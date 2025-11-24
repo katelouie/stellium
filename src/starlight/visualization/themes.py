@@ -206,6 +206,12 @@ def _get_classic_theme() -> dict[str, Any]:
             "glyph_color": "#333333",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#888888",  # Lighter grey
+            "line_width": 1.8,
+            "glyph_color": "#666666",
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#222222",
             "glyph_size": "32px",
@@ -260,6 +266,12 @@ def _get_dark_theme() -> dict[str, Any]:
             "glyph_color": "#DDDDDD",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#888888",  # Softer grey
+            "line_width": 1.8,
+            "glyph_color": "#BBBBBB",
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#EEEEEE",
             "glyph_size": "32px",
@@ -309,6 +321,12 @@ def _get_midnight_theme() -> dict[str, Any]:
             "line_width": 2.5,
             "glyph_color": "#FFFFFF",
             "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#A8C5E8",  # Lighter blue-grey
+            "line_width": 1.8,
+            "glyph_color": "#C8D5E8",  # Even lighter
+            "glyph_size": "11px",
         },
         "planets": {
             "glyph_color": "#FFD700",
@@ -360,6 +378,12 @@ def _get_neon_theme() -> dict[str, Any]:
             "glyph_color": "#FFFF00",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#00FFFF",  # Cyan instead of magenta
+            "line_width": 2.0,
+            "glyph_color": "#39FF14",  # Neon green
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#00FFFF",
             "glyph_size": "32px",
@@ -409,6 +433,12 @@ def _get_sepia_theme() -> dict[str, Any]:
             "line_width": 2.5,
             "glyph_color": "#3E2F1F",
             "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#8B7355",  # Lighter warm brown
+            "line_width": 1.8,
+            "glyph_color": "#A68B6B",
+            "glyph_size": "11px",
         },
         "planets": {
             "glyph_color": "#4A3728",
@@ -460,6 +490,12 @@ def _get_pastel_theme() -> dict[str, Any]:
             "glyph_color": "#666666",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#AAAAAA",  # Softer grey
+            "line_width": 1.8,
+            "glyph_color": "#999999",
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#555555",
             "glyph_size": "32px",
@@ -509,6 +545,12 @@ def _get_celestial_theme() -> dict[str, Any]:
             "line_width": 2.5,
             "glyph_color": "#FFF4D4",
             "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#DA70D6",  # Orchid/purple
+            "line_width": 1.8,
+            "glyph_color": "#E8D4FF",  # Soft lavender
+            "glyph_size": "11px",
         },
         "planets": {
             "glyph_color": "#FFD700",
@@ -566,6 +608,12 @@ def _get_viridis_theme() -> dict[str, Any]:
             "glyph_color": "#FDE724",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#22A884",  # Teal (mid viridis)
+            "line_width": 1.8,
+            "glyph_color": "#7AD151",  # Yellow-green
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#22A884",
             "glyph_size": "32px",
@@ -615,6 +663,12 @@ def _get_plasma_theme() -> dict[str, Any]:
             "line_width": 2.5,
             "glyph_color": "#F0F921",
             "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#E16462",  # Orange-red (mid plasma)
+            "line_width": 1.8,
+            "glyph_color": "#FCA636",  # Orange
+            "glyph_size": "11px",
         },
         "planets": {
             "glyph_color": "#E16462",
@@ -666,6 +720,12 @@ def _get_inferno_theme() -> dict[str, Any]:
             "glyph_color": "#FCFFA4",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#ED6925",  # Orange (mid inferno)
+            "line_width": 1.8,
+            "glyph_color": "#FB9A06",  # Lighter orange
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#ED6925",
             "glyph_size": "32px",
@@ -715,6 +775,12 @@ def _get_magma_theme() -> dict[str, Any]:
             "line_width": 2.5,
             "glyph_color": "#FCFDBF",
             "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#D3436E",  # Pink (mid magma)
+            "line_width": 1.8,
+            "glyph_color": "#EB5760",  # Lighter pink
+            "glyph_size": "11px",
         },
         "planets": {
             "glyph_color": "#D3436E",
@@ -766,6 +832,12 @@ def _get_cividis_theme() -> dict[str, Any]:
             "glyph_color": "#FFEA46",
             "glyph_size": "12px",
         },
+        "outer_wheel_angles": {
+            "line_color": "#9B9680",  # Grey-tan (mid cividis)
+            "line_width": 1.8,
+            "glyph_color": "#C5AC83",  # Lighter tan
+            "glyph_size": "11px",
+        },
         "planets": {
             "glyph_color": "#9B9680",
             "glyph_size": "32px",
@@ -815,6 +887,12 @@ def _get_turbo_theme() -> dict[str, Any]:
             "line_width": 2.5,
             "glyph_color": "#FABA39",
             "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#1AE4B6",  # Turquoise (turbo palette)
+            "line_width": 1.8,
+            "glyph_color": "#72FE5E",  # Bright green
+            "glyph_size": "11px",
         },
         "planets": {
             "glyph_color": "#72FE5E",

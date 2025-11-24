@@ -18,6 +18,7 @@ from starlight.visualization.layers import (
     ChartShapeLayer,
     ElementModalityTableLayer,
     HouseCuspLayer,
+    OuterAngleLayer,
     OuterHouseCuspLayer,
     PlanetLayer,
     ZodiacLayer,
@@ -92,9 +93,12 @@ class LayerFactory:
             )
 
         # Layer 3: Angles (ASC, MC, DSC, IC)
-        if not is_comparison:
-            # Only show angles for single charts (not comparisons)
-            layers.append(AngleLayer())
+        # Always show angles for inner wheel (chart1 for comparisons)
+        layers.append(AngleLayer())
+
+        # Layer 3b: Outer wheel angles (for comparisons only)
+        if is_comparison:
+            layers.append(OuterAngleLayer())
 
         # Layer 4: Aspects
         if is_comparison:
@@ -115,17 +119,27 @@ class LayerFactory:
                 p for p in chart.chart2.positions if self._is_planetary_object(p)
             ]
 
+            # Inner wheel: info stack extends inward (default)
             layers.append(
                 PlanetLayer(
                     planet_set=inner_planets,
-                    radius_key="planet_ring",  # Inner wheel
+                    radius_key="planet_ring_inner",
                 )
             )
+
+            # Outer wheel: info stack extends outward
+            # Hide info stack if position table is enabled (redundant info)
+            show_outer_info = not (
+                self.config.tables.enabled and self.config.tables.show_positions
+            )
+
             layers.append(
                 PlanetLayer(
                     planet_set=outer_planets,
-                    radius_key="planet_ring_outer",  # Outer wheel
+                    radius_key="planet_ring_outer",
                     use_outer_wheel_color=True,
+                    info_stack_direction="outward",  # Flip stack direction
+                    show_info_stack=show_outer_info,  # Hide if position table enabled
                 )
             )
         else:

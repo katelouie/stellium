@@ -399,6 +399,20 @@ class LayoutEngine:
             (multipliers["zodiac_ring_outer"] + multipliers["zodiac_ring_inner"]) / 2
         )
 
+        # Auto-select outer containment border based on table configuration
+        # (Will be overridden in layer_factory based on actual show_info_stack value)
+        if is_biwheel:
+            # Default to compact if tables with positions enabled (info stacks hidden)
+            # Will be refined in layer_factory which has access to show_info_stack
+            if self.config.tables.enabled and self.config.tables.show_positions:
+                radii["outer_containment_border"] = radii.get(
+                    "outer_containment_border_compact", radii.get("outer_containment_border_full", 0)
+                )
+            else:
+                radii["outer_containment_border"] = radii.get(
+                    "outer_containment_border_full", radii.get("outer_containment_border_compact", 0)
+                )
+
         return radii
 
     def _position_info_corners(

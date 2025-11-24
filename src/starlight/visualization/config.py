@@ -27,12 +27,19 @@ class ChartWheelConfig:
     # Radii for biwheel/comparison chart (keys match renderer.radii keys directly)
     biwheel_radii: dict[str, float] = field(
         default_factory=lambda: {
-            "zodiac_ring_outer": 0.50,
-            "zodiac_ring_inner": 0.40,
-            "planet_ring_inner": 0.25,  # Inner wheel planets
-            "planet_ring_outer": 0.50,  # Outer wheel planets
-            "house_number_ring": 0.22,
-            "aspect_ring_inner": 0.20,
+            "zodiac_ring_outer": 0.38,
+            "zodiac_ring_inner": 0.30,
+            "planet_ring_inner": 0.27,  # Inner wheel planets
+            "planet_ring_outer": 0.40,  # Outer wheel planets
+            "house_number_ring": 0.16,
+            "aspect_ring_inner": 0.15,
+            # Outer wheel house cusps
+            "outer_cusp_start": 0.38,  # Start of outer house cusp line
+            "outer_cusp_end": 0.45,  # End of outer house cusp line
+            "outer_house_number": 0.39,  # Position of outer house numbers
+            # Outer containment borders (auto-selected based on info stack visibility)
+            "outer_containment_border_compact": 0.48,  # When info stacks hidden
+            "outer_containment_border_full": 0.50,  # When info stacks visible
         }
     )
 
@@ -137,7 +144,7 @@ class ChartVisualizationConfig:
 
     # Auto-layout settings
     auto_center: bool = True
-    auto_grow_wheel: bool = True  # Grow wheel if canvas gets big
+    auto_grow_wheel: bool = False  # Grow wheel if canvas gets big
     min_margin: int = 10  # Minimum space between components
 
 

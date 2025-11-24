@@ -279,6 +279,12 @@ class ChartRenderer:
                 "glyph_color": "#333333",
                 "glyph_size": "12px",
             },
+            "outer_wheel_angles": {
+                "line_color": "#888888",  # Lighter than inner angles
+                "line_width": 1.8,  # Thinner than inner angles
+                "glyph_color": "#666666",  # Lighter glyph
+                "glyph_size": "11px",  # Slightly smaller
+            },
             "planets": {
                 "glyph_color": "#222222",
                 "glyph_size": "32px",
@@ -378,6 +384,34 @@ class ChartRenderer:
                 stroke_width=self.style["border_width"],
             )
         )
+
+        # Add optional outer containment border (for biwheels)
+        # HARD TEST: Always draw a border at a fixed radius for debugging
+        TEST_RADIUS = self.size * 0.48  # Hardcoded test value
+        dwg.add(
+            dwg.circle(
+                center=(self.center, self.center),
+                r=TEST_RADIUS,
+                fill="none",
+                stroke="#FF0000",  # Bright red for visibility
+                stroke_width=3,  # Thick for visibility
+            )
+        )
+
+        # Original logic (commented out for test)
+        # if (
+        #     "outer_containment_border" in self.radii
+        #     and self.radii["outer_containment_border"]
+        # ):
+        #     dwg.add(
+        #         dwg.circle(
+        #             center=(self.center, self.center),
+        #             r=self.radii["outer_containment_border"],
+        #             fill="none",
+        #             stroke=self.style["border_color"],
+        #             stroke_width=self.style["border_width"],
+        #         )
+        #     )
 
         return dwg
 
