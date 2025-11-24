@@ -2,7 +2,7 @@
 
 **A modern, extensible Python library for computational astrology**
 
-Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Starlight brings professional astrological calculations to Python with a clean, composable architecture that works for everyone—from quick scripts to production applications.
+Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Starlight brings professional astrological calculations to Python with a clean, composable architecture that works for everyone, from quick scripts to production applications.
 
 [![PyPI version](https://badge.fury.io/py/starlight-astro.svg)](https://badge.fury.io/py/starlight-astro)
 [![Python Version](https://img.shields.io/pypi/pyversions/starlight-astro.svg)](https://pypi.org/project/starlight-astro/)
@@ -120,12 +120,11 @@ chart.draw("custom.svg") \
 ### Your Own Chart
 
 ```python
-from datetime import datetime
 from starlight import ChartBuilder, Native
 
 # Create a Native (birth data container)
 native = Native(
-    datetime_input=datetime(2000, 1, 6, 12, 00),  # Naive or timezone-aware
+    datetime_input="2000-01-06 12:00",  # Naive or timezone-aware
     location_input="Seattle, WA" # City name or (lat, lon)
 )
 
@@ -163,8 +162,7 @@ Phase: Full (100% illuminated)
 from starlight import ChartBuilder, Native
 from datetime import datetime
 
-native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
-chart = ChartBuilder.from_native(native).calculate()
+chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").calculate()
 
 # Get all planets
 for planet in chart.get_planets():
@@ -207,12 +205,10 @@ Placidus (default), Whole Sign, Koch, Equal, Regiomontanus, Campanus, Porphyry, 
 ### Level 3: Multiple House Systems
 
 ```python
-from starlight import ChartBuilder, Native
+from starlight import ChartBuilder
 from starlight.engines import PlacidusHouses, WholeSignHouses, KochHouses
 
-native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
-
-chart = (ChartBuilder.from_native(native)
+chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .with_house_systems([
         PlacidusHouses(),
         WholeSignHouses(),
