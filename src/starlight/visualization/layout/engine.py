@@ -379,53 +379,25 @@ class LayoutEngine:
         """
         Calculate all wheel radii based on wheel size and chart type.
 
-        This is where the tweakable multipliers come in.
+        Config keys now match renderer keys directly - no mapping needed!
         """
-        multipliers = self.config.wheel.radii_multipliers
+        # Determine which radii config to use
         is_biwheel = (
             isinstance(chart, Comparison) or self.config.wheel.chart_type == "biwheel"
         )
 
-        radii = {}
+        multipliers = (
+            self.config.wheel.biwheel_radii if is_biwheel
+            else self.config.wheel.single_radii
+        )
 
-        if is_biwheel:
-            # Biwheel: use special multipliers
-            # Map config keys to layer-expected keys
-            radii["zodiac_ring_outer"] = wheel_size * multipliers["zodiac_outer"]
-            radii["zodiac_ring_inner"] = wheel_size * multipliers["zodiac_inner"]
-            radii["zodiac_glyph"] = wheel_size * (
-                (multipliers["zodiac_outer"] + multipliers["zodiac_inner"]) / 2
-            )
+        # Direct multiplication - config keys = renderer keys!
+        radii = {key: wheel_size * mult for key, mult in multipliers.items()}
 
-            # Planet rings (inner and outer for biwheel)
-            radii["planet_ring"] = wheel_size * multipliers["biwheel_inner_planets"]
-            radii["planet_ring_outer"] = (
-                wheel_size * multipliers["biwheel_outer_planets"]
-            )
-
-            # House cusps
-            radii["house_number_ring"] = wheel_size * multipliers["houses_numbers"]
-
-            # Aspect ring
-            radii["aspect_ring_inner"] = wheel_size * multipliers["aspects_inner"]
-
-        else:
-            # Single chart: use standard multipliers
-            # Map config keys to layer-expected keys
-            radii["zodiac_ring_outer"] = wheel_size * multipliers["zodiac_outer"]
-            radii["zodiac_ring_inner"] = wheel_size * multipliers["zodiac_inner"]
-            radii["zodiac_glyph"] = wheel_size * (
-                (multipliers["zodiac_outer"] + multipliers["zodiac_inner"]) / 2
-            )
-
-            # Planet ring (single)
-            radii["planet_ring"] = wheel_size * multipliers["planets"]
-
-            # House cusps
-            radii["house_number_ring"] = wheel_size * multipliers["houses_numbers"]
-
-            # Aspect ring
-            radii["aspect_ring_inner"] = wheel_size * multipliers["aspects_inner"]
+        # Calculate derived radius (zodiac glyph is positioned between rings)
+        radii["zodiac_glyph"] = wheel_size * (
+            (multipliers["zodiac_ring_outer"] + multipliers["zodiac_ring_inner"]) / 2
+        )
 
         return radii
 

@@ -13,21 +13,26 @@ class ChartWheelConfig:
     # House systems (None = use chart's default, "all" = all available, or list of names)
     house_systems: list[str] | str | None = None
 
-    # Radii adjustments
-    # For single charts only inner radii are used
-    # For biwhell charts we use both inner and outer
-    radii_multipliers: dict[str, float] = field(
+    # Radii for single chart (keys match renderer.radii keys directly)
+    single_radii: dict[str, float] = field(
         default_factory=lambda: {
-            # Single chart radii
-            "zodiac_outer": 0.50,
-            "zodiac_inner": 0.40,
-            "planets": 0.35,
-            "houses_numbers": 0.22,
-            "aspects_inner": 0.20,
-            # Biwheel additional radii
-            "biwheel_inner_planets": 0.25,  # Shrink inner wheel
-            "biwheel_outer_planets": 0.50,  # Expand for outer wheel
-            "biwheel_outer_houses": 0.52,  # House lines outside zodiac
+            "zodiac_ring_outer": 0.50,
+            "zodiac_ring_inner": 0.40,
+            "planet_ring": 0.35,
+            "house_number_ring": 0.22,
+            "aspect_ring_inner": 0.20,
+        }
+    )
+
+    # Radii for biwheel/comparison chart (keys match renderer.radii keys directly)
+    biwheel_radii: dict[str, float] = field(
+        default_factory=lambda: {
+            "zodiac_ring_outer": 0.50,
+            "zodiac_ring_inner": 0.40,
+            "planet_ring_inner": 0.25,  # Inner wheel planets
+            "planet_ring_outer": 0.50,  # Outer wheel planets
+            "house_number_ring": 0.22,
+            "aspect_ring_inner": 0.20,
         }
     )
 
