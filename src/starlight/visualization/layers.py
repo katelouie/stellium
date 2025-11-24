@@ -213,13 +213,28 @@ class HouseCuspLayer:
         self.style = style_override or {}
 
     def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
+        """Render house cusps and house numbers.
+
+        Handles both CalculatedChart and Comparison objects.
+        For Comparison, uses chart1 (inner wheel).
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
         style = renderer.style["houses"].copy()
         style.update(self.style)
 
+        # Handle Comparison vs CalculatedChart
+        if _is_comparison(chart):
+            # For comparison: use chart1 (inner wheel)
+            actual_chart = chart.chart1
+        else:
+            # For single chart: use as-is
+            actual_chart = chart
+
         try:
-            house_cusps: HouseCusps = chart.get_houses(self.system_name)
+            house_cusps: HouseCusps = actual_chart.get_houses(self.system_name)
         except (ValueError, KeyError):
             print(
                 f"Warning: House system '{self.system_name}' not found in chart data."
@@ -341,13 +356,28 @@ class OuterHouseCuspLayer:
         self.style = style_override or {}
 
     def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
+        """Render outer house cusps for chart2 (biwheel only).
+
+        Handles both CalculatedChart and Comparison objects.
+        For Comparison, uses chart2 (outer wheel).
+        For single charts, this layer doesn't apply.
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
         style = renderer.style["houses"].copy()
         style.update(self.style)
 
+        # This layer is ONLY for comparisons (outer wheel = chart2)
+        if _is_comparison(chart):
+            actual_chart = chart.chart2
+        else:
+            # For single charts, this layer doesn't make sense - skip it
+            return
+
         try:
-            house_cusps: HouseCusps = chart.get_houses(self.system_name)
+            house_cusps: HouseCusps = actual_chart.get_houses(self.system_name)
         except (ValueError, KeyError):
             print(
                 f"Warning: House system '{self.system_name}' not found in chart data."
@@ -407,12 +437,27 @@ class AngleLayer:
         self.style = style_override or {}
 
     def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
+        """Render chart angles.
+
+        Handles both CalculatedChart and Comparison objects.
+        For Comparison, uses chart1 (inner wheel) angles.
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
         style = renderer.style["angles"].copy()
         style.update(self.style)
 
-        angles = chart.get_angles()
+        # Handle Comparison vs CalculatedChart
+        if _is_comparison(chart):
+            # For comparison: use chart1 angles (inner wheel)
+            actual_chart = chart.chart1
+        else:
+            # For single chart: use as-is
+            actual_chart = chart
+
+        angles = actual_chart.get_angles()
 
         for angle in angles:
             if angle.name not in ANGLE_GLYPHS:
@@ -862,9 +907,7 @@ class ChartInfoLayer:
 
         if "datetime" in self.fields and chart.datetime:
             if chart.datetime.local_datetime:
-                dt_str = chart.datetime.local_datetime.strftime(
-                    "%B %d, %Y  %I:%M %p"
-                )
+                dt_str = chart.datetime.local_datetime.strftime("%B %d, %Y  %I:%M %p")
             else:
                 dt_str = chart.datetime.utc_datetime.strftime("%B %d, %Y  %H:%M UTC")
             lines.append(dt_str)
@@ -918,7 +961,9 @@ class ChartInfoLayer:
 
         # Calculate total lines including wrapped name (if present)
         # Name takes extra vertical space due to larger font
-        name_line_height = int(float(self.style["name_size"][:-2]) * 1.2)  # 120% of font size
+        name_line_height = int(
+            float(self.style["name_size"][:-2]) * 1.2
+        )  # 120% of font size
         total_lines = len(wrapped_lines) + (len(wrapped_name) if wrapped_name else 0)
 
         # Calculate position (use total_lines for proper spacing)
@@ -933,9 +978,7 @@ class ChartInfoLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         current_y = y
@@ -1000,7 +1043,9 @@ class ChartInfoLayer:
             # Text extends left from size - margin
             # Chart circle right edge is at center + radius
             chart_right_edge = renderer.center + zodiac_radius
-            available_width = (renderer.size - margin) - chart_right_edge - 10  # 10px safety buffer
+            available_width = (
+                (renderer.size - margin) - chart_right_edge - 10
+            )  # 10px safety buffer
 
         return max(available_width, 100)  # Minimum 100px
 
@@ -1069,8 +1114,8 @@ class ChartInfoLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1079,7 +1124,10 @@ class ChartInfoLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             # Fallback to top-left
             return (x_offset + margin, y_offset + margin)
@@ -1155,7 +1203,9 @@ class AspectCountsLayer:
                 glyph = aspect_name[:3]
 
             # Get the color for this aspect (for legend)
-            aspect_style = aspect_style_dict.get(aspect_name, aspect_style_dict.get("default", {}))
+            aspect_style = aspect_style_dict.get(
+                aspect_name, aspect_style_dict.get("default", {})
+            )
             if isinstance(aspect_style, dict):
                 aspect_color = aspect_style.get("color", "#888888")
             else:
@@ -1175,9 +1225,7 @@ class AspectCountsLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         # Render each line
@@ -1219,8 +1267,8 @@ class AspectCountsLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1229,7 +1277,10 @@ class AspectCountsLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             return (x_offset + margin, y_offset + margin)
 
@@ -1373,9 +1424,7 @@ class ElementModalityTableLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         # Header row - render each column header separately
@@ -1500,8 +1549,8 @@ class ElementModalityTableLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1510,7 +1559,10 @@ class ElementModalityTableLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             return (x_offset + margin, y_offset + margin)
 
@@ -1592,9 +1644,7 @@ class ChartShapeLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         # Render each line
@@ -1636,8 +1686,8 @@ class ChartShapeLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1646,7 +1696,10 @@ class ChartShapeLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             return (x_offset + margin, y_offset + margin)
 
@@ -1687,7 +1740,10 @@ class AspectLayer:
 
         dwg.add(
             dwg.circle(
-                center=(renderer.center, renderer.center),
+                center=(
+                    renderer.center + renderer.x_offset,
+                    renderer.center + renderer.y_offset,
+                ),
                 r=radius,
                 fill=style["background_color"],
                 stroke=style["line_color"],

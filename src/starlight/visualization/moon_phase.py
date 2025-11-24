@@ -213,7 +213,7 @@ class MoonPhaseLayer:
             Tuple of (x, y) coordinates
         """
         # Match chart padding for corner placement
-        margin = renderer.size * 0.03
+        margin = renderer.size * 0.01
 
         # Get offsets for extended canvas positioning
         x_offset = getattr(renderer, "x_offset", 0)
