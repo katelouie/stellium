@@ -10,6 +10,9 @@ class ChartWheelConfig:
 
     chart_type: Literal["single", "biwheel"]
 
+    # House systems (None = use chart's default, "all" = all available, or list of names)
+    house_systems: list[str] | str | None = None
+
     # Radii adjustments
     # For single charts only inner radii are used
     # For biwhell charts we use both inner and outer
@@ -40,22 +43,31 @@ class ChartWheelConfig:
 class InfoCornerConfig:
     """Configuration for the 4 info corners."""
 
+    # Chart info
     chart_info: bool = True
     chart_info_position: Literal[
         "top-left", "top-right", "bottom-left", "bottom-right"
     ] = "top-left"
+    chart_info_fields: list[str] | None = None  # None = use defaults
 
+    # Aspect counts
     aspect_counts: bool = False
     aspect_counts_position: str = "top-right"
 
+    # Element/modality
     element_modality: bool = False
     element_modality_position: str = "bottom-left"
 
+    # Chart shape
     chart_shape: bool = False
     chart_shape_position: str = "bottom-right"
 
+    # Moon phase
     moon_phase: bool = True
     moon_phase_position: str | None = "bottom-right"  # None = auto-position
+    moon_phase_show_label: bool = True
+    moon_phase_size: int | None = None  # None = auto-size based on position
+    moon_phase_label_size: str | None = None  # None = auto-size based on position
 
 
 @dataclass(frozen=True)
@@ -69,6 +81,9 @@ class TableConfig:
     show_positions: bool = True
     show_houses: bool = True
     show_aspectarian: bool = True
+
+    # Aspectarian mode (for comparison charts)
+    aspectarian_mode: str = "cross_chart"  # "cross_chart", "all", "chart1", "chart2"
 
     # Table spacing controls (tweakable)
     padding: int = 10
