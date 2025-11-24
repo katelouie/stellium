@@ -434,6 +434,242 @@ class ComparisonBuilder:
             native_label,
         )
 
+    @classmethod
+    def compare(
+        cls,
+        data1: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        data2: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        comparison_type: str,
+        chart1_label: str = "Chart 1",
+        chart2_label: str = "Chart 2",
+    ) -> "ComparisonBuilder":
+        """
+        General method for creating any type of comparison.
+
+        This is the flexible method that accepts any combination of inputs and any
+        comparison type. Convenience methods (.synastry(), .transit(), .progression())
+        are thin wrappers that call this method with appropriate defaults.
+
+        Args:
+            data1: First chart data (CalculatedChart, Native, or (datetime, location) tuple)
+            data2: Second chart data (CalculatedChart, Native, or (datetime, location) tuple)
+            comparison_type: Type of comparison ("synastry", "transit", "progression")
+            chart1_label: Label for first chart (default: "Chart 1")
+            chart2_label: Label for second chart (default: "Chart 2")
+
+        Returns:
+            ComparisonBuilder instance ready to configure and calculate
+
+        Examples:
+            >>> # With Native objects
+            >>> native1 = Native("1994-01-06 11:47", "Palo Alto, CA")
+            >>> native2 = Native("2000-01-01 17:00", "Seattle, WA")
+            >>> comparison = ComparisonBuilder.compare(native1, native2, "synastry").calculate()
+            >>>
+            >>> # With (datetime, location) tuples
+            >>> comparison = ComparisonBuilder.compare(
+            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
+            ...     ("2000-01-01 17:00", "Seattle, WA"),
+            ...     "synastry"
+            ... ).calculate()
+            >>>
+            >>> # Mixed inputs
+            >>> comparison = ComparisonBuilder.compare(
+            ...     native1,
+            ...     ("2024-11-24 14:30", None),  # Uses chart1's location for transits
+            ...     "transit"
+            ... ).calculate()
+        """
+        # Convert comparison_type string to ComparisonType enum
+        type_map = {
+            "synastry": ComparisonType.SYNASTRY,
+            "transit": ComparisonType.TRANSIT,
+            "progression": ComparisonType.PROGRESSION,
+        }
+        comp_type = type_map.get(comparison_type.lower())
+        if comp_type is None:
+            raise ValueError(
+                f"Invalid comparison type: '{comparison_type}'. "
+                f"Must be one of: {', '.join(type_map.keys())}"
+            )
+
+        # Helper to convert data input to CalculatedChart
+        def to_chart(data, location_fallback=None) -> CalculatedChart:
+            if isinstance(data, CalculatedChart):
+                return data
+            elif isinstance(data, Native):
+                return ChartBuilder.from_native(data).calculate()
+            elif isinstance(data, tuple) and len(data) == 2:
+                datetime_input, location_input = data
+                # Handle None location (use fallback for transits)
+                if location_input is None:
+                    if location_fallback is None:
+                        raise ValueError(
+                            "Location cannot be None unless comparing to an existing chart "
+                            "(e.g., for transits)"
+                        )
+                    location_input = location_fallback
+                # Create Native internally (handles all parsing)
+                native = Native(datetime_input, location_input)
+                return ChartBuilder.from_native(native).calculate()
+            else:
+                raise TypeError(
+                    f"Invalid data type: {type(data)}. "
+                    f"Expected CalculatedChart, Native, or (datetime, location) tuple"
+                )
+
+        # Convert data1 first
+        chart1 = to_chart(data1)
+
+        # Convert data2 (with chart1's location as fallback for transits)
+        chart2 = to_chart(data2, location_fallback=chart1.location)
+
+        # Create builder with both charts configured
+        builder = cls(chart1, comp_type, chart1_label)
+        builder._chart2 = chart2
+        builder._chart2_label = chart2_label
+
+        return builder
+
+    @classmethod
+    def synastry(
+        cls,
+        data1: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        data2: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        chart1_label: str = "Person 1",
+        chart2_label: str = "Person 2",
+    ) -> "ComparisonBuilder":
+        """
+        Create a synastry comparison between two natal charts.
+
+        Synastry analyzes the relationship between two people by comparing their
+        birth charts. This is a convenience method that calls .compare() with
+        comparison_type="synastry".
+
+        Args:
+            data1: First person's chart data (Native, CalculatedChart, or (datetime, location) tuple)
+            data2: Second person's chart data (Native, CalculatedChart, or (datetime, location) tuple)
+            chart1_label: Label for first person (default: "Person 1")
+            chart2_label: Label for second person (default: "Person 2")
+
+        Returns:
+            ComparisonBuilder instance ready to configure and calculate
+
+        Examples:
+            >>> # Simple string inputs
+            >>> comparison = ComparisonBuilder.synastry(
+            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
+            ...     ("2000-01-01 17:00", "Seattle, WA")
+            ... ).calculate()
+            >>>
+            >>> # With Native objects
+            >>> native1 = Native("1994-01-06 11:47", "Palo Alto, CA")
+            >>> native2 = Native("2000-01-01 17:00", "Seattle, WA")
+            >>> comparison = ComparisonBuilder.synastry(native1, native2).calculate()
+            >>>
+            >>> # With custom labels
+            >>> comparison = ComparisonBuilder.synastry(
+            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
+            ...     ("2000-01-01 17:00", "Seattle, WA"),
+            ...     chart1_label="Kate",
+            ...     chart2_label="Partner"
+            ... ).calculate()
+        """
+        return cls.compare(data1, data2, "synastry", chart1_label, chart2_label)
+
+    @classmethod
+    def transit(
+        cls,
+        natal_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        transit_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict | None],
+        natal_label: str = "Natal",
+        transit_label: str = "Transit",
+    ) -> "ComparisonBuilder":
+        """
+        Create a transit comparison (natal chart vs current sky positions).
+
+        Transits analyze how current planetary positions interact with a natal chart
+        for timing and prediction. This is a convenience method that calls .compare()
+        with comparison_type="transit".
+
+        Args:
+            natal_data: Natal chart data (Native, CalculatedChart, or (datetime, location) tuple)
+            transit_data: Transit time data. Can be:
+                - (datetime, location) tuple
+                - (datetime, None) to use natal location
+                - Native or CalculatedChart
+            natal_label: Label for natal chart (default: "Natal")
+            transit_label: Label for transit chart (default: "Transit")
+
+        Returns:
+            ComparisonBuilder instance ready to configure and calculate
+
+        Examples:
+            >>> # Transit using natal location
+            >>> comparison = ComparisonBuilder.transit(
+            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
+            ...     ("2024-11-24 14:30", None)  # Uses Palo Alto
+            ... ).calculate()
+            >>>
+            >>> # Transit with different location
+            >>> comparison = ComparisonBuilder.transit(
+            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
+            ...     ("2024-11-24 14:30", "New York, NY")
+            ... ).calculate()
+            >>>
+            >>> # With Native object
+            >>> natal = Native("1994-01-06 11:47", "Palo Alto, CA")
+            >>> comparison = ComparisonBuilder.transit(
+            ...     natal,
+            ...     ("2024-11-24 14:30", None)
+            ... ).calculate()
+        """
+        return cls.compare(natal_data, transit_data, "transit", natal_label, transit_label)
+
+    @classmethod
+    def progression(
+        cls,
+        natal_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        progressed_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        natal_label: str = "Natal",
+        progressed_label: str = "Progressed",
+    ) -> "ComparisonBuilder":
+        """
+        Create a progression comparison (progressed chart vs natal chart).
+
+        Progressions use symbolic timing (1 day = 1 year) to analyze long-term
+        development and growth. This is a convenience method that calls .compare()
+        with comparison_type="progression".
+
+        Args:
+            natal_data: Natal chart data (Native, CalculatedChart, or (datetime, location) tuple)
+            progressed_data: Progressed chart data (Native, CalculatedChart, or (datetime, location) tuple)
+            natal_label: Label for natal chart (default: "Natal")
+            progressed_label: Label for progressed chart (default: "Progressed")
+
+        Returns:
+            ComparisonBuilder instance ready to configure and calculate
+
+        Examples:
+            >>> # Simple progression (30 days after birth = age 30)
+            >>> import datetime
+            >>> from datetime import timedelta
+            >>> birth_date = datetime.datetime(1994, 1, 6, 11, 47)
+            >>> progressed_date = birth_date + timedelta(days=30)
+            >>>
+            >>> comparison = ComparisonBuilder.progression(
+            ...     (birth_date, "Palo Alto, CA"),
+            ...     (progressed_date, "Palo Alto, CA")
+            ... ).calculate()
+            >>>
+            >>> # With string dates
+            >>> comparison = ComparisonBuilder.progression(
+            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
+            ...     ("1994-02-05 11:47", "Palo Alto, CA")  # 30 days later
+            ... ).calculate()
+        """
+        return cls.compare(natal_data, progressed_data, "progression", natal_label, progressed_label)
+
     # ===== Configuration Methods =====
     def with_partner(
         self,

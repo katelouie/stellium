@@ -50,16 +50,18 @@ class ChartBuilder:
         )
     """
 
-    def __init__(self, datetime: ChartDateTime, location: ChartLocation) -> None:
+    def __init__(self, datetime: ChartDateTime, location: ChartLocation, native: Native | None = None) -> None:
         """
         Initialize builder with required data.
 
         Args:
             datetime: Chart datetime
             location: Chart location
+            native: Optional Native object (for convenience methods)
         """
         self._datetime = datetime
         self._location = location
+        self.native = native  # Store Native for reference
 
         # Default engines (can be overridden)
         self._ephemeris: EphemerisEngine = SwissEphemerisEngine()
@@ -90,7 +92,7 @@ class ChartBuilder:
         """
         # The Native object has already done all the processing.
         # We just pass its clean attributes to our "pro chef" __init__.
-        return cls(native.datetime, native.location)
+        return cls(native.datetime, native.location, native=native)
 
     @classmethod
     def from_notable(cls, name: str) -> "ChartBuilder":
@@ -129,6 +131,51 @@ class ChartBuilder:
         # Automatically set the notable's name on the chart
         builder._name = notable.name
         return builder
+
+    @classmethod
+    def from_details(cls, datetime_input: str | dt.datetime | dict, location_input: str | tuple[float, float] | dict) -> "ChartBuilder":
+        """
+        Create a ChartBuilder from datetime and location (convenience method).
+
+        This method accepts flexible datetime and location inputs, creates a Native
+        object internally, and returns a ready-to-configure ChartBuilder.
+
+        Args:
+            datetime_input: Datetime as string, datetime object, or dict
+                - String: "2024-11-24 14:30", "11/24/2024 2:30 PM", etc.
+                - datetime: Any datetime object (naive will be localized to location)
+                - dict: {"year": 2024, "month": 11, "day": 24, "hour": 14, "minute": 30}
+            location_input: Location as string, (lat, lon) tuple, or dict
+                - String: "Palo Alto, CA" (will be geocoded)
+                - Tuple: (37.4419, -122.1430)
+                - dict: {"latitude": 37.4419, "longitude": -122.1430, "name": "Palo Alto"}
+
+        Returns:
+            ChartBuilder instance ready to configure
+
+        Examples:
+            >>> # Simple string inputs
+            >>> chart = ChartBuilder.from_details(
+            ...     "1994-01-06 11:47",
+            ...     "Palo Alto, CA"
+            ... ).calculate()
+            >>>
+            >>> # US date format
+            >>> chart = ChartBuilder.from_details(
+            ...     "01/06/1994 11:47 AM",
+            ...     "Seattle, WA"
+            ... ).calculate()
+            >>>
+            >>> # With coordinates
+            >>> chart = ChartBuilder.from_details(
+            ...     "2024-11-24 14:30",
+            ...     (37.4419, -122.1430)
+            ... ).calculate()
+        """
+        # Create Native internally (it handles all the parsing)
+        native = Native(datetime_input, location_input)
+        # Use from_native which stores the native reference
+        return cls.from_native(native)
 
     # ---- Fluent configuration methods ---
     def with_ephemeris(self, engine: EphemerisEngine) -> "ChartBuilder":

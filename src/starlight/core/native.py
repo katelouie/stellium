@@ -19,7 +19,7 @@ from starlight.core.models import ChartDateTime, ChartLocation
 from starlight.utils.cache import cached
 
 # Define the messy input types we'll accept
-DateTimeInput = dt.datetime | ChartDateTime | dict[str, Any]
+DateTimeInput = dt.datetime | ChartDateTime | dict[str, Any] | str
 LocationInput = str | ChartLocation | tuple[float, float] | dict[str, float | str]
 
 
@@ -38,8 +38,8 @@ class Native:
         """Creates a new Native object by parsing flexible inputs.
 
         Args:
-            datetime_input: Can be a timezone-aware datetime, a dict, or
-                a pre-made ChartDateTime object
+            datetime_input: Can be a timezone-aware datetime, a datetime string,
+                a dict, or a pre-made ChartDateTime object
             location_input: Can be a string to geocode, a (lat, lon) tuple,
                 a dict, or a pre-made ChartLocation object
         """
@@ -104,6 +104,72 @@ class Native:
 
         raise TypeError(f"Unsupported location input type: {type(loc_in)}")
 
+    def _parse_datetime_string(self, dt_string: str) -> dt.datetime:
+        """
+        Parse a datetime string into a datetime object.
+
+        Supports formats:
+        - ISO 8601: "2024-11-24T14:30:00"
+        - Common: "2024-11-24 14:30:00", "2024-11-24 14:30"
+        - US: "11/24/2024 14:30", "11/24/2024 2:30 PM"
+        - European: "24/11/2024 14:30"
+        - Compact: "20241124143000", "20241124 1430"
+
+        Args:
+            dt_string: The datetime string to parse
+
+        Returns:
+            A naive datetime object (will be localized later)
+
+        Raises:
+            ValueError: If the string cannot be parsed with helpful suggestions
+        """
+        # Strip whitespace
+        dt_string = dt_string.strip()
+
+        # Common formats to try, in order of likelihood
+        formats = [
+            # ISO 8601 and variants
+            "%Y-%m-%dT%H:%M:%S",
+            "%Y-%m-%d %H:%M:%S",
+            "%Y-%m-%d %H:%M",
+            "%Y-%m-%d",
+            # Common variants
+            "%Y/%m/%d %H:%M:%S",
+            "%Y/%m/%d %H:%M",
+            # US format
+            "%m/%d/%Y %H:%M:%S",
+            "%m/%d/%Y %H:%M",
+            "%m/%d/%Y %I:%M %p",  # With AM/PM
+            "%m/%d/%Y",
+            # European format
+            "%d/%m/%Y %H:%M:%S",
+            "%d/%m/%Y %H:%M",
+            "%d/%m/%Y",
+            # Compact formats
+            "%Y%m%d%H%M%S",
+            "%Y%m%d %H%M",
+            "%Y%m%d",
+        ]
+
+        # Try each format
+        for fmt in formats:
+            try:
+                return dt.datetime.strptime(dt_string, fmt)
+            except ValueError:
+                continue
+
+        # If we got here, nothing worked - provide helpful error
+        raise ValueError(
+            f"Could not parse datetime string: '{dt_string}'\n\n"
+            "Supported formats:\n"
+            "  - ISO 8601: '2024-11-24T14:30:00' or '2024-11-24 14:30'\n"
+            "  - US format: '11/24/2024 14:30' or '11/24/2024 2:30 PM'\n"
+            "  - European: '24/11/2024 14:30'\n"
+            "  - Date only: '2024-11-24' (assumes midnight)\n"
+            "\nTime is optional and defaults to midnight if not provided."
+        )
+
     def _process_datetime(
         self, time_input: DateTimeInput, loc_timezone: str
     ) -> ChartDateTime:
@@ -111,7 +177,7 @@ class Native:
         Parses any time input into a ChartDateTime object.
 
         Args:
-            time_input: A dt.datetime, dict, or ChartDateTime.
+            time_input: A dt.datetime, string, dict, or ChartDateTime.
             location_timezone: The IANA timezone string (e.g., "America/New_York")
                                found during location parsing.
         """
@@ -122,7 +188,12 @@ class Native:
         utc_dt: dt.datetime | None = None
         local_dt: dt.datetime | None = None
 
-        # 2. Datetime Object Input
+        # 2. String Input - Parse datetime string
+        if isinstance(time_input, str):
+            time_input = self._parse_datetime_string(time_input)
+            # Now time_input is a dt.datetime, continue to next step
+
+        # 3. Datetime Object Input
         if isinstance(time_input, dt.datetime):
             local_dt = time_input  # Store for the final object
             if time_input.tzinfo is None:
@@ -144,7 +215,7 @@ class Native:
                 # Aware datetime. Just convert to UTC.
                 utc_dt = time_input.astimezone(dt.UTC)
 
-        # 3. Dictionary Input
+        # 4. Dictionary Input
         elif isinstance(time_input, dict):
             try:
                 naive_dt = dt.datetime(
