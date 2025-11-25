@@ -186,6 +186,7 @@ class ReportBuilder:
         format: str = "rich_table",
         file: str | None = None,
         show: bool = True,
+        chart_svg_path: str | None = None,
     ) -> str | None:
         """
         Render the report with flexible output options.
@@ -194,6 +195,7 @@ class ReportBuilder:
             format: Output format ("rich_table", "plain_table", "text", "pdf", "html")
             file: Optional filename to save to
             show: Whether to display in terminal (default True, ignored for pdf/html)
+            chart_svg_path: Optional path to chart SVG file (for pdf/html formats)
 
         Returns:
             Filename if saved to file, None otherwise
@@ -212,8 +214,11 @@ class ReportBuilder:
             # Save quietly (no terminal output)
             report.render(format="plain_table", file="chart.txt", show=False)
 
-            # Both terminal and file
-            report.render(format="rich_table", file="chart.txt", show=True)
+            # Generate PDF with embedded chart
+            report.render(format="pdf", file="report.pdf", chart_svg_path="chart.svg")
+
+            # Generate HTML
+            report.render(format="html", file="report.html", chart_svg_path="chart.svg")
         """
         if not self._chart:
             raise ValueError("No chart set. Call .from_chart(chart) before rendering.")
@@ -233,15 +238,22 @@ class ReportBuilder:
 
         # Save to file if requested
         if file:
-            content = self._to_string(section_data, format)
-            with open(file, "w", encoding="utf-8") as f:
-                f.write(content)
+            # Handle PDF/HTML differently (binary vs text)
+            if format == "pdf":
+                content = self._to_pdf(section_data, chart_svg_path)
+                with open(file, "wb") as f:  # Binary mode for PDF
+                    f.write(content)
+            else:
+                content = self._to_string(section_data, format, chart_svg_path)
+                with open(file, "w", encoding="utf-8") as f:
+                    f.write(content)
             return file
 
         return None
 
     def _to_string(
-        self, section_data: list[tuple[str, dict[str, Any]]], format: str
+        self, section_data: list[tuple[str, dict[str, Any]]], format: str,
+        chart_svg_path: str | None = None
     ) -> str:
         """
         Convert report to plaintext string (internal helper).
@@ -251,6 +263,7 @@ class ReportBuilder:
         Args:
             section_data: List of (section_name, section_dict) tuples
             format: Output format
+            chart_svg_path: Optional path to chart SVG (for HTML format)
 
         Returns:
             Plaintext string representation
@@ -267,12 +280,42 @@ class ReportBuilder:
                 # Use plain text renderer
                 renderer = PlainTextRenderer()
                 return renderer.render_report(section_data)
-        elif format in ("pdf", "html"):
-            # Future: specialized renderers
-            raise NotImplementedError(f"Format '{format}' not yet implemented")
+        elif format == "html":
+            # HTML renderer
+            from starlight.presentation.renderers import HTMLRenderer
+            renderer = HTMLRenderer()
+
+            # Load SVG if path provided
+            svg_content = None
+            if chart_svg_path:
+                try:
+                    with open(chart_svg_path, "r") as f:
+                        svg_content = f.read()
+                except Exception:
+                    pass  # Silently skip if can't load
+
+            return renderer.render_report(section_data, svg_content)
         else:
             available = "rich_table, plain_table, text, pdf, html"
             raise ValueError(f"Unknown format '{format}'. Available: {available}")
+
+    def _to_pdf(
+        self, section_data: list[tuple[str, dict[str, Any]]],
+        chart_svg_path: str | None = None
+    ) -> bytes:
+        """
+        Convert report to PDF bytes (internal helper).
+
+        Args:
+            section_data: List of (section_name, section_dict) tuples
+            chart_svg_path: Optional path to chart SVG to embed
+
+        Returns:
+            PDF as bytes
+        """
+        from starlight.presentation.renderers import PDFRenderer
+        renderer = PDFRenderer()
+        return renderer.render_report(section_data, chart_svg_path=chart_svg_path)
 
     def _print_to_console(
         self, section_data: list[tuple[str, dict[str, Any]]], format: str

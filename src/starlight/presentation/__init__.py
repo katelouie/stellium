@@ -21,7 +21,7 @@ Usage:
 from starlight.core.protocols import ReportRenderer, ReportSection
 
 from .builder import ReportBuilder
-from .renderers import PlainTextRenderer, RichTableRenderer
+from .renderers import HTMLRenderer, PDFRenderer, PlainTextRenderer, RichTableRenderer
 from .sections import (
     AspectSection,
     ChartOverviewSection,
@@ -43,4 +43,6 @@ __all__ = [
     # Renderers
     "RichTableRenderer",
     "PlainTextRenderer",
+    "HTMLRenderer",
+    "PDFRenderer",
 ]
