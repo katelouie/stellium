@@ -148,6 +148,7 @@ class PositionTableLayer:
         y_offset: float = 0,
         style_override: dict[str, Any] | None = None,
         object_types: list[str | ObjectType] | None = None,
+        config: Any | None = None,
     ) -> None:
         """
         Initialize position table layer.
@@ -159,11 +160,13 @@ class PositionTableLayer:
             object_types: Optional list of object types to include.
                          If None, uses default (planet, asteroid, point, node, angle).
                          Examples: ["planet", "asteroid", "midpoint"]
+            config: Optional ChartVisualizationConfig for column widths, padding, etc.
         """
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.style = {**self.DEFAULT_STYLE, **(style_override or {})}
         self.object_types = object_types
+        self.config = config
 
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render position table.
@@ -212,24 +215,56 @@ class PositionTableLayer:
         x_start = self.x_offset
         y_start = self.y_offset
 
-        # Header row
+        # Get column widths from config if available, otherwise use hardcoded style
+        if self.config and hasattr(self.config.tables, "position_col_widths"):
+            col_widths = self.config.tables.position_col_widths
+            padding = self.config.tables.padding
+            gap = self.config.tables.gap_between_columns
+        else:
+            # Fallback to evenly-spaced columns
+            col_widths = {
+                "planet": 100,
+                "sign": 50,
+                "degree": 60,
+                "house": 25,
+                "speed": 25,
+            }
+            padding = 10
+            gap = 5
+
+        # Header row with column mapping
+        col_names = ["planet", "sign", "degree"]
         headers = ["Planet", "Sign", "Degree"]
         if self.style["show_house"]:
+            col_names.append("house")
             headers.append("House")
         if self.style["show_speed"]:
+            col_names.append("speed")
             headers.append("Speed")
+
+        # Calculate column x positions (cumulative widths)
+        col_x_positions = [x_start + padding]
+        for i in range(1, len(col_names)):
+            prev_col_name = col_names[i - 1]
+            prev_x = col_x_positions[i - 1]
+            prev_width = col_widths.get(prev_col_name, 50)
+            col_x_positions.append(prev_x + prev_width + gap)
+
+        # Get theme-aware colors (fallback to hardcoded if not in renderer)
+        text_color = renderer.style.get("text_color", self.style["text_color"])
+        header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Render headers
         for i, header in enumerate(headers):
-            x = x_start + (i * self.style["col_spacing"])
+            x = col_x_positions[i]
             dwg.add(
                 dwg.text(
                     header,
-                    insert=(x, y_start),
+                    insert=(x, y_start + padding),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["header_size"],
-                    fill=self.style["header_color"],
+                    fill=header_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["header_weight"],
                 )
@@ -237,7 +272,7 @@ class PositionTableLayer:
 
         # Render data rows
         for row_idx, pos in enumerate(chart_positions):
-            y = y_start + ((row_idx + 1) * self.style["line_height"])
+            y = y_start + padding + ((row_idx + 1) * self.style["line_height"])
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
@@ -253,26 +288,25 @@ class PositionTableLayer:
             dwg.add(
                 dwg.text(
                     planet_text,
-                    insert=(x_start, y),
+                    insert=(col_x_positions[0], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
 
             # Column 1: Sign
-            x_sign = x_start + self.style["col_spacing"]
             dwg.add(
                 dwg.text(
                     pos.sign,
-                    insert=(x_sign, y),
+                    insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
@@ -282,51 +316,48 @@ class PositionTableLayer:
             degrees = int(pos.sign_degree)
             minutes = int((pos.sign_degree % 1) * 60)
             degree_text = f"{degrees}°{minutes:02d}'"
-            x_degree = x_start + (2 * self.style["col_spacing"])
             dwg.add(
                 dwg.text(
                     degree_text,
-                    insert=(x_degree, y),
+                    insert=(col_x_positions[2], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
 
             # Column 3: House (if enabled)
-            col_offset = 3
+            col_idx = 3
             if self.style["show_house"]:
                 house = self._get_house_placement(chart, pos)
-                x_house = x_start + (col_offset * self.style["col_spacing"])
                 dwg.add(
                     dwg.text(
                         str(house) if house else "-",
-                        insert=(x_house, y),
+                        insert=(col_x_positions[col_idx], y),
                         text_anchor="start",
                         dominant_baseline="hanging",
                         font_size=self.style["text_size"],
-                        fill=self.style["text_color"],
+                        fill=text_color,
                         font_family=renderer.style["font_family_text"],
                         font_weight=self.style["font_weight"],
                     )
                 )
-                col_offset += 1
+                col_idx += 1
 
             # Column 4: Speed (if enabled)
             if self.style["show_speed"]:
                 speed_text = f"{pos.speed_longitude:.2f}"
-                x_speed = x_start + (col_offset * self.style["col_spacing"])
                 dwg.add(
                     dwg.text(
                         speed_text,
-                        insert=(x_speed, y),
+                        insert=(col_x_positions[col_idx], y),
                         text_anchor="start",
                         dominant_baseline="hanging",
                         font_size=self.style["text_size"],
-                        fill=self.style["text_color"],
+                        fill=text_color,
                         font_family=renderer.style["font_family_text"],
                         font_weight=self.style["font_weight"],
                     )
@@ -371,13 +402,37 @@ class PositionTableLayer:
             )
         )
 
-        # Calculate table width
-        num_cols = 3  # Planet, Sign, Degree
+        # Get column widths from config if available
+        if self.config and hasattr(self.config.tables, 'position_col_widths'):
+            col_widths = self.config.tables.position_col_widths
+            padding = self.config.tables.padding
+            gap = self.config.tables.gap_between_columns
+            gap_between_tables = self.config.tables.gap_between_tables
+        else:
+            # Fallback
+            col_widths = {
+                "planet": 100,
+                "sign": 50,
+                "degree": 60,
+                "house": 25,
+                "speed": 25,
+            }
+            padding = 10
+            gap = 5
+            gap_between_tables = 20
+
+        # Calculate single table width from column widths
+        col_names = ["planet", "sign", "degree"]
         if self.style["show_house"]:
-            num_cols += 1
+            col_names.append("house")
         if self.style["show_speed"]:
-            num_cols += 1
-        table_width = num_cols * self.style["col_spacing"]
+            col_names.append("speed")
+
+        single_table_width = 2 * padding  # left and right padding
+        for i, col_name in enumerate(col_names):
+            single_table_width += col_widths.get(col_name, 50)
+            if i < len(col_names) - 1:
+                single_table_width += gap
 
         # Render Chart 1 table (left)
         x_chart1 = self.x_offset
@@ -404,7 +459,7 @@ class PositionTableLayer:
         )
 
         # Render Chart 2 table (right, with spacing)
-        x_chart2 = x_chart1 + table_width + 20  # 20px gap between tables
+        x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
         title_text = f"{comparison.chart2_label or 'Chart 2'} (Outer Wheel)"
@@ -439,24 +494,56 @@ class PositionTableLayer:
         x_start = x_offset
         y_start = y_offset
 
-        # Header row
+        # Get column widths from config if available, otherwise use hardcoded style
+        if self.config and hasattr(self.config.tables, 'position_col_widths'):
+            col_widths = self.config.tables.position_col_widths
+            padding = self.config.tables.padding
+            gap = self.config.tables.gap_between_columns
+        else:
+            # Fallback to evenly-spaced columns
+            col_widths = {
+                "planet": 100,
+                "sign": 50,
+                "degree": 60,
+                "house": 25,
+                "speed": 25,
+            }
+            padding = 10
+            gap = 5
+
+        # Header row with column mapping
+        col_names = ["planet", "sign", "degree"]
         headers = ["Planet", "Sign", "Degree"]
         if self.style["show_house"]:
+            col_names.append("house")
             headers.append("House")
         if self.style["show_speed"]:
+            col_names.append("speed")
             headers.append("Speed")
+
+        # Calculate column x positions (cumulative widths)
+        col_x_positions = [x_start + padding]
+        for i in range(1, len(col_names)):
+            prev_col_name = col_names[i - 1]
+            prev_x = col_x_positions[i - 1]
+            prev_width = col_widths.get(prev_col_name, 50)
+            col_x_positions.append(prev_x + prev_width + gap)
+
+        # Get theme-aware colors (fallback to hardcoded if not in renderer)
+        text_color = renderer.style.get("text_color", self.style["text_color"])
+        header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Render headers
         for i, header in enumerate(headers):
-            x = x_start + (i * self.style["col_spacing"])
+            x = col_x_positions[i]
             dwg.add(
                 dwg.text(
                     header,
-                    insert=(x, y_start),
+                    insert=(x, y_start + padding),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["header_size"],
-                    fill=self.style["header_color"],
+                    fill=header_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["header_weight"],
                 )
@@ -464,7 +551,7 @@ class PositionTableLayer:
 
         # Render data rows
         for row_idx, pos in enumerate(positions):
-            y = y_start + ((row_idx + 1) * self.style["line_height"])
+            y = y_start + padding + ((row_idx + 1) * self.style["line_height"])
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
@@ -480,26 +567,25 @@ class PositionTableLayer:
             dwg.add(
                 dwg.text(
                     planet_text,
-                    insert=(x_start, y),
+                    insert=(col_x_positions[0], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
 
             # Column 1: Sign
-            x_sign = x_start + self.style["col_spacing"]
             dwg.add(
                 dwg.text(
                     pos.sign,
-                    insert=(x_sign, y),
+                    insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
@@ -509,51 +595,48 @@ class PositionTableLayer:
             degrees = int(pos.sign_degree)
             minutes = int((pos.sign_degree % 1) * 60)
             degree_text = f"{degrees}°{minutes:02d}'"
-            x_degree = x_start + (2 * self.style["col_spacing"])
             dwg.add(
                 dwg.text(
                     degree_text,
-                    insert=(x_degree, y),
+                    insert=(col_x_positions[2], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
 
             # Column 3: House (if enabled)
-            col_offset = 3
+            col_idx = 3
             if self.style["show_house"]:
                 house = self._get_house_placement(chart, pos)
-                x_house = x_start + (col_offset * self.style["col_spacing"])
                 dwg.add(
                     dwg.text(
                         str(house) if house else "-",
-                        insert=(x_house, y),
+                        insert=(col_x_positions[col_idx], y),
                         text_anchor="start",
                         dominant_baseline="hanging",
                         font_size=self.style["text_size"],
-                        fill=self.style["text_color"],
+                        fill=text_color,
                         font_family=renderer.style["font_family_text"],
                         font_weight=self.style["font_weight"],
                     )
                 )
-                col_offset += 1
+                col_idx += 1
 
             # Column 4: Speed (if enabled)
             if self.style["show_speed"]:
                 speed_text = f"{pos.speed_longitude:.2f}"
-                x_speed = x_start + (col_offset * self.style["col_spacing"])
                 dwg.add(
                     dwg.text(
                         speed_text,
-                        insert=(x_speed, y),
+                        insert=(col_x_positions[col_idx], y),
                         text_anchor="start",
                         dominant_baseline="hanging",
                         font_size=self.style["text_size"],
-                        fill=self.style["text_color"],
+                        fill=text_color,
                         font_family=renderer.style["font_family_text"],
                         font_weight=self.style["font_weight"],
                     )
@@ -592,6 +675,7 @@ class HouseCuspTableLayer:
         x_offset: float = 0,
         y_offset: float = 0,
         style_override: dict[str, Any] | None = None,
+        config: Any | None = None,
     ) -> None:
         """
         Initialize house cusp table layer.
@@ -600,10 +684,12 @@ class HouseCuspTableLayer:
             x_offset: X position offset from canvas origin
             y_offset: Y position offset from canvas origin
             style_override: Optional style overrides
+            config: Optional ChartVisualizationConfig for column widths, padding, etc.
         """
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.style = {**self.DEFAULT_STYLE, **(style_override or {})}
+        self.config = config
 
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render house cusp table.
@@ -637,20 +723,44 @@ class HouseCuspTableLayer:
         x_start = self.x_offset
         y_start = self.y_offset
 
-        # Header row
+        # Get column widths from config if available
+        if self.config and hasattr(self.config.tables, 'house_col_widths'):
+            col_widths = self.config.tables.house_col_widths
+            padding = self.config.tables.padding
+            gap = self.config.tables.gap_between_columns
+        else:
+            # Fallback
+            col_widths = {"house": 30, "sign": 50, "degree": 60}
+            padding = 10
+            gap = 5
+
+        # Header row with column mapping
+        col_names = ["house", "sign", "degree"]
         headers = ["House", "Sign", "Degree"]
+
+        # Calculate column x positions (cumulative widths)
+        col_x_positions = [x_start + padding]
+        for i in range(1, len(col_names)):
+            prev_col_name = col_names[i - 1]
+            prev_x = col_x_positions[i - 1]
+            prev_width = col_widths.get(prev_col_name, 50)
+            col_x_positions.append(prev_x + prev_width + gap)
+
+        # Get theme-aware colors
+        text_color = renderer.style.get("text_color", self.style["text_color"])
+        header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Render headers
         for i, header in enumerate(headers):
-            x = x_start + (i * self.style["col_spacing"])
+            x = col_x_positions[i]
             dwg.add(
                 dwg.text(
                     header,
-                    insert=(x, y_start),
+                    insert=(x, y_start + padding),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["header_size"],
-                    fill=self.style["header_color"],
+                    fill=header_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["header_weight"],
                 )
@@ -658,7 +768,7 @@ class HouseCuspTableLayer:
 
         # Render data rows for all 12 houses
         for house_num in range(1, 13):
-            y = y_start + (house_num * self.style["line_height"])
+            y = y_start + padding + (house_num * self.style["line_height"])
 
             # Get cusp longitude
             cusp_longitude = houses.cusps[house_num - 1]
@@ -687,26 +797,25 @@ class HouseCuspTableLayer:
             dwg.add(
                 dwg.text(
                     house_text,
-                    insert=(x_start, y),
+                    insert=(col_x_positions[0], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
 
             # Column 1: Sign
-            x_sign = x_start + self.style["col_spacing"]
             dwg.add(
                 dwg.text(
                     sign_name,
-                    insert=(x_sign, y),
+                    insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
@@ -716,15 +825,14 @@ class HouseCuspTableLayer:
             degrees = int(degree_in_sign)
             minutes = int((degree_in_sign % 1) * 60)
             degree_text = f"{degrees}°{minutes:02d}'"
-            x_degree = x_start + (2 * self.style["col_spacing"])
             dwg.add(
                 dwg.text(
                     degree_text,
-                    insert=(x_degree, y),
+                    insert=(col_x_positions[2], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
@@ -746,12 +854,34 @@ class HouseCuspTableLayer:
         if not houses1 or not houses2:
             return
 
-        # Calculate table width (3 columns: House, Sign, Degree)
-        table_width = 3 * self.style["col_spacing"]
+        # Get config values
+        if self.config and hasattr(self.config.tables, 'house_col_widths'):
+            col_widths = self.config.tables.house_col_widths
+            padding = self.config.tables.padding
+            gap_between_cols = self.config.tables.gap_between_columns
+            gap_between_tables = self.config.tables.gap_between_tables
+        else:
+            # Fallback
+            col_widths = {"house": 30, "sign": 50, "degree": 60}
+            padding = 10
+            gap_between_cols = 5
+            gap_between_tables = 20
+
+        # Calculate single table width: padding + columns + gaps + padding
+        col_names = ["house", "sign", "degree"]
+        single_table_width = 2 * padding
+        for i, col_name in enumerate(col_names):
+            single_table_width += col_widths.get(col_name, 50)
+            if i < len(col_names) - 1:
+                single_table_width += gap_between_cols
 
         # Render Chart 1 house table (left)
         x_chart1 = self.x_offset
         y_start = self.y_offset
+
+        # Get theme-aware colors
+        text_color = renderer.style.get("text_color", self.style["text_color"])
+        header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Chart 1 title
         title_text = f"{comparison.chart1_label or 'Chart 1'} Houses"
@@ -762,7 +892,7 @@ class HouseCuspTableLayer:
                 text_anchor="start",
                 dominant_baseline="hanging",
                 font_size="12px",
-                fill=self.style["header_color"],
+                fill=header_color,
                 font_family=renderer.style["font_family_text"],
                 font_weight="bold",
             )
@@ -770,13 +900,11 @@ class HouseCuspTableLayer:
 
         # Render chart 1 house table (offset by title height)
         self._render_house_table_for_chart(
-            renderer, dwg, houses1, x_chart1, y_start + 20
+            renderer, dwg, houses1, x_chart1, y_start + 20, col_widths, padding, gap_between_cols, text_color, header_color
         )
 
         # Render Chart 2 house table (right, with spacing)
-        # Use tighter spacing (15px for "below" layout, 20px otherwise)
-        # Note: The calling code will determine which gap to use based on layout
-        x_chart2 = x_chart1 + table_width + 20  # 20px gap between tables (default)
+        x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
         title_text = f"{comparison.chart2_label or 'Chart 2'} Houses"
@@ -787,7 +915,7 @@ class HouseCuspTableLayer:
                 text_anchor="start",
                 dominant_baseline="hanging",
                 font_size="12px",
-                fill=self.style["header_color"],
+                fill=header_color,
                 font_family=renderer.style["font_family_text"],
                 font_weight="bold",
             )
@@ -795,30 +923,40 @@ class HouseCuspTableLayer:
 
         # Render chart 2 house table (offset by title height)
         self._render_house_table_for_chart(
-            renderer, dwg, houses2, x_chart2, y_start + 20
+            renderer, dwg, houses2, x_chart2, y_start + 20, col_widths, padding, gap_between_cols, text_color, header_color
         )
 
     def _render_house_table_for_chart(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, houses, x_offset, y_offset
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, houses, x_offset, y_offset,
+        col_widths, padding, gap, text_color, header_color
     ) -> None:
         """Render a house cusp table for a specific chart."""
         x_start = x_offset
         y_start = y_offset
 
-        # Header row
+        # Header row with column mapping
+        col_names = ["house", "sign", "degree"]
         headers = ["House", "Sign", "Degree"]
+
+        # Calculate column x positions (cumulative widths)
+        col_x_positions = [x_start + padding]
+        for i in range(1, len(col_names)):
+            prev_col_name = col_names[i - 1]
+            prev_x = col_x_positions[i - 1]
+            prev_width = col_widths.get(prev_col_name, 50)
+            col_x_positions.append(prev_x + prev_width + gap)
 
         # Render headers
         for i, header in enumerate(headers):
-            x = x_start + (i * self.style["col_spacing"])
+            x = col_x_positions[i]
             dwg.add(
                 dwg.text(
                     header,
-                    insert=(x, y_start),
+                    insert=(x, y_start + padding),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["header_size"],
-                    fill=self.style["header_color"],
+                    fill=header_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["header_weight"],
                 )
@@ -826,7 +964,7 @@ class HouseCuspTableLayer:
 
         # Render data rows for all 12 houses
         for house_num in range(1, 13):
-            y = y_start + (house_num * self.style["line_height"])
+            y = y_start + padding + (house_num * self.style["line_height"])
 
             # Get cusp longitude
             cusp_longitude = houses.cusps[house_num - 1]
@@ -855,26 +993,25 @@ class HouseCuspTableLayer:
             dwg.add(
                 dwg.text(
                     house_text,
-                    insert=(x_start, y),
+                    insert=(col_x_positions[0], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
 
             # Column 1: Sign
-            x_sign = x_start + self.style["col_spacing"]
             dwg.add(
                 dwg.text(
                     sign_name,
-                    insert=(x_sign, y),
+                    insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
@@ -884,15 +1021,14 @@ class HouseCuspTableLayer:
             degrees = int(degree_in_sign)
             minutes = int((degree_in_sign % 1) * 60)
             degree_text = f"{degrees}°{minutes:02d}'"
-            x_degree = x_start + (2 * self.style["col_spacing"])
             dwg.add(
                 dwg.text(
                     degree_text,
-                    insert=(x_degree, y),
+                    insert=(col_x_positions[2], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
-                    fill=self.style["text_color"],
+                    fill=text_color,
                     font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
@@ -925,6 +1061,7 @@ class AspectarianLayer:
         y_offset: float = 0,
         style_override: dict[str, Any] | None = None,
         object_types: list[str | ObjectType] | None = None,
+        config: Any | None = None,
     ) -> None:
         """
         Initialize aspectarian layer.
@@ -936,11 +1073,13 @@ class AspectarianLayer:
             object_types: Optional list of object types to include.
                          If None, uses default (planet, asteroid, point, node, angle).
                          Examples: ["planet", "asteroid", "midpoint"]
+            config: Optional ChartVisualizationConfig for cell sizing, padding, etc.
         """
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.style = {**self.DEFAULT_STYLE, **(style_override or {})}
         self.object_types = object_types
+        self.config = config
 
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render aspectarian grid.
@@ -1068,11 +1207,11 @@ class AspectarianLayer:
                     else obj.name[:2]
                 )
 
-                # Add ② indicator for chart2
+                # Add 2 indicator for chart2
                 glyph = f"{glyph}₂"
 
-                # Center of the column
-                x = x_start + (col_idx * cell_size) + (cell_size / 2)
+                # Center of the column (offset by cell_size for row header column)
+                x = x_start + cell_size + (col_idx * cell_size) + (cell_size / 2)
 
                 # Bottom of the text sits just above the first row (y_start + cell_size)
                 # We subtract the padding from the top of the grid
@@ -1100,7 +1239,7 @@ class AspectarianLayer:
                     else obj_row.name[:2]
                 )
 
-                # Add ① indicator for chart1
+                # Add 1 indicator for chart1
                 glyph = f"{glyph}₁"
 
                 # Center of the row vertically

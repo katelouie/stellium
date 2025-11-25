@@ -9,6 +9,14 @@ from typing import Any
 
 from starlight.core.comparison import Comparison
 from starlight.core.models import CalculatedChart
+from starlight.visualization.composer import ChartComposer
+from starlight.visualization.config import (
+    ChartVisualizationConfig,
+    ChartWheelConfig,
+    InfoCornerConfig,
+    TableConfig,
+)
+from starlight.visualization.themes import ChartTheme
 
 # Sentinel value to indicate "use theme's default colorful palette"
 _USE_THEME_DEFAULT_PALETTE = object()
@@ -41,53 +49,60 @@ class ChartDrawBuilder:
         """
         Initialize the builder.
 
+        Builder starts with NO defaults - all values are None until user sets them.
+        This ensures that config classes are the single source of truth for defaults.
+
         Args:
             chart: The chart or comparison to visualize
         """
         self._chart = chart
         self._is_comparison = isinstance(chart, Comparison)
 
-        # Core settings
-        self._filename = "chart.svg"
-        self._size = 600
+        # Core settings - None = use config defaults
+        self._filename: str | None = None
+        self._size: int | None = None
+        self._margin: int | None = None
 
-        # Theme and palettes
+        # Theme and palettes - None = use config defaults
         self._theme: str | None = None
         self._zodiac_palette: str | None = None
         self._aspect_palette: str | None = None
         self._planet_glyph_palette: str | None = None
-        self._color_sign_info = False
+        self._color_sign_info: bool | None = None
 
-        # Moon phase
-        self._moon_phase = True
-        self._moon_phase_position = None  # Auto-detect based on aspects
-        self._moon_phase_show_label = True
+        # Moon phase - None = use config defaults
+        self._moon_phase: bool | None = None
+        self._moon_phase_position: str | None = None
+        self._moon_phase_show_label: bool | None = None
         self._moon_phase_size: int | None = None
         self._moon_phase_label_size: str | None = None
 
-        # Corner elements
-        self._chart_info = False
-        self._chart_info_position = "top-left"
+        # Chart info - None = use config defaults
+        self._chart_info: bool | None = None
+        self._chart_info_position: str | None = None
         self._chart_info_fields: list[str] | None = None
 
-        self._aspect_counts = False
-        self._aspect_counts_position = "top-right"
+        # Aspect counts - None = use config defaults
+        self._aspect_counts: bool | None = None
+        self._aspect_counts_position: str | None = None
 
-        self._element_modality_table = False
-        self._element_modality_table_position = "bottom-left"
+        # Element/modality table - None = use config defaults
+        self._element_modality_table: bool | None = None
+        self._element_modality_table_position: str | None = None
 
-        self._chart_shape = False
-        self._chart_shape_position = "bottom-right"
+        # Chart shape - None = use config defaults
+        self._chart_shape: bool | None = None
+        self._chart_shape_position: str | None = None
 
-        # Extended canvas and tables
+        # Extended canvas and tables - None = use config defaults
         self._extended_canvas: str | None = None
-        self._show_position_table = False
-        self._show_aspectarian = False
-        self._show_house_cusps = False  # For natal charts only
-        self._aspectarian_mode = "cross_chart"  # For comparisons
-        self._table_object_types: list[str] | None = None  # Object types to show in tables
+        self._show_position_table: bool | None = None
+        self._show_aspectarian: bool | None = None
+        self._show_house_cusps: bool | None = None
+        self._aspectarian_mode: str | None = None
+        self._table_object_types: list[str] | None = None
 
-        # House systems (default: None = use chart's default, can be list of names or "all")
+        # House systems - None = use config defaults
         self._house_systems: list[str] | str | None = None
 
     def with_filename(self, filename: str) -> "ChartDrawBuilder":
@@ -342,7 +357,7 @@ class ChartDrawBuilder:
         position: str = "right",
         show_position_table: bool = True,
         show_aspectarian: bool = True,
-        show_house_cusps: bool = False,
+        show_house_cusps: bool = True,
         aspectarian_mode: str = "cross_chart",
         show_object_types: list[str] | None = None,
     ) -> "ChartDrawBuilder":
@@ -414,6 +429,19 @@ class ChartDrawBuilder:
         self._table_object_types = None
         return self
 
+    def with_margin(self, margin: int) -> "ChartDrawBuilder":
+        """
+        Set the margin around the chart.
+
+        Args:
+            margin: Margin in pixels (default: 10)
+
+        Returns:
+            Self for chaining
+        """
+        self._margin = margin
+        return self
+
     # === Preset Methods ===
 
     def preset_minimal(self) -> "ChartDrawBuilder":
@@ -440,7 +468,7 @@ class ChartDrawBuilder:
         self._moon_phase = True
         self._moon_phase_position = None  # Auto-detect based on aspects
         self._moon_phase_show_label = True
-        self._chart_info = False
+        self._chart_info = True
         self._aspect_counts = False
         self._element_modality_table = False
         self._chart_shape = False
@@ -496,7 +524,7 @@ class ChartDrawBuilder:
         if self._is_comparison:
             # Bi-wheel comparison chart
             # Moon in corner (show chart1's moon by default)
-            self._moon_phase = "chart1"
+            self._moon_phase = True
             self._moon_phase_position = "bottom-right"
             self._moon_phase_show_label = True
 
@@ -508,7 +536,9 @@ class ChartDrawBuilder:
             self._extended_canvas = "right"
             self._show_position_table = True
             self._show_aspectarian = True
-            self._aspectarian_mode = "cross_chart"  # Cross-chart aspects only by default
+            self._aspectarian_mode = (
+                "cross_chart"  # Cross-chart aspects only by default
+            )
 
             # Aspect counts for cross-chart aspects
             self._aspect_counts = True
@@ -517,8 +547,10 @@ class ChartDrawBuilder:
         else:
             # Standard natal chart synastry preset
             # Moon in corner to make room for annotations
+            self._chart_info = True
+            self._chart_info_position = "top-left"
             self._moon_phase = True
-            self._moon_phase_position = "top-left"
+            self._moon_phase_position = "bottom-right"
             self._moon_phase_show_label = True
 
             self._chart_info = True
@@ -533,7 +565,10 @@ class ChartDrawBuilder:
 
     def save(self) -> str:
         """
-        Build and save the chart visualization.
+        Build and save the chart visualization using the composer.
+
+        Only user-specified values are passed to config classes.
+        All other values use the config defaults (single source of truth).
 
         Returns:
             The filename of the saved SVG file
@@ -541,79 +576,92 @@ class ChartDrawBuilder:
         Raises:
             ValueError: If required configuration is missing
         """
-        # Import here to avoid circular dependency
-        from starlight.visualization.drawing import draw_chart, draw_comparison_chart
+        # Determine chart type
+        is_comparison = self._is_comparison
+        chart_type = "biwheel" if is_comparison else "single"
 
-        # Build options dictionary (common to both chart types)
-        options = {
-            "filename": self._filename,
-            "size": self._size,
-            "theme": self._theme,
-            "zodiac_palette": self._zodiac_palette,
-            "aspect_palette": self._aspect_palette,
-            "planet_glyph_palette": self._planet_glyph_palette,
-            "color_sign_info": self._color_sign_info,
-            "moon_phase": self._moon_phase,
-            "moon_phase_position": self._moon_phase_position,
-            "chart_info": self._chart_info,
-            "aspect_counts": self._aspect_counts,
+        # Build wheel config kwargs (only user-specified values)
+        wheel_kwargs = {"chart_type": chart_type}
+        if self._house_systems is not None:
+            wheel_kwargs["house_systems"] = self._house_systems
+        if self._theme is not None:
+            wheel_kwargs["theme"] = ChartTheme(self._theme)
+        if self._zodiac_palette is not None:
+            # Handle sentinel value for "use theme's default colorful palette"
+            if self._zodiac_palette is _USE_THEME_DEFAULT_PALETTE:
+                wheel_kwargs["zodiac_palette"] = None  # Let theme decide
+            else:
+                wheel_kwargs["zodiac_palette"] = self._zodiac_palette
+        if self._aspect_palette is not None:
+            wheel_kwargs["aspect_palette"] = self._aspect_palette
+        if self._planet_glyph_palette is not None:
+            wheel_kwargs["planet_glyph_palette"] = self._planet_glyph_palette
+        if self._color_sign_info is not None:
+            wheel_kwargs["color_sign_info"] = self._color_sign_info
+
+        # Build corners config kwargs (only user-specified values)
+        corners_kwargs = {}
+        if self._chart_info is not None:
+            corners_kwargs["chart_info"] = self._chart_info
+        if self._chart_info_position is not None:
+            corners_kwargs["chart_info_position"] = self._chart_info_position
+        if self._chart_info_fields is not None:
+            corners_kwargs["chart_info_fields"] = self._chart_info_fields
+        if self._aspect_counts is not None:
+            corners_kwargs["aspect_counts"] = self._aspect_counts
+        if self._aspect_counts_position is not None:
+            corners_kwargs["aspect_counts_position"] = self._aspect_counts_position
+        if self._element_modality_table is not None:
+            corners_kwargs["element_modality"] = self._element_modality_table
+        if self._element_modality_table_position is not None:
+            corners_kwargs["element_modality_position"] = self._element_modality_table_position
+        if self._chart_shape is not None:
+            corners_kwargs["chart_shape"] = self._chart_shape
+        if self._chart_shape_position is not None:
+            corners_kwargs["chart_shape_position"] = self._chart_shape_position
+        if self._moon_phase is not None:
+            corners_kwargs["moon_phase"] = self._moon_phase
+        if self._moon_phase_position is not None:
+            corners_kwargs["moon_phase_position"] = self._moon_phase_position
+        if self._moon_phase_show_label is not None:
+            corners_kwargs["moon_phase_show_label"] = self._moon_phase_show_label
+        if self._moon_phase_size is not None:
+            corners_kwargs["moon_phase_size"] = self._moon_phase_size
+        if self._moon_phase_label_size is not None:
+            corners_kwargs["moon_phase_label_size"] = self._moon_phase_label_size
+
+        # Build tables config kwargs (only user-specified values)
+        tables_kwargs = {}
+        if self._extended_canvas is not None:
+            tables_kwargs["enabled"] = True
+            tables_kwargs["placement"] = self._extended_canvas
+        if self._show_position_table is not None:
+            tables_kwargs["show_positions"] = self._show_position_table
+        if self._show_house_cusps is not None:
+            tables_kwargs["show_houses"] = self._show_house_cusps
+        if self._show_aspectarian is not None:
+            tables_kwargs["show_aspectarian"] = self._show_aspectarian
+        if self._aspectarian_mode is not None:
+            tables_kwargs["aspectarian_mode"] = self._aspectarian_mode
+        if self._table_object_types is not None:
+            tables_kwargs["object_types"] = self._table_object_types
+
+        # Build main config kwargs (only user-specified values)
+        config_kwargs: dict[str, Any] = {
+            "wheel": ChartWheelConfig(**wheel_kwargs),
+            "corners": InfoCornerConfig(**corners_kwargs),
+            "tables": TableConfig(**tables_kwargs),
         }
+        if self._filename is not None:
+            config_kwargs["filename"] = self._filename
+        if self._size is not None:
+            config_kwargs["base_size"] = self._size
+        if self._margin is not None:
+            config_kwargs["min_margin"] = self._margin
 
-        # Add moon phase options if enabled
-        if self._moon_phase:
-            options["moon_phase_label"] = self._moon_phase_show_label
-            # NOTE: draw_chart doesn't currently support moon_phase_size or label_size customization
-            # These would need to be added to drawing.py first
+        # Create config with only user-specified values
+        config = ChartVisualizationConfig(**config_kwargs)
 
-        # Add chart info options if enabled
-        if self._chart_info:
-            options["chart_info_position"] = self._chart_info_position
-            if self._chart_info_fields:
-                options["chart_info_fields"] = self._chart_info_fields
-
-        # Add aspect counts position if enabled
-        if self._aspect_counts:
-            options["aspect_counts_position"] = self._aspect_counts_position
-
-        # Branch based on chart type
-        if self._is_comparison:
-            # Comparison chart (bi-wheel)
-            # Add extended canvas if configured
-            if self._extended_canvas:
-                options["extended_canvas"] = self._extended_canvas
-                options["show_position_table"] = self._show_position_table
-                options["show_aspectarian"] = self._show_aspectarian
-                options["aspectarian_mode"] = self._aspectarian_mode
-                if self._table_object_types is not None:
-                    options["table_object_types"] = self._table_object_types
-
-            # Call draw_comparison_chart
-            return draw_comparison_chart(self._chart, **options)
-
-        else:
-            # Standard natal chart
-            # Add element/modality table position if enabled
-            options["element_modality_table"] = self._element_modality_table
-            if self._element_modality_table:
-                options["element_modality_position"] = self._element_modality_table_position
-
-            # Add chart shape position if enabled
-            options["chart_shape"] = self._chart_shape
-            if self._chart_shape:
-                options["chart_shape_position"] = self._chart_shape_position
-
-            # Add extended canvas if configured
-            if self._extended_canvas:
-                options["extended_canvas"] = self._extended_canvas
-                options["show_position_table"] = self._show_position_table
-                options["show_aspectarian"] = self._show_aspectarian
-                options["show_house_cusps"] = self._show_house_cusps
-                if self._table_object_types is not None:
-                    options["table_object_types"] = self._table_object_types
-
-            # Add house systems if configured
-            if self._house_systems is not None:
-                options["house_systems"] = self._house_systems
-
-            # Call draw_chart with all options
-            return draw_chart(self._chart, **options)
+        # Create composer and render
+        composer = ChartComposer(config)
+        return composer.compose(self._chart)

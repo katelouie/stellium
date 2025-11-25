@@ -112,7 +112,8 @@ class ZodiacLayer:
             )
 
         # Draw degree tick marks (5° increments within each sign)
-        tick_color = style.get("line_color")
+        # Use angles line color for all tick marks
+        tick_color = renderer.style["angles"]["line_color"]
         for sign_index in range(12):
             sign_start = sign_index * 30.0
 
@@ -147,6 +148,9 @@ class ZodiacLayer:
                 )
 
         # Draw 12 sign boundaries and glyphs
+        # Use angles line color for sign boundaries (major divisions)
+        boundary_color = renderer.style["angles"]["line_color"]
+
         for i in range(12):
             deg = i * 30.0
 
@@ -161,7 +165,7 @@ class ZodiacLayer:
                 dwg.line(
                     start=(x1, y1),
                     end=(x2, y2),
-                    stroke=style["line_color"],
+                    stroke=boundary_color,
                     stroke_width=0.5,
                 )
             )
@@ -213,13 +217,28 @@ class HouseCuspLayer:
         self.style = style_override or {}
 
     def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
+        """Render house cusps and house numbers.
+
+        Handles both CalculatedChart and Comparison objects.
+        For Comparison, uses chart1 (inner wheel).
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
         style = renderer.style["houses"].copy()
         style.update(self.style)
 
+        # Handle Comparison vs CalculatedChart
+        if _is_comparison(chart):
+            # For comparison: use chart1 (inner wheel)
+            actual_chart = chart.chart1
+        else:
+            # For single chart: use as-is
+            actual_chart = chart
+
         try:
-            house_cusps: HouseCusps = chart.get_houses(self.system_name)
+            house_cusps: HouseCusps = actual_chart.get_houses(self.system_name)
         except (ValueError, KeyError):
             print(
                 f"Warning: House system '{self.system_name}' not found in chart data."
@@ -341,13 +360,28 @@ class OuterHouseCuspLayer:
         self.style = style_override or {}
 
     def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
+        """Render outer house cusps for chart2 (biwheel only).
+
+        Handles both CalculatedChart and Comparison objects.
+        For Comparison, uses chart2 (outer wheel).
+        For single charts, this layer doesn't apply.
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
         style = renderer.style["houses"].copy()
         style.update(self.style)
 
+        # This layer is ONLY for comparisons (outer wheel = chart2)
+        if _is_comparison(chart):
+            actual_chart = chart.chart2
+        else:
+            # For single charts, this layer doesn't make sense - skip it
+            return
+
         try:
-            house_cusps: HouseCusps = chart.get_houses(self.system_name)
+            house_cusps: HouseCusps = actual_chart.get_houses(self.system_name)
         except (ValueError, KeyError):
             print(
                 f"Warning: House system '{self.system_name}' not found in chart data."
@@ -355,10 +389,16 @@ class OuterHouseCuspLayer:
             return
 
         # Define outer radii - beyond the zodiac ring
-        # zodiac_ring_outer is the outer edge of zodiac, we go beyond that
-        outer_cusp_start = renderer.radii["zodiac_ring_outer"] + 5
-        outer_cusp_end = renderer.radii["zodiac_ring_outer"] + 35
-        outer_number_radius = renderer.radii["zodiac_ring_outer"] + 20
+        # Use config values if available, otherwise fall back to pixel offsets
+        outer_cusp_start = renderer.radii.get(
+            "outer_cusp_start", renderer.radii["zodiac_ring_outer"] + 5
+        )
+        outer_cusp_end = renderer.radii.get(
+            "outer_cusp_end", renderer.radii["zodiac_ring_outer"] + 35
+        )
+        outer_number_radius = renderer.radii.get(
+            "outer_house_number", renderer.radii["zodiac_ring_outer"] + 20
+        )
 
         for i, cusp_deg in enumerate(house_cusps.cusps):
             house_num = i + 1
@@ -407,12 +447,27 @@ class AngleLayer:
         self.style = style_override or {}
 
     def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
+        """Render chart angles.
+
+        Handles both CalculatedChart and Comparison objects.
+        For Comparison, uses chart1 (inner wheel) angles.
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
         style = renderer.style["angles"].copy()
         style.update(self.style)
 
-        angles = chart.get_angles()
+        # Handle Comparison vs CalculatedChart
+        if _is_comparison(chart):
+            # For comparison: use chart1 angles (inner wheel)
+            actual_chart = chart.chart1
+        else:
+            # For single chart: use as-is
+            actual_chart = chart
+
+        angles = actual_chart.get_angles()
 
         for angle in angles:
             if angle.name not in ANGLE_GLYPHS:
@@ -472,6 +527,105 @@ class AngleLayer:
             )
 
 
+class OuterAngleLayer:
+    """Renders the outer wheel angles (for comparison charts)."""
+
+    def __init__(self, style_override: dict[str, Any] | None = None) -> None:
+        self.style = style_override or {}
+
+    def render(
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
+    ) -> None:
+        """Render outer wheel angles.
+
+        For Comparison, uses chart2 (outer wheel) angles.
+        Uses outer_wheel_angles styling from theme for visual distinction.
+        """
+        from starlight.visualization.extended_canvas import _is_comparison
+
+        # Get outer wheel angle styling (lighter/thinner than inner)
+        base_style = renderer.style.get("outer_wheel_angles", renderer.style["angles"])
+        style = base_style.copy()
+        style.update(self.style)
+
+        # Handle Comparison - use chart2 angles (outer wheel)
+        if _is_comparison(chart):
+            actual_chart = chart.chart2
+        else:
+            # Shouldn't be called for single charts, but handle gracefully
+            return
+
+        angles = actual_chart.get_angles()
+
+        for angle in angles:
+            if angle.name not in ANGLE_GLYPHS:
+                continue
+
+            # Draw angle line extending OUTWARD from zodiac ring
+            is_axis = angle.name in ("ASC", "MC")
+            line_width = style["line_width"] if is_axis else style["line_width"] * 0.7
+            line_color = (
+                style["line_color"]
+                if is_axis
+                else renderer.style["houses"]["line_color"]
+            )
+
+            if angle.name in ("ASC", "MC", "DSC", "IC"):
+                # Start at zodiac ring outer, extend outward
+                x1, y1 = renderer.polar_to_cartesian(
+                    angle.longitude, renderer.radii["zodiac_ring_outer"]
+                )
+                # Extend to just past outer planets
+                # Use outer_cusp_end as a good stopping point
+                outer_radius = renderer.radii.get(
+                    "outer_cusp_end",
+                    renderer.radii["zodiac_ring_outer"] + 35
+                )
+                x2, y2 = renderer.polar_to_cartesian(
+                    angle.longitude, outer_radius
+                )
+                dwg.add(
+                    dwg.line(
+                        start=(x1, y1),
+                        end=(x2, y2),
+                        stroke=line_color,
+                        stroke_width=line_width,
+                    )
+                )
+
+            # Draw angle glyph - positioned outside zodiac ring
+            # Position near the outer house numbers
+            glyph_radius = renderer.radii.get(
+                "outer_house_number",
+                renderer.radii["zodiac_ring_outer"] + 20
+            ) - 5  # Slightly inside house numbers
+            x_glyph, y_glyph = renderer.polar_to_cartesian(angle.longitude, glyph_radius)
+
+            # Apply directional offset based on angle name
+            offset = 6  # Smaller offset than inner angles
+            if angle.name == "ASC":
+                y_glyph -= offset
+            elif angle.name == "MC":
+                x_glyph += offset
+            elif angle.name == "DSC":
+                y_glyph += offset
+            elif angle.name == "IC":
+                x_glyph -= offset
+
+            dwg.add(
+                dwg.text(
+                    ANGLE_GLYPHS[angle.name],
+                    insert=(x_glyph, y_glyph),
+                    text_anchor="middle",
+                    dominant_baseline="central",
+                    font_size=style["glyph_size"],
+                    fill=style["glyph_color"],
+                    font_family=renderer.style["font_family_text"],
+                    font_weight="bold",
+                )
+            )
+
+
 class PlanetLayer:
     """Renders a set of planets at a specific radius."""
 
@@ -481,6 +635,8 @@ class PlanetLayer:
         radius_key: str = "planet_ring",
         style_override: dict[str, Any] | None = None,
         use_outer_wheel_color: bool = False,
+        info_stack_direction: str = "inward",
+        show_info_stack: bool = True,
     ) -> None:
         """
         Args:
@@ -488,11 +644,15 @@ class PlanetLayer:
             radius_key: The key from renderer.radii to use (e.g., "planet_ring").
             style_override: Style overrides for this layer.
             use_outer_wheel_color: If True, use the theme's outer_wheel_planet_color.
+            info_stack_direction: "inward" (toward center) or "outward" (away from center).
+            show_info_stack: If False, hide info stacks (glyph only).
         """
         self.planets = planet_set
         self.radius_key = radius_key
         self.style = style_override or {}
         self.use_outer_wheel_color = use_outer_wheel_color
+        self.info_stack_direction = info_stack_direction
+        self.show_info_stack = show_info_stack
 
     def render(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
@@ -581,71 +741,79 @@ class PlanetLayer:
 
             # Draw Planet Info (Degrees, Sign, Minutes) - all at ADJUSTED longitude
             # This creates a "column" of info that moves together with the glyph
-            glyph_size_px = float(style["glyph_size"][:-2])
+            if self.show_info_stack:
+                glyph_size_px = float(style["glyph_size"][:-2])
 
-            # Calculate radii for info rings (inward from planet glyph)
-            degrees_radius = base_radius - (glyph_size_px * 0.8)
-            sign_radius = base_radius - (glyph_size_px * 1.2)
-            minutes_radius = base_radius - (glyph_size_px * 1.6)
+                # Calculate radii for info rings based on direction
+                if self.info_stack_direction == "outward":
+                    # Stack extends AWAY from center (for outer wheel)
+                    degrees_radius = base_radius + (glyph_size_px * 0.8)
+                    sign_radius = base_radius + (glyph_size_px * 1.2)
+                    minutes_radius = base_radius + (glyph_size_px * 1.6)
+                else:
+                    # Stack extends TOWARD center (default, for inner wheel)
+                    degrees_radius = base_radius - (glyph_size_px * 0.8)
+                    sign_radius = base_radius - (glyph_size_px * 1.2)
+                    minutes_radius = base_radius - (glyph_size_px * 1.6)
 
-            # Degrees
-            deg_str = f"{int(planet.sign_degree)}°"
-            x_deg, y_deg = renderer.polar_to_cartesian(adjusted_long, degrees_radius)
-            dwg.add(
-                dwg.text(
-                    deg_str,
-                    insert=(x_deg, y_deg),
-                    text_anchor="middle",
-                    dominant_baseline="central",
-                    font_size=style["info_size"],
-                    fill=style["info_color"],
-                    font_family=renderer.style["font_family_text"],
+                # Degrees
+                deg_str = f"{int(planet.sign_degree)}°"
+                x_deg, y_deg = renderer.polar_to_cartesian(adjusted_long, degrees_radius)
+                dwg.add(
+                    dwg.text(
+                        deg_str,
+                        insert=(x_deg, y_deg),
+                        text_anchor="middle",
+                        dominant_baseline="central",
+                        font_size=style["info_size"],
+                        fill=style["info_color"],
+                        font_family=renderer.style["font_family_text"],
+                    )
                 )
-            )
 
-            # Sign glyph - with optional adaptive coloring
-            sign_glyph = ZODIAC_GLYPHS[int(planet.longitude // 30)]
-            sign_index = int(planet.longitude // 30)
-            x_sign, y_sign = renderer.polar_to_cartesian(adjusted_long, sign_radius)
+                # Sign glyph - with optional adaptive coloring
+                sign_glyph = ZODIAC_GLYPHS[int(planet.longitude // 30)]
+                sign_index = int(planet.longitude // 30)
+                x_sign, y_sign = renderer.polar_to_cartesian(adjusted_long, sign_radius)
 
-            # Use adaptive sign color if enabled
-            if renderer.color_sign_info and renderer.zodiac_palette:
-                zodiac_pal = ZodiacPalette(renderer.zodiac_palette)
-                sign_color = get_sign_info_color(
-                    sign_index,
-                    zodiac_pal,
-                    renderer.style["background_color"],
-                    min_contrast=4.5,
+                # Use adaptive sign color if enabled
+                if renderer.color_sign_info and renderer.zodiac_palette:
+                    zodiac_pal = ZodiacPalette(renderer.zodiac_palette)
+                    sign_color = get_sign_info_color(
+                        sign_index,
+                        zodiac_pal,
+                        renderer.style["background_color"],
+                        min_contrast=4.5,
+                    )
+                else:
+                    sign_color = style["info_color"]
+
+                dwg.add(
+                    dwg.text(
+                        sign_glyph,
+                        insert=(x_sign, y_sign),
+                        text_anchor="middle",
+                        dominant_baseline="central",
+                        font_size=style["info_size"],
+                        fill=sign_color,
+                        font_family=renderer.style["font_family_glyphs"],
+                    )
                 )
-            else:
-                sign_color = style["info_color"]
 
-            dwg.add(
-                dwg.text(
-                    sign_glyph,
-                    insert=(x_sign, y_sign),
-                    text_anchor="middle",
-                    dominant_baseline="central",
-                    font_size=style["info_size"],
-                    fill=sign_color,
-                    font_family=renderer.style["font_family_glyphs"],
+                # Minutes
+                min_str = f"{int((planet.sign_degree % 1) * 60):02d}'"
+                x_min, y_min = renderer.polar_to_cartesian(adjusted_long, minutes_radius)
+                dwg.add(
+                    dwg.text(
+                        min_str,
+                        insert=(x_min, y_min),
+                        text_anchor="middle",
+                        dominant_baseline="central",
+                        font_size=style["info_size"],
+                        fill=style["info_color"],
+                        font_family=renderer.style["font_family_text"],
+                    )
                 )
-            )
-
-            # Minutes
-            min_str = f"{int((planet.sign_degree % 1) * 60):02d}'"
-            x_min, y_min = renderer.polar_to_cartesian(adjusted_long, minutes_radius)
-            dwg.add(
-                dwg.text(
-                    min_str,
-                    insert=(x_min, y_min),
-                    text_anchor="middle",
-                    dominant_baseline="central",
-                    font_size=style["info_size"],
-                    fill=style["info_color"],
-                    font_family=renderer.style["font_family_text"],
-                )
-            )
 
     def _calculate_adjusted_positions(
         self, planets: list[CelestialPosition], base_radius: float
@@ -862,9 +1030,7 @@ class ChartInfoLayer:
 
         if "datetime" in self.fields and chart.datetime:
             if chart.datetime.local_datetime:
-                dt_str = chart.datetime.local_datetime.strftime(
-                    "%B %d, %Y  %I:%M %p"
-                )
+                dt_str = chart.datetime.local_datetime.strftime("%B %d, %Y  %I:%M %p")
             else:
                 dt_str = chart.datetime.utc_datetime.strftime("%B %d, %Y  %H:%M UTC")
             lines.append(dt_str)
@@ -918,7 +1084,9 @@ class ChartInfoLayer:
 
         # Calculate total lines including wrapped name (if present)
         # Name takes extra vertical space due to larger font
-        name_line_height = int(float(self.style["name_size"][:-2]) * 1.2)  # 120% of font size
+        name_line_height = int(
+            float(self.style["name_size"][:-2]) * 1.2
+        )  # 120% of font size
         total_lines = len(wrapped_lines) + (len(wrapped_name) if wrapped_name else 0)
 
         # Calculate position (use total_lines for proper spacing)
@@ -933,9 +1101,7 @@ class ChartInfoLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         current_y = y
@@ -1000,7 +1166,9 @@ class ChartInfoLayer:
             # Text extends left from size - margin
             # Chart circle right edge is at center + radius
             chart_right_edge = renderer.center + zodiac_radius
-            available_width = (renderer.size - margin) - chart_right_edge - 10  # 10px safety buffer
+            available_width = (
+                (renderer.size - margin) - chart_right_edge - 10
+            )  # 10px safety buffer
 
         return max(available_width, 100)  # Minimum 100px
 
@@ -1069,8 +1237,8 @@ class ChartInfoLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1079,7 +1247,10 @@ class ChartInfoLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             # Fallback to top-left
             return (x_offset + margin, y_offset + margin)
@@ -1155,7 +1326,9 @@ class AspectCountsLayer:
                 glyph = aspect_name[:3]
 
             # Get the color for this aspect (for legend)
-            aspect_style = aspect_style_dict.get(aspect_name, aspect_style_dict.get("default", {}))
+            aspect_style = aspect_style_dict.get(
+                aspect_name, aspect_style_dict.get("default", {})
+            )
             if isinstance(aspect_style, dict):
                 aspect_color = aspect_style.get("color", "#888888")
             else:
@@ -1175,9 +1348,7 @@ class AspectCountsLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         # Render each line
@@ -1219,8 +1390,8 @@ class AspectCountsLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1229,7 +1400,10 @@ class AspectCountsLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             return (x_offset + margin, y_offset + margin)
 
@@ -1373,9 +1547,7 @@ class ElementModalityTableLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         # Header row - render each column header separately
@@ -1500,8 +1672,8 @@ class ElementModalityTableLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1510,7 +1682,10 @@ class ElementModalityTableLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             return (x_offset + margin, y_offset + margin)
 
@@ -1592,9 +1767,7 @@ class ChartShapeLayer:
         # Ensure text color has sufficient contrast with background
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"],
-            background_color,
-            min_contrast=4.5
+            self.style["text_color"], background_color, min_contrast=4.5
         )
 
         # Render each line
@@ -1636,8 +1809,8 @@ class ChartShapeLayer:
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
-        x_offset = getattr(renderer, 'x_offset', 0)
-        y_offset = getattr(renderer, 'y_offset', 0)
+        x_offset = getattr(renderer, "x_offset", 0)
+        y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
             return (x_offset + margin, y_offset + margin)
@@ -1646,7 +1819,10 @@ class ChartShapeLayer:
         elif self.position == "bottom-left":
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
-            return (x_offset + renderer.size - margin, y_offset + renderer.size - margin - total_height)
+            return (
+                x_offset + renderer.size - margin,
+                y_offset + renderer.size - margin - total_height,
+            )
         else:
             return (x_offset + margin, y_offset + margin)
 
@@ -1687,7 +1863,10 @@ class AspectLayer:
 
         dwg.add(
             dwg.circle(
-                center=(renderer.center, renderer.center),
+                center=(
+                    renderer.center + renderer.x_offset,
+                    renderer.center + renderer.y_offset,
+                ),
                 r=radius,
                 fill=style["background_color"],
                 stroke=style["line_color"],
