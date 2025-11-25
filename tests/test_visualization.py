@@ -30,7 +30,6 @@ from starlight.core.models import (
 from starlight.core.native import Native
 from starlight.engines.houses import PlacidusHouses, WholeSignHouses
 from starlight.visualization.core import ChartRenderer, get_display_name, get_glyph
-from starlight.visualization.drawing import draw_chart
 from starlight.visualization.layers import (
     AngleLayer,
     AspectCountsLayer,
@@ -526,7 +525,7 @@ class TestDrawChart:
     def test_draw_chart_basic(self, test_chart, temp_output_dir):
         """Test basic chart drawing."""
         filepath = os.path.join(temp_output_dir, "test_chart.svg")
-        result = draw_chart(test_chart, filename=filepath, size=600)
+        result = test_chart.draw(filepath).with_size(600).save()
 
         assert result == filepath
         assert os.path.exists(filepath)
@@ -540,63 +539,63 @@ class TestDrawChart:
     def test_draw_chart_custom_size(self, test_chart, temp_output_dir):
         """Test chart drawing with custom size."""
         filepath = os.path.join(temp_output_dir, "test_800.svg")
-        draw_chart(test_chart, filename=filepath, size=800)
+        test_chart.draw(filepath).with_size(800).save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_with_moon_phase(self, test_chart, temp_output_dir):
         """Test chart drawing with moon phase."""
         filepath = os.path.join(temp_output_dir, "test_moon.svg")
-        draw_chart(test_chart, filename=filepath, moon_phase=True)
+        test_chart.draw(filepath).with_moon_phase().save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_without_moon_phase(self, test_chart, temp_output_dir):
         """Test chart drawing without moon phase."""
         filepath = os.path.join(temp_output_dir, "test_no_moon.svg")
-        draw_chart(test_chart, filename=filepath, moon_phase=False)
+        test_chart.draw(filepath).without_moon_phase().save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_with_info(self, test_chart, temp_output_dir):
         """Test chart drawing with chart info."""
         filepath = os.path.join(temp_output_dir, "test_info.svg")
-        draw_chart(test_chart, filename=filepath, chart_info=True)
+        test_chart.draw(filepath).with_chart_info().save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_with_aspect_counts(self, test_chart, temp_output_dir):
         """Test chart drawing with aspect counts."""
         filepath = os.path.join(temp_output_dir, "test_aspects.svg")
-        draw_chart(test_chart, filename=filepath, aspect_counts=True)
+        test_chart.draw(filepath).with_aspect_counts().save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_with_element_table(self, test_chart, temp_output_dir):
         """Test chart drawing with element/modality table."""
         filepath = os.path.join(temp_output_dir, "test_elements.svg")
-        draw_chart(test_chart, filename=filepath, element_modality_table=True)
+        test_chart.draw(filepath).with_element_modality_table().save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_with_chart_shape(self, test_chart, temp_output_dir):
         """Test chart drawing with chart shape."""
         filepath = os.path.join(temp_output_dir, "test_shape.svg")
-        draw_chart(test_chart, filename=filepath, chart_shape=True)
+        test_chart.draw(filepath).with_chart_shape().save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_all_features(self, test_chart, temp_output_dir):
         """Test chart drawing with all features enabled."""
         filepath = os.path.join(temp_output_dir, "test_full.svg")
-        draw_chart(
-            test_chart,
-            filename=filepath,
-            moon_phase=True,
-            chart_info=True,
-            aspect_counts=True,
-            element_modality_table=True,
-            chart_shape=True,
+        (
+            test_chart.draw(filepath)
+            .with_moon_phase()
+            .with_chart_info()
+            .with_aspect_counts()
+            .with_element_modality_table()
+            .with_chart_shape()
+            .save()
         )
 
         assert os.path.exists(filepath)
@@ -609,14 +608,14 @@ class TestDrawChart:
     def test_draw_chart_with_theme(self, test_chart, temp_output_dir):
         """Test chart drawing with theme."""
         filepath = os.path.join(temp_output_dir, "test_theme.svg")
-        draw_chart(test_chart, filename=filepath, theme=ChartTheme.DARK)
+        test_chart.draw(filepath).with_theme("dark").save()
 
         assert os.path.exists(filepath)
 
     def test_draw_chart_with_zodiac_palette(self, test_chart, temp_output_dir):
         """Test chart drawing with zodiac palette."""
         filepath = os.path.join(temp_output_dir, "test_palette.svg")
-        draw_chart(test_chart, filename=filepath, zodiac_palette=ZodiacPalette.ELEMENTAL)
+        test_chart.draw(filepath).with_zodiac_palette("elemental").save()
 
         assert os.path.exists(filepath)
 
@@ -634,7 +633,7 @@ class TestDrawChart:
         )
 
         filepath = os.path.join(temp_output_dir, "test_multi_houses.svg")
-        draw_chart(multi_house_chart, filename=filepath)
+        multi_house_chart.draw(filepath).save()
 
         assert os.path.exists(filepath)
 
@@ -656,7 +655,7 @@ class TestVisualizationEdgeCases:
         chart = ChartBuilder.from_native(native).calculate()
 
         filepath = os.path.join(temp_output_dir, "no_aspects.svg")
-        draw_chart(chart, filename=filepath)
+        chart.draw(filepath).save()
 
         assert os.path.exists(filepath)
 
@@ -669,7 +668,7 @@ class TestVisualizationEdgeCases:
         chart = ChartBuilder.from_native(native).calculate()
 
         filepath = os.path.join(temp_output_dir, "minimal.svg")
-        draw_chart(chart, filename=filepath, moon_phase=False, chart_info=False)
+        chart.draw(filepath).without_moon_phase().save()
 
         assert os.path.exists(filepath)
 
@@ -724,7 +723,7 @@ class TestVisualizationPerformance:
         filepath = os.path.join(temp_output_dir, "perf_test.svg")
 
         start = time.time()
-        draw_chart(test_chart, filename=filepath)
+        test_chart.draw(filepath).save()
         elapsed = time.time() - start
 
         # Should complete in under 5 seconds
@@ -735,7 +734,7 @@ class TestVisualizationPerformance:
         """Test creating multiple charts in sequence."""
         for i in range(5):
             filepath = os.path.join(temp_output_dir, f"chart_{i}.svg")
-            draw_chart(test_chart, filename=filepath)
+            test_chart.draw(filepath).save()
             assert os.path.exists(filepath)
 
 
@@ -747,7 +746,7 @@ class TestVisualizationPerformance:
 def test_chart_file_not_empty(test_chart, temp_output_dir):
     """Regression test: Ensure generated SVG files are not empty."""
     filepath = os.path.join(temp_output_dir, "not_empty.svg")
-    draw_chart(test_chart, filename=filepath)
+    test_chart.draw(filepath).save()
 
     file_size = os.path.getsize(filepath)
     assert file_size > 100  # Should be at least 100 bytes
@@ -756,7 +755,7 @@ def test_chart_file_not_empty(test_chart, temp_output_dir):
 def test_svg_well_formed(test_chart, temp_output_dir):
     """Regression test: Ensure SVG is well-formed XML."""
     filepath = os.path.join(temp_output_dir, "well_formed.svg")
-    draw_chart(test_chart, filename=filepath)
+    test_chart.draw(filepath).save()
 
     with open(filepath, "r") as f:
         content = f.read()

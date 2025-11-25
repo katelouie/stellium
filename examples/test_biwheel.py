@@ -8,7 +8,7 @@ Tests the new draw_comparison_chart function with a synastry example.
 from datetime import datetime
 import datetime as dt
 
-from starlight import ChartBuilder, ComparisonBuilder, draw_comparison_chart
+from starlight import ChartBuilder, ComparisonBuilder
 from starlight.core.models import ChartLocation
 
 
@@ -33,13 +33,11 @@ def test_basic_synastry():
     )
 
     # Draw bi-wheel chart
-    draw_comparison_chart(
-        synastry,
-        filename="examples/chart_examples/biwheel_synastry_basic.svg",
-        theme="classic",
-        extended_canvas="right",
-        show_position_table=True,
-        show_aspectarian=True,
+    (
+        synastry.draw("examples/chart_examples/biwheel_synastry_basic.svg")
+        .with_theme("classic")
+        .with_tables(position="right", show_position_table=True, show_aspectarian=True)
+        .save()
     )
 
     print("✓ Generated: biwheel_synastry_basic.svg")
@@ -61,20 +59,20 @@ def test_synastry_themes():
     )
 
     # Dark theme
-    draw_comparison_chart(
-        synastry,
-        filename="examples/chart_examples/biwheel_synastry_dark.svg",
-        theme="dark",
-        extended_canvas="right",
+    (
+        synastry.draw("examples/chart_examples/biwheel_synastry_dark.svg")
+        .with_theme("dark")
+        .with_tables(position="right")
+        .save()
     )
     print("✓ Generated: biwheel_synastry_dark.svg (dark theme)")
 
     # Midnight theme
-    draw_comparison_chart(
-        synastry,
-        filename="examples/chart_examples/biwheel_synastry_midnight.svg",
-        theme="midnight",
-        extended_canvas="right",
+    (
+        synastry.draw("examples/chart_examples/biwheel_synastry_midnight.svg")
+        .with_theme("midnight")
+        .with_tables(position="right")
+        .save()
     )
     print("✓ Generated: biwheel_synastry_midnight.svg (midnight theme)")
 
@@ -93,20 +91,20 @@ def test_extended_canvas_positions():
     )
 
     # Extended canvas on left
-    draw_comparison_chart(
-        synastry,
-        filename="examples/chart_examples/biwheel_extended_left.svg",
-        extended_canvas="left",
-        theme="classic",
+    (
+        synastry.draw("examples/chart_examples/biwheel_extended_left.svg")
+        .with_tables(position="left")
+        .with_theme("classic")
+        .save()
     )
     print("✓ Generated: biwheel_extended_left.svg")
 
     # Extended canvas below
-    draw_comparison_chart(
-        synastry,
-        filename="examples/chart_examples/biwheel_extended_below.svg",
-        extended_canvas="below",
-        theme="classic",
+    (
+        synastry.draw("examples/chart_examples/biwheel_extended_below.svg")
+        .with_tables(position="below")
+        .with_theme("classic")
+        .save()
     )
     print("✓ Generated: biwheel_extended_below.svg")
 

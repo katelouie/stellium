@@ -160,8 +160,9 @@ Presentation/Visualization/Export
 │   │
 │   ├── visualization/         # SVG chart rendering
 │   │   ├── core.py           # ChartRenderer
-│   │   ├── layers.py         # Chart layers (Zodiac, Houses, Planets, etc.)
-│   │   └── draw.py           # High-level draw_chart() function
+│   │   ├── builder.py        # ChartDrawBuilder (fluent API)
+│   │   ├── composer.py       # ChartComposer (orchestrator)
+│   │   └── layers.py         # Chart layers (Zodiac, Houses, Planets, etc.)
 │   │
 │   ├── data/                  # Data registries and notables database
 │   │   └── notables/         # Notable births YAML files
@@ -1012,8 +1013,7 @@ report = (ReportBuilder()
 report.render(format="rich_table")
 
 # Draw chart
-from starlight import draw_chart
-draw_chart(chart, "chart.svg")
+chart.draw("chart.svg").save()
 ```
 
 ### Key Files to Know

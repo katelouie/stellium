@@ -22,9 +22,6 @@ from starlight.engines.orbs import LuminariesOrbEngine
 
 # --- Advanced Imports (for Custom Charts) ---
 from starlight.visualization.core import ChartRenderer, IRenderLayer
-
-# --- High-Level Drawing Functions ---
-from starlight.visualization.drawing import draw_chart, draw_chart_with_multiple_houses
 from starlight.visualization.layers import (
     AngleLayer,
     AspectLayer,
@@ -75,7 +72,7 @@ def example_1_standard_natal_chart():
 
     output_path = os.path.join(OUTPUT_DIR, "example_1_natal_chart.svg")
 
-    draw_chart(chart, filename=output_path, size=800)
+    chart.draw(output_path).with_size(800).save()
 
     print(f"✅ Success! Chart saved to {output_path}\n")
 
@@ -83,14 +80,14 @@ def example_1_standard_natal_chart():
 def example_2_multi_house_chart():
     """
     Draws a chart showing two house systems overlaid, using the
-    specialized high-level function.
+    fluent builder API.
     """
     print("Running Example 2: Multi-House Chart...")
     chart = create_sample_chart(multi_house=True)
 
     output_path = os.path.join(OUTPUT_DIR, "example_2_multi_house.svg")
 
-    draw_chart_with_multiple_houses(chart, filename=output_path, size=800)
+    chart.draw(output_path).with_size(800).with_house_systems("all").save()
 
     print(f"✅ Success! Chart saved to {output_path}\n")
 

@@ -2,7 +2,6 @@
 
 from .builder import ChartDrawBuilder
 from .core import ChartRenderer
-# from .drawing import draw_chart, draw_comparison_chart  # Module doesn't exist
 from .extended_canvas import AspectarianLayer, HouseCuspTableLayer, PositionTableLayer
 from .layers import (
     AngleLayer,
@@ -52,8 +51,6 @@ __all__ = [
     # Core rendering
     "ChartRenderer",
     "ChartDrawBuilder",
-    # "draw_chart",  # Module doesn't exist
-    # "draw_comparison_chart",  # Module doesn't exist
     # Layers
     "ZodiacLayer",
     "HouseCuspLayer",

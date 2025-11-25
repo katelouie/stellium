@@ -2,15 +2,15 @@
 Starlight - Computational Astrology Library
 
 Quick Start:
-    >>> from starlight import ChartBuilder, draw_chart
-    >>> chart = ChartBuilder.from_notable("Albert Einstein").build()
-    >>> draw_chart(chart, "einstein.svg")
+    >>> from starlight import ChartBuilder
+    >>> chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    >>> chart.draw("einstein.svg").save()
 
 For more control:
     >>> from starlight import ChartBuilder, Native, ReportBuilder
     >>> from starlight.engines import PlacidusHouses, ModernAspectEngine
     >>> native = Native(datetime_input=..., location_input=...)
-    >>> chart = ChartBuilder.from_native(native).build()
+    >>> chart = ChartBuilder.from_native(native).calculate()
 """
 
 __version__ = "0.2.0"
@@ -54,7 +54,6 @@ from starlight.presentation import ReportBuilder
 
 # === Visualization (High-Level) ===
 from starlight.visualization import ChartRenderer
-# draw_chart and draw_comparison_chart don't exist
 
 __all__ = [
     # Version
@@ -77,8 +76,6 @@ __all__ = [
     "get_object_info",
     "get_aspect_info",
     # Visualization
-    # "draw_chart",  # Doesn't exist
-    # "draw_comparison_chart",  # Doesn't exist
     "ChartRenderer",
     # Presentation
     "ReportBuilder",
