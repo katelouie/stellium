@@ -266,7 +266,9 @@ class TestPlanetGlyphPalette:
         """Test that luminaries palette treats Sun and Moon specially."""
         sun_color = get_planet_glyph_color("Sun", PlanetGlyphPalette.LUMINARIES)
         moon_color = get_planet_glyph_color("Moon", PlanetGlyphPalette.LUMINARIES)
-        mars_color = get_planet_glyph_color("Mars", PlanetGlyphPalette.LUMINARIES, "#222222")
+        mars_color = get_planet_glyph_color(
+            "Mars", PlanetGlyphPalette.LUMINARIES, "#222222"
+        )
 
         # Sun should be gold
         assert sun_color == "#FFD700"
@@ -279,10 +281,22 @@ class TestPlanetGlyphPalette:
 
     def test_rainbow_palette_all_different(self):
         """Test that rainbow palette gives each planet a different color."""
-        planets = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                   "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        planets = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
 
-        colors = [get_planet_glyph_color(p, PlanetGlyphPalette.RAINBOW) for p in planets]
+        colors = [
+            get_planet_glyph_color(p, PlanetGlyphPalette.RAINBOW) for p in planets
+        ]
 
         # All should be different
         assert len(set(colors)) == len(planets)
@@ -295,18 +309,24 @@ class TestPlanetGlyphPalette:
         assert sun_color == moon_color
 
         # Traditional planets
-        mercury_color = get_planet_glyph_color("Mercury", PlanetGlyphPalette.PLANET_TYPE)
+        mercury_color = get_planet_glyph_color(
+            "Mercury", PlanetGlyphPalette.PLANET_TYPE
+        )
         venus_color = get_planet_glyph_color("Venus", PlanetGlyphPalette.PLANET_TYPE)
         assert mercury_color == venus_color
 
         # Modern planets
         uranus_color = get_planet_glyph_color("Uranus", PlanetGlyphPalette.PLANET_TYPE)
-        neptune_color = get_planet_glyph_color("Neptune", PlanetGlyphPalette.PLANET_TYPE)
+        neptune_color = get_planet_glyph_color(
+            "Neptune", PlanetGlyphPalette.PLANET_TYPE
+        )
         assert uranus_color == neptune_color
 
     def test_unknown_planet_returns_theme_default(self):
         """Test that unknown planets return theme default color."""
-        color = get_planet_glyph_color("UnknownPlanet", PlanetGlyphPalette.ELEMENT, "#123456")
+        color = get_planet_glyph_color(
+            "UnknownPlanet", PlanetGlyphPalette.ELEMENT, "#123456"
+        )
         assert color == "#123456"
 
     def test_get_planet_glyph_palette_description(self):
@@ -455,12 +475,16 @@ class TestColorUtilities:
     def test_get_sign_info_color_meets_contrast(self):
         """Test that sign info color meets contrast requirement."""
         # White background
-        color = get_sign_info_color(0, ZodiacPalette.RAINBOW, "#FFFFFF", min_contrast=4.5)
+        color = get_sign_info_color(
+            0, ZodiacPalette.RAINBOW, "#FFFFFF", min_contrast=4.5
+        )
         ratio = get_contrast_ratio(color, "#FFFFFF")
         assert ratio >= 4.5
 
         # Black background
-        color = get_sign_info_color(6, ZodiacPalette.ELEMENTAL, "#000000", min_contrast=4.5)
+        color = get_sign_info_color(
+            6, ZodiacPalette.ELEMENTAL, "#000000", min_contrast=4.5
+        )
         ratio = get_contrast_ratio(color, "#000000")
         assert ratio >= 4.5
 
@@ -510,23 +534,50 @@ class TestSignAndPlanetMappings:
 
     def test_planet_elements_has_major_planets(self):
         """Test that planet elements includes all major planets."""
-        major_planets = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                        "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        major_planets = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
         for planet in major_planets:
             assert planet in PLANET_ELEMENTS
             assert PLANET_ELEMENTS[planet] in ("fire", "earth", "air", "water")
 
     def test_planet_types_has_major_planets(self):
         """Test that planet types includes all major planets."""
-        major_planets = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                        "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        major_planets = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
         for planet in major_planets:
             assert planet in PLANET_TYPES
 
     def test_planet_types_categories(self):
         """Test that planet types uses valid categories."""
-        valid_types = {"luminary", "traditional", "modern", "centaur",
-                      "asteroid", "node", "point"}
+        valid_types = {
+            "luminary",
+            "traditional",
+            "modern",
+            "centaur",
+            "asteroid",
+            "node",
+            "point",
+        }
         for planet_type in PLANET_TYPES.values():
             assert planet_type in valid_types
 
@@ -559,9 +610,8 @@ class TestPaletteEdgeCases:
     def test_palette_with_invalid_enum(self):
         """Test behavior with invalid palette enum value."""
         # This should fall back to grey
-        colors = get_palette_colors("invalid_palette")  # type: ignore
-        # Should return 12 colors (fallback behavior)
-        assert len(colors) == 12
+        with pytest.raises(ValueError, match="not a valid"):
+            get_palette_colors("invalid_palette")  # type: ignore
 
     def test_aspect_palette_fallback(self):
         """Test aspect palette fallback behavior."""

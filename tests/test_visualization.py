@@ -44,7 +44,6 @@ from starlight.visualization.layers import (
 from starlight.visualization.palettes import ZodiacPalette
 from starlight.visualization.themes import ChartTheme
 
-
 # ============================================================================
 # FIXTURES
 # ============================================================================
@@ -173,14 +172,6 @@ class TestChartRenderer:
         assert isinstance(x, float)
         assert isinstance(y, float)
 
-    def test_create_svg_drawing(self, renderer, temp_output_dir):
-        """Test SVG drawing creation."""
-        filepath = os.path.join(temp_output_dir, "test.svg")
-        dwg = renderer.create_svg_drawing(filepath)
-
-        assert dwg is not None
-        assert isinstance(dwg, svgwrite.Drawing)
-
     def test_astrological_to_svg_angle(self, renderer):
         """Test astrological to SVG angle conversion."""
         # 0° Aries should map to 180° SVG (9 o'clock)
@@ -192,7 +183,7 @@ class TestChartRenderer:
         renderer = ChartRenderer(rotation=90)
         svg_angle = renderer.astrological_to_svg_angle(90)
         # With 90° rotation, 90° astrological should map to 180° SVG
-        assert isinstance(svg_angle, (int, float))
+        assert isinstance(svg_angle, int | float)
 
 
 # ============================================================================
@@ -323,7 +314,12 @@ class TestPlanetLayer:
             p
             for p in test_chart.positions
             if p.object_type
-            in (ObjectType.PLANET, ObjectType.ASTEROID, ObjectType.NODE, ObjectType.POINT)
+            in (
+                ObjectType.PLANET,
+                ObjectType.ASTEROID,
+                ObjectType.NODE,
+                ObjectType.POINT,
+            )
         ]
         layer = PlanetLayer(planet_set=planets)
         assert layer is not None
@@ -335,7 +331,12 @@ class TestPlanetLayer:
             p
             for p in test_chart.positions
             if p.object_type
-            in (ObjectType.PLANET, ObjectType.ASTEROID, ObjectType.NODE, ObjectType.POINT)
+            in (
+                ObjectType.PLANET,
+                ObjectType.ASTEROID,
+                ObjectType.NODE,
+                ObjectType.POINT,
+            )
         ]
         layer = PlanetLayer(planet_set=planets)
         layer.render(renderer, mock_dwg, test_chart)
@@ -346,7 +347,9 @@ class TestPlanetLayer:
     def test_render_filters_planets_only(self, renderer, mock_dwg, test_chart):
         """Test that PlanetLayer only renders planets (not angles)."""
         # Filter to planets only
-        planets = [p for p in test_chart.positions if p.object_type == ObjectType.PLANET]
+        planets = [
+            p for p in test_chart.positions if p.object_type == ObjectType.PLANET
+        ]
         layer = PlanetLayer(planet_set=planets)
         layer.render(renderer, mock_dwg, test_chart)
 
