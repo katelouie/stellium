@@ -19,6 +19,7 @@ from starlight.visualization.layers import (
     ElementModalityTableLayer,
     HouseCuspLayer,
     OuterAngleLayer,
+    OuterBorderLayer,
     OuterHouseCuspLayer,
     PlanetLayer,
     ZodiacLayer,
@@ -180,6 +181,10 @@ class LayerFactory:
                     position=self.config.corners.chart_shape_position,
                 )
             )
+
+        # Layer N: Outer border (for comparison charts only, drawn last so it's on top)
+        if is_comparison:
+            layers.append(OuterBorderLayer())
 
         return layers
 

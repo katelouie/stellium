@@ -136,6 +136,14 @@ class ModernAspectEngine:
             if _are_axis_pair(obj1, obj2):
                 continue
 
+            # Skip aspects TO Dsc/IC (but allow aspects TO Asc/MC)
+            if obj2.name in ["DSC", "IC"] or obj1.name in ["DSC", "IC"]:
+                continue
+
+            # Skip Asc-MC aspect (angle to angle)
+            if {obj1.name, obj2.name} == {"ASC", "MC"}:
+                continue
+
             distance = _angular_distance(obj1.longitude, obj2.longitude)
 
             # 3. Check against each aspect in our config

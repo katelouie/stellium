@@ -223,7 +223,13 @@ class ChartRenderer:
 
             # Set default palettes from theme if not explicitly provided
             if self.zodiac_palette is None:
+                # None means "use theme's colorful default"
                 self.zodiac_palette = get_theme_default_palette(theme_enum).value
+            elif self.zodiac_palette == "monochrome":
+                # Keep as "monochrome" - ZodiacLayer will use theme's ring_color
+                pass
+            # Otherwise use the specific palette name provided
+
             if self.aspect_palette is None:
                 self.aspect_palette = get_theme_default_aspect_palette(theme_enum).value
             if self.planet_glyph_palette is None:
@@ -236,6 +242,10 @@ class ChartRenderer:
             # Set default palettes if not explicitly provided
             if self.zodiac_palette is None:
                 self.zodiac_palette = "grey"
+            elif self.zodiac_palette == "monochrome":
+                # For no-theme case, monochrome uses grey
+                self.zodiac_palette = "grey"
+
             if self.aspect_palette is None:
                 self.aspect_palette = "classic"
             if self.planet_glyph_palette is None:
@@ -345,75 +355,9 @@ class ChartRenderer:
 
         return x, y
 
-    def create_svg_drawing(self, filename: str) -> svgwrite.Drawing:
-        """Creates the main SVG object and draws the background."""
-        dwg = svgwrite.Drawing(
-            filename=filename,
-            size=(f"{self.size}px", f"{self.size}px"),
-            viewBox=f"0 0 {self.size} {self.size}",
-            profile="full",
-        )
-
-        # Add square background instead of circle
-        dwg.add(
-            dwg.rect(
-                insert=(0, 0),
-                size=(f"{self.size}px", f"{self.size}px"),
-                fill=self.style["background_color"],
-            )
-        )
-
-        # Add outer circle border
-        dwg.add(
-            dwg.circle(
-                center=(self.center, self.center),
-                r=self.radii["outer_border"],
-                fill="none",
-                stroke=self.style["border_color"],
-                stroke_width=self.style["border_width"],
-            )
-        )
-
-        # Add border circle at aspect ring inner radius
-        dwg.add(
-            dwg.circle(
-                center=(self.center, self.center),
-                r=self.radii["aspect_ring_inner"],
-                fill="none",
-                stroke=self.style["border_color"],
-                stroke_width=self.style["border_width"],
-            )
-        )
-
-        # Add optional outer containment border (for biwheels)
-        # HARD TEST: Always draw a border at a fixed radius for debugging
-        TEST_RADIUS = self.size * 0.48  # Hardcoded test value
-        dwg.add(
-            dwg.circle(
-                center=(self.center, self.center),
-                r=TEST_RADIUS,
-                fill="none",
-                stroke="#FF0000",  # Bright red for visibility
-                stroke_width=3,  # Thick for visibility
-            )
-        )
-
-        # Original logic (commented out for test)
-        # if (
-        #     "outer_containment_border" in self.radii
-        #     and self.radii["outer_containment_border"]
-        # ):
-        #     dwg.add(
-        #         dwg.circle(
-        #             center=(self.center, self.center),
-        #             r=self.radii["outer_containment_border"],
-        #             fill="none",
-        #             stroke=self.style["border_color"],
-        #             stroke_width=self.style["border_width"],
-        #         )
-        #     )
-
-        return dwg
+    # NOTE: create_svg_drawing() was removed as it was unused legacy code.
+    # All SVG rendering now goes through ChartComposer and the layer system.
+    # Background, borders, and all chart elements are rendered as layers.
 
 
 class IRenderLayer(Protocol):

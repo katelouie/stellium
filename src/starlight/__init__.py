@@ -53,7 +53,8 @@ from starlight.data import get_notable_registry
 from starlight.presentation import ReportBuilder
 
 # === Visualization (High-Level) ===
-from starlight.visualization import ChartRenderer, draw_chart, draw_comparison_chart
+from starlight.visualization import ChartRenderer
+# draw_chart and draw_comparison_chart don't exist
 
 __all__ = [
     # Version
@@ -76,8 +77,8 @@ __all__ = [
     "get_object_info",
     "get_aspect_info",
     # Visualization
-    "draw_chart",
-    "draw_comparison_chart",
+    # "draw_chart",  # Doesn't exist
+    # "draw_comparison_chart",  # Doesn't exist
     "ChartRenderer",
     # Presentation
     "ReportBuilder",

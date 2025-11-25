@@ -183,7 +183,7 @@ def draw_chart_grid(
         # Create a mini-SVG for this chart
         mini_dwg = svgwrite.Drawing(size=(chart_size, chart_size))
 
-        # Add background and borders (from renderer.create_svg_drawing logic)
+        # Add background and borders
         mini_dwg.add(
             mini_dwg.rect(
                 insert=(0, 0),

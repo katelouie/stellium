@@ -144,27 +144,30 @@ class ChartDrawBuilder:
         self._theme = theme
         return self
 
-    def with_zodiac_palette(self, palette: str | None = None) -> "ChartDrawBuilder":
+    def with_zodiac_palette(self, palette: str | bool) -> "ChartDrawBuilder":
         """
         Set the zodiac ring color palette.
 
         Args:
-            palette: Palette name (e.g., "grey", "rainbow", "viridis", "elemental").
-                     If not provided (empty call), uses the theme's default colorful palette.
-                     If theme is set, calling without args gives you the colorful version.
+            palette: Can be:
+                - True: Use theme's default colorful palette
+                - str: Specific palette name (e.g., "grey", "rainbow", "viridis", "elemental")
 
         Returns:
             Self for chaining
 
         Usage:
-            .with_zodiac_palette()           # Use theme's colorful default palette
+            # Default (no call): Monochrome using theme's zodiac ring_color
+
+            .with_zodiac_palette(True)       # Use theme's colorful default palette
             .with_zodiac_palette("rainbow")  # Use specific rainbow palette
+            .with_zodiac_palette("grey")     # Monochrome grey palette
         """
-        if palette is None:
-            # Empty call: signal to use theme's default colorful palette
+        if palette is True:
+            # True: signal to use theme's default colorful palette
             self._zodiac_palette = _USE_THEME_DEFAULT_PALETTE
         else:
-            # Specific palette provided
+            # Specific palette name provided
             self._zodiac_palette = palette
         return self
 
@@ -586,12 +589,16 @@ class ChartDrawBuilder:
             wheel_kwargs["house_systems"] = self._house_systems
         if self._theme is not None:
             wheel_kwargs["theme"] = ChartTheme(self._theme)
-        if self._zodiac_palette is not None:
-            # Handle sentinel value for "use theme's default colorful palette"
-            if self._zodiac_palette is _USE_THEME_DEFAULT_PALETTE:
-                wheel_kwargs["zodiac_palette"] = None  # Let theme decide
-            else:
-                wheel_kwargs["zodiac_palette"] = self._zodiac_palette
+        # Handle zodiac palette
+        if self._zodiac_palette is _USE_THEME_DEFAULT_PALETTE:
+            # User called .with_zodiac_palette(True) → use theme's colorful default
+            wheel_kwargs["zodiac_palette"] = None  # Signals renderer to use theme default
+        elif self._zodiac_palette is not None:
+            # User specified a palette name
+            wheel_kwargs["zodiac_palette"] = self._zodiac_palette
+        else:
+            # User didn't call .with_zodiac_palette() → use monochrome
+            wheel_kwargs["zodiac_palette"] = "monochrome"
         if self._aspect_palette is not None:
             wheel_kwargs["aspect_palette"] = self._aspect_palette
         if self._planet_glyph_palette is not None:

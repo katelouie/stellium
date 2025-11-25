@@ -30,24 +30,24 @@ class ChartWheelConfig:
             "zodiac_ring_outer": 0.38,
             "zodiac_ring_inner": 0.30,
             "planet_ring_inner": 0.27,  # Inner wheel planets
-            "planet_ring_outer": 0.40,  # Outer wheel planets
+            "planet_ring_outer": 0.41,  # Outer wheel planets
             "house_number_ring": 0.16,
             "aspect_ring_inner": 0.15,
             # Outer wheel house cusps
             "outer_cusp_start": 0.38,  # Start of outer house cusp line
-            "outer_cusp_end": 0.45,  # End of outer house cusp line
+            "outer_cusp_end": 0.48,  # End of outer house cusp line
             "outer_house_number": 0.39,  # Position of outer house numbers
             # Outer containment borders (auto-selected based on info stack visibility)
-            "outer_containment_border_compact": 0.48,  # When info stacks hidden
-            "outer_containment_border_full": 0.50,  # When info stacks visible
+            "outer_containment_border_compact": 0.46,  # When info stacks hidden
+            "outer_containment_border_full": 0.51,  # When info stacks visible
         }
     )
 
     # Visual theme
     theme: ChartTheme | None = None
     zodiac_palette: str | None = None
-    aspect_palette: str | None = "classic"
-    planet_glyph_palette: str | None = "default"
+    aspect_palette: str | None = None  # None = use theme default
+    planet_glyph_palette: str | None = None  # None = use theme default
     color_sign_info: bool = False
 
 

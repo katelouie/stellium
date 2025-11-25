@@ -69,10 +69,18 @@ class ZodiacLayer:
         active_palette = self.palette
         if active_palette == ZodiacPalette.GREY and renderer.zodiac_palette:
             # If layer is using default and renderer has a palette, use renderer's
-            active_palette = ZodiacPalette(renderer.zodiac_palette)
+            active_palette = renderer.zodiac_palette
 
         # Get colors for the palette
-        sign_colors = get_palette_colors(active_palette)
+        if active_palette == "monochrome":
+            # Monochrome: use theme's ring_color for all 12 signs
+            ring_color = style.get("ring_color", "#EEEEEE")
+            sign_colors = [ring_color] * 12
+        else:
+            # Convert to enum if string
+            if isinstance(active_palette, str):
+                active_palette = ZodiacPalette(active_palette)
+            sign_colors = get_palette_colors(active_palette)
 
         # Draw 12 zodiac sign wedges (30° each)
         for sign_index in range(12):
@@ -1891,3 +1899,35 @@ class AspectLayer:
                     opacity=0.6,  # Make aspect lines semi-transparent to reduce visual clutter
                 )
             )
+
+
+class OuterBorderLayer:
+    """Renders the outer containment border for comparison/biwheel charts."""
+
+    def render(
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: Any
+    ) -> None:
+        """Render the outer containment border using config radius and style."""
+        # Check if outer_containment_border radius is set
+        if "outer_containment_border" not in renderer.radii:
+            return
+
+        border_radius = renderer.radii["outer_containment_border"]
+
+        # Use border styling from theme
+        border_color = renderer.style.get("border_color", "#999999")
+        border_width = renderer.style.get("border_width", 1)
+
+        # Draw the outer border circle
+        dwg.add(
+            dwg.circle(
+                center=(
+                    renderer.center + renderer.x_offset,
+                    renderer.center + renderer.y_offset
+                ),
+                r=border_radius,
+                fill="none",
+                stroke=border_color,
+                stroke_width=border_width,
+            )
+        )
