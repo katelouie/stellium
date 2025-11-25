@@ -37,6 +37,7 @@ from starlight.core.models import (
     PhaseData,
 )
 from starlight.core.native import Native, Notable
+from starlight.core.synthesis import SynthesisBuilder, SynthesisChart
 
 # === Registry Access ===
 from starlight.core.registry import (
@@ -91,4 +92,7 @@ __all__ = [
     "ComparisonType",
     "ComparisonAspect",
     "HouseOverlay",
+    # Synthesis Charts
+    "SynthesisBuilder",
+    "SynthesisChart",
 ]

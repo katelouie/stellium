@@ -66,6 +66,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Creates `MidpointPosition` instances with component object references
 - Added PhaseData data model, and added phase data to relevant planets and asteroids under CelestialPosition.phase during ephemeris engine call.
 - Added Comparison charts for transits, synastry and progressions.
+- Added Synthesis charts for relationship astrology (`core/synthesis.py`):
+  - **Davison charts**: `.davison(chart1, chart2)` - midpoint in time and space, then regular chart calculation
+  - **Composite charts**: `.composite(chart1, chart2)` - midpoint of each planet/point position
+  - `SynthesisChart` inheriting from `CalculatedChart` for full polymorphism (visualization/reports just work!)
+  - `SynthesisBuilder` fluent API with configuration options:
+    - `.with_labels("Alice", "Bob")` - custom chart labels
+    - `.with_location_method("great_circle" | "simple")` - geographic midpoint calculation (Davison)
+    - `.with_houses(True | False | "place")` - house calculation method (Composite)
+    - `.with_midpoint_method("short_arc" | "long_arc")` - zodiac midpoint direction (Composite)
+  - Great circle (geodesic) geographic midpoint as default - follows Earth's curvature
+  - Full source chart storage in result for traceability
+  - Helper functions: `calculate_midpoint_longitude()`, `calculate_datetime_midpoint()`, `calculate_location_midpoint()`, `julian_day_to_datetime()`
+  - 59 tests covering helpers, Davison, Composite, and visualization inheritance
 
 #### Chart Building & Calculation
 
