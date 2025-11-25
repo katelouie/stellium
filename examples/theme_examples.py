@@ -14,7 +14,7 @@ Each theme provides a cohesive visual style including:
 
 from datetime import datetime
 
-from starlight import ChartBuilder, draw_chart
+from starlight import ChartBuilder
 from starlight.visualization import ChartTheme
 from starlight.visualization.themes import get_theme_description
 
@@ -31,7 +31,7 @@ for theme in ChartTheme:
     description = get_theme_description(theme)
 
     # Draw chart with theme (uses theme's default zodiac palette)
-    draw_chart(chart, filename=filename, theme=theme)
+    chart.draw(filename).with_theme(theme.value).save()
 
     print(f"✓ {description}")
     print(f"  → {filename}\n")
@@ -50,79 +50,79 @@ print("Each theme now has coordinated palette variants that harmonize")
 print("with its color story:\n")
 
 # Dark theme with coordinated palettes
-draw_chart(
-    chart,
-    filename="examples/chart_examples/dark_rainbow_dark.svg",
-    theme="dark",
-    zodiac_palette="rainbow_dark",
+(
+    chart.draw("examples/chart_examples/dark_rainbow_dark.svg")
+    .with_theme("dark")
+    .with_zodiac_palette("rainbow_dark")
+    .save()
 )
 print("✓ Dark theme + Rainbow Dark palette → dark_rainbow_dark.svg")
 
-draw_chart(
-    chart,
-    filename="examples/chart_examples/dark_elemental_dark.svg",
-    theme="dark",
-    zodiac_palette="elemental_dark",
+(
+    chart.draw("examples/chart_examples/dark_elemental_dark.svg")
+    .with_theme("dark")
+    .with_zodiac_palette("elemental_dark")
+    .save()
 )
 print("✓ Dark theme + Elemental Dark palette → dark_elemental_dark.svg")
 
 # Midnight theme with coordinated palettes
-draw_chart(
-    chart,
-    filename="examples/chart_examples/midnight_rainbow_midnight.svg",
-    theme="midnight",
-    zodiac_palette="rainbow_midnight",
+(
+    chart.draw("examples/chart_examples/midnight_rainbow_midnight.svg")
+    .with_theme("midnight")
+    .with_zodiac_palette("rainbow_midnight")
+    .save()
 )
 print("✓ Midnight theme + Rainbow Midnight palette → midnight_rainbow_midnight.svg")
 
-draw_chart(
-    chart,
-    filename="examples/chart_examples/midnight_elemental_midnight.svg",
-    theme="midnight",
-    zodiac_palette="elemental_midnight",
+(
+    chart.draw("examples/chart_examples/midnight_elemental_midnight.svg")
+    .with_theme("midnight")
+    .with_zodiac_palette("elemental_midnight")
+    .save()
 )
 print("✓ Midnight theme + Elemental Midnight palette → midnight_elemental_midnight.svg")
 
 # Neon theme with coordinated palettes
-draw_chart(
-    chart,
-    filename="examples/chart_examples/neon_rainbow_neon.svg",
-    theme="neon",
-    zodiac_palette="rainbow_neon",
+(
+    chart.draw("examples/chart_examples/neon_rainbow_neon.svg")
+    .with_theme("neon")
+    .with_zodiac_palette("rainbow_neon")
+    .save()
 )
 print("✓ Neon theme + Rainbow Neon palette → neon_rainbow_neon.svg")
 
-draw_chart(
-    chart,
-    filename="examples/chart_examples/neon_elemental_neon.svg",
-    theme="neon",
-    zodiac_palette="elemental_neon",
+(
+    chart.draw("examples/chart_examples/neon_elemental_neon.svg")
+    .with_theme("neon")
+    .with_zodiac_palette("elemental_neon")
+    .save()
 )
 print("✓ Neon theme + Elemental Neon palette → neon_elemental_neon.svg")
 
 # Sepia theme with coordinated palettes
-draw_chart(
-    chart,
-    filename="examples/chart_examples/sepia_rainbow_sepia.svg",
-    theme="sepia",
-    zodiac_palette="rainbow_sepia",
+(
+    chart.draw("examples/chart_examples/sepia_rainbow_sepia.svg")
+    .with_theme("sepia")
+    .with_zodiac_palette("rainbow_sepia")
+    .save()
 )
 print("✓ Sepia theme + Rainbow Sepia palette → sepia_rainbow_sepia.svg")
 
-draw_chart(
-    chart,
-    filename="examples/chart_examples/sepia_elemental_sepia.svg",
-    theme="sepia",
-    zodiac_palette="elemental_sepia",
+(
+    chart.draw("examples/chart_examples/sepia_elemental_sepia.svg")
+    .with_theme("sepia")
+    .with_zodiac_palette("elemental_sepia")
+    .save()
 )
 print("✓ Sepia theme + Elemental Sepia palette → sepia_elemental_sepia.svg")
 
 # Celestial theme with coordinated palette
-draw_chart(
-    chart,
-    filename="examples/chart_examples/celestial_rainbow_celestial.svg",
-    theme="celestial",
-    zodiac_palette="rainbow_celestial",
+(
+    chart.draw("examples/chart_examples/celestial_rainbow_celestial.svg")
+    .with_theme("celestial")
+    .with_zodiac_palette("rainbow_celestial")
+    .save()
 )
 print("✓ Celestial theme + Rainbow Celestial palette → celestial_rainbow_celestial.svg")
 
@@ -131,19 +131,19 @@ print("Mix & Match: Custom Combinations")
 print("=" * 70 + "\n")
 
 # You can also mix and match any theme with any palette
-draw_chart(
-    chart,
-    filename="examples/chart_examples/dark_rainbow_base.svg",
-    theme="dark",
-    zodiac_palette="rainbow",
+(
+    chart.draw("examples/chart_examples/dark_rainbow_base.svg")
+    .with_theme("dark")
+    .with_zodiac_palette("rainbow")
+    .save()
 )
 print("✓ Dark theme + Base Rainbow palette → dark_rainbow_base.svg")
 
-draw_chart(
-    chart,
-    filename="examples/chart_examples/midnight_elemental_base.svg",
-    theme="midnight",
-    zodiac_palette="elemental",
+(
+    chart.draw("examples/chart_examples/midnight_elemental_base.svg")
+    .with_theme("midnight")
+    .with_zodiac_palette("elemental")
+    .save()
 )
 print("✓ Midnight theme + Base Elemental palette → midnight_elemental_base.svg")
 

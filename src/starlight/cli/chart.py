@@ -38,7 +38,6 @@ def chart_from_registry_cmd(name, output, house_system, output_format):
     from starlight.core.builder import ChartBuilder
     from starlight.data.registry import get_notable_registry
     from starlight.presentation.builder import ReportBuilder
-    from starlight.visualization.drawing import draw_chart
 
     try:
         registry = get_notable_registry()
@@ -55,7 +54,7 @@ def chart_from_registry_cmd(name, output, house_system, output_format):
 
         if output_format == "svg":
             output_path = output or f"{name.lower().replace(' ', '_')}.svg"
-            draw_chart(chart, output_path)
+            chart.draw(output_path).save()
             click.echo(f"✅ Chart saved to: {output_path}")
 
         elif output_format == "terminal":

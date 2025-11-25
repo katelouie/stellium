@@ -7,7 +7,7 @@ the zodiac wheel visualization.
 
 from datetime import datetime
 
-from starlight import ChartBuilder, Native, draw_chart
+from starlight import ChartBuilder, Native
 from starlight.visualization import ZodiacPalette
 
 # Create a sample chart
@@ -26,7 +26,7 @@ print("Generating charts with different zodiac palettes...\n")
 
 for palette, description in palettes:
     filename = f"examples/chart_examples/palette_{palette.value}.svg"
-    draw_chart(chart, filename=filename, zodiac_palette=palette)
+    chart.draw(filename).with_zodiac_palette(palette.value).save()
     print(f"✓ {description:20s} → {filename}")
 
 print("\nAll charts generated successfully!")

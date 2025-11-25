@@ -12,7 +12,6 @@ from datetime import datetime
 
 from starlight import ChartBuilder
 from starlight.core.native import Native
-from starlight.visualization.drawing import draw_chart
 from starlight.visualization.layers import AspectLayer, PlanetLayer, ZodiacLayer
 
 
@@ -28,7 +27,7 @@ def test_data_science_themes():
     for theme in themes:
         print(f"  - Generating chart with {theme} theme...")
         output_file = f"examples/chart_examples/test_{theme}_theme.svg"
-        draw_chart(chart, output_file, theme=theme)
+        chart.draw(output_file).with_theme(theme).save()
 
     print("  ✓ All data science themes generated successfully!")
 
@@ -42,32 +41,32 @@ def test_mix_and_match_palettes():
 
     # Test: Classic theme with rainbow zodiac and viridis aspects
     print("  - Classic theme + rainbow zodiac + viridis aspects...")
-    draw_chart(
-        chart,
-        "examples/chart_examples/test_mix_classic_rainbow_viridis.svg",
-        theme="classic",
-        zodiac_palette="rainbow",
-        aspect_palette="viridis",
+    (
+        chart.draw("examples/chart_examples/test_mix_classic_rainbow_viridis.svg")
+        .with_theme("classic")
+        .with_zodiac_palette("rainbow")
+        .with_aspect_palette("viridis")
+        .save()
     )
 
     # Test: Dark theme with elemental zodiac and plasma aspects
     print("  - Dark theme + elemental zodiac + plasma aspects...")
-    draw_chart(
-        chart,
-        "examples/chart_examples/test_mix_dark_elemental_plasma.svg",
-        theme="dark",
-        zodiac_palette="elemental",
-        aspect_palette="plasma",
+    (
+        chart.draw("examples/chart_examples/test_mix_dark_elemental_plasma.svg")
+        .with_theme("dark")
+        .with_zodiac_palette("elemental")
+        .with_aspect_palette("plasma")
+        .save()
     )
 
     # Test: Midnight theme with viridis zodiac and blues aspects
     print("  - Midnight theme + viridis zodiac + blues aspects...")
-    draw_chart(
-        chart,
-        "examples/chart_examples/test_mix_midnight_viridis_blues.svg",
-        theme="midnight",
-        zodiac_palette="viridis",
-        aspect_palette="blues",
+    (
+        chart.draw("examples/chart_examples/test_mix_midnight_viridis_blues.svg")
+        .with_theme("midnight")
+        .with_zodiac_palette("viridis")
+        .with_aspect_palette("blues")
+        .save()
     )
 
     print("  ✓ Mix-and-match palettes tested successfully!")
@@ -84,11 +83,11 @@ def test_planet_glyph_palettes():
 
     for palette in palettes:
         print(f"  - Generating chart with {palette} planet palette...")
-        draw_chart(
-            chart,
-            f"examples/chart_examples/test_planet_{palette}.svg",
-            theme="dark",
-            planet_glyph_palette=palette,
+        (
+            chart.draw(f"examples/chart_examples/test_planet_{palette}.svg")
+            .with_theme("dark")
+            .with_planet_glyph_palette(palette)
+            .save()
         )
 
     print("  ✓ Planet glyph palettes tested successfully!")
@@ -103,11 +102,11 @@ def test_adaptive_sign_coloring():
 
     # Test with viridis theme and adaptive coloring enabled
     print("  - Viridis theme with adaptive sign coloring...")
-    draw_chart(
-        chart,
-        "examples/chart_examples/test_adaptive_sign_coloring.svg",
-        theme="viridis",
-        color_sign_info=True,
+    (
+        chart.draw("examples/chart_examples/test_adaptive_sign_coloring.svg")
+        .with_theme("viridis")
+        .with_adaptive_colors(sign_info=True)
+        .save()
     )
 
     print("  ✓ Adaptive sign coloring tested successfully!")

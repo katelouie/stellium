@@ -11,7 +11,7 @@ Tests:
 6. Extended canvas with different themes
 """
 
-from starlight import ChartBuilder, draw_chart
+from starlight import ChartBuilder
 
 
 def test_extended_right():
@@ -20,13 +20,11 @@ def test_extended_right():
 
     chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
-    draw_chart(
-        chart,
-        filename="examples/chart_examples/extended_right.svg",
-        extended_canvas="right",
-        show_position_table=True,
-        show_aspectarian=True,
-        moon_phase=False,
+    (
+        chart.draw("examples/chart_examples/extended_right.svg")
+        .without_moon_phase()
+        .with_tables(position="right", show_position_table=True, show_aspectarian=True)
+        .save()
     )
     print("✓ Generated: extended_right.svg")
 
@@ -37,13 +35,11 @@ def test_extended_left():
 
     chart = ChartBuilder.from_notable("Marie Curie").calculate()
 
-    draw_chart(
-        chart,
-        filename="examples/chart_examples/extended_left.svg",
-        extended_canvas="left",
-        show_position_table=True,
-        show_aspectarian=True,
-        moon_phase=False,
+    (
+        chart.draw("examples/chart_examples/extended_left.svg")
+        .without_moon_phase()
+        .with_tables(position="left", show_position_table=True, show_aspectarian=True)
+        .save()
     )
     print("✓ Generated: extended_left.svg")
 
@@ -54,13 +50,11 @@ def test_extended_below():
 
     chart = ChartBuilder.from_notable("Frida Kahlo").calculate()
 
-    draw_chart(
-        chart,
-        filename="examples/chart_examples/extended_below.svg",
-        extended_canvas="below",
-        show_position_table=True,
-        show_aspectarian=True,
-        moon_phase=False,
+    (
+        chart.draw("examples/chart_examples/extended_below.svg")
+        .without_moon_phase()
+        .with_tables(position="below", show_position_table=True, show_aspectarian=True)
+        .save()
     )
     print("✓ Generated: extended_below.svg")
 
@@ -72,26 +66,22 @@ def test_extended_with_themes():
     chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
     # Dark theme
-    draw_chart(
-        chart,
-        filename="examples/chart_examples/extended_dark.svg",
-        extended_canvas="right",
-        show_position_table=True,
-        show_aspectarian=True,
-        theme="dark",
-        moon_phase=False,
+    (
+        chart.draw("examples/chart_examples/extended_dark.svg")
+        .with_theme("dark")
+        .without_moon_phase()
+        .with_tables(position="right", show_position_table=True, show_aspectarian=True)
+        .save()
     )
     print("✓ Generated: extended_dark.svg (dark theme)")
 
     # Midnight theme
-    draw_chart(
-        chart,
-        filename="examples/chart_examples/extended_midnight.svg",
-        extended_canvas="right",
-        show_position_table=True,
-        show_aspectarian=True,
-        theme="midnight",
-        moon_phase=False,
+    (
+        chart.draw("examples/chart_examples/extended_midnight.svg")
+        .with_theme("midnight")
+        .without_moon_phase()
+        .with_tables(position="right", show_position_table=True, show_aspectarian=True)
+        .save()
     )
     print("✓ Generated: extended_midnight.svg (midnight theme)")
 
@@ -102,22 +92,15 @@ def test_extended_with_corners():
 
     chart = ChartBuilder.from_notable("Marie Curie").calculate()
 
-    draw_chart(
-        chart,
-        filename="examples/chart_examples/extended_full_featured.svg",
-        extended_canvas="right",
-        show_position_table=True,
-        show_aspectarian=True,
-        chart_info=True,
-        chart_info_position="top-left",
-        aspect_counts=True,
-        aspect_counts_position="top-right",
-        element_modality_table=True,
-        element_modality_position="bottom-left",
-        chart_shape=True,
-        chart_shape_position="bottom-right",
-        moon_phase=True,
-        moon_phase_position="center",
+    (
+        chart.draw("examples/chart_examples/extended_full_featured.svg")
+        .with_moon_phase()
+        .with_chart_info()
+        .with_aspect_counts()
+        .with_element_modality_table()
+        .with_chart_shape()
+        .with_tables(position="right", show_position_table=True, show_aspectarian=True)
+        .save()
     )
     print("✓ Generated: extended_full_featured.svg (all features)")
 
