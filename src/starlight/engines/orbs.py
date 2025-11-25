@@ -22,7 +22,7 @@ class SimpleOrbEngine:
     """
 
     def __init__(
-        self, orb_map: dict[str, float] | None = None, fallback_orb: int | None = None
+        self, orb_map: dict[str, float] | None = None, fallback_orb: float | None = None
     ) -> None:
         """
         Args:
