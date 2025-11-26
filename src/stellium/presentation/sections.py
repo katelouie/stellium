@@ -149,6 +149,37 @@ def get_aspect_sort_key(aspect_name: str) -> tuple:
     return (2000, aspect_name)
 
 
+def abbreviate_house_system(system_name: str) -> str:
+    """
+    Generate 2-4 character abbreviation for house system names.
+
+    Args:
+        system_name: Full house system name (e.g., "Placidus", "Whole Sign")
+
+    Returns:
+        Short abbreviation (e.g., "Pl", "WS")
+
+    Example:
+        >>> abbreviate_house_system("Placidus")
+        'Pl'
+        >>> abbreviate_house_system("Whole Sign")
+        'WS'
+    """
+    abbreviations = {
+        "Placidus": "Pl",
+        "Whole Sign": "WS",
+        "Koch": "Ko",
+        "Equal": "Eq",
+        "Porphyry": "Po",
+        "Regiomontanus": "Re",
+        "Campanus": "Ca",
+        "Morinus": "Mo",
+        "Meridian": "Me",
+        "Alcabitius": "Al",
+    }
+    return abbreviations.get(system_name, system_name[:4])
+
+
 class ChartOverviewSection:
     """
     Overview section with basic chart information.
@@ -220,7 +251,7 @@ class PlanetPositionSection:
         self,
         include_speed: bool = False,
         include_house: bool = True,
-        house_system: str | None = None,
+        house_systems: str | list[str] = "all",
     ) -> None:
         """
         Initialize section with display options.
@@ -228,11 +259,28 @@ class PlanetPositionSection:
         Args:
             include_speed: Show speed column (for retrograde detection)
             include_house: Show house placement column
-            house_system: Which system to use for houses (None = chart default)
+            house_systems: Which systems to display:
+                - "all": Show all calculated house systems (DEFAULT)
+                - list[str]: Show specific systems (e.g., ["Placidus", "Whole Sign"])
+                - None: Show default system only
         """
         self.include_speed = include_speed
         self.include_house = include_house
-        self.house_system = house_system
+
+        # Normalize to internal representation
+        if house_systems == "all":
+            self._house_systems_mode = "all"
+            self._house_systems = None
+        elif isinstance(house_systems, list):
+            self._house_systems_mode = "specific"
+            self._house_systems = house_systems
+        elif house_systems is None:
+            self._house_systems_mode = "default"
+            self._house_systems = None
+        else:
+            # Single system name as string
+            self._house_systems_mode = "specific"
+            self._house_systems = [house_systems]
 
     @property
     def section_name(self) -> str:
@@ -242,11 +290,27 @@ class PlanetPositionSection:
         """
         Generate planet positions table.
         """
+        # Determine which house systems to show
+        if self._house_systems_mode == "all":
+            # Show all calculated systems
+            systems_to_show = list(chart.house_systems.keys())
+        elif self._house_systems_mode == "specific":
+            # Show only specified systems (that exist in chart)
+            systems_to_show = [
+                s for s in self._house_systems if s in chart.house_systems
+            ]
+        else:  # "default"
+            # Show only the chart's default system
+            systems_to_show = [chart.default_house_system]
+
         # Build headers based on options
         headers = ["Planet", "Position"]
 
-        if self.include_house:
-            headers.append("House")
+        if self.include_house and systems_to_show:
+            # Add one column per house system with abbreviated name
+            for system_name in systems_to_show:
+                abbrev = abbreviate_house_system(system_name)
+                headers.append(f"House ({abbrev})")
 
         if self.include_speed:
             headers.append("Speed")
@@ -288,20 +352,383 @@ class PlanetPositionSection:
             else:
                 row.append(f"{pos.sign} {degree}°{minute:02d}'")
 
-            # House (if requested)
-            if self.include_house:
-                system = self.house_system or chart.default_house_system
-                try:
-                    house_placements = chart.house_placements[system]
-                    house = house_placements.get(pos.name, "—")
-                    row.append(str(house) if house else "—")
-                except KeyError:
-                    row.append("—")
+            # House columns (one per system)
+            if self.include_house and systems_to_show:
+                for system_name in systems_to_show:
+                    try:
+                        house_placements = chart.house_placements[system_name]
+                        house = house_placements.get(pos.name, "—")
+                        row.append(str(house) if house else "—")
+                    except KeyError:
+                        row.append("—")
 
             # Speed and motion (if requested)
             if self.include_speed:
                 row.append(f"{pos.speed_longitude:.4f}°/day")
                 row.append("Retrograde" if pos.is_retrograde else "Direct")
+
+            rows.append(row)
+
+        return {"type": "table", "headers": headers, "rows": rows}
+
+
+class HouseCuspsSection:
+    """
+    Table of house cusp positions for multiple house systems.
+
+    Shows:
+    - House number (1-12)
+    - Cusp position for each calculated house system
+    """
+
+    def __init__(self, systems: str | list[str] = "all") -> None:
+        """
+        Initialize section with system selection.
+
+        Args:
+            systems: Which systems to display:
+                - "all": Show all calculated house systems (DEFAULT)
+                - list[str]: Show specific systems (e.g., ["Placidus", "Whole Sign"])
+        """
+        # Normalize to internal representation
+        if systems == "all":
+            self._systems_mode = "all"
+            self._systems = None
+        elif isinstance(systems, list):
+            self._systems_mode = "specific"
+            self._systems = systems
+        else:
+            # Single system name as string
+            self._systems_mode = "specific"
+            self._systems = [systems]
+
+    @property
+    def section_name(self) -> str:
+        return "House Cusps"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """
+        Generate house cusps table.
+        """
+        from stellium.core.models import longitude_to_sign_and_degree
+
+        # Determine which house systems to show
+        if self._systems_mode == "all":
+            # Show all calculated systems
+            systems_to_show = list(chart.house_systems.keys())
+        else:  # "specific"
+            # Show only specified systems (that exist in chart)
+            systems_to_show = [
+                s for s in self._systems if s in chart.house_systems
+            ]
+
+        # Build headers
+        headers = ["House"]
+        for system_name in systems_to_show:
+            abbrev = abbreviate_house_system(system_name)
+            headers.append(f"Cusp ({abbrev})")
+
+        # Build rows (houses 1-12)
+        rows = []
+        for house_num in range(1, 13):
+            row = [str(house_num)]
+
+            for system_name in systems_to_show:
+                house_cusps = chart.house_systems[system_name]
+                # Cusps are 0-indexed in the tuple
+                cusp_longitude = house_cusps.cusps[house_num - 1]
+
+                # Convert to sign and degree
+                sign, sign_degree = longitude_to_sign_and_degree(cusp_longitude)
+                degree = int(sign_degree)
+                minute = int((sign_degree % 1) * 60)
+
+                # Format with sign glyph
+                sign_glyph = get_sign_glyph(sign)
+                if sign_glyph:
+                    row.append(f"{degree}° {sign_glyph} {minute:02d}'")
+                else:
+                    row.append(f"{degree}° {sign} {minute:02d}'")
+
+            rows.append(row)
+
+        return {"type": "table", "headers": headers, "rows": rows}
+
+
+class DignitySection:
+    """
+    Table of essential dignities for planets.
+
+    Shows dignity scores and details for traditional and/or modern systems.
+    Gracefully handles missing dignity data with helpful message.
+    """
+
+    def __init__(
+        self,
+        essential: str = "both",
+        show_details: bool = False,
+    ) -> None:
+        """
+        Initialize dignity section.
+
+        Args:
+            essential: Which essential dignity system(s) to show:
+                - "traditional": Traditional dignities only
+                - "modern": Modern dignities only
+                - "both": Both systems (DEFAULT)
+                - "none": Skip essential dignities
+            show_details: Show dignity names instead of just scores
+        """
+        if essential not in ("traditional", "modern", "both", "none"):
+            raise ValueError(
+                f"essential must be 'traditional', 'modern', 'both', or 'none': got {essential}"
+            )
+        self.essential = essential
+        self.show_details = show_details
+
+    @property
+    def section_name(self) -> str:
+        return "Essential Dignities"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """
+        Generate dignity table.
+        """
+        # Check if dignity data exists
+        if "dignities" not in chart.metadata:
+            # Graceful handling: return helpful message
+            return {
+                "type": "text",
+                "content": (
+                    "Add DignityComponent() to chart builder to enable dignity calculations.\n\n"
+                    "Example:\n"
+                    "  chart = ChartBuilder.from_native(native).add_component(DignityComponent()).calculate()"
+                ),
+            }
+
+        dignity_data = chart.metadata["dignities"]
+        planet_dignities = dignity_data.get("planet_dignities", {})
+
+        if not planet_dignities:
+            return {
+                "type": "text",
+                "content": "No dignity data available.",
+            }
+
+        # Build headers
+        headers = ["Planet"]
+
+        if self.essential in ("traditional", "both"):
+            if self.show_details:
+                headers.append("Traditional Dignities")
+            else:
+                headers.append("Trad Score")
+
+        if self.essential in ("modern", "both"):
+            if self.show_details:
+                headers.append("Modern Dignities")
+            else:
+                headers.append("Mod Score")
+
+        # Filter to planets only
+        positions = [
+            p
+            for p in chart.positions
+            if p.object_type
+            in (
+                ObjectType.PLANET,
+                ObjectType.ASTEROID,
+            )
+        ]
+
+        # Sort positions consistently
+        positions = sorted(positions, key=get_object_sort_key)
+
+        # Build rows
+        rows = []
+        for pos in positions:
+            if pos.name not in planet_dignities:
+                continue
+
+            row = []
+
+            # Planet name with glyph
+            display_name, glyph = get_object_display(pos.name)
+            if glyph:
+                row.append(f"{glyph} {display_name}")
+            else:
+                row.append(display_name)
+
+            dignity_info = planet_dignities[pos.name]
+
+            # Traditional column
+            if self.essential in ("traditional", "both"):
+                if "traditional" in dignity_info:
+                    trad = dignity_info["traditional"]
+                    if self.show_details:
+                        # Show dignity names
+                        dignity_names = trad.get("dignities", [])
+                        if dignity_names:
+                            row.append(", ".join(dignity_names))
+                        else:
+                            row.append("Peregrine" if trad.get("is_peregrine") else "—")
+                    else:
+                        # Show score
+                        score = trad.get("score", 0)
+                        row.append(f"{score:+d}" if score != 0 else "0")
+                else:
+                    row.append("—")
+
+            # Modern column
+            if self.essential in ("modern", "both"):
+                if "modern" in dignity_info:
+                    mod = dignity_info["modern"]
+                    if self.show_details:
+                        # Show dignity names
+                        dignity_names = mod.get("dignities", [])
+                        if dignity_names:
+                            row.append(", ".join(dignity_names))
+                        else:
+                            row.append("—")
+                    else:
+                        # Show score
+                        score = mod.get("score", 0)
+                        row.append(f"{score:+d}" if score != 0 else "0")
+                else:
+                    row.append("—")
+
+            rows.append(row)
+
+        return {"type": "table", "headers": headers, "rows": rows}
+
+
+class AspectPatternSection:
+    """
+    Table of detected aspect patterns.
+
+    Shows Grand Trines, T-Squares, Yods, etc.
+    Gracefully handles missing pattern data with helpful message.
+    """
+
+    def __init__(
+        self,
+        pattern_types: str | list[str] = "all",
+        sort_by: str = "type",
+    ) -> None:
+        """
+        Initialize aspect pattern section.
+
+        Args:
+            pattern_types: Which pattern types to show:
+                - "all": Show all detected patterns (DEFAULT)
+                - list[str]: Show specific pattern types (e.g., ["Grand Trine", "T-Square"])
+            sort_by: How to sort patterns:
+                - "type": Group by pattern type
+                - "element": Group by element (Fire, Earth, Air, Water)
+                - "count": Sort by number of planets involved
+        """
+        self.pattern_types = pattern_types
+        self.sort_by = sort_by
+
+    @property
+    def section_name(self) -> str:
+        return "Aspect Patterns"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """
+        Generate aspect pattern table.
+        """
+        # Check if aspect pattern data exists
+        if "aspect_patterns" not in chart.metadata:
+            # Graceful handling: return helpful message
+            return {
+                "type": "text",
+                "content": (
+                    "Add AspectPatternAnalyzer() to chart builder to enable pattern detection.\n\n"
+                    "Example:\n"
+                    "  from stellium.engines.patterns import AspectPatternAnalyzer\n"
+                    "  chart = ChartBuilder.from_native(native).add_analyzer(AspectPatternAnalyzer()).calculate()"
+                ),
+            }
+
+        patterns = chart.metadata["aspect_patterns"]
+
+        if not patterns:
+            return {
+                "type": "text",
+                "content": "No aspect patterns detected in this chart.",
+            }
+
+        # Filter patterns if specific types requested
+        if self.pattern_types != "all":
+            if isinstance(self.pattern_types, list):
+                patterns = [p for p in patterns if p.name in self.pattern_types]
+            else:
+                patterns = [p for p in patterns if p.name == self.pattern_types]
+
+        if not patterns:
+            return {
+                "type": "text",
+                "content": f"No patterns of type {self.pattern_types} found.",
+            }
+
+        # Sort patterns
+        if self.sort_by == "element":
+            patterns = sorted(
+                patterns,
+                key=lambda p: (p.element or "zzz", p.name),  # Put None at end
+            )
+        elif self.sort_by == "count":
+            patterns = sorted(
+                patterns,
+                key=lambda p: (-len(p.planets), p.name),  # Descending by count
+            )
+        else:  # "type"
+            patterns = sorted(patterns, key=lambda p: p.name)
+
+        # Build headers
+        headers = ["Pattern", "Planets", "Element/Quality", "Details"]
+
+        # Build rows
+        rows = []
+        for pattern in patterns:
+            row = []
+
+            # Pattern name
+            row.append(pattern.name)
+
+            # Planets involved (with glyphs)
+            planet_names = []
+            for planet in pattern.planets:
+                display_name, glyph = get_object_display(planet.name)
+                if glyph:
+                    planet_names.append(f"{glyph} {display_name}")
+                else:
+                    planet_names.append(display_name)
+            row.append(", ".join(planet_names))
+
+            # Element/Quality
+            elem_qual = []
+            if pattern.element:
+                elem_qual.append(pattern.element)
+            if pattern.quality:
+                elem_qual.append(pattern.quality)
+            row.append(" / ".join(elem_qual) if elem_qual else "—")
+
+            # Details (count + focal planet if applicable)
+            details = []
+            details.append(f"{len(pattern.planets)} planets")
+
+            # Check for focal/apex planet
+            focal = pattern.focal_planet
+            if focal:
+                focal_display, focal_glyph = get_object_display(focal.name)
+                if focal_glyph:
+                    details.append(f"Apex: {focal_glyph} {focal_display}")
+                else:
+                    details.append(f"Apex: {focal_display}")
+
+            row.append(", ".join(details))
 
             rows.append(row)
 

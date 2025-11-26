@@ -4,9 +4,10 @@
 
 - [ ] Add "text" option to presentation reports that outputs sentences of information.
 - [x] Add PDF and HTML report options.
-- [ ] Add dignity report section (with essential and accidental modes).
+- [x] Add house cusp section
+- [x] Add dignity report section (with essential and accidental modes).
 - [ ] Add midpoint aspect report section.
-- [ ] Add aspect pattern report section.
+- [x] Add aspect pattern report section.
 - [ ] Add Comparison chart sections (synastry, transit, progression)
 - [ ] Add Synthesis chart sections (composite, davison)
 

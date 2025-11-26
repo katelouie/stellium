@@ -12,8 +12,11 @@ from stellium.core.protocols import ReportRenderer, ReportSection
 
 from .renderers import PlainTextRenderer, RichTableRenderer
 from .sections import (
+    AspectPatternSection,
     AspectSection,
     ChartOverviewSection,
+    DignitySection,
+    HouseCuspsSection,
     MidpointSection,
     MoonPhaseSection,
     PlanetPositionSection,
@@ -71,7 +74,7 @@ class ReportBuilder:
         self,
         include_speed: bool = False,
         include_house: bool = True,
-        house_system: str | None = None,
+        house_systems: str | list[str] = "all",
     ) -> "ReportBuilder":
         """
         Add planet positions table.
@@ -79,7 +82,10 @@ class ReportBuilder:
         Args:
             include_speed: Show speed in longitude (for retrogrades)
             include_house: Show house placement
-            house_system: Which house system to use (None = default)
+            house_systems: Which house systems to display (DEFAULT: "all")
+                - "all": Show all calculated systems
+                - list[str]: Show specific systems
+                - None: Show default system only
 
         Returns:
             Self for chaining
@@ -88,7 +94,7 @@ class ReportBuilder:
             PlanetPositionSection(
                 include_speed=include_speed,
                 include_house=include_house,
-                house_system=house_system,
+                house_systems=house_systems,
             )
         )
         return self
@@ -138,6 +144,84 @@ class ReportBuilder:
             MidpointSection(
                 mode=mode,
                 threshold=threshold,
+            )
+        )
+        return self
+
+    def with_house_cusps(self, systems: str | list[str] = "all") -> "ReportBuilder":
+        """
+        Add house cusps table.
+
+        Args:
+            systems: Which house systems to display (DEFAULT: "all")
+                - "all": Show all calculated systems
+                - list[str]: Show specific systems
+
+        Returns:
+            Self for chaining
+        """
+        self._sections.append(HouseCuspsSection(systems=systems))
+        return self
+
+    def with_dignities(
+        self,
+        essential: str = "both",
+        show_details: bool = False,
+    ) -> "ReportBuilder":
+        """
+        Add essential dignities table.
+
+        Args:
+            essential: Which essential dignity system(s) to show (DEFAULT: "both")
+                - "traditional": Traditional dignities only
+                - "modern": Modern dignities only
+                - "both": Both systems
+                - "none": Skip essential dignities
+            show_details: Show dignity names instead of just scores
+
+        Returns:
+            Self for chaining
+
+        Note:
+            Requires DignityComponent to be added to chart builder.
+            If missing, displays helpful message instead of erroring.
+        """
+        self._sections.append(
+            DignitySection(
+                essential=essential,
+                show_details=show_details,
+            )
+        )
+        return self
+
+    def with_aspect_patterns(
+        self,
+        pattern_types: str | list[str] = "all",
+        sort_by: str = "type",
+    ) -> "ReportBuilder":
+        """
+        Add aspect patterns table (Grand Trines, T-Squares, Yods, etc.).
+
+        Args:
+            pattern_types: Which pattern types to show (DEFAULT: "all")
+                - "all": Show all detected patterns
+                - list[str]: Show specific pattern types
+            sort_by: How to sort patterns (DEFAULT: "type")
+                - "type": Group by pattern type
+                - "element": Group by element
+                - "count": Sort by number of planets
+
+        Returns:
+            Self for chaining
+
+        Note:
+            Requires AspectPatternAnalyzer to be added to chart builder.
+            If missing, displays helpful message instead of erroring.
+        """
+        self._sections.append(
+            AspectPatternSection(
+                pattern_types=pattern_types,
+                sort_by=sort_by,
             )
         )
         return self

@@ -9,6 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Report Section Enhancements (November 26, 2025)
+
+- **Multi-House System Planet Positions**: `PlanetPositionSection` now shows house placements for ALL calculated house systems
+  - Changed API from `house_system` (singular) to `house_systems` (plural/flexible)
+  - New defaults: `house_systems="all"` shows all calculated systems (Placidus, Whole Sign, Koch, etc.)
+  - Can specify: `house_systems=["Placidus", "Whole Sign"]` for specific systems, or `house_systems=None` for default only
+  - Dynamic column headers with abbreviated system names: "House (Pl)", "House (WS)", "House (Ko)"
+  - One column per house system - finally exposes the multi-system data that was already calculated!
+
+- **House Cusps Section**: New `HouseCuspsSection` displays cusp degrees for all house systems
+  - Shows all 12 houses with degree + sign + minute formatting ("15° ♈︎ 23'")
+  - API: `systems="all"` (default) or list of specific systems
+  - Uses same abbreviation system as planet positions for consistency
+  - Accessed via `.with_house_cusps(systems="all")` builder method
+
+- **Dignity Section**: New `DignitySection` displays essential dignities with graceful error handling
+  - Supports traditional, modern, or both dignity systems: `essential="both"` (default)
+  - Two display modes: `show_details=False` shows scores (+9, -5), `show_details=True` shows dignity names
+  - Graceful handling: if `DignityComponent()` not added, shows helpful message instead of erroring
+  - Message includes example code showing how to add the component
+  - Accessed via `.with_dignities(essential="both", show_details=False)` builder method
+
+- **Aspect Pattern Section**: New `AspectPatternSection` displays detected patterns (Grand Trines, T-Squares, Yods, etc.)
+  - Shows pattern type, involved planets (with glyphs), element/quality, and focal planet (if applicable)
+  - Supports filtering: `pattern_types="all"` (default) or list of specific pattern types
+  - Sorting options: `sort_by="type"` (default), `"element"`, or `"count"`
+  - Graceful handling: if `AspectPatternAnalyzer()` not added, shows helpful message with example
+  - Accessed via `.with_aspect_patterns(pattern_types="all", sort_by="type")` builder method
+
+- **House System Abbreviation Helper**: Added `abbreviate_house_system()` utility function
+  - Maps full house system names to 2-4 character codes (e.g., "Placidus" → "Pl", "Whole Sign" → "WS")
+  - Used consistently across all report sections for compact, readable column headers
+  - Supports 10 common house systems with fallback to first 4 characters
+
+- **ReportBuilder API Updates**: Three new builder methods for enhanced reports
+  - `.with_house_cusps(systems="all")` - add house cusps table
+  - `.with_dignities(essential="both", show_details=False)` - add dignities table
+  - `.with_aspect_patterns(pattern_types="all", sort_by="type")` - add aspect patterns table
+  - Updated `.with_planet_positions(house_systems="all")` signature (minor breaking change: `house_system` → `house_systems`)
+
 #### Multi-House System Visualization (November 25, 2025)
 
 - Fixed `with_house_systems("all")` to actually render multiple house systems on the chart wheel
@@ -227,6 +267,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated ReportBuilder API: consolidated `.render()` and `.to_file()` into single `.render(format, file, show)` method
 
 ### Fixed
+
+#### November 26, 2025
+
+- **DignityComponent Protocol Signature**: Fixed `DignityComponent.calculate()` to match updated `ChartComponent` protocol
+  - Added missing `house_placements_map: dict[str, dict[str, int]]` parameter
+  - Protocol was updated to include house placements but component wasn't updated
+  - Caused `TypeError: takes 5 positional arguments but 6 were given`
+
+- **String Formatting in Error Messages**: Fixed Python syntax errors in graceful error message strings
+  - Changed multi-line strings with embedded newlines/quotes to use string concatenation with parentheses
+  - Affected `DignitySection` and `AspectPatternSection` helpful messages
+  - Prevents parser confusion with mixed quote types and escape sequences
 
 #### November 24-25, 2025
 

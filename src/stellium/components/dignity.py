@@ -110,6 +110,7 @@ class DignityComponent:
         location: ChartLocation,
         positions: list[CelestialPosition],
         house_systems_map: dict[str, HouseCusps],
+        house_placements_map: dict[str, dict[str, int]],
     ) -> list[CelestialPosition]:
         """
         Calculate dignities for all positions.
@@ -123,6 +124,7 @@ class DignityComponent:
             location: Chart location
             positions: Already calculated positions
             house_systems_map: All calculated house systems
+            house_placements_map: House placements for all systems
 
         Returns:
             Empty list (dignities stored in metadata)
