@@ -430,7 +430,8 @@ class LayoutEngine:
         Corners are positioned relative to the wheel's bounding box.
         """
         corners = {}
-        margin = self.config.min_margin
+        # Reduced margin for info corners - they should be closer to edges
+        corner_margin = 5  # Reduced from min_margin (10) to be less "inset"
 
         # Get wheel bounding box
         wheel_bbox = BoundingBox(
@@ -469,20 +470,20 @@ class LayoutEngine:
 
             # Calculate position based on corner
             if position == "top-left":
-                pos = Position(wheel_pos.x + margin, wheel_pos.y + margin)
+                pos = Position(wheel_pos.x + corner_margin, wheel_pos.y + corner_margin)
             elif position == "top-right":
                 pos = Position(
-                    wheel_pos.x + wheel_size - dims.width - margin, wheel_pos.y + margin
+                    wheel_pos.x + wheel_size - dims.width - corner_margin, wheel_pos.y + corner_margin
                 )
             elif position == "bottom-left":
                 pos = Position(
-                    wheel_pos.x + margin,
-                    wheel_pos.y + wheel_size - dims.height - margin,
+                    wheel_pos.x + corner_margin,
+                    wheel_pos.y + wheel_size - dims.height - corner_margin,
                 )
             else:  # "bottom-right"
                 pos = Position(
-                    wheel_pos.x + wheel_size - dims.width - margin,
-                    wheel_pos.y + wheel_size - dims.height - margin,
+                    wheel_pos.x + wheel_size - dims.width - corner_margin,
+                    wheel_pos.y + wheel_size - dims.height - corner_margin,
                 )
 
             corners[name] = BoundingBox(position=pos, dimensions=dims)

@@ -655,6 +655,15 @@ class ChartDrawBuilder:
         if self._color_sign_info is not None:
             wheel_kwargs["color_sign_info"] = self._color_sign_info
 
+        # Auto-hide chart shape if moon phase is in bottom-right (they would overlap)
+        moon_in_bottom_right = (
+            self._moon_phase is True and
+            self._moon_phase_position == "bottom-right"
+        )
+        if moon_in_bottom_right and self._chart_shape is True:
+            # Disable chart shape to avoid collision with moon phase
+            self._chart_shape = False
+
         # Build corners config kwargs (only user-specified values)
         corners_kwargs = {}
         if self._chart_info is not None:

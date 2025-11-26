@@ -276,10 +276,14 @@ class PositionTableLayer:
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
+            # Get display name from registry
+            obj_info = CELESTIAL_REGISTRY.get(pos.name)
+            display_name = obj_info.display_name if obj_info else pos.name
+
             if glyph_info["type"] == "unicode":
-                planet_text = f"{glyph_info['value']} {pos.name}"
+                planet_text = f"{glyph_info['value']} {display_name}"
             else:
-                planet_text = pos.name
+                planet_text = display_name
 
             # Add retrograde symbol if applicable
             if pos.is_retrograde:
@@ -555,10 +559,14 @@ class PositionTableLayer:
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
+            # Get display name from registry
+            obj_info = CELESTIAL_REGISTRY.get(pos.name)
+            display_name = obj_info.display_name if obj_info else pos.name
+
             if glyph_info["type"] == "unicode":
-                planet_text = f"{glyph_info['value']} {pos.name}"
+                planet_text = f"{glyph_info['value']} {display_name}"
             else:
-                planet_text = pos.name
+                planet_text = display_name
 
             # Add retrograde symbol if applicable
             if pos.is_retrograde:
