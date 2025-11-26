@@ -9,6 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Unknown Birth Time Charts (November 25, 2025)
+
+- Added `UnknownTimeChart` model for charts with known date but unknown birth time
+- Added `MoonRange` dataclass tracking Moon's daily arc (start/end longitude, sign crossing detection)
+- Added `time_unknown` parameter to `Native` class - auto-normalizes to noon
+- Added `ChartBuilder.with_unknown_time()` fluent method
+- Added `MoonRangeLayer` visualization - semi-transparent arc showing Moon's possible positions
+- Unknown time charts skip houses and angles (can't calculate without exact time)
+- Theme-aware Moon arc colors using `style["planets"]["glyph_color"]`
+
+#### Chart Header Band (November 25, 2025)
+
+- Added `HeaderLayer` for prominent native info display at top of chart
+- Added `HeaderConfig` with customizable height, fonts, and coordinate precision
+- Three header modes:
+  - **Single chart**: Name (Cinzel font), short location + coordinates, datetime + timezone
+  - **Biwheel**: Two-column layout - inner chart left-aligned, outer chart right-aligned
+  - **Synthesis**: "Davison: Name1 & Name2" with midpoint coordinates
+- Added smart location parsing - extracts "City, State" from verbose geopy strings
+- Canvas grows taller (rectangle) when header enabled
+- `.with_header()` / `.without_header()` builder methods (header ON by default)
+- `ChartInfoLayer` simplified to just house system + ephemeris when header enabled
+
+#### API Convenience Methods (November 24, 2025)
+
+- Added datetime string parsing to `Native` class:
+  - Supports ISO 8601: `"1994-01-06 11:47"`, `"1994-01-06T11:47:00"`
+  - Supports US format: `"01/06/1994 11:47 AM"`
+  - Supports European format: `"06-01-1994 11:47"`
+  - Supports date-only: `"1994-01-06"` (defaults to noon)
+- Added `ChartBuilder.from_details(datetime, location, *, name=None, time_unknown=False)` convenience method
+- Added `ComparisonBuilder` convenience methods:
+  - `.synastry(data1, data2)` - for relationship analysis
+  - `.transit(natal_data, transit_data)` - for timing analysis
+  - `.progression(natal_data, progressed_data)` - for symbolic timing
+  - `.compare(data1, data2, comparison_type)` - for programmatic use
+- All convenience methods accept tuples `(datetime, location)` or `(datetime, location, name)`
+
+#### Outer Wheel Visualization Improvements (November 24, 2025)
+
+- Added `OuterAngleLayer` for outer wheel angles in biwheel charts
+  - Extends outward from zodiac ring
+  - Lighter colors and thinner lines than inner angles
+- Added `OuterBorderLayer` for visual containment of outer planets
+- Added `outer_wheel_angles` styling to all 13 themes
+- Inner wheel angles now always display in comparison charts
+
 #### Core Architecture & Models
 
 - Added core dataclass models in `core/models.py`: ObjectType, ChartLocation, ChartDateTime, CelestialPosition, HouseCusps, Aspect, CalculatedChart
@@ -126,6 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `get_object_sort_key()` - sorts by type → registry order → swe_id → alphabetical
   - `get_aspect_sort_key()` - sorts by angle (registry order) → angle value → alphabetical
   - Applied to all sections for consistent astrological ordering
+- Added typst PDF reporting.
 
 ### Removed
 
@@ -135,6 +183,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Removed ASPECT_COLORS dict from presentation.py (now uses aspect registry)
 
 ### Changed
+
+#### Architecture & Config Refactors (November 24-25, 2025)
+
+- Refactored `ChartDrawBuilder` to delegate ALL defaults to config classes (single source of truth)
+- Split `radii_multipliers` into `single_radii` and `biwheel_radii` for clean chart-type separation
+- Config keys now directly match renderer keys (no mapping required)
+- Simplified `_calculate_wheel_radii()` from 54 lines to 26 lines
+- All zodiac tick marks now use angles line color for consistent visual hierarchy
+- `MoonPhaseLayer` now properly wired into `LayerFactory` (was missing!)
+
+#### Other Changes
 
 - Complete restructuring of the package to composable protocol-based design
 - Pivoted on houses: Chart supports multiple house systems simultaneously, data models updated
@@ -151,6 +210,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated ReportBuilder API: consolidated `.render()` and `.to_file()` into single `.render(format, file, show)` method
 
 ### Fixed
+
+#### November 24-25, 2025
+
+- Fixed `MoonPhaseLayer` not appearing (wasn't wired into `LayerFactory`)
+- Fixed moon phase label positioning when header enabled (label_y clamping now accounts for y_offset)
+- Fixed `ChartInfoLayer` positioning when header enabled (removed double-counting of header_height)
+- Fixed synthesis chart header showing "davison Chart" instead of "Davison: Name1 & Name2" (was using wrong attribute names)
+- Fixed biwheel header columns overlapping (added 45%/10%/45% column layout with proper spacing)
+
+#### Earlier Fixes
 
 - Fixed multi-house system chart rendering (Whole Sign fills no longer cover Placidus lines)
 - Fixed Rich renderer ANSI code leakage into file output (terminal gets colors, files get plain text)

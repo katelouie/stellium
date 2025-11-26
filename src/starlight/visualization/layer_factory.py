@@ -17,6 +17,7 @@ from starlight.visualization.layers import (
     ChartInfoLayer,
     ChartShapeLayer,
     ElementModalityTableLayer,
+    HeaderLayer,
     HouseCuspLayer,
     MoonRangeLayer,
     OuterAngleLayer,
@@ -25,6 +26,7 @@ from starlight.visualization.layers import (
     PlanetLayer,
     ZodiacLayer,
 )
+from starlight.visualization.moon_phase import MoonPhaseLayer
 from starlight.visualization.layout.engine import LayoutResult
 
 
@@ -64,8 +66,22 @@ class LayerFactory:
         """
         is_comparison = isinstance(chart, Comparison)
         is_unknown_time = isinstance(chart, UnknownTimeChart)
+        header_enabled = self.config.header.enabled
 
         layers = []
+
+        # Layer 0: Header (if enabled) - rendered first, in the header area
+        if header_enabled:
+            layers.append(
+                HeaderLayer(
+                    height=self.config.header.height,
+                    name_font_size=self.config.header.name_font_size,
+                    name_font_family=self.config.header.name_font_family,
+                    details_font_size=self.config.header.details_font_size,
+                    line_height=self.config.header.line_height,
+                    coord_precision=self.config.header.coord_precision,
+                )
+            )
 
         # Layer 1: Zodiac ring (always present)
         layers.append(
@@ -161,11 +177,29 @@ class LayerFactory:
         if is_unknown_time:
             layers.append(MoonRangeLayer())
 
+        # Layer 5c: Moon phase (if enabled, and not a comparison chart)
+        if self.config.corners.moon_phase and not is_comparison:
+            # Build style override from config if size/label_size specified
+            moon_style = {}
+            if self.config.corners.moon_phase_size is not None:
+                moon_style["size"] = self.config.corners.moon_phase_size
+            if self.config.corners.moon_phase_label_size is not None:
+                moon_style["label_size"] = self.config.corners.moon_phase_label_size
+
+            layers.append(
+                MoonPhaseLayer(
+                    position=self.config.corners.moon_phase_position,
+                    show_label=self.config.corners.moon_phase_show_label,
+                    style_override=moon_style if moon_style else None,
+                )
+            )
+
         # Layer 6: Info corners (if enabled)
         if self.config.corners.chart_info:
             layers.append(
                 ChartInfoLayer(
                     position=self.config.corners.chart_info_position,
+                    header_enabled=header_enabled,
                 )
             )
 

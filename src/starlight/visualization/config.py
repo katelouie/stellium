@@ -52,10 +52,30 @@ class ChartWheelConfig:
 
 
 @dataclass(frozen=True)
-class InfoCornerConfig:
-    """Configuration for the 4 info corners."""
+class HeaderConfig:
+    """Configuration for the chart header band."""
 
-    # Chart info
+    # Header toggle
+    enabled: bool = True
+
+    # Header height (pixels added to canvas)
+    height: int = 70
+
+    # Styling
+    name_font_size: str = "18px"
+    name_font_family: str = "Cinzel, serif"  # Elegant display font
+    details_font_size: str = "12px"
+    line_height: int = 16
+
+    # Coordinate precision (decimal places)
+    coord_precision: int = 4
+
+
+@dataclass(frozen=True)
+class InfoCornerConfig:
+    """Configuration for the 4 info corners (now simplified when header is enabled)."""
+
+    # Chart info (simplified to just house system + ephemeris when header is enabled)
     chart_info: bool = True
     chart_info_position: Literal[
         "top-left", "top-right", "bottom-left", "bottom-right"
@@ -137,6 +157,7 @@ class ChartVisualizationConfig:
     wheel: ChartWheelConfig
     corners: InfoCornerConfig
     tables: TableConfig
+    header: HeaderConfig = None  # None triggers default creation
 
     # Core settings
     base_size: int = 600
@@ -146,6 +167,12 @@ class ChartVisualizationConfig:
     auto_center: bool = True
     auto_grow_wheel: bool = False  # Grow wheel if canvas gets big
     min_margin: int = 10  # Minimum space between components
+
+    def __post_init__(self):
+        """Create default HeaderConfig if None provided."""
+        if self.header is None:
+            # Use object.__setattr__ because frozen dataclass
+            object.__setattr__(self, "header", HeaderConfig())
 
 
 @dataclass(frozen=True)

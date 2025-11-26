@@ -13,6 +13,7 @@ from starlight.visualization.composer import ChartComposer
 from starlight.visualization.config import (
     ChartVisualizationConfig,
     ChartWheelConfig,
+    HeaderConfig,
     InfoCornerConfig,
     TableConfig,
 )
@@ -104,6 +105,10 @@ class ChartDrawBuilder:
 
         # House systems - None = use config defaults
         self._house_systems: list[str] | str | None = None
+
+        # Header - None = use config defaults (header is ON by default)
+        self._header: bool | None = None
+        self._header_height: int | None = None
 
     def with_filename(self, filename: str) -> "ChartDrawBuilder":
         """
@@ -238,6 +243,50 @@ class ChartDrawBuilder:
             builder.with_house_systems("all")
         """
         self._house_systems = systems
+        return self
+
+    def with_header(self, height: int | None = None) -> "ChartDrawBuilder":
+        """
+        Enable the chart header band.
+
+        The header displays native information prominently at the top of the chart:
+        - Single chart: Name, location (with coordinates), datetime, timezone
+        - Biwheel: Two-column layout with chart1 left-aligned, chart2 right-aligned
+        - Synthesis: "Composite: Name1 & Name2" with midpoint info
+
+        When header is enabled, the chart canvas becomes taller (a rectangle instead
+        of a square), and the simplified info corner shows only calculation settings
+        (house system, ephemeris).
+
+        Args:
+            height: Optional custom height in pixels (default: 70)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            # Default header
+            chart.draw("chart.svg").with_header().save()
+
+            # Custom header height
+            chart.draw("chart.svg").with_header(height=90).save()
+        """
+        self._header = True
+        if height is not None:
+            self._header_height = height
+        return self
+
+    def without_header(self) -> "ChartDrawBuilder":
+        """
+        Disable the chart header band.
+
+        When header is disabled, all native info (name, location, datetime, etc.)
+        is displayed in the chart info corner instead.
+
+        Returns:
+            Self for chaining
+        """
+        self._header = False
         return self
 
     def with_moon_phase(
@@ -653,11 +702,19 @@ class ChartDrawBuilder:
         if self._table_object_types is not None:
             tables_kwargs["object_types"] = self._table_object_types
 
+        # Build header config kwargs (only user-specified values)
+        header_kwargs = {}
+        if self._header is not None:
+            header_kwargs["enabled"] = self._header
+        if self._header_height is not None:
+            header_kwargs["height"] = self._header_height
+
         # Build main config kwargs (only user-specified values)
         config_kwargs: dict[str, Any] = {
             "wheel": ChartWheelConfig(**wheel_kwargs),
             "corners": InfoCornerConfig(**corners_kwargs),
             "tables": TableConfig(**tables_kwargs),
+            "header": HeaderConfig(**header_kwargs) if header_kwargs else HeaderConfig(),
         }
         if self._filename is not None:
             config_kwargs["filename"] = self._filename

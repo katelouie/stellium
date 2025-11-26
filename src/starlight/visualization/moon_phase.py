@@ -163,18 +163,22 @@ class MoonPhaseLayer:
                 # Ensure label has enough padding from edge (minimum margin)
                 min_margin = renderer.size * 0.03  # Match chart padding
 
+                # Get y_offset to account for header
+                y_offset = getattr(renderer, "y_offset", 0)
+
                 if self.position in ["top-left", "top-right"]:
                     # Above the moon - ensure we don't hit top edge
                     label_y = max(
                         y - self.style["size"] - self.style["label_offset"],
-                        min_margin + 12,  # 12px for text height
+                        y_offset + min_margin + 12,  # 12px for text height
                     )
                     dominant_baseline = "auto"  # Bottom of text aligns with y
                 else:
                     # Below the moon - ensure we don't hit bottom edge
+                    # y_offset + renderer.size is the bottom of the wheel area
                     label_y = min(
                         y + self.style["size"] + self.style["label_offset"],
-                        renderer.size - min_margin - 4,  # 4px buffer
+                        y_offset + renderer.size - min_margin - 4,  # 4px buffer
                     )
                     dominant_baseline = "hanging"  # Top of text aligns with y
 

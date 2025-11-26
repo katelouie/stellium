@@ -61,6 +61,10 @@ class LayoutResult:
     wheel_grew: bool  # Did we grow the wheel due to large canvas?
     actual_margins: dict[str, float]  # Actual margins used
 
+    # Header (optional, with defaults)
+    header_enabled: bool = False
+    header_height: int = 0
+
 
 @dataclass(frozen=True)
 class TableLayoutSpec:
@@ -147,6 +151,8 @@ class LayoutEngine:
 
         return LayoutResult(
             canvas_dimensions=canvas_dims,
+            header_enabled=self.config.header.enabled,
+            header_height=self.config.header.height if self.config.header.enabled else 0,
             wheel_position=wheel_pos,
             wheel_size=wheel_size,
             wheel_radii=wheel_radii,
@@ -493,20 +499,24 @@ class LayoutEngine:
         measurements: dict[str, Dimensions],
     ) -> Dimensions:
         """
-        Calculate required canvas size based on wheel + tables + corners.
+        Calculate required canvas size based on wheel + tables + corners + header.
 
         Logic:
         1. Start with base wheel size
-        2. Add table dimensions based on placement
-        3. Add padding for margins
-        4. Ensure minimum space for corner elements
+        2. Add header height if enabled
+        3. Add table dimensions based on placement
+        4. Add padding for margins
+        5. Ensure minimum space for corner elements
         """
         padding = self.config.min_margin * 2
 
         # Start with wheel size + padding
-
         width = base_wheel_size + padding
         height = base_wheel_size + padding
+
+        # Add header height if enabled
+        if self.config.header.enabled:
+            height += self.config.header.height
 
         # Add table dimensions based on placement
 
@@ -538,16 +548,21 @@ class LayoutEngine:
         """
         Calculate wheel position within canvas.
 
-        Centers the wheel, accounting for table placement.
+        Centers the wheel, accounting for table placement and header.
         """
+        # Calculate header offset
+        header_offset = self.config.header.height if self.config.header.enabled else 0
+
         if not self.config.auto_center:
-            # Simple top-left positioning with margin
-            return Position(self.config.min_margin, self.config.min_margin)
+            # Simple top-left positioning with margin, accounting for header
+            return Position(self.config.min_margin, self.config.min_margin + header_offset)
 
         if not self.config.tables.enabled:
             # Simple centering when no tables
             x = (canvas_dims.width - wheel_size) / 2
-            y = (canvas_dims.height - wheel_size) / 2
+            # Center wheel in the space BELOW the header
+            available_height = canvas_dims.height - header_offset
+            y = header_offset + (available_height - wheel_size) / 2
             return Position(x, y)
 
         # Adjust for table placement
@@ -561,29 +576,35 @@ class LayoutEngine:
                 - self.config.tables.padding
             )
             x = (available_width - wheel_size) / 2
-            y = (canvas_dims.height - wheel_size) / 2
+            # Center wheel in the space BELOW the header
+            available_height = canvas_dims.height - header_offset
+            y = header_offset + (available_height - wheel_size) / 2
 
         elif placement == "left":
             # Wheel goes on the right, shifted by table width
             table_space = table_layout.total_width + self.config.tables.padding
             available_width = canvas_dims.width - table_space
             x = table_space + ((available_width - wheel_size) / 2)
-            y = (canvas_dims.height - wheel_size) / 2
+            # Center wheel in the space BELOW the header
+            available_height = canvas_dims.height - header_offset
+            y = header_offset + (available_height - wheel_size) / 2
 
         elif placement == "below":
-            # Wheel goes on top, centered horizontally
+            # Wheel goes on top (but below header), centered horizontally
             x = (canvas_dims.width - wheel_size) / 2
             available_height = (
                 canvas_dims.height
+                - header_offset
                 - table_layout.total_height
                 - self.config.tables.padding
             )
-            y = (available_height - wheel_size) / 2
+            y = header_offset + (available_height - wheel_size) / 2
 
         else:
             # Fallback to simple centering
             x = (canvas_dims.width - wheel_size) / 2
-            y = (canvas_dims.height - wheel_size) / 2
+            available_height = canvas_dims.height - header_offset
+            y = header_offset + (available_height - wheel_size) / 2
 
         return Position(x, y)
 

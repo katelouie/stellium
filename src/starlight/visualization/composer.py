@@ -104,6 +104,9 @@ class ChartComposer:
         renderer.x_offset = int(layout.wheel_position.x)
         renderer.y_offset = int(layout.wheel_position.y)
 
+        # Set header height for layers that need to account for it
+        renderer.header_height = layout.header_height
+
         return renderer
 
     def _get_background_color(self) -> str:
