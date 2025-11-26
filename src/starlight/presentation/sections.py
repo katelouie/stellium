@@ -9,7 +9,51 @@ import datetime as dt
 from typing import Any
 
 from starlight.core.models import CalculatedChart, MidpointPosition, ObjectType
-from starlight.core.registry import CELESTIAL_REGISTRY, get_aspects_by_category
+from starlight.core.registry import (
+    ASPECT_REGISTRY,
+    CELESTIAL_REGISTRY,
+    get_aspects_by_category,
+)
+from starlight.engines.dignities import DIGNITIES
+
+
+def get_object_display(name: str) -> tuple[str, str]:
+    """
+    Get display name and glyph for a celestial object.
+
+    Args:
+        name: Internal object name (e.g., "Sun", "True Node")
+
+    Returns:
+        Tuple of (display_name, glyph)
+    """
+    if name in CELESTIAL_REGISTRY:
+        info = CELESTIAL_REGISTRY[name]
+        return info.display_name, info.glyph
+    return name, ""
+
+
+def get_sign_glyph(sign_name: str) -> str:
+    """Get the zodiac glyph for a sign name."""
+    if sign_name in DIGNITIES:
+        return DIGNITIES[sign_name]["symbol"]
+    return ""
+
+
+def get_aspect_display(aspect_name: str) -> tuple[str, str]:
+    """
+    Get display name and glyph for an aspect.
+
+    Args:
+        aspect_name: Aspect name (e.g., "Conjunction", "Trine")
+
+    Returns:
+        Tuple of (name, glyph)
+    """
+    if aspect_name in ASPECT_REGISTRY:
+        info = ASPECT_REGISTRY[aspect_name]
+        return info.name, info.glyph
+    return aspect_name, ""
 
 
 def get_object_sort_key(position):
@@ -228,13 +272,21 @@ class PlanetPositionSection:
         rows = []
         for pos in positions:
             row = []
-            # Planet name
-            row.append(pos.name)
+            # Planet name with glyph (e.g., "☉ Sun")
+            display_name, glyph = get_object_display(pos.name)
+            if glyph:
+                row.append(f"{glyph} {display_name}")
+            else:
+                row.append(display_name)
 
-            # Position (e.g., "15° ♌ 32'")
+            # Position with sign glyph (e.g., "♈︎ Aries 15°32'")
             degree = int(pos.sign_degree)
             minute = int((pos.sign_degree % 1) * 60)
-            row.append(f"{degree}° {pos.sign} {minute:02d}'")
+            sign_glyph = get_sign_glyph(pos.sign)
+            if sign_glyph:
+                row.append(f"{sign_glyph} {pos.sign} {degree}°{minute:02d}'")
+            else:
+                row.append(f"{pos.sign} {degree}°{minute:02d}'")
 
             # House (if requested)
             if self.include_house:
@@ -333,7 +385,19 @@ class AspectSection:
         # Build rows
         rows = []
         for aspect in aspects:
-            row = [aspect.object1.name, aspect.aspect_name, aspect.object2.name]
+            # Planet 1 with glyph
+            name1, glyph1 = get_object_display(aspect.object1.name)
+            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+
+            # Aspect with glyph
+            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            aspect_display = f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+
+            # Planet 2 with glyph
+            name2, glyph2 = get_object_display(aspect.object2.name)
+            planet2 = f"{glyph2} {name2}" if glyph2 else name2
+
+            row = [planet1, aspect_display, planet2]
 
             if self.orb_display:
                 row.append(f"{aspect.orb:.2f}°")

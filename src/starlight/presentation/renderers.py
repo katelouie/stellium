@@ -873,20 +873,25 @@ class TypstRenderer:
             return ""
 
         num_cols = len(headers)
+        num_rows = len(rows)
 
-        # Start table with elegant styling matching our warm color palette
-        # Wrap in align(center) to center the table
+        # Wrap table in a block with rounded corners and clip
+        # Use a box to contain the table with rounded corners
         lines = [
             "#align(center)[",
+            "#block(",
+            "  clip: true,",
+            "  radius: 6pt,",
+            ")[",
             "#table(",
             f"  columns: {num_cols},",
-            '  stroke: (x: none, y: 0.5pt + rgb("#e0d8dc")),',
-            "  inset: (x: 14pt, y: 12pt),",
+            "  stroke: none,",  # Remove internal strokes, we have the outer border
+            "  inset: (x: 14pt, y: 10pt),",
             "  align: (col, row) => if col == 0 { left } else { center },",
-            "  fill: (col, row) => {",
-            '    if row == 0 { rgb("#4a3353") }',  # warm primary purple for header
-            '    else if calc.odd(row) { rgb("#f9f6f7") }',  # subtle warm purple tint
-            '    else { rgb("#faf8f5") }',  # cream
+            f"  fill: (col, row) => {{",
+            f'    if row == 0 {{ rgb("#4a3353") }}',  # warm primary purple for header
+            f'    else if calc.odd(row) {{ rgb("#f9f6f7") }}',  # subtle warm purple tint
+            f'    else {{ rgb("#faf8f5") }}',  # cream
             "  },",
         ]
 
@@ -906,7 +911,8 @@ class TypstRenderer:
             )
             lines.append(f"  {row_cells},")
 
-        lines.append(")")
+        lines.append(")")  # close table
+        lines.append("]")  # close block
         lines.append("]")  # close align(center)
 
         return "\n".join(lines)
