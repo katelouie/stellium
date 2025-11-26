@@ -19,17 +19,22 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 - **Fully typed** with modern type hints for excellent IDE support
 - **Protocol-driven architecture** - extend with custom engines, no inheritance required
 - **Fluent builder pattern** - chainable, readable, intuitive API
+- **Flexible input formats** - accepts datetime strings, city names, or precise coordinates
 - **Modular & composable** - mix and match components as needed
 - **Production-ready** with comprehensive test coverage
 
 ### **For Astrologers**
 
+- **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
 - **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more
+- **Declination calculations** with out-of-bounds planet detection
+- **Bi-wheel charts** for synastry, transits, progressions, and composite analysis
 - **Sect-aware calculations** with proper day/night chart handling
 - **25+ Arabic Parts** with traditional formulas
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
-- **Beautiful visualizations** with professional SVG chart rendering
-- **Notable births and events database** for quick exploration and learning
+- **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
+- **Beautiful visualizations** with professional SVG chart rendering and 13 themes
+- **Notable births database** for quick exploration and learning
 
 ### Visual Chart Example
 
@@ -45,8 +50,9 @@ Unlike other Python astrology libraries, Stellium is designed for **extensibilit
 chart = AstrologyLibrary(date, location)  # That's all you can do
 
 # Stellium: composable, configurable, extensible
-chart = (ChartBuilder.from_native(native)
+chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .with_house_systems([PlacidusHouses(), WholeSignHouses()])  # Multiple systems!
+    .with_sidereal("lahiri")                                    # Sidereal zodiac option
     .with_aspects(ModernAspectEngine())                         # Swap aspect engines
     .with_orbs(LuminariesOrbEngine())                          # Custom orb rules
     .add_component(ArabicPartsCalculator())                    # Plugin-style components
@@ -81,7 +87,7 @@ pip install stellium
 ```python
 from stellium import ChartBuilder
 
-chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
+chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 chart.draw("einstein.svg").save()
 ```
 
@@ -120,16 +126,13 @@ chart.draw("custom.svg") \
 ### Your Own Chart
 
 ```python
-from stellium import ChartBuilder, Native
+from stellium import ChartBuilder
 
-# Create a Native (birth data container)
-native = Native(
-    datetime_input="2000-01-06 12:00",  # Naive or timezone-aware
-    location_input="Seattle, WA" # City name or (lat, lon)
-)
-
-# Build and calculate the chart
-chart = ChartBuilder.from_native(native).calculate()
+# Quick method: just pass datetime string and location
+chart = ChartBuilder.from_details(
+    "2000-01-06 12:00",  # ISO format, US format, or European format
+    "Seattle, WA"        # City name or (lat, lon) tuple
+).calculate()
 
 # Access planetary positions
 sun = chart.get_object("Sun")
@@ -148,9 +151,10 @@ Phase: Full (100% illuminated)
 
 **Key Features:**
 
-- Automatic geocoding (city name → coordinates)
-- Automatic timezone handling (naive datetimes converted to UTC)
-- Default house system is Placidus, default aspects are major (Ptolemaic)
+- **Flexible datetime parsing**: ISO 8601, US format, European format, or date-only
+- **Automatic geocoding**: City name → coordinates
+- **Automatic timezone handling**: Naive datetimes converted to UTC
+- **Smart defaults**: Placidus houses, major (Ptolemaic) aspects, tropical zodiac
 
 ---
 
@@ -159,34 +163,32 @@ Phase: Full (100% illuminated)
 ### Level 1: Exploring Chart Data
 
 ```python
-from stellium import ChartBuilder, Native
-from datetime import datetime
+from stellium import ChartBuilder
 
+# Modern convenience method - accepts datetime strings!
 chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").calculate()
 
 # Get all planets
 for planet in chart.get_planets():
-    print(planet)
+    print(f"{planet.name}: {planet.longitude:.2f}° {planet.sign}")
 
 # Get aspects
 for aspect in chart.aspects:
-    print(aspect)
+    print(f"{aspect.object1.name} {aspect.aspect_name} {aspect.object2.name} (orb: {aspect.orb:.2f}°)")
 
 # Get house cusps
 houses = chart.get_houses()  # Returns HouseCusps for default (or first) system
-print(houses)
+for i, cusp in enumerate(houses.cusps, 1):
+    print(f"House {i}: {cusp:.2f}°")
 ```
 
 ### Level 2: Custom House Systems & Aspects
 
 ```python
-from stellium import ChartBuilder, Native
+from stellium import ChartBuilder
 from stellium.engines import WholeSignHouses, ModernAspectEngine, SimpleOrbEngine
-from datetime import datetime
 
-native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
-
-chart = (ChartBuilder.from_native(native)
+chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .with_house_systems([WholeSignHouses()])  # Use Whole Sign houses
     .with_aspects(ModernAspectEngine())       # Explicit aspect engine
     .with_orbs(SimpleOrbEngine())             # Simple orb rules
@@ -196,7 +198,7 @@ print(f"House System: {chart.default_house_system}")
 
 # Access house cusps for the specific system
 whole_sign_cusps = chart.get_house_cusps("Whole Sign")
-print(whole_sign_cusps.get_description(1)) # First House
+print(whole_sign_cusps.get_description(1))  # First House
 ```
 
 **Available House Systems:**
@@ -231,13 +233,10 @@ print(f"Sun in Koch House: {sun_koch_house}")
 ### Level 4: Arabic Parts & Components
 
 ```python
-from stellium import ChartBuilder, Native
+from stellium import ChartBuilder
 from stellium.components import ArabicPartsCalculator, MidpointCalculator
-from datetime import datetime
 
-native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
-
-chart = (ChartBuilder.from_native(native)
+chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .add_component(ArabicPartsCalculator())
     .add_component(MidpointCalculator())
     .calculate())
@@ -258,69 +257,74 @@ for mp in midpoints[:5]:  # First 5 midpoints
 - `ArabicPartsCalculator` - 25+ traditional lots (Part of Fortune, Spirit, Love, etc.)
 - `MidpointCalculator` - Direct midpoints for all planet pairs
 - `DignityComponent` - Essential dignities (rulership, exaltation, triplicity, etc.)
-- `AccidentalDignityComponent` - House-based accidental dignities
+- `AspectPatternAnalyzer` - Detect Grand Trines, T-Squares, Yods, Stelliums, etc.
 
 ### Level 5: Terminal Reports with Rich
 
 ```python
 from stellium import ChartBuilder, Native, ReportBuilder
+from stellium.components import DignityComponent, AspectPatternAnalyzer
 from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
-chart = ChartBuilder.from_native(native).calculate()
+chart = (ChartBuilder.from_native(native)
+    .add_component(DignityComponent())
+    .add_component(AspectPatternAnalyzer())
+    .calculate())
 
-# Build a beautiful terminal report
+# Build a comprehensive terminal report
 report = (ReportBuilder()
     .from_chart(chart)
-    .with_chart_overview()           # Chart metadata (date, location, etc.)
-    .with_planet_positions()         # Planetary positions table
-    .with_aspects(mode="major"))     # Major aspects table
+    .with_chart_overview()                    # Chart metadata (date, location, zodiac system)
+    .with_planet_positions(house_systems="all")  # Positions with ALL house systems
+    .with_declinations()                      # Declination table with OOB detection
+    .with_house_cusps(systems="all")          # House cusps for all systems
+    .with_aspects(mode="major")               # Major aspects table
+    .with_aspect_patterns()                   # Grand Trines, T-Squares, Yods, etc.
+    .with_dignities(essential="both"))        # Essential dignities (traditional + modern)
 
-report.render(format="rich_table") # Rich terminal formatting
+report.render(format="rich_table")  # Beautiful terminal output
 
-report.render(format="plain_table", file="my_chart.txt") # Export to file
+# Export to file
+report.render(format="plain_table", file="my_chart.txt")
+report.render(format="pdf", file="my_chart.pdf")  # PDF with Typst
 ```
 
-### Level 6: Advanced - Custom Visualization
+### Level 6: Advanced - Bi-Wheel Charts
 
 ```python
-from stellium import ChartBuilder, Native, ChartRenderer
-from stellium.visualization.layers import (
-    ZodiacLayer, HouseCuspLayer, PlanetLayer,
-    AspectLayer, AngleLayer
-)
-from datetime import datetime
+from stellium import ComparisonBuilder
 
-native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
-chart = ChartBuilder.from_native(native).calculate()
+# Synastry chart (relationship analysis)
+synastry = ComparisonBuilder.synastry(
+    ("1994-01-06 11:47", "Palo Alto, CA", "Kate"),
+    ("1995-06-15 14:30", "Seattle, WA", "Alex")
+).calculate()
 
-# Manual layer assembly for custom charts
-rotation = chart.get_object("ASC").longitude
-renderer = ChartRenderer(size=800, rotation=rotation)
-dwg = renderer.create_svg_drawing("custom_chart.svg")
+# Draw bi-wheel with both charts
+synastry.draw("synastry_biwheel.svg") \
+    .preset_detailed() \
+    .save()
 
-# Add layers in order (bottom to top)
-layers = [
-    ZodiacLayer(),
-    HouseCuspLayer(house_system_name="Placidus"),
-    AngleLayer(),
-    AspectLayer(),
-    PlanetLayer()
-]
+# Access inner and outer charts separately
+inner_chart = synastry.inner_chart
+outer_chart = synastry.outer_chart
 
-for layer in layers:
-    layer.render(renderer, dwg, chart)
-
-dwg.save()
+# Get aspects between the two charts
+interaspects = synastry.interaspects
+for aspect in interaspects[:10]:
+    print(f"{aspect.object1.name} ({inner_chart.name}) "
+          f"{aspect.aspect_name} "
+          f"{aspect.object2.name} ({outer_chart.name})")
 ```
 
-**Use Cases for Custom Layers:**
+**Comparison Chart Types:**
 
-- Synastry (bi-wheel) charts
-- Transit overlays
-- Custom styling and colors
-- Educational diagrams
-- Research visualizations
+- **Synastry**: Relationship compatibility and dynamics
+- **Transit**: Current planetary influences on natal chart
+- **Progression**: Secondary progressions for timing
+- **Composite**: Relationship midpoint chart (synthesis)
+- **Davison**: Relationship chart with actual location
 
 ---
 
@@ -345,6 +349,31 @@ See `stellium --help` for full CLI documentation.
 
 ## 🔍 Feature Highlights
 
+### Zodiac Systems
+
+- **Tropical Zodiac** (Western astrology) - default
+- **Sidereal Zodiac** (Vedic/Hindu astrology) with 9 ayanamsa systems:
+  - Lahiri (default for sidereal)
+  - Fagan-Bradley
+  - Raman
+  - Krishnamurti
+  - Yukteshwar
+  - J.N. Bhasin
+  - True Chitrapaksha
+  - True Revati
+  - De Luce
+
+```python
+# Tropical (default)
+chart = ChartBuilder.from_native(native).calculate()
+
+# Sidereal with Lahiri ayanamsa
+chart = ChartBuilder.from_native(native).with_sidereal("lahiri").calculate()
+
+# Sidereal with custom ayanamsa
+chart = ChartBuilder.from_native(native).with_sidereal("fagan_bradley").calculate()
+```
+
 ### Celestial Objects
 
 Calculate positions for 50+ celestial objects:
@@ -354,6 +383,20 @@ Calculate positions for 50+ celestial objects:
 - **Lunar Nodes**: North Node, South Node, True Node, Mean Node
 - **Lunar Apogee**: Lilith (Mean, True, Osculating, Interpolated)
 - **Chart Points**: Ascendant, Midheaven, Descendant, IC, Vertex, East Point
+
+### Coordinate Systems
+
+- **Ecliptic Coordinates**: Longitude, latitude (distance from ecliptic)
+- **Equatorial Coordinates**: Right ascension, declination (distance from celestial equator)
+- **Out-of-Bounds Detection**: Automatically identifies planets with extreme declinations (>23°27')
+
+```python
+sun = chart.get_object("Sun")
+print(f"Ecliptic: {sun.longitude:.2f}° longitude, {sun.latitude:.2f}° latitude")
+print(f"Equatorial: {sun.right_ascension:.2f}° RA, {sun.declination:.2f}° declination")
+if sun.is_out_of_bounds:
+    print(f"⚠ Sun is out of bounds!")
+```
 
 ### Aspect Calculations
 
@@ -367,6 +410,62 @@ Calculate positions for 50+ celestial objects:
 - **Essential Dignities**: Ruler, Exaltation, Triplicity (by sect), Bound, Decan, Detriment, Fall
 - **Accidental Dignities**: House placement, angular/succedent/cadent, joy
 - **Both Traditional & Modern** rulerships supported
+
+### Comparison Charts (Bi-Wheels)
+
+Create relationship, timing, and synthesis charts:
+
+```python
+from stellium import ComparisonBuilder
+
+# Synastry (relationship analysis)
+synastry = ComparisonBuilder.synastry(
+    ("1994-01-06 11:47", "Palo Alto, CA", "Person A"),
+    ("1995-06-15 14:30", "Seattle, WA", "Person B")
+).calculate()
+synastry.draw("synastry.svg").save()
+
+# Transits (timing analysis)
+transits = ComparisonBuilder.transit(
+    natal_data=("1994-01-06 11:47", "Palo Alto, CA"),
+    transit_data=("2025-11-26 12:00", "Palo Alto, CA")
+).calculate()
+
+# Composite (relationship midpoint chart)
+composite = ComparisonBuilder.composite(
+    ("1994-01-06 11:47", "Palo Alto, CA"),
+    ("1995-06-15 14:30", "Seattle, WA")
+).calculate()
+
+# Davison (relationship midpoint chart with actual location)
+davison = ComparisonBuilder.davison(
+    ("1994-01-06 11:47", "Palo Alto, CA"),
+    ("1995-06-15 14:30", "Seattle, WA")
+).calculate()
+```
+
+**Comparison Types:**
+- **Synastry**: Two natal charts overlaid (bi-wheel)
+- **Transit**: Natal chart + current/future planets
+- **Progression**: Natal chart + progressed positions
+- **Composite**: Midpoint chart (mathematical average)
+- **Davison**: Midpoint chart with actual geographic location
+
+### Unknown Birth Time Charts
+
+Handle charts when birth time is unknown:
+
+```python
+# Create chart with unknown time (defaults to noon, skips houses/angles)
+chart = ChartBuilder.from_details(
+    "1994-01-06",  # Date only
+    "Palo Alto, CA",
+    time_unknown=True
+).calculate()
+
+# Visualize with Moon's daily arc
+chart.draw("unknown_time.svg").save()  # Shows Moon's possible range
+```
 
 ### Data Export
 
@@ -511,11 +610,15 @@ pytest tests/test_integration.py
 
 ## 🗺️ Roadmap
 
-### Coming Soon
-
-- **Sidereal Support**: Sidereal zodiac calculations
-
 See [TODO.md](TODO.md) for the full development roadmap.
+
+### Recently Added
+
+- ✅ **Sidereal Zodiac Support** - 9 ayanamsa systems (Lahiri, Fagan-Bradley, Raman, etc.)
+- ✅ **Declination Calculations** - Out-of-bounds detection, equatorial coordinates
+- ✅ **Bi-Wheel Charts** - Synastry, transits, progressions, composite charts
+- ✅ **Enhanced Reports** - Dignities, aspect patterns, house cusps, declinations
+- ✅ **Unknown Time Charts** - Moon arc visualization for charts without birth time
 
 ---
 
