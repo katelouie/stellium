@@ -66,6 +66,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Swiss Ephemeris Integration**: Clean integration with pyswisseph global state management
 - **Thread Safety**: Sidereal mode set before each calculation batch (global state concern acknowledged)
 
+#### Declination Support (November 26, 2025)
+
+- **Equatorial Coordinates**: Full support for declination and right ascension alongside ecliptic coordinates
+  - **Dual Coordinate Systems**: Each CelestialPosition now has BOTH ecliptic (longitude/latitude) AND equatorial (right ascension/declination) coordinates
+  - **Automatic Calculation**: SwissEphemerisEngine makes two `calc_ut()` calls per planet (one standard, one with `FLG_EQUATORIAL`)
+  - **Efficient Caching**: Both coordinate systems are cached separately for performance
+  - **Clean Data Model**: Clear separation between ecliptic latitude (distance from ecliptic) and declination (distance from celestial equator)
+
+- **CelestialPosition Extensions**: New fields and properties for equatorial coordinates
+  - `declination: float | None` - Distance from celestial equator in degrees (-90° to +90°)
+  - `right_ascension: float | None` - Equatorial equivalent of longitude (0° to 360°)
+  - `is_out_of_bounds: bool` - Property detecting when declination exceeds Sun's maximum (~23°27')
+  - `declination_direction: str` - Returns "north", "south", or "none"
+
+- **Out-of-Bounds Detection**: Identifies planets with extreme declinations
+  - Maximum solar declination is ~23.4367° (Tropic of Cancer/Capricorn)
+  - Moon, Mercury, Mars, and Venus can go out-of-bounds
+  - Jupiter, Saturn, and outer planets rarely or never exceed these bounds
+  - Out-of-bounds planets considered to have extra intensity or unconventional expression
+
+- **Declination Report Section**: New `DeclinationSection` displays declination data
+  - Shows all planets with their declination values formatted as degrees°minutes'
+  - Indicates north/south direction for each planet
+  - Highlights out-of-bounds planets with "OOB ⚠" marker
+  - Filters out asteroids and minor points for cleaner display
+  - Accessed via `.with_declinations()` builder method
+
+- **Future Capabilities**: Foundation for advanced declination techniques
+  - Architecture ready for parallel/contraparallel aspect detection
+  - Enables traditional declination-based astrological techniques
+  - Complete equatorial coordinate system available for custom analysis
+
 ## [0.2.0] - 2025-11-26
 
 ### Added
