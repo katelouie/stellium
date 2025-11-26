@@ -2,8 +2,8 @@
 
 import pytest
 
-from starlight.core.models import ObjectType
-from starlight.core.registry import (
+from stellium.core.models import ObjectType
+from stellium.core.registry import (
     CELESTIAL_REGISTRY,
     get_all_by_category,
     get_all_by_type,

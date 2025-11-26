@@ -79,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added 4 tests for core dataclass models
 - Added Protocol definitions: EphemerisEngine, HouseSystemEngine, AspectEngine, OrbEngine, DignityCalculator, ChartComponent, ReportRenderer, ReportSection
 - Added configuration models: AspectConfig, CalculationConfig
-- Renamed from `starlight` to `stellium` (entire package).
+- Renamed from `stellium` to `stellium` (entire package).
 
 #### Registries
 
@@ -246,4 +246,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.1.0]
 
-- Initial version of `starlight`
+- Initial version of `stellium`

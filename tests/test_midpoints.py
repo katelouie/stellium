@@ -5,10 +5,10 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.components.midpoints import MidpointCalculator
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import CelestialPosition, ChartLocation, ObjectType
-from starlight.core.native import Native
+from stellium.components.midpoints import MidpointCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import CelestialPosition, ChartLocation, ObjectType
+from stellium.core.native import Native
 
 
 def test_basic_midpoint_calculation():

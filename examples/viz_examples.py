@@ -1,5 +1,5 @@
 """
-Example Usage for the Starlight Visualization System.
+Example Usage for the Stellium Visualization System.
 
 This file demonstrates how to use the high-level drawing functions
 and how to manually assemble layers for custom charts.
@@ -11,18 +11,18 @@ from pathlib import Path
 
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import CalculatedChart, ObjectType
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import CalculatedChart, ObjectType
 
-# --- Core Starlight Imports ---
-from starlight.core.native import Native
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.engines.orbs import LuminariesOrbEngine
+# --- Core Stellium Imports ---
+from stellium.core.native import Native
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.engines.orbs import LuminariesOrbEngine
 
 # --- Advanced Imports (for Custom Charts) ---
-from starlight.visualization.core import ChartRenderer, IRenderLayer
-from starlight.visualization.layers import (
+from stellium.visualization.core import ChartRenderer, IRenderLayer
+from stellium.visualization.layers import (
     AngleLayer,
     AspectLayer,
     HouseCuspLayer,

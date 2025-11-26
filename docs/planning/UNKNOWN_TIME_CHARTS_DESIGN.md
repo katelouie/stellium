@@ -5,7 +5,7 @@ Status: Ready for Implementation
 
 ## Overview
 
-Many people know their birth date and location but not their exact birth time. This feature allows Starlight to generate meaningful charts for these users, clearly indicating what is known vs unknown.
+Many people know their birth date and location but not their exact birth time. This feature allows Stellium to generate meaningful charts for these users, clearly indicating what is known vs unknown.
 
 ## What We Know Without Birth Time
 
@@ -160,7 +160,7 @@ class MoonRangeLayer:
 ## API Usage
 
 ```python
-from starlight import ChartBuilder, Native
+from stellium import ChartBuilder, Native
 
 # Option 1: Flag on Native
 native = Native("1994-01-06", "Palo Alto, CA", time_unknown=True)

@@ -14,9 +14,9 @@ Each theme provides a cohesive visual style including:
 
 from datetime import datetime
 
-from starlight import ChartBuilder
-from starlight.visualization import ChartTheme
-from starlight.visualization.themes import get_theme_description
+from stellium import ChartBuilder
+from stellium.visualization import ChartTheme
+from stellium.visualization.themes import get_theme_description
 
 # Create a sample chart (Kate Louie's birth data)
 chart = ChartBuilder.from_native(

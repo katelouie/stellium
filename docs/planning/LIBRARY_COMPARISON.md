@@ -1,14 +1,14 @@
-# 🌟 Starlight vs Other Python Astrology Libraries
+# 🌟 Stellium vs Other Python Astrology Libraries
 
 ## Executive Summary
 
-This document compares **Starlight** against major Python astrology libraries to assess its position in the ecosystem, identify unique strengths, and highlight areas for improvement.
+This document compares **Stellium** against major Python astrology libraries to assess its position in the ecosystem, identify unique strengths, and highlight areas for improvement.
 
 ---
 
 ## 📚 **Library Overview**
 
-### **Starlight** (Current Project)
+### **Stellium** (Current Project)
 - **Focus**: Modern astrological chart calculation with comprehensive features
 - **Foundation**: Swiss Ephemeris (pyswisseph)
 - **Architecture**: Object-oriented with clean separation of concerns
@@ -42,7 +42,7 @@ This document compares **Starlight** against major Python astrology libraries to
 
 ## 🔍 **Detailed Feature Comparison**
 
-| Feature | Starlight | Kerykeion | Immanuel | Flatlib | PyEphem |
+| Feature | Stellium | Kerykeion | Immanuel | Flatlib | PyEphem |
 |---------|-----------|-----------|-----------|---------|---------|
 | **Core Calculations** |
 | Planetary positions | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -78,7 +78,7 @@ This document compares **Starlight** against major Python astrology libraries to
 
 ---
 
-## 🏆 **Starlight's Unique Strengths**
+## 🏆 **Stellium's Unique Strengths**
 
 ### **1. Advanced Caching Architecture**
 ```python
@@ -121,7 +121,7 @@ console.print(create_table_dignities(chart, plain=True))
 
 ---
 
-## ⚠️ **Areas Where Starlight Lags Behind**
+## ⚠️ **Areas Where Stellium Lags Behind**
 
 ### **1. Chart Visualization (Critical Gap)**
 - **Status**: Broken SVG implementation
@@ -150,19 +150,19 @@ console.print(create_table_dignities(chart, plain=True))
 ### **Professional/Commercial Use**
 1. **Immanuel-Python** - Most complete feature set, astro.com compatibility
 2. **Kerykeion** - Best for AI/data applications, modern API
-3. **Starlight** - Growing capabilities, excellent technical foundation
+3. **Stellium** - Growing capabilities, excellent technical foundation
 4. **Flatlib** - Traditional astrology specialists
 5. **PyEphem** - Scientific/research applications only
 
 ### **Developer Experience**
-1. **Starlight** - Most modern Python practices, clean architecture
+1. **Stellium** - Most modern Python practices, clean architecture
 2. **Immanuel-Python** - Well-designed API, good documentation
 3. **Kerykeion** - Simple high-level interface
 4. **Flatlib** - Traditional but functional
 5. **PyEphem** - Scientific focus, steeper learning curve
 
 ### **Technical Innovation**
-1. **Starlight** - Advanced caching, modern architecture
+1. **Stellium** - Advanced caching, modern architecture
 2. **Kerykeion** - AI integration, data-driven approach
 3. **Immanuel-Python** - Comprehensive chart modeling
 4. **Flatlib** - Traditional technique depth
@@ -269,7 +269,7 @@ console.print(create_table_dignities(chart, plain=True))
 
 ## 🚀 **Conclusion**
 
-**Starlight has excellent technical foundations** with some unique strengths (caching, dignities, modern Python), but faces critical gaps in visualization and chart variety that limit professional adoption.
+**Stellium has excellent technical foundations** with some unique strengths (caching, dignities, modern Python), but faces critical gaps in visualization and chart variety that limit professional adoption.
 
 **The path to market leadership requires:**
 1. **Fix the chart drawing system** (immediate priority)
@@ -281,4 +281,4 @@ console.print(create_table_dignities(chart, plain=True))
 - **Professional astrologers**: Needs chart visualization
 - **AI/data applications**: Strong potential with JSON export
 
-With focused development on critical gaps, Starlight can become a leading Python astrology library within 6-12 months.
+With focused development on critical gaps, Stellium can become a leading Python astrology library within 6-12 months.

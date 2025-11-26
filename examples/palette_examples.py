@@ -7,8 +7,8 @@ the zodiac wheel visualization.
 
 from datetime import datetime
 
-from starlight import ChartBuilder, Native
-from starlight.visualization import ZodiacPalette
+from stellium import ChartBuilder, Native
+from stellium.visualization import ZodiacPalette
 
 # Create a sample chart
 native = Native(datetime(1994, 1, 6, 11, 47), "Seattle, WA")

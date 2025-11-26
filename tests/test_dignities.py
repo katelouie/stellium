@@ -37,8 +37,8 @@ Tests verify the calculations are correct and tables are accurate.
 
 import pytest
 
-from starlight.core.models import CelestialPosition, ObjectType
-from starlight.engines.dignities import (
+from stellium.core.models import CelestialPosition, ObjectType
+from stellium.engines.dignities import (
     DIGNITIES,
     ModernDignityCalculator,
     MutualReceptionAnalyzer,

@@ -5,7 +5,7 @@ This directory contains astronomical calculation data from the Swiss Ephemeris, 
 ## 📁 What's Included
 
 ### Essential Files (Included in Repository)
-Starlight includes **essential ephemeris files** covering **1800-2400 CE** (~7.8MB total):
+Stellium includes **essential ephemeris files** covering **1800-2400 CE** (~7.8MB total):
 
 ```
 data/swisseph/ephe/
@@ -34,7 +34,7 @@ The complete Swiss Ephemeris dataset covers **13201 BCE to 17191 CE** (~334MB to
 The included files work immediately:
 
 ```python
-from starlight.chart import Chart
+from stellium.chart import Chart
 from datetime import datetime
 import pytz
 
@@ -132,7 +132,7 @@ python scripts/download_ephemeris.py --years 3000-4000
 The Swiss Ephemeris is available under **dual licensing**:
 
 ### AGPL License (Free)
-- ✅ **Starlight uses this license**
+- ✅ **Stellium uses this license**
 - ✅ Free for open-source projects
 - ⚠️ Requires AGPL compliance for derivative works
 

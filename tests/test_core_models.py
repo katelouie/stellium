@@ -5,7 +5,7 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.core.models import (
+from stellium.core.models import (
     CelestialPosition,
     ChartDateTime,
     ChartLocation,

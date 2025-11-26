@@ -9,10 +9,10 @@ from datetime import datetime
 import pytest
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartDateTime, ChartLocation
-from starlight.core.native import Native, Notable
-from starlight.data import NotableRegistry, get_notable_registry
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartDateTime, ChartLocation
+from stellium.core.native import Native, Notable
+from stellium.data import NotableRegistry, get_notable_registry
 
 
 # Test fixtures with timezone data (fast!)

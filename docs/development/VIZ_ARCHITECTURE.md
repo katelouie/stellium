@@ -1,4 +1,4 @@
-# Starlight Visualization Architecture
+# Stellium Visualization Architecture
 
 **Version**: 2.0
 **Status**: Refactor in Progress
@@ -741,7 +741,7 @@ Let's trace a complete rendering from user code to saved file:
 
 ### User Code
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 

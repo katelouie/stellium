@@ -59,10 +59,10 @@ Documentation = "https://github.com/katelouie/stellium"
 "Bug Tracker" = "https://github.com/katelouie/stellium/issues"
 
 [tool.setuptools.dynamic]
-version = { attr = "starlight.__version__" }
+version = { attr = "stellium.__version__" }
 
 [project.scripts]
-starlight = "starlight.cli:cli"
+stellium = "stellium.cli:cli"
 
 [tool.setuptools.packages.find]
 where = ["src"]

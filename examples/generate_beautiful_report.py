@@ -11,10 +11,10 @@ Usage:
 
 import sys
 
-sys.path.insert(0, "/Users/katelouie/code/starlight/src")
+sys.path.insert(0, "/Users/katelouie/code/stellium/src")
 
-from starlight import ChartBuilder, ReportBuilder
-from starlight.engines import PlacidusHouses, WholeSignHouses
+from stellium import ChartBuilder, ReportBuilder
+from stellium.engines import PlacidusHouses, WholeSignHouses
 
 # ============================================================================
 # CHART CONFIGURATION
@@ -24,9 +24,9 @@ DATETIME = "1994-01-06 11:47"
 LOCATION = "Palo Alto, CA"
 
 # Output paths
-SVG_PATH = "/Users/katelouie/code/starlight/examples/chart_examples/beautiful_chart.svg"
+SVG_PATH = "/Users/katelouie/code/stellium/examples/chart_examples/beautiful_chart.svg"
 PDF_PATH = (
-    "/Users/katelouie/code/starlight/examples/chart_examples/beautiful_report.pdf"
+    "/Users/katelouie/code/stellium/examples/chart_examples/beautiful_report.pdf"
 )
 
 # ============================================================================

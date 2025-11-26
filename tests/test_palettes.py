@@ -10,7 +10,7 @@ This test suite covers:
 
 import pytest
 
-from starlight.visualization.palettes import (
+from stellium.visualization.palettes import (
     PLANET_ELEMENTS,
     PLANET_TYPES,
     SIGN_ELEMENTS,

@@ -19,18 +19,18 @@ from unittest.mock import Mock, patch
 import pytest
 import svgwrite
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import (
     CalculatedChart,
     CelestialPosition,
     ChartLocation,
     HouseCusps,
     ObjectType,
 )
-from starlight.core.native import Native
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.visualization.core import ChartRenderer, get_display_name, get_glyph
-from starlight.visualization.layers import (
+from stellium.core.native import Native
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.visualization.core import ChartRenderer, get_display_name, get_glyph
+from stellium.visualization.layers import (
     AngleLayer,
     AspectCountsLayer,
     AspectLayer,
@@ -41,8 +41,8 @@ from starlight.visualization.layers import (
     PlanetLayer,
     ZodiacLayer,
 )
-from starlight.visualization.palettes import ZodiacPalette
-from starlight.visualization.themes import ChartTheme
+from stellium.visualization.palettes import ZodiacPalette
+from stellium.visualization.themes import ChartTheme
 
 # ============================================================================
 # FIXTURES

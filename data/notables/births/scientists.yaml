@@ -18,7 +18,7 @@
     and scientific genius aspects
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false
 - name: Marie Curie
   event_type: birth
@@ -40,7 +40,7 @@
     themes
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false
 - name: Nikola Tesla
   event_type: birth
@@ -62,5 +62,5 @@
     innovative aspects
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false

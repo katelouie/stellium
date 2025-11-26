@@ -1,7 +1,7 @@
 """
 Comparison Charts Examples - Synastry, Transits, and Progressions
 
-This example demonstrates how to use Starlight's comparison chart features
+This example demonstrates how to use Stellium's comparison chart features
 to analyze relationships (synastry), timing (transits), and symbolic development
 (progressions).
 
@@ -12,12 +12,12 @@ Comparison charts calculate aspects BETWEEN two charts, as well as house overlay
 import datetime as dt
 from datetime import datetime
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.comparison import ComparisonBuilder
-from starlight.core.models import ChartLocation
-from starlight.core.native import Native
-from starlight.engines.aspects import CrossChartAspectEngine, ModernAspectEngine
-from starlight.engines.orbs import SimpleOrbEngine
+from stellium.core.builder import ChartBuilder
+from stellium.core.comparison import ComparisonBuilder
+from stellium.core.models import ChartLocation
+from stellium.core.native import Native
+from stellium.engines.aspects import CrossChartAspectEngine, ModernAspectEngine
+from stellium.engines.orbs import SimpleOrbEngine
 
 
 # ===== Example 1: Basic Synastry =====
@@ -335,7 +335,7 @@ def example_custom_aspect_engine():
     print("Example 7: Custom Aspect Engine")
     print("=" * 60)
 
-    from starlight.core.config import AspectConfig
+    from stellium.core.config import AspectConfig
 
     new_york = ChartLocation(latitude=40.7128, longitude=-74.0060, name="New York, NY")
 

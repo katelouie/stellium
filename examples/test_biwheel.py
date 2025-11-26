@@ -8,8 +8,8 @@ Tests the new draw_comparison_chart function with a synastry example.
 from datetime import datetime
 import datetime as dt
 
-from starlight import ChartBuilder, ComparisonBuilder
-from starlight.core.models import ChartLocation
+from stellium import ChartBuilder, ComparisonBuilder
+from stellium.core.models import ChartLocation
 
 
 def test_basic_synastry():

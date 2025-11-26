@@ -5,13 +5,13 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.components.arabic_parts import (
+from stellium.components.arabic_parts import (
     ARABIC_PARTS_CATALOG,
     ArabicPartsCalculator,
 )
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation, ObjectType
-from starlight.core.native import Native
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation, ObjectType
+from stellium.core.native import Native
 
 
 def test_part_of_fortune_day_chart():

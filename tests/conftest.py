@@ -65,17 +65,17 @@ from typing import Generator
 import pytest
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import (
     Aspect,
     CelestialPosition,
     ChartLocation,
     ObjectType,
 )
-from starlight.core.native import Native
-from starlight.engines.aspects import HarmonicAspectEngine, ModernAspectEngine
-from starlight.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
-from starlight.engines.houses import (
+from stellium.core.native import Native
+from stellium.engines.aspects import HarmonicAspectEngine, ModernAspectEngine
+from stellium.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
+from stellium.engines.houses import (
     CampanusHouses,
     EqualHouses,
     KochHouses,
@@ -84,7 +84,7 @@ from starlight.engines.houses import (
     RegiomontanusHouses,
     WholeSignHouses,
 )
-from starlight.engines.orbs import LuminariesOrbEngine, SimpleOrbEngine
+from stellium.engines.orbs import LuminariesOrbEngine, SimpleOrbEngine
 
 
 # ============================================================================
@@ -413,7 +413,7 @@ def aspect_info_conjunction():
 
     Use this when: Testing aspect-specific logic for conjunctions.
     """
-    from starlight.core.registry import ASPECT_REGISTRY
+    from stellium.core.registry import ASPECT_REGISTRY
 
     return ASPECT_REGISTRY.get_aspect("Conjunction")
 
@@ -425,7 +425,7 @@ def aspect_info_trine():
 
     Use this when: Testing aspect-specific logic for trines.
     """
-    from starlight.core.registry import ASPECT_REGISTRY
+    from stellium.core.registry import ASPECT_REGISTRY
 
     return ASPECT_REGISTRY.get_aspect("Trine")
 

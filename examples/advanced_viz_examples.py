@@ -1,5 +1,5 @@
 """
-Advanced Visualization Examples for Starlight
+Advanced Visualization Examples for Stellium
 
 Demonstrates new visualization features including:
 - Adaptive zodiac glyph coloring
@@ -8,11 +8,11 @@ Demonstrates new visualization features including:
 - Multiple palettes and themes
 
 Run this script to generate example charts:
-    source ~/.zshrc && pyenv activate starlight && python examples/advanced_viz_examples.py
+    source ~/.zshrc && pyenv activate stellium && python examples/advanced_viz_examples.py
 """
 
-from starlight import ChartBuilder
-from starlight.visualization import (
+from stellium import ChartBuilder
+from stellium.visualization import (
     AspectPalette,
     ChartTheme,
     PlanetGlyphPalette,
@@ -148,12 +148,12 @@ def example_5_html_reference():
     # Generate comprehensive reference
     print("  - Generating complete color reference...")
     generate_html_reference(
-        filename="examples/chart_examples/starlight_colors.html",
+        filename="examples/chart_examples/stellium_colors.html",
     )
-    print("  - Saved to examples/chart_examples/starlight_colors.html")
+    print("  - Saved to examples/chart_examples/stellium_colors.html")
 
     # You can also generate separate references:
-    # from starlight.visualization import (
+    # from stellium.visualization import (
     #     generate_zodiac_palette_reference,
     #     generate_aspect_palette_reference,
     #     generate_theme_reference,
@@ -273,7 +273,7 @@ def example_8_planet_glyph_palettes():
 
 
 if __name__ == "__main__":
-    print("🌟 Starlight Advanced Visualization Examples")
+    print("🌟 Stellium Advanced Visualization Examples")
     print("=" * 60)
 
     # Run all examples
@@ -290,5 +290,5 @@ if __name__ == "__main__":
     print("✅ All examples generated successfully!")
     print("\nGenerated files:")
     print("  - Individual charts: examples/chart_examples/*.svg")
-    print("  - Color reference: examples/chart_examples/starlight_colors.html")
+    print("  - Color reference: examples/chart_examples/stellium_colors.html")
     print("\nOpen the HTML file in a browser to see all available colors!")

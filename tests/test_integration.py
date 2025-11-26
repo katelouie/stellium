@@ -4,11 +4,11 @@ import datetime as dt
 
 import pytest
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.core.native import Native
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.core.native import Native
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
 
 def test_einstein_chart():
@@ -117,7 +117,7 @@ def test_points_and_nodes_object_types():
     # Verify Vertex exists and is a POINT type
     vertex = chart.get_object("Vertex")
     assert vertex is not None, "Vertex should exist"
-    from starlight.core.models import ObjectType
+    from stellium.core.models import ObjectType
 
     assert vertex.object_type == ObjectType.POINT, "Vertex should be POINT type"
 

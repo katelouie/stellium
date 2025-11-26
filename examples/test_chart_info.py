@@ -10,7 +10,7 @@ Tests:
 """
 
 from datetime import datetime
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 
 def test_moon_positions():

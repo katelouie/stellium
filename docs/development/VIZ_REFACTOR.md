@@ -36,7 +36,7 @@
 ### File Structure
 
 ```python
-starlight_viz_refactor/
+stellium_viz_refactor/
 ├── config.py          # All configuration dataclasses
 ├── layout/
 │   ├── __init__.py
@@ -53,7 +53,7 @@ starlight_viz_refactor/
     └── custom_config.py
 ```
 
-# Starlight Visualization Refactor - Complete Implementation Plan
+# Stellium Visualization Refactor - Complete Implementation Plan
 
 ## Executive Summary
 
@@ -88,7 +88,7 @@ This document outlines the complete plan for finishing the visualization refacto
 ### File Structure (Current & Planned)
 
 ```
-starlight/visualization/
+stellium/visualization/
 ├── __init__.py                 # Public API exports
 ├── builder.py                  # ✅ ChartDrawBuilder (fluent API)
 ├── composer.py                 # ⚠️ ChartComposer (needs completion)
@@ -347,7 +347,7 @@ class ChartComposer:
     def _render_tables(self, canvas, renderer, chart, layout):
         """Render table layers using layout positions."""
         # Import table layers
-        from starlight.visualization.extended_canvas import (
+        from stellium.visualization.extended_canvas import (
             PositionTableLayer,
             HouseCuspTableLayer,
             AspectarianLayer,
@@ -368,7 +368,7 @@ class ChartComposer:
     def _get_background_color(self) -> str:
         """Get background color from theme or default."""
         if self.config.wheel.theme:
-            from starlight.visualization.themes import get_theme_style
+            from stellium.visualization.themes import get_theme_style
             style = get_theme_style(self.config.wheel.theme)
             return style.get('background_color', '#FFFFFF')
         return '#FFFFFF'
@@ -511,7 +511,7 @@ class LayoutEngine:
 ### Example 1: Simple Natal Chart (Backward Compatible)
 
 ```python
-from starlight import Chart
+from stellium import Chart
 
 # Old API - still works!
 chart = Chart("1990-01-15 14:30", "New York, NY")
@@ -521,9 +521,9 @@ chart.draw("natal.svg").preset_standard().save()
 ### Example 2: Advanced Configuration (New API)
 
 ```python
-from starlight import Chart
-from starlight.visualization import ChartComposer, ChartVisualizationConfig
-from starlight.visualization.config import ChartWheelConfig, TableConfig
+from stellium import Chart
+from stellium.visualization import ChartComposer, ChartVisualizationConfig
+from stellium.visualization.config import ChartWheelConfig, TableConfig
 
 chart = Chart("1990-01-15 14:30", "New York, NY")
 
@@ -561,9 +561,9 @@ composer.compose(chart.calculated)
 ### Example 3: Programmatic Layer Composition (Advanced)
 
 ```python
-from starlight import Chart
-from starlight.visualization import ChartRenderer
-from starlight.visualization.layers import (
+from stellium import Chart
+from stellium.visualization import ChartRenderer
+from stellium.visualization.layers import (
     ZodiacLayer, PlanetLayer, AspectLayer
 )
 

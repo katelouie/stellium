@@ -1,7 +1,7 @@
-# 🌟 Starlight Architecture Refactor: Ground-Up Rebuild Guide
+# 🌟 Stellium Architecture Refactor: Ground-Up Rebuild Guide
 
 **Timeline**: 2 weeks
-**Goal**: Transform Starlight into a composable, component-based astrology platform
+**Goal**: Transform Stellium into a composable, component-based astrology platform
 **Approach**: Clean slate - we're building the foundation right this time
 
 ---
@@ -38,7 +38,7 @@
 ```
 
 ```python
-# Starlight: Composable astrological components
+# Stellium: Composable astrological components
 chart = ChartBuilder(datetime, location) \
     .with_ephemeris(SwissEphemeris()) \
     .with_houses(PlacidusHouses()) \
@@ -57,7 +57,7 @@ chart = ChartBuilder(datetime, location) \
 ### What We're Building
 
 ```
-starlight/
+stellium/
 ├── core/
 │   ├── protocols.py       # Interface definitions
 │   ├── models.py          # Immutable data classes
@@ -86,21 +86,21 @@ starlight/
 
 ```bash
 # Create new architecture directories
-mkdir -p src/starlight/core
-mkdir -p src/starlight/engines
-mkdir -p src/starlight/components
-mkdir -p src/starlight/utils
+mkdir -p src/stellium/core
+mkdir -p src/stellium/engines
+mkdir -p src/stellium/components
+mkdir -p src/stellium/utils
 
 # Create __init__.py files
-touch src/starlight/core/__init__.py
-touch src/starlight/engines/__init__.py
-touch src/starlight/components/__init__.py
-touch src/starlight/utils/__init__.py
+touch src/stellium/core/__init__.py
+touch src/stellium/engines/__init__.py
+touch src/stellium/components/__init__.py
+touch src/stellium/utils/__init__.py
 ```
 
 ### Step 1.2: Create Immutable Data Models
 
-**File**: `src/starlight/core/models.py`
+**File**: `src/stellium/core/models.py`
 
 ```python
 """
@@ -333,7 +333,7 @@ class CalculatedChart:
 import pytest
 from datetime import datetime
 import pytz
-from starlight.core.models import (
+from stellium.core.models import (
     ChartLocation,
     ChartDateTime,
     CelestialPosition,
@@ -409,7 +409,7 @@ if __name__ == "__main__":
 **Run the tests:**
 
 ```bash
-source ~/.zshrc && pyenv activate starlight && python tests/test_core_models.py
+source ~/.zshrc && pyenv activate stellium && python tests/test_core_models.py
 ```
 
 ---
@@ -418,11 +418,11 @@ source ~/.zshrc && pyenv activate starlight && python tests/test_core_models.py
 
 ### Step 2.1: Define Protocol Interfaces
 
-**File**: `src/starlight/core/protocols.py`
+**File**: `src/stellium/core/protocols.py`
 
 ```python
 """
-Protocol definitions for Starlight components.
+Protocol definitions for Stellium components.
 
 Protocols define INTERFACES - what methods a component must implement.
 They don't provide implementation - that's in the engine classes.
@@ -432,7 +432,7 @@ you must implement these methods with these signatures."
 """
 
 from typing import Protocol, List, Tuple, Optional, Dict, Any
-from starlight.core.models import (
+from stellium.core.models import (
     ChartDateTime,
     ChartLocation,
     CelestialPosition,
@@ -626,7 +626,7 @@ class ChartComponent(Protocol):
 
 ### Step 2.2: Create Configuration Models
 
-**File**: `src/starlight/core/config.py`
+**File**: `src/stellium/core/config.py`
 
 ```python
 """Configuration models for chart calculation."""
@@ -722,7 +722,7 @@ class CalculationConfig:
 
 ### Step 3.1: Create Swiss Ephemeris Engine
 
-**File**: `src/starlight/engines/ephemeris.py`
+**File**: `src/stellium/engines/ephemeris.py`
 
 ```python
 """Ephemeris calculation engines."""
@@ -731,13 +731,13 @@ import os
 from typing import List, Optional, Dict
 import swisseph as swe
 
-from starlight.core.models import (
+from stellium.core.models import (
     ChartDateTime,
     ChartLocation,
     CelestialPosition,
     ObjectType,
 )
-from starlight.cache import cached
+from stellium.cache import cached
 
 
 def _set_ephemeris_path():
@@ -935,8 +935,8 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.models import ChartDateTime, ChartLocation
-from starlight.engines.ephemeris import SwissEphemerisEngine, MockEphemerisEngine
+from stellium.core.models import ChartDateTime, ChartLocation
+from stellium.engines.ephemeris import SwissEphemerisEngine, MockEphemerisEngine
 
 
 def test_mock_ephemeris_engine():
@@ -991,7 +991,7 @@ if __name__ == "__main__":
 
 ### Step 4.1: Create House System Engines
 
-**File**: `src/starlight/engines/houses.py`
+**File**: `src/stellium/engines/houses.py`
 
 ```python
 """House system calculation engines."""
@@ -1000,13 +1000,13 @@ from typing import List
 import swisseph as swe
 from dataclasses import replace
 
-from starlight.core.models import (
+from stellium.core.models import (
     ChartDateTime,
     ChartLocation,
     HouseCusps,
     CelestialPosition,
 )
-from starlight.cache import cached
+from stellium.cache import cached
 
 
 # Swiss Ephemeris house system codes
@@ -1213,7 +1213,7 @@ class EqualHouses:
 
 ### Step 5.1: Create the ChartBuilder
 
-**File**: `src/starlight/core/builder.py`
+**File**: `src/stellium/core/builder.py`
 
 ```python
 """
@@ -1229,17 +1229,17 @@ import pytz
 import swisseph as swe
 from geopy.geocoders import Nominatim
 
-from starlight.core.models import (
+from stellium.core.models import (
     ChartDateTime,
     ChartLocation,
     CalculatedChart,
     CelestialPosition,
     ObjectType,
 )
-from starlight.core.config import CalculationConfig
-from starlight.engines.ephemeris import SwissEphemerisEngine
-from starlight.engines.houses import PlacidusHouses
-from starlight.cache import cached
+from stellium.core.config import CalculationConfig
+from stellium.engines.ephemeris import SwissEphemerisEngine
+from stellium.engines.houses import PlacidusHouses
+from stellium.cache import cached
 
 
 class ChartBuilder:
@@ -1474,7 +1474,7 @@ class ChartBuilder:
 def _cached_geocode(location_name: str) -> dict:
     """Cached geocoding."""
     try:
-        geolocator = Nominatim(user_agent="starlight_geocoder")
+        geolocator = Nominatim(user_agent="stellium_geocoder")
         location = geolocator.geocode(location_name)
 
         if location:
@@ -1500,10 +1500,10 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.ephemeris import MockEphemerisEngine
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.ephemeris import MockEphemerisEngine
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
 
 def test_basic_chart_building():
@@ -1564,7 +1564,7 @@ if __name__ == "__main__":
 **Run all tests:**
 
 ```bash
-source ~/.zshrc && pyenv activate starlight && python -m pytest tests/ -v
+source ~/.zshrc && pyenv activate stellium && python -m pytest tests/ -v
 ```
 
 ---
@@ -1586,9 +1586,9 @@ At this point, you should have:
 # Create a quick test script: test_week1.py
 from datetime import datetime
 import pytz
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.houses import WholeSignHouses
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.houses import WholeSignHouses
 
 dt = datetime(1994, 1, 6, 19, 47, tzinfo=pytz.UTC)
 location = ChartLocation(latitude=37.7749, longitude=-122.4194, name="San Francisco")
@@ -1610,7 +1610,7 @@ print("\n✨ Week 1 Complete! Architecture is solid.")
 
 Run it:
 ```bash
-source ~/.zshrc && pyenv activate starlight && python test_week1.py
+source ~/.zshrc && pyenv activate stellium && python test_week1.py
 ```
 
 ---
@@ -1621,7 +1621,7 @@ source ~/.zshrc && pyenv activate starlight && python test_week1.py
 
 ### Step 6.1: Create Aspect Engine
 
-**File**: `src/starlight/engines/aspects.py`
+**File**: `src/stellium/engines/aspects.py`
 
 ```python
 """Aspect calculation engines."""
@@ -1629,7 +1629,7 @@ source ~/.zshrc && pyenv activate starlight && python test_week1.py
 from typing import List, Dict, Optional
 import math
 
-from starlight.core.models import CelestialPosition, Aspect, ObjectType
+from stellium.core.models import CelestialPosition, Aspect, ObjectType
 
 
 class ModernAspectEngine:
@@ -1824,8 +1824,8 @@ class HarmonicAspectEngine:
 """Test aspect engines."""
 
 import pytest
-from starlight.core.models import CelestialPosition, ObjectType
-from starlight.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from stellium.core.models import CelestialPosition, ObjectType
+from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
 
 
 def test_conjunction_detection():
@@ -1907,13 +1907,13 @@ if __name__ == "__main__":
 
 ## Day 7: Dignity Calculator
 
-**File**: `src/starlight/engines/dignities.py`
+**File**: `src/stellium/engines/dignities.py`
 
 ```python
 """Dignity calculation engines."""
 
 from typing import Dict, Any, List
-from starlight.core.models import CelestialPosition
+from stellium.core.models import CelestialPosition
 
 
 # Traditional essential dignities data
@@ -2001,10 +2001,10 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.engines.aspects import ModernAspectEngine
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.engines.aspects import ModernAspectEngine
 
 
 def test_einstein_chart():
@@ -2098,9 +2098,9 @@ import time
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.aspects import ModernAspectEngine
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.aspects import ModernAspectEngine
 
 
 def benchmark_chart_calculation():
@@ -2136,7 +2136,7 @@ if __name__ == "__main__":
 
 Run it:
 ```bash
-source ~/.zshrc && pyenv activate starlight && python tests/benchmark_performance.py
+source ~/.zshrc && pyenv activate stellium && python tests/benchmark_performance.py
 ```
 
 ---
@@ -2154,7 +2154,7 @@ source ~/.zshrc && pyenv activate starlight && python tests/benchmark_performanc
 
 ### Old API (will be deprecated)
 ```python
-from starlight.chart import Chart
+from stellium.chart import Chart
 
 chart = Chart(
     datetime_utc=datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC),
@@ -2168,7 +2168,7 @@ for planet in chart.planets:
 
 ### New API
 ```python
-from starlight.core.builder import ChartBuilder
+from stellium.core.builder import ChartBuilder
 
 chart = ChartBuilder.from_location_name(
     datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC),
@@ -2190,7 +2190,7 @@ for planet in chart.get_planets():
 
 ### Custom House Systems
 ```python
-from starlight.engines.houses import WholeSignHouses
+from stellium.engines.houses import WholeSignHouses
 
 chart = ChartBuilder.from_location_name(dt, location) \
     .with_houses(WholeSignHouses()) \
@@ -2199,7 +2199,7 @@ chart = ChartBuilder.from_location_name(dt, location) \
 
 ### Custom Aspects
 ```python
-from starlight.engines.aspects import HarmonicAspectEngine
+from stellium.engines.aspects import HarmonicAspectEngine
 
 chart = ChartBuilder.from_datetime(dt, location) \
     .with_aspects(HarmonicAspectEngine(harmonic=7)) \
@@ -2217,7 +2217,7 @@ chart_data = chart.to_dict()
 
 If you want to keep old code working temporarily:
 
-**File**: `src/starlight/legacy.py`
+**File**: `src/stellium/legacy.py`
 
 ```python
 """
@@ -2229,8 +2229,8 @@ Will be removed in version 2.0.
 
 import warnings
 from datetime import datetime
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
 
 
 class Chart:
@@ -2284,12 +2284,12 @@ class Chart:
 **File**: `docs/USER_GUIDE.md`
 
 ```markdown
-# Starlight User Guide
+# Stellium User Guide
 
 ## Installation
 
 ```bash
-pip install starlight  # Once published
+pip install stellium  # Once published
 ```
 
 ## Quick Start
@@ -2299,7 +2299,7 @@ pip install starlight  # Once published
 ```python
 from datetime import datetime
 import pytz
-from starlight.core.builder import ChartBuilder
+from stellium.core.builder import ChartBuilder
 
 # Create a chart
 chart = ChartBuilder.from_location_name(
@@ -2319,7 +2319,7 @@ for aspect in chart.aspects:
 ### Custom House Systems
 
 ```python
-from starlight.engines.houses import WholeSignHouses
+from stellium.engines.houses import WholeSignHouses
 
 chart = ChartBuilder.from_location_name(dt, "London, UK") \
     .with_houses(WholeSignHouses()) \
@@ -2343,7 +2343,7 @@ with open('chart.json', 'w') as f:
 ### Custom Aspect Calculations
 
 ```python
-from starlight.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
 
 # Traditional aspects
 chart = ChartBuilder.from_datetime(dt, location) \
@@ -2359,7 +2359,7 @@ chart = ChartBuilder.from_datetime(dt, location) \
 ### Configuration Presets
 
 ```python
-from starlight.core.config import CalculationConfig
+from stellium.core.config import CalculationConfig
 
 # Minimal calculation (faster)
 config = CalculationConfig.minimal()
@@ -2393,7 +2393,7 @@ angles = chart.get_angles()
 
 - See [API Reference](API_REFERENCE.md) for complete documentation
 - See [Examples](../examples/) for more use cases
-- See [Developer Guide](development/DEVELOPER_GUIDE.md) to extend Starlight
+- See [Developer Guide](development/DEVELOPER_GUIDE.md) to extend Stellium
 ```
 
 ---
@@ -2418,13 +2418,13 @@ Create `test_week2_complete.py`:
 
 from datetime import datetime
 import pytz
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
 
 def main():
-    print("🌟 Starlight Architecture Refactor - Final Test")
+    print("🌟 Stellium Architecture Refactor - Final Test")
     print("="*60)
 
     # Einstein's chart
@@ -2479,7 +2479,7 @@ if __name__ == "__main__":
 
 Run it:
 ```bash
-source ~/.zshrc && pyenv activate starlight && python test_week2_complete.py
+source ~/.zshrc && pyenv activate stellium && python test_week2_complete.py
 ```
 
 ---

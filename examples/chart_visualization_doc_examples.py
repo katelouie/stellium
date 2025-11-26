@@ -2,8 +2,8 @@
 
 import os
 
-from starlight import ChartBuilder, ComparisonBuilder, ComparisonType
-from starlight.engines import PlacidusHouses, WholeSignHouses
+from stellium import ChartBuilder, ComparisonBuilder, ComparisonType
+from stellium.engines import PlacidusHouses, WholeSignHouses
 
 FILEDIR = "docs/images"
 

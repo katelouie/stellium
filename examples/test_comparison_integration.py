@@ -11,8 +11,8 @@ Tests the integration of:
 from datetime import datetime
 import datetime as dt
 
-from starlight import ChartBuilder, ComparisonBuilder
-from starlight.core.models import ChartLocation
+from stellium import ChartBuilder, ComparisonBuilder
+from stellium.core.models import ChartLocation
 
 
 def test_comparison_draw_method():

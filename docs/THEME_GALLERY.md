@@ -1,8 +1,8 @@
-# Starlight Theme Gallery
+# Stellium Theme Gallery
 
 **Visual showcase of all available themes with recommended palette combinations.**
 
-This gallery demonstrates each of Starlight's 13 themes with carefully chosen palette pairings. Each theme creates a distinct mood and aesthetic - find the one that matches your vision!
+This gallery demonstrates each of Stellium's 13 themes with carefully chosen palette pairings. Each theme creates a distinct mood and aesthetic - find the one that matches your vision!
 
 ## Table of Contents
 
@@ -550,7 +550,7 @@ chart.draw("turbo.svg") \
 All examples in this gallery were generated using the same natal chart (Albert Einstein) for consistency:
 
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
 

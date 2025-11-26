@@ -1,4 +1,4 @@
-# 🌟 Starlight Architecture Refactor: Weeks 3-4 Guide
+# 🌟 Stellium Architecture Refactor: Weeks 3-4 Guide
 
 **Timeline**: Weeks 3-4 (Days 11-20)
 **Goal**: Build components, integrate visualization, add advanced features
@@ -76,7 +76,7 @@ Arabic Parts are perfect for testing the component system because:
 
 ### Step 11.1: Design the Component Interface
 
-**File**: `src/starlight/components/__init__.py`
+**File**: `src/stellium/components/__init__.py`
 
 ```python
 """
@@ -91,7 +91,7 @@ They return CelestialPosition objects that integrate seamlessly
 with the rest of the chart.
 """
 
-from starlight.core.protocols import ChartComponent
+from stellium.core.protocols import ChartComponent
 
 __all__ = ['ChartComponent']
 ```
@@ -103,7 +103,7 @@ __all__ = ['ChartComponent']
 
 ### Step 11.2: Create Arabic Parts Component
 
-**File**: `src/starlight/components/arabic_parts.py`
+**File**: `src/stellium/components/arabic_parts.py`
 
 ```python
 """
@@ -121,7 +121,7 @@ Many lots are "sect-aware" - they flip the formula for day vs night charts:
 """
 
 from typing import List, Optional, Dict
-from starlight.core.models import (
+from stellium.core.models import (
     ChartDateTime,
     ChartLocation,
     CelestialPosition,
@@ -399,7 +399,7 @@ class PartOfFortuneCalculator:
 
 ### Step 11.3: Integrate with ChartBuilder
 
-**Update**: `src/starlight/core/builder.py`
+**Update**: `src/stellium/core/builder.py`
 
 Add to the `calculate()` method:
 
@@ -433,9 +433,9 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation, ObjectType
-from starlight.components.arabic_parts import ArabicPartsCalculator, ARABIC_PARTS_CATALOG
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation, ObjectType
+from stellium.components.arabic_parts import ArabicPartsCalculator, ARABIC_PARTS_CATALOG
 
 
 def test_part_of_fortune_day_chart():
@@ -578,7 +578,7 @@ Midpoints test different aspects of the component system:
 
 ### Step 12.1: Create Midpoints Component
 
-**File**: `src/starlight/components/midpoints.py`
+**File**: `src/stellium/components/midpoints.py`
 
 ```python
 """
@@ -595,7 +595,7 @@ Both are significant, but direct midpoint is more commonly used.
 """
 
 from typing import List, Optional, Set, Tuple
-from starlight.core.models import (
+from stellium.core.models import (
     ChartDateTime,
     ChartLocation,
     CelestialPosition,
@@ -815,9 +815,9 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation, CelestialPosition, ObjectType
-from starlight.components.midpoints import MidpointCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation, CelestialPosition, ObjectType
+from stellium.components.midpoints import MidpointCalculator
 
 
 def test_basic_midpoint_calculation():
@@ -901,7 +901,7 @@ def test_indirect_midpoints():
 def test_midpoint_shortest_arc():
     """Test that midpoint uses shortest arc."""
     # Create mock positions with known longitudes
-    from starlight.core.models import HouseCusps
+    from stellium.core.models import HouseCusps
 
     houses = HouseCusps(
         system="Equal",
@@ -969,7 +969,7 @@ We need to update `drawing.py` to work with the new data model:
 
 Instead of rewriting drawing.py entirely, create an adapter that converts between old and new formats.
 
-**File**: `src/starlight/adapters/drawing_adapter.py`
+**File**: `src/stellium/adapters/drawing_adapter.py`
 
 ```python
 """
@@ -984,7 +984,7 @@ updated to use the new models directly.
 """
 
 from typing import List, Dict, Any
-from starlight.core.models import CalculatedChart, CelestialPosition, ObjectType
+from stellium.core.models import CalculatedChart, CelestialPosition, ObjectType
 
 
 class LegacyChartAdapter:
@@ -1137,7 +1137,7 @@ class LegacyChartAdapter:
 
 ### Step 13.2: Create Drawing Helper Function
 
-**File**: `src/starlight/visualization.py`
+**File**: `src/stellium/visualization.py`
 
 ```python
 """
@@ -1147,9 +1147,9 @@ This provides a clean interface for chart visualization,
 hiding the adapter complexity.
 """
 
-from starlight.core.models import CalculatedChart
-from starlight.adapters.drawing_adapter import LegacyChartAdapter
-from starlight.drawing import draw_chart as legacy_draw_chart
+from stellium.core.models import CalculatedChart
+from stellium.adapters.drawing_adapter import LegacyChartAdapter
+from stellium.drawing import draw_chart as legacy_draw_chart
 
 
 def draw_chart(chart: CalculatedChart, filename: str, size: int = 600) -> str:
@@ -1189,10 +1189,10 @@ import os
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.visualization import draw_chart
-from starlight.engines.aspects import ModernAspectEngine
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.visualization import draw_chart
+from stellium.engines.aspects import ModernAspectEngine
 
 
 def test_basic_chart_drawing():
@@ -1221,8 +1221,8 @@ def test_basic_chart_drawing():
 
 def test_chart_with_components():
     """Test drawing chart with Arabic parts and midpoints."""
-    from starlight.components.arabic_parts import ArabicPartsCalculator
-    from starlight.components.midpoints import MidpointCalculator
+    from stellium.components.arabic_parts import ArabicPartsCalculator
+    from stellium.components.midpoints import MidpointCalculator
 
     dt = datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)
     location = ChartLocation(latitude=40, longitude=-74, name="New York")
@@ -1241,7 +1241,7 @@ def test_chart_with_components():
 
 def test_different_house_systems_visualize():
     """Test that different house systems both visualize."""
-    from starlight.engines.houses import PlacidusHouses, WholeSignHouses
+    from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
     dt = datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)
     location = ChartLocation(latitude=51.5074, longitude=-0.1278, name="London")
@@ -1269,7 +1269,7 @@ if __name__ == "__main__":
 
 Run tests:
 ```bash
-source ~/.zshrc && pyenv activate starlight && python -m pytest tests/test_visualization.py -v
+source ~/.zshrc && pyenv activate stellium && python -m pytest tests/test_visualization.py -v
 ```
 
 ---
@@ -1282,7 +1282,7 @@ The `presentation.py` module creates text tables. We need to update it to work w
 
 ### Step 14.1: Create Modern Presentation Module
 
-**File**: `src/starlight/presentation/modern.py`
+**File**: `src/stellium/presentation/modern.py`
 
 ```python
 """
@@ -1298,7 +1298,7 @@ from rich.table import Table
 from rich.panel import Panel
 from rich.text import Text
 
-from starlight.core.models import CalculatedChart, CelestialPosition, Aspect, ObjectType
+from stellium.core.models import CalculatedChart, CelestialPosition, Aspect, ObjectType
 
 
 def print_chart_summary(chart: CalculatedChart, console: Console = None):
@@ -1562,7 +1562,7 @@ def print_aspect_summary(chart: CalculatedChart, tight_orb: float = 3.0):
 
 For cases where Rich isn't available:
 
-**File**: `src/starlight/presentation/simple.py`
+**File**: `src/stellium/presentation/simple.py`
 
 ```python
 """
@@ -1571,7 +1571,7 @@ Simple text presentation (no Rich dependency).
 For environments where Rich isn't available or desired.
 """
 
-from starlight.core.models import CalculatedChart, ObjectType
+from stellium.core.models import CalculatedChart, ObjectType
 
 
 def format_chart_text(chart: CalculatedChart) -> str:
@@ -1658,7 +1658,7 @@ Examples serve as:
 
 ```python
 """
-Modern Starlight usage examples.
+Modern Stellium usage examples.
 
 Demonstrates the new architecture and its capabilities.
 """
@@ -1667,18 +1667,18 @@ from datetime import datetime
 import pytz
 from rich.console import Console
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
-from starlight.components.arabic_parts import ArabicPartsCalculator
-from starlight.components.midpoints import MidpointCalculator
-from starlight.presentation.modern import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from stellium.components.arabic_parts import ArabicPartsCalculator
+from stellium.components.midpoints import MidpointCalculator
+from stellium.presentation.modern import (
     print_chart_summary,
     create_houses_table,
     print_aspect_summary
 )
-from starlight.visualization import draw_chart
+from stellium.visualization import draw_chart
 
 
 def example_1_basic_chart():
@@ -1851,7 +1851,7 @@ if __name__ == "__main__":
 
 Run it:
 ```bash
-source ~/.zshrc && pyenv activate starlight && python examples/modern_usage.py
+source ~/.zshrc && pyenv activate stellium && python examples/modern_usage.py
 ```
 
 ---
@@ -1868,8 +1868,8 @@ At this point you should have:
 
 **Test everything:**
 ```bash
-source ~/.zshrc && pyenv activate starlight && python -m pytest tests/ -v
-source ~/.zshrc && pyenv activate starlight && python examples/modern_usage.py
+source ~/.zshrc && pyenv activate stellium && python -m pytest tests/ -v
+source ~/.zshrc && pyenv activate stellium && python examples/modern_usage.py
 ```
 
 ---
@@ -1892,7 +1892,7 @@ These patterns are **emergent** - they arise from aspects but represent somethin
 
 ### Step 16.1: Design Pattern Detection System
 
-**File**: `src/starlight/analysis/__init__.py`
+**File**: `src/stellium/analysis/__init__.py`
 
 ```python
 """
@@ -1902,7 +1902,7 @@ Pattern detection, dignity analysis, and other interpretive tools.
 """
 
 from typing import Protocol, List
-from starlight.core.models import CalculatedChart
+from stellium.core.models import CalculatedChart
 
 
 class ChartAnalyzer(Protocol):
@@ -1932,7 +1932,7 @@ class ChartAnalyzer(Protocol):
 
 ### Step 16.2: Create Pattern Detection Models
 
-**File**: `src/starlight/analysis/models.py`
+**File**: `src/stellium/analysis/models.py`
 
 ```python
 """
@@ -1941,7 +1941,7 @@ Data models for chart analysis results.
 
 from dataclasses import dataclass
 from typing import List
-from starlight.core.models import CelestialPosition, Aspect
+from stellium.core.models import CelestialPosition, Aspect
 
 
 @dataclass(frozen=True)
@@ -1989,7 +1989,7 @@ class Stellium:
 
 ### Step 16.3: Implement Pattern Detector
 
-**File**: `src/starlight/analysis/patterns.py`
+**File**: `src/stellium/analysis/patterns.py`
 
 ```python
 """
@@ -2001,13 +2001,13 @@ Identifies significant geometric configurations in natal charts.
 from typing import List, Set, Tuple
 from itertools import combinations
 
-from starlight.core.models import (
+from stellium.core.models import (
     CalculatedChart,
     CelestialPosition,
     Aspect,
     ObjectType,
 )
-from starlight.analysis.models import AspectPattern, Stellium
+from stellium.analysis.models import AspectPattern, Stellium
 
 
 class PatternDetector:
@@ -2494,10 +2494,10 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.analysis.patterns import PatternDetector, StelliumDetector
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.analysis.patterns import PatternDetector, StelliumDetector
 
 
 def test_grand_trine_detection():
@@ -2615,7 +2615,7 @@ Synastry compares two charts to understand relationship dynamics:
 
 ### Step 17.1: Create Synastry Models
 
-**File**: `src/starlight/synastry/models.py`
+**File**: `src/stellium/synastry/models.py`
 
 ```python
 """
@@ -2624,7 +2624,7 @@ Data models for synastry analysis.
 
 from dataclasses import dataclass
 from typing import List
-from starlight.core.models import CalculatedChart, CelestialPosition, Aspect
+from stellium.core.models import CalculatedChart, CelestialPosition, Aspect
 
 
 @dataclass(frozen=True)
@@ -2689,7 +2689,7 @@ class SynastryChart:
 
 ### Step 17.2: Create Synastry Calculator
 
-**File**: `src/starlight/synastry/calculator.py`
+**File**: `src/stellium/synastry/calculator.py`
 
 ```python
 """
@@ -2697,8 +2697,8 @@ Synastry calculation between two natal charts.
 """
 
 from typing import List, Dict, Optional
-from starlight.core.models import CalculatedChart, CelestialPosition, ObjectType
-from starlight.synastry.models import SynastryAspect, SynastryChart
+from stellium.core.models import CalculatedChart, CelestialPosition, ObjectType
+from stellium.synastry.models import SynastryAspect, SynastryChart
 
 
 class SynastryCalculator:
@@ -2825,7 +2825,7 @@ class SynastryCalculator:
 
 ### Step 17.3: Create Composite Chart Calculator
 
-**File**: `src/starlight/synastry/composite.py`
+**File**: `src/stellium/synastry/composite.py`
 
 ```python
 """
@@ -2839,7 +2839,7 @@ from datetime import datetime, timedelta
 import pytz
 from typing import List
 
-from starlight.core.models import (
+from stellium.core.models import (
     CalculatedChart,
     ChartDateTime,
     ChartLocation,
@@ -2847,7 +2847,7 @@ from starlight.core.models import (
     HouseCusps,
     ObjectType,
 )
-from starlight.core.builder import ChartBuilder
+from stellium.core.builder import ChartBuilder
 
 
 class CompositeChartCalculator:
@@ -2917,10 +2917,10 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.synastry.calculator import SynastryCalculator
-from starlight.synastry.composite import CompositeChartCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.synastry.calculator import SynastryCalculator
+from stellium.synastry.composite import CompositeChartCalculator
 
 
 def test_basic_synastry():
@@ -3009,7 +3009,7 @@ Transits show current planetary positions relative to natal positions:
 
 ### Step 18.1: Create Transit Models
 
-**File**: `src/starlight/transits/models.py`
+**File**: `src/stellium/transits/models.py`
 
 ```python
 """
@@ -3019,7 +3019,7 @@ Data models for transit calculations.
 from dataclasses import dataclass
 from datetime import datetime
 from typing import List
-from starlight.core.models import CelestialPosition
+from stellium.core.models import CelestialPosition
 
 
 @dataclass(frozen=True)
@@ -3077,7 +3077,7 @@ class TransitSet:
 
 ### Step 18.2: Create Transit Calculator
 
-**File**: `src/starlight/transits/calculator.py`
+**File**: `src/stellium/transits/calculator.py`
 
 ```python
 """
@@ -3090,9 +3090,9 @@ from datetime import datetime, timedelta
 from typing import List, Dict, Optional
 import pytz
 
-from starlight.core.models import CalculatedChart, CelestialPosition, ChartLocation
-from starlight.core.builder import ChartBuilder
-from starlight.transits.models import Transit, TransitSet
+from stellium.core.models import CalculatedChart, CelestialPosition, ChartLocation
+from stellium.core.builder import ChartBuilder
+from stellium.transits.models import Transit, TransitSet
 
 
 class TransitCalculator:
@@ -3211,7 +3211,7 @@ class TransitCalculator:
 
     def _get_transit_positions(self, chart: CalculatedChart) -> List[CelestialPosition]:
         """Get positions to use in transit calculations."""
-        from starlight.core.models import ObjectType
+        from stellium.core.models import ObjectType
         return [
             p for p in chart.positions
             if p.object_type == ObjectType.PLANET
@@ -3251,9 +3251,9 @@ import pytest
 from datetime import datetime, timedelta
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.transits.calculator import TransitCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.transits.calculator import TransitCalculator
 
 
 def test_current_transits():
@@ -3338,11 +3338,11 @@ A plugin system enables:
 
 ### Step 19.1: Design Plugin Protocol
 
-**File**: `src/starlight/plugins/__init__.py`
+**File**: `src/stellium/plugins/__init__.py`
 
 ```python
 """
-Plugin system for Starlight.
+Plugin system for Stellium.
 
 Allows third-party extensions for:
 - Custom components (new calculations)
@@ -3352,12 +3352,12 @@ Allows third-party extensions for:
 """
 
 from typing import Protocol, List, Any
-from starlight.core.models import CalculatedChart
+from stellium.core.models import CalculatedChart
 
 
-class StarlightPlugin(Protocol):
+class StelliumPlugin(Protocol):
     """
-    Base protocol for all Starlight plugins.
+    Base protocol for all Stellium plugins.
 
     All plugins must implement this interface.
     """
@@ -3390,7 +3390,7 @@ class StarlightPlugin(Protocol):
         ...
 
 
-class ExporterPlugin(StarlightPlugin, Protocol):
+class ExporterPlugin(StelliumPlugin, Protocol):
     """
     Plugin that exports charts to different formats.
 
@@ -3413,7 +3413,7 @@ class ExporterPlugin(StarlightPlugin, Protocol):
 
 ### Step 19.2: Create Plugin Registry
 
-**File**: `src/starlight/plugins/registry.py`
+**File**: `src/stellium/plugins/registry.py`
 
 ```python
 """
@@ -3427,7 +3427,7 @@ import pkgutil
 
 class PluginRegistry:
     """
-    Central registry for Starlight plugins.
+    Central registry for Stellium plugins.
 
     Handles plugin discovery, registration, and retrieval.
     """
@@ -3447,7 +3447,7 @@ class PluginRegistry:
         Register a plugin.
 
         Args:
-            plugin: Plugin instance implementing StarlightPlugin protocol
+            plugin: Plugin instance implementing StelliumPlugin protocol
         """
         # Validate plugin
         if not hasattr(plugin, 'plugin_name'):
@@ -3522,13 +3522,13 @@ def get_registry() -> PluginRegistry:
 
 ```python
 """
-Sample plugin demonstrating how to extend Starlight.
+Sample plugin demonstrating how to extend Stellium.
 
 This plugin exports charts to a simple HTML format.
 """
 
-from starlight.core.models import CalculatedChart, ObjectType
-from starlight.plugins import ExporterPlugin
+from stellium.core.models import CalculatedChart, ObjectType
+from stellium.plugins import ExporterPlugin
 
 
 class HTMLExporterPlugin:
@@ -3638,9 +3638,9 @@ class HTMLExporterPlugin:
 if __name__ == "__main__":
     from datetime import datetime
     import pytz
-    from starlight.core.builder import ChartBuilder
-    from starlight.core.models import ChartLocation
-    from starlight.plugins.registry import get_registry
+    from stellium.core.builder import ChartBuilder
+    from stellium.core.models import ChartLocation
+    from stellium.plugins.registry import get_registry
 
     # Register the plugin
     plugin = HTMLExporterPlugin()
@@ -3662,11 +3662,11 @@ if __name__ == "__main__":
 **File**: `docs/development/PLUGIN_GUIDE.md`
 
 ```markdown
-# Starlight Plugin Development Guide
+# Stellium Plugin Development Guide
 
 ## Overview
 
-Starlight's plugin system allows you to extend the library with custom functionality.
+Stellium's plugin system allows you to extend the library with custom functionality.
 
 ## Plugin Types
 
@@ -3733,7 +3733,7 @@ class MyExporter:
 ## Registration
 
 ```python
-from starlight.plugins.registry import get_registry
+from stellium.plugins.registry import get_registry
 
 plugin = MyPlugin()
 registry = get_registry()
@@ -3782,11 +3782,11 @@ from datetime import datetime
 import pytz
 from typing import Callable
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.components.arabic_parts import ArabicPartsCalculator
-from starlight.components.midpoints import MidpointCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.components.arabic_parts import ArabicPartsCalculator
+from stellium.components.midpoints import MidpointCalculator
 
 
 class Benchmark:
@@ -3896,12 +3896,12 @@ if __name__ == "__main__":
 
 Run benchmarks:
 ```bash
-source ~/.zshrc && pyenv activate starlight && python tests/benchmarks/benchmark_charts.py
+source ~/.zshrc && pyenv activate stellium && python tests/benchmarks/benchmark_charts.py
 ```
 
 ### Step 20.2: Add Caching Optimization
 
-**File**: `src/starlight/core/cache_integration.py`
+**File**: `src/stellium/core/cache_integration.py`
 
 ```python
 """
@@ -3915,7 +3915,7 @@ Enhances performance by caching:
 
 from functools import lru_cache
 from typing import Tuple
-from starlight.core.models import CelestialPosition, HouseCusps
+from stellium.core.models import CelestialPosition, HouseCusps
 
 
 # Use LRU cache for frequently accessed calculations
@@ -3988,15 +3988,15 @@ import pytest
 from datetime import datetime
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
-from starlight.components.arabic_parts import ArabicPartsCalculator
-from starlight.components.midpoints import MidpointCalculator
-from starlight.analysis.patterns import PatternDetector, StelliumDetector
-from starlight.presentation.modern import print_chart_summary
-from starlight.visualization import draw_chart
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from stellium.components.arabic_parts import ArabicPartsCalculator
+from stellium.components.midpoints import MidpointCalculator
+from stellium.analysis.patterns import PatternDetector, StelliumDetector
+from stellium.presentation.modern import print_chart_summary
+from stellium.visualization import draw_chart
 
 
 def test_complete_workflow():
@@ -4073,7 +4073,7 @@ def test_all_components_together():
         .calculate()
 
     # Should have positions from all components
-    from starlight.core.models import ObjectType
+    from stellium.core.models import ObjectType
 
     planets = [p for p in chart.positions if p.object_type == ObjectType.PLANET]
     arabic_parts = [p for p in chart.positions if p.object_type == ObjectType.ARABIC_PART]
@@ -4127,7 +4127,7 @@ This guide helps you migrate from the old `Chart` class to the new builder-based
 
 ### Old Way
 ```python
-from starlight.chart import Chart
+from stellium.chart import Chart
 
 chart = Chart(
     datetime_utc,
@@ -4139,8 +4139,8 @@ chart = Chart(
 
 ### New Way
 ```python
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
 
 location = ChartLocation(latitude, longitude, "New York")
 chart = ChartBuilder.from_datetime(datetime_utc, location).calculate()
@@ -4155,7 +4155,7 @@ chart = Chart(datetime_utc, lat, lon, house_system='W')  # W = Whole Sign
 
 ### New Way
 ```python
-from starlight.engines.houses import WholeSignHouses
+from stellium.engines.houses import WholeSignHouses
 
 chart = ChartBuilder.from_datetime(dt, location) \
     .with_houses(WholeSignHouses()) \
@@ -4172,7 +4172,7 @@ aspects = chart.calculate_aspects()
 
 ### New Way
 ```python
-from starlight.engines.aspects import ModernAspectEngine
+from stellium.engines.aspects import ModernAspectEngine
 
 chart = ChartBuilder.from_datetime(dt, location) \
     .with_aspects(ModernAspectEngine()) \
@@ -4201,14 +4201,14 @@ planets = [p for p in chart.positions if p.object_type == ObjectType.PLANET]
 
 ### Old Way
 ```python
-from starlight.drawing import draw_chart
+from stellium.drawing import draw_chart
 
 draw_chart(chart, "output.svg")
 ```
 
 ### New Way
 ```python
-from starlight.visualization import draw_chart
+from stellium.visualization import draw_chart
 
 draw_chart(chart, "output.svg")
 ```
@@ -4243,7 +4243,7 @@ echo ""
 
 # Activate environment
 source ~/.zshrc
-pyenv activate starlight
+pyenv activate stellium
 
 # Run all tests
 echo "Running unit tests..."
@@ -4290,12 +4290,12 @@ At this point you should have:
 
 ```bash
 # Run everything
-source ~/.zshrc && pyenv activate starlight && ./scripts/run_all_tests.sh
+source ~/.zshrc && pyenv activate stellium && ./scripts/run_all_tests.sh
 
 # Or run tests individually
-source ~/.zshrc && pyenv activate starlight && python -m pytest tests/ -v
-source ~/.zshrc && pyenv activate starlight && python examples/modern_usage.py
-source ~/.zshrc && pyenv activate starlight && python tests/benchmarks/benchmark_charts.py
+source ~/.zshrc && pyenv activate stellium && python -m pytest tests/ -v
+source ~/.zshrc && pyenv activate stellium && python examples/modern_usage.py
+source ~/.zshrc && pyenv activate stellium && python tests/benchmarks/benchmark_charts.py
 ```
 
 ---
@@ -4342,7 +4342,7 @@ Before considering the refactor complete:
 
 ## Congratulations! 🎉
 
-You've completed the 4-week architectural refactoring of Starlight!
+You've completed the 4-week architectural refactoring of Stellium!
 
 ### What You've Built
 

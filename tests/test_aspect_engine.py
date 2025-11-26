@@ -2,9 +2,9 @@
 
 import pytest
 
-from starlight.core.models import CelestialPosition, ObjectType
-from starlight.engines.aspects import HarmonicAspectEngine, ModernAspectEngine
-from starlight.engines.orbs import SimpleOrbEngine
+from stellium.core.models import CelestialPosition, ObjectType
+from stellium.engines.aspects import HarmonicAspectEngine, ModernAspectEngine
+from stellium.engines.orbs import SimpleOrbEngine
 
 
 def test_conjunction_detection():

@@ -1,4 +1,4 @@
-# Starlight Astrology Library - Architecture Documentation
+# Stellium Astrology Library - Architecture Documentation
 
 **Version:** 1.0
 **Last Updated:** 2025-11-16
@@ -26,7 +26,7 @@
 
 ## Executive Summary
 
-Starlight is a modern, protocol-driven Python astrology library built on Swiss Ephemeris for NASA-grade astronomical calculations. The architecture follows three core design principles:
+Stellium is a modern, protocol-driven Python astrology library built on Swiss Ephemeris for NASA-grade astronomical calculations. The architecture follows three core design principles:
 
 ### Core Principles
 
@@ -52,7 +52,7 @@ Starlight is a modern, protocol-driven Python astrology library built on Swiss E
 ## Directory Structure
 
 ```
-src/starlight/
+src/stellium/
 ├── __init__.py                  # Main package exports
 │
 ├── core/                        # Core abstractions and data models
@@ -637,8 +637,8 @@ class AspectEngine(Protocol):
 
 **Example:**
 ```python
-from starlight.engines import ModernAspectEngine
-from starlight.core.config import AspectConfig
+from stellium.engines import ModernAspectEngine
+from stellium.core.config import AspectConfig
 
 config = AspectConfig(
     aspects=["Conjunction", "Trine", "Square", "Opposition"],
@@ -678,7 +678,7 @@ class OrbEngine(Protocol):
 
 **Example:**
 ```python
-from starlight.engines import LuminariesOrbEngine
+from stellium.engines import LuminariesOrbEngine
 
 orb_engine = LuminariesOrbEngine(
     luminary_orbs={"Conjunction": 10.0, "Trine": 8.0},
@@ -731,7 +731,7 @@ class ChartComponent(Protocol):
 
 **Example:**
 ```python
-from starlight.components import ArabicPartsCalculator
+from stellium.components import ArabicPartsCalculator
 
 chart = (
     ChartBuilder.from_native(native)
@@ -775,7 +775,7 @@ class ChartAnalyzer(Protocol):
 
 **Example:**
 ```python
-from starlight.engines import AspectPatternAnalyzer
+from stellium.engines import AspectPatternAnalyzer
 
 chart = (
     ChartBuilder.from_native(native)
@@ -888,7 +888,7 @@ class Native:
 Simple:
 ```python
 from datetime import datetime
-from starlight.core.native import Native
+from stellium.core.native import Native
 
 # Naive datetime + location name
 native = Native(
@@ -946,7 +946,7 @@ class Notable:
 
 **Example:**
 ```python
-from starlight.core.native import Notable
+from stellium.core.native import Notable
 
 # Get Einstein's chart
 einstein = Notable.get("Albert Einstein")
@@ -1067,14 +1067,14 @@ If you don't specify engines/config, these defaults are used:
 
 **Simple (using defaults):**
 ```python
-from starlight.core.builder import ChartBuilder
+from stellium.core.builder import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 ```
 
 **With aspects:**
 ```python
-from starlight.engines import ModernAspectEngine
+from stellium.engines import ModernAspectEngine
 
 chart = (
     ChartBuilder.from_notable("Albert Einstein")
@@ -1085,7 +1085,7 @@ chart = (
 
 **Multiple house systems:**
 ```python
-from starlight.engines import PlacidusHouses, WholeSignHouses, KochHouses
+from stellium.engines import PlacidusHouses, WholeSignHouses, KochHouses
 
 chart = (
     ChartBuilder.from_native(native)
@@ -1101,7 +1101,7 @@ print(chart.get_house("Sun", "Koch"))
 
 **With components:**
 ```python
-from starlight.components import ArabicPartsCalculator, MidpointCalculator
+from stellium.components import ArabicPartsCalculator, MidpointCalculator
 
 chart = (
     ChartBuilder.from_native(native)
@@ -1117,16 +1117,16 @@ sun_moon_midpoint = chart.get_object("Sun/Moon")
 
 **Full customization:**
 ```python
-from starlight.core.builder import ChartBuilder
-from starlight.core.config import CalculationConfig, AspectConfig
-from starlight.engines import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.config import CalculationConfig, AspectConfig
+from stellium.engines import (
     PlacidusHouses,
     WholeSignHouses,
     ModernAspectEngine,
     LuminariesOrbEngine,
     AspectPatternAnalyzer
 )
-from starlight.components import ArabicPartsCalculator, DignityComponent
+from stellium.components import ArabicPartsCalculator, DignityComponent
 
 # Configure what to calculate
 calc_config = CalculationConfig(
@@ -1245,7 +1245,7 @@ def search_objects(query: str) -> list[CelestialObjectInfo]:
 
 **Example:**
 ```python
-from starlight.core.registry import get_object_info, get_all_by_type
+from stellium.core.registry import get_object_info, get_all_by_type
 
 # Get info
 lilith_info = get_object_info("Mean Apogee")
@@ -1335,7 +1335,7 @@ def search_aspects(query: str) -> list[AspectInfo]:
 
 **Example:**
 ```python
-from starlight.core.registry import get_aspect_info, get_aspects_by_category
+from stellium.core.registry import get_aspect_info, get_aspects_by_category
 
 # Get info
 trine_info = get_aspect_info("Trine")
@@ -1423,7 +1423,7 @@ def _calculate_single_position(
 
 **Example:**
 ```python
-from starlight.engines import SwissEphemerisEngine
+from stellium.engines import SwissEphemerisEngine
 
 # Use custom ephemeris path
 engine = SwissEphemerisEngine(ephemeris_path="/path/to/ephe")
@@ -1453,7 +1453,7 @@ class MockEphemerisEngine:
 
 **Example:**
 ```python
-from starlight.engines.ephemeris import MockEphemerisEngine
+from stellium.engines.ephemeris import MockEphemerisEngine
 
 mock = MockEphemerisEngine({
     "Sun": 285.5,      # 15° Capricorn
@@ -1535,7 +1535,7 @@ class SwissHouseSystemBase:
 
 **Example:**
 ```python
-from starlight.engines import PlacidusHouses, WholeSignHouses
+from stellium.engines import PlacidusHouses, WholeSignHouses
 
 chart = (
     ChartBuilder.from_native(native)
@@ -1614,8 +1614,8 @@ def _is_applying(
 
 **Example:**
 ```python
-from starlight.engines import ModernAspectEngine
-from starlight.core.config import AspectConfig
+from stellium.engines import ModernAspectEngine
+from stellium.core.config import AspectConfig
 
 # Custom config
 config = AspectConfig(
@@ -1660,7 +1660,7 @@ class HarmonicAspectEngine:
 
 **Example:**
 ```python
-from starlight.engines import HarmonicAspectEngine
+from stellium.engines import HarmonicAspectEngine
 
 # Septile aspects
 septile_engine = HarmonicAspectEngine(harmonic=7)
@@ -1701,7 +1701,7 @@ class SimpleOrbEngine:
 
 **Example:**
 ```python
-from starlight.engines import SimpleOrbEngine
+from stellium.engines import SimpleOrbEngine
 
 orbs = SimpleOrbEngine(
     orb_map={
@@ -1747,7 +1747,7 @@ class LuminariesOrbEngine:
 
 **Example:**
 ```python
-from starlight.engines import LuminariesOrbEngine
+from stellium.engines import LuminariesOrbEngine
 
 orbs = LuminariesOrbEngine(
     luminary_orbs={
@@ -1805,7 +1805,7 @@ class ComplexOrbEngine:
 
 **Example:**
 ```python
-from starlight.engines import ComplexOrbEngine
+from stellium.engines import ComplexOrbEngine
 
 config = {
     "by_pair": {
@@ -1880,7 +1880,7 @@ class TraditionalDignityCalculator:
 
 **Example:**
 ```python
-from starlight.engines import TraditionalDignityCalculator
+from stellium.engines import TraditionalDignityCalculator
 
 calc = TraditionalDignityCalculator()
 
@@ -1941,7 +1941,7 @@ class MutualReceptionAnalyzer:
 
 **Example:**
 ```python
-from starlight.engines import MutualReceptionAnalyzer
+from stellium.engines import MutualReceptionAnalyzer
 
 analyzer = MutualReceptionAnalyzer()
 positions = chart.get_planets()
@@ -1993,7 +1993,7 @@ class AspectPatternAnalyzer:
 
 **Example:**
 ```python
-from starlight.engines import AspectPatternAnalyzer, ModernAspectEngine
+from stellium.engines import AspectPatternAnalyzer, ModernAspectEngine
 
 chart = (
     ChartBuilder.from_native(native)
@@ -2078,7 +2078,7 @@ class ArabicPartsCalculator:
 
 **Example:**
 ```python
-from starlight.components import ArabicPartsCalculator
+from stellium.components import ArabicPartsCalculator
 
 chart = (
     ChartBuilder.from_native(native)
@@ -2131,7 +2131,7 @@ class MidpointCalculator:
 
 **Example:**
 ```python
-from starlight.components import MidpointCalculator
+from stellium.components import MidpointCalculator
 
 chart = (
     ChartBuilder.from_native(native)
@@ -2202,7 +2202,7 @@ class DignityComponent:
 
 **Example:**
 ```python
-from starlight.components import DignityComponent
+from stellium.components import DignityComponent
 
 chart = (
     ChartBuilder.from_native(native)
@@ -2262,7 +2262,7 @@ class AccidentalDignityComponent:
 
 **Example:**
 ```python
-from starlight.components import AccidentalDignityComponent
+from stellium.components import AccidentalDignityComponent
 
 chart = (
     ChartBuilder.from_native(native)
@@ -2316,8 +2316,8 @@ class IRenderLayer(Protocol):
 
 **Example:**
 ```python
-from starlight.visualization import ChartRenderer
-from starlight.visualization.layers import (
+from stellium.visualization import ChartRenderer
+from stellium.visualization.layers import (
     ZodiacLayer,
     HouseCuspLayer,
     PlanetLayer,
@@ -2388,7 +2388,7 @@ def get_chart_rotation(self, chart: CalculatedChart) -> float:
 
 **Example:**
 ```python
-from starlight.visualization import ChartRenderer
+from stellium.visualization import ChartRenderer
 
 renderer = ChartRenderer(size=1000, rotation=0)
 
@@ -2444,7 +2444,7 @@ def draw_chart_with_multiple_houses(
 
 **Example:**
 ```python
-from starlight.visualization import draw_chart
+from stellium.visualization import draw_chart
 
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
@@ -2488,7 +2488,7 @@ def draw_moon_phase(
 
 **Example:**
 ```python
-from starlight.visualization.moon_phase import draw_moon_phase
+from stellium.visualization.moon_phase import draw_moon_phase
 
 moon = chart.get_object("Moon")
 if moon and moon.phase:
@@ -2608,7 +2608,7 @@ def render(
 
 **Example:**
 ```python
-from starlight.presentation import ReportBuilder
+from stellium.presentation import ReportBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
@@ -2867,8 +2867,8 @@ overlay = HouseOverlay(
 **Synastry:**
 
 ```python
-from starlight.core.native import Native
-from starlight.core.comparison import create_synastry
+from stellium.core.native import Native
+from stellium.core.comparison import create_synastry
 
 native1 = Native(datetime(1990, 1, 1, 12, 0), "New York, NY")
 native2 = Native(datetime(1992, 5, 15, 8, 30), "Los Angeles, CA")
@@ -2891,8 +2891,8 @@ for overlay in synastry.house_overlays:
 
 ```python
 from datetime import datetime
-from starlight.core.native import Native
-from starlight.core.comparison import create_transits
+from stellium.core.native import Native
+from stellium.core.comparison import create_transits
 
 # Birth chart
 native = Native(datetime(1990, 1, 1, 12, 0), "New York, NY")
@@ -2909,9 +2909,9 @@ for aspect in transits.cross_aspects:
 **Custom Configuration:**
 
 ```python
-from starlight.core.comparison import ComparisonBuilder
-from starlight.engines import ModernAspectEngine, SimpleOrbEngine
-from starlight.core.config import AspectConfig
+from stellium.core.comparison import ComparisonBuilder
+from stellium.engines import ModernAspectEngine, SimpleOrbEngine
+from stellium.core.config import AspectConfig
 
 # Tight orbs for transits
 orb_engine = SimpleOrbEngine(
@@ -3066,7 +3066,7 @@ AspectEngine.calculate_aspects()
 
 ## Extension Points
 
-How to add new functionality to Starlight.
+How to add new functionality to Stellium.
 
 ### Adding New Celestial Objects
 
@@ -3114,7 +3114,7 @@ CELESTIAL_REGISTRY["YourObject"] = CelestialObjectInfo(
 **4. Include in calculation config**
 
 ```python
-from starlight.core.config import CalculationConfig
+from stellium.core.config import CalculationConfig
 
 config = CalculationConfig(
     include_asteroids=["YourObject"]  # or include_points
@@ -3136,8 +3136,8 @@ print(f"YourObject: {your_object.sign_position}")
 **1. Implement the protocol**
 
 ```python
-from starlight.core.protocols import HouseSystemEngine
-from starlight.core.models import HouseCusps, CelestialPosition, ObjectType
+from stellium.core.protocols import HouseSystemEngine
+from stellium.core.models import HouseCusps, CelestialPosition, ObjectType
 
 class CustomHouses:
     @property
@@ -3240,8 +3240,8 @@ ASPECT_REGISTRY["MyAspect"] = AspectInfo(
 **2. Include in aspect config**
 
 ```python
-from starlight.core.config import AspectConfig
-from starlight.engines import ModernAspectEngine
+from stellium.core.config import AspectConfig
+from stellium.engines import ModernAspectEngine
 
 config = AspectConfig(
     aspects=["Conjunction", "MyAspect"],
@@ -3269,8 +3269,8 @@ for aspect in chart.aspects:
 **1. Implement the protocol**
 
 ```python
-from starlight.core.protocols import ChartComponent
-from starlight.core.models import CelestialPosition, ObjectType
+from stellium.core.protocols import ChartComponent
+from stellium.core.models import CelestialPosition, ObjectType
 
 class MyComponent:
     @property
@@ -3356,8 +3356,8 @@ class MyAnalysisComponent:
 **1. Implement the protocol**
 
 ```python
-from starlight.core.protocols import OrbEngine
-from starlight.core.models import CelestialPosition
+from stellium.core.protocols import OrbEngine
+from stellium.core.models import CelestialPosition
 
 class MyOrbEngine:
     def get_orb_allowance(
@@ -3389,7 +3389,7 @@ class MyOrbEngine:
 **2. Use it**
 
 ```python
-from starlight.engines import ModernAspectEngine
+from stellium.engines import ModernAspectEngine
 
 chart = (
     ChartBuilder.from_native(native)
@@ -3408,8 +3408,8 @@ chart = (
 **1. Implement the protocol**
 
 ```python
-from starlight.core.protocols import ChartAnalyzer
-from starlight.core.models import CalculatedChart
+from stellium.core.protocols import ChartAnalyzer
+from stellium.core.models import CalculatedChart
 
 class MyAnalyzer:
     @property
@@ -3489,8 +3489,8 @@ print(f"Element balance: {findings['element_balance']}")
 **1. Implement the protocol**
 
 ```python
-from starlight.core.protocols import ReportSection
-from starlight.core.models import CalculatedChart
+from stellium.core.protocols import ReportSection
+from stellium.core.models import CalculatedChart
 
 class MySection:
     @property
@@ -3526,7 +3526,7 @@ class MySection:
 **2. Use it**
 
 ```python
-from starlight.presentation import ReportBuilder
+from stellium.presentation import ReportBuilder
 
 # Create custom builder
 builder = ReportBuilder()
@@ -3607,7 +3607,7 @@ CalculationConfig.comprehensive()
 
 **Example:**
 ```python
-from starlight.core.config import CalculationConfig
+from stellium.core.config import CalculationConfig
 
 # Custom config
 config = CalculationConfig(
@@ -3643,7 +3643,7 @@ aspects = [
 
 **Example:**
 ```python
-from starlight.core.config import AspectConfig
+from stellium.core.config import AspectConfig
 
 # Only major aspects, no asteroids
 config = AspectConfig(
@@ -3661,7 +3661,7 @@ Each engine can be configured independently.
 #### Ephemeris Path
 
 ```python
-from starlight.engines import SwissEphemerisEngine
+from stellium.engines import SwissEphemerisEngine
 
 engine = SwissEphemerisEngine(
     ephemeris_path="/custom/path/to/ephe"
@@ -3673,7 +3673,7 @@ chart = ChartBuilder.from_native(native).with_ephemeris(engine).calculate()
 #### House Systems
 
 ```python
-from starlight.engines import PlacidusHouses, WholeSignHouses, KochHouses
+from stellium.engines import PlacidusHouses, WholeSignHouses, KochHouses
 
 # Multiple systems
 chart = (
@@ -3697,7 +3697,7 @@ print(chart.get_house("Sun", "Koch"))
 See [Orb Engines](#orb-engines) section for full details.
 
 ```python
-from starlight.engines import SimpleOrbEngine, LuminariesOrbEngine, ComplexOrbEngine
+from stellium.engines import SimpleOrbEngine, LuminariesOrbEngine, ComplexOrbEngine
 
 # Simple
 simple = SimpleOrbEngine(
@@ -3728,7 +3728,7 @@ Components have their own configuration options.
 #### Arabic Parts
 
 ```python
-from starlight.components import ArabicPartsCalculator
+from stellium.components import ArabicPartsCalculator
 
 # Default (all lots)
 arabic_parts = ArabicPartsCalculator()
@@ -3743,7 +3743,7 @@ chart = (
 #### Dignities
 
 ```python
-from starlight.components import DignityComponent
+from stellium.components import DignityComponent
 
 dignity = DignityComponent(
     traditional=True,              # Calculate traditional
@@ -3762,7 +3762,7 @@ chart = (
 #### Accidental Dignities
 
 ```python
-from starlight.components import AccidentalDignityComponent
+from stellium.components import AccidentalDignityComponent
 
 acc_dignity = AccidentalDignityComponent(
     house_system="Placidus",       # Which house system to use
@@ -3779,7 +3779,7 @@ chart = (
 ### Caching Configuration
 
 ```python
-from starlight.utils.cache import Cache
+from stellium.utils.cache import Cache
 
 # Custom cache
 cache = Cache(
@@ -3805,7 +3805,7 @@ chart = ChartBuilder.from_native(native).with_cache(cache=None).calculate()
 ### Visualization Configuration
 
 ```python
-from starlight.visualization import ChartRenderer, draw_chart
+from stellium.visualization import ChartRenderer, draw_chart
 
 # Custom renderer
 renderer = ChartRenderer(
@@ -3873,17 +3873,17 @@ except RuntimeError as e:
 
 ### Type Hints
 
-Starlight is fully typed. Use mypy for type checking:
+Stellium is fully typed. Use mypy for type checking:
 
 ```bash
-mypy src/starlight
+mypy src/stellium
 ```
 
 **Example typed usage:**
 ```python
-from starlight.core.native import Native
-from starlight.core.models import CalculatedChart
-from starlight.core.builder import ChartBuilder
+from stellium.core.native import Native
+from stellium.core.models import CalculatedChart
+from stellium.core.builder import ChartBuilder
 
 native: Native = Native(datetime(2000, 1, 1), "New York")
 builder: ChartBuilder = ChartBuilder.from_native(native)
@@ -3968,7 +3968,7 @@ chart = (
 python examples/usage.py  # May fail!
 
 # Right
-source ~/.zshrc && pyenv activate starlight && python examples/usage.py
+source ~/.zshrc && pyenv activate stellium && python examples/usage.py
 ```
 
 **3. Don't modify frozen dataclasses:**
@@ -4046,11 +4046,11 @@ new_sun = replace(sun, longitude=45.0)
 ```python
 # Essential imports
 from datetime import datetime
-from starlight.core.native import Native
-from starlight.core.builder import ChartBuilder
+from stellium.core.native import Native
+from stellium.core.builder import ChartBuilder
 
 # Models
-from starlight.core.models import (
+from stellium.core.models import (
     CalculatedChart,
     CelestialPosition,
     Aspect,
@@ -4058,10 +4058,10 @@ from starlight.core.models import (
 )
 
 # Configuration
-from starlight.core.config import CalculationConfig, AspectConfig
+from stellium.core.config import CalculationConfig, AspectConfig
 
 # Engines
-from starlight.engines import (
+from stellium.engines import (
     PlacidusHouses,
     WholeSignHouses,
     ModernAspectEngine,
@@ -4069,17 +4069,17 @@ from starlight.engines import (
 )
 
 # Components
-from starlight.components import (
+from stellium.components import (
     ArabicPartsCalculator,
     MidpointCalculator,
     DignityComponent
 )
 
 # Visualization
-from starlight.visualization import draw_chart
+from stellium.visualization import draw_chart
 
 # Reporting
-from starlight.presentation import ReportBuilder
+from stellium.presentation import ReportBuilder
 ```
 
 ### Quick Usage Examples
@@ -4091,7 +4091,7 @@ chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
 **With aspects:**
 ```python
-from starlight.engines import ModernAspectEngine
+from stellium.engines import ModernAspectEngine
 
 chart = (
     ChartBuilder.from_notable("Albert Einstein")
@@ -4102,8 +4102,8 @@ chart = (
 
 **Full featured:**
 ```python
-from starlight.engines import PlacidusHouses, ModernAspectEngine, AspectPatternAnalyzer
-from starlight.components import ArabicPartsCalculator, DignityComponent
+from stellium.engines import PlacidusHouses, ModernAspectEngine, AspectPatternAnalyzer
+from stellium.components import ArabicPartsCalculator, DignityComponent
 
 chart = (
     ChartBuilder.from_native(native)
@@ -4118,7 +4118,7 @@ chart = (
 
 **Generate report:**
 ```python
-from starlight.presentation import ReportBuilder
+from stellium.presentation import ReportBuilder
 
 report = (
     ReportBuilder()
@@ -4133,18 +4133,18 @@ print(report)
 
 **Draw chart:**
 ```python
-from starlight.visualization import draw_chart
+from stellium.visualization import draw_chart
 
 draw_chart(chart, "output.svg", size=1000)
 ```
 
 ### File Locations
 
-**Core abstractions:** `src/starlight/core/`
-**Calculation engines:** `src/starlight/engines/`
-**Add-on components:** `src/starlight/components/`
-**Chart rendering:** `src/starlight/visualization/`
-**Report generation:** `src/starlight/presentation/`
+**Core abstractions:** `src/stellium/core/`
+**Calculation engines:** `src/stellium/engines/`
+**Add-on components:** `src/stellium/components/`
+**Chart rendering:** `src/stellium/visualization/`
+**Report generation:** `src/stellium/presentation/`
 **Tests:** `tests/`
 **Examples:** `examples/`
 **Documentation:** `docs/`
@@ -4153,13 +4153,13 @@ draw_chart(chart, "output.svg", size=1000)
 
 ## Appendix: Swiss Ephemeris Setup
 
-Starlight requires Swiss Ephemeris data files. These are included in `data/swisseph/ephe/`.
+Stellium requires Swiss Ephemeris data files. These are included in `data/swisseph/ephe/`.
 
-**Default path:** `src/starlight/data/swisseph/ephe/`
+**Default path:** `src/stellium/data/swisseph/ephe/`
 
 **Custom path:**
 ```python
-from starlight.engines import SwissEphemerisEngine
+from stellium.engines import SwissEphemerisEngine
 
 engine = SwissEphemerisEngine(ephemeris_path="/path/to/ephe")
 chart = ChartBuilder.from_native(native).with_ephemeris(engine).calculate()
@@ -4170,7 +4170,7 @@ chart = ChartBuilder.from_native(native).with_ephemeris(engine).calculate()
 Always activate the pyenv environment before running:
 
 ```bash
-source ~/.zshrc && pyenv activate starlight && python your_script.py
+source ~/.zshrc && pyenv activate stellium && python your_script.py
 ```
 
 ---

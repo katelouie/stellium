@@ -36,8 +36,8 @@ import datetime as dt
 import pytest
 import swisseph as swe
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import (
     Aspect,
     AspectPattern,
     CalculatedChart,
@@ -46,9 +46,9 @@ from starlight.core.models import (
     ChartLocation,
     ObjectType,
 )
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.engines.orbs import SimpleOrbEngine
-from starlight.engines.patterns import AspectPatternAnalyzer
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.engines.orbs import SimpleOrbEngine
+from stellium.engines.patterns import AspectPatternAnalyzer
 
 
 # =============================================================================
@@ -301,7 +301,7 @@ def test_yod_detection():
     ]
 
     # Create aspect engine with Quincunx included
-    from starlight.core.config import AspectConfig
+    from stellium.core.config import AspectConfig
 
     config = AspectConfig(
         aspects=["Conjunction", "Sextile", "Square", "Trine", "Opposition", "Quincunx"]

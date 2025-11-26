@@ -9,15 +9,15 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.components.midpoints import MidpointCalculator
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation, ObjectType
-from starlight.core.native import Native
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
-from starlight.engines.orbs import SimpleOrbEngine
-from starlight.presentation.sections import (
+from stellium.components.midpoints import MidpointCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation, ObjectType
+from stellium.core.native import Native
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.engines.orbs import SimpleOrbEngine
+from stellium.presentation.sections import (
     AspectSection,
     CacheInfoSection,
     ChartOverviewSection,

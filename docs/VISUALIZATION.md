@@ -1,10 +1,10 @@
-# Starlight Visualization Guide
+# Stellium Visualization Guide
 
 **Beautiful astrological charts with zero configuration, infinite customization.**
 
-Starlight's visualization system transforms your calculated charts into professional-quality SVG graphics. Whether you need a quick chart for analysis or a publication-ready visualization with custom styling, the fluent API makes it effortless.
+Stellium's visualization system transforms your calculated charts into professional-quality SVG graphics. Whether you need a quick chart for analysis or a publication-ready visualization with custom styling, the fluent API makes it effortless.
 
-See the HTML full theme and palette reference overview [rendered here](https://html-preview.github.io/?url=https://github.com/katelouie/starlight/blob/main/examples/chart_examples/starlight_colors.html).
+See the HTML full theme and palette reference overview [rendered here](https://html-preview.github.io/?url=https://github.com/katelouie/stellium/blob/main/examples/chart_examples/stellium_colors.html).
 
 - [Theme Gallery](THEME_GALLERY.md) - Visual showcase of all themes
 - [Palette Gallery](PALETTE_GALLERY.md) - Visual showcase of all palettes
@@ -29,7 +29,7 @@ See the HTML full theme and palette reference overview [rendered here](https://h
 ### Your First Chart (2 Lines)
 
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
 chart.draw("einstein.svg").save()
@@ -719,7 +719,7 @@ Corner elements add contextual information without cluttering the chart.
 
 ### Auto-Padding
 
-When more than 2 corners are occupied, Starlight automatically adds subtle padding to prevent overlap and improve readability.
+When more than 2 corners are occupied, Stellium automatically adds subtle padding to prevent overlap and improve readability.
 
 ```python
 # Auto-padding kicks in here (3 corners)
@@ -829,7 +829,7 @@ The fluent API lets you stack configuration for complete control:
 
 ```python
 from datetime import datetime
-from starlight import ChartBuilder, Native
+from stellium import ChartBuilder, Native
 
 native = Native(datetime(1990, 5, 15, 14, 30), "Los Angeles, CA")
 chart = ChartBuilder.from_native(native).calculate()
@@ -853,7 +853,7 @@ chart.draw("comprehensive.svg") \
 The old `draw_chart()` function still works if you prefer functional style:
 
 ```python
-from starlight.visualization import draw_chart
+from stellium.visualization import draw_chart
 
 draw_chart(
     chart,
@@ -907,7 +907,7 @@ chart.draw("extended_below.svg").with_theme("midnight").with_tables("below").sav
 Comparison charts (synastry, transits, progressions) use the same API:
 
 ```python
-from starlight import ComparisonBuilder
+from stellium import ComparisonBuilder
 
 comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
 
@@ -968,7 +968,7 @@ chart.draw("/tmp/test.svg").save()        # Saves to /tmp/
 chart.draw("chart.svg").save()            # Saves to current directory
 ```
 
-**Note:** Directories must exist before saving. Starlight does not create directories automatically.
+**Note:** Directories must exist before saving. Stellium does not create directories automatically.
 
 ---
 
@@ -1068,8 +1068,8 @@ See the [Theme Gallery](THEME_GALLERY.md) and [Palette Gallery](PALETTE_GALLERY.
 - [Main README](../README.md) - Project overview and installation
 - [Theme Gallery](THEME_GALLERY.md) - Visual showcase of all themes
 - [Palette Gallery](PALETTE_GALLERY.md) - Visual showcase of all palettes
-- [GitHub Issues](https://github.com/katelouie/starlight/issues) - Report bugs or request features
-- [GitHub Discussions](https://github.com/katelouie/starlight/discussions) - Ask questions
+- [GitHub Issues](https://github.com/katelouie/stellium/issues) - Report bugs or request features
+- [GitHub Discussions](https://github.com/katelouie/stellium/discussions) - Ask questions
 
 ---
 

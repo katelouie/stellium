@@ -5,7 +5,7 @@ include CHANGELOG.md
 include pyproject.toml
 
 # Include only essential Swiss Ephemeris data files (covers 1800-2400 CE, ~3.7MB)
-# Additional ephemeris data can be downloaded via CLI: starlight ephemeris download
+# Additional ephemeris data can be downloaded via CLI: stellium ephemeris download
 include data/README.md
 include data/swisseph/ephe/sepl_18.se1
 include data/swisseph/ephe/sepl_24.se1

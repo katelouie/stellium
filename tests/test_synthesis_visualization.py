@@ -9,8 +9,8 @@ import tempfile
 
 import pytest
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.synthesis import SynthesisBuilder
+from stellium.core.builder import ChartBuilder
+from stellium.core.synthesis import SynthesisBuilder
 
 
 class TestSynthesisVisualization:
@@ -38,7 +38,7 @@ class TestSynthesisVisualization:
 
     def test_draw_returns_builder(self, davison_chart):
         """Test that draw() returns a ChartDrawBuilder."""
-        from starlight.visualization.builder import ChartDrawBuilder
+        from stellium.visualization.builder import ChartDrawBuilder
 
         builder = davison_chart.draw("test.svg")
         assert isinstance(builder, ChartDrawBuilder)

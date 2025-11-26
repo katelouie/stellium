@@ -15,10 +15,10 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import CelestialPosition, ChartDateTime, ChartLocation, ObjectType
-from starlight.core.native import Native
-from starlight.engines.houses import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import CelestialPosition, ChartDateTime, ChartLocation, ObjectType
+from stellium.core.native import Native
+from stellium.engines.houses import (
     HOUSE_SYSTEM_CODES,
     APCHouses,
     AlcabitiusHouses,

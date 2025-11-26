@@ -1,8 +1,8 @@
-# 🌟 Starlight Development Roadmap
+# 🌟 Stellium Development Roadmap
 
 ## Feature Implementation Recommendations
 
-Based on analysis of the current codebase and technical astrology requirements, this document outlines recommended next features for the Starlight astrological calculation engine.
+Based on analysis of the current codebase and technical astrology requirements, this document outlines recommended next features for the Stellium astrological calculation engine.
 
 ---
 
@@ -66,8 +66,8 @@ def get_aspect_patterns(self) -> dict:
 ```
 
 #### Files to Modify:
-- `src/starlight/chart.py` - Add pattern detection methods
-- `src/starlight/presentation.py` - Add pattern display formatting
+- `src/stellium/chart.py` - Add pattern detection methods
+- `src/stellium/presentation.py` - Add pattern display formatting
 - `tests/` - Add comprehensive pattern detection tests
 
 ---
@@ -106,9 +106,9 @@ def get_hemispheric_emphasis(self) -> dict:
 ```
 
 #### Files to Create/Modify:
-- `src/starlight/analysis.py` - New module for chart analysis
-- `src/starlight/chart.py` - Add balance calculation methods
-- `src/starlight/presentation.py` - Add balance visualization
+- `src/stellium/analysis.py` - New module for chart analysis
+- `src/stellium/chart.py` - Add balance calculation methods
+- `src/stellium/presentation.py` - Add balance visualization
 
 ---
 
@@ -148,9 +148,9 @@ class Planet(Object):
 ```
 
 #### Files to Modify:
-- `src/starlight/objects.py` - Enhance retrograde/solar methods
-- `src/starlight/chart.py` - Add retrograde analysis
-- `src/starlight/presentation.py` - Improve retrograde display
+- `src/stellium/objects.py` - Enhance retrograde/solar methods
+- `src/stellium/chart.py` - Add retrograde analysis
+- `src/stellium/presentation.py` - Improve retrograde display
 
 ---
 
@@ -220,7 +220,7 @@ Analyze planetary rulership chains and mutual reception patterns.
 # Add to chart.py
 def get_dispositor_chains(self) -> dict:
     """Calculate complete dispositor analysis."""
-    from starlight.signs import DIGNITIES
+    from stellium.signs import DIGNITIES
     
     dispositors = {}
     for planet in self.planets:
@@ -308,7 +308,7 @@ Enhance house system analysis beyond current basic implementation.
 # Add to chart.py
 def get_house_analysis(self) -> dict:
     """Comprehensive house system analysis."""
-    from starlight.signs import DIGNITIES
+    from stellium.signs import DIGNITIES
     
     house_rulers = {}
     for i, cusp_degree in enumerate(self.cusps):
@@ -471,7 +471,7 @@ Caching expansion, parallel processing, memory optimization.
 
 ### New Module Structure:
 ```
-src/starlight/
+src/stellium/
 ├── analysis/           # New analysis modules
 │   ├── __init__.py
 │   ├── patterns.py     # Aspect pattern detection
@@ -526,4 +526,4 @@ DEFAULT_CONFIG = {
 
 ---
 
-This roadmap provides a structured approach to expanding Starlight into a comprehensive professional astrological calculation engine while maintaining code quality and architectural integrity.
+This roadmap provides a structured approach to expanding Stellium into a comprehensive professional astrological calculation engine while maintaining code quality and architectural integrity.

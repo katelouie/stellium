@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/project/starlight/
+      url: https://pypi.org/project/stellium/
     permissions:
       id-token: write  # Required for trusted publishing
       contents: read

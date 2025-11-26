@@ -2,12 +2,12 @@
 
 import datetime as dt
 
-from starlight.components.midpoints import MidpointCalculator
-from starlight.core.builder import ChartBuilder
-from starlight.core.native import Native
-from starlight.engines.aspects import ModernAspectEngine
-from starlight.engines.orbs import SimpleOrbEngine
-from starlight.presentation import ReportBuilder
+from stellium.components.midpoints import MidpointCalculator
+from stellium.core.builder import ChartBuilder
+from stellium.core.native import Native
+from stellium.engines.aspects import ModernAspectEngine
+from stellium.engines.orbs import SimpleOrbEngine
+from stellium.presentation import ReportBuilder
 
 # Create a chart
 native = Native(dt.datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
