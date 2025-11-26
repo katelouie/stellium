@@ -1,7 +1,9 @@
 """Code to generate the charts for docs/VISUALIZATION.md"""
 
-from starlight import ChartBuilder, ComparisonBuilder, ComparisonType
 import os
+
+from starlight import ChartBuilder, ComparisonBuilder, ComparisonType
+from starlight.engines import PlacidusHouses, WholeSignHouses
 
 FILEDIR = "docs/images"
 
@@ -53,9 +55,20 @@ def readme_chart_2():
 @chart
 def readme_chart_3():
     filename = "examples/readme_extended_detailed.svg"
-    chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
+    chart = (
+        ChartBuilder.from_notable("Albert Einstein")
+        .with_house_systems([PlacidusHouses(), WholeSignHouses()])
+        .with_aspects()
+        .calculate()
+    )
     drawing = chart.draw(os.path.join(FILEDIR, filename))
-    drawing = drawing.with_theme("midnight").preset_detailed().with_tables().save()
+    drawing = (
+        drawing.with_theme("midnight")
+        .preset_detailed()
+        .with_house_systems("all")
+        .with_tables()
+        .save()
+    )
 
 
 @chart
