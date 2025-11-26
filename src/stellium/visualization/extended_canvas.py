@@ -1412,8 +1412,13 @@ class AspectarianLayer:
         else:
             aspect_glyph = aspect.aspect_name[:1]
 
-        if aspect_info and aspect_info.color:
-            text_color = aspect_info.color
+        # Get color from aspect palette (renderer.style["aspects"])
+        aspect_style_dict = renderer.style.get("aspects", {})
+        aspect_style = aspect_style_dict.get(
+            aspect.aspect_name, aspect_style_dict.get("default", {})
+        )
+        if isinstance(aspect_style, dict):
+            text_color = aspect_style.get("color", self.style["text_color"])
         else:
             text_color = self.style["text_color"]
 
