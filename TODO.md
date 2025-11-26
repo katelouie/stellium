@@ -3,7 +3,7 @@
 ## Reports
 
 - [ ] Add "text" option to presentation reports that outputs sentences of information.
-- [ ] Add PDF and HTML report options.
+- [x] Add PDF and HTML report options.
 - [ ] Add dignity report section (with essential and accidental modes).
 - [ ] Add midpoint aspect report section.
 - [ ] Add aspect pattern report section.
@@ -15,9 +15,9 @@
 - [x] Add chart type with more info (such as positions, native info, aspect triangle chart).
 - [ ] Add option to render aspect triangle aspect charts separately.
 - [ ] Add vedic square-type charts
-- [ ] Synastry square aspect table
+- [x] Synastry square aspect table
 - [ ] Declinations
-- [ ] Add bi-wheel charts for Comparison charts
+- [x] Add bi-wheel charts for Comparison charts
 - [ ] Update chart grid to take in *arbitrary wheel-only charts*
 - [x] Make aspect palettes better (more different colors, line styles)
   - [x] Maybe add a legend with the aspect count corner info?
@@ -31,7 +31,7 @@
 ## Core Functions
 
 - [x] Add synastry
-- [ ] Add composite
+- [x] Add composite
 - [x] Add transits
 - [x] Add progressions
 - [ ] Add returns (?)
@@ -45,7 +45,7 @@
 
 - [x] Nudge planets outwards and house numbers inwards for natal charts
 - [x] Don't calculate aspects for known things like: AC/DSC, MC/IC, NN/SN
-  - [ ] Don't calculate aspects between the 4 main angles in general
+  - [x] Don't calculate aspects between the 4 main angles in general
 - [x] DO calculate aspects between Angles and other things
 - [x] Make all aspect lines slightly transparent (alpha < 1)
 - [x] When moon in is center of chart and aspects are displayed/present, move the moon to the corner
