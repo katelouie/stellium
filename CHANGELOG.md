@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Multi-House System Visualization (November 25, 2025)
+
+- Fixed `with_house_systems("all")` to actually render multiple house systems on the chart wheel
+- Secondary house systems render as dashed lines with distinct colors for visual differentiation
+- Added `secondary_color` to all 13 themes for theme-aware overlay styling
+- `LayerFactory` now properly reads `config.wheel.house_systems` and creates overlay layers
+- Info corner displays all rendered house systems (e.g., "Placidus, Whole Sign")
+- Supports rendering 2+ house systems with automatic color cycling for additional overlays
+
 #### Unknown Birth Time Charts (November 25, 2025)
 
 - Added `UnknownTimeChart` model for charts with known date but unknown birth time

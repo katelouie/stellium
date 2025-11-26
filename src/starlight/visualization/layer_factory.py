@@ -10,6 +10,7 @@ from typing import Protocol
 from starlight.core.comparison import Comparison
 from starlight.core.models import CalculatedChart, UnknownTimeChart
 from starlight.visualization.config import ChartVisualizationConfig
+from starlight.visualization.themes import get_theme_style
 from starlight.visualization.layers import (
     AngleLayer,
     AspectCountsLayer,
@@ -105,12 +106,27 @@ class LayerFactory:
                     )
                 )
             else:
-                # Single chart: just one set of houses
+                # Single chart: determine which house systems to show
+                house_systems_to_render = self._get_house_systems_to_render(chart)
+
+                # Always render the primary system
+                primary_system = house_systems_to_render[0]
                 layers.append(
                     HouseCuspLayer(
-                        house_system_name=chart.default_house_system,
+                        house_system_name=primary_system,
                     )
                 )
+
+                # Render additional house systems as overlays with distinct styling
+                for i, system_name in enumerate(house_systems_to_render[1:], start=1):
+                    # Use different colors/styles for secondary systems
+                    overlay_style = self._get_overlay_style(i)
+                    layers.append(
+                        HouseCuspLayer(
+                            house_system_name=system_name,
+                            style_override=overlay_style,
+                        )
+                    )
 
         # Layer 3: Angles (ASC, MC, DSC, IC) - skip for unknown time charts
         if not is_unknown_time:
@@ -196,10 +212,18 @@ class LayerFactory:
 
         # Layer 6: Info corners (if enabled)
         if self.config.corners.chart_info:
+            # Pass house systems list if multiple are being rendered
+            house_systems_for_info = None
+            if not is_comparison and not is_unknown_time:
+                house_systems_to_render = self._get_house_systems_to_render(chart)
+                if len(house_systems_to_render) > 0:
+                    house_systems_for_info = house_systems_to_render
+
             layers.append(
                 ChartInfoLayer(
                     position=self.config.corners.chart_info_position,
                     header_enabled=header_enabled,
+                    house_systems=house_systems_for_info,
                 )
             )
 
@@ -244,3 +268,74 @@ class LayerFactory:
             ObjectType.POINT,
             ObjectType.NODE,
         )
+
+    def _get_house_systems_to_render(self, chart: CalculatedChart) -> list[str]:
+        """
+        Determine which house systems to render based on config and chart data.
+
+        Args:
+            chart: The chart being rendered
+
+        Returns:
+            List of house system names to render, with the primary system first
+        """
+        config_systems = self.config.wheel.house_systems
+
+        if config_systems is None:
+            # Use chart's default only
+            return [chart.default_house_system]
+
+        if config_systems == "all":
+            # Use all house systems available in the chart
+            available_systems = list(chart.house_systems.keys())
+            # Make sure the default system is first
+            if chart.default_house_system in available_systems:
+                available_systems.remove(chart.default_house_system)
+                available_systems.insert(0, chart.default_house_system)
+            return available_systems
+
+        if isinstance(config_systems, str):
+            # Single system specified
+            return [config_systems]
+
+        # List of systems specified
+        return list(config_systems)
+
+    def _get_overlay_style(self, index: int) -> dict:
+        """
+        Get distinct styling for overlay house systems.
+
+        Uses the theme's secondary_color for the first overlay, with fallback
+        colors for additional overlays.
+
+        Args:
+            index: 1-based index of the overlay (1 = first overlay, 2 = second, etc.)
+
+        Returns:
+            Style dictionary for HouseCuspLayer
+        """
+        # Get the secondary color from the theme
+        secondary_color = "#3498DB"  # Default fallback (blue)
+
+        if self.config.wheel.theme:
+            style = get_theme_style(self.config.wheel.theme)
+            houses_style = style.get("houses", {})
+            secondary_color = houses_style.get("secondary_color", secondary_color)
+
+        # Fallback colors for additional overlays (beyond the first)
+        fallback_colors = [
+            secondary_color,  # First overlay uses theme color
+            "#E74C3C",  # Red
+            "#2ECC71",  # Green
+            "#9B59B6",  # Purple
+            "#F39C12",  # Orange
+        ]
+
+        color = fallback_colors[(index - 1) % len(fallback_colors)]
+
+        return {
+            "line_color": color,
+            "number_color": color,
+            "line_width": 0.6,  # Thinner than primary
+            "line_dash": "3,2",  # Dashed to distinguish from primary
+        }

@@ -199,6 +199,7 @@ def _get_classic_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#F5F5F5",
             "fill_color_2": "#FFFFFF",
+            "secondary_color": "#3498DB",  # Blue for secondary house system overlay
         },
         "angles": {
             "line_color": "#555555",
@@ -259,6 +260,7 @@ def _get_dark_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#252525",
             "fill_color_2": "#1E1E1E",
+            "secondary_color": "#4ECDC4",  # Teal for secondary house system overlay
         },
         "angles": {
             "line_color": "#AAAAAA",
@@ -315,6 +317,7 @@ def _get_midnight_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#0E223D",
             "fill_color_2": "#0A1628",
+            "secondary_color": "#87CEEB",  # Sky blue for secondary house system overlay
         },
         "angles": {
             "line_color": "#E8E8E8",
@@ -371,6 +374,7 @@ def _get_neon_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#1A0A1A",
             "fill_color_2": "#0D0D0D",
+            "secondary_color": "#FF00FF",  # Magenta for secondary house system overlay
         },
         "angles": {
             "line_color": "#FF00FF",
@@ -427,6 +431,7 @@ def _get_sepia_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#EDE4D0",
             "fill_color_2": "#F4ECD8",
+            "secondary_color": "#8B4513",  # Saddle brown for secondary house system overlay
         },
         "angles": {
             "line_color": "#5D4E37",
@@ -483,6 +488,7 @@ def _get_pastel_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#F5F5F5",
             "fill_color_2": "#FAFAFA",
+            "secondary_color": "#B4A7D6",  # Soft lavender for secondary house system overlay
         },
         "angles": {
             "line_color": "#888888",
@@ -539,6 +545,7 @@ def _get_celestial_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#241540",
             "fill_color_2": "#1A0F2E",
+            "secondary_color": "#DA70D6",  # Orchid for secondary house system overlay
         },
         "angles": {
             "line_color": "#FFD700",
@@ -601,6 +608,7 @@ def _get_viridis_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#222222",
             "fill_color_2": "#1C1C1C",
+            "secondary_color": "#7AD151",  # Yellow-green for secondary house system overlay
         },
         "angles": {
             "line_color": "#7AD151",
@@ -657,6 +665,7 @@ def _get_plasma_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#150A5F",
             "fill_color_2": "#0D0887",
+            "secondary_color": "#E16462",  # Orange-red for secondary house system overlay
         },
         "angles": {
             "line_color": "#FCCE25",
@@ -713,6 +722,7 @@ def _get_inferno_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#1B0C41",
             "fill_color_2": "#000004",
+            "secondary_color": "#ED6925",  # Orange for secondary house system overlay
         },
         "angles": {
             "line_color": "#F7D03C",
@@ -769,6 +779,7 @@ def _get_magma_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#0B0924",
             "fill_color_2": "#000004",
+            "secondary_color": "#D3436E",  # Pink for secondary house system overlay
         },
         "angles": {
             "line_color": "#F8765C",
@@ -825,6 +836,7 @@ def _get_cividis_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#00306E",
             "fill_color_2": "#00204C",
+            "secondary_color": "#E5C482",  # Gold/tan for secondary house system overlay
         },
         "angles": {
             "line_color": "#E5C482",
@@ -881,6 +893,7 @@ def _get_turbo_theme() -> dict[str, Any]:
             "fill_alternate": True,
             "fill_color_1": "#242438",
             "fill_color_2": "#1A1A2E",
+            "secondary_color": "#1AE4B6",  # Turquoise for secondary house system overlay
         },
         "angles": {
             "line_color": "#FABA39",
