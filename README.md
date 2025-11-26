@@ -1,18 +1,18 @@
-# 🌟 Starlight
+# 🌟 Stellium
 
 **A modern, extensible Python library for computational astrology**
 
-Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Starlight brings professional astrological calculations to Python with a clean, composable architecture that works for everyone, from quick scripts to production applications.
+Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings professional astrological calculations to Python with a clean, composable architecture that works for everyone, from quick scripts to production applications.
 
-[![PyPI version](https://badge.fury.io/py/starlight-astro.svg)](https://badge.fury.io/py/starlight-astro)
-[![Python Version](https://img.shields.io/pypi/pyversions/starlight-astro.svg)](https://pypi.org/project/starlight-astro/)
+[![PyPI version](https://badge.fury.io/py/stellium.svg)](https://badge.fury.io/py/stellium)
+[![Python Version](https://img.shields.io/pypi/pyversions/stellium.svg)](https://pypi.org/project/stellium/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen.svg)]()
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/katelouie/starlight)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/katelouie/stellium)
 
 ---
 
-## ✨ Why Starlight?
+## ✨ Why Stellium?
 
 ### **For Python Developers**
 
@@ -36,15 +36,15 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Starlight brings 
 ![Example Round Chart](docs/images/examples/readme_first.svg)
 ![Example Extended Chart](docs/images/examples/readme_extended_detailed.svg)
 
-### **What Makes Starlight Different**
+### **What Makes Stellium Different**
 
-Unlike other Python astrology libraries, Starlight is designed for **extensibility**:
+Unlike other Python astrology libraries, Stellium is designed for **extensibility**:
 
 ```python
 # Other libraries: rigid, hard-coded calculations
 chart = AstrologyLibrary(date, location)  # That's all you can do
 
-# Starlight: composable, configurable, extensible
+# Stellium: composable, configurable, extensible
 chart = (ChartBuilder.from_native(native)
     .with_house_systems([PlacidusHouses(), WholeSignHouses()])  # Multiple systems!
     .with_aspects(ModernAspectEngine())                         # Swap aspect engines
@@ -64,7 +64,7 @@ chart = (ChartBuilder.from_native(native)
 ## Installation
 
 ```bash
-pip install starlight-astro
+pip install stellium
 ```
 
 ### Requirements
@@ -79,7 +79,7 @@ pip install starlight-astro
 ### Your First Chart (2 Lines of Code)
 
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 chart.draw("einstein.svg").save()
@@ -120,7 +120,7 @@ chart.draw("custom.svg") \
 ### Your Own Chart
 
 ```python
-from starlight import ChartBuilder, Native
+from stellium import ChartBuilder, Native
 
 # Create a Native (birth data container)
 native = Native(
@@ -159,7 +159,7 @@ Phase: Full (100% illuminated)
 ### Level 1: Exploring Chart Data
 
 ```python
-from starlight import ChartBuilder, Native
+from stellium import ChartBuilder, Native
 from datetime import datetime
 
 chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").calculate()
@@ -180,8 +180,8 @@ print(houses)
 ### Level 2: Custom House Systems & Aspects
 
 ```python
-from starlight import ChartBuilder, Native
-from starlight.engines import WholeSignHouses, ModernAspectEngine, SimpleOrbEngine
+from stellium import ChartBuilder, Native
+from stellium.engines import WholeSignHouses, ModernAspectEngine, SimpleOrbEngine
 from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
@@ -205,8 +205,8 @@ Placidus (default), Whole Sign, Koch, Equal, Regiomontanus, Campanus, Porphyry, 
 ### Level 3: Multiple House Systems
 
 ```python
-from starlight import ChartBuilder
-from starlight.engines import PlacidusHouses, WholeSignHouses, KochHouses
+from stellium import ChartBuilder
+from stellium.engines import PlacidusHouses, WholeSignHouses, KochHouses
 
 chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .with_house_systems([
@@ -231,8 +231,8 @@ print(f"Sun in Koch House: {sun_koch_house}")
 ### Level 4: Arabic Parts & Components
 
 ```python
-from starlight import ChartBuilder, Native
-from starlight.components import ArabicPartsCalculator, MidpointCalculator
+from stellium import ChartBuilder, Native
+from stellium.components import ArabicPartsCalculator, MidpointCalculator
 from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
@@ -263,7 +263,7 @@ for mp in midpoints[:5]:  # First 5 midpoints
 ### Level 5: Terminal Reports with Rich
 
 ```python
-from starlight import ChartBuilder, Native, ReportBuilder
+from stellium import ChartBuilder, Native, ReportBuilder
 from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
@@ -284,8 +284,8 @@ report.render(format="plain_table", file="my_chart.txt") # Export to file
 ### Level 6: Advanced - Custom Visualization
 
 ```python
-from starlight import ChartBuilder, Native, ChartRenderer
-from starlight.visualization.layers import (
+from stellium import ChartBuilder, Native, ChartRenderer
+from stellium.visualization.layers import (
     ZodiacLayer, HouseCuspLayer, PlanetLayer,
     AspectLayer, AngleLayer
 )
@@ -326,20 +326,20 @@ dwg.save()
 
 ## Command-Line Interface
 
-Starlight includes a CLI for quick chart generation:
+Stellium includes a CLI for quick chart generation:
 
 ```bash
 # Generate a chart from the notable database
-starlight chart notable "Albert Einstein" --output einstein.svg
+stellium chart notable "Albert Einstein" --output einstein.svg
 
 # Manage ephemeris data
-starlight ephemeris download --years 1000-3000
+stellium ephemeris download --years 1000-3000
 
 # Clear calculation cache
-starlight cache clear
+stellium cache clear
 ```
 
-See `starlight --help` for full CLI documentation.
+See `stellium --help` for full CLI documentation.
 
 ---
 
@@ -385,7 +385,7 @@ data = chart.to_dict()
 ### Performance
 
 ```python
-from starlight.utils.cache import enable_cache, get_cache_stats
+from stellium.utils.cache import enable_cache, get_cache_stats
 
 enable_cache(max_age_seconds=604800)  # 1 week cache
 
@@ -420,8 +420,8 @@ The `/examples` directory contains runnable code:
 
 ```bash
 # Install with examples
-git clone https://github.com/katelouie/starlight.git
-cd starlight
+git clone https://github.com/katelouie/stellium.git
+cd stellium
 pip install -e .
 
 # Run examples
@@ -431,14 +431,14 @@ python examples/report_examples.py
 
 ## Architecture Philosophy
 
-Starlight is built on three core principles:
+Stellium is built on three core principles:
 
 ### 1. **Protocols over Inheritance**
 
 Extend functionality by implementing protocols, not subclassing:
 
 ```python
-from starlight.core.protocols import ChartComponent
+from stellium.core.protocols import ChartComponent
 from typing import Protocol
 
 class MyCustomComponent:
@@ -493,7 +493,7 @@ cached_chart = chart  # Safe to reuse
 
 ## Testing
 
-Starlight has comprehensive test coverage:
+Stellium has comprehensive test coverage:
 
 ```bash
 # Run all tests
@@ -513,12 +513,7 @@ pytest tests/test_integration.py
 
 ### Coming Soon
 
-- **Synastry Charts**: Bi-wheel visualizations and inter-chart aspects
-- **Transit Calculations**: Current planetary positions against natal chart
-- **Progressions**: Secondary progressions and solar arc directions
-- **Additional Chart Types**: Returns, composites, and harmonic charts
 - **Sidereal Support**: Sidereal zodiac calculations
-- **Enhanced Visualizations**: More chart styles and customization options
 
 See [TODO.md](TODO.md) for the full development roadmap.
 
@@ -539,8 +534,8 @@ Please see **[CONTRIBUTING.md](CONTRIBUTING.md)** for detailed guidelines.
 **Quick Start for Contributors:**
 
 ```bash
-git clone https://github.com/katelouie/starlight.git
-cd starlight
+git clone https://github.com/katelouie/stellium.git
+cd stellium
 pip install -e ".[dev]"  # Install with dev dependencies
 pre-commit install       # Set up pre-commit hooks
 pytest                   # Run tests
@@ -550,7 +545,7 @@ pytest                   # Run tests
 
 ## License
 
-Starlight is released under the **MIT License**. See [LICENSE](LICENSE) for details.
+Stellium is released under the **MIT License**. See [LICENSE](LICENSE) for details.
 
 **Note on Swiss Ephemeris**: This library uses the Swiss Ephemeris, which has its own licensing terms for commercial use. See the [Swiss Ephemeris website](https://www.astro.com/swisseph/) for details.
 
@@ -566,14 +561,14 @@ Starlight is released under the **MIT License**. See [LICENSE](LICENSE) for deta
 
 ## Community & Support
 
-- **Issues**: [GitHub Issues](https://github.com/katelouie/starlight/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/katelouie/starlight/discussions)
+- **Issues**: [GitHub Issues](https://github.com/katelouie/stellium/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/katelouie/stellium/discussions)
 - **Email**: <katehlouie@gmail.com>
 
 ---
 
 **Built with precision, designed for everyone** ✨
 
-Whether you're building a professional astrology application, researching astrological patterns, or learning computational astrology—Starlight provides the tools you need with a modern, extensible architecture.
+Whether you're building a professional astrology application, researching astrological patterns, or learning computational astrology: Stellium provides the tools you need with a modern, extensible architecture.
 
 *Star the repo if you find it useful!* ⭐

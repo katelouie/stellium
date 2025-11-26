@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "starlight-astro"
+name = "stellium"
 dynamic = ["version"]
 description = "A modern Python library for astrological chart calculation and visualization, built on the Swiss Ephemeris for astronomical accuracy."
 authors = [{ name = "Kate Louie", email = "katehlouie@gmail.com" }]
