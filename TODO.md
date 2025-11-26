@@ -7,13 +7,14 @@
 - [ ] Add dignity report section (with essential and accidental modes).
 - [ ] Add midpoint aspect report section.
 - [ ] Add aspect pattern report section.
-- [ ] Add Comparison chart sections
+- [ ] Add Comparison chart sections (synastry, transit, progression)
+- [ ] Add Synthesis chart sections (composite, davison)
 
 ## Chart Visualization
 
 - [x] Transfer over moon phase rendering code from old files.
 - [x] Add chart type with more info (such as positions, native info, aspect triangle chart).
-- [ ] Add option to render aspect triangle aspect charts separately.
+- [ ] Add option to render aspect triangle aspectarian charts separately.
 - [ ] Add vedic square-type charts
 - [x] Synastry square aspect table
 - [ ] Declinations
@@ -34,7 +35,7 @@
 - [x] Add composite
 - [x] Add transits
 - [x] Add progressions
-- [ ] Add returns (?)
+- [ ] Add returns
 - [ ] Add sidereal
 - [ ] Add Vedic
 - [ ] Declinations

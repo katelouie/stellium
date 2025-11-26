@@ -53,10 +53,10 @@ dev = [
 docs = ["mkdocs>=1.5.0", "mkdocs-material>=9.5.0"]
 
 [project.urls]
-Homepage = "https://github.com/katelouie/starlight"
-Repository = "https://github.com/katelouie/starlight"
-Documentation = "https://github.com/katelouie/starlight"
-"Bug Tracker" = "https://github.com/katelouie/starlight/issues"
+Homepage = "https://github.com/katelouie/stellium"
+Repository = "https://github.com/katelouie/stellium"
+Documentation = "https://github.com/katelouie/stellium"
+"Bug Tracker" = "https://github.com/katelouie/stellium/issues"
 
 [tool.setuptools.dynamic]
 version = { attr = "starlight.__version__" }
