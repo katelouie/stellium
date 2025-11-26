@@ -1,8 +1,8 @@
-# 🌟 Starlight Vision: The React of Astrology
+# 🌟 Stellium Vision: The React of Astrology
 
 ## Executive Summary
 
-This document outlines the architectural vision for transforming Starlight into the "React of Astrology" - a component-based, extensible platform that enables the next generation of astrological software development.
+This document outlines the architectural vision for transforming Stellium into the "React of Astrology" - a component-based, extensible platform that enables the next generation of astrological software development.
 
 ---
 
@@ -13,7 +13,7 @@ This document outlines the architectural vision for transforming Starlight into 
 - **GitHub Stars**: 2,000+ (currently Kerykeion has ~200)
 - **PyPI Downloads**: 10,000+ monthly downloads
 - **Community**: Active contributors, issues, discussions
-- **Enterprise Adoption**: Professional astrology software using Starlight
+- **Enterprise Adoption**: Professional astrology software using Stellium
 
 ### Technical Leadership
 
@@ -24,7 +24,7 @@ This document outlines the architectural vision for transforming Starlight into 
 
 ### Ecosystem Leadership
 
-- **Integration Standard**: Other tools build on Starlight
+- **Integration Standard**: Other tools build on Stellium
 - **Reference Implementation**: When astrologers need "correct" calculations
 - **Educational Resource**: Used in astrology software courses
 
@@ -46,7 +46,7 @@ function buildWebsite() { /* everything coupled together */ }
 </App>
 ```
 
-### What Starlight Could Do for Astrology
+### What Stellium Could Do for Astrology
 
 ```python
 # Current: Monolithic chart objects
@@ -54,7 +54,7 @@ chart = Chart(datetime, location, houses)
 aspects = chart.get_all_aspects()  # Fixed implementation
 
 # Vision: Composable astrological components
-from starlight.components import (
+from stellium.components import (
     ChartCore, AspectEngine, DignityCalculator, 
     HouseSystem, ProgressionEngine
 )
@@ -86,9 +86,9 @@ research_chart = ChartCore(datetime, location) \
 
 ```python
 # Third parties could create plugins
-from starlight_vedic import VedicExtensions
-from starlight_financial import FinancialAstrology
-from starlight_medical import MedicalAstrology
+from stellium_vedic import VedicExtensions
+from stellium_financial import FinancialAstrology
+from stellium_medical import MedicalAstrology
 
 chart.with_extension(VedicExtensions()) \
      .with_extension(FinancialAstrology())
@@ -117,7 +117,7 @@ chart.render(PDFRenderer(template='professional'))
 
 ```python
 # Functional composition for data processing
-from starlight.pipeline import Pipeline
+from stellium.pipeline import Pipeline
 
 # Research pipeline
 results = Pipeline() \
@@ -136,7 +136,7 @@ results = Pipeline() \
 
 ```python
 # FastAPI integration
-from starlight.web import ChartAPI
+from stellium.web import ChartAPI
 
 @app.get("/chart/{birth_data}")
 async def get_chart(birth_data: BirthData):
@@ -147,7 +147,7 @@ async def get_chart(birth_data: BirthData):
 
 ```python
 # LLM integration for chart interpretation
-from starlight.ai import ChartInterpreter
+from stellium.ai import ChartInterpreter
 
 interpreter = ChartInterpreter(model="gpt-4")
 interpretation = interpreter.analyze(chart, 
@@ -160,7 +160,7 @@ interpretation = interpreter.analyze(chart,
 
 ```python
 # Statistical analysis integration
-from starlight.research import StatisticalAnalysis
+from stellium.research import StatisticalAnalysis
 
 analysis = StatisticalAnalysis() \
     .load_dataset('professional_athletes.csv') \
@@ -179,7 +179,7 @@ analysis = StatisticalAnalysis() \
 - **Limited**: Hard to extend or customize
 - **Isolated**: Each library is its own ecosystem
 
-### Starlight Vision
+### Stellium Vision
 
 - **Modular**: Mix and match components
 - **Extensible**: Plugin architecture for new techniques
@@ -195,7 +195,7 @@ analysis = StatisticalAnalysis() \
 #### Step 1: Extract Core Interfaces
 
 ```python
-# Create new file: src/starlight/core/protocols.py
+# Create new file: src/stellium/core/protocols.py
 from typing import Protocol, Dict, List, Any
 from abc import ABC, abstractmethod
 
@@ -230,7 +230,7 @@ class HouseEngine(Protocol):
 #### Step 2: Create Component Base Classes
 
 ```python
-# Create new file: src/starlight/core/components.py
+# Create new file: src/stellium/core/components.py
 from typing import Optional, Dict, Any
 from dataclasses import dataclass
 
@@ -267,9 +267,9 @@ class ChartComponent(ABC):
 #### Step 3: Implement Concrete Components
 
 ```python
-# Create new file: src/starlight/components/ephemeris.py
-from starlight.core.components import ChartComponent, ChartData
-from starlight.cache import cached
+# Create new file: src/stellium/components/ephemeris.py
+from stellium.core.components import ChartComponent, ChartData
+from stellium.cache import cached
 import swisseph as swe
 
 class SwissEphemerisEngine(ChartComponent):
@@ -310,11 +310,11 @@ class SwissEphemerisEngine(ChartComponent):
 #### Step 4: Create Compatibility Layer
 
 ```python
-# Modify existing src/starlight/chart.py
-from starlight.core.components import ChartData
-from starlight.components.ephemeris import SwissEphemerisEngine
-from starlight.components.aspects import ModernAspectEngine
-from starlight.components.dignities import TraditionalDignityEngine
+# Modify existing src/stellium/chart.py
+from stellium.core.components import ChartData
+from stellium.components.ephemeris import SwissEphemerisEngine
+from stellium.components.aspects import ModernAspectEngine
+from stellium.components.dignities import TraditionalDignityEngine
 
 class Chart:
     """Backwards-compatible chart class with component architecture."""
@@ -384,10 +384,10 @@ class Chart:
 #### Step 5: Fluent Builder Interface
 
 ```python
-# Create new file: src/starlight/builder.py
+# Create new file: src/stellium/builder.py
 from typing import Optional, Dict, Any
-from starlight.core.components import ChartData, ChartComponent
-from starlight.components import *
+from stellium.core.components import ChartData, ChartComponent
+from stellium.components import *
 
 class ChartBuilder:
     """Fluent interface for building charts with components."""
@@ -469,12 +469,12 @@ def create_research_chart(datetime_utc, location):
 #### Step 6: Plugin Registration
 
 ```python
-# Create new file: src/starlight/plugins/__init__.py
+# Create new file: src/stellium/plugins/__init__.py
 from typing import Dict, Type, Any
-from starlight.core.components import ChartComponent
+from stellium.core.components import ChartComponent
 
 class PluginRegistry:
-    """Global registry for Starlight plugins."""
+    """Global registry for Stellium plugins."""
     
     _plugins: Dict[str, Type[ChartComponent]] = {}
     _categories: Dict[str, list] = {
@@ -509,15 +509,15 @@ class PluginRegistry:
         return cls._plugins.copy()
 
 # Plugin decorator
-def starlight_plugin(name: str, category: str = 'extensions'):
-    """Decorator to register Starlight plugins."""
+def stellium_plugin(name: str, category: str = 'extensions'):
+    """Decorator to register Stellium plugins."""
     def decorator(plugin_class: Type[ChartComponent]):
         PluginRegistry.register(name, plugin_class, category)
         return plugin_class
     return decorator
 
 # Usage example:
-@starlight_plugin('vedic_aspects', 'aspects')
+@stellium_plugin('vedic_aspects', 'aspects')
 class VedicAspectEngine(ChartComponent):
     """Vedic astrology aspect calculations."""
     
@@ -529,7 +529,7 @@ class VedicAspectEngine(ChartComponent):
 #### Step 7: Dynamic Plugin Loading
 
 ```python
-# Create new file: src/starlight/plugins/loader.py
+# Create new file: src/stellium/plugins/loader.py
 import importlib
 import pkgutil
 from pathlib import Path
@@ -551,11 +551,11 @@ class PluginLoader:
     def auto_discover() -> None:
         """Auto-discover and load plugins from known locations."""
         # Load built-in plugins
-        PluginLoader.load_from_package('starlight.plugins.builtin')
+        PluginLoader.load_from_package('stellium.plugins.builtin')
         
-        # Load from installed packages with starlight_ prefix
+        # Load from installed packages with stellium_ prefix
         for finder, name, ispkg in pkgutil.iter_modules():
-            if name.startswith('starlight_'):
+            if name.startswith('stellium_'):
                 try:
                     PluginLoader.load_from_package(name)
                 except PluginLoadError:
@@ -571,30 +571,30 @@ PluginLoader.auto_discover()
 
 ```python
 # Create separate packages following naming convention:
-# starlight-vedic/
+# stellium-vedic/
 # ├── pyproject.toml
 # ├── src/
-# │   └── starlight_vedic/
+# │   └── stellium_vedic/
 # │       ├── __init__.py
 # │       ├── aspects.py
 # │       ├── dignities.py
 # │       └── houses.py
 
-# starlight_vedic/__init__.py
-from starlight.plugins import starlight_plugin
-from starlight.core.components import ChartComponent
+# stellium_vedic/__init__.py
+from stellium.plugins import stellium_plugin
+from stellium.core.components import ChartComponent
 
-@starlight_plugin('vedic_aspects', 'aspects')
+@stellium_plugin('vedic_aspects', 'aspects')
 class VedicAspectEngine(ChartComponent):
     """Vedic astrology aspect calculations."""
     pass
 
-@starlight_plugin('vedic_dignities', 'dignities')
+@stellium_plugin('vedic_dignities', 'dignities')
 class VedicDignityEngine(ChartComponent):
     """Vedic dignity calculations."""
     pass
 
-# Installation: pip install starlight-vedic
+# Installation: pip install stellium-vedic
 # Usage: Components auto-register when package is imported
 ```
 
@@ -620,7 +620,7 @@ my_chart_style = ChartBuilder(birth_datetime, location) \
 
 ```python
 # Statistical astrology research
-from starlight.research import Pipeline
+from stellium.research import Pipeline
 
 study_results = Pipeline() \
     .load_birth_data('athlete_database.csv') \
@@ -640,7 +640,7 @@ study_results = Pipeline() \
 
 ```python
 # Dating app integration
-from starlight.compatibility import SynastryEngine
+from stellium.compatibility import SynastryEngine
 
 compatibility = SynastryEngine() \
     .compare_charts(person1_chart, person2_chart) \
@@ -725,12 +725,12 @@ class MyCustomEngine(ChartComponent):
         pass
 
 # 2. Register as plugin
-@starlight_plugin('my_custom_engine', 'extensions')
+@stellium_plugin('my_custom_engine', 'extensions')
 class MyCustomEngine(ChartComponent):
     # Implementation
 
 # 3. Distribute as separate package
-# Package name: starlight-mycustom
+# Package name: stellium-mycustom
 # Import triggers auto-registration
 ```
 
@@ -756,4 +756,4 @@ class MyCustomEngine(ChartComponent):
 - **AI Integrations**: LLM interpretation tools
 - **Research Tools**: Statistical analysis packages
 
-This vision transforms Starlight from a calculation library into an extensible platform that enables innovation in astrological software development.
+This vision transforms Stellium from a calculation library into an extensible platform that enables innovation in astrological software development.

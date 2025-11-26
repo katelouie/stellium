@@ -10,9 +10,9 @@ Tests:
 
 from datetime import datetime
 
-from starlight import ChartBuilder
-from starlight.core.native import Native
-from starlight.visualization.layers import AspectLayer, PlanetLayer, ZodiacLayer
+from stellium import ChartBuilder
+from stellium.core.native import Native
+from stellium.visualization.layers import AspectLayer, PlanetLayer, ZodiacLayer
 
 
 def test_data_science_themes():

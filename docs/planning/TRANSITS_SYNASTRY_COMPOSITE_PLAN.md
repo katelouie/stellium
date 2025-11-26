@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document outlines the implementation strategy for three major chart types in Starlight:
+This document outlines the implementation strategy for three major chart types in Stellium:
 
 1. **Transits** - Current planetary positions compared to a natal chart
 2. **Synastry** - Comparing two charts for relationship compatibility
@@ -32,7 +32,7 @@ This document outlines the implementation strategy for three major chart types i
 
 ## Design Philosophy
 
-Following Starlight's core principles:
+Following Stellium's core principles:
 
 1. **Protocols over Inheritance** - Create new protocols for comparison engines
 2. **Composability** - Reuse existing engines where possible
@@ -194,21 +194,21 @@ class TransitOrbEngine:
 
 **New files:**
 
-- `src/starlight/transits/__init__.py`
-- `src/starlight/transits/builder.py` - `TransitBuilder`
-- `src/starlight/transits/models.py` - `TransitChart`
-- `src/starlight/transits/orbs.py` - `TransitOrbEngine`
+- `src/stellium/transits/__init__.py`
+- `src/stellium/transits/builder.py` - `TransitBuilder`
+- `src/stellium/transits/models.py` - `TransitChart`
+- `src/stellium/transits/orbs.py` - `TransitOrbEngine`
 - `tests/test_transits.py`
 
 **Modified files:**
 
-- `src/starlight/__init__.py` - Export `TransitBuilder`, `TransitChart`
-- `src/starlight/visualization/` - Add transit visualization layers (optional)
+- `src/stellium/__init__.py` - Export `TransitBuilder`, `TransitChart`
+- `src/stellium/visualization/` - Add transit visualization layers (optional)
 
 ### Usage Example
 
 ```python
-from starlight import ChartBuilder, Native, TransitBuilder
+from stellium import ChartBuilder, Native, TransitBuilder
 from datetime import datetime
 
 # Create natal chart
@@ -392,23 +392,23 @@ class SynastryBuilder:
 
 **New files:**
 
-- `src/starlight/synastry/__init__.py`
-- `src/starlight/synastry/builder.py` - `SynastryBuilder`
-- `src/starlight/synastry/models.py` - `SynastryChart`
-- `src/starlight/synastry/orbs.py` - `SynastryOrbEngine`
-- `src/starlight/synastry/analysis.py` - Compatibility scoring, etc.
+- `src/stellium/synastry/__init__.py`
+- `src/stellium/synastry/builder.py` - `SynastryBuilder`
+- `src/stellium/synastry/models.py` - `SynastryChart`
+- `src/stellium/synastry/orbs.py` - `SynastryOrbEngine`
+- `src/stellium/synastry/analysis.py` - Compatibility scoring, etc.
 - `tests/test_synastry.py`
 
 **Modified files:**
 
-- `src/starlight/__init__.py` - Export `SynastryBuilder`, `SynastryChart`
-- `src/starlight/visualization/drawing.py` - Add `draw_synastry_chart()` for bi-wheel
-- `src/starlight/presentation/sections.py` - Add synastry report sections
+- `src/stellium/__init__.py` - Export `SynastryBuilder`, `SynastryChart`
+- `src/stellium/visualization/drawing.py` - Add `draw_synastry_chart()` for bi-wheel
+- `src/stellium/presentation/sections.py` - Add synastry report sections
 
 ### Usage Example
 
 ```python
-from starlight import ChartBuilder, Native, SynastryBuilder
+from stellium import ChartBuilder, Native, SynastryBuilder
 
 # Create two natal charts
 person1 = Native(datetime(1990, 5, 20, 14, 30), "London, UK")
@@ -633,19 +633,19 @@ class CompositeBuilder:
 
 **New files:**
 
-- `src/starlight/composite/__init__.py`
-- `src/starlight/composite/builder.py` - `CompositeBuilder`
-- `src/starlight/composite/models.py` - `CompositeChart`
+- `src/stellium/composite/__init__.py`
+- `src/stellium/composite/builder.py` - `CompositeBuilder`
+- `src/stellium/composite/models.py` - `CompositeChart`
 - `tests/test_composite.py`
 
 **Modified files:**
 
-- `src/starlight/__init__.py` - Export `CompositeBuilder`, `CompositeChart`
+- `src/stellium/__init__.py` - Export `CompositeBuilder`, `CompositeChart`
 
 ### Usage Example
 
 ```python
-from starlight import ChartBuilder, Native, CompositeBuilder
+from stellium import ChartBuilder, Native, CompositeBuilder
 
 # Create two natal charts
 person1 = Native(datetime(1990, 5, 20, 14, 30), "London, UK")
@@ -715,7 +715,7 @@ for aspect in composite.composite_chart.aspects:
 This is needed for both transits and synastry:
 
 ```python
-# src/starlight/engines/aspects.py
+# src/stellium/engines/aspects.py
 
 def calculate_aspects_between_charts(
     positions1: tuple[CelestialPosition, ...],
@@ -776,7 +776,7 @@ class SynastryOrbEngine:
 ### 3. Visualization Extensions
 
 ```python
-# src/starlight/visualization/drawing.py
+# src/stellium/visualization/drawing.py
 
 def draw_transit_chart(natal: CalculatedChart, transit: TransitChart, filename: str):
     """Draw natal chart with transit positions in outer ring."""
@@ -828,7 +828,7 @@ def draw_synastry_chart(synastry: SynastryChart, filename: str):
    - Should composite use derived ASC from midpoint datetime/location, or calculate based on other method?
 
 4. **General:**
-   - Should these be separate submodules (`starlight.transits`, `starlight.synastry`) or part of core?
+   - Should these be separate submodules (`stellium.transits`, `stellium.synastry`) or part of core?
    - Do we want CLI support for these chart types?
    - Priority on visualization or calculation first?
 

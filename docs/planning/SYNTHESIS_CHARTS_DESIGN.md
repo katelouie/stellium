@@ -1,15 +1,15 @@
 # Synthesis Charts Implementation Plan
-## Composite and Davison Charts for Starlight
+## Composite and Davison Charts for Stellium
 
 **Status:** Design Complete, Implementation Pending
 **Designed:** November 25, 2025 (Kate & Clicky)
-**Target File:** `src/starlight/core/synthesis.py`
+**Target File:** `src/stellium/core/synthesis.py`
 
 ---
 
 ## Overview
 
-This document describes the design for implementing **composite** and **davison** charts in Starlight. Both are "synthesis" charts - they create a single chart from two source charts, representing a relationship.
+This document describes the design for implementing **composite** and **davison** charts in Stellium. Both are "synthesis" charts - they create a single chart from two source charts, representing a relationship.
 
 ### What Are They?
 
@@ -438,7 +438,7 @@ def calculate_location_midpoint(loc1: ChartLocation,
 
 ### Phase 1: Core Infrastructure (30-60 min)
 
-1. **Create `src/starlight/core/synthesis.py`**
+1. **Create `src/stellium/core/synthesis.py`**
    - Import necessary types from `core/models.py`
    - Create `SynthesisChart` dataclass (inheriting from `CalculatedChart`)
 
@@ -492,7 +492,7 @@ Composite is HARDER - more custom logic.
 ### Phase 4: Polish (30 min)
 
 1. **Add to public API**
-   - Export `SynthesisBuilder`, `SynthesisChart` from `starlight/__init__.py`
+   - Export `SynthesisBuilder`, `SynthesisChart` from `stellium/__init__.py`
 
 2. **Documentation**
    - Docstrings complete
@@ -629,7 +629,7 @@ def test_synthesis_chart_reports():
 ## File Structure
 
 ```
-src/starlight/
+src/stellium/
 └── core/
     ├── models.py           # Add SynthesisChart dataclass here
     ├── synthesis.py        # NEW: SynthesisBuilder + helper functions
@@ -644,7 +644,7 @@ tests/
 
 ## Design Philosophy
 
-This implementation follows Starlight's core principles:
+This implementation follows Stellium's core principles:
 
 1. **Protocols over inheritance** - Except when inheritance makes sense (SynthesisChart IS-A CalculatedChart)
 2. **Composability** - SynthesisChart works with all existing visualization/reporting

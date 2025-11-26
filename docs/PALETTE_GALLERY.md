@@ -1,8 +1,8 @@
-# Starlight Palette Gallery
+# Stellium Palette Gallery
 
 **Visual showcase of all color palettes with accessibility notes.**
 
-Starlight offers 24+ color palettes across three visual systems: zodiac wheels, aspect lines, and planet glyphs. This gallery demonstrates each palette with accessibility information and recommended use cases.
+Stellium offers 24+ color palettes across three visual systems: zodiac wheels, aspect lines, and planet glyphs. This gallery demonstrates each palette with accessibility information and recommended use cases.
 
 ## Table of Contents
 
@@ -644,7 +644,7 @@ chart.draw().with_planet_glyph_palette("viridis").save()
 - ✅ Grey (inherently high contrast)
 - ✅ Cividis (designed for accessibility)
 
-**Note:** Starlight automatically adjusts zodiac wheel glyph colors for contrast against their backgrounds, ensuring WCAG AA compliance regardless of palette choice.
+**Note:** Stellium automatically adjusts zodiac wheel glyph colors for contrast against their backgrounds, ensuring WCAG AA compliance regardless of palette choice.
 
 ---
 
@@ -756,7 +756,7 @@ chart.draw() \
 All examples in this gallery were generated using the same natal chart (Albert Einstein) for consistency:
 
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
 

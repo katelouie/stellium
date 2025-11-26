@@ -173,13 +173,13 @@ Let's solve both.
 
 ## 1\. The Final Piece of the House Pivot
 
-You are correct, the protocol and model changes are the hard part. The last step is seeing how that pivot simplifies your *implementation* from the Day 4 plan (`src/starlight/engines/houses.py`).
+You are correct, the protocol and model changes are the hard part. The last step is seeing how that pivot simplifies your *implementation* from the Day 4 plan (`src/stellium/engines/houses.py`).
 
 Your `assign_houses` methods no longer need to create new `CelestialPosition` objects. They just run a simple loop and return a dictionary. It's much cleaner.
 
 Here is the "after" picture for your house engines:
 
-**File**: `src/starlight/engines/houses.py`
+**File**: `src/stellium/engines/houses.py`
 
 ```python
 # ... (imports, including 'replace' from dataclasses) ...
@@ -283,7 +283,7 @@ Instead of a simple `dict`, your `AspectEngine` should accept an `OrbEngine`.
 
 ### Step 1: Add a New `OrbEngine` Protocol
 
-Add this to `src/starlight/core/protocols.py`.
+Add this to `src/stellium/core/protocols.py`.
 
 ```python
 class OrbEngine(Protocol):
@@ -317,7 +317,7 @@ class OrbEngine(Protocol):
 
 ### Step 2: Update Your `AspectEngine` Protocol
 
-In `src/starlight/core/protocols.py`, change the `calculate_aspects` signature.
+In `src/stellium/core/protocols.py`, change the `calculate_aspects` signature.
 
 * **From this:**
 
@@ -369,12 +369,12 @@ Your `ChartBuilder` will need to be aware of this. It will hold a default `OrbEn
 
 ### Step 4: Create Orb Engine Implementations
 
-Now for the fun part. You can create different orb engines. These would live in a new file, `src/starlight/engines/orbs.py`.
+Now for the fun part. You can create different orb engines. These would live in a new file, `src/stellium/engines/orbs.py`.
 
 ```python
-# File: src/starlight/engines/orbs.py
+# File: src/stellium/engines/orbs.py
 
-from starlight.core.models import CelestialPosition
+from stellium.core.models import CelestialPosition
 
 class SimpleOrbEngine:
     """
@@ -655,10 +655,10 @@ class HouseSystemEngine(Protocol):
 Now, your `PlacidusHouses` (and other engines) will implement this new method. They will call `swe.houses()` *once* and use all the data.
 
 ```python
-# In src/starlight/engines/houses.py
+# In src/stellium/engines/houses.py
 
 import swisseph as swe
-from starlight.core.models import (
+from stellium.core.models import (
     HouseCusps,
     CelestialPosition,
     ObjectType,

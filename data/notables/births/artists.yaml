@@ -18,7 +18,7 @@
     intensity
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false
 - name: Pablo Picasso
   event_type: birth
@@ -40,5 +40,5 @@
   astrological_notes: Scorpio Sun - tests artistic revolution and creative transformation
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false

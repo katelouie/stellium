@@ -6,7 +6,7 @@ Tests the RichTableRenderer and PlainTextRenderer classes.
 
 import pytest
 
-from starlight.presentation.renderers import PlainTextRenderer, RichTableRenderer
+from stellium.presentation.renderers import PlainTextRenderer, RichTableRenderer
 
 
 # ============================================================================

@@ -1,6 +1,6 @@
 # Publishing to PyPI
 
-This guide covers how to publish Starlight to PyPI (Python Package Index).
+This guide covers how to publish Stellium to PyPI (Python Package Index).
 
 ## Prerequisites
 
@@ -20,9 +20,9 @@ Trusted publishing eliminates the need for API tokens by using GitHub's OIDC ide
 1. Go to your PyPI account settings
 2. Navigate to "Publishing" → "Add a new pending publisher"
 3. Fill in:
-   - PyPI Project Name: `starlight`
+   - PyPI Project Name: `stellium`
    - Owner: `katelouie`
-   - Repository name: `starlight`
+   - Repository name: `stellium`
    - Workflow name: `publish-to-pypi.yml`
    - Environment name: `pypi`
 
@@ -54,7 +54,7 @@ Before publishing, ensure:
    pytest
    ```
 
-2. **Version is bumped** in `src/starlight/__init__.py`:
+2. **Version is bumped** in `src/stellium/__init__.py`:
    ```python
    __version__ = "0.3.0"  # Update this
    ```
@@ -70,7 +70,7 @@ Before publishing, ensure:
    python -m build
 
    # Verify Swiss Ephemeris data is included
-   tar -tzf dist/starlight-*.tar.gz | grep -E "\.se1"
+   tar -tzf dist/stellium-*.tar.gz | grep -E "\.se1"
    ```
 
 ### 2. Test on TestPyPI (Recommended First Time)
@@ -88,14 +88,14 @@ Test your package on TestPyPI before publishing to the real PyPI:
 python -m twine upload --repository testpypi dist/*
 
 # Test installation (in a clean virtual environment)
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ starlight
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ stellium
 ```
 
 Note: The `--extra-index-url` is needed because dependencies (like `pyswisseph`) are not on TestPyPI.
 
 **Verify the test installation**:
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 from datetime import datetime
 
 # Should work!
@@ -113,7 +113,7 @@ Once verified on TestPyPI, publish to the real PyPI:
 **Via GitHub Release (Automatic - Recommended)**:
 1. Create a new release on GitHub
 2. Tag version: `v0.3.0` (must match `__version__`)
-3. Release title: `v0.3.0` or "Starlight v0.3.0"
+3. Release title: `v0.3.0` or "Stellium v0.3.0"
 4. Description: Copy relevant section from CHANGELOG.md
 5. Click "Publish release"
 
@@ -136,19 +136,19 @@ python -m twine upload dist/*
 
 ### 4. Verify Publication
 
-1. Check PyPI page: https://pypi.org/project/starlight/
+1. Check PyPI page: https://pypi.org/project/stellium/
 
 2. Test installation in a fresh virtual environment:
    ```bash
    python -m venv test_env
    source test_env/bin/activate
-   pip install starlight
-   python -c "from starlight import ChartBuilder; print('Success!')"
+   pip install stellium
+   python -c "from stellium import ChartBuilder; print('Success!')"
    ```
 
 3. Verify Swiss Ephemeris data works:
    ```python
-   from starlight import ChartBuilder
+   from stellium import ChartBuilder
    from datetime import datetime
 
    chart = ChartBuilder.from_native(
@@ -165,7 +165,7 @@ python -m twine upload dist/*
 
 The package includes:
 
-- **Python source code**: All modules in `src/starlight/`
+- **Python source code**: All modules in `src/stellium/`
 - **Swiss Ephemeris data**: Essential data files (~3.7MB) for 1800-2400 CE
   - `data/swisseph/ephe/sepl_18.se1` (planets 1800-1999)
   - `data/swisseph/ephe/sepl_24.se1` (planets 2000-2399)
@@ -173,7 +173,7 @@ The package includes:
   - `data/swisseph/ephe/semo_24.se1` (moon 2000-2399)
   - `data/swisseph/ephe/seas_18.se1` (asteroids 1800-1999)
   - `data/swisseph/ephe/seas_24.se1` (asteroids 2000-2399)
-  - Additional ephemeris files can be downloaded via CLI: `starlight ephemeris download`
+  - Additional ephemeris files can be downloaded via CLI: `stellium ephemeris download`
 - **Notable births data**: Curated database of famous births with verified birth data
 - **Metadata**: README.md, LICENSE, CHANGELOG.md
 - **Tests**: All test files (users can run tests if desired)
@@ -202,14 +202,14 @@ recursive-include data/swisseph/ephe *.se1
 
 Verify files are in distribution:
 ```bash
-tar -tzf dist/starlight-*.tar.gz | grep -E "\.se1"
+tar -tzf dist/stellium-*.tar.gz | grep -E "\.se1"
 ```
 
 ### Import Errors After Installation
 
 If users report:
 ```
-ModuleNotFoundError: No module named 'starlight.engines'
+ModuleNotFoundError: No module named 'stellium.engines'
 ```
 
 Ensure `pyproject.toml` has:
@@ -230,7 +230,7 @@ license = "MIT"  # Not license = { text = "MIT" }
 Before each release:
 
 - [ ] All tests pass (`pytest`)
-- [ ] Version bumped in `src/starlight/__init__.py`
+- [ ] Version bumped in `src/stellium/__init__.py`
 - [ ] CHANGELOG.md updated with release notes
 - [ ] Build locally and verify (`python -m build`)
 - [ ] Check Swiss Ephemeris data included in tarball

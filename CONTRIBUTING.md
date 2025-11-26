@@ -1,6 +1,6 @@
-# Contributing to Starlight 🌟
+# Contributing to Stellium 🌟
 
-Thank you for your interest in contributing to Starlight! We welcome contributions from developers and astrologers of all experience levels. Whether you're fixing a typo, adding a feature, or proposing a major architectural change, your contributions help make Starlight better for everyone.
+Thank you for your interest in contributing to Stellium! We welcome contributions from developers and astrologers of all experience levels. Whether you're fixing a typo, adding a feature, or proposing a major architectural change, your contributions help make Stellium better for everyone.
 
 ---
 
@@ -41,8 +41,8 @@ This project follows a simple principle: **be respectful and constructive**. We'
 # 1. Fork the repository on GitHub
 
 # 2. Clone your fork
-git clone https://github.com/YOUR-USERNAME/starlight.git
-cd starlight
+git clone https://github.com/YOUR-USERNAME/stellium.git
+cd stellium
 
 # 3. Install in development mode with all dev dependencies
 pip install -e ".[dev]"
@@ -65,7 +65,7 @@ You're ready to start contributing! 🎉
 
 ### Installing Dependencies
 
-Starlight uses `setuptools` for package management. Development dependencies include testing, formatting, and type-checking tools.
+Stellium uses `setuptools` for package management. Development dependencies include testing, formatting, and type-checking tools.
 
 ```bash
 # Install package in editable mode with dev dependencies
@@ -121,21 +121,21 @@ pytest -v
 
 ### Type Checking
 
-Starlight uses full type hints. Check your types with:
+Stellium uses full type hints. Check your types with:
 
 ```bash
-mypy src/starlight
+mypy src/stellium
 ```
 
 ---
 
 ## Architecture Philosophy
 
-Understanding Starlight's architecture is key to contributing effectively. The library is built on three core principles that make it extensible, maintainable, and performant.
+Understanding Stellium's architecture is key to contributing effectively. The library is built on three core principles that make it extensible, maintainable, and performant.
 
 ### 1. **Protocols over Inheritance**
 
-Instead of rigid class hierarchies, Starlight uses **protocols** (structural typing) for extensibility.
+Instead of rigid class hierarchies, Stellium uses **protocols** (structural typing) for extensibility.
 
 #### ❌ Traditional Approach (Inheritance)
 
@@ -156,7 +156,7 @@ class MyEngine(BaseEngine):  # Must inherit
 - Hard to test (need to mock inheritance chain)
 - Limits composition
 
-#### ✅ Starlight Approach (Protocols)
+#### ✅ Stellium Approach (Protocols)
 
 ```python
 # In core/protocols.py
@@ -182,7 +182,7 @@ builder = ChartBuilder.from_native(native).with_ephemeris(MyEphemerisEngine())
 - Compose engines freely
 - Type-safe (mypy validates protocols)
 
-**Key Protocols in Starlight:**
+**Key Protocols in Stellium:**
 
 - `EphemerisEngine` - Calculate celestial positions
 - `HouseSystemEngine` - Calculate house cusps
@@ -194,7 +194,7 @@ builder = ChartBuilder.from_native(native).with_ephemeris(MyEphemerisEngine())
 
 ### 2. **Composability**
 
-Every piece of Starlight is designed to work independently and be combined freely.
+Every piece of Stellium is designed to work independently and be combined freely.
 
 ```python
 # Mix and match - everything is optional
@@ -302,7 +302,7 @@ We welcome:
    ```bash
    pytest                    # All tests must pass
    pytest --cov=src          # Check coverage
-   mypy src/starlight        # Type check
+   mypy src/stellium        # Type check
    ```
 
 5. **Commit your changes**
@@ -406,7 +406,7 @@ tests/
 pytest tests/test_vedic_houses.py -v
 
 # Run with coverage to see what you're testing
-pytest tests/test_vedic_houses.py --cov=src/starlight/engines/houses
+pytest tests/test_vedic_houses.py --cov=src/stellium/engines/houses
 
 # Run all tests to ensure you didn't break anything
 pytest
@@ -416,7 +416,7 @@ pytest
 
 ## Code Style
 
-Starlight follows standard Python conventions with strict type checking.
+Stellium follows standard Python conventions with strict type checking.
 
 ### Formatting
 
@@ -476,8 +476,8 @@ import pytz
 from geopy.geocoders import Nominatim
 
 # Local
-from starlight.core.models import CelestialPosition
-from starlight.engines.ephemeris import SwissEphemerisEngine
+from stellium.core.models import CelestialPosition
+from stellium.engines.ephemeris import SwissEphemerisEngine
 ```
 
 ### Docstrings
@@ -521,17 +521,17 @@ def calculate_aspect_orb(
 
 ## Creating Extensions
 
-One of Starlight's strengths is extensibility. Here's how to add new functionality:
+One of Stellium's strengths is extensibility. Here's how to add new functionality:
 
 ### Creating a Custom House System
 
 Implement the `HouseSystemEngine` protocol:
 
 ```python
-# In src/starlight/engines/houses.py (or your own module)
+# In src/stellium/engines/houses.py (or your own module)
 
-from starlight.core.protocols import HouseSystemEngine
-from starlight.core.models import HouseCusps
+from stellium.core.protocols import HouseSystemEngine
+from stellium.core.models import HouseCusps
 
 class VedicHouses:
     """Vedic/Hindu house system (whole sign from Moon)."""
@@ -575,10 +575,10 @@ chart = ChartBuilder.from_native(native).with_house_systems([VedicHouses()]).cal
 Implement the `ChartComponent` protocol:
 
 ```python
-# In src/starlight/components/your_component.py
+# In src/stellium/components/your_component.py
 
-from starlight.core.protocols import ChartComponent
-from starlight.core.models import CelestialPosition
+from stellium.core.protocols import ChartComponent
+from stellium.core.models import CelestialPosition
 
 class FixedStarsCalculator:
     """Calculate positions of fixed stars."""
@@ -625,9 +625,9 @@ fixed_stars = chart.get_component_result("Fixed Stars")
 Implement the `ReportSection` protocol:
 
 ```python
-# In src/starlight/presentation/sections.py
+# In src/stellium/presentation/sections.py
 
-from starlight.core.protocols import ReportSection
+from stellium.core.protocols import ReportSection
 from rich.table import Table
 
 class FixedStarsSection:
@@ -669,10 +669,10 @@ report = (ReportBuilder()
 Implement the `IRenderLayer` protocol:
 
 ```python
-# In src/starlight/visualization/layers.py
+# In src/stellium/visualization/layers.py
 
-from starlight.core.protocols import IRenderLayer
-from starlight.visualization.core import ChartRenderer
+from stellium.core.protocols import IRenderLayer
+from stellium.visualization.core import ChartRenderer
 
 class FixedStarsLayer:
     """Render fixed stars on the chart."""
@@ -751,8 +751,8 @@ Add examples to the `/examples` directory:
 Example demonstrating the new Fixed Stars component.
 """
 
-from starlight import ChartBuilder, Native
-from starlight.components import FixedStarsCalculator
+from stellium import ChartBuilder, Native
+from stellium.components import FixedStarsCalculator
 from datetime import datetime
 
 native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
@@ -782,7 +782,7 @@ If your contribution adds a major feature, update the README:
 **For maintainers only**: Instructions for publishing new releases to PyPI can be found in [docs/PUBLISHING.md](docs/PUBLISHING.md).
 
 Key points:
-- Version is defined in `src/starlight/__init__.py`
+- Version is defined in `src/stellium/__init__.py`
 - Releases are automated via GitHub Actions
 - Swiss Ephemeris data files (~3.5MB) are automatically included
 - Always test on TestPyPI first for major releases
@@ -797,7 +797,7 @@ Checklist:
 
 - [ ] All tests pass (`pytest`)
 - [ ] New features have tests
-- [ ] Type checking passes (`mypy src/starlight`)
+- [ ] Type checking passes (`mypy src/stellium`)
 - [ ] Code is formatted (`pre-commit run --all-files`)
 - [ ] Documentation is updated (if applicable)
 - [ ] Examples are added (if applicable)
@@ -855,8 +855,8 @@ Your contribution will be included in the next release! We'll:
 ### Questions About Contributing?
 
 - **Architecture questions**: Read [ARCHITECTURE_QUICK_REFERENCE.md](docs/development/ARCHITECTURE_QUICK_REFERENCE.md)
-- **GitHub Discussions**: Ask questions in [Discussions](https://github.com/katelouie/starlight/discussions)
-- **Issues**: For bugs or feature requests, open an [issue](https://github.com/katelouie/starlight/issues)
+- **GitHub Discussions**: Ask questions in [Discussions](https://github.com/katelouie/stellium/discussions)
+- **Issues**: For bugs or feature requests, open an [issue](https://github.com/katelouie/stellium/issues)
 - **Email**: Reach out to <katehlouie@gmail.com>
 
 ### Learning Resources
@@ -872,9 +872,9 @@ Your contribution will be included in the next release! We'll:
 - [Swiss Ephemeris Documentation](https://www.astro.com/swisseph/swephinfo_e.htm)
 - [PySwissEph API](https://astrorigin.com/pyswisseph/sphinx/)
 
-**Starlight Docs:**
+**Stellium Docs:**
 
-- [USER_GUIDE.md](docs/USER_GUIDE.md) - How to use Starlight
+- [USER_GUIDE.md](docs/USER_GUIDE.md) - How to use Stellium
 - [ARCHITECTURE_QUICK_REFERENCE.md](docs/development/ARCHITECTURE_QUICK_REFERENCE.md) - System design
 
 ---
@@ -883,7 +883,7 @@ Your contribution will be included in the next release! We'll:
 
 All contributors are recognized in:
 
-- The [Contributors](https://github.com/katelouie/starlight/graphs/contributors) page
+- The [Contributors](https://github.com/katelouie/stellium/graphs/contributors) page
 - The [CHANGELOG.md](CHANGELOG.md) for each release
 - A heartfelt thank you! ❤️
 
@@ -908,11 +908,11 @@ Contributing to open source is a learning opportunity. Don't be afraid to:
 
 ### Have Fun
 
-Building Starlight should be enjoyable. If you're stuck or frustrated, reach out. We're all in this together to create something amazing.
+Building Stellium should be enjoyable. If you're stuck or frustrated, reach out. We're all in this together to create something amazing.
 
 ---
 
-**Thank you for contributing to Starlight!** ✨
+**Thank you for contributing to Stellium!** ✨
 
 Your contributions help make computational astrology accessible to everyone. Whether you're adding a feature, fixing a bug, or improving documentation—you're making a difference.
 

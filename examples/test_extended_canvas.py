@@ -11,7 +11,7 @@ Tests:
 6. Extended canvas with different themes
 """
 
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 
 def test_extended_right():

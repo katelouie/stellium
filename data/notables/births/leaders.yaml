@@ -18,7 +18,7 @@
   astrological_notes: Capricorn Sun - tests leadership and social justice themes
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false
 - name: Winston Churchill
   event_type: birth
@@ -40,5 +40,5 @@
     oratory skills
   data_quality: C
   sources:
-  - Starlight Test Suite
+  - Stellium Test Suite
   verified: false

@@ -5,10 +5,10 @@ import time
 
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.core.native import Native
-from starlight.engines.aspects import ModernAspectEngine
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.core.native import Native
+from stellium.engines.aspects import ModernAspectEngine
 
 
 def benchmark_chart_calculation():

@@ -2,7 +2,7 @@
 
 import pytest
 
-from starlight.core.registry import (
+from stellium.core.registry import (
     ASPECT_REGISTRY,
     get_aspect_by_alias,
     get_aspect_info,

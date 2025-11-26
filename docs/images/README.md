@@ -1,6 +1,6 @@
 # Documentation Images
 
-This directory contains SVG chart examples used in Starlight's documentation.
+This directory contains SVG chart examples used in Stellium's documentation.
 
 ## Directory Structure
 
@@ -49,7 +49,7 @@ Palette examples:
 All images are generated using Albert Einstein's natal chart for consistency:
 
 ```python
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
 

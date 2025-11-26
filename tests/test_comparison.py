@@ -11,10 +11,10 @@ These tests validate that:
 import datetime as dt
 from datetime import datetime, timezone
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.comparison import ComparisonBuilder
-from starlight.core.models import ChartLocation, ComparisonType
-from starlight.core.native import Native
+from stellium.core.builder import ChartBuilder
+from stellium.core.comparison import ComparisonBuilder
+from stellium.core.models import ChartLocation, ComparisonType
+from stellium.core.native import Native
 
 
 def test_synastry_cross_aspects_only():

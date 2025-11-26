@@ -12,9 +12,9 @@ This test suite covers:
 
 import pytest
 
-from starlight.core.models import CelestialPosition, ObjectType
-from starlight.core.registry import ASPECT_REGISTRY
-from starlight.engines.orbs import ComplexOrbEngine, LuminariesOrbEngine, SimpleOrbEngine
+from stellium.core.models import CelestialPosition, ObjectType
+from stellium.core.registry import ASPECT_REGISTRY
+from stellium.engines.orbs import ComplexOrbEngine, LuminariesOrbEngine, SimpleOrbEngine
 
 
 # ============================================================================
@@ -632,7 +632,7 @@ class TestOrbEngineIntegration:
 
     def test_orb_engine_with_aspect_engine(self, sun_position, moon_position):
         """Test orb engine integration with aspect calculations."""
-        from starlight.engines.aspects import ModernAspectEngine
+        from stellium.engines.aspects import ModernAspectEngine
 
         orb_engine = LuminariesOrbEngine()
         aspect_engine = ModernAspectEngine()

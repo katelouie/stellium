@@ -1,4 +1,4 @@
-# 🌟 Starlight Refactor Checklist
+# 🌟 Stellium Refactor Checklist
 
 Track your progress through the architectural overhaul.
 
@@ -9,7 +9,7 @@ Track your progress through the architectural overhaul.
 ### Day 1: Project Structure & Data Model
 
 - [ ] Create new directory structure (`core/`, `engines/`, `components/`)
-- [ ] Write `src/starlight/core/models.py`
+- [ ] Write `src/stellium/core/models.py`
   - [ ] ChartLocation
   - [ ] ChartDateTime
   - [ ] CelestialPosition
@@ -25,13 +25,13 @@ Track your progress through the architectural overhaul.
 
 ### Day 2: Core Protocols
 
-- [ ] Write `src/starlight/core/protocols.py`
+- [ ] Write `src/stellium/core/protocols.py`
   - [ ] EphemerisEngine protocol
   - [ ] HouseSystemEngine protocol
   - [ ] AspectEngine protocol
   - [ ] DignityCalculator protocol
   - [ ] ChartComponent protocol
-- [ ] Write `src/starlight/core/config.py`
+- [ ] Write `src/stellium/core/config.py`
   - [ ] AspectConfig
   - [ ] CalculationConfig
   - [ ] Configuration presets
@@ -42,7 +42,7 @@ Track your progress through the architectural overhaul.
 
 ### Day 3: Ephemeris Engine
 
-- [ ] Write `src/starlight/engines/ephemeris.py`
+- [ ] Write `src/stellium/engines/ephemeris.py`
   - [ ] SwissEphemerisEngine
   - [ ] MockEphemerisEngine (for testing)
   - [ ] Swiss Ephemeris path setup
@@ -56,7 +56,7 @@ Track your progress through the architectural overhaul.
 
 ### Day 4: House Systems
 
-- [ ] Write `src/starlight/engines/houses.py`
+- [ ] Write `src/stellium/engines/houses.py`
   - [ ] PlacidusHouses
   - [ ] WholeSignHouses
   - [ ] EqualHouses
@@ -71,7 +71,7 @@ Track your progress through the architectural overhaul.
 
 ### Day 5: Chart Builder
 
-- [ ] Write `src/starlight/core/builder.py`
+- [ ] Write `src/stellium/core/builder.py`
   - [ ] ChartBuilder class
   - [ ] Fluent API methods (`.with_*()`)
   - [ ] `from_datetime()` constructor
@@ -104,7 +104,7 @@ Track your progress through the architectural overhaul.
 
 ### Day 6: Aspect Engine
 
-- [ ] Write `src/starlight/engines/aspects.py`
+- [ ] Write `src/stellium/engines/aspects.py`
   - [ ] ModernAspectEngine
   - [ ] HarmonicAspectEngine
   - [ ] Applying/separating calculation
@@ -122,7 +122,7 @@ Track your progress through the architectural overhaul.
 
 ### Day 7: Dignity Calculator
 
-- [ ] Write `src/starlight/engines/dignities.py`
+- [ ] Write `src/stellium/engines/dignities.py`
   - [ ] TraditionalDignityCalculator
   - [ ] Dignity data (ruler, exaltation, etc.)
   - [ ] Scoring system
@@ -157,7 +157,7 @@ Track your progress through the architectural overhaul.
   - [ ] Side-by-side API comparison
   - [ ] Migration examples
   - [ ] Common patterns
-- [ ] Write `src/starlight/legacy.py` (optional wrapper)
+- [ ] Write `src/stellium/legacy.py` (optional wrapper)
 - [ ] Create migration script for existing code
 - [ ] Test legacy compatibility ✓
 
@@ -235,7 +235,7 @@ Track your progress through the architectural overhaul.
 ### Start of day:
 ```bash
 # Activate environment
-source ~/.zshrc && pyenv activate starlight
+source ~/.zshrc && pyenv activate stellium
 
 # Pull latest changes (if working across machines)
 git pull origin claude/architecture-overhaul-planning-*
@@ -294,7 +294,7 @@ pip install -e .
 ## Resources
 
 - Main guide: `docs/development/REFACTORING_GUIDE.md`
-- Old codebase: `src/starlight/chart.py` (reference)
+- Old codebase: `src/stellium/chart.py` (reference)
 - Vision doc: `docs/planning/VISION_ARCHITECTURE.md`
 
 ---

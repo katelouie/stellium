@@ -1,6 +1,6 @@
-# Starlight Documentation
+# Stellium Documentation
 
-This directory contains comprehensive documentation for the Starlight astrology library.
+This directory contains comprehensive documentation for the Stellium astrology library.
 
 ## 📁 Documentation Structure
 
@@ -21,7 +21,7 @@ This directory contains comprehensive documentation for the Starlight astrology 
 
 ## 🚀 Getting Started
 
-New to Starlight? Start with the main [README.md](../README.md) in the project root for:
+New to Stellium? Start with the main [README.md](../README.md) in the project root for:
 - Quick start guide
 - Installation instructions
 - Basic usage examples
@@ -35,12 +35,12 @@ New to Starlight? Start with the main [README.md](../README.md) in the project r
 
 ### Project Structure
 ```
-starlight/
+stellium/
 ├── README.md              # Main project documentation
 ├── docs/                  # This documentation directory
 │   ├── planning/          # Project planning documents
 │   └── development/       # Development guides (future)
-├── src/starlight/         # Core library code
+├── src/stellium/         # Core library code
 ├── tests/                 # Test suite and outputs
 └── examples/              # Usage examples
 ```

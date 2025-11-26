@@ -7,9 +7,9 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import CalculatedChart, ChartDateTime, ChartLocation
-from starlight.core.synthesis import (
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import CalculatedChart, ChartDateTime, ChartLocation
+from stellium.core.synthesis import (
     SynthesisBuilder,
     SynthesisChart,
     calculate_datetime_midpoint,

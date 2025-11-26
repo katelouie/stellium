@@ -3,11 +3,11 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.core.builder import ChartBuilder
-from starlight.core.models import ChartLocation
-from starlight.core.native import Native
-from starlight.engines.ephemeris import MockEphemerisEngine
-from starlight.engines.houses import PlacidusHouses, WholeSignHouses
+from stellium.core.builder import ChartBuilder
+from stellium.core.models import ChartLocation
+from stellium.core.native import Native
+from stellium.engines.ephemeris import MockEphemerisEngine
+from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
 
 def test_basic_chart_building():

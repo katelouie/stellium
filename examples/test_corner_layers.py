@@ -9,7 +9,7 @@ Tests:
 4. All corners occupied with auto-padding
 """
 
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 
 
 def test_individual_corners():

@@ -7,7 +7,7 @@ This guide demonstrates how to use the new bi-wheel chart drawing functionality 
 The simplest way to create a bi-wheel comparison chart:
 
 ```python
-from starlight import ChartBuilder, ComparisonBuilder
+from stellium import ChartBuilder, ComparisonBuilder
 
 # Create two charts
 chart1 = ChartBuilder.from_notable("Albert Einstein").calculate()
@@ -214,7 +214,7 @@ synastry.draw("minimal_biwheel.svg") \
 You can also use `draw_comparison_chart()` directly:
 
 ```python
-from starlight import draw_comparison_chart
+from stellium import draw_comparison_chart
 
 draw_comparison_chart(
     synastry,
@@ -319,7 +319,7 @@ This tests:
 
 ## Architecture
 
-The implementation follows Starlight's core principles:
+The implementation follows Stellium's core principles:
 
 - **Protocols**: Extended existing protocols (no breaking changes)
 - **Immutability**: All Comparison data is frozen

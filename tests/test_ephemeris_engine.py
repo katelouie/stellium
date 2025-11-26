@@ -5,8 +5,8 @@ import datetime as dt
 import pytest
 import pytz
 
-from starlight.core.models import ChartDateTime, ChartLocation
-from starlight.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
+from stellium.core.models import ChartDateTime, ChartLocation
+from stellium.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
 
 
 def test_mock_ephemeris_engine():

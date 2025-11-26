@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime
 
-from starlight.core.native import Native
+from stellium.core.native import Native
 
 
 class TestNativeDatetimeStringParsing:

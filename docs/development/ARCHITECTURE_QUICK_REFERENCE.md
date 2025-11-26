@@ -1,4 +1,4 @@
-# 🏗️ Starlight Architecture Quick Reference
+# 🏗️ Stellium Architecture Quick Reference
 
 A one-page reference for key architectural patterns and decisions.
 
@@ -67,7 +67,7 @@ Presentation/Drawing/Export
 ## Directory Structure
 
 ```
-src/starlight/
+src/stellium/
 ├── core/                    # Core abstractions
 │   ├── models.py           # Data classes (immutable)
 │   ├── protocols.py        # Interfaces (Protocol)
@@ -203,7 +203,7 @@ assert new_pos.longitude == 45.0
 ### Adding Caching
 
 ```python
-from starlight.cache import cached
+from stellium.cache import cached
 
 class MyEngine:
     @cached(cache_type="ephemeris", max_age_seconds=86400)
@@ -280,7 +280,7 @@ chart.positions[0].longitude = 999  # Fails (frozen)
 ```python
 # DON'T
 # core/models.py
-from starlight.engines.ephemeris import SwissEphemeris  # ❌
+from stellium.engines.ephemeris import SwissEphemeris  # ❌
 
 # DO
 # core/models.py has no engine imports
@@ -414,7 +414,7 @@ from dataclasses import fields
 print(fields(CelestialPosition))
 
 # Test caching
-from starlight.cache import cache_info
+from stellium.cache import cache_info
 print(cache_info())
 ```
 

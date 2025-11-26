@@ -1,6 +1,6 @@
-# Claude Development Instructions for Starlight
+# Claude Development Instructions for Stellium
 
-**Starlight** is a modern, extensible Python library for computational astrology built on Swiss Ephemeris for NASA-grade astronomical accuracy.
+**Stellium** is a modern, extensible Python library for computational astrology built on Swiss Ephemeris for NASA-grade astronomical accuracy.
 
 ---
 
@@ -76,7 +76,7 @@ pytest --cov=src --cov-report=term-missing
 
 ## Codebase Architecture
 
-Starlight is built on three foundational principles that enable extensibility, maintainability, and performance:
+Stellium is built on three foundational principles that enable extensibility, maintainability, and performance:
 
 ### 1. **Protocols over Inheritance**
 - Uses structural typing (Protocols) instead of class hierarchies
@@ -128,8 +128,8 @@ Presentation/Visualization/Export
 ## Directory Structure
 
 ```
-/home/user/starlight/
-├── src/starlight/              # Main package source code
+/home/user/stellium/
+├── src/stellium/              # Main package source code
 │   ├── __init__.py            # Public API exports
 │   ├── core/                  # Core abstractions (NEVER import from engines here)
 │   │   ├── models.py         # Immutable data classes (CelestialPosition, Aspect, etc.)
@@ -297,8 +297,8 @@ class Chart:
 
 ```bash
 # Clone and setup
-git clone https://github.com/katelouie/starlight.git
-cd starlight
+git clone https://github.com/katelouie/stellium.git
+cd stellium
 
 # Activate environment
 source ~/.zshrc
@@ -352,7 +352,7 @@ python examples/report_examples.py
 
 ```bash
 # Run mypy on source code
-mypy src/starlight
+mypy src/stellium
 ```
 
 ### 5. Code Formatting
@@ -454,7 +454,7 @@ def test_moon_aspect_orb_calculation():
 
 ### Test Files That Require Environment
 
-**IMPORTANT:** All tests that import from `starlight.*` require the pyenv environment to be activated:
+**IMPORTANT:** All tests that import from `stellium.*` require the pyenv environment to be activated:
 
 ```bash
 source ~/.zshrc && pyenv activate starlight && pytest
@@ -524,8 +524,8 @@ import pytz
 from geopy.geocoders import Nominatim
 
 # Local - group by module
-from starlight.core.models import CelestialPosition
-from starlight.engines.ephemeris import SwissEphemerisEngine
+from stellium.core.models import CelestialPosition
+from stellium.engines.ephemeris import SwissEphemerisEngine
 ```
 
 ### Docstrings
@@ -572,11 +572,11 @@ def calculate_aspect_orb(
 ```python
 # ❌ DON'T: core/ should NEVER import from engines/
 # In core/models.py
-from starlight.engines.ephemeris import SwissEphemeris  # ❌ WRONG
+from stellium.engines.ephemeris import SwissEphemeris  # ❌ WRONG
 
 # ✅ DO: engines/ can import from core/
 # In engines/ephemeris.py
-from starlight.core.models import CelestialPosition  # ✅ CORRECT
+from stellium.core.models import CelestialPosition  # ✅ CORRECT
 ```
 
 **Import hierarchy:**
@@ -600,10 +600,10 @@ visualization/  # Imports from core, engines, components
 Implement the `HouseSystemEngine` protocol:
 
 ```python
-# In src/starlight/engines/houses.py
+# In src/stellium/engines/houses.py
 
-from starlight.core.protocols import HouseSystemEngine
-from starlight.core.models import HouseCusps
+from stellium.core.protocols import HouseSystemEngine
+from stellium.core.models import HouseCusps
 
 class VedicHouses:
     """Vedic/Hindu house system (whole sign from Moon)."""
@@ -637,10 +637,10 @@ chart = ChartBuilder.from_native(native).with_house_systems([VedicHouses()]).cal
 Implement the `ChartComponent` protocol:
 
 ```python
-# In src/starlight/components/fixed_stars.py
+# In src/stellium/components/fixed_stars.py
 
-from starlight.core.protocols import ChartComponent
-from starlight.core.models import CelestialPosition
+from stellium.core.protocols import ChartComponent
+from stellium.core.models import CelestialPosition
 
 class FixedStarsCalculator:
     """Calculate positions of fixed stars."""
@@ -678,10 +678,10 @@ fixed_stars = chart.get_component_result("Fixed Stars")
 Implement the `IRenderLayer` protocol:
 
 ```python
-# In src/starlight/visualization/layers.py
+# In src/stellium/visualization/layers.py
 
-from starlight.core.protocols import IRenderLayer
-from starlight.visualization.core import ChartRenderer
+from stellium.core.protocols import IRenderLayer
+from stellium.visualization.core import ChartRenderer
 
 class FixedStarsLayer:
     """Render fixed stars on the chart."""
@@ -721,7 +721,7 @@ dwg.save()
 ### Task 4: Add Caching to Expensive Calculations
 
 ```python
-from starlight.utils.cache import cached
+from stellium.utils.cache import cached
 
 class MyEngine:
     @cached(cache_type="ephemeris", max_age_seconds=86400)
@@ -739,7 +739,7 @@ class MyEngine:
 
 ```python
 # List available notables
-from starlight.data import get_notable_registry
+from stellium.data import get_notable_registry
 registry = get_notable_registry()
 for name in registry.list_notable_names():
     print(name)
@@ -821,7 +821,7 @@ assert new_sun.longitude == 100
 Celestial objects and aspects are defined in registries:
 
 ```python
-from starlight.core.registry import CELESTIAL_REGISTRY, ASPECT_REGISTRY
+from stellium.core.registry import CELESTIAL_REGISTRY, ASPECT_REGISTRY
 
 # Get object info
 sun_info = CELESTIAL_REGISTRY.get_object("Sun")
@@ -894,11 +894,11 @@ new_pos = replace(chart.positions[0], longitude=999)
 ```python
 # ❌ DON'T: Import from higher-level modules in core
 # In core/models.py
-from starlight.engines.ephemeris import SwissEphemeris  # ❌ WRONG
+from stellium.engines.ephemeris import SwissEphemeris  # ❌ WRONG
 
 # ✅ DO: Only import from same level or lower
 # In engines/ephemeris.py
-from starlight.core.models import CelestialPosition  # ✅ CORRECT
+from stellium.core.models import CelestialPosition  # ✅ CORRECT
 ```
 
 ### Anti-Pattern 3: Hidden State
@@ -958,7 +958,7 @@ pytest --cov=src --cov-report=term-missing
 pytest tests/test_chart_builder.py -v
 
 # Type checking
-mypy src/starlight
+mypy src/stellium
 
 # Code formatting (auto-run by pre-commit)
 pre-commit run --all-files
@@ -975,19 +975,19 @@ python examples/report_examples.py
 
 ```python
 # Simple chart
-from starlight import ChartBuilder
+from stellium import ChartBuilder
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
 # Custom chart
-from starlight import ChartBuilder, Native
+from stellium import ChartBuilder, Native
 from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 0), "Seattle, WA")
 chart = ChartBuilder.from_native(native).calculate()
 
 # Advanced configuration
-from starlight.engines import PlacidusHouses, WholeSignHouses, ModernAspectEngine
-from starlight.components import ArabicPartsCalculator
+from stellium.engines import PlacidusHouses, WholeSignHouses, ModernAspectEngine
+from stellium.components import ArabicPartsCalculator
 
 chart = (ChartBuilder.from_native(native)
     .with_house_systems([PlacidusHouses(), WholeSignHouses()])
@@ -1004,7 +1004,7 @@ for aspect in aspects[:5]:
     print(f"{aspect.object1.name} {aspect.aspect_name} {aspect.object2.name}")
 
 # Generate report
-from starlight import ReportBuilder
+from stellium import ReportBuilder
 report = (ReportBuilder()
     .from_chart(chart)
     .with_chart_overview()
@@ -1018,14 +1018,14 @@ chart.draw("chart.svg").save()
 
 ### Key Files to Know
 
-- `src/starlight/__init__.py` - Public API exports
-- `src/starlight/core/builder.py` - ChartBuilder (main entry point)
-- `src/starlight/core/models.py` - All data models
-- `src/starlight/core/protocols.py` - All interface definitions
-- `src/starlight/core/registry.py` - CELESTIAL_REGISTRY, ASPECT_REGISTRY
-- `src/starlight/engines/ephemeris.py` - SwissEphemerisEngine
-- `src/starlight/engines/houses.py` - House system engines
-- `src/starlight/engines/aspects.py` - Aspect engines
+- `src/stellium/__init__.py` - Public API exports
+- `src/stellium/core/builder.py` - ChartBuilder (main entry point)
+- `src/stellium/core/models.py` - All data models
+- `src/stellium/core/protocols.py` - All interface definitions
+- `src/stellium/core/registry.py` - CELESTIAL_REGISTRY, ASPECT_REGISTRY
+- `src/stellium/engines/ephemeris.py` - SwissEphemerisEngine
+- `src/stellium/engines/houses.py` - House system engines
+- `src/stellium/engines/aspects.py` - Aspect engines
 - `pyproject.toml` - Package configuration, dependencies, tool config
 
 ### Common Gotchas
@@ -1043,7 +1043,7 @@ chart.draw("chart.svg").save()
 1. Use caching for expensive operations: `@cached(cache_type="ephemeris")`
 2. Batch ephemeris calls when possible
 3. Use MockEphemerisEngine for tests that don't need real calculations
-4. Enable cache: `from starlight.utils.cache import enable_cache; enable_cache()`
+4. Enable cache: `from stellium.utils.cache import enable_cache; enable_cache()`
 
 ### Decision Guide
 
@@ -1078,4 +1078,4 @@ chart.draw("chart.svg").save()
 source ~/.zshrc && pyenv activate starlight
 ```
 
-This is the most important rule for working with Starlight. Without the environment activated, Swiss Ephemeris imports will fail and calculations will be incorrect.
+This is the most important rule for working with Stellium. Without the environment activated, Swiss Ephemeris imports will fail and calculations will be incorrect.

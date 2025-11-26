@@ -1,9 +1,9 @@
-# Starlight User Guide - WORK IN PROGRESS
+# Stellium User Guide - WORK IN PROGRESS
 
 ## Installation
 
 ```bash
-pip install starlight-astro
+pip install stellium-astro
 ```
 
 ## Quick Start
@@ -13,8 +13,8 @@ pip install starlight-astro
 ```python
 from datetime import datetime
 import pytz
-from starlight.core.builder import ChartBuilder
-from starlight.core.native import Native
+from stellium.core.builder import ChartBuilder
+from stellium.core.native import Native
 
 # Create a native
 birthday = datetime(1994, 1, 6, 19, 47)
@@ -36,7 +36,7 @@ for aspect in chart.aspects:
 ### Custom House Systems
 
 ```python
-from starlight.engines.houses import WholeSignHouses
+from stellium.engines.houses import WholeSignHouses
 
 chart = (
     ChartBuilder.from_native(native)
@@ -62,8 +62,8 @@ with open('chart.json', 'w') as f:
 ### Custom Aspect Calculations
 
 ```python
-from starlight.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
-from starlight.engines.orbs import SimpleOrbEngine
+from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from stellium.engines.orbs import SimpleOrbEngine
 
 # Traditional aspects
 chart = ChartBuilder.from_native(native) \
@@ -81,7 +81,7 @@ chart = ChartBuilder.from_native(native) \
 ### Configuration Presets
 
 ```python
-from starlight.core.config import CalculationConfig
+from stellium.core.config import CalculationConfig
 
 # Minimal calculation (faster)
 config = CalculationConfig.minimal()
@@ -115,4 +115,4 @@ angles = chart.get_angles()
 
 - See [API Reference] for complete documentation
 - See [Examples] for more use cases
-- See [Developer Guide] to extend Starlight
+- See [Developer Guide] to extend Stellium
