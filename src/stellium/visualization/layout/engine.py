@@ -425,18 +425,14 @@ class LayoutEngine:
         self, wheel_pos: Position, wheel_size: int, measurements: dict[str, Dimensions]
     ) -> dict[str, BoundingBox]:
         """
-        Position info corner elements with collision detection.
+        Position info corner elements outside the wheel's bounding box.
 
-        Corners are positioned relative to the wheel's bounding box.
+        Corners are positioned relative to the wheel's edges, but pushed outward
+        to avoid overlapping the wheel itself.
         """
         corners = {}
-        # Reduced margin for info corners - they should be closer to edges
-        corner_margin = 5  # Reduced from min_margin (10) to be less "inset"
-
-        # Get wheel bounding box
-        wheel_bbox = BoundingBox(
-            position=wheel_pos, dimensions=Dimensions(wheel_size, wheel_size)
-        )
+        # Gap between wheel edge and info corners
+        corner_gap = 5
 
         # Position each enabled corner
         corner_configs = [
@@ -468,22 +464,31 @@ class LayoutEngine:
 
             dims = measurements.get(name, Dimensions(100, 80))  # Fallback dims
 
-            # Calculate position based on corner
+            # Calculate position based on corner - OUTSIDE wheel bounding box
+            # TESTING with large values to verify positioning is working
             if position == "top-left":
-                pos = Position(wheel_pos.x + corner_margin, wheel_pos.y + corner_margin)
-            elif position == "top-right":
+                # Position above and to the left of wheel
                 pos = Position(
-                    wheel_pos.x + wheel_size - dims.width - corner_margin, wheel_pos.y + corner_margin
+                    wheel_pos.x - dims.width - corner_gap,
+                    wheel_pos.y - dims.height - corner_gap
+                )
+            elif position == "top-right":
+                # Aspect counter: TEST with 50px offset
+                pos = Position(
+                    wheel_pos.x + wheel_size + corner_gap + 50,
+                    wheel_pos.y - dims.height - corner_gap - 50
                 )
             elif position == "bottom-left":
+                # Element modality table: TEST with 50px offset
                 pos = Position(
-                    wheel_pos.x + corner_margin,
-                    wheel_pos.y + wheel_size - dims.height - corner_margin,
+                    wheel_pos.x - dims.width - corner_gap - 50,
+                    wheel_pos.y + wheel_size + corner_gap + 50
                 )
             else:  # "bottom-right"
+                # Position below and to the right of wheel
                 pos = Position(
-                    wheel_pos.x + wheel_size - dims.width - corner_margin,
-                    wheel_pos.y + wheel_size - dims.height - corner_margin,
+                    wheel_pos.x + wheel_size + corner_gap,
+                    wheel_pos.y + wheel_size + corner_gap
                 )
 
             corners[name] = BoundingBox(position=pos, dimensions=dims)

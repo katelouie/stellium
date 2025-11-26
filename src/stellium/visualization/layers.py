@@ -1691,10 +1691,10 @@ class ChartInfoLayer:
         Returns:
             Tuple of (x, y) coordinates
         """
-        # Match the chart's own padding (distance from zodiac ring to canvas edge)
+        # Base margin - match the chart's own padding
         # zodiac_ring_outer is at radius 0.47 * size from center
         # center is at size/2, so padding = size/2 - 0.47 * size = 0.03 * size
-        margin = renderer.size * 0.03
+        base_margin = renderer.size * 0.03
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
@@ -1702,20 +1702,25 @@ class ChartInfoLayer:
         x_offset = getattr(renderer, "x_offset", 0)
         y_offset = getattr(renderer, "y_offset", 0)
 
+        # Manual adjustments for specific corners to move them away from wheel
         if self.position == "top-left":
-            return (x_offset + margin, y_offset + margin)
+            return (x_offset + base_margin, y_offset + base_margin)
         elif self.position == "top-right":
+            # Aspect counter: reduce margin to push further away
+            margin = base_margin * 0.3  # Reduced from base to push outward
             return (x_offset + renderer.size - margin, y_offset + margin)
         elif self.position == "bottom-left":
+            # Element modality: reduce margin to push further away
+            margin = base_margin * 0.3  # Reduced from base to push outward
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
             return (
-                x_offset + renderer.size - margin,
-                y_offset + renderer.size - margin - total_height,
+                x_offset + renderer.size - base_margin,
+                y_offset + renderer.size - base_margin - total_height,
             )
         else:
             # Fallback to top-left
-            return (x_offset + margin, y_offset + margin)
+            return (x_offset + base_margin, y_offset + base_margin)
 
 
 class AspectCountsLayer:
@@ -1846,9 +1851,9 @@ class AspectCountsLayer:
     def _get_position_coordinates(
         self, renderer: ChartRenderer, num_lines: int
     ) -> tuple[float, float]:
-        """Calculate position coordinates."""
+        """Calculate position coordinates for AspectCountsLayer."""
         # Match the chart's own padding
-        margin = renderer.size * 0.03
+        base_margin = renderer.size * 0.03
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
@@ -1856,18 +1861,21 @@ class AspectCountsLayer:
         y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
-            return (x_offset + margin, y_offset + margin)
+            return (x_offset + base_margin, y_offset + base_margin)
         elif self.position == "top-right":
+            # Aspect counter: reduce margin to push further right and up
+            margin = base_margin * 0.3
             return (x_offset + renderer.size - margin, y_offset + margin)
         elif self.position == "bottom-left":
+            margin = base_margin * 0.3
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
             return (
-                x_offset + renderer.size - margin,
-                y_offset + renderer.size - margin - total_height,
+                x_offset + renderer.size - base_margin,
+                y_offset + renderer.size - base_margin - total_height,
             )
         else:
-            return (x_offset + margin, y_offset + margin)
+            return (x_offset + base_margin, y_offset + base_margin)
 
 
 class ElementModalityTableLayer:
@@ -2128,9 +2136,9 @@ class ElementModalityTableLayer:
     def _get_position_coordinates(
         self, renderer: ChartRenderer, num_lines: int
     ) -> tuple[float, float]:
-        """Calculate position coordinates."""
+        """Calculate position coordinates for ElementModalityTableLayer."""
         # Match the chart's own padding
-        margin = renderer.size * 0.03
+        base_margin = renderer.size * 0.03
         total_height = num_lines * self.style["line_height"]
 
         # Get offsets for extended canvas positioning
@@ -2138,18 +2146,21 @@ class ElementModalityTableLayer:
         y_offset = getattr(renderer, "y_offset", 0)
 
         if self.position == "top-left":
-            return (x_offset + margin, y_offset + margin)
+            return (x_offset + base_margin, y_offset + base_margin)
         elif self.position == "top-right":
+            margin = base_margin * 0.3
             return (x_offset + renderer.size - margin, y_offset + margin)
         elif self.position == "bottom-left":
+            # Element modality: reduce margin to push further left and down
+            margin = base_margin * 0.3
             return (x_offset + margin, y_offset + renderer.size - margin - total_height)
         elif self.position == "bottom-right":
             return (
-                x_offset + renderer.size - margin,
-                y_offset + renderer.size - margin - total_height,
+                x_offset + renderer.size - base_margin,
+                y_offset + renderer.size - base_margin - total_height,
             )
         else:
-            return (x_offset + margin, y_offset + margin)
+            return (x_offset + base_margin, y_offset + base_margin)
 
 
 class ChartShapeLayer:

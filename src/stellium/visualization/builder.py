@@ -641,7 +641,9 @@ class ChartDrawBuilder:
         # Handle zodiac palette
         if self._zodiac_palette is _USE_THEME_DEFAULT_PALETTE:
             # User called .with_zodiac_palette(True) → use theme's colorful default
-            wheel_kwargs["zodiac_palette"] = None  # Signals renderer to use theme default
+            wheel_kwargs["zodiac_palette"] = (
+                None  # Signals renderer to use theme default
+            )
         elif self._zodiac_palette is not None:
             # User specified a palette name
             wheel_kwargs["zodiac_palette"] = self._zodiac_palette
@@ -657,8 +659,7 @@ class ChartDrawBuilder:
 
         # Auto-hide chart shape if moon phase is in bottom-right (they would overlap)
         moon_in_bottom_right = (
-            self._moon_phase is True and
-            self._moon_phase_position == "bottom-right"
+            self._moon_phase is True and self._moon_phase_position == "bottom-right"
         )
         if moon_in_bottom_right and self._chart_shape is True:
             # Disable chart shape to avoid collision with moon phase
@@ -679,7 +680,9 @@ class ChartDrawBuilder:
         if self._element_modality_table is not None:
             corners_kwargs["element_modality"] = self._element_modality_table
         if self._element_modality_table_position is not None:
-            corners_kwargs["element_modality_position"] = self._element_modality_table_position
+            corners_kwargs["element_modality_position"] = (
+                self._element_modality_table_position
+            )
         if self._chart_shape is not None:
             corners_kwargs["chart_shape"] = self._chart_shape
         if self._chart_shape_position is not None:
@@ -723,7 +726,9 @@ class ChartDrawBuilder:
             "wheel": ChartWheelConfig(**wheel_kwargs),
             "corners": InfoCornerConfig(**corners_kwargs),
             "tables": TableConfig(**tables_kwargs),
-            "header": HeaderConfig(**header_kwargs) if header_kwargs else HeaderConfig(),
+            "header": HeaderConfig(**header_kwargs)
+            if header_kwargs
+            else HeaderConfig(),
         }
         if self._filename is not None:
             config_kwargs["filename"] = self._filename

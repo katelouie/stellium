@@ -64,7 +64,9 @@ def readme_chart_3():
     drawing = chart.draw(os.path.join(FILEDIR, filename))
     drawing = (
         drawing.with_theme("midnight")
-        .preset_detailed()
+        .with_chart_info()
+        .with_aspect_counts()
+        .with_element_modality_table()
         .with_house_systems("all")
         .with_tables()
         .save()
@@ -350,9 +352,10 @@ def examples_chart_extended_below_no_aspect():
 
 def main():
     """Execute all registered chart functions"""
-    for func in _chart_functions:
-        print(f"Generating {func.__name__}...")
-        func()
+    # for func in _chart_functions:
+    #     print(f"Generating {func.__name__}...")
+    #     func()
+    readme_chart_3()
 
 
 if __name__ == "__main__":
