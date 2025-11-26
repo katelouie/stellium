@@ -32,6 +32,7 @@ class Native:
     datetime: ChartDateTime
     location: ChartLocation
     name: str | None
+    time_unknown: bool
 
     def __init__(
         self,
@@ -39,6 +40,7 @@ class Native:
         location_input: LocationInput,
         *,
         name: str | None = None,
+        time_unknown: bool = False,
     ) -> None:
         """Creates a new Native object by parsing flexible inputs.
 
@@ -48,10 +50,58 @@ class Native:
             location_input: Can be a string to geocode, a (lat, lon) tuple,
                 a dict, or a pre-made ChartLocation object
             name: Optional name of the person or event (for display purposes)
+            time_unknown: If True, only the date is known (time set to noon,
+                houses/angles will not be calculated, Moon shown as range)
         """
         self.location = self._process_location(location_input)
+        self.time_unknown = time_unknown
+
+        # If time is unknown, normalize to noon for calculation
+        if time_unknown:
+            datetime_input = self._normalize_to_noon(datetime_input)
+
         self.datetime = self._process_datetime(datetime_input, self.location.timezone)
         self.name = name
+
+    def _normalize_to_noon(self, datetime_input: DateTimeInput) -> dt.datetime:
+        """
+        Normalize a datetime input to noon on the same date.
+
+        Used for unknown birth time charts where we calculate for noon
+        as the midpoint of the day.
+
+        Args:
+            datetime_input: Any supported datetime input
+
+        Returns:
+            A naive datetime set to 12:00:00 on the same date
+        """
+        # Handle string input
+        if isinstance(datetime_input, str):
+            parsed = self._parse_datetime_string(datetime_input)
+            return dt.datetime(parsed.year, parsed.month, parsed.day, 12, 0, 0)
+
+        # Handle datetime object
+        if isinstance(datetime_input, dt.datetime):
+            return dt.datetime(
+                datetime_input.year, datetime_input.month, datetime_input.day, 12, 0, 0
+            )
+
+        # Handle dict input
+        if isinstance(datetime_input, dict):
+            return dt.datetime(
+                int(datetime_input["year"]),
+                int(datetime_input["month"]),
+                int(datetime_input["day"]),
+                12, 0, 0
+            )
+
+        # Handle ChartDateTime (extract date, set to noon)
+        if isinstance(datetime_input, ChartDateTime):
+            utc = datetime_input.utc_datetime
+            return dt.datetime(utc.year, utc.month, utc.day, 12, 0, 0)
+
+        raise TypeError(f"Cannot normalize datetime input of type: {type(datetime_input)}")
 
     def _process_location(self, loc_in: LocationInput) -> ChartLocation:
         """Internal helper to parse any location input."""

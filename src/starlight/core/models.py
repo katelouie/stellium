@@ -821,3 +821,129 @@ class HouseOverlay:
             "Person A's" if self.house_owner == "chart1" else "Person B's"
         )
         return f"{owner_name}'s {self.planet_name} in {house_owner_name} house {self.falls_in_house}"
+
+
+# =============================================================================
+# Unknown Birth Time Charts
+# =============================================================================
+
+
+@dataclass(frozen=True)
+class MoonRange:
+    """
+    Moon position range for unknown birth time charts.
+
+    When birth time is unknown, the Moon's position could be anywhere within
+    a ~12-14° range (Moon moves about 12-14° per day). This dataclass captures
+    the full range to display on the chart.
+
+    Attributes:
+        start_longitude: Moon position at 00:00:00 local time
+        end_longitude: Moon position at 23:59:59 local time
+        noon_longitude: Moon position at 12:00:00 (displayed position)
+        start_sign: Zodiac sign at start of day
+        end_sign: Zodiac sign at end of day
+        crosses_sign_boundary: True if Moon changes sign during the day
+    """
+
+    start_longitude: float  # Position at 00:00:00
+    end_longitude: float  # Position at 23:59:59
+    noon_longitude: float  # Position at 12:00:00 (displayed position)
+    start_sign: str
+    end_sign: str
+    crosses_sign_boundary: bool
+
+    @property
+    def arc_size(self) -> float:
+        """
+        Size of the Moon's arc in degrees.
+
+        Handles wrap-around at 0°/360° Aries point.
+        """
+        if self.end_longitude < self.start_longitude:
+            # Wraps around 0° Aries
+            return (360 - self.start_longitude) + self.end_longitude
+        return self.end_longitude - self.start_longitude
+
+    @property
+    def sign_display(self) -> str:
+        """Human-readable sign display for the Moon range."""
+        if self.crosses_sign_boundary:
+            return f"{self.start_sign} - {self.end_sign}"
+        return self.start_sign
+
+    def __str__(self) -> str:
+        if self.crosses_sign_boundary:
+            return (
+                f"Moon: {self.start_sign} {self.start_longitude % 30:.0f}° - "
+                f"{self.end_sign} {self.end_longitude % 30:.0f}° "
+                f"(arc: {self.arc_size:.1f}°)"
+            )
+        start_deg = self.start_longitude % 30
+        end_deg = self.end_longitude % 30
+        return f"Moon: {self.start_sign} {start_deg:.0f}° - {end_deg:.0f}° (arc: {self.arc_size:.1f}°)"
+
+
+@dataclass(frozen=True)
+class UnknownTimeChart(CalculatedChart):
+    """
+    A natal chart calculated without known birth time.
+
+    Inherits from CalculatedChart for compatibility with all existing code,
+    but has some key differences:
+    - Houses are empty (no house cusps without birth time)
+    - Angles are not calculated (no Asc/MC/Dsc/IC)
+    - Moon is shown as a range rather than single position
+    - Planetary positions are calculated for noon
+
+    The chart can still be:
+    - Visualized (without houses, with moon arc)
+    - Exported to JSON
+    - Used for aspect calculations (using noon Moon)
+    - Used for dignity calculations (planets only)
+
+    Attributes:
+        moon_range: MoonRange showing the Moon's possible positions throughout the day
+    """
+
+    moon_range: MoonRange = field(default=None)  # type: ignore
+
+    def __post_init__(self) -> None:
+        """Validate that moon_range is provided."""
+        if self.moon_range is None:
+            raise ValueError("moon_range is required for UnknownTimeChart")
+
+    @property
+    def is_time_unknown(self) -> bool:
+        """Always True for this chart type."""
+        return True
+
+    def get_house(self, object_name: str, system_name: str | None = None) -> None:
+        """Houses are not available for unknown time charts."""
+        return None
+
+    def get_houses(self, system_name: str | None = None) -> None:
+        """Houses are not available for unknown time charts."""
+        return None
+
+    def get_angles(self) -> list[CelestialPosition]:
+        """Angles are not available for unknown time charts."""
+        return []
+
+    def to_dict(self) -> dict[str, Any]:
+        """Serialize to dictionary, including moon_range."""
+        base_dict = super().to_dict()
+
+        # Add moon range info
+        base_dict["time_unknown"] = True
+        base_dict["moon_range"] = {
+            "start_longitude": self.moon_range.start_longitude,
+            "end_longitude": self.moon_range.end_longitude,
+            "noon_longitude": self.moon_range.noon_longitude,
+            "start_sign": self.moon_range.start_sign,
+            "end_sign": self.moon_range.end_sign,
+            "crosses_sign_boundary": self.moon_range.crosses_sign_boundary,
+            "arc_size": self.moon_range.arc_size,
+        }
+
+        return base_dict

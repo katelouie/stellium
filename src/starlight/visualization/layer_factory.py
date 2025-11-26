@@ -8,7 +8,7 @@ in the right order based on the user's configuration.
 from typing import Protocol
 
 from starlight.core.comparison import Comparison
-from starlight.core.models import CalculatedChart
+from starlight.core.models import CalculatedChart, UnknownTimeChart
 from starlight.visualization.config import ChartVisualizationConfig
 from starlight.visualization.layers import (
     AngleLayer,
@@ -18,6 +18,7 @@ from starlight.visualization.layers import (
     ChartShapeLayer,
     ElementModalityTableLayer,
     HouseCuspLayer,
+    MoonRangeLayer,
     OuterAngleLayer,
     OuterBorderLayer,
     OuterHouseCuspLayer,
@@ -62,6 +63,7 @@ class LayerFactory:
             List of layers ready to render
         """
         is_comparison = isinstance(chart, Comparison)
+        is_unknown_time = isinstance(chart, UnknownTimeChart)
 
         layers = []
 
@@ -72,34 +74,36 @@ class LayerFactory:
             )
         )
 
-        # Layer 2: House cusps
-        if is_comparison:
-            # Biwheel: inner chart houses inside, outer chart houses outside
-            layers.append(
-                HouseCuspLayer(
-                    house_system_name=chart.chart1.default_house_system,
+        # Layer 2: House cusps (skip for unknown time charts - no houses without time!)
+        if not is_unknown_time:
+            if is_comparison:
+                # Biwheel: inner chart houses inside, outer chart houses outside
+                layers.append(
+                    HouseCuspLayer(
+                        house_system_name=chart.chart1.default_house_system,
+                    )
                 )
-            )
-            layers.append(
-                OuterHouseCuspLayer(
-                    house_system_name=chart.chart2.default_house_system,
+                layers.append(
+                    OuterHouseCuspLayer(
+                        house_system_name=chart.chart2.default_house_system,
+                    )
                 )
-            )
-        else:
-            # Single chart: just one set of houses
-            layers.append(
-                HouseCuspLayer(
-                    house_system_name=chart.default_house_system,
+            else:
+                # Single chart: just one set of houses
+                layers.append(
+                    HouseCuspLayer(
+                        house_system_name=chart.default_house_system,
+                    )
                 )
-            )
 
-        # Layer 3: Angles (ASC, MC, DSC, IC)
-        # Always show angles for inner wheel (chart1 for comparisons)
-        layers.append(AngleLayer())
+        # Layer 3: Angles (ASC, MC, DSC, IC) - skip for unknown time charts
+        if not is_unknown_time:
+            # Always show angles for inner wheel (chart1 for comparisons)
+            layers.append(AngleLayer())
 
-        # Layer 3b: Outer wheel angles (for comparisons only)
-        if is_comparison:
-            layers.append(OuterAngleLayer())
+            # Layer 3b: Outer wheel angles (for comparisons only)
+            if is_comparison:
+                layers.append(OuterAngleLayer())
 
         # Layer 4: Aspects
         if is_comparison:
@@ -152,6 +156,10 @@ class LayerFactory:
                     radius_key="planet_ring",
                 )
             )
+
+        # Layer 5b: Moon range arc (for unknown time charts only)
+        if is_unknown_time:
+            layers.append(MoonRangeLayer())
 
         # Layer 6: Info corners (if enabled)
         if self.config.corners.chart_info:

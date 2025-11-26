@@ -11,7 +11,7 @@ from typing import Any
 
 import svgwrite
 
-from starlight.core.models import CalculatedChart, CelestialPosition, HouseCusps
+from starlight.core.models import CalculatedChart, CelestialPosition, HouseCusps, UnknownTimeChart
 
 from .core import (
     ANGLE_GLYPHS,
@@ -1037,7 +1037,17 @@ class ChartInfoLayer:
                 lines.append(location_name)
 
         if "datetime" in self.fields and chart.datetime:
-            if chart.datetime.local_datetime:
+            # Check if this is an unknown time chart
+            is_unknown_time = isinstance(chart, UnknownTimeChart)
+
+            if is_unknown_time:
+                # Show date only with "Time Unknown" indicator
+                if chart.datetime.local_datetime:
+                    dt_str = chart.datetime.local_datetime.strftime("%B %d, %Y")
+                else:
+                    dt_str = chart.datetime.utc_datetime.strftime("%B %d, %Y")
+                dt_str += "  (Time Unknown)"
+            elif chart.datetime.local_datetime:
                 dt_str = chart.datetime.local_datetime.strftime("%B %d, %Y  %I:%M %p")
             else:
                 dt_str = chart.datetime.utc_datetime.strftime("%B %d, %Y  %H:%M UTC")
@@ -1056,18 +1066,21 @@ class ChartInfoLayer:
             lines.append(f"{abs(lat):.2f}°{lat_dir}, {abs(lon):.2f}°{lon_dir}")
 
         if "house_system" in self.fields:
-            # Use provided house_systems list if available, otherwise use chart's default
-            if self.house_systems:
-                if len(self.house_systems) == 1:
-                    lines.append(self.house_systems[0])
+            # Skip house system for unknown time charts (no houses without time!)
+            is_unknown_time = isinstance(chart, UnknownTimeChart)
+            if not is_unknown_time:
+                # Use provided house_systems list if available, otherwise use chart's default
+                if self.house_systems:
+                    if len(self.house_systems) == 1:
+                        lines.append(self.house_systems[0])
+                    else:
+                        # Multiple house systems - show all
+                        systems_str = ", ".join(self.house_systems)
+                        lines.append(systems_str)
                 else:
-                    # Multiple house systems - show all
-                    systems_str = ", ".join(self.house_systems)
-                    lines.append(systems_str)
-            else:
-                house_system = getattr(chart, "default_house_system", None)
-                if house_system:
-                    lines.append(house_system)
+                    house_system = getattr(chart, "default_house_system", None)
+                    if house_system:
+                        lines.append(house_system)
 
         if "ephemeris" in self.fields:
             # Currently only Tropical is implemented
@@ -1931,3 +1944,161 @@ class OuterBorderLayer:
                 stroke_width=border_width,
             )
         )
+
+
+class MoonRangeLayer:
+    """
+    Renders a shaded arc showing the Moon's possible position range.
+
+    Used for unknown birth time charts where the Moon could be anywhere
+    within a ~12-14° range throughout the day.
+
+    The arc is drawn as a semi-transparent wedge from the day-start position
+    to the day-end position, with the Moon glyph at the noon position.
+    """
+
+    def __init__(
+        self,
+        arc_color: str | None = None,
+        arc_opacity: float = 0.4,
+    ) -> None:
+        """
+        Initialize moon range layer.
+
+        Args:
+            arc_color: Color for the shaded arc (defaults to Moon color from theme)
+            arc_opacity: Opacity of the shaded arc (0.0-1.0)
+        """
+        self.arc_color = arc_color
+        self.arc_opacity = arc_opacity
+
+    def render(
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: Any
+    ) -> None:
+        """Render the Moon range arc for unknown time charts."""
+        # Only render for UnknownTimeChart
+        if not isinstance(chart, UnknownTimeChart):
+            return
+
+        moon_range = chart.moon_range
+        if moon_range is None:
+            return
+
+        # Get planet ring radius (where planets are drawn)
+        planet_radius = renderer.radii.get("planet_ring", renderer.size * 0.35)
+
+        # Get Moon color from theme
+        # Use planets.glyph_color for consistency with how the Moon glyph is rendered
+        style = renderer.style
+        planet_style = style.get("planets", {})
+        default_glyph_color = planet_style.get("glyph_color", "#8B8B8B")
+
+        if self.arc_color:
+            # Custom color override
+            fill_color = self.arc_color
+        elif renderer.planet_glyph_palette:
+            # If there's a planet glyph palette, try to get Moon-specific color
+            planet_palette = PlanetGlyphPalette(renderer.planet_glyph_palette)
+            fill_color = get_planet_glyph_color(
+                "Moon", planet_palette, default_glyph_color
+            )
+        else:
+            # Use the theme's planet glyph color (same as Moon glyph)
+            fill_color = default_glyph_color
+
+        # Determine arc radii - slightly inside and outside the planet ring
+        arc_width = renderer.size * 0.04  # 4% of chart size
+        inner_radius = planet_radius - arc_width / 2
+        outer_radius = planet_radius + arc_width / 2
+
+        # Use renderer.polar_to_cartesian for correct coordinate transformation
+        # This handles rotation, centering, and SVG coordinate system automatically
+        start_lon = moon_range.start_longitude
+        end_lon = moon_range.end_longitude
+
+        # Get the four corner points using the renderer's coordinate system
+        outer_start_x, outer_start_y = renderer.polar_to_cartesian(start_lon, outer_radius)
+        outer_end_x, outer_end_y = renderer.polar_to_cartesian(end_lon, outer_radius)
+        inner_start_x, inner_start_y = renderer.polar_to_cartesian(start_lon, inner_radius)
+        inner_end_x, inner_end_y = renderer.polar_to_cartesian(end_lon, inner_radius)
+
+        # Create the arc path
+        path_data = self._create_arc_path(
+            outer_start_x, outer_start_y,
+            outer_end_x, outer_end_y,
+            inner_start_x, inner_start_y,
+            inner_end_x, inner_end_y,
+            inner_radius, outer_radius,
+            moon_range.arc_size
+        )
+
+        # Draw the shaded arc
+        dwg.add(
+            dwg.path(
+                d=path_data,
+                fill=fill_color,
+                fill_opacity=self.arc_opacity,
+                stroke="none",
+            )
+        )
+
+        # Optionally: draw subtle border on the arc
+        dwg.add(
+            dwg.path(
+                d=path_data,
+                fill="none",
+                stroke=fill_color,
+                stroke_width=0.5,
+                stroke_opacity=self.arc_opacity * 2,
+            )
+        )
+
+    def _create_arc_path(
+        self,
+        outer_start_x: float, outer_start_y: float,
+        outer_end_x: float, outer_end_y: float,
+        inner_start_x: float, inner_start_y: float,
+        inner_end_x: float, inner_end_y: float,
+        inner_r: float, outer_r: float,
+        arc_size_deg: float,
+    ) -> str:
+        """
+        Create SVG path data for an annular sector (donut slice).
+
+        Args:
+            outer_start_x/y: Outer arc start point
+            outer_end_x/y: Outer arc end point
+            inner_start_x/y: Inner arc start point (at start longitude)
+            inner_end_x/y: Inner arc end point (at end longitude)
+            inner_r, outer_r: Inner and outer radii for arc commands
+            arc_size_deg: Size of the arc in degrees
+
+        Returns:
+            SVG path data string
+        """
+        # For a small arc (< 180°), large_arc_flag = 0
+        # Moon range is always < 180° (typically ~12-14°)
+        large_arc = 0 if arc_size_deg < 180 else 1
+
+        # Sweep flag: 0 = counter-clockwise, 1 = clockwise
+        # In the chart's visual system, zodiac goes counter-clockwise
+        # So Moon moving from start to end (increasing longitude) goes counter-clockwise
+        # SVG sweep=0 is counter-clockwise
+        sweep_outer = 0
+        sweep_inner = 1  # Opposite direction for inner arc to close the shape
+
+        # Build path:
+        # M = move to outer start
+        # A = arc to outer end
+        # L = line to inner end (at end longitude)
+        # A = arc back to inner start
+        # Z = close path
+        path = (
+            f"M {outer_start_x:.2f},{outer_start_y:.2f} "
+            f"A {outer_r:.2f},{outer_r:.2f} 0 {large_arc},{sweep_outer} {outer_end_x:.2f},{outer_end_y:.2f} "
+            f"L {inner_end_x:.2f},{inner_end_y:.2f} "
+            f"A {inner_r:.2f},{inner_r:.2f} 0 {large_arc},{sweep_inner} {inner_start_x:.2f},{inner_start_y:.2f} "
+            f"Z"
+        )
+
+        return path

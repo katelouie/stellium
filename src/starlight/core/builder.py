@@ -17,6 +17,9 @@ from starlight.core.models import (
     ChartDateTime,
     ChartLocation,
     HouseCusps,
+    MoonRange,
+    UnknownTimeChart,
+    longitude_to_sign_and_degree,
 )
 from starlight.core.native import Native
 from starlight.core.protocols import (
@@ -84,6 +87,9 @@ class ChartBuilder:
         # Optional chart name (for display purposes)
         self._name: str | None = None
 
+        # Unknown time flag
+        self._time_unknown: bool = False
+
     @classmethod
     def from_native(cls, native: Native) -> "ChartBuilder":
         """Create a new ChartBuilder from a Native object.
@@ -96,6 +102,9 @@ class ChartBuilder:
         # If the Native has a name, use it
         if native.name:
             builder._name = native.name
+        # If the Native has time_unknown flag, propagate it
+        if native.time_unknown:
+            builder._time_unknown = True
         return builder
 
     @classmethod
@@ -143,6 +152,7 @@ class ChartBuilder:
         location_input: str | tuple[float, float] | dict,
         *,
         name: str | None = None,
+        time_unknown: bool = False,
     ) -> "ChartBuilder":
         """
         Create a ChartBuilder from datetime and location (convenience method).
@@ -160,6 +170,8 @@ class ChartBuilder:
                 - Tuple: (37.4419, -122.1430)
                 - dict: {"latitude": 37.4419, "longitude": -122.1430, "name": "Palo Alto"}
             name: Optional name of the person or event (for display purposes)
+            time_unknown: If True, creates an UnknownTimeChart (no houses/angles,
+                Moon shown as range, time normalized to noon)
 
         Returns:
             ChartBuilder instance ready to configure
@@ -178,14 +190,16 @@ class ChartBuilder:
             ...     name="Kate Louie"
             ... ).calculate()
             >>>
-            >>> # With coordinates
+            >>> # Unknown birth time
             >>> chart = ChartBuilder.from_details(
-            ...     "2024-11-24 14:30",
-            ...     (37.4419, -122.1430)
+            ...     "1994-01-06",
+            ...     "Palo Alto, CA",
+            ...     name="Someone",
+            ...     time_unknown=True
             ... ).calculate()
         """
         # Create Native internally (it handles all the parsing)
-        native = Native(datetime_input, location_input, name=name)
+        native = Native(datetime_input, location_input, name=name, time_unknown=time_unknown)
         # Use from_native which stores the native reference
         return cls.from_native(native)
 
@@ -258,6 +272,32 @@ class ChartBuilder:
         self._analyzers.append(analyzer)
         return self
 
+    def with_unknown_time(self) -> "ChartBuilder":
+        """
+        Mark this chart as having unknown birth time.
+
+        When birth time is unknown:
+        - Time is normalized to noon for planet calculations
+        - Houses and angles will NOT be calculated
+        - Moon will include a range showing possible positions throughout the day
+        - The resulting chart is an UnknownTimeChart (subclass of CalculatedChart)
+
+        Returns:
+            Self for method chaining
+
+        Example:
+            >>> chart = (ChartBuilder
+            ...     .from_details("1994-01-06", "Palo Alto, CA")
+            ...     .with_unknown_time()
+            ...     .calculate())
+            >>> isinstance(chart, UnknownTimeChart)
+            True
+            >>> chart.moon_range.arc_size
+            13.5  # Moon travels ~13.5° that day
+        """
+        self._time_unknown = True
+        return self
+
     # --- Calculation ---
 
     def _get_objects_list(self) -> list[str]:
@@ -276,13 +316,18 @@ class ChartBuilder:
         # Ensure all names are unique
         return list(set(objects))
 
-    def calculate(self) -> CalculatedChart:
+    def calculate(self) -> CalculatedChart | UnknownTimeChart:
         """
         Execute all calculations and return the final chart.
 
         Returns:
-            CalculatedChart with all calculated data
+            CalculatedChart with all calculated data, or
+            UnknownTimeChart if time_unknown flag is set
         """
+        # Dispatch to unknown time calculation if needed
+        if self._time_unknown:
+            return self._calculate_unknown_time_chart()
+
         # Step 1: Calculate planetary positions
         objects_to_calculate = self._get_objects_list()
         positions = self._ephemeris.calculate_positions(
@@ -390,6 +435,124 @@ class ChartBuilder:
             house_placements=house_placements_map,
             aspects=tuple(aspects),
             metadata=final_metadata,
+        )
+
+    def _calculate_unknown_time_chart(self) -> UnknownTimeChart:
+        """
+        Calculate a chart for unknown birth time.
+
+        This is a specialized calculation that:
+        - Calculates planetary positions for noon
+        - Skips house and angle calculations entirely
+        - Calculates Moon range (positions at 00:00, 12:00, 23:59)
+        - Still calculates aspects (using noon Moon)
+
+        Returns:
+            UnknownTimeChart with moon_range and no houses/angles
+        """
+        # Step 1: Calculate planetary positions (at noon, already normalized)
+        objects_to_calculate = self._get_objects_list()
+        positions = self._ephemeris.calculate_positions(
+            self._datetime, self._location, objects_to_calculate
+        )
+
+        # Step 2: Calculate Moon range (need positions at start and end of day)
+        moon_range = self._calculate_moon_range()
+
+        # Step 3: Calculate aspects (if engine provided)
+        # Uses noon Moon position for aspect calculations
+        aspects = []
+        if self._aspect_engine:
+            aspects = self._aspect_engine.calculate_aspects(
+                positions,
+                self._orb_engine,
+            )
+
+        # Build metadata
+        final_metadata: dict = {}
+
+        # Add cache statistics to the metadata
+        cache_stats = self._get_cache().get_stats()
+        final_metadata["cache_stats"] = cache_stats
+
+        # Add chart name to metadata if set
+        if self._name is not None:
+            final_metadata["name"] = self._name
+
+        # Mark as time unknown
+        final_metadata["time_unknown"] = True
+
+        # Step 4: Build UnknownTimeChart (no houses, no angles)
+        return UnknownTimeChart(
+            datetime=self._datetime,
+            location=self._location,
+            positions=tuple(positions),
+            house_systems={},  # No houses for unknown time
+            house_placements={},  # No house placements
+            aspects=tuple(aspects),
+            metadata=final_metadata,
+            moon_range=moon_range,
+        )
+
+    def _calculate_moon_range(self) -> MoonRange:
+        """
+        Calculate the Moon's position range for the day.
+
+        Calculates Moon position at:
+        - 00:00:00 (start of day)
+        - 12:00:00 (noon - displayed position)
+        - 23:59:59 (end of day)
+
+        Returns:
+            MoonRange with start, noon, and end positions
+        """
+        # Get the date from current datetime (already at noon)
+        utc_dt = self._datetime.utc_datetime
+
+        # Calculate Julian Day for start of day (00:00:00 UTC)
+        start_of_day = utc_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        jd_start = swe.julday(
+            start_of_day.year,
+            start_of_day.month,
+            start_of_day.day,
+            0.0,  # 00:00:00
+        )
+
+        # Calculate Julian Day for end of day (23:59:59 UTC)
+        end_of_day = utc_dt.replace(hour=23, minute=59, second=59, microsecond=0)
+        jd_end = swe.julday(
+            end_of_day.year,
+            end_of_day.month,
+            end_of_day.day,
+            23.0 + 59.0 / 60.0 + 59.0 / 3600.0,  # 23:59:59
+        )
+
+        # Get Moon position at start of day
+        moon_start = swe.calc_ut(jd_start, swe.MOON)[0]
+        start_longitude = moon_start[0]
+
+        # Get Moon position at end of day
+        moon_end = swe.calc_ut(jd_end, swe.MOON)[0]
+        end_longitude = moon_end[0]
+
+        # Get Moon position at noon (current calculation time)
+        moon_noon = swe.calc_ut(self._datetime.julian_day, swe.MOON)[0]
+        noon_longitude = moon_noon[0]
+
+        # Determine signs
+        start_sign, _ = longitude_to_sign_and_degree(start_longitude)
+        end_sign, _ = longitude_to_sign_and_degree(end_longitude)
+
+        # Check if Moon crosses sign boundary
+        crosses_boundary = start_sign != end_sign
+
+        return MoonRange(
+            start_longitude=start_longitude,
+            end_longitude=end_longitude,
+            noon_longitude=noon_longitude,
+            start_sign=start_sign,
+            end_sign=end_sign,
+            crosses_sign_boundary=crosses_boundary,
         )
 
     def with_cache(
