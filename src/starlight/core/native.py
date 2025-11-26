@@ -31,9 +31,14 @@ class Native:
 
     datetime: ChartDateTime
     location: ChartLocation
+    name: str | None
 
     def __init__(
-        self, datetime_input: DateTimeInput, location_input: LocationInput
+        self,
+        datetime_input: DateTimeInput,
+        location_input: LocationInput,
+        *,
+        name: str | None = None,
     ) -> None:
         """Creates a new Native object by parsing flexible inputs.
 
@@ -42,9 +47,11 @@ class Native:
                 a dict, or a pre-made ChartDateTime object
             location_input: Can be a string to geocode, a (lat, lon) tuple,
                 a dict, or a pre-made ChartLocation object
+            name: Optional name of the person or event (for display purposes)
         """
         self.location = self._process_location(location_input)
         self.datetime = self._process_datetime(datetime_input, self.location.timezone)
+        self.name = name
 
     def _process_location(self, loc_in: LocationInput) -> ChartLocation:
         """Internal helper to parse any location input."""

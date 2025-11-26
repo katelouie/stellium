@@ -187,15 +187,17 @@ class ReportBuilder:
         file: str | None = None,
         show: bool = True,
         chart_svg_path: str | None = None,
+        title: str | None = None,
     ) -> str | None:
         """
         Render the report with flexible output options.
 
         Args:
-            format: Output format ("rich_table", "plain_table", "text", "pdf", "html")
+            format: Output format ("rich_table", "plain_table", "text", "pdf", "html", "typst")
             file: Optional filename to save to
-            show: Whether to display in terminal (default True, ignored for pdf/html)
-            chart_svg_path: Optional path to chart SVG file (for pdf/html formats)
+            show: Whether to display in terminal (default True, ignored for pdf/html/typst)
+            chart_svg_path: Optional path to chart SVG file (for pdf/html/typst formats)
+            title: Optional report title (for typst format)
 
         Returns:
             Filename if saved to file, None otherwise
@@ -214,8 +216,11 @@ class ReportBuilder:
             # Save quietly (no terminal output)
             report.render(format="plain_table", file="chart.txt", show=False)
 
-            # Generate PDF with embedded chart
+            # Generate PDF with embedded chart (WeasyPrint)
             report.render(format="pdf", file="report.pdf", chart_svg_path="chart.svg")
+
+            # Generate beautiful PDF with Typst (recommended!)
+            report.render(format="typst", file="report.pdf", chart_svg_path="chart.svg")
 
             # Generate HTML
             report.render(format="html", file="report.html", chart_svg_path="chart.svg")
@@ -238,10 +243,14 @@ class ReportBuilder:
 
         # Save to file if requested
         if file:
-            # Handle PDF/HTML differently (binary vs text)
+            # Handle PDF formats (binary output)
             if format == "pdf":
                 content = self._to_pdf(section_data, chart_svg_path)
-                with open(file, "wb") as f:  # Binary mode for PDF
+                with open(file, "wb") as f:
+                    f.write(content)
+            elif format == "typst":
+                content = self._to_typst_pdf(section_data, chart_svg_path, title)
+                with open(file, "wb") as f:
                     f.write(content)
             else:
                 content = self._to_string(section_data, format, chart_svg_path)
@@ -296,7 +305,7 @@ class ReportBuilder:
 
             return renderer.render_report(section_data, svg_content)
         else:
-            available = "rich_table, plain_table, text, pdf, html"
+            available = "rich_table, plain_table, text, pdf, html, typst"
             raise ValueError(f"Unknown format '{format}'. Available: {available}")
 
     def _to_pdf(
@@ -304,7 +313,7 @@ class ReportBuilder:
         chart_svg_path: str | None = None
     ) -> bytes:
         """
-        Convert report to PDF bytes (internal helper).
+        Convert report to PDF bytes using WeasyPrint (internal helper).
 
         Args:
             section_data: List of (section_name, section_dict) tuples
@@ -316,6 +325,42 @@ class ReportBuilder:
         from starlight.presentation.renderers import PDFRenderer
         renderer = PDFRenderer()
         return renderer.render_report(section_data, chart_svg_path=chart_svg_path)
+
+    def _to_typst_pdf(
+        self, section_data: list[tuple[str, dict[str, Any]]],
+        chart_svg_path: str | None = None,
+        title: str | None = None,
+    ) -> bytes:
+        """
+        Convert report to PDF bytes using Typst (internal helper).
+
+        Typst produces beautiful, professional-quality PDFs with proper
+        typography, kerning, and hyphenation.
+
+        Args:
+            section_data: List of (section_name, section_dict) tuples
+            chart_svg_path: Optional path to chart SVG to embed
+            title: Optional report title (uses chart's name if not provided)
+
+        Returns:
+            PDF as bytes
+        """
+        from starlight.presentation.renderers import TypstRenderer
+
+        # Build title from chart name if not provided
+        if title is None and self._chart:
+            chart_name = self._chart.metadata.get("name")
+            if chart_name:
+                title = f"{chart_name} — Natal Chart"  # em dash
+            else:
+                title = "Natal Chart Report"
+
+        renderer = TypstRenderer()
+        return renderer.render_report(
+            section_data,
+            chart_svg_path=chart_svg_path,
+            title=title or "Astrological Report",
+        )
 
     def _print_to_console(
         self, section_data: list[tuple[str, dict[str, Any]]], format: str

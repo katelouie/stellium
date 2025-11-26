@@ -132,6 +132,10 @@ class ChartOverviewSection:
         """
         data = {}
 
+        # Name (if available in metadata)
+        if "name" in chart.metadata:
+            data["Name"] = chart.metadata["name"]
+
         # Date and time
         birth: dt.datetime = chart.datetime.local_datetime
         data["Date"] = birth.strftime("%B %d, %Y")

@@ -92,7 +92,11 @@ class ChartBuilder:
         """
         # The Native object has already done all the processing.
         # We just pass its clean attributes to our "pro chef" __init__.
-        return cls(native.datetime, native.location, native=native)
+        builder = cls(native.datetime, native.location, native=native)
+        # If the Native has a name, use it
+        if native.name:
+            builder._name = native.name
+        return builder
 
     @classmethod
     def from_notable(cls, name: str) -> "ChartBuilder":
@@ -133,7 +137,13 @@ class ChartBuilder:
         return builder
 
     @classmethod
-    def from_details(cls, datetime_input: str | dt.datetime | dict, location_input: str | tuple[float, float] | dict) -> "ChartBuilder":
+    def from_details(
+        cls,
+        datetime_input: str | dt.datetime | dict,
+        location_input: str | tuple[float, float] | dict,
+        *,
+        name: str | None = None,
+    ) -> "ChartBuilder":
         """
         Create a ChartBuilder from datetime and location (convenience method).
 
@@ -149,6 +159,7 @@ class ChartBuilder:
                 - String: "Palo Alto, CA" (will be geocoded)
                 - Tuple: (37.4419, -122.1430)
                 - dict: {"latitude": 37.4419, "longitude": -122.1430, "name": "Palo Alto"}
+            name: Optional name of the person or event (for display purposes)
 
         Returns:
             ChartBuilder instance ready to configure
@@ -160,10 +171,11 @@ class ChartBuilder:
             ...     "Palo Alto, CA"
             ... ).calculate()
             >>>
-            >>> # US date format
+            >>> # With a name
             >>> chart = ChartBuilder.from_details(
-            ...     "01/06/1994 11:47 AM",
-            ...     "Seattle, WA"
+            ...     "1994-01-06 11:47",
+            ...     "Palo Alto, CA",
+            ...     name="Kate Louie"
             ... ).calculate()
             >>>
             >>> # With coordinates
@@ -173,7 +185,7 @@ class ChartBuilder:
             ... ).calculate()
         """
         # Create Native internally (it handles all the parsing)
-        native = Native(datetime_input, location_input)
+        native = Native(datetime_input, location_input, name=name)
         # Use from_native which stores the native reference
         return cls.from_native(native)
 

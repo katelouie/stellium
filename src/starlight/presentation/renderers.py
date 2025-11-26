@@ -296,66 +296,95 @@ class HTMLRenderer:
         self.css_style = css_style or self._get_default_css()
 
     def _get_default_css(self) -> str:
-        """Get default CSS styling for reports."""
-        return """
+        """Get default CSS styling for reports.
+
+        Embeds Astronomicon font for proper astrological symbol rendering in PDFs.
+        Falls back to system symbol fonts for browsers.
+        """
+        # Get path to Noto Sans Symbols font (has proper Unicode zodiac/planet glyphs)
+        import os
+
+        font_dir = os.path.join(
+            os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+            ),
+            "assets",
+            "fonts",
+        )
+        noto_symbols_path = os.path.join(font_dir, "NotoSansSymbols-Regular.ttf")
+
+        return f"""
         <style>
-            body {
+            /* Embed Noto Sans Symbols for proper Unicode astrological glyphs */
+            @font-face {{
+                font-family: 'Noto Sans Symbols';
+                src: url('file://{noto_symbols_path}') format('truetype');
+                font-weight: normal;
+                font-style: normal;
+            }}
+
+            body {{
                 font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
                 max-width: 800px;
                 margin: 20px auto;
                 padding: 20px;
                 color: #333;
-            }
-            h2 {
+            }}
+
+            /* Font stack for tables - Noto Sans Symbols for zodiac/planet glyphs */
+            table, td, th {{
+                font-family: 'Noto Sans Symbols', 'Apple Symbols', 'Segoe UI Symbol',
+                             'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }}
+            h2 {{
                 color: #2c3e50;
                 border-bottom: 2px solid #3498db;
                 padding-bottom: 5px;
                 margin-top: 30px;
-            }
-            table {
+            }}
+            table {{
                 width: 100%;
                 border-collapse: collapse;
                 margin: 15px 0;
                 font-size: 14px;
-            }
-            th {
+            }}
+            th {{
                 background-color: #3498db;
                 color: white;
                 padding: 10px;
                 text-align: left;
                 font-weight: 600;
-            }
-            td {
+            }}
+            td {{
                 padding: 8px 10px;
                 border-bottom: 1px solid #ddd;
-            }
-            tr:hover {
+            }}
+            tr:hover {{
                 background-color: #f5f5f5;
-            }
-            dl {
+            }}
+            dl {{
                 margin: 15px 0;
-            }
-            dt {
+            }}
+            dt {{
                 font-weight: 600;
                 color: #2c3e50;
                 margin-top: 10px;
-            }
-            dd {
+            }}
+            dd {{
                 margin-left: 20px;
                 color: #555;
-            }
-            .chart-svg {
+            }}
+            .chart-svg {{
                 margin: 20px auto;
                 text-align: center;
-            }
-            .chart-svg svg {
+            }}
+            .chart-svg svg {{
                 max-width: 100%;
                 height: auto;
-                font-variant-emoji: text;  /* Prefer text glyphs over emoji */
-            }
-            .chart-svg svg text {
-                font-variant-emoji: text;  /* Also apply to text elements */
-            }
+            }}
+            .chart-svg svg text {{
+                font-family: 'Astronomicon', 'Apple Symbols', sans-serif;
+            }}
         </style>
         """
 
@@ -418,8 +447,11 @@ class HTMLRenderer:
         text = text.replace("\n", "<br>\n")
         return f"<p>{text}</p>"
 
-    def render_report(self, sections: list[tuple[str, dict[str, Any]]],
-                     chart_svg_content: str | None = None) -> str:
+    def render_report(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        chart_svg_content: str | None = None,
+    ) -> str:
         """
         Render complete report to HTML string.
 
@@ -467,6 +499,7 @@ class PDFRenderer:
         """Initialize PDF renderer."""
         try:
             import weasyprint
+
             self.weasyprint = weasyprint
         except ImportError:
             raise ImportError(
@@ -475,9 +508,12 @@ class PDFRenderer:
 
         self.html_renderer = HTMLRenderer()
 
-    def render_report(self, sections: list[tuple[str, dict[str, Any]]],
-                     output_file: str | None = None,
-                     chart_svg_path: str | None = None) -> bytes:
+    def render_report(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        output_file: str | None = None,
+        chart_svg_path: str | None = None,
+    ) -> bytes:
         """
         Render complete report to PDF.
 
@@ -511,3 +547,433 @@ class PDFRenderer:
                 f.write(pdf_bytes)
 
         return pdf_bytes
+
+
+# Check for typst availability
+try:
+    import typst as typst_lib
+
+    TYPST_AVAILABLE = True
+except ImportError:
+    TYPST_AVAILABLE = False
+
+
+class TypstRenderer:
+    """
+    Renderer that creates beautiful PDFs using Typst typesetting.
+
+    Typst is a modern typesetting system with LaTeX-quality output
+    but much simpler syntax and faster compilation.
+
+    Requires: pip install typst
+
+    Features:
+    - Professional typography (kerning, ligatures, hyphenation)
+    - Clean table styling with alternating row colors
+    - Proper font handling for astrological symbols
+    - Embedded SVG chart support
+    - Page headers/footers with page numbers
+    """
+
+    def __init__(self) -> None:
+        """Initialize Typst renderer."""
+        if not TYPST_AVAILABLE:
+            raise ImportError(
+                "Typst library not available. Install with: pip install typst"
+            )
+
+    def render_report(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        output_file: str | None = None,
+        chart_svg_path: str | None = None,
+        title: str = "Astrological Report",
+    ) -> bytes:
+        """
+        Render complete report to PDF using Typst.
+
+        Args:
+            sections: List of (section_name, section_data) tuples
+            output_file: Optional file path to save PDF
+            chart_svg_path: Optional path to chart SVG file to embed
+            title: Report title
+
+        Returns:
+            PDF as bytes
+        """
+        import os
+        import tempfile
+
+        # Generate Typst content
+        typst_content = self._generate_typst_document(sections, chart_svg_path, title)
+
+        # Write to temp file (typst-py requires file path)
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".typ", delete=False, encoding="utf-8"
+        ) as f:
+            f.write(typst_content)
+            temp_path = f.name
+
+        try:
+            # Get font directories for custom fonts
+            base_font_dir = os.path.join(
+                os.path.dirname(
+                    os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+                ),
+                "assets",
+                "fonts",
+            )
+            # Include subdirectories for Cinzel Decorative and Crimson Pro
+            font_dirs = [
+                base_font_dir,
+                os.path.join(base_font_dir, "Cinzel_Decorative"),
+                os.path.join(base_font_dir, "Crimson_Pro"),
+                os.path.join(base_font_dir, "Crimson_Pro", "static"),  # Static weights
+            ]
+
+            # Compile to PDF
+            # Use root="/" to allow absolute paths in the document
+            # Add font_paths for all our custom fonts
+            pdf_bytes = typst_lib.compile(
+                temp_path,
+                root="/",
+                font_paths=font_dirs,
+            )
+
+            # Save to output file if requested
+            if output_file:
+                with open(output_file, "wb") as f:
+                    f.write(pdf_bytes)
+
+            return pdf_bytes
+        finally:
+            # Clean up temp file
+            os.unlink(temp_path)
+
+    def _generate_typst_document(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        chart_svg_path: str | None,
+        title: str,
+    ) -> str:
+        """Generate complete Typst document markup."""
+        parts = []
+
+        # Document setup
+        parts.append(self._get_document_preamble(title))
+
+        # Title page with chart
+        parts.append(self._render_title_page(title, chart_svg_path))
+
+        # Page break after title
+        parts.append("\n#pagebreak()\n")
+
+        # Sections
+        for section_name, section_data in sections:
+            parts.append(self._render_section(section_name, section_data))
+
+        # Footer with generation info
+        parts.append("""
+#v(1fr)
+#generated-footer
+""")
+
+        return "\n".join(parts)
+
+    def _render_title_page(self, title: str, chart_svg_path: str | None = None) -> str:
+        """Generate Typst markup for title page."""
+        parts = []
+
+        # Add breathing room at top
+        parts.append("#v(0.3in)")
+
+        # Star divider (now using the function from preamble)
+        parts.append("#star-divider")
+        parts.append("")
+
+        # Main title
+        parts.append(f"= {self._escape(title)}")
+        parts.append("")
+
+        # Star divider again
+        parts.append("#star-divider")
+        parts.append("#v(0.4in)")
+
+        # Chart wheel if provided
+        if chart_svg_path:
+            import os
+
+            abs_path = os.path.abspath(chart_svg_path)
+            parts.append(f'''
+    #align(center)[
+    #box(
+        stroke: 1.5pt + gold,
+        radius: 6pt,
+        clip: true,
+        inset: 10pt,
+        fill: white,
+        image("{abs_path}", width: 80%)
+    )
+    ]
+    ''')
+
+        # Push remaining space to bottom
+        parts.append("#v(1fr)")
+
+        return "\n".join(parts)
+
+    def _get_document_preamble(
+        self, title: str, include_title_page: bool = True
+    ) -> str:
+        """Get Typst document preamble with styling."""
+        # Note: Using regular string (not f-string) because Typst uses { } syntax
+        return """// Starlight Astrology Report
+// Generated with Typst for beautiful typography
+
+// ============================================================================
+// COLOR PALETTE - Warm mystical purple theme (matches cream undertones)
+// ============================================================================
+#let primary = rgb("#4a3353")       // Warm deep purple (more burgundy undertone)
+#let secondary = rgb("#6b4d6e")     // Warm medium purple
+#let accent = rgb("#8e6b8a")        // Warm light purple/mauve
+#let gold = rgb("#b8953d")          // Warm antique gold
+#let cream = rgb("#faf8f5")         // Warm cream background
+#let text-dark = rgb("#2d2330")     // Warm near-black
+
+// ============================================================================
+// PAGE SETUP with subtle cream background
+// ============================================================================
+#set page(
+  paper: "us-letter",
+  margin: (top: 0.75in, bottom: 0.75in, left: 0.85in, right: 0.85in),
+  fill: cream,
+  header: context {
+    if counter(page).get().first() > 1 [
+      #set text(font: "Cinzel Decorative", size: 8pt, fill: accent, tracking: 0.5pt)
+      #h(1fr)
+      Astrological Report
+      #h(1fr)
+    ]
+  },
+  footer: context {
+    set text(size: 8pt, fill: accent)
+    h(1fr)
+    counter(page).display("1 of 1", both: true)
+    h(1fr)
+  },
+)
+
+// ============================================================================
+// TYPOGRAPHY - Crimson Pro body, Cinzel Decorative headings
+// ============================================================================
+#set text(
+  font: ("Crimson Pro", "Crimson Text", "Georgia", "New Computer Modern", "Noto Sans Symbols"),
+  size: 10.5pt,
+  fill: text-dark,
+  hyphenate: true,
+)
+
+#set par(
+  justify: true,
+  leading: 0.85em,
+  first-line-indent: 0em,
+)
+
+// ============================================================================
+// HEADING STYLES - Using Cinzel Decorative for that esoteric feel
+// ============================================================================
+
+// Main title (used on title page)
+#show heading.where(level: 1): it => {
+  set text(font: "Cinzel Decorative", size: 26pt, weight: "regular", fill: primary, tracking: 2pt)
+  set par(justify: false)
+  align(center)[#it.body]
+  v(0.5em)
+}
+
+// Section headings with colored band and star symbol
+#show heading.where(level: 2): it => {
+  v(1em)
+  block(
+    width: 100%,
+    fill: primary,
+    inset: (x: 12pt, y: 8pt),
+    radius: 2pt,
+  )[
+    #set text(font: "Cinzel Decorative", size: 10pt, weight: "regular", fill: white, tracking: 0.5pt)
+    #sym.star.stroked #it.body
+  ]
+  v(0.6em)
+}
+
+// Subsection headings
+#show heading.where(level: 3): it => {
+  set text(font: "Cinzel Decorative", size: 10pt, weight: "regular", fill: secondary)
+  v(0.5em)
+  it.body
+  v(0.3em)
+  line(length: 40%, stroke: 0.5pt + accent)
+  v(0.3em)
+}
+
+// === DESIGN FLOURISHES ===
+#let star-divider = {
+  set align(center)
+  v(0.15in)
+  box(width: 65%)[
+    #grid(
+      columns: (1fr, auto, 1fr),
+      align: (right, center, left),
+      column-gutter: 10pt,
+      line(length: 100%, stroke: 0.75pt + gold),
+      text(fill: gold, size: 9pt, baseline: -1pt)[★ #h(4pt) #text(fill: primary)[☆] #h(4pt) ★],
+      line(length: 100%, stroke: 0.75pt + gold),
+    )
+  ]
+  v(0.15in)
+}
+
+#let generated-footer = {
+  v(1fr)  // pushes to bottom of available space
+  align(center)[
+    #line(length: 15%, stroke: 0.5pt + accent)
+    #v(6pt)
+    #text(font: "Cinzel Decorative", size: 7.5pt, fill: accent, tracking: 0.5pt, style: "italic")[
+      Generated with Starlight
+    ]
+    #v(3pt)
+    #text(fill: gold, size: 6pt)[#emoji.moon.crescent]
+  ]
+}
+"""
+
+    def _render_section(self, section_name: str, section_data: dict[str, Any]) -> str:
+        """Render a single section to Typst markup."""
+        data_type = section_data.get("type")
+
+        parts = [f"\n== {self._escape(section_name)}\n"]
+
+        if data_type == "table":
+            parts.append(self._render_table(section_data))
+        elif data_type == "key_value":
+            parts.append(self._render_key_value(section_data))
+        elif data_type == "text":
+            parts.append(self._render_text(section_data))
+        else:
+            parts.append(f"Unknown section type: {data_type}")
+
+        return "\n".join(parts)
+
+    def _render_table(self, data: dict[str, Any]) -> str:
+        """Convert table data to Typst table markup."""
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+
+        if not headers:
+            return ""
+
+        num_cols = len(headers)
+
+        # Start table with elegant styling matching our warm color palette
+        # Wrap in align(center) to center the table
+        lines = [
+            "#align(center)[",
+            "#table(",
+            f"  columns: {num_cols},",
+            '  stroke: (x: none, y: 0.5pt + rgb("#e0d8dc")),',
+            "  inset: (x: 14pt, y: 12pt),",
+            "  align: (col, row) => if col == 0 { left } else { center },",
+            "  fill: (col, row) => {",
+            '    if row == 0 { rgb("#4a3353") }',  # warm primary purple for header
+            '    else if calc.odd(row) { rgb("#f9f6f7") }',  # subtle warm purple tint
+            '    else { rgb("#faf8f5") }',  # cream
+            "  },",
+        ]
+
+        # Header row with white text
+        header_cells = ", ".join(
+            f'[#text(fill: white, weight: "semibold")[{self._escape(h)}]]'
+            for h in headers
+        )
+        lines.append(f"  {header_cells},")
+
+        # Data rows
+        for row in rows:
+            # Ensure row has right number of cells
+            padded_row = list(row) + [""] * (num_cols - len(row))
+            row_cells = ", ".join(
+                f"[{self._escape(str(cell))}]" for cell in padded_row[:num_cols]
+            )
+            lines.append(f"  {row_cells},")
+
+        lines.append(")")
+        lines.append("]")  # close align(center)
+
+        return "\n".join(lines)
+
+    def _render_key_value(self, data: dict[str, Any]) -> str:
+        """Convert key-value data to Typst grid markup."""
+        kv_data = data.get("data", {})
+
+        if not kv_data:
+            return ""
+
+        # Elegant key-value display with warm purple styling
+        lines = [
+            "#block(",
+            '  fill: rgb("#f9f6f7"),',  # warm purple tint
+            "  inset: 12pt,",
+            "  radius: 4pt,",
+            "  width: 100%,",
+            ")[",
+            "#grid(",
+            "  columns: (110pt, 1fr),",
+            "  gutter: 6pt,",
+            "  row-gutter: 8pt,",
+        ]
+
+        for key, value in kv_data.items():
+            lines.append(
+                f'  [#text(fill: rgb("#6b4d6e"), weight: "semibold")[{self._escape(key)}:]], [{self._escape(str(value))}],'
+            )
+
+        lines.append(")")
+        lines.append("]")
+
+        return "\n".join(lines)
+
+    def _render_text(self, data: dict[str, Any]) -> str:
+        """Convert text data to Typst paragraph."""
+        text = data.get("text", "")
+        return self._escape(text)
+
+    def _render_chart_svg(self, svg_path: str) -> str:
+        """Generate Typst markup to embed chart SVG."""
+        import os
+
+        # Make path absolute for Typst to find it
+        abs_path = os.path.abspath(svg_path)
+        return f'''
+#align(center)[
+  #box(
+    stroke: 1pt + rgb("#e2e8f0"),
+    radius: 4pt,
+    clip: true,
+    inset: 8pt,
+    image("{abs_path}", width: 90%)
+  )
+]
+#v(0.5em)
+'''
+
+    def _escape(self, text: str) -> str:
+        """Escape special Typst characters in text."""
+        # Characters that need escaping in Typst
+        # Note: # starts commands, * is bold, _ is italic, etc.
+        text = str(text)
+        # Escape backslashes first
+        text = text.replace("\\", "\\\\")
+        # Escape other special chars
+        for char in ["#", "*", "_", "@", "$", "`"]:
+            text = text.replace(char, "\\" + char)
+        return text
