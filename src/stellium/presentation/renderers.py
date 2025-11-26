@@ -488,67 +488,6 @@ class HTMLRenderer:
         return "\n".join(html_parts)
 
 
-class PDFRenderer:
-    """
-    Renderer that converts report sections to PDF using WeasyPrint.
-
-    Requires: pip install weasyprint
-    """
-
-    def __init__(self) -> None:
-        """Initialize PDF renderer."""
-        try:
-            import weasyprint
-
-            self.weasyprint = weasyprint
-        except ImportError:
-            raise ImportError(
-                "WeasyPrint not available. Install with: pip install weasyprint"
-            )
-
-        self.html_renderer = HTMLRenderer()
-
-    def render_report(
-        self,
-        sections: list[tuple[str, dict[str, Any]]],
-        output_file: str | None = None,
-        chart_svg_path: str | None = None,
-    ) -> bytes:
-        """
-        Render complete report to PDF.
-
-        Args:
-            sections: List of (section_name, section_data) tuples
-            output_file: Optional file path to save PDF
-            chart_svg_path: Optional path to chart SVG file to embed
-
-        Returns:
-            PDF as bytes
-        """
-        # Load SVG content if path provided
-        svg_content = None
-        if chart_svg_path:
-            try:
-                with open(chart_svg_path, "r") as f:
-                    svg_content = f.read()
-            except Exception as e:
-                print(f"Warning: Could not load SVG from {chart_svg_path}: {e}")
-
-        # Generate HTML
-        html_content = self.html_renderer.render_report(sections, svg_content)
-
-        # Convert HTML to PDF
-        html_doc = self.weasyprint.HTML(string=html_content)
-        pdf_bytes = html_doc.write_pdf()
-
-        # Save to file if requested
-        if output_file:
-            with open(output_file, "wb") as f:
-                f.write(pdf_bytes)
-
-        return pdf_bytes
-
-
 # Check for typst availability
 try:
     import typst as typst_lib

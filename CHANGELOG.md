@@ -266,6 +266,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Migrated 7 files to use aspect registry as single source of truth
 - Updated ReportBuilder API: consolidated `.render()` and `.to_file()` into single `.render(format, file, show)` method
 
+### Changed
+
+#### November 26, 2025
+
+- **PDF Rendering Now Uses Typst**: Changed `format="pdf"` to use Typst renderer instead of WeasyPrint
+  - Typst produces superior output with beautiful typography (Cinzel Decorative, Crimson Pro fonts)
+  - Better SVG embedding and star dividers
+  - Faster compilation and smaller file sizes
+  - WeasyPrint `_to_pdf()` method remains in codebase but is no longer used
+  - Migration: `format="typst"` → `format="pdf"` (old format string no longer needed)
+
 ### Fixed
 
 #### November 26, 2025

@@ -54,7 +54,7 @@ print(f"✓ Chart SVG saved to {SVG_PATH}")
 # ============================================================================
 # GENERATE PDF REPORT
 # ============================================================================
-print("\nGenerating PDF report with Typst...")
+print("\nGenerating PDF report...")
 report = (
     ReportBuilder()
     .from_chart(chart)
@@ -63,8 +63,9 @@ report = (
     .with_aspects(mode="major")
 )
 
-# Title will be auto-generated from the chart's name!
-report.render(format="typst", file=PDF_PATH, chart_svg_path=SVG_PATH, show=False)
+# PDF format now uses Typst by default for beautiful typography!
+# Title will be auto-generated from the chart's name.
+report.render(format="pdf", file=PDF_PATH, chart_svg_path=SVG_PATH, show=False)
 print(f"✓ PDF saved to {PDF_PATH}")
 
 print("\n" + "=" * 50)

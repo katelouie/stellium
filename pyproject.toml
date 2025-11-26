@@ -37,7 +37,7 @@ dependencies = [
     "rich>=13.9.0",
     "svgwrite>=1.4.3",
     "pyyaml",
-    "weasyprint>=62.0",
+    "typst",
 ]
 
 [project.optional-dependencies]

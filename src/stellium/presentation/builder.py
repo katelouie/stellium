@@ -277,11 +277,11 @@ class ReportBuilder:
         Render the report with flexible output options.
 
         Args:
-            format: Output format ("rich_table", "plain_table", "text", "pdf", "html", "typst")
+            format: Output format ("rich_table", "plain_table", "text", "pdf", "html")
             file: Optional filename to save to
-            show: Whether to display in terminal (default True, ignored for pdf/html/typst)
-            chart_svg_path: Optional path to chart SVG file (for pdf/html/typst formats)
-            title: Optional report title (for typst format)
+            show: Whether to display in terminal (default True, ignored for pdf/html)
+            chart_svg_path: Optional path to chart SVG file (for pdf/html formats)
+            title: Optional report title (for pdf format)
 
         Returns:
             Filename if saved to file, None otherwise
@@ -300,11 +300,8 @@ class ReportBuilder:
             # Save quietly (no terminal output)
             report.render(format="plain_table", file="chart.txt", show=False)
 
-            # Generate PDF with embedded chart (WeasyPrint)
+            # Generate beautiful PDF with Typst (uses Cinzel fonts and star dividers!)
             report.render(format="pdf", file="report.pdf", chart_svg_path="chart.svg")
-
-            # Generate beautiful PDF with Typst (recommended!)
-            report.render(format="typst", file="report.pdf", chart_svg_path="chart.svg")
 
             # Generate HTML
             report.render(format="html", file="report.html", chart_svg_path="chart.svg")
@@ -327,12 +324,8 @@ class ReportBuilder:
 
         # Save to file if requested
         if file:
-            # Handle PDF formats (binary output)
+            # Handle PDF format (binary output via Typst)
             if format == "pdf":
-                content = self._to_pdf(section_data, chart_svg_path)
-                with open(file, "wb") as f:
-                    f.write(content)
-            elif format == "typst":
                 content = self._to_typst_pdf(section_data, chart_svg_path, title)
                 with open(file, "wb") as f:
                     f.write(content)
@@ -391,24 +384,6 @@ class ReportBuilder:
         else:
             available = "rich_table, plain_table, text, pdf, html, typst"
             raise ValueError(f"Unknown format '{format}'. Available: {available}")
-
-    def _to_pdf(
-        self, section_data: list[tuple[str, dict[str, Any]]],
-        chart_svg_path: str | None = None
-    ) -> bytes:
-        """
-        Convert report to PDF bytes using WeasyPrint (internal helper).
-
-        Args:
-            section_data: List of (section_name, section_dict) tuples
-            chart_svg_path: Optional path to chart SVG to embed
-
-        Returns:
-            PDF as bytes
-        """
-        from stellium.presentation.renderers import PDFRenderer
-        renderer = PDFRenderer()
-        return renderer.render_report(section_data, chart_svg_path=chart_svg_path)
 
     def _to_typst_pdf(
         self, section_data: list[tuple[str, dict[str, Any]]],

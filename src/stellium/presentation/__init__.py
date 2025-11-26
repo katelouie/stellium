@@ -21,7 +21,7 @@ Usage:
 from stellium.core.protocols import ReportRenderer, ReportSection
 
 from .builder import ReportBuilder
-from .renderers import HTMLRenderer, PDFRenderer, PlainTextRenderer, RichTableRenderer
+from .renderers import HTMLRenderer, PlainTextRenderer, RichTableRenderer
 from .sections import (
     AspectSection,
     ChartOverviewSection,
@@ -44,5 +44,4 @@ __all__ = [
     "RichTableRenderer",
     "PlainTextRenderer",
     "HTMLRenderer",
-    "PDFRenderer",
 ]
