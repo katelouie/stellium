@@ -236,7 +236,10 @@ class ChartOverviewSection:
             data["Zodiac"] = zodiac_display
 
             # Show ayanamsa offset value for sidereal
-            if chart.zodiac_type.value == "sidereal" and chart.ayanamsa_value is not None:
+            if (
+                chart.zodiac_type.value == "sidereal"
+                and chart.ayanamsa_value is not None
+            ):
                 # Format as degrees°minutes'seconds"
                 degrees = int(chart.ayanamsa_value)
                 minutes = int((chart.ayanamsa_value % 1) * 60)
@@ -435,9 +438,7 @@ class HouseCuspsSection:
             systems_to_show = list(chart.house_systems.keys())
         else:  # "specific"
             # Show only specified systems (that exist in chart)
-            systems_to_show = [
-                s for s in self._systems if s in chart.house_systems
-            ]
+            systems_to_show = [s for s in self._systems if s in chart.house_systems]
 
         # Build headers
         headers = ["House"]
@@ -835,7 +836,9 @@ class AspectSection:
 
             # Aspect with glyph
             aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            aspect_display = (
+                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            )
 
             # Planet 2 with glyph
             name2, glyph2 = get_object_display(aspect.object2.name)
@@ -1037,4 +1040,64 @@ class MoonPhaseSection:
         return {
             "type": "key_value",
             "data": data,
+        }
+
+
+class DeclinationSection:
+    """Table of planetary declinations.
+
+    Shows:
+    - Planet name with glyph
+    - Declination value (degrees north/south of celestial equator)
+    - Direction (North/South)
+    - Out-of-bounds status
+    """
+
+    @property
+    def section_name(self) -> str:
+        return "Declinations"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """
+        Generate declination table data.
+
+        Shows declination values for all planets with equatorial coordinates.
+        Highlights out-of-bounds planets (beyond Sun's max declination).
+        """
+        headers = ["Planet", "Declination", "Direction", "Status"]
+        rows = []
+
+        # Get all planets and major points
+        all_objects = list(chart.positions)
+
+        for obj in all_objects:
+            # Skip if no declination data
+            if obj.declination is None:
+                continue
+
+            # Skip asteroids and minor points for cleaner display
+            if obj.object_type in (ObjectType.ASTEROID, ObjectType.POINT):
+                continue
+
+            display_name, glyph = get_object_display(obj.name)
+            planet_label = f"{glyph} {display_name}"
+
+            # Format declination as degrees°minutes'
+            dec_abs = abs(obj.declination)
+            degrees = int(dec_abs)
+            minutes = int((dec_abs % 1) * 60)
+            dec_str = f"{degrees}°{minutes:02d}'"
+
+            # Direction
+            direction = obj.declination_direction.title()
+
+            # Status - mark out-of-bounds planets
+            status = "OOB ⚠" if obj.is_out_of_bounds else ""
+
+            rows.append([planet_label, dec_str, direction, status])
+
+        return {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
         }

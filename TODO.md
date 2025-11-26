@@ -18,7 +18,7 @@
 - [ ] Add option to render aspect triangle aspectarian charts separately.
 - [ ] Add vedic square-type charts
 - [x] Synastry square aspect table
-- [ ] Declinations
+- [x] Declinations
 - [x] Add bi-wheel charts for Comparison charts
 - [ ] Update chart grid to take in *arbitrary wheel-only charts*
 - [x] Make aspect palettes better (more different colors, line styles)
@@ -37,9 +37,9 @@
 - [x] Add transits
 - [x] Add progressions
 - [ ] Add returns
-- [ ] Add sidereal
-- [ ] Add Vedic
-- [ ] Declinations
+- [x] Add sidereal
+- [x] Add Vedic dignities
+- [x] Declinations
 - [ ] Add more notable people and events to data registry
 - [x] Add "name" parameter to ChartBuilder, that the chart drawer then uses for chart_info in larger font on top
 

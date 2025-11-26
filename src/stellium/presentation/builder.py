@@ -15,6 +15,7 @@ from .sections import (
     AspectPatternSection,
     AspectSection,
     ChartOverviewSection,
+    DeclinationSection,
     DignitySection,
     HouseCuspsSection,
     MidpointSection,
@@ -260,6 +261,30 @@ class ReportBuilder:
     def with_moon_phase(self) -> "ReportBuilder":
         """Add moon phase section."""
         self._sections.append(MoonPhaseSection())
+        return self
+
+    def with_declinations(self) -> "ReportBuilder":
+        """
+        Add declinations table.
+
+        Shows planetary declinations (distance from celestial equator),
+        direction (north/south), and out-of-bounds status.
+
+        Out-of-bounds planets have declination beyond the Sun's maximum
+        (~23°27') and are considered to have extra intensity or unconventional
+        expression.
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_chart_overview()
+            ...     .with_declinations()
+            ...     .render())
+        """
+        self._sections.append(DeclinationSection())
         return self
 
     # -------------------------------------------------------------------------

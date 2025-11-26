@@ -105,15 +105,19 @@ class CelestialPosition:
     name: str
     object_type: ObjectType
 
-    # Positional data
+    # Ecliptic coordinates (standard zodiac system)
     longitude: float  # 0-360 degrees
-    latitude: float = 0.0
+    latitude: float = 0.0  # Ecliptic latitude (distance from ecliptic plane)
     distance: float = 0.0
 
     # Velocity data
     speed_longitude: float = 0.0
     speed_latitude: float = 0.0
     speed_distance: float = 0.0
+
+    # Equatorial coordinates (for declination aspects)
+    declination: float | None = None  # Distance from celestial equator (-90 to +90)
+    right_ascension: float | None = None  # Like longitude but measured from vernal equinox
 
     # Derived data (calculated from longitude)
     sign: str = field(init=False)
@@ -139,6 +143,32 @@ class CelestialPosition:
         degrees = int(self.sign_degree)
         minutes = int((self.sign_degree % 1) * 60)
         return f"{degrees}°{minutes:02d}' {self.sign}"
+
+    @property
+    def is_out_of_bounds(self) -> bool:
+        """Planet is beyond the Sun's maximum declination (~23°27').
+
+        Out-of-bounds planets are considered to have extra intensity,
+        unpredictability, or unconventional expression in their significations.
+
+        The Sun's declination varies between approximately +23.4367° and -23.4367°
+        (the Tropic of Cancer and Tropic of Capricorn). When a planet exceeds
+        these bounds, it's "out of bounds."
+
+        Moon, Mercury, Mars, and Venus can go out of bounds.
+        Jupiter, Saturn, and outer planets rarely or never do.
+        """
+        if self.declination is None:
+            return False
+        # Maximum solar declination (obliquity of ecliptic)
+        return abs(self.declination) > 23.4367
+
+    @property
+    def declination_direction(self) -> str:
+        """Direction of declination: 'north', 'south', or 'none'."""
+        if self.declination is None:
+            return "none"
+        return "north" if self.declination >= 0 else "south"
 
     def __str__(self) -> str:
         retro = " ℞" if self.is_retrograde else ""

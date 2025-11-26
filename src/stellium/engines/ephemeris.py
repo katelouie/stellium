@@ -260,14 +260,18 @@ class SwissEphemerisEngine:
             config: Calculation configuration (for zodiac type)
 
         Returns:
-            CelestialPosition with optional phase data
+            CelestialPosition with ecliptic AND equatorial coordinates
         """
         try:
             # Get appropriate flags for zodiac type
             flags = self._get_calculation_flags(config)
 
-            # Calculate position with appropriate flags
+            # Calculate ecliptic coordinates (for zodiac position)
             result = swe.calc_ut(julian_day, object_id, flags)
+
+            # Calculate equatorial coordinates (for declination)
+            equ_flags = flags | swe.FLG_EQUATORIAL
+            equ_result = swe.calc_ut(julian_day, object_id, equ_flags)
 
             # Calculate phase data if available
             phase_data = self._calculate_phase(julian_day, object_id, object_name)
@@ -275,12 +279,17 @@ class SwissEphemerisEngine:
             return CelestialPosition(
                 name=object_name,
                 object_type=self._get_object_type(object_name),
+                # Ecliptic coordinates
                 longitude=result[0][0],
                 latitude=result[0][1],
                 distance=result[0][2],
                 speed_longitude=result[0][3],
                 speed_latitude=result[0][4],
                 speed_distance=result[0][5],
+                # Equatorial coordinates
+                right_ascension=equ_result[0][0],
+                declination=equ_result[0][1],
+                # Phase data
                 phase=phase_data,
             )
         except swe.Error as e:
