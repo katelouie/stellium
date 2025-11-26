@@ -1556,10 +1556,13 @@ class ChartInfoLayer:
         else:
             text_anchor = "start"
 
-        # Ensure text color has sufficient contrast with background
+        # Get theme-aware text color from planets info_color
+        theme_text_color = renderer.style.get("planets", {}).get(
+            "info_color", self.style["text_color"]
+        )
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"], background_color, min_contrast=4.5
+            theme_text_color, background_color, min_contrast=4.5
         )
 
         current_y = y
@@ -1812,10 +1815,13 @@ class AspectCountsLayer:
         else:
             text_anchor = "start"
 
-        # Ensure text color has sufficient contrast with background
+        # Get theme-aware text color for header from planets info_color
+        theme_text_color = renderer.style.get("planets", {}).get(
+            "info_color", self.style["text_color"]
+        )
         background_color = renderer.style.get("background_color", "#FFFFFF")
-        text_color = adjust_color_for_contrast(
-            self.style["text_color"], background_color, min_contrast=4.5
+        header_color = adjust_color_for_contrast(
+            theme_text_color, background_color, min_contrast=4.5
         )
 
         # Render each line
@@ -1832,8 +1838,11 @@ class AspectCountsLayer:
                 self.style["title_weight"] if i == 0 else self.style["font_weight"]
             )
 
-            # Use line-specific color if available, otherwise default text color
-            fill_color = line_color if line_color else text_color
+            # Header uses theme color, aspect lines use their palette colors
+            if i == 0:
+                fill_color = header_color
+            else:
+                fill_color = line_color if line_color else header_color
 
             dwg.add(
                 dwg.text(
@@ -2014,10 +2023,13 @@ class ElementModalityTableLayer:
 
         line_height = self.style["line_height"]
 
-        # Ensure text color has sufficient contrast with background
+        # Get theme-aware text color from planets info_color
+        theme_text_color = renderer.style.get("planets", {}).get(
+            "info_color", self.style["text_color"]
+        )
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"], background_color, min_contrast=4.5
+            theme_text_color, background_color, min_contrast=4.5
         )
 
         # Header row - render each column header separately
@@ -2237,10 +2249,13 @@ class ChartShapeLayer:
         else:
             text_anchor = "start"
 
-        # Ensure text color has sufficient contrast with background
+        # Get theme-aware text color from planets info_color
+        theme_text_color = renderer.style.get("planets", {}).get(
+            "info_color", self.style["text_color"]
+        )
         background_color = renderer.style.get("background_color", "#FFFFFF")
         text_color = adjust_color_for_contrast(
-            self.style["text_color"], background_color, min_contrast=4.5
+            theme_text_color, background_color, min_contrast=4.5
         )
 
         # Render each line

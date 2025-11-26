@@ -182,12 +182,15 @@ class MoonPhaseLayer:
                     )
                     dominant_baseline = "hanging"  # Top of text aligns with y
 
-                # Ensure label color has sufficient contrast (match corner text behavior)
+                # Get theme-aware label color from planets info_color (match corner text)
                 from .palettes import adjust_color_for_contrast
 
+                theme_text_color = renderer.style.get("planets", {}).get(
+                    "info_color", self.style["label_color"]
+                )
                 background_color = renderer.style.get("background_color", "#FFFFFF")
                 label_color = adjust_color_for_contrast(
-                    self.style["label_color"], background_color, min_contrast=4.5
+                    theme_text_color, background_color, min_contrast=4.5
                 )
 
                 dwg.add(
