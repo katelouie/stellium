@@ -68,7 +68,7 @@ def readme_chart_3():
         .with_aspect_counts()
         .with_element_modality_table()
         .with_house_systems("all")
-        .with_tables()
+        .with_tables(aspectarian_detailed=True)
         .save()
     )
 

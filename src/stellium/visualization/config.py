@@ -117,6 +117,9 @@ class TableConfig:
     # Aspectarian mode (for comparison charts)
     aspectarian_mode: str = "cross_chart"  # "cross_chart", "all", "chart1", "chart2"
 
+    # Aspectarian detailed mode - show orb and applying/separating in cells
+    aspectarian_detailed: bool = False
+
     # Table spacing controls (tweakable)
     padding: int = 10
     gap_between_tables: int = 20

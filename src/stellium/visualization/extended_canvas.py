@@ -1049,13 +1049,19 @@ class AspectarianLayer:
 
     Shows aspects between all planets in a classic triangle grid format.
     Respects chart theme colors.
+
+    Supports two modes:
+    - Simple (default): Large aspect glyphs only
+    - Detailed: Smaller glyphs with orb value and A/S (applying/separating) indicator
     """
 
     DEFAULT_STYLE = {
         "text_color": "#333333",
         "header_color": "#222222",
         "grid_color": "#CCCCCC",
-        "text_size": "10px",
+        "text_size": "14px",  # Larger glyph for simple mode
+        "text_size_detailed": "11px",  # Smaller glyph for detailed mode
+        "orb_size": "6px",  # Small font for orb text
         "header_size": "10px",
         "cell_size": 24,  # Size of each grid cell
         "font_weight": "normal",
@@ -1070,6 +1076,7 @@ class AspectarianLayer:
         style_override: dict[str, Any] | None = None,
         object_types: list[str | ObjectType] | None = None,
         config: Any | None = None,
+        detailed: bool = False,
     ) -> None:
         """
         Initialize aspectarian layer.
@@ -1082,12 +1089,15 @@ class AspectarianLayer:
                          If None, uses default (planet, asteroid, point, node, angle).
                          Examples: ["planet", "asteroid", "midpoint"]
             config: Optional ChartVisualizationConfig for cell sizing, padding, etc.
+            detailed: If True, show orb and applying/separating indicator in cells.
+                     If False (default), show larger glyphs only.
         """
         self.x_offset = x_offset
         self.y_offset = y_offset
         self.style = {**self.DEFAULT_STYLE, **(style_override or {})}
         self.object_types = object_types
         self.config = config
+        self.detailed = detailed
 
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render aspectarian grid.
@@ -1404,7 +1414,11 @@ class AspectarianLayer:
         x: float,
         y: float,
     ):
-        """Helper to render the aspect glyph in a cell."""
+        """Helper to render the aspect glyph in a cell.
+
+        In simple mode (default): renders a larger glyph centered in the cell.
+        In detailed mode: renders a smaller glyph with orb and A/S indicator below.
+        """
         aspect_info = get_aspect_info(aspect.aspect_name)
 
         if aspect_info and aspect_info.glyph:
@@ -1422,15 +1436,59 @@ class AspectarianLayer:
         else:
             text_color = self.style["text_color"]
 
-        dwg.add(
-            dwg.text(
-                aspect_glyph,
-                insert=(x, y),
-                text_anchor="middle",
-                dominant_baseline="middle",
-                font_size=self.style["text_size"],
-                fill=text_color,
-                font_family=renderer.style["font_family_glyphs"],
-                font_weight=self.style["font_weight"],
+        if self.detailed:
+            # Detailed mode: smaller glyph at top, orb + A/S at bottom
+            glyph_y = y - 4  # Shift glyph up slightly
+
+            # Render smaller aspect glyph
+            dwg.add(
+                dwg.text(
+                    aspect_glyph,
+                    insert=(x, glyph_y),
+                    text_anchor="middle",
+                    dominant_baseline="middle",
+                    font_size=self.style["text_size_detailed"],
+                    fill=text_color,
+                    font_family=renderer.style["font_family_glyphs"],
+                    font_weight=self.style["font_weight"],
+                )
             )
-        )
+
+            # Build orb + A/S text
+            orb_text = f"{aspect.orb:.0f}°"
+            if aspect.is_applying is not None:
+                orb_text += "A" if aspect.is_applying else "S"
+
+            # Render orb text below glyph
+            orb_y = y + 5  # Below the glyph
+            # Get theme-aware color for orb text (use info_color like other info text)
+            orb_color = renderer.style.get("planets", {}).get(
+                "info_color", self.style["text_color"]
+            )
+
+            dwg.add(
+                dwg.text(
+                    orb_text,
+                    insert=(x, orb_y),
+                    text_anchor="middle",
+                    dominant_baseline="middle",
+                    font_size=self.style["orb_size"],
+                    fill=orb_color,
+                    font_family=renderer.style["font_family_text"],
+                    font_weight="normal",
+                )
+            )
+        else:
+            # Simple mode: larger glyph centered in cell
+            dwg.add(
+                dwg.text(
+                    aspect_glyph,
+                    insert=(x, y),
+                    text_anchor="middle",
+                    dominant_baseline="middle",
+                    font_size=self.style["text_size"],
+                    fill=text_color,
+                    font_family=renderer.style["font_family_glyphs"],
+                    font_weight=self.style["font_weight"],
+                )
+            )

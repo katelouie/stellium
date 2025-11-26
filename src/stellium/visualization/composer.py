@@ -200,5 +200,6 @@ class ChartComposer:
                 object_types=self.config.tables.object_types,
                 config=self.config,
                 style_override=extended_style,
+                detailed=self.config.tables.aspectarian_detailed,
             )
             aspectarian_layer.render(renderer, canvas, chart)

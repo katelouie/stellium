@@ -101,6 +101,7 @@ class ChartDrawBuilder:
         self._show_aspectarian: bool | None = None
         self._show_house_cusps: bool | None = None
         self._aspectarian_mode: str | None = None
+        self._aspectarian_detailed: bool | None = None
         self._table_object_types: list[str] | None = None
 
         # House systems - None = use config defaults
@@ -411,6 +412,7 @@ class ChartDrawBuilder:
         show_aspectarian: bool = True,
         show_house_cusps: bool = True,
         aspectarian_mode: str = "cross_chart",
+        aspectarian_detailed: bool = False,
         show_object_types: list[str] | None = None,
     ) -> "ChartDrawBuilder":
         """
@@ -429,6 +431,8 @@ class ChartDrawBuilder:
                 - "all": All three grids (chart1 internal, chart2 internal, cross-chart)
                 - "chart1": Only chart1 internal aspects
                 - "chart2": Only chart2 internal aspects
+            aspectarian_detailed: If True, show orb and A/S (applying/separating)
+                indicator in each cell. If False (default), show larger glyphs only.
             show_object_types: List of object types to include in tables.
                 If None, uses default (planet, asteroid, point, node, angle).
                 Examples: ["planet", "asteroid", "midpoint"]
@@ -453,6 +457,9 @@ class ChartDrawBuilder:
                 aspectarian_mode="all"  # Show all aspect grids
             )
 
+            # Detailed aspectarian with orb and applying/separating
+            builder.with_tables(position="right", aspectarian_detailed=True)
+
             # Include midpoints and Arabic parts in tables
             builder.with_tables(
                 position="right",
@@ -464,6 +471,7 @@ class ChartDrawBuilder:
         self._show_aspectarian = show_aspectarian
         self._show_house_cusps = show_house_cusps
         self._aspectarian_mode = aspectarian_mode
+        self._aspectarian_detailed = aspectarian_detailed
         self._table_object_types = show_object_types
         return self
 
@@ -711,6 +719,8 @@ class ChartDrawBuilder:
             tables_kwargs["show_aspectarian"] = self._show_aspectarian
         if self._aspectarian_mode is not None:
             tables_kwargs["aspectarian_mode"] = self._aspectarian_mode
+        if self._aspectarian_detailed is not None:
+            tables_kwargs["aspectarian_detailed"] = self._aspectarian_detailed
         if self._table_object_types is not None:
             tables_kwargs["object_types"] = self._table_object_types
 
