@@ -5,6 +5,8 @@ from pathlib import Path
 
 import swisseph as swe
 
+from stellium.core.ayanamsa import ZodiacType, get_ayanamsa
+from stellium.core.config import CalculationConfig
 from stellium.core.models import (
     CelestialPosition,
     ChartDateTime,
@@ -148,6 +150,7 @@ class SwissEphemerisEngine:
         datetime: ChartDateTime,
         location: ChartLocation,
         objects: list[str] | None = None,
+        config: CalculationConfig | None = None,
     ) -> list[CelestialPosition]:
         """
         Calculate positions using Swiss Ephemeris.
@@ -156,6 +159,7 @@ class SwissEphemerisEngine:
             datetime: When to calculate
             location: Where to calculate from
             objects: Which objects to calculate (None = all standard)
+            config: Calculation configuration (for zodiac type)
 
         Returns:
             List of CelestialPosition objects
@@ -178,6 +182,13 @@ class SwissEphemerisEngine:
                 "Mean Apogee",  # Black Moon Lilith
             ]
 
+        # Use default config if not provided
+        if config is None:
+            config = CalculationConfig()
+
+        # Set up sidereal mode if needed
+        self._setup_sidereal_mode(config)
+
         positions = []
 
         for obj_name in objects:
@@ -186,7 +197,7 @@ class SwissEphemerisEngine:
 
             obj_id = self._object_ids[obj_name]
             position = self._calculate_single_position(
-                datetime.julian_day, obj_id, obj_name
+                datetime.julian_day, obj_id, obj_name, config
             )
             positions.append(position)
 
@@ -205,9 +216,39 @@ class SwissEphemerisEngine:
 
         return positions
 
+    def _setup_sidereal_mode(self, config: CalculationConfig) -> None:
+        """Set up sidereal mode if needed.
+
+        Args:
+            config: Calculation configuration
+        """
+        if config.zodiac_type == ZodiacType.SIDEREAL:
+            if config.ayanamsa is None:
+                raise ValueError("Ayanamsa must be specified for sidereal calculations")
+            ayanamsa_info = get_ayanamsa(config.ayanamsa)
+            swe.set_sid_mode(ayanamsa_info.swe_constant)
+
+    def _get_calculation_flags(self, config: CalculationConfig) -> int:
+        """Get Swiss Ephemeris flags based on configuration.
+
+        Args:
+            config: Calculation configuration
+
+        Returns:
+            Flags for swe.calc_ut()
+        """
+        # Base flags: use Swiss Ephemeris data and calculate speeds
+        flags = swe.FLG_SWIEPH | swe.FLG_SPEED
+
+        # Add sidereal flag if using sidereal zodiac
+        if config.zodiac_type == ZodiacType.SIDEREAL:
+            flags |= swe.FLG_SIDEREAL
+
+        return flags
+
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_single_position(
-        self, julian_day: float, object_id: int, object_name: str
+        self, julian_day: float, object_id: int, object_name: str, config: CalculationConfig
     ) -> CelestialPosition:
         """
         Calculate position for a single object (cached).
@@ -216,12 +257,17 @@ class SwissEphemerisEngine:
             julian_day: Julian day number
             object_id: Swiss Ephemeris object ID
             object_name: Name of the object
+            config: Calculation configuration (for zodiac type)
 
         Returns:
             CelestialPosition with optional phase data
         """
         try:
-            result = swe.calc_ut(julian_day, object_id)
+            # Get appropriate flags for zodiac type
+            flags = self._get_calculation_flags(config)
+
+            # Calculate position with appropriate flags
+            result = swe.calc_ut(julian_day, object_id, flags)
 
             # Calculate phase data if available
             phase_data = self._calculate_phase(julian_day, object_id, object_name)

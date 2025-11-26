@@ -10,6 +10,7 @@ import datetime as dt
 import pytz
 import swisseph as swe
 
+from stellium.core.ayanamsa import ZodiacType
 from stellium.core.config import CalculationConfig
 from stellium.core.models import (
     CalculatedChart,
@@ -259,6 +260,72 @@ class ChartBuilder:
         self._config = config
         return self
 
+    def with_sidereal(self, ayanamsa: str = "lahiri") -> "ChartBuilder":
+        """
+        Use sidereal zodiac for calculations.
+
+        The sidereal zodiac is based on fixed star positions, unlike the tropical
+        zodiac which is based on the seasons. Different ayanamsa systems represent
+        different methods of calculating the offset between tropical and sidereal.
+
+        Args:
+            ayanamsa: The ayanamsa system to use. Common options:
+                - "lahiri" (default) - Indian government standard, most common for Vedic
+                - "fagan_bradley" - Primary Western sidereal
+                - "raman" - B.V. Raman's system, popular in South India
+                - "krishnamurti" - Used in KP system
+                - "yukteshwar" - Sri Yukteshwar's system
+                See stellium.core.ayanamsa.list_ayanamsas() for all options
+
+        Returns:
+            Self for method chaining
+
+        Example:
+            >>> # Vedic-style chart with Lahiri ayanamsa
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_sidereal("lahiri")
+            ...     .calculate())
+            >>>
+            >>> # Western sidereal with Fagan-Bradley
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_sidereal("fagan_bradley")
+            ...     .calculate())
+        """
+        self._config.zodiac_type = ZodiacType.SIDEREAL
+        self._config.ayanamsa = ayanamsa
+        return self
+
+    def with_tropical(self) -> "ChartBuilder":
+        """
+        Use tropical zodiac for calculations (default).
+
+        The tropical zodiac is based on the seasons, with 0° Aries aligned
+        to the March equinox. This is the standard system used in Western
+        astrology.
+
+        This method is included for explicitness - tropical is already the
+        default, so you only need to call this if you want to override a
+        previous .with_sidereal() call.
+
+        Returns:
+            Self for method chaining
+
+        Example:
+            >>> # Explicit tropical (same as default)
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_tropical()
+            ...     .calculate())
+            >>>
+            >>> # Override previous sidereal setting
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_sidereal("lahiri")
+            ...     .with_tropical()  # Back to tropical
+            ...     .calculate())
+        """
+        self._config.zodiac_type = ZodiacType.TROPICAL
+        self._config.ayanamsa = None
+        return self
+
     def add_component(self, component: ChartComponent) -> "ChartBuilder":
         """Add an additional calculation component (e.g. ArabicParts)."""
         self._components.append(component)
@@ -331,7 +398,7 @@ class ChartBuilder:
         # Step 1: Calculate planetary positions
         objects_to_calculate = self._get_objects_list()
         positions = self._ephemeris.calculate_positions(
-            self._datetime, self._location, objects_to_calculate
+            self._datetime, self._location, objects_to_calculate, self._config
         )
 
         # Step 2: Calculate all house systems AND angles
@@ -344,7 +411,7 @@ class ChartBuilder:
                 continue  # Avoid duplicate calculations
 
             # Call the efficient protocol method
-            cusps, angles = engine.calculate_house_data(self._datetime, self._location)
+            cusps, angles = engine.calculate_house_data(self._datetime, self._location, self._config)
 
             house_systems_map[system_name] = cusps
 
@@ -426,6 +493,15 @@ class ChartBuilder:
         if self._name is not None:
             final_metadata["name"] = self._name
 
+        # Calculate ayanamsa value if sidereal
+        ayanamsa_value = None
+        if self._config.zodiac_type == ZodiacType.SIDEREAL:
+            from stellium.core.ayanamsa import get_ayanamsa_value
+            ayanamsa_value = get_ayanamsa_value(
+                self._datetime.julian_day,
+                self._config.ayanamsa  # type: ignore  # Already validated in config.__post_init__
+            )
+
         # Step 7: Build final chart
         return CalculatedChart(
             datetime=self._datetime,
@@ -435,6 +511,9 @@ class ChartBuilder:
             house_placements=house_placements_map,
             aspects=tuple(aspects),
             metadata=final_metadata,
+            zodiac_type=self._config.zodiac_type,
+            ayanamsa=self._config.ayanamsa,
+            ayanamsa_value=ayanamsa_value,
         )
 
     def _calculate_unknown_time_chart(self) -> UnknownTimeChart:

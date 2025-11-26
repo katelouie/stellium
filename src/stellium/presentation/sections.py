@@ -226,6 +226,23 @@ class ChartOverviewSection:
         house_systems = ", ".join(chart.house_systems.keys())
         data["House System"] = house_systems
 
+        # Zodiac system
+        if chart.zodiac_type:
+            zodiac_display = chart.zodiac_type.value.title()  # "Tropical" or "Sidereal"
+            if chart.zodiac_type.value == "sidereal" and chart.ayanamsa:
+                # Show ayanamsa name for sidereal
+                ayanamsa_display = chart.ayanamsa.replace("_", " ").title()
+                zodiac_display = f"{zodiac_display} ({ayanamsa_display})"
+            data["Zodiac"] = zodiac_display
+
+            # Show ayanamsa offset value for sidereal
+            if chart.zodiac_type.value == "sidereal" and chart.ayanamsa_value is not None:
+                # Format as degrees°minutes'seconds"
+                degrees = int(chart.ayanamsa_value)
+                minutes = int((chart.ayanamsa_value % 1) * 60)
+                seconds = int(((chart.ayanamsa_value % 1) * 60 % 1) * 60)
+                data["Ayanamsa"] = f"{degrees}°{minutes:02d}'{seconds:02d}\""
+
         # Sect (if available in metadata)
         if "dignities" in chart.metadata:
             sect = chart.metadata["dignities"].get("sect", "unknown")

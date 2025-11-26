@@ -4,6 +4,8 @@ from dataclasses import replace
 
 import swisseph as swe
 
+from stellium.core.ayanamsa import ZodiacType, get_ayanamsa
+from stellium.core.config import CalculationConfig
 from stellium.core.models import (
     CelestialPosition,
     ChartDateTime,
@@ -47,12 +49,59 @@ class SwissHouseSystemBase:
     def system_name(self) -> str:
         return "BaseClass"
 
+    def _setup_sidereal_mode(self, config: CalculationConfig | None) -> None:
+        """Set up sidereal mode if needed.
+
+        Args:
+            config: Calculation configuration (None = use tropical)
+        """
+        if config and config.zodiac_type == ZodiacType.SIDEREAL:
+            if config.ayanamsa is None:
+                raise ValueError("Ayanamsa must be specified for sidereal calculations")
+            ayanamsa_info = get_ayanamsa(config.ayanamsa)
+            swe.set_sid_mode(ayanamsa_info.swe_constant)
+
+    def _get_calculation_flags(self, config: CalculationConfig | None) -> int:
+        """Get Swiss Ephemeris flags based on configuration.
+
+        Args:
+            config: Calculation configuration (None = use tropical)
+
+        Returns:
+            Flags for swe.houses_ex()
+        """
+        flags = 0  # Default for tropical
+
+        if config and config.zodiac_type == ZodiacType.SIDEREAL:
+            flags = swe.FLG_SIDEREAL
+
+        return flags
+
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_swiss_houses(
-        self, julian_day: float, latitude: float, longitude: float, system_code: bytes
+        self, julian_day: float, latitude: float, longitude: float, system_code: bytes,
+        config: CalculationConfig | None = None
     ) -> tuple:
-        """Cached Swiss Ephemeris house calculation."""
-        return swe.houses(julian_day, latitude, longitude, hsys=system_code)
+        """Cached Swiss Ephemeris house calculation.
+
+        Args:
+            julian_day: Julian day number
+            latitude: Geographic latitude
+            longitude: Geographic longitude
+            system_code: House system code (e.g., b"P" for Placidus)
+            config: Calculation configuration (for zodiac type)
+
+        Returns:
+            Tuple of (cusps, angles) from Swiss Ephemeris
+        """
+        # Set up sidereal mode if needed
+        self._setup_sidereal_mode(config)
+
+        # Get appropriate flags
+        flags = self._get_calculation_flags(config)
+
+        # Use houses_ex for sidereal support
+        return swe.houses_ex(julian_day, latitude, longitude, hsys=system_code, flags=flags)
 
     def assign_houses(
         self, positions: list[CelestialPosition], cusps: HouseCusps
@@ -85,15 +134,26 @@ class SwissHouseSystemBase:
         return 1  # fallback
 
     def calculate_house_data(
-        self, datetime: ChartDateTime, location: ChartLocation
+        self, datetime: ChartDateTime, location: ChartLocation,
+        config: CalculationConfig | None = None
     ) -> tuple[HouseCusps, list[CelestialPosition]]:
-        """Calculate house system's house cusps and chart angles."""
+        """Calculate house system's house cusps and chart angles.
+
+        Args:
+            datetime: Chart datetime
+            location: Chart location
+            config: Calculation configuration (for zodiac type)
+
+        Returns:
+            Tuple of (house cusps, angle positions)
+        """
         # Cusps
         cusps_list, angles_list = self._calculate_swiss_houses(
             datetime.julian_day,
             location.latitude,
             location.longitude,
             HOUSE_SYSTEM_CODES[self.system_name],
+            config,
         )
         cusps = HouseCusps(system=self.system_name, cusps=tuple(cusps_list))
 

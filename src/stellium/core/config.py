@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass, field
 
+from stellium.core.ayanamsa import ZodiacType
+
 
 @dataclass
 class AspectConfig:
@@ -56,6 +58,16 @@ class CalculationConfig:
         default_factory=lambda: ["Mean Apogee"]  # Black Moon Lilith by default
     )
     include_asteroids: list[str] = field(default_factory=list)  # Default empty
+
+    # Zodiac system configuration
+    zodiac_type: ZodiacType = ZodiacType.TROPICAL
+    ayanamsa: str | None = None  # Only used if zodiac_type is SIDEREAL
+
+    def __post_init__(self) -> None:
+        """Validate configuration after initialization."""
+        # Set default ayanamsa if sidereal but none specified
+        if self.zodiac_type == ZodiacType.SIDEREAL and self.ayanamsa is None:
+            object.__setattr__(self, "ayanamsa", "lahiri")  # Default to Lahiri
 
     @classmethod
     def minimal(cls) -> "CalculationConfig":

@@ -9,6 +9,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Sidereal Zodiac Support (November 26, 2025)
+
+- **Full Sidereal Zodiac System**: Stellium now supports both tropical (Western) and sidereal (Vedic) zodiac calculations
+  - **Ayanamsa Registry**: Support for 9 common ayanamsa systems (Lahiri, Fagan-Bradley, Raman, Krishnamurti, Yukteshwar, J.N. Bhasin, True Chitrapaksha, True Revati, De Luce)
+  - **ZodiacType Enum**: Clean distinction between `TROPICAL` and `SIDEREAL` zodiac types
+  - **Smart Defaults**: Tropical is default, sidereal automatically uses Lahiri if no ayanamsa specified
+
+- **ChartBuilder API**: New fluent methods for zodiac selection
+  - `.with_sidereal(ayanamsa="lahiri")` - Calculate chart using sidereal zodiac with specified ayanamsa
+  - `.with_tropical()` - Explicitly use tropical zodiac (default behavior, useful for overriding)
+  - Examples: `.with_sidereal("fagan_bradley")`, `.with_sidereal("raman")`
+  - Comprehensive docstrings with usage examples for all ayanamsa systems
+
+- **Chart Metadata**: CalculatedChart now tracks zodiac system information
+  - `zodiac_type` - ZodiacType enum (TROPICAL or SIDEREAL)
+  - `ayanamsa` - Name of ayanamsa system used (e.g., "lahiri", "fagan_bradley")
+  - `ayanamsa_value` - Actual ayanamsa offset in degrees at chart time (e.g., 24.123°)
+  - Enables future tropical vs sidereal biwheel comparisons of same native
+
+- **Report Display**: ChartOverviewSection shows zodiac system information
+  - Displays zodiac type: "Tropical" or "Sidereal (Lahiri)"
+  - Shows ayanamsa offset for sidereal charts: "Ayanamsa: 24°07'48""
+  - Formatted as degrees°minutes'seconds" for readability
+
+- **Ayanamsa Utilities**: Helper functions for working with ayanamsa systems
+  - `get_ayanamsa(name)` - Get AyanamsaInfo by name (case-insensitive)
+  - `get_ayanamsa_value(julian_day, ayanamsa)` - Calculate offset for specific date
+  - `list_ayanamsas()` - Get all available ayanamsa names
+  - AyanamsaInfo dataclass with name, Swiss Ephemeris constant, description, and tradition
+
+### Changed
+
+- **SwissEphemerisEngine**: Updated to support sidereal calculations
+  - Now accepts `CalculationConfig` parameter in `calculate_positions()`
+  - Sets sidereal mode via `swe.set_sid_mode()` when config specifies sidereal
+  - Adds `FLG_SIDEREAL` flag to Swiss Ephemeris calculations automatically
+  - All longitude values returned are already sidereal-adjusted (no post-processing needed)
+
+- **House Calculations**: Migrated from `swe.houses()` to `swe.houses_ex()` for sidereal support
+  - All house system engines (Placidus, Whole Sign, Koch, etc.) now use `houses_ex()` with flags
+  - Accepts `CalculationConfig` parameter in `calculate_house_data()`
+  - Properly sets sidereal mode and flags for house cusp calculations
+  - Backwards compatible - tropical calculations unchanged
+
+- **CalculationConfig**: Extended with zodiac system fields
+  - Added `zodiac_type: ZodiacType = ZodiacType.TROPICAL` (default)
+  - Added `ayanamsa: str | None = None` (only used for sidereal)
+  - Smart `__post_init__` validation: defaults to "lahiri" if sidereal but no ayanamsa specified
+
+### Technical Notes
+
+- **No Breaking Changes**: All existing tropical calculations work unchanged (tropical is default)
+- **Data Flow**: Sidereal positions flow through aspect/midpoint calculations unchanged (angular separation is zodiac-agnostic)
+- **Future-Ready**: Architecture supports tropical vs sidereal biwheel comparisons (validation to be implemented)
+- **Swiss Ephemeris Integration**: Clean integration with pyswisseph global state management
+- **Thread Safety**: Sidereal mode set before each calculation batch (global state concern acknowledged)
+
+## [0.2.0] - 2025-11-26
+
+### Added
+
 #### Report Section Enhancements (November 26, 2025)
 
 - **Multi-House System Planet Positions**: `PlanetPositionSection` now shows house placements for ALL calculated house systems

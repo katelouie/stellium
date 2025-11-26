@@ -342,6 +342,11 @@ class CalculatedChart:
     aspects: tuple[Aspect, ...] = ()
     metadata: dict[str, Any] = field(default_factory=dict)
 
+    # Zodiac system metadata
+    zodiac_type: Any = None  # ZodiacType | None (avoiding circular import)
+    ayanamsa: str | None = None  # Only set if zodiac_type is SIDEREAL
+    ayanamsa_value: float | None = None  # Actual ayanamsa offset in degrees at chart time
+
     # Metadata
     calculation_timestamp: dt.datetime = field(
         default_factory=lambda: dt.datetime.now(dt.UTC)
