@@ -18,6 +18,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Info corner displays all rendered house systems (e.g., "Placidus, Whole Sign")
 - Supports rendering 2+ house systems with automatic color cycling for additional overlays
 
+#### Aspect Line Style Preservation (November 25, 2025)
+
+- Fixed aspect line dash patterns being lost when using themes other than Classic
+- Added `build_aspect_styles_from_palette()` helper that merges palette colors with registry line styles
+- All themes now use this helper to preserve ASPECT_REGISTRY's `dash_pattern` and `line_width` metadata
+- Themes only override colors, not line styles (solid for major aspects, dashed patterns for minors)
+
 #### Unknown Birth Time Charts (November 25, 2025)
 
 - Added `UnknownTimeChart` model for charts with known date but unknown birth time

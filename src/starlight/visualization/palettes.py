@@ -680,6 +680,40 @@ def get_aspect_palette_colors(palette: AspectPalette) -> dict[str, str]:
         return get_aspect_palette_colors(AspectPalette.CLASSIC)
 
 
+def build_aspect_styles_from_palette(palette: AspectPalette | str) -> dict[str, dict]:
+    """
+    Build complete aspect styling dict with palette colors + registry line styles.
+
+    This merges palette colors with the ASPECT_REGISTRY's line_width and dash_pattern,
+    ensuring themes only change colors while preserving the registry's line styling.
+
+    Args:
+        palette: The aspect palette to use for colors
+
+    Returns:
+        Dictionary mapping aspect names to style dicts with "color", "width", "dash" keys
+    """
+    from starlight.core.registry import ASPECT_REGISTRY
+
+    # Get colors from palette
+    if isinstance(palette, str):
+        palette = AspectPalette(palette)
+    colors = get_aspect_palette_colors(palette)
+
+    # Build styles using registry metadata for width/dash
+    styles = {}
+    for aspect_info in ASPECT_REGISTRY.values():
+        if aspect_info.category in ["Major", "Minor"]:
+            color = colors.get(aspect_info.name, aspect_info.color)
+            styles[aspect_info.name] = {
+                "color": color,
+                "width": aspect_info.metadata.get("line_width", 1.5),
+                "dash": aspect_info.metadata.get("dash_pattern", "1,0"),
+            }
+
+    return styles
+
+
 def get_aspect_palette_description(palette: AspectPalette) -> str:
     """
     Get a human-readable description of an aspect palette.

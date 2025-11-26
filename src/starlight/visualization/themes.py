@@ -14,6 +14,7 @@ from .palettes import (
     AspectPalette,
     PlanetGlyphPalette,
     ZodiacPalette,
+    build_aspect_styles_from_palette,
     get_aspect_palette_colors,
 )
 
@@ -283,11 +284,7 @@ def _get_dark_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#95E1D3",  # Cyan for outer wheel
         },
         "aspects": {
-            "Conjunction": {"color": "#FFD700", "width": 2.0, "dash": "1,0"},
-            "Opposition": {"color": "#FF6B6B", "width": 1.5, "dash": "1,0"},
-            "Trine": {"color": "#4ECDC4", "width": 1.5, "dash": "1,0"},
-            "Square": {"color": "#FF6B9D", "width": 1.5, "dash": "1,0"},
-            "Sextile": {"color": "#95E1D3", "width": 1.2, "dash": "1,0"},
+            **build_aspect_styles_from_palette(AspectPalette.DARK),
             "default": {"color": "#666666", "width": 0.5, "dash": "2,2"},
             "line_color": "#555555",
             "background_color": "#1E1E1E",
@@ -340,11 +337,7 @@ def _get_midnight_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#87CEEB",  # Sky blue for outer wheel
         },
         "aspects": {
-            "Conjunction": {"color": "#FFD700", "width": 2.0, "dash": "1,0"},
-            "Opposition": {"color": "#87CEEB", "width": 1.5, "dash": "1,0"},
-            "Trine": {"color": "#98D8E8", "width": 1.5, "dash": "1,0"},
-            "Square": {"color": "#B0C4DE", "width": 1.5, "dash": "1,0"},
-            "Sextile": {"color": "#ADD8E6", "width": 1.2, "dash": "1,0"},
+            **build_aspect_styles_from_palette(AspectPalette.MIDNIGHT),
             "default": {"color": "#4A6FA5", "width": 0.5, "dash": "2,2"},
             "line_color": "#3A5A7C",
             "background_color": "#0A1628",
@@ -397,11 +390,7 @@ def _get_neon_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#39FF14",  # Neon green for outer wheel
         },
         "aspects": {
-            "Conjunction": {"color": "#FFFF00", "width": 2.5, "dash": "1,0"},
-            "Opposition": {"color": "#FF00FF", "width": 2.0, "dash": "1,0"},
-            "Trine": {"color": "#00FFFF", "width": 2.0, "dash": "1,0"},
-            "Square": {"color": "#FF1493", "width": 2.0, "dash": "1,0"},
-            "Sextile": {"color": "#39FF14", "width": 1.5, "dash": "1,0"},
+            **build_aspect_styles_from_palette(AspectPalette.NEON),
             "default": {"color": "#00FF88", "width": 0.8, "dash": "2,2"},
             "line_color": "#00FFFF",
             "background_color": "#0D0D0D",
@@ -454,11 +443,7 @@ def _get_sepia_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#8B7355",  # Lighter brown for outer wheel
         },
         "aspects": {
-            "Conjunction": {"color": "#8B4513", "width": 2.0, "dash": "1,0"},
-            "Opposition": {"color": "#A0522D", "width": 1.5, "dash": "1,0"},
-            "Trine": {"color": "#9B7653", "width": 1.5, "dash": "1,0"},
-            "Square": {"color": "#8B7355", "width": 1.5, "dash": "1,0"},
-            "Sextile": {"color": "#A68B6B", "width": 1.2, "dash": "1,0"},
+            **build_aspect_styles_from_palette(AspectPalette.SEPIA),
             "default": {"color": "#C4A582", "width": 0.5, "dash": "2,2"},
             "line_color": "#A68B6B",
             "background_color": "#F4ECD8",
@@ -511,11 +496,7 @@ def _get_pastel_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#B4A7D6",  # Soft lavender for outer wheel
         },
         "aspects": {
-            "Conjunction": {"color": "#FFD4A3", "width": 2.0, "dash": "1,0"},
-            "Opposition": {"color": "#FFB3BA", "width": 1.5, "dash": "1,0"},
-            "Trine": {"color": "#BAE1FF", "width": 1.5, "dash": "1,0"},
-            "Square": {"color": "#FFDFBA", "width": 1.5, "dash": "1,0"},
-            "Sextile": {"color": "#BAFFC9", "width": 1.2, "dash": "1,0"},
+            **build_aspect_styles_from_palette(AspectPalette.PASTEL),
             "default": {"color": "#E0E0E0", "width": 0.5, "dash": "2,2"},
             "line_color": "#D4D4D4",
             "background_color": "#FAFAFA",
@@ -568,11 +549,7 @@ def _get_celestial_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#DA70D6",  # Orchid for outer wheel
         },
         "aspects": {
-            "Conjunction": {"color": "#FFD700", "width": 2.0, "dash": "1,0"},
-            "Opposition": {"color": "#DA70D6", "width": 1.5, "dash": "1,0"},
-            "Trine": {"color": "#9370DB", "width": 1.5, "dash": "1,0"},
-            "Square": {"color": "#BA55D3", "width": 1.5, "dash": "1,0"},
-            "Sextile": {"color": "#DDA0DD", "width": 1.2, "dash": "1,0"},
+            **build_aspect_styles_from_palette(AspectPalette.CELESTIAL),
             "default": {"color": "#7B5FAF", "width": 0.5, "dash": "2,2"},
             "line_color": "#6B4FA3",
             "background_color": "#1A0F2E",
@@ -587,7 +564,6 @@ def _get_celestial_theme() -> dict[str, Any]:
 
 def _get_viridis_theme() -> dict[str, Any]:
     """Viridis theme - perceptually uniform purple→green→yellow palette."""
-    aspect_colors = get_aspect_palette_colors(AspectPalette.VIRIDIS)
     return {
         "background_color": "#1C1C1C",
         "border_color": "#414487",
@@ -631,10 +607,7 @@ def _get_viridis_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#414487",  # Purple for outer wheel (viridis low end)
         },
         "aspects": {
-            **{
-                name: {"color": color, "width": 1.5, "dash": "1,0"}
-                for name, color in aspect_colors.items()
-            },
+            **build_aspect_styles_from_palette(AspectPalette.VIRIDIS),
             "default": {"color": "#414487", "width": 0.5, "dash": "2,2"},
             "line_color": "#2A788E",
             "background_color": "#1C1C1C",
@@ -644,7 +617,6 @@ def _get_viridis_theme() -> dict[str, Any]:
 
 def _get_plasma_theme() -> dict[str, Any]:
     """Plasma theme - vibrant blue→purple→orange→yellow palette."""
-    aspect_colors = get_aspect_palette_colors(AspectPalette.PLASMA)
     return {
         "background_color": "#0D0887",
         "border_color": "#6A00A8",
@@ -688,10 +660,7 @@ def _get_plasma_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#B12A90",  # Deep magenta for outer wheel
         },
         "aspects": {
-            **{
-                name: {"color": color, "width": 1.5, "dash": "1,0"}
-                for name, color in aspect_colors.items()
-            },
+            **build_aspect_styles_from_palette(AspectPalette.PLASMA),
             "default": {"color": "#8F0DA4", "width": 0.5, "dash": "2,2"},
             "line_color": "#B12A90",
             "background_color": "#0D0887",
@@ -701,7 +670,6 @@ def _get_plasma_theme() -> dict[str, Any]:
 
 def _get_inferno_theme() -> dict[str, Any]:
     """Inferno theme - dramatic black→red→orange→yellow palette."""
-    aspect_colors = get_aspect_palette_colors(AspectPalette.INFERNO)
     return {
         "background_color": "#000004",
         "border_color": "#781C6D",
@@ -745,10 +713,7 @@ def _get_inferno_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#A52C60",  # Deep red for outer wheel
         },
         "aspects": {
-            **{
-                name: {"color": color, "width": 1.5, "dash": "1,0"}
-                for name, color in aspect_colors.items()
-            },
+            **build_aspect_styles_from_palette(AspectPalette.INFERNO),
             "default": {"color": "#781C6D", "width": 0.5, "dash": "2,2"},
             "line_color": "#A52C60",
             "background_color": "#000004",
@@ -758,7 +723,6 @@ def _get_inferno_theme() -> dict[str, Any]:
 
 def _get_magma_theme() -> dict[str, Any]:
     """Magma theme - subtle black→purple→pink→yellow palette."""
-    aspect_colors = get_aspect_palette_colors(AspectPalette.MAGMA)
     return {
         "background_color": "#000004",
         "border_color": "#5F187F",
@@ -802,10 +766,7 @@ def _get_magma_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#7B2382",  # Deep purple for outer wheel
         },
         "aspects": {
-            **{
-                name: {"color": color, "width": 1.5, "dash": "1,0"}
-                for name, color in aspect_colors.items()
-            },
+            **build_aspect_styles_from_palette(AspectPalette.MAGMA),
             "default": {"color": "#5F187F", "width": 0.5, "dash": "2,2"},
             "line_color": "#7B2382",
             "background_color": "#000004",
@@ -815,7 +776,6 @@ def _get_magma_theme() -> dict[str, Any]:
 
 def _get_cividis_theme() -> dict[str, Any]:
     """Cividis theme - CVD-optimized blue→yellow palette."""
-    aspect_colors = get_aspect_palette_colors(AspectPalette.CIVIDIS)
     return {
         "background_color": "#00204C",
         "border_color": "#25567B",
@@ -859,10 +819,7 @@ def _get_cividis_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#4E6B7C",  # Blue-grey for outer wheel
         },
         "aspects": {
-            **{
-                name: {"color": color, "width": 1.5, "dash": "1,0"}
-                for name, color in aspect_colors.items()
-            },
+            **build_aspect_styles_from_palette(AspectPalette.CIVIDIS),
             "default": {"color": "#4E6B7C", "width": 0.5, "dash": "2,2"},
             "line_color": "#73807D",
             "background_color": "#00204C",
@@ -872,7 +829,6 @@ def _get_cividis_theme() -> dict[str, Any]:
 
 def _get_turbo_theme() -> dict[str, Any]:
     """Turbo theme - Google's improved rainbow palette."""
-    aspect_colors = get_aspect_palette_colors(AspectPalette.TURBO)
     return {
         "background_color": "#1A1A2E",
         "border_color": "#4662D7",
@@ -916,10 +872,7 @@ def _get_turbo_theme() -> dict[str, Any]:
             "outer_wheel_planet_color": "#1AE4B6",  # Turquoise for outer wheel
         },
         "aspects": {
-            **{
-                name: {"color": color, "width": 1.5, "dash": "1,0"}
-                for name, color in aspect_colors.items()
-            },
+            **build_aspect_styles_from_palette(AspectPalette.TURBO),
             "default": {"color": "#4662D7", "width": 0.5, "dash": "2,2"},
             "line_color": "#1AE4B6",
             "background_color": "#1A1A2E",
