@@ -39,6 +39,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `list_ayanamsas()` - Get all available ayanamsa names
   - AyanamsaInfo dataclass with name, Swiss Ephemeris constant, description, and tradition
 
+#### Notables Database
+
+- Added ~200 births to the database of varying quality
+
 ### Changed
 
 - **SwissEphemerisEngine**: Updated to support sidereal calculations

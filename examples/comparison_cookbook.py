@@ -268,9 +268,7 @@ def example_7_current_transits():
 
     print(f"Transit aspects found: {len(transits.cross_aspects)}")
     print("\nTransits to natal Sun:")
-    sun_transits = [
-        asp for asp in transits.cross_aspects if asp.object1.name == "Sun"
-    ]
+    sun_transits = [asp for asp in transits.cross_aspects if asp.object1.name == "Sun"]
     for asp in sun_transits[:5]:
         applying = "applying" if asp.is_applying else "separating"
         print(
@@ -535,11 +533,11 @@ def main():
 
     # --- Part 3: Transit Charts ---
     example_7_current_transits()
-    # example_8_transit_with_tight_orbs()
+    example_8_transit_with_tight_orbs()
 
     # --- Part 4: Advanced Configuration ---
-    # example_9_custom_aspect_types()
-    # example_10_no_house_overlays()
+    example_9_custom_aspect_types()
+    example_10_no_house_overlays()
 
     # --- Part 5: Reports ---
     example_11_synastry_pdf_report()

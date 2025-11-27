@@ -19,7 +19,7 @@ import os
 from pathlib import Path
 
 from stellium import ChartBuilder
-from stellium.engines import PlacidusHouses, WholeSignHouses, KochHouses
+from stellium.engines import KochHouses, PlacidusHouses, WholeSignHouses
 
 # Output directory for generated charts
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -179,7 +179,7 @@ def example_7_theme_matched_palettes():
     """
     section_header("Example 7: Theme-Matched Palettes")
 
-    chart = ChartBuilder.from_notable("Wolfgang Mozart").with_aspects().calculate()
+    chart = ChartBuilder.from_notable("Mozart").with_aspects().calculate()
 
     combos = [
         ("dark", "rainbow_dark"),
@@ -208,7 +208,11 @@ def example_8_chart_info():
     """
     section_header("Example 8: Chart Info")
 
-    chart = ChartBuilder.from_notable("Queen Victoria").with_aspects().calculate()
+    chart = (
+        ChartBuilder.from_notable("Queen of the United Kingdom Victoria")
+        .with_aspects()
+        .calculate()
+    )
 
     positions = ["top-left", "top-right", "bottom-left", "bottom-right"]
 
@@ -226,7 +230,9 @@ def example_9_moon_phase():
     """
     section_header("Example 9: Moon Phase")
 
-    chart = ChartBuilder.from_notable("Princess Diana").with_aspects().calculate()
+    chart = (
+        ChartBuilder.from_notable("Princess of Wales Diana").with_aspects().calculate()
+    )
 
     # Moon phase with label
     with_label = OUTPUT_DIR / "09_moon_labeled.svg"
@@ -388,7 +394,7 @@ def example_16_selective_tables():
 
     # Only aspectarian, no positions
     asp_only = OUTPUT_DIR / "16_aspectarian_only.svg"
-    chart.draw(str(asp_only)).with_tables(show_positions=False).save()
+    chart.draw(str(asp_only)).with_tables(show_position_table=False).save()
     print(f"Created: {asp_only}")
 
 
@@ -576,7 +582,7 @@ def main():
 
     # --- Part 5: Multiple House Systems ---
     example_11_multi_house()
-    # example_12_three_house_systems()
+    example_12_three_house_systems()
 
     # --- Part 6: Tables ---
     example_13_tables_right()

@@ -240,7 +240,7 @@ def example_8_aspect_focused():
     """
     section_header("Example 8: Aspect-Focused Report")
 
-    chart = ChartBuilder.from_notable("Wolfgang Mozart").with_aspects().calculate()
+    chart = ChartBuilder.from_notable("Mozart").with_aspects().calculate()
 
     output_file = OUTPUT_DIR / "mozart_aspects.pdf"
     svg_path = OUTPUT_DIR / "mozart_chart.svg"
@@ -569,7 +569,7 @@ def main():
     # --- Part 1: Basic Reports (Terminal) ---
     example_1_minimal_terminal()
     example_2_standard_terminal()
-    # example_3_detailed_terminal()
+    example_3_detailed_terminal()
 
     # --- Part 2: PDF Reports ---
     example_4_basic_pdf()
@@ -577,21 +577,21 @@ def main():
     example_6_full_pdf()
 
     # --- Part 3: Custom Reports ---
-    # example_7_custom_sections()
-    # example_8_aspect_focused()
-    # example_9_positions_only()
+    example_7_custom_sections()
+    example_8_aspect_focused()
+    example_9_positions_only()
 
     # --- Part 4: Comparison Reports ---
     example_10_synastry_report()
-    # example_11_transit_report()
-    # example_12_custom_synastry()
+    example_11_transit_report()
+    example_12_custom_synastry()
 
     # --- Part 5: Output Formats ---
-    # example_13_plain_text()
-    # example_14_save_and_display()
+    example_13_plain_text()
+    example_14_save_and_display()
 
     # --- Part 6: Batch Processing ---
-    # example_15_batch_reports()
+    example_15_batch_reports()
 
     print("\n" + "=" * 60)
     print("  COOKBOOK COMPLETE")
