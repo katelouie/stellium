@@ -737,7 +737,7 @@ class TypstRenderer:
 
         # Star divider again
         parts.append("#star-divider")
-        parts.append("#v(0.4in)")
+        parts.append("#v(0.2in)")
 
         # Chart wheel if provided
         if chart_svg_path:
