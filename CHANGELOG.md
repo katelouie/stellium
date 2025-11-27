@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Edge cases: negative age, fractional age, large ages
 
 Example usage:
+
 ```python
 from stellium import ComparisonBuilder, ChartBuilder
 
@@ -110,6 +111,7 @@ for aspect in prog.cross_aspects:
 - **Returns Cookbook** (`examples/returns_cookbook.py`): 14 comprehensive examples demonstrating all return types, configurations, and precision verification
 
 Example usage:
+
 ```python
 from stellium import ReturnBuilder, ChartBuilder
 
@@ -243,6 +245,8 @@ sr_tokyo = ReturnBuilder.solar(natal, 2025, location="Tokyo, Japan").calculate()
   - Added `zodiac_type: ZodiacType = ZodiacType.TROPICAL` (default)
   - Added `ayanamsa: str | None = None` (only used for sidereal)
   - Smart `__post_init__` validation: defaults to "lahiri" if sidereal but no ayanamsa specified
+
+- Removed get_stats() (cache) call from metadata for every chart calculate() -- this was causing massive slowdowns because it was scanning the entire cache file collection EVERY time. Now considerably faster to make charts.
 
 ### Technical Notes
 
