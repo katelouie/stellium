@@ -361,8 +361,6 @@ def example_11_transit_report():
     transit_chart = (
         ChartBuilder.from_details(
             transit_time,
-            natal.location.latitude,
-            natal.location.longitude,
             natal.location.name,
         )
         .with_aspects()

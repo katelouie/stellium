@@ -40,8 +40,10 @@
 - [x] Add sidereal
 - [x] Add Vedic dignities
 - [x] Declinations
-- [ ] Add more notable people and events to data registry
+- [x] Add more notable people and events to data registry
 - [x] Add "name" parameter to ChartBuilder, that the chart drawer then uses for chart_info in larger font on top
+- [ ] Add fixed stars
+- [ ] Add progressions to ComparisonChart
 
 ### Fixes
 
@@ -56,4 +58,4 @@
 
 ## Testing
 
-- [ ] Look at coverage report and add more tests...
+- [x] Look at coverage report and add more tests...

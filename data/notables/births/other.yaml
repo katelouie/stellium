@@ -597,29 +597,28 @@
   verified: true
 - name: Wassily Kandinsky
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
+  year: 1866
+  month: 12
+  day: 16  # Gregorian (Dec 4 Julian)
+  hour: 6
   minute: 0
-  latitude: 5.75
+  latitude: 55.75
   longitude: 37.5833
-  location_name: Moscow, Russian Federation, 5
-  timezone: null
+  location_name: Moscow, Russia
+  timezone: Europe/Moscow
   category: artist
   subcategories:
-  - 1866 births
-  - Birthday 4 December
-  - Birthplace Moscow, RU
-  - Sun 24 Sagittarius
-  - Moon 5 Aries
-  notable_for: Russian artist, an expressionist painter, who in the years immediately
-    preceding World War I, completed an amazing transformation of art  in a crucial
-    period of 20th century culture, and made abstract
-  astrological_notes: Sun SagittariusMoon, Moon Scorpio, Asc Scorpio1944
-  data_quality: C
+    - Painter
+    - Expressionist
+    - Abstract Art Pioneer
+  notable_for: >-
+    Russian artist and expressionist painter who helped lay the foundations for
+    abstract art in Munich before World War I. One of the pioneers of abstraction
+    in western art. Founded the influential Blue Rider group.
+  astrological_notes: Sun 24 Sagittarius, Moon 5 Aries
+  data_quality: C  # Conflicting data regarding calendar conversion
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Kandinsky,_Wassily'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Kandinsky,_Wassily"
   verified: false
 - name: Jackson Pollock
   event_type: birth
@@ -1766,29 +1765,28 @@
   verified: true
 - name: Fyodor Dostoevsky
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
-  minute: 0
-  latitude: 5.75
+  year: 1821
+  month: 11
+  day: 11  # Gregorian (Oct 30 Julian)
+  hour: 9
+  minute: 47
+  latitude: 55.75
   longitude: 37.5833
-  location_name: Moscow, Russian Federation, 5
-  timezone: null
+  location_name: Moscow, Russia
+  timezone: Europe/Moscow
   category: writer
   subcategories:
-  - 1821 births
-  - Birthday 30 October
-  - Birthplace Moscow, RU
-  - Sun 18 Scorpio
-  - Moon 10 Gemini
-  notable_for: Russian writer, one of Russia's greatest novelists.  His works include
-    "Crime and Punishment," 1866 and "The Brothers Karamazov," 1880.  Born to a physician
-    in Moscow, he went to army engineering coll
-  astrological_notes: Sun ScorpioMoon, Moon GeminiAsc, Asc Sagittarius1881
+    - Novelist
+    - Philosopher
+    - Essayist
+  notable_for: >-
+    Russian writer, one of Russia's greatest novelists. His works include
+    "Crime and Punishment" (1866), "The Idiot" (1869), and "The Brothers Karamazov"
+    (1880). Major influence on 20th century literature and philosophy.
+  astrological_notes: Sun 18 Scorpio, Moon 10 Gemini, Asc Sagittarius
   data_quality: C
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Dostoevsky,_Fyodor'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Dostoevsky,_Fyodor"
   verified: false
 - name: Emily Dickinson
   event_type: birth
@@ -2204,55 +2202,57 @@
   verified: true
 - name: Isaac Newton
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
-  minute: 0
-  latitude: 82.55
-  longitude: -62.5
-  location_name: Woolsthorpe Manor, England, 5
-  timezone: null
+  year: 1643
+  month: 1
+  day: 4  # Gregorian (Dec 25, 1642 Julian)
+  hour: 1
+  minute: 38
+  latitude: 52.8055
+  longitude: -0.6378
+  location_name: Woolsthorpe Manor, Lincolnshire, England
+  timezone: Europe/London
   category: scientist
   subcategories:
-  - 1642 births
-  - Birthday 25 December
-  - Birthplace Woolsthorpe Manor, ENG (UK)
-  - Sun 13 Capricorn
-  - Moon 2 Cancer
-  notable_for: British astronomer, physicist, mathematician and astrologer who showed
-    how the universe is held together. Newton is often described as one of the greatest
-    names in the history of human thought.  Biogr
-  astrological_notes: Sun CapricornMoon, Moon CancerAsc, Asc Libra1727
-  data_quality: C
+    - Mathematician
+    - Physicist
+    - Astronomer
+    - Astrologer
+  notable_for: >-
+    British astronomer, physicist, mathematician and astrologer who showed
+    how the universe is held together through laws of motion and gravity.
+    Often described as one of the greatest names in the history of human thought.
+    Author of "Principia Mathematica" (1687).
+  astrological_notes: Sun 13 Capricorn, Moon 2 Cancer, Asc Libra
+  data_quality: B  # "an hour or two after midnight"
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Newton,_Isaac'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Newton,_Isaac"
+    - "Michael White, Isaac Newton: The Last Sorcerer (1997)"
   verified: false
+
 - name: Nikola Tesla
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
-  minute: 0
-  latitude: 4.5833
+  year: 1856
+  month: 7
+  day: 10
+  hour: 0
+  minute: 0  # Midnight
+  latitude: 44.5833
   longitude: 15.3167
-  location_name: Smiljan, Croatia, 4
-  timezone: null
-  category: notable
+  location_name: Smiljan, Croatia
+  timezone: Europe/Zagreb
+  category: scientist
   subcategories:
-  - 1856 births
-  - Birthday 28 June
-  - Birthplace Smiljan, HRV
-  - Sun 17 Cancer
-  - Moon 14 Libra
-  notable_for: Serbian-American inventor and engineer who was a master of electricity
-    at a time when it was changing American life.  He is the unsung creator of the
-    electric age, without whom our radio, auto ignitio
-  astrological_notes: Sun CancerMoon, Moon LibraAsc, Asc Taurus1943
+    - Inventor
+    - Engineer
+    - Physicist
+  notable_for: >-
+    Serbian-American inventor and engineer who was a master of electricity
+    at a time when it was changing American life. Creator of AC electrical
+    systems, the Tesla coil, and pioneered wireless communication.
+  astrological_notes: Sun 17 Cancer, Moon 14 Libra, Asc Taurus
   data_quality: B
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Tesla,_Nikola'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Tesla,_Nikola"
   verified: false
 - name: Marie Curie
   event_type: birth
@@ -2308,55 +2308,55 @@
   verified: true
 - name: Johannes Kepler
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
-  minute: 0
-  latitude: 8.75
+  year: 1571
+  month: 12
+  day: 27  # Julian calendar
+  hour: 14
+  minute: 30
+  latitude: 48.75
   longitude: 8.8667
-  location_name: Weil der Stadt, GER, 4
-  timezone: null
+  location_name: Weil der Stadt, Germany
+  timezone: Europe/Berlin
   category: scientist
   subcategories:
-  - 1571 births
-  - Birthday 27 December
-  - Birthplace Weil der Stadt, GER
-  - Sun 15 Capricorn
-  - Moon 4 Gemini
-  notable_for: German author, mathematician, scientist, astronomer, court astrologer
-    and teacher.  Known as "the father of modern astronomy," he discovered the three
-    laws of planetary motion which paved the way a ha
-  astrological_notes: Sun CapricornMoon, Moon GeminiAsc, Asc Gemini1630
-  data_quality: B
+    - Mathematician
+    - Astronomer
+    - Astrologer
+  notable_for: >-
+    German author, mathematician, scientist, astronomer, court astrologer
+    and teacher. Known as "the father of modern astronomy," he discovered
+    the three laws of planetary motion which paved the way for Newton's
+    theory of gravity.
+  astrological_notes: Sun 15 Capricorn, Moon 4 Gemini, Asc Gemini
+  data_quality: B  # Kepler rectified his own time to 2:30 PM
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Kepler,_Johannes'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Kepler,_Johannes"
   verified: false
+
 - name: Nicolaus Copernicus
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
+  year: 1473
+  month: 2
+  day: 19  # Julian calendar
+  hour: 17
   minute: 0
-  latitude: 3.0333
+  latitude: 53.0333
   longitude: 18.5833
-  location_name: Torun, Poland, 5
-  timezone: null
+  location_name: Torun, Poland
+  timezone: Europe/Warsaw
   category: scientist
   subcategories:
-  - 1473 births
-  - Birthday 19 February
-  - Birthplace Torun, POL
-  - Sun 10 Pisces
-  - Moon 5 Sagittarius
-  notable_for: Polish astronomer and author, considered the founder of modern astronomy.  He
+    - Astronomer
+    - Mathematician
+    - Author
+  notable_for: >-
+    Polish astronomer and author, considered the founder of modern astronomy. He
     established the theory that the earth rotates daily on its axis and that planets
-    revolve in orbits around the sun.  Copern
-  astrological_notes: Sun PiscesMoon, Moon SagittariusAsc, Asc Virgo1543
-  data_quality: AA
+    revolve in orbits around the sun. Author of "De revolutionibus orbium coelestium."
+  astrological_notes: Sun 10 Pisces, Moon 5 Sagittarius, Asc Virgo
+  data_quality: AA  # "astrologers present at his birth"
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Copernicus,_Nicolaus'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Copernicus,_Nicolaus"
   verified: true
 - name: Ada Lovelace
   event_type: birth
@@ -2651,10 +2651,10 @@
   day: 9
   hour: 4
   minute: 30
-  latitude: 93.0333
-  longitude: 34.6333
-  location_name: Paris Arrondissement 6, France, 4
-  timezone: null
+  latitude: 48.85
+  longitude: 2.3333
+  location_name: Paris, France
+  timezone: Europe/Paris
   category: politician
   subcategories:
   - 1908 births
@@ -3248,10 +3248,10 @@
   day: 26
   hour: 7
   minute: 30
-  latitude: 97.65
-  longitude: 159.1667
-  location_name: Shaoshanchong (Hunan), China, 2
-  timezone: null
+  latitude: 27.9167
+  longitude: 112.4833
+  location_name: Shaoshan, Hunan, China
+  timezone: Asia/Shanghai
   category: politician
   subcategories:
   - 1893 births
@@ -3995,29 +3995,29 @@
   verified: false
 - name: William Lilly
   event_type: birth
-  year: null
-  month: null
-  day: null
-  hour: 12
+  year: 1602
+  month: 5
+  day: 1  # Julian calendar (May 11 Gregorian)
+  hour: 2
   minute: 0
-  latitude: 2.8333
+  latitude: 52.8333
   longitude: -1.2667
-  location_name: Diseworth, England, 5
-  timezone: null
-  category: occultist
+  location_name: Diseworth, Leicestershire, England
+  timezone: Europe/London
+  category: astrologer
   subcategories:
-  - 1602 births
-  - Birthday 1 May
-  - Birthplace Diseworth, ENG (UK)
-  - Sun 19 Taurus
-  - Moon 14 Capricorn
-  notable_for: British astrologer and author.  He studied astrology with Ashmole and
-    published books of prediction from 1633.  The author of "Christian Astrology,"
-    1647, "A Guide for Astrologers," 1676 and an autobi
-  astrological_notes: Sun TaurusMoon, Moon CapricornAsc, Asc Pisces1681
-  data_quality: A
+    - Astrologer
+    - Author
+    - Occultist
+  notable_for: >-
+    British astrologer and author, the most famous astrologer of the 17th century.
+    Author of "Christian Astrology" (1647), the first major astrological textbook
+    in English. Predicted the Great Fire of London 14 years before it happened.
+  astrological_notes: Sun 19 Taurus, Moon 14 Capricorn, Asc Pisces
+  data_quality: A  # Gadbury gives 2:00 AM
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William'
+    - "AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William"
+    - "Gadbury's Collection of Nativities (1661)"
   verified: true
 - name: Dion Fortune
   event_type: birth
@@ -4328,3 +4328,428 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Simpson,_O.J.'
   verified: true
+
+# ============================================================================
+# Added for cookbook examples - November 2025
+# ============================================================================
+
+- name: John Lennon
+  event_type: birth
+  year: 1940
+  month: 10
+  day: 9
+  hour: 18
+  minute: 30
+  latitude: 53.4167
+  longitude: -2.9167
+  location_name: Liverpool, England
+  timezone: Europe/London
+  category: musician
+  subcategories:
+    - Singer
+    - Songwriter
+    - Peace Activist
+  notable_for: >-
+    British singer, songwriter and peace activist, founding member of The Beatles.
+    Wrote iconic songs including "Imagine," "Give Peace a Chance," and numerous
+    Beatles classics. Assassinated in New York City in 1980.
+  astrological_notes: Sun 16 Libra, Moon 3 Aquarius
+  data_quality: DD  # Conflicting times - 6:30 PM vs 7:00 AM
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Lennon,_John"
+  verified: false
+
+- name: Yoko Ono
+  event_type: birth
+  year: 1933
+  month: 2
+  day: 18
+  hour: 20
+  minute: 30
+  latitude: 35.7
+  longitude: 139.7667
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: artist
+  subcategories:
+    - Conceptual Artist
+    - Musician
+    - Peace Activist
+  notable_for: >-
+    Japanese conceptual artist, musician, designer, composer, poet and performer.
+    Became widely known through her marriage to John Lennon of The Beatles.
+    Pioneer of conceptual and performance art.
+  astrological_notes: Sun 29 Aquarius, Moon in Sagittarius
+  data_quality: A  # From memory
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Ono,_Yoko"
+  verified: false
+
+- name: Paul McCartney
+  event_type: birth
+  year: 1942
+  month: 6
+  day: 18
+  hour: 14
+  minute: 0
+  latitude: 53.4167
+  longitude: -2.9167
+  location_name: Liverpool, England
+  timezone: Europe/London
+  category: musician
+  subcategories:
+    - Singer
+    - Songwriter
+    - Multi-instrumentalist
+  notable_for: >-
+    British singer, songwriter and multi-instrumentalist, founding member of
+    The Beatles. One of the most successful composers in pop music history.
+    Knighted in 1997 for services to music.
+  astrological_notes: Sun 27 Gemini, Moon in Leo
+  data_quality: A  # From Linda McCartney
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/McCartney,_Paul"
+  verified: false
+
+- name: Brad Pitt
+  event_type: birth
+  year: 1963
+  month: 12
+  day: 18
+  hour: 6
+  minute: 31
+  latitude: 35.3333
+  longitude: -96.9333
+  location_name: Shawnee, Oklahoma, USA
+  timezone: America/Chicago
+  category: actor
+  subcategories:
+    - Actor
+    - Producer
+    - Film Star
+  notable_for: >-
+    American actor and film producer. Won Academy Award for Best Supporting Actor
+    for "Once Upon a Time in Hollywood" (2019). Known for films like "Fight Club,"
+    "Troy," and "Ocean's Eleven."
+  astrological_notes: Sun 26 Sagittarius, Moon in Capricorn
+  data_quality: A  # From memory, confirmed by birth notice
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Pitt,_Brad"
+  verified: false
+
+- name: Angelina Jolie
+  event_type: birth
+  year: 1975
+  month: 6
+  day: 4
+  hour: 9
+  minute: 9
+  latitude: 34.0922
+  longitude: -118.2944
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: actor
+  subcategories:
+    - Actor
+    - Filmmaker
+    - Humanitarian
+  notable_for: >-
+    American actress, filmmaker and humanitarian. Won Academy Award for Best
+    Supporting Actress for "Girl, Interrupted" (1999). UNHCR Special Envoy
+    and noted humanitarian.
+  astrological_notes: Sun 13 Gemini, Moon 13 Aries, Asc 28 Cancer
+  data_quality: AA  # From birth certificate
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Jolie,_Angelina"
+  verified: true
+
+- name: Barack Obama
+  event_type: birth
+  year: 1961
+  month: 8
+  day: 4
+  hour: 19
+  minute: 24
+  latitude: 21.3
+  longitude: -157.8667
+  location_name: Honolulu, Hawaii, USA
+  timezone: Pacific/Honolulu
+  category: politician
+  subcategories:
+    - U.S. President
+    - Lawyer
+    - Author
+  notable_for: >-
+    44th President of the United States (2009-2017), first African American
+    to hold the office. Won Nobel Peace Prize in 2009. Previously served as
+    U.S. Senator from Illinois.
+  astrological_notes: Sun 12 Leo, Moon 3 Gemini
+  data_quality: AA  # From birth certificate
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Obama,_Barack"
+  verified: true
+
+- name: Michelle Obama
+  event_type: birth
+  year: 1964
+  month: 1
+  day: 17
+  hour: 12
+  minute: 0  # Time unknown - using noon
+  latitude: 41.85
+  longitude: -87.65
+  location_name: Chicago, Illinois, USA
+  timezone: America/Chicago
+  category: public figure
+  subcategories:
+    - First Lady
+    - Lawyer
+    - Author
+  notable_for: >-
+    American attorney, author and former First Lady of the United States
+    (2009-2017). Founded the Let's Move! initiative. Her memoir "Becoming"
+    became a bestseller.
+  astrological_notes: Sun 26 Capricorn
+  data_quality: X  # No birth time available
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Obama,_Michelle"
+  verified: false
+
+- name: Prince William
+  event_type: birth
+  year: 1982
+  month: 6
+  day: 21
+  hour: 21
+  minute: 3
+  latitude: 51.5167
+  longitude: -0.175
+  location_name: Paddington, London, England
+  timezone: Europe/London
+  category: royalty
+  subcategories:
+    - Prince of Wales
+    - Royal
+    - Philanthropist
+  notable_for: >-
+    Prince of Wales and heir apparent to the British throne. Elder son of
+    King Charles III and Diana, Princess of Wales. Founder of charitable
+    initiatives including The Royal Foundation.
+  astrological_notes: Sun 0 Cancer, Moon in Cancer
+  data_quality: AA  # Published in The London Gazette
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/William,_Prince_of_Wales"
+    - "The London Gazette, 21 June 1982, p. 8215"
+  verified: true
+
+- name: Kate Middleton
+  event_type: birth
+  year: 1982
+  month: 1
+  day: 9
+  hour: 19
+  minute: 0
+  latitude: 51.4542
+  longitude: -0.9731
+  location_name: Reading, Berkshire, England
+  timezone: Europe/London
+  category: royalty
+  subcategories:
+    - Princess of Wales
+    - Royal
+    - Philanthropist
+  notable_for: >-
+    Catherine, Princess of Wales. Wife of William, Prince of Wales.
+    Patron of numerous charitable organizations focusing on children's
+    welfare, mental health and the arts.
+  astrological_notes: Sun 19 Capricorn
+  data_quality: C  # From astrologer commissioned for wedding gift
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Catherine,_Duchess_of_Cambridge"
+  verified: false
+
+- name: Queen Elizabeth II
+  event_type: birth
+  year: 1926
+  month: 4
+  day: 21
+  hour: 2
+  minute: 40
+  latitude: 51.5086
+  longitude: -0.1439
+  location_name: Mayfair, London, England
+  timezone: Europe/London
+  category: royalty
+  subcategories:
+    - Queen
+    - Head of State
+    - Monarch
+  notable_for: >-
+    Queen of the United Kingdom from 1952 to 2022. Longest-reigning British
+    monarch (70 years). Oversaw significant changes in British society and
+    the transformation of the British Empire into the Commonwealth.
+  astrological_notes: Sun 0 Taurus, Moon 12 Leo, Asc 21 Capricorn
+  data_quality: AA  # Published in The Times
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom"
+    - "The Times [London], 22 April 1926, p. 14"
+  verified: true
+
+- name: Richard Burton
+  event_type: birth
+  year: 1925
+  month: 11
+  day: 10
+  hour: 15
+  minute: 0
+  latitude: 51.6333
+  longitude: -3.7333
+  location_name: Pontrhydyfen, Wales
+  timezone: Europe/London
+  category: actor
+  subcategories:
+    - Actor
+    - Stage Actor
+    - Film Star
+  notable_for: >-
+    Welsh actor renowned for his Shakespearean performances and film roles.
+    Seven-time Academy Award nominee. Famous for his tumultuous relationship
+    with Elizabeth Taylor, whom he married twice.
+  astrological_notes: Sun 17 Scorpio
+  data_quality: DD  # Conflicting times
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Burton,_Richard_(1925)"
+  verified: false
+
+- name: Thomas Edison
+  event_type: birth
+  year: 1847
+  month: 2
+  day: 11
+  hour: 3
+  minute: 0
+  latitude: 41.2978
+  longitude: -82.6208
+  location_name: Milan, Ohio, USA
+  timezone: America/New_York
+  category: inventor
+  subcategories:
+    - Inventor
+    - Businessman
+    - Engineer
+  notable_for: >-
+    American inventor and businessman who developed many devices including
+    the phonograph, motion picture camera, and practical electric light bulb.
+    Held over 1,000 patents.
+  astrological_notes: Sun 22 Aquarius
+  data_quality: C  # Multiple conflicting times
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Edison,_Thomas"
+    - "Alfred Powell Morgan, The Pageant of Electricity (1939)"
+  verified: false
+
+- name: Michelangelo
+  event_type: birth
+  year: 1475
+  month: 3
+  day: 6  # Julian calendar
+  hour: 1
+  minute: 45
+  latitude: 43.6389
+  longitude: 11.9875
+  location_name: Caprese Michelangelo, Italy
+  timezone: Europe/Rome
+  category: artist
+  subcategories:
+    - Sculptor
+    - Painter
+    - Architect
+    - Poet
+  notable_for: >-
+    Italian sculptor, painter, architect and poet of the High Renaissance.
+    Created the ceiling of the Sistine Chapel, the statue of David, and
+    the Pietà. Considered one of the greatest artists of all time.
+  astrological_notes: Sun 25 Pisces (Julian)
+  data_quality: B  # Father's record "4 to 5 hours before day"
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Michelangelo"
+    - "A. Gotti, Vita di Michelangelo"
+  verified: false
+
+- name: Galileo Galilei
+  event_type: birth
+  year: 1564
+  month: 2
+  day: 15  # Julian calendar
+  hour: 16
+  minute: 0
+  latitude: 43.7167
+  longitude: 10.4
+  location_name: Pisa, Italy
+  timezone: Europe/Rome
+  category: scientist
+  subcategories:
+    - Astronomer
+    - Physicist
+    - Mathematician
+  notable_for: >-
+    Italian astronomer, physicist and mathematician. Known as the "father of
+    modern observational astronomy." Improved the telescope and made key
+    astronomical observations supporting heliocentrism.
+  astrological_notes: Sun 6 Pisces (Julian)
+  data_quality: B  # Horoscopes in his own hand
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Galileo,_Galilei"
+    - "N.M. Swerdlow, Journal for the History of Astronomy"
+  verified: false
+
+- name: Vincent van Gogh
+  event_type: birth
+  year: 1853
+  month: 3
+  day: 30
+  hour: 11
+  minute: 0
+  latitude: 51.4667
+  longitude: 4.8667
+  location_name: Groot-Zundert, Netherlands
+  timezone: Europe/Amsterdam
+  category: artist
+  subcategories:
+    - Painter
+    - Post-Impressionist
+  notable_for: >-
+    Dutch Post-Impressionist painter, one of the most famous and influential
+    figures in Western art history. Created over 2,100 artworks including
+    "The Starry Night" and "Sunflowers."
+  astrological_notes: Sun 9 Aries
+  data_quality: A  # From birth certificate
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Van_Gogh,_Vincent"
+  verified: true
+
+- name: Wolfgang Mozart
+  event_type: birth
+  year: 1756
+  month: 1
+  day: 27
+  hour: 20
+  minute: 0
+  latitude: 47.8
+  longitude: 13.0333
+  location_name: Salzburg, Austria
+  timezone: Europe/Vienna
+  category: musician
+  subcategories:
+    - Composer
+    - Pianist
+    - Child Prodigy
+  notable_for: >-
+    Austrian composer widely regarded as among the greatest in Western music
+    history. Child prodigy who composed over 600 works including symphonies,
+    operas, and chamber music.
+  astrological_notes: Sun 7 Aquarius
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus"
+  verified: false
