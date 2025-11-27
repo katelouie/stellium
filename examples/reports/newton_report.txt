@@ -1,0 +1,95 @@
+
+Chart Overview
+==============
+        Name: Isaac Newton
+        Date: January 04, 1643
+        Time: 01:38 AM
+    Timezone: Europe/London
+    Location: Woolsthorpe Manor, Lincolnshire, England
+ Coordinates: 52.8055°, -0.6378°
+House System: Placidus
+      Zodiac: Tropical
+
+
+Planet Positions
+================
+| Planet              | Position              | House (Pl) |
+|---------------------|-----------------------|------------|
+| ☉ Sun               | ♑︎ Capricorn 13°40'   | 3          |
+| ☽ Moon              | ♋︎ Cancer 2°26'       | 9          |
+| ☿ Mercury           | ♐︎ Sagittarius 20°56' | 2          |
+| ♀ Venus             | ♒︎ Aquarius 27°11'    | 4          |
+| ♂ Mars              | ♉︎ Taurus 7°31'       | 7          |
+| ♃ Jupiter           | ♓︎ Pisces 14°07'      | 5          |
+| ♄ Saturn            | ♓︎ Pisces 19°53'      | 5          |
+| ♅ Uranus            | ♏︎ Scorpio 15°39'     | 1          |
+| ♆ Neptune           | ♐︎ Sagittarius 0°57'  | 2          |
+| ♇ Pluto             | ♊︎ Gemini 2°35'       | 8          |
+| ☊ North Node        | ♎︎ Libra 9°26'        | 12         |
+| ☋ South Node        | ♈︎ Aries 9°26'        | 6          |
+| ⚸ Black Moon Lilith | ♌︎ Leo 17°36'         | 10         |
+| 🜊 Vertex            | ♉︎ Taurus 24°53'      | 8          |
+| ⚷ Chiron            | ♊︎ Gemini 8°28'       | 8          |
+
+
+Major Aspects
+=============
+| Planet 1            | Aspect        | Planet 2            | Orb   | Applying |
+|---------------------|---------------|---------------------|-------|----------|
+| ☉ Sun               | ⚹ Sextile     | ♃ Jupiter           | 0.45° | A→       |
+| ⚷ Chiron            | △ Trine       | ☊ North Node        | 0.97° | A→       |
+| ⚷ Chiron            | ⚹ Sextile     | ☋ South Node        | 0.97° | ←S       |
+| ☿ Mercury           | □ Square      | ♄ Saturn            | 1.05° | ←S       |
+| ♀ Venus             | △ Trine       | ASC                 | 1.38° | —        |
+| ♅ Uranus            | △ Trine       | ♃ Jupiter           | 1.54° | A→       |
+| ♆ Neptune           | ☍ Opposition  | ♇ Pluto             | 1.63° | A→       |
+| ♅ Uranus            | □ Square      | ⚸ Black Moon Lilith | 1.94° | ←S       |
+| ☉ Sun               | ⚹ Sextile     | ♅ Uranus            | 1.99° | A→       |
+| ♀ Venus             | □ Square      | 🜊 Vertex            | 2.30° | —        |
+| ♇ Pluto             | ⚹ Sextile     | MC                  | 2.41° | —        |
+| ♂ Mars              | □ Square      | MC                  | 2.51° | —        |
+| ☿ Mercury           | △ Trine       | ⚸ Black Moon Lilith | 3.33° | ←S       |
+| ⚷ Chiron            | ⚹ Sextile     | MC                  | 3.46° | —        |
+| ♀ Venus             | □ Square      | ♆ Neptune           | 3.77° | A→       |
+| ♆ Neptune           | △ Trine       | MC                  | 4.04° | —        |
+| ♅ Uranus            | △ Trine       | ♄ Saturn            | 4.23° | ←S       |
+| ☉ Sun               | □ Square      | ☋ South Node        | 4.24° | ←S       |
+| ☉ Sun               | □ Square      | ☊ North Node        | 4.24° | ←S       |
+| ☊ North Node        | ⚹ Sextile     | MC                  | 4.44° | —        |
+| ☋ South Node        | △ Trine       | MC                  | 4.44° | —        |
+| ☿ Mercury           | ⚹ Sextile     | ASC                 | 4.89° | —        |
+| ♄ Saturn            | ⚹ Sextile     | 🜊 Vertex            | 5.01° | —        |
+| ☽ Moon              | ⚹ Sextile     | ♂ Mars              | 5.08° | A→       |
+| ☽ Moon              | △ Trine       | ♀ Venus             | 5.24° | ←S       |
+| ♀ Venus             | □ Square      | ♇ Pluto             | 5.40° | A→       |
+| ⚷ Chiron            | □ Square      | ♃ Jupiter           | 5.66° | ←S       |
+| ♃ Jupiter           | ☌ Conjunction | ♄ Saturn            | 5.76° | A→       |
+| ⚷ Chiron            | ☌ Conjunction | ♇ Pluto             | 5.87° | A→       |
+| ♆ Neptune           | ☍ Opposition  | 🜊 Vertex            | 6.07° | —        |
+| ☉ Sun               | △ Trine       | ♂ Mars              | 6.16° | ←S       |
+| ☽ Moon              | △ Trine       | ASC                 | 6.62° | —        |
+| ☿ Mercury           | □ Square      | ♃ Jupiter           | 6.81° | ←S       |
+| ☊ North Node        | △ Trine       | ♇ Pluto             | 6.84° | A→       |
+| ☽ Moon              | □ Square      | ☊ North Node        | 7.00° | A→       |
+| ☽ Moon              | □ Square      | ☋ South Node        | 7.00° | A→       |
+| ⚸ Black Moon Lilith | □ Square      | 🜊 Vertex            | 7.29° | —        |
+| ⚷ Chiron            | ☍ Opposition  | ♆ Neptune           | 7.50° | A→       |
+| ♇ Pluto             | ☌ Conjunction | 🜊 Vertex            | 7.70° | —        |
+
+
+House Cusps
+===========
+| House | Cusp (Pl)  |
+|-------|------------|
+| 1     | 25° ♎︎ 49' |
+| 2     | 22° ♏︎ 26' |
+| 3     | 26° ♐︎ 06' |
+| 4     | 5° ♒︎ 00'  |
+| 5     | 9° ♓︎ 22'  |
+| 6     | 5° ♈︎ 48'  |
+| 7     | 25° ♈︎ 49' |
+| 8     | 22° ♉︎ 26' |
+| 9     | 26° ♊︎ 06' |
+| 10    | 5° ♌︎ 00'  |
+| 11    | 9° ♍︎ 22'  |
+| 12    | 5° ♎︎ 48'  |
