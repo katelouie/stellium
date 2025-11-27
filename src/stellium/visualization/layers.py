@@ -42,15 +42,17 @@ class HeaderLayer:
     - Biwheel: Two-column layout with chart1 info left-aligned, chart2 right-aligned
     - Synthesis: "Composite: Name1 & Name2" or "Davison: Name1 & Name2" with midpoint info
 
-    The header uses Cinzel font for names (elegant, esoteric feel) and
-    the normal text font for details.
+    The header uses Baskerville italic-semibold for names (elegant, classical feel)
+    and the normal text font for details.
     """
 
     def __init__(
         self,
         height: int = 70,
         name_font_size: str = "18px",
-        name_font_family: str = "Cinzel, serif",
+        name_font_family: str = "Baskerville, 'Libre Baskerville', Georgia, serif",
+        name_font_weight: str = "600",  # Semibold (falls back to bold if unavailable)
+        name_font_style: str = "italic",
         details_font_size: str = "12px",
         line_height: int = 16,
         coord_precision: int = 4,
@@ -62,6 +64,8 @@ class HeaderLayer:
             height: Header height in pixels
             name_font_size: Font size for name(s)
             name_font_family: Font family for name(s)
+            name_font_weight: Font weight for name(s) - "600" for semibold, "bold" for bold
+            name_font_style: Font style for name(s) - "italic" or "normal"
             details_font_size: Font size for details
             line_height: Line height for detail rows
             coord_precision: Decimal places for coordinates
@@ -69,6 +73,8 @@ class HeaderLayer:
         self.height = height
         self.name_font_size = name_font_size
         self.name_font_family = name_font_family
+        self.name_font_weight = name_font_weight
+        self.name_font_style = name_font_style
         self.details_font_size = details_font_size
         self.line_height = line_height
         self.coord_precision = coord_precision
@@ -173,7 +179,7 @@ class HeaderLayer:
 
         current_y = top
 
-        # Name (big, bold, Cinzel)
+        # Name (big, italic-semibold, Baskerville)
         if name:
             dwg.add(
                 dwg.text(
@@ -184,7 +190,8 @@ class HeaderLayer:
                     font_size=self.name_font_size,
                     fill=name_color,
                     font_family=self.name_font_family,
-                    font_weight="bold",
+                    font_weight=self.name_font_weight,
+                    font_style=self.name_font_style,
                 )
             )
             current_y += int(float(self.name_font_size[:-2]) * 1.3)
@@ -318,7 +325,8 @@ class HeaderLayer:
                     font_size=self.name_font_size,
                     fill=name_color,
                     font_family=self.name_font_family,
-                    font_weight="bold",
+                    font_weight=self.name_font_weight,
+                    font_style=self.name_font_style,
                 )
             )
             current_y += int(float(self.name_font_size[:-2]) * 1.3)
@@ -399,7 +407,8 @@ class HeaderLayer:
                 font_size=self.name_font_size,
                 fill=name_color,
                 font_family=self.name_font_family,
-                font_weight="bold",
+                font_weight=self.name_font_weight,
+                font_style=self.name_font_style,
             )
         )
         current_y += int(float(self.name_font_size[:-2]) * 1.3)
