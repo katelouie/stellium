@@ -338,4 +338,5 @@ class LayerFactory:
             "number_color": color,
             "line_width": 0.6,  # Thinner than primary
             "line_dash": "3,2",  # Dashed to distinguish from primary
+            "fill_alternate": False,  # No fills for overlay systems (only primary gets fills)
         }

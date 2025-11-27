@@ -13,6 +13,33 @@ class ContentMeasurer:
     This is crucial for calculating layout before creating the SVG.
     """
 
+    def _get_house_systems_to_display(
+        self, chart: CalculatedChart | Comparison, config: ChartVisualizationConfig
+    ) -> list[str]:
+        """Determine which house systems to display in tables.
+
+        Returns list of house system names based on config settings.
+        """
+        # Get the actual chart object (for Comparison, use chart1)
+        actual_chart = chart.chart1 if isinstance(chart, Comparison) else chart
+
+        if not actual_chart.house_systems:
+            return []
+
+        # Check config for house_systems setting
+        config_systems = config.wheel.house_systems
+        if config_systems == "all":
+            # Show all available house systems
+            return list(actual_chart.house_systems.keys())
+        elif isinstance(config_systems, list):
+            # Show specific systems (filter to only those available)
+            return [s for s in config_systems if s in actual_chart.house_systems]
+
+        # Default: just show the default house system
+        if actual_chart.default_house_system:
+            return [actual_chart.default_house_system]
+        return list(actual_chart.house_systems.keys())[:1]  # First available
+
     def measure_position_table(
         self, chart: CalculatedChart | Comparison, config: ChartVisualizationConfig
     ) -> Dimensions:
@@ -51,8 +78,13 @@ class ContentMeasurer:
         show_house = True
         show_speed = True
 
-        if show_house:
+        # Get house systems to display (may be multiple)
+        house_systems = self._get_house_systems_to_display(chart, config) if show_house else []
+
+        # Add a "house" column for each house system
+        for _ in house_systems:
             col_names.append("house")
+
         if show_speed:
             col_names.append("speed")
 
@@ -81,7 +113,8 @@ class ContentMeasurer:
         """
         Measure house cusp table dimensions.
 
-        Always 12 rows (houses), but 1 or 2 tables for single/comparison.
+        Always 12 rows (houses). For multiple house systems, adds columns (sign + degree)
+        for each system. For comparison charts, shows separate tables for each chart.
         """
         # Get config values
         col_widths = config.tables.house_col_widths
@@ -90,8 +123,14 @@ class ContentMeasurer:
         gap_between_tables = config.tables.gap_between_tables
         line_height = 16  # Match DEFAULT_STYLE in extended_canvas.py
 
-        # 3 columns: house, sign, degree
-        col_names = ["house", "sign", "degree"]
+        # Get house systems to display
+        house_systems = self._get_house_systems_to_display(chart, config)
+        num_house_systems = max(len(house_systems), 1)  # At least 1
+
+        # Build column list: house number + (sign, degree) for each system
+        col_names = ["house"]
+        for _ in range(num_house_systems):
+            col_names.extend(["sign", "degree"])
 
         # Calculate single table width: padding + columns + gaps + padding
         single_table_width = 2 * padding  # left and right padding
@@ -100,12 +139,12 @@ class ContentMeasurer:
             if i < len(col_names) - 1:  # Add gap between columns
                 single_table_width += gap_between_cols
 
-        # 1 or 2 tables?
-        num_tables = 2 if isinstance(chart, Comparison) else 1
-        total_width = (single_table_width * num_tables) + (gap_between_tables * (num_tables - 1))
+        # For comparisons, we have 2 chart tables
+        num_chart_tables = 2 if isinstance(chart, Comparison) else 1
+        total_width = (single_table_width * num_chart_tables) + (gap_between_tables * (num_chart_tables - 1))
 
         # Height: padding + title (for comparison) + header + 12 rows + padding
-        title_height = 20 if num_tables == 2 else 0
+        title_height = 20 if num_chart_tables == 2 else 0
         total_height = padding + title_height + line_height + (12 * line_height) + padding
 
         return Dimensions(total_width, total_height)

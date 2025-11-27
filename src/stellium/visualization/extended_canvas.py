@@ -184,6 +184,29 @@ class PositionTableLayer:
             # Render standard single table
             self._render_single_table(renderer, dwg, chart)
 
+    def _get_house_systems_to_display(self, chart) -> list[str]:
+        """Determine which house systems to display in the table.
+
+        Returns list of house system names based on config settings.
+        """
+        if not chart.house_systems:
+            return []
+
+        # Check config for house_systems setting
+        if self.config and hasattr(self.config, "wheel"):
+            config_systems = self.config.wheel.house_systems
+            if config_systems == "all":
+                # Show all available house systems
+                return list(chart.house_systems.keys())
+            elif isinstance(config_systems, list):
+                # Show specific systems (filter to only those available)
+                return [s for s in config_systems if s in chart.house_systems]
+
+        # Default: just show the default house system
+        if chart.default_house_system:
+            return [chart.default_house_system]
+        return list(chart.house_systems.keys())[:1]  # First available
+
     def _render_single_table(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
@@ -232,12 +255,24 @@ class PositionTableLayer:
             padding = 10
             gap = 5
 
+        # Determine which house systems to show
+        house_systems = self._get_house_systems_to_display(chart) if self.style["show_house"] else []
+
         # Header row with column mapping
         col_names = ["planet", "sign", "degree"]
         headers = ["Planet", "Sign", "Degree"]
-        if self.style["show_house"]:
+
+        # Add house column(s) - one per system
+        for system_name in house_systems:
             col_names.append("house")
-            headers.append("House")
+            # Use abbreviated name for header if multiple systems
+            if len(house_systems) > 1:
+                # Abbreviate system names for header
+                abbrev = self._abbreviate_house_system(system_name)
+                headers.append(abbrev)
+            else:
+                headers.append("House")
+
         if self.style["show_speed"]:
             col_names.append("speed")
             headers.append("Speed")
@@ -333,10 +368,10 @@ class PositionTableLayer:
                 )
             )
 
-            # Column 3: House (if enabled)
+            # House columns (one per system)
             col_idx = 3
-            if self.style["show_house"]:
-                house = self._get_house_placement(chart, pos)
+            for system_name in house_systems:
+                house = self._get_house_placement_for_system(chart, pos, system_name)
                 dwg.add(
                     dwg.text(
                         str(house) if house else "-",
@@ -351,7 +386,7 @@ class PositionTableLayer:
                 )
                 col_idx += 1
 
-            # Column 4: Speed (if enabled)
+            # Speed column (if enabled)
             if self.style["show_speed"]:
                 speed_text = f"{pos.speed_longitude:.2f}"
                 dwg.add(
@@ -366,6 +401,31 @@ class PositionTableLayer:
                         font_weight=self.style["font_weight"],
                     )
                 )
+
+    def _abbreviate_house_system(self, name: str) -> str:
+        """Get abbreviated name for house system header."""
+        abbreviations = {
+            "Placidus": "Plac",
+            "Whole Sign": "WS",
+            "Koch": "Koch",
+            "Equal": "Equ",
+            "Regiomontanus": "Regio",
+            "Campanus": "Camp",
+            "Porphyry": "Porph",
+            "Morinus": "Mor",
+            "Alcabitius": "Alca",
+            "Topocentric": "Topo",
+        }
+        return abbreviations.get(name, name[:4])
+
+    def _get_house_placement_for_system(
+        self, chart, position, system_name: str
+    ) -> int | None:
+        """Get house placement for a position in a specific house system."""
+        if not chart.house_placements:
+            return None
+        placements = chart.house_placements.get(system_name, {})
+        return placements.get(position.name)
 
     def _render_comparison_tables(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, comparison
@@ -715,16 +775,50 @@ class HouseCuspTableLayer:
             # Render standard single table
             self._render_single_house_table(renderer, dwg, chart)
 
+    def _get_house_systems_to_display(self, chart) -> list[str]:
+        """Determine which house systems to display in the table."""
+        if not chart.house_systems:
+            return []
+
+        # Check config for house_systems setting
+        if self.config and hasattr(self.config, "wheel"):
+            config_systems = self.config.wheel.house_systems
+            if config_systems == "all":
+                return list(chart.house_systems.keys())
+            elif isinstance(config_systems, list):
+                return [s for s in config_systems if s in chart.house_systems]
+
+        # Default: just show the default house system
+        if chart.default_house_system:
+            return [chart.default_house_system]
+        return list(chart.house_systems.keys())[:1]
+
+    def _abbreviate_house_system(self, name: str) -> str:
+        """Get abbreviated name for house system header."""
+        abbreviations = {
+            "Placidus": "Plac",
+            "Whole Sign": "WS",
+            "Koch": "Koch",
+            "Equal": "Equ",
+            "Regiomontanus": "Regio",
+            "Campanus": "Camp",
+            "Porphyry": "Porph",
+            "Morinus": "Mor",
+            "Alcabitius": "Alca",
+            "Topocentric": "Topo",
+        }
+        return abbreviations.get(name, name[:4])
+
     def _render_single_house_table(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
     ) -> None:
-        """Render a single house cusp table for a standard chart."""
-        # Get house cusps from default house system
-        if not chart.default_house_system:
-            return
+        """Render a single house cusp table for a standard chart.
 
-        houses = chart.get_houses(chart.default_house_system)
-        if not houses:
+        Supports multiple house systems as additional columns.
+        """
+        # Get house systems to display
+        house_systems = self._get_house_systems_to_display(chart)
+        if not house_systems:
             return
 
         # Build table
@@ -742,9 +836,18 @@ class HouseCuspTableLayer:
             padding = 10
             gap = 5
 
-        # Header row with column mapping
-        col_names = ["house", "sign", "degree"]
-        headers = ["House", "Sign", "Degree"]
+        # Build column names and headers: House + (Sign, Degree) per system
+        col_names = ["house"]
+        headers = ["House"]
+
+        for system_name in house_systems:
+            col_names.extend(["sign", "degree"])
+            if len(house_systems) > 1:
+                # Use abbreviated system name as header prefix
+                abbrev = self._abbreviate_house_system(system_name)
+                headers.extend([f"{abbrev}", f"Deg"])
+            else:
+                headers.extend(["Sign", "Degree"])
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -757,6 +860,12 @@ class HouseCuspTableLayer:
         # Get theme-aware colors
         text_color = renderer.style.get("text_color", self.style["text_color"])
         header_color = renderer.style.get("text_color", self.style["header_color"])
+
+        # Sign names for conversion
+        sign_names = [
+            "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+        ]
 
         # Render headers
         for i, header in enumerate(headers):
@@ -778,33 +887,10 @@ class HouseCuspTableLayer:
         for house_num in range(1, 13):
             y = y_start + padding + (house_num * self.style["line_height"])
 
-            # Get cusp longitude
-            cusp_longitude = houses.cusps[house_num - 1]
-
-            # Calculate sign and degree
-            sign_index = int(cusp_longitude / 30)
-            sign_names = [
-                "Aries",
-                "Taurus",
-                "Gemini",
-                "Cancer",
-                "Leo",
-                "Virgo",
-                "Libra",
-                "Scorpio",
-                "Sagittarius",
-                "Capricorn",
-                "Aquarius",
-                "Pisces",
-            ]
-            sign_name = sign_names[sign_index % 12]
-            degree_in_sign = cusp_longitude % 30
-
             # Column 0: House number
-            house_text = f"{house_num}"
             dwg.add(
                 dwg.text(
-                    house_text,
+                    str(house_num),
                     insert=(col_x_positions[0], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
@@ -815,36 +901,51 @@ class HouseCuspTableLayer:
                 )
             )
 
-            # Column 1: Sign
-            dwg.add(
-                dwg.text(
-                    sign_name,
-                    insert=(col_x_positions[1], y),
-                    text_anchor="start",
-                    dominant_baseline="hanging",
-                    font_size=self.style["text_size"],
-                    fill=text_color,
-                    font_family=renderer.style["font_family_text"],
-                    font_weight=self.style["font_weight"],
-                )
-            )
+            # Render sign and degree for each house system
+            col_idx = 1
+            for system_name in house_systems:
+                houses = chart.get_houses(system_name)
+                if not houses:
+                    col_idx += 2
+                    continue
 
-            # Column 2: Degree
-            degrees = int(degree_in_sign)
-            minutes = int((degree_in_sign % 1) * 60)
-            degree_text = f"{degrees}°{minutes:02d}'"
-            dwg.add(
-                dwg.text(
-                    degree_text,
-                    insert=(col_x_positions[2], y),
-                    text_anchor="start",
-                    dominant_baseline="hanging",
-                    font_size=self.style["text_size"],
-                    fill=text_color,
-                    font_family=renderer.style["font_family_text"],
-                    font_weight=self.style["font_weight"],
+                cusp_longitude = houses.cusps[house_num - 1]
+                sign_index = int(cusp_longitude / 30)
+                sign_name = sign_names[sign_index % 12]
+                degree_in_sign = cusp_longitude % 30
+
+                # Sign column
+                dwg.add(
+                    dwg.text(
+                        sign_name,
+                        insert=(col_x_positions[col_idx], y),
+                        text_anchor="start",
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=text_color,
+                        font_family=renderer.style["font_family_text"],
+                        font_weight=self.style["font_weight"],
+                    )
                 )
-            )
+                col_idx += 1
+
+                # Degree column
+                degrees = int(degree_in_sign)
+                minutes = int((degree_in_sign % 1) * 60)
+                degree_text = f"{degrees}°{minutes:02d}'"
+                dwg.add(
+                    dwg.text(
+                        degree_text,
+                        insert=(col_x_positions[col_idx], y),
+                        text_anchor="start",
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=text_color,
+                        font_family=renderer.style["font_family_text"],
+                        font_weight=self.style["font_weight"],
+                    )
+                )
+                col_idx += 1
 
     def _render_comparison_house_tables(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, comparison
