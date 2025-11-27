@@ -40,8 +40,8 @@ Builder Methods:
 """
 
 import datetime as dt
-from dataclasses import dataclass, field
-from datetime import datetime
+from dataclasses import dataclass, field, replace
+from datetime import datetime, timedelta
 from typing import Any, Literal
 
 from stellium.core.builder import ChartBuilder
@@ -630,20 +630,35 @@ class ComparisonBuilder:
     def progression(
         cls,
         natal_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
-        progressed_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        progressed_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict] | None = None,
+        *,
+        target_date: str | datetime | None = None,
+        age: float | None = None,
+        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "quotidian",
         natal_label: str = "Natal",
         progressed_label: str = "Progressed",
     ) -> "ComparisonBuilder":
         """
-        Create a progression comparison (progressed chart vs natal chart).
+        Create a progression comparison with auto-calculation support.
 
-        Progressions use symbolic timing (1 day = 1 year) to analyze long-term
-        development and growth. This is a convenience method that calls .compare()
-        with comparison_type="progression".
+        Secondary progressions use the symbolic equation "one day = one year."
+        To find progressed positions at age 30, look at where planets were
+        30 days after birth.
+
+        Can be called three ways:
+        1. Auto-calculate by target date: progression(natal, target_date="2025-06-15")
+        2. Auto-calculate by age: progression(natal, age=30)
+        3. Manual (legacy): progression(natal, progressed_chart)
 
         Args:
             natal_data: Natal chart data (Native, CalculatedChart, or (datetime, location) tuple)
-            progressed_data: Progressed chart data (Native, CalculatedChart, or (datetime, location) tuple)
+            progressed_data: Optional pre-calculated progressed chart (for backwards compatibility)
+            target_date: Target date for progression (triggers auto-calculation)
+            age: Age in years for progression (alternative to target_date)
+            angle_method: How to progress angles:
+                - "quotidian" (default): Actual daily motion from Swiss Ephemeris
+                - "solar_arc": Angles progress at rate of progressed Sun
+                - "naibod": Angles progress at mean Sun rate (59'08"/year)
             natal_label: Label for natal chart (default: "Natal")
             progressed_label: Label for progressed chart (default: "Progressed")
 
@@ -651,24 +666,153 @@ class ComparisonBuilder:
             ComparisonBuilder instance ready to configure and calculate
 
         Examples:
-            >>> # Simple progression (30 days after birth = age 30)
-            >>> import datetime
-            >>> from datetime import timedelta
-            >>> birth_date = datetime.datetime(1994, 1, 6, 11, 47)
-            >>> progressed_date = birth_date + timedelta(days=30)
+            >>> # Auto-calculate by age (most convenient)
+            >>> prog = ComparisonBuilder.progression(natal, age=30).calculate()
             >>>
-            >>> comparison = ComparisonBuilder.progression(
-            ...     (birth_date, "Palo Alto, CA"),
-            ...     (progressed_date, "Palo Alto, CA")
+            >>> # Auto-calculate by target date
+            >>> prog = ComparisonBuilder.progression(
+            ...     natal, target_date="2025-06-15"
             ... ).calculate()
             >>>
-            >>> # With string dates
-            >>> comparison = ComparisonBuilder.progression(
-            ...     ("1994-01-06 11:47", "Palo Alto, CA"),
-            ...     ("1994-02-05 11:47", "Palo Alto, CA")  # 30 days later
+            >>> # With solar arc angles
+            >>> prog = ComparisonBuilder.progression(
+            ...     natal, age=30, angle_method="solar_arc"
             ... ).calculate()
+            >>>
+            >>> # Legacy: explicit progressed chart (backwards compatible)
+            >>> progressed_chart = ChartBuilder.from_details(
+            ...     "1994-02-05 11:47", "Palo Alto, CA"
+            ... ).calculate()
+            >>> prog = ComparisonBuilder.progression(natal, progressed_chart).calculate()
         """
-        return cls.compare(natal_data, progressed_data, "progression", natal_label, progressed_label)
+        from stellium.utils.progressions import (
+            adjust_angles_by_arc,
+            calculate_naibod_arc,
+            calculate_progressed_datetime,
+            calculate_solar_arc,
+            calculate_years_elapsed,
+        )
+
+        # Helper to convert input to CalculatedChart
+        def to_chart(data, location_fallback=None) -> CalculatedChart:
+            if isinstance(data, CalculatedChart):
+                return data
+            elif isinstance(data, Native):
+                return ChartBuilder.from_native(data).calculate()
+            elif isinstance(data, tuple) and len(data) == 2:
+                datetime_input, location_input = data
+                if location_input is None:
+                    if location_fallback is None:
+                        raise ValueError(
+                            "Location cannot be None unless comparing to an existing chart"
+                        )
+                    location_input = location_fallback
+                native = Native(datetime_input, location_input)
+                return ChartBuilder.from_native(native).calculate()
+            else:
+                raise TypeError(
+                    f"Invalid data type: {type(data)}. "
+                    f"Expected CalculatedChart, Native, or (datetime, location) tuple"
+                )
+
+        # Convert natal data to chart
+        natal_chart = to_chart(natal_data)
+
+        # Determine progressed chart
+        if progressed_data is not None:
+            # Legacy path: use provided chart directly
+            progressed_chart = to_chart(progressed_data, location_fallback=natal_chart.location)
+        else:
+            # Auto-calculate path
+            natal_datetime = natal_chart.datetime.local_datetime
+
+            # Determine target date
+            if age is not None:
+                # Calculate target date from age
+                target = natal_datetime + timedelta(days=age * 365.25)
+            elif target_date is not None:
+                # Parse target date string if needed
+                if isinstance(target_date, str):
+                    # Use Native's parsing (handles ISO format, etc.)
+                    temp_native = Native(target_date, natal_chart.location)
+                    # Native.datetime is ChartDateTime, we need the local datetime
+                    target = temp_native.datetime.local_datetime
+                else:
+                    target = target_date
+            else:
+                # Default to now (naive datetime to match natal)
+                target = datetime.now()
+
+            # Calculate progressed datetime using 1 day = 1 year rule
+            progressed_dt = calculate_progressed_datetime(natal_datetime, target)
+
+            # Create progressed chart at natal location
+            name = natal_chart.metadata.get("name", "Chart")
+            progressed_chart = ChartBuilder.from_details(
+                progressed_dt,
+                natal_chart.location,
+                name=f"{name} - Progressed",
+            ).calculate()
+
+            # Apply angle adjustment if not quotidian
+            # For solar arc and naibod, angles are natal angles + arc
+            # (NOT quotidian progressed angles + arc)
+            if angle_method != "quotidian":
+                # Get natal and progressed Sun positions
+                natal_sun = natal_chart.get_object("Sun")
+                progressed_sun = progressed_chart.get_object("Sun")
+
+                if natal_sun and progressed_sun:
+                    if angle_method == "solar_arc":
+                        arc = calculate_solar_arc(
+                            natal_sun.longitude, progressed_sun.longitude
+                        )
+                    elif angle_method == "naibod":
+                        years = calculate_years_elapsed(natal_datetime, target)
+                        arc = calculate_naibod_arc(years)
+                    else:
+                        arc = 0.0  # Shouldn't happen with type hints
+
+                    # For solar arc/naibod, we need to replace the quotidian
+                    # progressed angles with natal angles + arc
+                    # Build a new positions tuple with adjusted angles
+                    adjusted_positions = []
+                    for pos in progressed_chart.positions:
+                        if pos.object_type == ObjectType.ANGLE:
+                            # Find the natal angle position
+                            natal_angle = natal_chart.get_object(pos.name)
+                            if natal_angle:
+                                # Natal angle + arc = progressed angle
+                                new_lon = (natal_angle.longitude + arc) % 360
+                                adjusted_positions.append(
+                                    replace(pos, longitude=new_lon)
+                                )
+                            else:
+                                adjusted_positions.append(pos)
+                        else:
+                            adjusted_positions.append(pos)
+
+                    # Create new chart with adjusted positions
+                    progressed_chart = CalculatedChart(
+                        datetime=progressed_chart.datetime,
+                        location=progressed_chart.location,
+                        positions=tuple(adjusted_positions),
+                        house_systems=progressed_chart.house_systems,
+                        house_placements=progressed_chart.house_placements,
+                        aspects=progressed_chart.aspects,
+                        metadata={
+                            **progressed_chart.metadata,
+                            "angle_method": angle_method,
+                            "angle_arc": arc,
+                        },
+                    )
+
+        # Create builder with both charts configured
+        builder = cls(natal_chart, ComparisonType.PROGRESSION, natal_label)
+        builder._chart2 = progressed_chart
+        builder._chart2_label = progressed_label
+
+        return builder
 
     # ===== Configuration Methods =====
     def with_partner(

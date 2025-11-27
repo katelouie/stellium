@@ -9,6 +9,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Secondary Progressions Auto-Calculation (November 27, 2025)
+
+- **Enhanced `ComparisonBuilder.progression()`**: Now supports automatic progressed chart calculation
+  - **By age**: `ComparisonBuilder.progression(natal, age=30)` - Calculate progressions for age 30
+  - **By target date**: `ComparisonBuilder.progression(natal, target_date="2025-06-15")` - Progressed to specific date
+  - **Legacy support**: `ComparisonBuilder.progression(natal, progressed_chart)` - Explicit chart still works
+
+- **Three Angle Progression Methods**:
+  - `angle_method="quotidian"` (default): Actual daily motion from Swiss Ephemeris - most accurate
+  - `angle_method="solar_arc"`: Angles progress at rate of progressed Sun
+  - `angle_method="naibod"`: Angles progress at mean Sun rate (59'08"/year)
+
+- **Progression Utilities** (`src/stellium/utils/progressions.py`):
+  - `calculate_progressed_datetime(natal_dt, target_dt)` - Core 1 day = 1 year calculation
+  - `calculate_solar_arc(natal_sun, progressed_sun)` - Solar arc calculation
+  - `calculate_naibod_arc(years)` - Naibod arc calculation
+  - `adjust_angles_by_arc(positions, arc)` - Apply arc to angle positions
+
+- **Angle Method Metadata**: Progressed charts include angle adjustment info
+  - `angle_method` - Which method was used
+  - `angle_arc` - Calculated arc in degrees
+
+- **21 Comprehensive Tests** (`tests/test_progressions.py`):
+  - Progression by age and target date
+  - All three angle methods verified
+  - Progressed Sun (~1°/year) and Moon (~12°/year) motion
+  - Backwards compatibility with legacy API
+  - Edge cases: negative age, fractional age, large ages
+
+Example usage:
+```python
+from stellium import ComparisonBuilder, ChartBuilder
+
+natal = ChartBuilder.from_notable("Albert Einstein").calculate()
+
+# Progressions for age 30
+prog = ComparisonBuilder.progression(natal, age=30).calculate()
+
+# Progressions to a specific date
+prog = ComparisonBuilder.progression(natal, target_date="2025-06-15").calculate()
+
+# With solar arc angles
+prog = ComparisonBuilder.progression(
+    natal, age=30, angle_method="solar_arc"
+).calculate()
+
+# Access results
+for aspect in prog.cross_aspects:
+    print(f"Progressed {aspect.object2.name} {aspect.aspect_name} Natal {aspect.object1.name}")
+```
+
 #### Planetary Returns Support (November 28, 2025)
 
 - **ReturnBuilder**: New fluent builder for calculating planetary return charts
