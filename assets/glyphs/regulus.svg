@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="200"
+   height="100"
+   viewBox="0 0 52.916665 26.458334"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="07.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8284272"
+     inkscape:cx="102.44612"
+     inkscape:cy="62.85599"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:snap-intersection-paths="false"
+     inkscape:snap-midpoints="true"
+     inkscape:snap-smooth-nodes="false"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:snap-bbox="false"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-global="false"
+     inkscape:snap-nodes="true"
+     inkscape:object-paths="false"
+     inkscape:window-width="1366"
+     inkscape:window-height="705"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:bbox-nodes="true"
+     inkscape:object-nodes="true"
+     inkscape:lockguides="false"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-center="false"
+     inkscape:snap-others="true" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Слой 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect297-3"
+       style="fill:#000000;stroke:none;stroke-width:0.793747;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stop-color:#000000"
+       d="m 36.975779,6.6804661 c -0.735054,0 -1.357368,0.509103 -1.535308,1.191143 H 23.084637 V 18.984109 h -2.38125 V 7.8922781 c 4.5e-5,-0.007 0.001,-0.01368 0.001,-0.02066 h -0.001 -0.79375 c 0,1.319828 -1.060904,2.3812489 -2.380733,2.3812489 -1.31983,0 -2.38125,-1.0614209 -2.38125,-2.3812489 h -0.794783 c 0,1.748803 1.42723,3.1739649 3.176033,3.1739649 0.947401,0 1.798017,-0.420711 2.380733,-1.0821039 v 9.8143879 h 3.96875 V 8.6653671 h 11.562084 c 0.144817,0.554353 0.583639,0.992908 1.137915,1.137915 v 9.9745849 h 0.79375 V 9.8037981 c 0.682194,-0.177834 1.191659,-0.800145 1.191659,-1.535305 0,-0.872051 -0.715965,-1.588019 -1.588016,-1.588019 z m 0,0.794784 c 0.443077,0 0.793232,0.350158 0.793232,0.793234 0,0.443077 -0.350155,0.792716 -0.793232,0.792716 -0.443076,0 -0.794784,-0.349639 -0.794784,-0.792716 0,-0.443076 0.351708,-0.793234 0.794784,-0.793234 z"
+       sodipodi:nodetypes="sccccccccsccscccccccccsssssss" />
+  </g>
+</svg>
