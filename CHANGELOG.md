@@ -79,6 +79,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **22 Comprehensive Tests**: Full test coverage for registry, engine, component, and integration
 
+- **FixedStarsSection for Reports**: New report section to display fixed stars
+  - `.with_fixed_stars()` method on ReportBuilder
+  - Tier filtering: `tier=1` for Royal Stars only, `tier=2` for Major, etc.
+  - Sort options: `sort_by="longitude"` (zodiacal order), `"magnitude"` (brightest first), `"tier"` (royal first)
+  - Includes star name with crown (♔) for Royal Stars, position, constellation, magnitude, nature, keywords
+  - Graceful fallback message if FixedStarsComponent not added to chart
+
+- **Report Cookbook Examples**: Four new examples demonstrating fixed stars in reports
+  - Example 9b: Full fixed stars report
+  - Example 9c: Royal Stars only
+  - Example 9d: Fixed stars PDF with chart wheel
+
 ### Changed
 
 - **SwissEphemerisEngine**: Updated to support sidereal calculations

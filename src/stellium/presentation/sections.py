@@ -13,6 +13,7 @@ from stellium.core.models import CalculatedChart, MidpointPosition, ObjectType
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     CELESTIAL_REGISTRY,
+    FIXED_STARS_REGISTRY,
     get_aspects_by_category,
 )
 from stellium.engines.dignities import DIGNITIES
@@ -1373,6 +1374,141 @@ class DeclinationSection:
             status = "OOB ⚠" if obj.is_out_of_bounds else ""
 
             rows.append([planet_label, dec_str, direction, status])
+
+        return {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+        }
+
+
+class FixedStarsSection:
+    """Table of fixed star positions.
+
+    Shows:
+    - Star name with glyph
+    - Zodiac position (sign + degree)
+    - Constellation
+    - Magnitude (brightness)
+    - Traditional planetary nature
+    - Keywords
+    """
+
+    def __init__(
+        self,
+        tier: int | None = None,
+        include_keywords: bool = True,
+        sort_by: str = "longitude",
+    ) -> None:
+        """
+        Initialize fixed stars section.
+
+        Args:
+            tier: Filter to specific tier (1=Royal, 2=Major, 3=Extended).
+                  None shows all tiers.
+            include_keywords: Include interpretive keywords column
+            sort_by: Sort order - "longitude" (zodiacal order),
+                    "magnitude" (brightest first), or "tier" (royal first)
+        """
+        self.tier = tier
+        self.include_keywords = include_keywords
+        self.sort_by = sort_by
+
+        if sort_by not in ("longitude", "magnitude", "tier"):
+            raise ValueError("sort_by must be 'longitude', 'magnitude', or 'tier'")
+
+    @property
+    def section_name(self) -> str:
+        if self.tier == 1:
+            return "Royal Stars"
+        elif self.tier == 2:
+            return "Major Fixed Stars"
+        elif self.tier == 3:
+            return "Extended Fixed Stars"
+        return "Fixed Stars"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate fixed stars table data."""
+        # Get fixed stars from chart positions
+        fixed_stars = [
+            p for p in chart.positions
+            if p.object_type == ObjectType.FIXED_STAR
+        ]
+
+        if not fixed_stars:
+            return {
+                "type": "text",
+                "text": (
+                    "No fixed stars calculated. Add FixedStarsComponent() to include them:\n\n"
+                    "    from stellium.components import FixedStarsComponent\n\n"
+                    "    chart = (\n"
+                    "        ChartBuilder.from_native(native)\n"
+                    "        .add_component(FixedStarsComponent())\n"
+                    "        .calculate()\n"
+                    "    )"
+                ),
+            }
+
+        # Filter by tier if specified
+        if self.tier is not None:
+            fixed_stars = [
+                s for s in fixed_stars if hasattr(s, "tier") and s.tier == self.tier
+            ]
+
+        # Sort stars
+        if self.sort_by == "magnitude":
+            fixed_stars = sorted(
+                fixed_stars, key=lambda s: getattr(s, "magnitude", 99)
+            )
+        elif self.sort_by == "tier":
+            fixed_stars = sorted(
+                fixed_stars, key=lambda s: (getattr(s, "tier", 9), s.longitude)
+            )
+        else:  # longitude (default)
+            fixed_stars = sorted(fixed_stars, key=lambda s: s.longitude)
+
+        # Build headers
+        headers = ["Star", "Position", "Constellation", "Mag", "Nature"]
+        if self.include_keywords:
+            headers.append("Keywords")
+
+        # Build rows
+        rows = []
+        for star in fixed_stars:
+            # Star name with glyph
+            tier_marker = ""
+            if hasattr(star, "is_royal") and star.is_royal:
+                tier_marker = " ♔"  # Crown for royal stars
+
+            star_label = f"★ {star.name}{tier_marker}"
+
+            # Position with sign glyph
+            degree = int(star.sign_degree)
+            minute = int((star.sign_degree % 1) * 60)
+            sign_glyph = get_sign_glyph(star.sign)
+            if sign_glyph:
+                position = f"{sign_glyph} {star.sign} {degree}°{minute:02d}'"
+            else:
+                position = f"{star.sign} {degree}°{minute:02d}'"
+
+            # Constellation
+            constellation = getattr(star, "constellation", "")
+
+            # Magnitude (lower = brighter)
+            magnitude = getattr(star, "magnitude", None)
+            mag_str = f"{magnitude:.2f}" if magnitude is not None else "—"
+
+            # Nature
+            nature = getattr(star, "nature", "")
+
+            row = [star_label, position, constellation, mag_str, nature]
+
+            # Keywords
+            if self.include_keywords:
+                keywords = getattr(star, "keywords", ())
+                row.append(", ".join(keywords[:3]) if keywords else "")
+
+            rows.append(row)
 
         return {
             "type": "table",

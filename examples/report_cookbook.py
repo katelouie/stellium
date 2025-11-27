@@ -18,7 +18,7 @@ import os
 from pathlib import Path
 
 from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
-from stellium.components import DignityComponent, MidpointCalculator
+from stellium.components import DignityComponent, FixedStarsComponent, MidpointCalculator
 from stellium.engines import PlacidusHouses, WholeSignHouses
 
 # Output directory for generated reports
@@ -294,6 +294,116 @@ def example_9_positions_only():
         .with_house_cusps(systems="all")
         .render()
     )
+
+
+def example_9b_fixed_stars_report():
+    """
+    Example 9b: Fixed Stars Report
+
+    Include fixed star positions in your report. Fixed stars add another
+    layer of traditional astrological interpretation to your charts.
+
+    Stars are organized in tiers:
+    - Tier 1: Royal Stars (Aldebaran, Regulus, Antares, Fomalhaut)
+    - Tier 2: Major Stars (Sirius, Algol, Spica, etc.)
+    - Tier 3: Extended Stars
+    """
+    section_header("Example 9b: Fixed Stars Report")
+
+    # Calculate chart with fixed stars
+    chart = (
+        ChartBuilder.from_notable("Aleister Crowley")
+        .with_aspects()
+        .add_component(FixedStarsComponent())  # All 26 stars
+        .calculate()
+    )
+
+    print("Generating report with all fixed stars...\n")
+
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_planet_positions()
+        .with_fixed_stars()  # All stars, sorted by zodiac position
+        .render()
+    )
+
+
+def example_9c_royal_stars_only():
+    """
+    Example 9c: Royal Stars Only
+
+    The four Royal Stars of Persia are the most important fixed stars.
+    This example shows how to include only these stars in your report.
+    """
+    section_header("Example 9c: Royal Stars Only")
+
+    # Calculate with just royal stars (faster, less clutter)
+    chart = (
+        ChartBuilder.from_notable("Albert Einstein")
+        .with_aspects()
+        .add_component(FixedStarsComponent(royal_only=True))
+        .calculate()
+    )
+
+    print("Generating report with Royal Stars only...\n")
+
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_planet_positions()
+        .with_fixed_stars(tier=1)  # Only Tier 1 (Royal)
+        .render()
+    )
+
+
+def example_9d_fixed_stars_pdf():
+    """
+    Example 9d: Fixed Stars PDF Report
+
+    Generate a beautiful PDF with fixed stars included.
+    Stars sorted by brightness (magnitude).
+    """
+    section_header("Example 9d: Fixed Stars PDF")
+
+    chart = (
+        ChartBuilder.from_notable("Nostradamus")
+        .with_house_systems([PlacidusHouses()])
+        .with_aspects()
+        .add_component(FixedStarsComponent(tier=2, include_higher_tiers=True))
+        .add_component(DignityComponent())
+        .calculate()
+    )
+
+    # Generate chart
+    svg_path = OUTPUT_DIR / "nostradamus_chart.svg"
+    print(f"Generating chart to {svg_path}...")
+    chart.draw(str(svg_path)).with_theme("midnight").save()
+
+    # Generate PDF with fixed stars
+    pdf_path = OUTPUT_DIR / "nostradamus_fixed_stars.pdf"
+    print(f"Generating fixed stars PDF to {pdf_path}...")
+
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_planet_positions()
+        .with_fixed_stars(sort_by="magnitude")  # Brightest first
+        .with_aspects(mode="major")
+        .with_dignities()
+        .render(
+            format="pdf",
+            file=str(pdf_path),
+            chart_svg_path=str(svg_path),
+            title="Nostradamus - Natal Chart with Fixed Stars",
+            show=False,
+        )
+    )
+
+    print(f"Done! Open {pdf_path} to see the result.")
 
 
 # =============================================================================
@@ -578,6 +688,9 @@ def main():
     example_7_custom_sections()
     example_8_aspect_focused()
     example_9_positions_only()
+    example_9b_fixed_stars_report()
+    example_9c_royal_stars_only()
+    example_9d_fixed_stars_pdf()
 
     # --- Part 4: Comparison Reports ---
     example_10_synastry_report()

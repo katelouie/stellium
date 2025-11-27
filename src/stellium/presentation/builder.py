@@ -19,6 +19,7 @@ from .sections import (
     CrossChartAspectSection,
     DeclinationSection,
     DignitySection,
+    FixedStarsSection,
     HouseCuspsSection,
     MidpointSection,
     MoonPhaseSection,
@@ -331,6 +332,61 @@ class ReportBuilder:
             ...     .render())
         """
         self._sections.append(DeclinationSection())
+        return self
+
+    def with_fixed_stars(
+        self,
+        tier: int | None = None,
+        include_keywords: bool = True,
+        sort_by: str = "longitude",
+    ) -> "ReportBuilder":
+        """
+        Add fixed stars table.
+
+        Shows positions and metadata for fixed stars in the chart.
+        Requires FixedStarsComponent to be added to chart builder.
+
+        Args:
+            tier: Filter to specific tier (DEFAULT: None = all tiers)
+                - 1: Royal Stars only (Aldebaran, Regulus, Antares, Fomalhaut)
+                - 2: Major Stars only
+                - 3: Extended Stars only
+                - None: All tiers
+            include_keywords: Include interpretive keywords column (DEFAULT: True)
+            sort_by: Sort order (DEFAULT: "longitude")
+                - "longitude": Zodiacal order
+                - "magnitude": Brightest first
+                - "tier": Royal first, then Major, then Extended
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Royal stars only
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_fixed_stars(tier=1)
+            ...     .render())
+            >>>
+            >>> # All stars sorted by brightness
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_fixed_stars(sort_by="magnitude")
+            ...     .render())
+
+        Note:
+            Requires FixedStarsComponent to be added to chart builder:
+                chart = (ChartBuilder.from_native(native)
+                    .add_component(FixedStarsComponent())
+                    .calculate())
+        """
+        self._sections.append(
+            FixedStarsSection(
+                tier=tier,
+                include_keywords=include_keywords,
+                sort_by=sort_by,
+            )
+        )
         return self
 
     # -------------------------------------------------------------------------
