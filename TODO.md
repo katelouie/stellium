@@ -36,7 +36,7 @@
 - [x] Add composite
 - [x] Add transits
 - [ ] Add progressions
-- [ ] Add returns
+- [x] Add returns
 - [x] Add sidereal
 - [x] Add Vedic dignities
 - [x] Declinations
