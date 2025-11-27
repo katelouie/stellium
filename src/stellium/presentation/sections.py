@@ -8,6 +8,7 @@ into a standardized structure that renderers can consume.
 import datetime as dt
 from typing import Any
 
+from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, MidpointPosition, ObjectType
 from stellium.core.registry import (
     ASPECT_REGISTRY,
@@ -190,66 +191,134 @@ class ChartOverviewSection:
     - Location
     - Chart type (day/night)
     - House system
+
+    For Comparison objects, shows info for both charts.
     """
 
     @property
     def section_name(self) -> str:
         return "Chart Overview"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
         """
         Generate chart overview data.
+
+        For Comparison objects, shows both charts' information.
 
         Why key-value format?
         - Simple label: value pairs
         - Easy to render as a list or small table
         - Human-readable structure
         """
+        # Handle Comparison objects
+        if isinstance(chart, Comparison):
+            return self._generate_comparison_data(chart)
+
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(
+        self, chart: CalculatedChart, label: str | None = None
+    ) -> dict[str, Any]:
+        """Generate overview data for a single chart."""
         data = {}
 
         # Name (if available in metadata)
         if "name" in chart.metadata:
-            data["Name"] = chart.metadata["name"]
+            name = chart.metadata["name"]
+            if label:
+                data[f"{label}"] = name
+            else:
+                data["Name"] = name
 
         # Date and time
         birth: dt.datetime = chart.datetime.local_datetime
-        data["Date"] = birth.strftime("%B %d, %Y")
-        data["Time"] = birth.strftime("%I:%M %p")
-        data["Timezone"] = str(chart.location.timezone)
+        date_label = f"{label} Date" if label else "Date"
+        time_label = f"{label} Time" if label else "Time"
+        data[date_label] = birth.strftime("%B %d, %Y")
+        data[time_label] = birth.strftime("%I:%M %p")
+
+        if not label:  # Only show timezone for single charts
+            data["Timezone"] = str(chart.location.timezone)
 
         # Location
         loc = chart.location
-        data["Location"] = f"{loc.name}" if loc.name else "Unknown"
-        data["Coordinates"] = f"{loc.latitude:.4f}°, {loc.longitude:.4f}°"
+        loc_label = f"{label} Location" if label else "Location"
+        data[loc_label] = f"{loc.name}" if loc.name else "Unknown"
 
-        # Chart metadata
-        house_systems = ", ".join(chart.house_systems.keys())
-        data["House System"] = house_systems
+        if not label:  # Only show detailed info for single charts
+            data["Coordinates"] = f"{loc.latitude:.4f}°, {loc.longitude:.4f}°"
 
-        # Zodiac system
-        if chart.zodiac_type:
-            zodiac_display = chart.zodiac_type.value.title()  # "Tropical" or "Sidereal"
-            if chart.zodiac_type.value == "sidereal" and chart.ayanamsa:
-                # Show ayanamsa name for sidereal
-                ayanamsa_display = chart.ayanamsa.replace("_", " ").title()
-                zodiac_display = f"{zodiac_display} ({ayanamsa_display})"
-            data["Zodiac"] = zodiac_display
+            # Chart metadata
+            house_systems = ", ".join(chart.house_systems.keys())
+            data["House System"] = house_systems
 
-            # Show ayanamsa offset value for sidereal
-            if (
-                chart.zodiac_type.value == "sidereal"
-                and chart.ayanamsa_value is not None
-            ):
-                # Format as degrees°minutes'seconds"
-                degrees = int(chart.ayanamsa_value)
-                minutes = int((chart.ayanamsa_value % 1) * 60)
-                seconds = int(((chart.ayanamsa_value % 1) * 60 % 1) * 60)
-                data["Ayanamsa"] = f"{degrees}°{minutes:02d}'{seconds:02d}\""
+            # Zodiac system
+            if chart.zodiac_type:
+                zodiac_display = chart.zodiac_type.value.title()
+                if chart.zodiac_type.value == "sidereal" and chart.ayanamsa:
+                    ayanamsa_display = chart.ayanamsa.replace("_", " ").title()
+                    zodiac_display = f"{zodiac_display} ({ayanamsa_display})"
+                data["Zodiac"] = zodiac_display
 
-        # Sect (if available in metadata)
-        if "dignities" in chart.metadata:
-            sect = chart.metadata["dignities"].get("sect", "unknown")
-            data["Chart Sect"] = f"{sect.title()} Chart"
+                if (
+                    chart.zodiac_type.value == "sidereal"
+                    and chart.ayanamsa_value is not None
+                ):
+                    degrees = int(chart.ayanamsa_value)
+                    minutes = int((chart.ayanamsa_value % 1) * 60)
+                    seconds = int(((chart.ayanamsa_value % 1) * 60 % 1) * 60)
+                    data["Ayanamsa"] = f"{degrees}°{minutes:02d}'{seconds:02d}\""
+
+            # Sect (if available in metadata)
+            if "dignities" in chart.metadata:
+                sect = chart.metadata["dignities"].get("sect", "unknown")
+                data["Chart Sect"] = f"{sect.title()} Chart"
+
+        return {
+            "type": "key_value",
+            "data": data,
+        }
+
+    def _generate_comparison_data(self, comparison: Comparison) -> dict[str, Any]:
+        """Generate overview data for a Comparison object."""
+        data = {}
+
+        # Comparison type
+        comp_type = comparison.comparison_type.value.title()
+        data["Comparison Type"] = comp_type
+
+        # Chart 1 info
+        chart1 = comparison.chart1
+        label1 = comparison.chart1_label or "Chart 1"
+        if "name" in chart1.metadata:
+            data[label1] = chart1.metadata["name"]
+        else:
+            data[label1] = "(unnamed)"
+
+        birth1: dt.datetime = chart1.datetime.local_datetime
+        data[f"{label1} Date"] = birth1.strftime("%B %d, %Y")
+        data[f"{label1} Time"] = birth1.strftime("%I:%M %p")
+        data[f"{label1} Location"] = (
+            chart1.location.name if chart1.location.name else "Unknown"
+        )
+
+        # Chart 2 info
+        chart2 = comparison.chart2
+        label2 = comparison.chart2_label or "Chart 2"
+        if "name" in chart2.metadata:
+            data[label2] = chart2.metadata["name"]
+        else:
+            data[label2] = "(unnamed)"
+
+        birth2: dt.datetime = chart2.datetime.local_datetime
+        data[f"{label2} Date"] = birth2.strftime("%B %d, %Y")
+        data[f"{label2} Time"] = birth2.strftime("%I:%M %p")
+        data[f"{label2} Location"] = (
+            chart2.location.name if chart2.location.name else "Unknown"
+        )
+
+        # Cross-chart aspect count
+        data["Cross-Chart Aspects"] = len(comparison.cross_aspects)
 
         return {
             "type": "key_value",
@@ -306,28 +375,37 @@ class PlanetPositionSection:
     def section_name(self) -> str:
         return "Planet Positions"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
         """
         Generate planet positions table.
+
+        For Comparison objects, generates side-by-side tables for each chart.
         """
+        # Handle Comparison objects with side-by-side tables
+        if isinstance(chart, Comparison):
+            return self._generate_comparison_data(chart)
+
+        # Single chart: standard table
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(
+        self, chart: CalculatedChart, title: str | None = None
+    ) -> dict[str, Any]:
+        """Generate position table data for a single chart."""
         # Determine which house systems to show
         if self._house_systems_mode == "all":
-            # Show all calculated systems
             systems_to_show = list(chart.house_systems.keys())
         elif self._house_systems_mode == "specific":
-            # Show only specified systems (that exist in chart)
             systems_to_show = [
                 s for s in self._house_systems if s in chart.house_systems
             ]
         else:  # "default"
-            # Show only the chart's default system
             systems_to_show = [chart.default_house_system]
 
         # Build headers based on options
         headers = ["Planet", "Position"]
 
         if self.include_house and systems_to_show:
-            # Add one column per house system with abbreviated name
             for system_name in systems_to_show:
                 abbrev = abbreviate_house_system(system_name)
                 headers.append(f"House ({abbrev})")
@@ -356,14 +434,14 @@ class PlanetPositionSection:
         rows = []
         for pos in positions:
             row = []
-            # Planet name with glyph (e.g., "☉ Sun")
+            # Planet name with glyph
             display_name, glyph = get_object_display(pos.name)
             if glyph:
                 row.append(f"{glyph} {display_name}")
             else:
                 row.append(display_name)
 
-            # Position with sign glyph (e.g., "♈︎ Aries 15°32'")
+            # Position with sign glyph
             degree = int(pos.sign_degree)
             minute = int((pos.sign_degree % 1) * 60)
             sign_glyph = get_sign_glyph(pos.sign)
@@ -389,7 +467,36 @@ class PlanetPositionSection:
 
             rows.append(row)
 
-        return {"type": "table", "headers": headers, "rows": rows}
+        result = {"type": "table", "headers": headers, "rows": rows}
+        if title:
+            result["title"] = title
+        return result
+
+    def _generate_comparison_data(self, comparison: Comparison) -> dict[str, Any]:
+        """Generate side-by-side position tables for a Comparison."""
+        # Generate table data for each chart
+        chart1_data = self._generate_single_chart_data(
+            comparison.chart1, title=comparison.chart1_label
+        )
+        chart2_data = self._generate_single_chart_data(
+            comparison.chart2, title=comparison.chart2_label
+        )
+
+        return {
+            "type": "side_by_side_tables",
+            "tables": [
+                {
+                    "title": chart1_data.get("title", "Chart 1"),
+                    "headers": chart1_data["headers"],
+                    "rows": chart1_data["rows"],
+                },
+                {
+                    "title": chart2_data.get("title", "Chart 2"),
+                    "headers": chart2_data["headers"],
+                    "rows": chart2_data["rows"],
+                },
+            ],
+        }
 
 
 class HouseCuspsSection:
@@ -426,18 +533,29 @@ class HouseCuspsSection:
     def section_name(self) -> str:
         return "House Cusps"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
         """
         Generate house cusps table.
+
+        For Comparison objects, generates side-by-side tables for each chart.
         """
+        # Handle Comparison objects with side-by-side tables
+        if isinstance(chart, Comparison):
+            return self._generate_comparison_data(chart)
+
+        # Single chart: standard table
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(
+        self, chart: CalculatedChart, title: str | None = None
+    ) -> dict[str, Any]:
+        """Generate house cusps table data for a single chart."""
         from stellium.core.models import longitude_to_sign_and_degree
 
         # Determine which house systems to show
         if self._systems_mode == "all":
-            # Show all calculated systems
             systems_to_show = list(chart.house_systems.keys())
         else:  # "specific"
-            # Show only specified systems (that exist in chart)
             systems_to_show = [s for s in self._systems if s in chart.house_systems]
 
         # Build headers
@@ -453,7 +571,6 @@ class HouseCuspsSection:
 
             for system_name in systems_to_show:
                 house_cusps = chart.house_systems[system_name]
-                # Cusps are 0-indexed in the tuple
                 cusp_longitude = house_cusps.cusps[house_num - 1]
 
                 # Convert to sign and degree
@@ -470,7 +587,35 @@ class HouseCuspsSection:
 
             rows.append(row)
 
-        return {"type": "table", "headers": headers, "rows": rows}
+        result = {"type": "table", "headers": headers, "rows": rows}
+        if title:
+            result["title"] = title
+        return result
+
+    def _generate_comparison_data(self, comparison: Comparison) -> dict[str, Any]:
+        """Generate side-by-side house cusps tables for a Comparison."""
+        chart1_data = self._generate_single_chart_data(
+            comparison.chart1, title=comparison.chart1_label
+        )
+        chart2_data = self._generate_single_chart_data(
+            comparison.chart2, title=comparison.chart2_label
+        )
+
+        return {
+            "type": "side_by_side_tables",
+            "tables": [
+                {
+                    "title": chart1_data.get("title", "Chart 1"),
+                    "headers": chart1_data["headers"],
+                    "rows": chart1_data["rows"],
+                },
+                {
+                    "title": chart2_data.get("title", "Chart 2"),
+                    "headers": chart2_data["headers"],
+                    "rows": chart2_data["rows"],
+                },
+            ],
+        }
 
 
 class DignitySection:
@@ -841,6 +986,139 @@ class AspectSection:
             )
 
             # Planet 2 with glyph
+            name2, glyph2 = get_object_display(aspect.object2.name)
+            planet2 = f"{glyph2} {name2}" if glyph2 else name2
+
+            row = [planet1, aspect_display, planet2]
+
+            if self.orb_display:
+                row.append(f"{aspect.orb:.2f}°")
+
+                # Applying/separating
+                if aspect.is_applying is None:
+                    row.append("—")
+                elif aspect.is_applying:
+                    row.append("A→")  # Applying
+                else:
+                    row.append("←S")  # Separating
+
+            rows.append(row)
+
+        return {"type": "table", "headers": headers, "rows": rows}
+
+
+class CrossChartAspectSection:
+    """
+    Table of cross-chart aspects for Comparison charts.
+
+    Shows aspects between chart1 planets and chart2 planets:
+    - Chart 1 Planet (with label)
+    - Aspect type
+    - Chart 2 Planet (with label)
+    - Orb (optional)
+    - Applying/Separating (optional)
+    """
+
+    def __init__(
+        self, mode: str = "all", orbs: bool = True, sort_by: str = "orb"
+    ) -> None:
+        """
+        Initialize cross-chart aspect section.
+
+        Args:
+            mode: "all", "major", "minor", or "harmonic"
+            orbs: Show orb column
+            sort_by: How to sort aspects ("orb", "planet", "aspect_type")
+        """
+        if mode not in ("all", "major", "minor", "harmonic"):
+            raise ValueError(
+                f"mode must be 'all', 'major', 'minor', or 'harmonic', got {mode}"
+            )
+        if sort_by not in ("orb", "planet", "aspect_type"):
+            raise ValueError(
+                f"sort_by must be 'orb', 'planet', or 'aspect_type', got {sort_by}"
+            )
+
+        self.mode = mode
+        self.orb_display = orbs
+        self.sort_by = sort_by
+
+    @property
+    def section_name(self) -> str:
+        if self.mode == "major":
+            return "Cross-Chart Aspects (Major)"
+        elif self.mode == "minor":
+            return "Cross-Chart Aspects (Minor)"
+        elif self.mode == "harmonic":
+            return "Cross-Chart Aspects (Harmonic)"
+        return "Cross-Chart Aspects"
+
+    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
+        """Generate cross-chart aspects table."""
+        # This section only works with Comparison objects
+        if not isinstance(chart, Comparison):
+            return {
+                "type": "text",
+                "content": (
+                    "Cross-chart aspects require a Comparison object.\n\n"
+                    "Example:\n"
+                    "  comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()\n"
+                    "  report = ReportBuilder().from_chart(comparison).with_cross_aspects().render()"
+                ),
+            }
+
+        # Get cross-chart aspects
+        aspects = list(chart.cross_aspects)
+
+        # Filter aspects based on mode
+        if self.mode != "all":
+            aspect_category = self.mode.title()
+            allowed_aspects = [a.name for a in get_aspects_by_category(aspect_category)]
+            aspects = [a for a in aspects if a.aspect_name in allowed_aspects]
+
+        if not aspects:
+            return {
+                "type": "text",
+                "content": "No cross-chart aspects found.",
+            }
+
+        # Sort aspects
+        if self.sort_by == "orb":
+            aspects = sorted(aspects, key=lambda a: a.orb)
+        elif self.sort_by == "aspect_type":
+            aspects = sorted(aspects, key=lambda a: get_aspect_sort_key(a.aspect_name))
+        elif self.sort_by == "planet":
+            aspects = sorted(
+                aspects,
+                key=lambda a: (
+                    get_object_sort_key(a.object1),
+                    get_object_sort_key(a.object2),
+                ),
+            )
+
+        # Build headers with chart labels
+        chart1_label = chart.chart1_label or "Chart 1"
+        chart2_label = chart.chart2_label or "Chart 2"
+
+        headers = [f"{chart1_label}", "Aspect", f"{chart2_label}"]
+        if self.orb_display:
+            headers.append("Orb")
+            headers.append("Applying")
+
+        # Build rows
+        rows = []
+        for aspect in aspects:
+            # Planet 1 with glyph (from chart1)
+            name1, glyph1 = get_object_display(aspect.object1.name)
+            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+
+            # Aspect with glyph
+            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            aspect_display = (
+                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            )
+
+            # Planet 2 with glyph (from chart2)
             name2, glyph2 = get_object_display(aspect.object2.name)
             planet2 = f"{glyph2} {name2}" if glyph2 else name2
 

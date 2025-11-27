@@ -49,6 +49,8 @@ class RichTableRenderer:
             return self._render_key_value(section_name, section_data)
         elif data_type == "text":
             return self._render_text(section_name, section_data)
+        elif data_type == "side_by_side_tables":
+            return self._render_side_by_side_tables(section_name, section_data)
         else:
             return f"Unknown section type: {data_type}"
 
@@ -76,6 +78,8 @@ class RichTableRenderer:
                 self._print_key_value(console, section_data)
             elif data_type == "text":
                 console.print(section_data.get("text", ""))
+            elif data_type == "side_by_side_tables":
+                self._print_side_by_side_tables(console, section_data)
             else:
                 console.print(f"Unknown section type: {data_type}")
 
@@ -173,6 +177,71 @@ class RichTableRenderer:
             line.append(str(value))
             console.print(line)
 
+    def _render_side_by_side_tables(
+        self, section_name: str, data: dict[str, Any]
+    ) -> str:
+        """Render two tables side by side with Rich."""
+        from rich.columns import Columns
+
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return ""
+
+        # Create Rich tables for each
+        rich_tables = []
+        for table_data in tables_data:
+            table = Table(
+                title=table_data.get("title"),
+                show_header=True,
+                header_style="bold magenta",
+            )
+
+            for header in table_data["headers"]:
+                table.add_column(header)
+
+            for row in table_data["rows"]:
+                str_row = [str(cell) for cell in row]
+                table.add_row(*str_row)
+
+            rich_tables.append(table)
+
+        # Use Columns to display side by side
+        with self.console.capture() as capture:
+            self.console.print(Columns(rich_tables, equal=True, expand=True))
+
+        return capture.get()
+
+    def _print_side_by_side_tables(
+        self, console: Console, data: dict[str, Any]
+    ) -> None:
+        """Print two tables side by side directly to console."""
+        from rich.columns import Columns
+
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return
+
+        # Create Rich tables for each
+        rich_tables = []
+        for table_data in tables_data:
+            table = Table(
+                title=table_data.get("title"),
+                show_header=True,
+                header_style="bold magenta",
+            )
+
+            for header in table_data["headers"]:
+                table.add_column(header)
+
+            for row in table_data["rows"]:
+                str_row = [str(cell) for cell in row]
+                table.add_row(*str_row)
+
+            rich_tables.append(table)
+
+        # Use Columns to display side by side
+        console.print(Columns(rich_tables, equal=True, expand=True))
+
 
 class PlainTextRenderer:
     """
@@ -195,6 +264,8 @@ class PlainTextRenderer:
             return self._render_key_value(section_name, section_data)
         elif data_type == "text":
             return section_data.get("text", "")
+        elif data_type == "side_by_side_tables":
+            return self._render_side_by_side_tables(section_name, section_data)
         else:
             return f"Unknown section type: {data_type}"
 
@@ -276,6 +347,36 @@ class PlainTextRenderer:
             lines.append(f"{key.rjust(max_key_len)}: {value}")
 
         return "\n".join(lines)
+
+    def _render_side_by_side_tables(
+        self, section_name: str, data: dict[str, Any]
+    ) -> str:
+        """
+        Render two tables side by side in plain text.
+
+        For plain text, we render tables vertically (one after the other)
+        with clear titles, since true side-by-side is complex in ASCII.
+        """
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return ""
+
+        output_parts = []
+        for table_data in tables_data:
+            # Add title if present
+            title = table_data.get("title", "")
+            if title:
+                output_parts.append(f"\n{title}")
+                output_parts.append("-" * len(title))
+
+            # Render the table using existing method
+            table_output = self._render_table(
+                section_name,
+                {"headers": table_data["headers"], "rows": table_data["rows"]},
+            )
+            output_parts.append(table_output)
+
+        return "\n".join(output_parts)
 
 
 class HTMLRenderer:
@@ -798,6 +899,8 @@ class TypstRenderer:
             parts.append(self._render_key_value(section_data))
         elif data_type == "text":
             parts.append(self._render_text(section_data))
+        elif data_type == "side_by_side_tables":
+            parts.append(self._render_side_by_side_tables(section_data))
         else:
             parts.append(f"Unknown section type: {data_type}")
 
@@ -891,6 +994,86 @@ class TypstRenderer:
         """Convert text data to Typst paragraph."""
         text = data.get("text", "")
         return self._escape(text)
+
+    def _render_side_by_side_tables(self, data: dict[str, Any]) -> str:
+        """
+        Render two tables side by side in Typst.
+
+        Uses Typst's grid layout to place tables next to each other.
+        """
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return ""
+
+        # For two tables, use a grid with two columns
+        # For more tables, adjust proportionally
+        num_tables = len(tables_data)
+        col_spec = ", ".join(["1fr"] * num_tables)
+
+        lines = [
+            "#grid(",
+            f"  columns: ({col_spec}),",
+            "  column-gutter: 16pt,",
+        ]
+
+        for i, table_data in enumerate(tables_data):
+            title = table_data.get("title", f"Table {i + 1}")
+            headers = table_data.get("headers", [])
+            rows = table_data.get("rows", [])
+
+            if not headers:
+                lines.append("  [],")  # Empty cell
+                continue
+
+            num_cols = len(headers)
+
+            # Build table for this chart
+            table_lines = [
+                "  [",
+                f'    #text(font: "Cinzel Decorative", size: 9pt, fill: rgb("#6b4d6e"), tracking: 0.5pt)[{self._escape(title)}]',
+                "    #v(6pt)",
+                "    #block(",
+                "      clip: true,",
+                "      radius: 4pt,",
+                "      width: 100%,",
+                "    )[",
+                "    #table(",
+                f"      columns: {num_cols},",
+                "      stroke: none,",
+                "      inset: (x: 8pt, y: 6pt),",
+                "      align: (col, row) => if col == 0 { left } else { center },",
+                "      fill: (col, row) => {",
+                '        if row == 0 { rgb("#4a3353") }',
+                '        else if calc.odd(row) { rgb("#f9f6f7") }',
+                '        else { rgb("#faf8f5") }',
+                "      },",
+            ]
+
+            # Header row
+            header_cells = ", ".join(
+                f'[#text(fill: white, weight: "semibold", size: 8pt)[{self._escape(h)}]]'
+                for h in headers
+            )
+            table_lines.append(f"      {header_cells},")
+
+            # Data rows
+            for row in rows:
+                padded_row = list(row) + [""] * (num_cols - len(row))
+                row_cells = ", ".join(
+                    f"[#text(size: 8pt)[{self._escape(str(cell))}]]"
+                    for cell in padded_row[:num_cols]
+                )
+                table_lines.append(f"      {row_cells},")
+
+            table_lines.append("    )")  # close table
+            table_lines.append("    ]")  # close block
+            table_lines.append("  ],")  # close grid cell
+
+            lines.extend(table_lines)
+
+        lines.append(")")  # close grid
+
+        return "\n".join(lines)
 
     def _render_chart_svg(self, svg_path: str) -> str:
         """Generate Typst markup to embed chart SVG."""

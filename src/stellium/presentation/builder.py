@@ -7,6 +7,7 @@ by adding sections one at a time, then rendering in their chosen format.
 
 from typing import Any
 
+from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
 from stellium.core.protocols import ReportRenderer, ReportSection
 
@@ -15,6 +16,7 @@ from .sections import (
     AspectPatternSection,
     AspectSection,
     ChartOverviewSection,
+    CrossChartAspectSection,
     DeclinationSection,
     DignitySection,
     HouseCuspsSection,
@@ -40,21 +42,25 @@ class ReportBuilder:
 
     def __init__(self) -> None:
         """Initialize an empty report builder."""
-        self._chart: CalculatedChart | None = None
+        self._chart: CalculatedChart | Comparison | None = None
         self._sections: list[ReportSection] = []
 
-    def from_chart(self, chart: CalculatedChart) -> "ReportBuilder":
+    def from_chart(self, chart: CalculatedChart | Comparison) -> "ReportBuilder":
         """
         Set the chart to generate reports from.
 
         Args:
-            chart: A CalculatedChart from ChartBuilder
+            chart: A CalculatedChart from ChartBuilder or Comparison from ComparisonBuilder
 
         Returns:
             Self for chaining
         """
         self._chart = chart
         return self
+
+    def _is_comparison(self) -> bool:
+        """Check if the current chart is a Comparison object."""
+        return isinstance(self._chart, Comparison)
 
     # -------------------------------------------------------------------------
     # Section Adding Methods
@@ -119,6 +125,46 @@ class ReportBuilder:
         """
         self._sections.append(
             AspectSection(
+                mode=mode,
+                orbs=orbs,
+                sort_by=sort_by,
+            )
+        )
+        return self
+
+    def with_cross_aspects(
+        self,
+        mode: str = "all",
+        orbs: bool = True,
+        sort_by: str = "orb",
+    ) -> "ReportBuilder":
+        """
+        Add cross-chart aspects table (for Comparison charts).
+
+        Shows aspects between chart1 planets and chart2 planets with
+        appropriate labels for each chart.
+
+        Args:
+            mode: "all", "major", "minor", or "harmonic"
+            orbs: Show orb column
+            sort_by: How to sort aspects ("orb", "planet", "aspect_type")
+
+        Returns:
+            Self for chaining
+
+        Note:
+            This section requires a Comparison object (from ComparisonBuilder).
+            If used with a single CalculatedChart, displays a helpful message.
+
+        Example:
+            >>> comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
+            >>> report = (ReportBuilder()
+            ...     .from_chart(comparison)
+            ...     .with_cross_aspects(mode="major")
+            ...     .render())
+        """
+        self._sections.append(
+            CrossChartAspectSection(
                 mode=mode,
                 orbs=orbs,
                 sort_by=sort_by,
@@ -286,6 +332,222 @@ class ReportBuilder:
         """
         self._sections.append(DeclinationSection())
         return self
+
+    # -------------------------------------------------------------------------
+    # Preset Methods
+    # -------------------------------------------------------------------------
+    # Convenience methods that bundle multiple sections into common configurations.
+
+    def preset_minimal(self) -> "ReportBuilder":
+        """
+        Minimal preset: Just the basics.
+
+        Includes:
+        - Chart overview (name, date, location)
+        - Planet positions
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> report = ReportBuilder().from_chart(chart).preset_minimal().render()
+        """
+        return self.with_chart_overview().with_planet_positions()
+
+    def preset_standard(self) -> "ReportBuilder":
+        """
+        Standard preset: Common report sections for everyday use.
+
+        Includes:
+        - Chart overview
+        - Planet positions (with house placements)
+        - Major aspects (sorted by orb)
+        - House cusps
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> report = ReportBuilder().from_chart(chart).preset_standard().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_planet_positions(include_house=True)
+            .with_aspects(mode="major")
+            .with_house_cusps()
+        )
+
+    def preset_detailed(self) -> "ReportBuilder":
+        """
+        Detailed preset: Comprehensive report with all major sections.
+
+        Includes:
+        - Chart overview
+        - Moon phase
+        - Planet positions (with speed and all house systems)
+        - Declinations
+        - All aspects (sorted by orb)
+        - House cusps
+        - Essential dignities
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> report = ReportBuilder().from_chart(chart).preset_detailed().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_moon_phase()
+            .with_planet_positions(include_speed=True, include_house=True)
+            .with_declinations()
+            .with_aspects(mode="all")
+            .with_house_cusps()
+            .with_dignities()
+        )
+
+    def preset_full(self) -> "ReportBuilder":
+        """
+        Full preset: Everything available.
+
+        Includes all sections for maximum detail:
+        - Chart overview
+        - Moon phase
+        - Planet positions (with speed and all house systems)
+        - Declinations
+        - All aspects
+        - Aspect patterns (Grand Trines, T-Squares, etc.)
+        - House cusps
+        - Essential dignities
+        - Midpoints
+
+        Note: Some sections require specific components to be added during
+        chart calculation (e.g., DignityComponent, AspectPatternAnalyzer).
+        Missing components show helpful messages rather than errors.
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_aspects()
+            ...     .add_component(DignityComponent())
+            ...     .add_component(AspectPatternAnalyzer())
+            ...     .add_component(MidpointCalculator())
+            ...     .calculate())
+            >>> report = ReportBuilder().from_chart(chart).preset_full().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_moon_phase()
+            .with_planet_positions(include_speed=True, include_house=True)
+            .with_declinations()
+            .with_aspects(mode="all")
+            .with_aspect_patterns()
+            .with_house_cusps()
+            .with_dignities()
+            .with_midpoints()
+        )
+
+    def preset_positions_only(self) -> "ReportBuilder":
+        """
+        Positions-only preset: Focus on planetary placements.
+
+        Includes:
+        - Chart overview
+        - Planet positions (with speed and house placements)
+        - Declinations
+        - House cusps
+
+        No aspects or interpretive sections.
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> report = ReportBuilder().from_chart(chart).preset_positions_only().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_planet_positions(include_speed=True, include_house=True)
+            .with_declinations()
+            .with_house_cusps()
+        )
+
+    def preset_aspects_only(self) -> "ReportBuilder":
+        """
+        Aspects-only preset: Focus on planetary relationships.
+
+        Includes:
+        - Chart overview
+        - All aspects (with orbs)
+        - Aspect patterns (Grand Trines, T-Squares, etc.)
+
+        Returns:
+            Self for chaining
+
+        Note: Aspect patterns require AspectPatternAnalyzer component.
+
+        Example:
+            >>> report = ReportBuilder().from_chart(chart).preset_aspects_only().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_aspects(mode="all", orbs=True)
+            .with_aspect_patterns()
+        )
+
+    def preset_synastry(self) -> "ReportBuilder":
+        """
+        Synastry preset: Optimized for relationship comparison charts.
+
+        Designed for Comparison objects, this preset shows:
+        - Chart overview (displays both charts' info)
+        - Planet positions (side-by-side tables for each chart)
+        - Cross-chart aspects (with chart labels)
+        - House cusps (side-by-side tables for each chart)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
+            >>> report = ReportBuilder().from_chart(comparison).preset_synastry().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_planet_positions(include_house=True)
+            .with_cross_aspects(mode="major")
+            .with_house_cusps()
+        )
+
+    def preset_transit(self) -> "ReportBuilder":
+        """
+        Transit preset: Optimized for transit comparison charts.
+
+        Shows natal chart positions alongside transit positions,
+        with cross-chart aspects showing transiting planets'
+        aspects to natal positions.
+
+        Includes:
+        - Chart overview
+        - Planet positions (side-by-side: natal vs transit)
+        - Cross-chart aspects (all aspects, tight orbs)
+        - House cusps (side-by-side)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> transit = ComparisonBuilder.transit(natal, transit_time).calculate()
+            >>> report = ReportBuilder().from_chart(transit).preset_transit().render()
+        """
+        return (
+            self.with_chart_overview()
+            .with_planet_positions(include_house=True)
+            .with_cross_aspects(mode="all")
+            .with_house_cusps()
+        )
 
     # -------------------------------------------------------------------------
     # Rendering Methods
