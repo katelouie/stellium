@@ -945,11 +945,14 @@ class AspectSection:
 
     def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
         """Generate aspects table."""
-        # Filer aspects based on mode
+        # Filter aspects based on mode
         aspects = chart.aspects
-        aspect_category = self.mode.title()
-        allowed_aspects = [a.name for a in get_aspects_by_category(aspect_category)]
-        aspects = [a for a in aspects if a.aspect_name in allowed_aspects]
+
+        # Only filter if not "all" mode
+        if self.mode != "all":
+            aspect_category = self.mode.title()
+            allowed_aspects = [a.name for a in get_aspects_by_category(aspect_category)]
+            aspects = [a for a in aspects if a.aspect_name in allowed_aspects]
 
         # Sort aspects
         if self.sort_by == "orb":
