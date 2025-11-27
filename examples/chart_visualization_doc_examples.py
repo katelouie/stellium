@@ -352,10 +352,10 @@ def examples_chart_extended_below_no_aspect():
 
 def main():
     """Execute all registered chart functions"""
-    # for func in _chart_functions:
-    #     print(f"Generating {func.__name__}...")
-    #     func()
-    readme_chart_3()
+    for func in _chart_functions:
+        print(f"Generating {func.__name__}...")
+        func()
+    # readme_chart_3()
 
 
 if __name__ == "__main__":
