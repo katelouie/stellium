@@ -38,6 +38,7 @@ chart.draw().with_zodiac_palette("grey").save()
 **Accessibility:** ✅ Excellent - High contrast, printer-friendly
 
 **Best for:**
+
 - Printing and photocopying
 - Black-and-white publications
 - Professional minimalism
@@ -60,9 +61,11 @@ chart.draw().with_zodiac_palette("rainbow").save()
 **Accessibility:** ✅ Good - Adaptive glyphs ensure readability
 
 **Color scheme:**
+
 - Aries → Pisces: Red → Orange → Yellow → Green → Blue → Purple → Red
 
 **Best for:**
+
 - Learning astrology
 - General use
 - Friendly, approachable presentations
@@ -85,12 +88,14 @@ chart.draw().with_zodiac_palette("elemental").save()
 **Accessibility:** ✅ Good - Clear element groupings
 
 **Color scheme:**
+
 - Fire signs (Aries, Leo, Sagittarius): Red/Orange
 - Earth signs (Taurus, Virgo, Capricorn): Green/Brown
 - Air signs (Gemini, Libra, Aquarius): Yellow/Light Blue
 - Water signs (Cancer, Scorpio, Pisces): Blue/Purple
 
 **Best for:**
+
 - Teaching elemental dignities
 - Traditional astrology
 - Educational materials
@@ -113,11 +118,13 @@ chart.draw().with_zodiac_palette("cardinality").save()
 **Accessibility:** ✅ Good - Clear modality groupings
 
 **Color scheme:**
+
 - Cardinal signs (Aries, Cancer, Libra, Capricorn): Red shades
 - Fixed signs (Taurus, Leo, Scorpio, Aquarius): Blue shades
 - Mutable signs (Gemini, Virgo, Sagittarius, Pisces): Green shades
 
 **Best for:**
+
 - Teaching modalities
 - Pattern recognition (Cardinal/Fixed/Mutable)
 - Educational presentations
@@ -144,6 +151,7 @@ chart.draw().with_theme("midnight").with_zodiac_palette("rainbow_midnight").save
 **Accessibility:** ✅ Excellent - Designed for navy background
 
 **Best for:**
+
 - Midnight theme (THE PERFECT CHART)
 - Night sky aesthetic
 - Professional presentations
@@ -166,6 +174,7 @@ chart.draw().with_theme("celestial").with_zodiac_palette("rainbow_celestial").sa
 **Accessibility:** ✅ Excellent - Designed for purple background
 
 **Best for:**
+
 - Celestial theme
 - Mystical presentations
 - Spiritual work
@@ -188,6 +197,7 @@ chart.draw().with_theme("neon").with_zodiac_palette("rainbow_neon").save()
 **Accessibility:** ✅ Excellent - Maximum contrast on black
 
 **Best for:**
+
 - Neon theme (MAXIMUM IMPACT)
 - Cyberpunk aesthetic
 - Eye-catching presentations
@@ -216,6 +226,7 @@ chart.draw().with_zodiac_palette("viridis").save()
 **Colorblind support:** Deuteranopia, Protanopia, Tritanopia
 
 **Best for:**
+
 - Data visualization aesthetic
 - Accessibility requirements
 - Scientific contexts
@@ -240,6 +251,7 @@ chart.draw().with_zodiac_palette("plasma").save()
 **Colorblind support:** Deuteranopia, Protanopia, Tritanopia
 
 **Best for:**
+
 - Beautiful gradients
 - Presentations where aesthetics matter
 - Scientific contexts with color
@@ -264,6 +276,7 @@ chart.draw().with_zodiac_palette("inferno").save()
 **Colorblind support:** Deuteranopia, Protanopia, Tritanopia
 
 **Best for:**
+
 - Warm aesthetic
 - Dramatic presentations
 - Data visualization
@@ -288,6 +301,7 @@ chart.draw().with_zodiac_palette("magma").save()
 **Colorblind support:** Deuteranopia, Protanopia, Tritanopia
 
 **Best for:**
+
 - Mystical presentations
 - Beautiful scientific aesthetic
 - Artistic displays
@@ -312,6 +326,7 @@ chart.draw().with_zodiac_palette("cividis").save()
 **Colorblind support:** Deuteranopia, Protanopia, Tritanopia, AND normal vision
 
 **Best for:**
+
 - MAXIMUM accessibility
 - Inclusive presentations
 - Universal design
@@ -336,6 +351,7 @@ chart.draw().with_zodiac_palette("turbo").save()
 **Colorblind support:** None (uses full spectrum)
 
 **Best for:**
+
 - Maximum color range
 - Vibrant presentations
 - Artistic displays
@@ -345,67 +361,43 @@ chart.draw().with_zodiac_palette("turbo").save()
 
 ---
 
-#### Viridis Rainbow (Hybrid)
+#### Sepia Rainbow
 
 ```python
-chart.draw().with_zodiac_palette("viridis_rainbow").save()
+chart.draw().with_zodiac_palette("rainbow_sepia").save()
 ```
 
-![Zodiac - Viridis Rainbow](images/gallery/zodiac_viridis_rainbow.svg)
-
-**Description:** Viridis-style scientific rainbow
-
-**Accessibility:** ✅✅ Excellent - Colorblind-friendly
-
-**Best for:** Scientific aesthetic with full spectrum
+![Zodiac - Sepia Rainbow](images/gallery/zodiac_sepia_rainbow.svg)
 
 ---
 
-#### Plasma Rainbow (Hybrid)
+#### Spectral
 
 ```python
-chart.draw().with_zodiac_palette("plasma_rainbow").save()
+chart.draw().with_zodiac_palette("spectral").save()
 ```
 
-![Zodiac - Plasma Rainbow](images/gallery/zodiac_plasma_rainbow.svg)
-
-**Description:** Plasma-style scientific rainbow
-
-**Accessibility:** ✅✅ Excellent - Colorblind-friendly
-
-**Best for:** Beautiful scientific rainbow
+![Zodiac - Spectral](images/gallery/zodiac_spectral.svg)
 
 ---
 
-#### Inferno Rainbow (Hybrid)
+#### Elemental Midnight
 
 ```python
-chart.draw().with_zodiac_palette("inferno_rainbow").save()
+chart.draw().with_zodiac_palette("elemental_midnight").save()
 ```
 
-![Zodiac - Inferno Rainbow](images/gallery/zodiac_inferno_rainbow.svg)
-
-**Description:** Inferno-style warm rainbow
-
-**Accessibility:** ✅✅ Excellent - Colorblind-friendly
-
-**Best for:** Warm scientific rainbow
+![Zodiac - Elemental Midnight](images/gallery/zodiac_elemental_midnight.svg)
 
 ---
 
-#### Magma Rainbow (Hybrid)
+#### Elemental Neon
 
 ```python
-chart.draw().with_zodiac_palette("magma_rainbow").save()
+chart.draw().with_zodiac_palette("elemental_neon").save()
 ```
 
-![Zodiac - Magma Rainbow](images/gallery/zodiac_magma_rainbow.svg)
-
-**Description:** Magma-style mystical rainbow
-
-**Accessibility:** ✅✅ Excellent - Colorblind-friendly
-
-**Best for:** Mystical scientific rainbow
+![Zodiac - Elemental Neon](images/gallery/zodiac_elemental_neon.svg)
 
 ---
 
@@ -419,6 +411,8 @@ Control the colors of aspect lines connecting planets. Most themes use aspect-sp
 chart.draw().with_aspect_palette("classic").save()
 ```
 
+![Aspect - Classic](images/gallery/aspect_classic.svg)
+
 **Description:** Traditional aspect colors (red squares, blue trines, etc.)
 
 **Best for:** Traditional astrology, general use
@@ -430,6 +424,8 @@ chart.draw().with_aspect_palette("classic").save()
 ```python
 chart.draw().with_aspect_palette("dark").save()
 ```
+
+![Aspect - Dark](images/gallery/aspect_dark.svg)
 
 **Description:** Muted aspect colors for dark backgrounds
 
@@ -443,21 +439,11 @@ chart.draw().with_aspect_palette("dark").save()
 chart.draw().with_aspect_palette("blues").save()
 ```
 
+![Aspect - Blues](images/gallery/aspect_blues.svg)
+
 **Description:** Blue gradient for all aspects
 
 **Best for:** Cohesive blue aesthetic, calming presentations
-
----
-
-### Greens
-
-```python
-chart.draw().with_aspect_palette("greens").save()
-```
-
-**Description:** Green gradient for all aspects
-
-**Best for:** Nature-themed charts, growth focus
 
 ---
 
@@ -467,9 +453,23 @@ chart.draw().with_aspect_palette("greens").save()
 chart.draw().with_aspect_palette("purples").save()
 ```
 
+![Aspect - Purples](images/gallery/aspect_purples.svg)
+
 **Description:** Purple gradient for all aspects
 
 **Best for:** Mystical aesthetic, spiritual work
+
+---
+
+### Pastel
+
+```python
+chart.draw().with_aspect_palette("pastel").save()
+```
+
+![Aspect - Pastel](images/gallery/aspect_pastel.svg)
+
+**Description:** Soft gentle colors
 
 ---
 
@@ -480,6 +480,8 @@ All scientific palettes (Viridis, Plasma, Inferno, Magma, Cividis, Turbo) are av
 ```python
 chart.draw().with_aspect_palette("plasma").save()
 ```
+
+![Aspect - Plasma](images/gallery/aspect_plasma.svg)
 
 ---
 
@@ -497,6 +499,8 @@ chart.draw().with_planet_glyph_palette("default").save()
 
 **Best for:** Clean, consistent aesthetic
 
+![Planet Glyphs - Default](images/gallery/planet_glyphs_default.svg)
+
 ---
 
 ### Element
@@ -510,6 +514,7 @@ chart.draw().with_planet_glyph_palette("element").save()
 **Description:** Planets colored by their elemental association
 
 **Color scheme:**
+
 - Fire planets (Mars, Sun): Red/Orange
 - Earth planets (Saturn, Venus): Green/Brown
 - Air planets (Mercury, Uranus): Yellow/Light Blue
@@ -544,6 +549,7 @@ chart.draw().with_planet_glyph_palette("planet_type").save()
 **Description:** Planets grouped by type
 
 **Color scheme:**
+
 - Personal planets (Sun, Moon, Mercury, Venus, Mars): Red
 - Social planets (Jupiter, Saturn): Blue
 - Transpersonal planets (Uranus, Neptune, Pluto): Purple
@@ -609,16 +615,19 @@ chart.draw().with_planet_glyph_palette("viridis").save()
 ### Colorblind-Friendly Palettes
 
 **Deuteranopia & Protanopia (Red-Green Colorblindness):**
+
 - ✅✅✅ Cividis (BEST)
 - ✅✅ Viridis, Plasma, Inferno, Magma
 - ✅ Grey (always safe)
 
 **Tritanopia (Blue-Yellow Colorblindness):**
+
 - ✅✅✅ Cividis (BEST)
 - ✅✅ Viridis, Plasma, Inferno, Magma
 - ✅ Grey (always safe)
 
 **All Types of Colorblindness:**
+
 - ✅✅✅ **Cividis** - The ONLY palette optimized for ALL types
 - ✅✅ Scientific palettes (Viridis, Plasma, Inferno, Magma)
 - ✅ Grey monochrome
@@ -628,10 +637,12 @@ chart.draw().with_planet_glyph_palette("viridis").save()
 ### Print-Friendly Palettes
 
 **Black & White Printing:**
+
 - ✅✅✅ Grey (perfect)
 - ✅ Viridis (good grayscale conversion)
 
 **Color Printing:**
+
 - ✅ Any palette works
 - ✅✅ Rainbow, Elemental, Cardinality (clear on paper)
 
@@ -640,6 +651,7 @@ chart.draw().with_planet_glyph_palette("viridis").save()
 ### High Contrast Requirements
 
 **WCAG AA Compliant (4.5:1 minimum):**
+
 - ✅ ALL palettes (zodiac wheel glyphs are ALWAYS adaptively colored)
 - ✅ Grey (inherently high contrast)
 - ✅ Cividis (designed for accessibility)
@@ -710,14 +722,17 @@ chart.draw() \
 ### By Accessibility Need
 
 **Maximum Accessibility:**
+
 - Cividis (all colorblindness types)
 - Grey (monochrome)
 
 **Good Accessibility:**
+
 - Viridis, Plasma, Inferno, Magma (colorblind-friendly)
 - Elemental, Cardinality (clear structure)
 
 **Not Colorblind-Friendly:**
+
 - Turbo (full spectrum)
 - Rainbow (traditional spectrum)
 
@@ -726,26 +741,31 @@ chart.draw() \
 ### By Use Case
 
 **For Printing:**
+
 - Grey (best)
 - Viridis (good grayscale)
 
 **For Education:**
+
 - Elemental (teaches elements)
 - Cardinality (teaches modalities)
 - Planet Type (teaches planetary spheres)
 
 **For Aesthetics:**
+
 - Rainbow Midnight (with Midnight theme)
 - Rainbow Celestial (with Celestial theme)
 - Rainbow Neon (with Neon theme)
 - Plasma, Magma (scientific beauty)
 
 **For Data Visualization:**
+
 - Viridis (standard)
 - Plasma (beautiful)
 - Cividis (accessible)
 
 **For Tradition:**
+
 - Grey (classical)
 - Classic aspects (traditional colors)
 

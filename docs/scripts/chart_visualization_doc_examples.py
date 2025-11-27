@@ -350,12 +350,259 @@ def examples_chart_extended_below_no_aspect():
     drawing.with_theme("celestial").with_tables("below", show_aspectarian=False).save()
 
 
+@chart
+def gallery_palette_zodiac_grey():
+    filename = "gallery/zodiac_grey.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("grey").save()
+
+
+@chart
+def gallery_palette_zodiac_rainbow():
+    filename = "gallery/zodiac_rainbow.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("rainbow").save()
+
+
+@chart
+def gallery_palette_zodiac_elemental():
+    filename = "gallery/zodiac_elemental.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("elemental").save()
+
+
+@chart
+def gallery_palette_zodiac_modality():
+    filename = "gallery/zodiac_cardinality.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("cardinality").save()
+
+
+@chart
+def gallery_palette_zodiac_rainbow_midnight():
+    filename = "gallery/zodiac_rainbow_midnight.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_theme("midnight").with_zodiac_palette("rainbow_midnight").save()
+
+
+@chart
+def gallery_palette_zodiac_rainbow_celestial():
+    filename = "gallery/zodiac_rainbow_celestial.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_theme("celestial").with_zodiac_palette("rainbow_celestial").save()
+
+
+@chart
+def gallery_palette_zodiac_rainbow_neon():
+    filename = "gallery/zodiac_rainbow_neon.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_theme("neon").with_zodiac_palette("rainbow_neon").save()
+
+
+@chart
+def gallery_palette_zodiac_viridis():
+    filename = "gallery/zodiac_viridis.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("viridis").save()
+
+
+@chart
+def gallery_palette_zodiac_plasma():
+    filename = "gallery/zodiac_plasma.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("plasma").save()
+
+
+@chart
+def gallery_palette_zodiac_inferno():
+    filename = "gallery/zodiac_inferno.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("inferno").save()
+
+
+@chart
+def gallery_palette_zodiac_magma():
+    filename = "gallery/zodiac_magma.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("magma").save()
+
+
+@chart
+def gallery_palette_zodiac_cividis():
+    filename = "gallery/zodiac_cividis.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("cividis").save()
+
+
+@chart
+def gallery_palette_zodiac_turbo():
+    filename = "gallery/zodiac_turbo.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("turbo").save()
+
+
+@chart
+def gallery_palette_zodiac_sepia_rainbow():
+    filename = "gallery/zodiac_sepia_rainbow.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("rainbow_sepia").save()
+
+
+@chart
+def gallery_palette_zodiac_spectral():
+    filename = "gallery/zodiac_spectral.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("spectral").save()
+
+
+@chart
+def gallery_palette_zodiac_elemental_midnight():
+    filename = "gallery/zodiac_elemental_midnight.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("elemental_midnight").save()
+
+
+@chart
+def gallery_palette_zodiac_elemental_neon():
+    filename = "gallery/zodiac_elemental_neon.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_zodiac_palette("elemental_neon").save()
+
+
+@chart
+def gallery_palette_aspect_classic():
+    filename = "gallery/aspect_classic.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_aspect_palette("classic").save()
+
+
+@chart
+def gallery_palette_aspect_dark():
+    filename = "gallery/aspect_dark.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_aspect_palette("dark").save()
+
+
+@chart
+def gallery_palette_aspect_blues():
+    filename = "gallery/aspect_blues.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_aspect_palette("blues").save()
+
+
+@chart
+def gallery_palette_aspect_pastel():
+    filename = "gallery/aspect_pastel.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_aspect_palette("pastel").save()
+
+
+@chart
+def gallery_palette_aspect_purples():
+    filename = "gallery/aspect_purples.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_aspect_palette("purples").save()
+
+
+@chart
+def gallery_palette_aspect_plasma():
+    filename = "gallery/aspect_plasma.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_aspect_palette("plasma").save()
+
+
+@chart
+def gallery_palette_planet_default():
+    filename = "gallery/planet_glyphs_default.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("default").save()
+
+
+@chart
+def gallery_palette_planet_element():
+    filename = "gallery/planet_glyphs_element.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("element").save()
+
+
+@chart
+def gallery_palette_planet_sign_ruler():
+    filename = "gallery/planet_glyphs_sign_ruler.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("sign_ruler").save()
+
+
+@chart
+def gallery_palette_planet_planet_type():
+    filename = "gallery/planet_glyphs_planet_type.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("planet_type").save()
+
+
+@chart
+def gallery_palette_planet_luminaries():
+    filename = "gallery/planet_glyphs_luminaries.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("luminaries").save()
+
+
+@chart
+def gallery_palette_planet_rainbow():
+    filename = "gallery/planet_glyphs_rainbow.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("rainbow").save()
+
+
+@chart
+def gallery_palette_planet_chakra():
+    filename = "gallery/planet_glyphs_chakra.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("chakra").save()
+
+
+@chart
+def gallery_palette_planet_viridis():
+    filename = "gallery/planet_glyphs_viridis.svg"
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    drawing = chart.draw(os.path.join(FILEDIR, filename))
+    drawing.with_planet_glyph_palette("viridis").save()
+
+
 def main():
     """Execute all registered chart functions"""
     for func in _chart_functions:
         print(f"Generating {func.__name__}...")
         func()
-    # readme_chart_3()
 
 
 if __name__ == "__main__":

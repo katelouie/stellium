@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stellium Color & Theme Reference</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #555;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        .palette-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .palette-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 15px;
+        }
+        .palette-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .palette-description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        .color-swatches {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .color-swatch {
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            position: relative;
+            cursor: pointer;
+        }
+        .color-swatch:hover::after {
+            content: attr(data-color);
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            background: #333;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.75em;
+            white-space: nowrap;
+            z-index: 10;
+        }
+        .color-label {
+            font-size: 0.75em;
+            color: #666;
+            margin-top: 4px;
+            text-align: center;
+        }
+        .aspect-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .aspect-item {
+            text-align: center;
+        }
+        .planet-colors {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .planet-item {
+            text-align: center;
+        }
+        .theme-preview {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 15px;
+            align-items: start;
+        }
+        .theme-info {
+            display: grid;
+            gap: 8px;
+        }
+        .theme-color-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .theme-color-label {
+            font-size: 0.85em;
+            color: #666;
+            min-width: 150px;
+        }
+        .theme-color-swatch {
+            width: 40px;
+            height: 30px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .theme-color-value {
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #888;
+        }
+        code {
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌟 Stellium Color & Theme Reference</h1>
+    <p>
+        This reference sheet shows all available color palettes and themes in the Stellium visualization system.
+        Hover over color swatches to see hex values.
+    </p>
+
+<h2>🌈 Zodiac Wheel Palettes</h2>
+<p>Color palettes for the 12 zodiac signs on the outer wheel.</p>
+<div class="palette-grid">
+<div class="palette-card">
+<div class="palette-name">Grey</div>
+<div class="palette-description">Classic grey wheel (no color)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #EEEEEE;" data-color="#EEEEEE"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow</div>
+<div class="palette-description">Rainbow spectrum (12 soft colors)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #E8B4B8;" data-color="#E8B4B8"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #E8C4B8;" data-color="#E8C4B8"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #E8D8B8;" data-color="#E8D8B8"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #E8E8B8;" data-color="#E8E8B8"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #D8E8B8;" data-color="#D8E8B8"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #C4E8B8;" data-color="#C4E8B8"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #B8E8C4;" data-color="#B8E8C4"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #B8E8D8;" data-color="#B8E8D8"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #B8D8E8;" data-color="#B8D8E8"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #B8C4E8;" data-color="#B8C4E8"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #C4B8E8;" data-color="#C4B8E8"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #D8B8E8;" data-color="#D8B8E8"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Elemental</div>
+<div class="palette-description">4-color elemental (Fire/Earth/Air/Water)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #F4D4D4;" data-color="#F4D4D4"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4D4;" data-color="#D4E4D4"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4F4;" data-color="#D4E4F4"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4F4;" data-color="#E4D4F4"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #F4D4D4;" data-color="#F4D4D4"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4D4;" data-color="#D4E4D4"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4F4;" data-color="#D4E4F4"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4F4;" data-color="#E4D4F4"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #F4D4D4;" data-color="#F4D4D4"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4D4;" data-color="#D4E4D4"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4F4;" data-color="#D4E4F4"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4F4;" data-color="#E4D4F4"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Cardinality</div>
+<div class="palette-description">3-color modality (Cardinal/Fixed/Mutable)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #F4E4D4;" data-color="#F4E4D4"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4E4;" data-color="#D4E4E4"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4E4;" data-color="#E4D4E4"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #F4E4D4;" data-color="#F4E4D4"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4E4;" data-color="#D4E4E4"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4E4;" data-color="#E4D4E4"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #F4E4D4;" data-color="#F4E4D4"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4E4;" data-color="#D4E4E4"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4E4;" data-color="#E4D4E4"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #F4E4D4;" data-color="#F4E4D4"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #D4E4E4;" data-color="#D4E4E4"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #E4D4E4;" data-color="#E4D4E4"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow_Dark</div>
+<div class="palette-description">Dark rainbow (muted, darker spectrum)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #B88B8F;" data-color="#B88B8F"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #B89B8F;" data-color="#B89B8F"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #B8AB8F;" data-color="#B8AB8F"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #B8B88F;" data-color="#B8B88F"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #ABB88F;" data-color="#ABB88F"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #9BB88F;" data-color="#9BB88F"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #8FB89B;" data-color="#8FB89B"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #8FB8AB;" data-color="#8FB8AB"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #8FABB8;" data-color="#8FABB8"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #8F9BB8;" data-color="#8F9BB8"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #9B8FB8;" data-color="#9B8FB8"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #AB8FB8;" data-color="#AB8FB8"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow_Midnight</div>
+<div class="palette-description">Midnight rainbow (cool blues and purples)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #4A5A7C;" data-color="#4A5A7C"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #3A6A8C;" data-color="#3A6A8C"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #3A7A9C;" data-color="#3A7A9C"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #3A8AAC;" data-color="#3A8AAC"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #3A8A9C;" data-color="#3A8A9C"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #3A9A8C;" data-color="#3A9A8C"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #3A9A7C;" data-color="#3A9A7C"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #3A8A6C;" data-color="#3A8A6C"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #4A6A7C;" data-color="#4A6A7C"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #5A5A8C;" data-color="#5A5A8C"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #6A4A8C;" data-color="#6A4A8C"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #7A3A8C;" data-color="#7A3A8C"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow_Neon</div>
+<div class="palette-description">Neon rainbow (super bright electric colors)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #FF00AA;" data-color="#FF00AA"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #FF3300;" data-color="#FF3300"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #FF6600;" data-color="#FF6600"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #FFFF00;" data-color="#FFFF00"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #AAFF00;" data-color="#AAFF00"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #00FF00;" data-color="#00FF00"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #00FFAA;" data-color="#00FFAA"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #00FFFF;" data-color="#00FFFF"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #0088FF;" data-color="#0088FF"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #0000FF;" data-color="#0000FF"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #AA00FF;" data-color="#AA00FF"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #FF00FF;" data-color="#FF00FF"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow_Sepia</div>
+<div class="palette-description">Sepia rainbow (warm browns and earth tones)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #C4A090;" data-color="#C4A090"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #C4AA90;" data-color="#C4AA90"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #C4B490;" data-color="#C4B490"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #C4BE90;" data-color="#C4BE90"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #B4C490;" data-color="#B4C490"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #AAC490;" data-color="#AAC490"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #90C4AA;" data-color="#90C4AA"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #90C4B4;" data-color="#90C4B4"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #90B4C4;" data-color="#90B4C4"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #90AAC4;" data-color="#90AAC4"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #A090C4;" data-color="#A090C4"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #AA90C4;" data-color="#AA90C4"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow_Celestial</div>
+<div class="palette-description">Celestial rainbow (cosmic purples and blues)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #9B4FA3;" data-color="#9B4FA3"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #8B5FAF;" data-color="#8B5FAF"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #7B6FAF;" data-color="#7B6FAF"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #6B7FAF;" data-color="#6B7FAF"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #5B8FAF;" data-color="#5B8FAF"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #4B9FAF;" data-color="#4B9FAF"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #4BAFAF;" data-color="#4BAFAF"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #4BAFAF;" data-color="#4BAFAF"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #5B9FAF;" data-color="#5B9FAF"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #6B8FAF;" data-color="#6B8FAF"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #7B7FAF;" data-color="#7B7FAF"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #8B6FAF;" data-color="#8B6FAF"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Elemental_Dark</div>
+<div class="palette-description">Dark elemental (muted element colors)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #B88080;" data-color="#B88080"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #80A880;" data-color="#80A880"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #8080B8;" data-color="#8080B8"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #A880B8;" data-color="#A880B8"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #B88080;" data-color="#B88080"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #80A880;" data-color="#80A880"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #8080B8;" data-color="#8080B8"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #A880B8;" data-color="#A880B8"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #B88080;" data-color="#B88080"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #80A880;" data-color="#80A880"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #8080B8;" data-color="#8080B8"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #A880B8;" data-color="#A880B8"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Elemental_Midnight</div>
+<div class="palette-description">Midnight elemental (cool-toned elements)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #5A6A8C;" data-color="#5A6A8C"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #4A7A7C;" data-color="#4A7A7C"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #6A7AAC;" data-color="#6A7AAC"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #5A5A8C;" data-color="#5A5A8C"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #5A6A8C;" data-color="#5A6A8C"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #4A7A7C;" data-color="#4A7A7C"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #6A7AAC;" data-color="#6A7AAC"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #5A5A8C;" data-color="#5A5A8C"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #5A6A8C;" data-color="#5A6A8C"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #4A7A7C;" data-color="#4A7A7C"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #6A7AAC;" data-color="#6A7AAC"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #5A5A8C;" data-color="#5A5A8C"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Elemental_Neon</div>
+<div class="palette-description">Neon elemental (electric element colors)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #FF0066;" data-color="#FF0066"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #00FF66;" data-color="#00FF66"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #00CCFF;" data-color="#00CCFF"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #CC00FF;" data-color="#CC00FF"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #FF0066;" data-color="#FF0066"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #00FF66;" data-color="#00FF66"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #00CCFF;" data-color="#00CCFF"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #CC00FF;" data-color="#CC00FF"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #FF0066;" data-color="#FF0066"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #00FF66;" data-color="#00FF66"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #00CCFF;" data-color="#00CCFF"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #CC00FF;" data-color="#CC00FF"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Elemental_Sepia</div>
+<div class="palette-description">Sepia elemental (warm-toned elements)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #C49080;" data-color="#C49080"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #A0B490;" data-color="#A0B490"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #90A8C4;" data-color="#90A8C4"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #A490B4;" data-color="#A490B4"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #C49080;" data-color="#C49080"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #A0B490;" data-color="#A0B490"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #90A8C4;" data-color="#90A8C4"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #A490B4;" data-color="#A490B4"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #C49080;" data-color="#C49080"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #A0B490;" data-color="#A0B490"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #90A8C4;" data-color="#90A8C4"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #A490B4;" data-color="#A490B4"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Viridis</div>
+<div class="palette-description">Viridis (purple→green→yellow, colorblind-friendly)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #440154;" data-color="#440154"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #482475;" data-color="#482475"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #414487;" data-color="#414487"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #355F8D;" data-color="#355F8D"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #2A788E;" data-color="#2A788E"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #21918C;" data-color="#21918C"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #22A884;" data-color="#22A884"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #42BE71;" data-color="#42BE71"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #7AD151;" data-color="#7AD151"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #BBDF27;" data-color="#BBDF27"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #FDE724;" data-color="#FDE724"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #FDE724;" data-color="#FDE724"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Plasma</div>
+<div class="palette-description">Plasma (blue→purple→orange→yellow, vibrant)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #0D0887;" data-color="#0D0887"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #41049D;" data-color="#41049D"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #6A00A8;" data-color="#6A00A8"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #8F0DA4;" data-color="#8F0DA4"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #B12A90;" data-color="#B12A90"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #CC4778;" data-color="#CC4778"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #E16462;" data-color="#E16462"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #F1844B;" data-color="#F1844B"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #FCA636;" data-color="#FCA636"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #FCCE25;" data-color="#FCCE25"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #F0F921;" data-color="#F0F921"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #F0F921;" data-color="#F0F921"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Inferno</div>
+<div class="palette-description">Inferno (black→red→orange→yellow, dramatic)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #000004;" data-color="#000004"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #1B0C41;" data-color="#1B0C41"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #4A0C6B;" data-color="#4A0C6B"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #781C6D;" data-color="#781C6D"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #A52C60;" data-color="#A52C60"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #CF4446;" data-color="#CF4446"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #ED6925;" data-color="#ED6925"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #FB9A06;" data-color="#FB9A06"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #F7D03C;" data-color="#F7D03C"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Magma</div>
+<div class="palette-description">Magma (black→purple→pink→yellow, subtle)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #000004;" data-color="#000004"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #0B0924;" data-color="#0B0924"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #231151;" data-color="#231151"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #410F75;" data-color="#410F75"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #5F187F;" data-color="#5F187F"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #7B2382;" data-color="#7B2382"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #982D80;" data-color="#982D80"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #B73779;" data-color="#B73779"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #D3436E;" data-color="#D3436E"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #EB5760;" data-color="#EB5760"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #F8765C;" data-color="#F8765C"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #FCFDBF;" data-color="#FCFDBF"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Cividis</div>
+<div class="palette-description">Cividis (blue→yellow, CVD-optimized)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #00204C;" data-color="#00204C"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #00306E;" data-color="#00306E"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #00447A;" data-color="#00447A"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #25567B;" data-color="#25567B"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #4E6B7C;" data-color="#4E6B7C"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #73807D;" data-color="#73807D"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #9B9680;" data-color="#9B9680"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #C5AC83;" data-color="#C5AC83"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #E5C482;" data-color="#E5C482"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #FDDC7D;" data-color="#FDDC7D"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #FEE883;" data-color="#FEE883"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #FFEA46;" data-color="#FFEA46"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Turbo</div>
+<div class="palette-description">Turbo (rainbow, improved Google palette)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #30123B;" data-color="#30123B"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #4662D7;" data-color="#4662D7"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #1FAAD2;" data-color="#1FAAD2"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #1AE4B6;" data-color="#1AE4B6"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #72FE5E;" data-color="#72FE5E"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #C8EF34;" data-color="#C8EF34"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #FABA39;" data-color="#FABA39"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #F66B19;" data-color="#F66B19"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #CA2A04;" data-color="#CA2A04"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #7A0403;" data-color="#7A0403"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #7A0403;" data-color="#7A0403"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #7A0403;" data-color="#7A0403"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Coolwarm</div>
+<div class="palette-description">Coolwarm (blue→white→red, diverging)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #3B4CC0;" data-color="#3B4CC0"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #5E6EC5;" data-color="#5E6EC5"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #7F91CB;" data-color="#7F91CB"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #A1B4D0;" data-color="#A1B4D0"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #C3D7D6;" data-color="#C3D7D6"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #E5E5E5;" data-color="#E5E5E5"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #F1D4D0;" data-color="#F1D4D0"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #F3B6AF;" data-color="#F3B6AF"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #EC8C88;" data-color="#EC8C88"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #DD5C5C;" data-color="#DD5C5C"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #C73333;" data-color="#C73333"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #B40426;" data-color="#B40426"></div><div class="color-label">Pis</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Spectral</div>
+<div class="palette-description">Spectral (red→yellow→green→blue, diverging)</div>
+<div class="color-swatches">
+<div><div class="color-swatch" style="background-color: #9E0142;" data-color="#9E0142"></div><div class="color-label">Ari</div></div>
+<div><div class="color-swatch" style="background-color: #D53E4F;" data-color="#D53E4F"></div><div class="color-label">Tau</div></div>
+<div><div class="color-swatch" style="background-color: #F46D43;" data-color="#F46D43"></div><div class="color-label">Gem</div></div>
+<div><div class="color-swatch" style="background-color: #FDAE61;" data-color="#FDAE61"></div><div class="color-label">Can</div></div>
+<div><div class="color-swatch" style="background-color: #FEE08B;" data-color="#FEE08B"></div><div class="color-label">Leo</div></div>
+<div><div class="color-swatch" style="background-color: #FFFFBF;" data-color="#FFFFBF"></div><div class="color-label">Vir</div></div>
+<div><div class="color-swatch" style="background-color: #E6F598;" data-color="#E6F598"></div><div class="color-label">Lib</div></div>
+<div><div class="color-swatch" style="background-color: #ABDDA4;" data-color="#ABDDA4"></div><div class="color-label">Sco</div></div>
+<div><div class="color-swatch" style="background-color: #66C2A5;" data-color="#66C2A5"></div><div class="color-label">Sag</div></div>
+<div><div class="color-swatch" style="background-color: #3288BD;" data-color="#3288BD"></div><div class="color-label">Cap</div></div>
+<div><div class="color-swatch" style="background-color: #5E4FA2;" data-color="#5E4FA2"></div><div class="color-label">Aqu</div></div>
+<div><div class="color-swatch" style="background-color: #5E4FA2;" data-color="#5E4FA2"></div><div class="color-label">Pis</div></div>
+</div></div>
+</div>
+<h2>🔷 Aspect Line Palettes</h2>
+<p>Color palettes for aspect lines in the chart center.</p>
+<div class="palette-grid">
+<div class="palette-card">
+<div class="palette-name">Classic</div>
+<div class="palette-description">Classic (registry defaults)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #34495E;" data-color="#34495E"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #27AE60;" data-color="#27AE60"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #F39C12;" data-color="#F39C12"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #3498DB;" data-color="#3498DB"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #E74C3C;" data-color="#E74C3C"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #95A5A6;" data-color="#95A5A6"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #E67E22;" data-color="#E67E22"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #D68910;" data-color="#D68910"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Dark</div>
+<div class="palette-description">Dark (bright accents for dark backgrounds)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #95E1D3;" data-color="#95E1D3"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF6B9D;" data-color="#FF6B9D"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #4ECDC4;" data-color="#4ECDC4"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF6B6B;" data-color="#FF6B6B"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #888888;" data-color="#888888"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF9999;" data-color="#FF9999"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFAA99;" data-color="#FFAA99"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BB88CC;" data-color="#BB88CC"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Midnight</div>
+<div class="palette-description">Midnight (gold and cool blues)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #ADD8E6;" data-color="#ADD8E6"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B0C4DE;" data-color="#B0C4DE"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #98D8E8;" data-color="#98D8E8"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #87CEEB;" data-color="#87CEEB"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #7B8FA0;" data-color="#7B8FA0"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #C0D0E0;" data-color="#C0D0E0"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B0C8D8;" data-color="#B0C8D8"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A0B8D0;" data-color="#A0B8D0"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Neon</div>
+<div class="palette-description">Neon (cyberpunk bright colors)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFFF00;" data-color="#FFFF00"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #39FF14;" data-color="#39FF14"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF1493;" data-color="#FF1493"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #00FFFF;" data-color="#00FFFF"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF00FF;" data-color="#FF00FF"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #00FF88;" data-color="#00FF88"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF6600;" data-color="#FF6600"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FF9900;" data-color="#FF9900"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #CC00FF;" data-color="#CC00FF"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Sepia</div>
+<div class="palette-description">Sepia (warm browns)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8B4513;" data-color="#8B4513"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A68B6B;" data-color="#A68B6B"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8B7355;" data-color="#8B7355"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9B7653;" data-color="#9B7653"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A0522D;" data-color="#A0522D"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #C4A582;" data-color="#C4A582"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B8936A;" data-color="#B8936A"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A88158;" data-color="#A88158"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #987654;" data-color="#987654"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Pastel</div>
+<div class="palette-description">Pastel (soft gentle colors)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFD4A3;" data-color="#FFD4A3"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BAFFC9;" data-color="#BAFFC9"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFDFBA;" data-color="#FFDFBA"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BAE1FF;" data-color="#BAE1FF"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFB3BA;" data-color="#FFB3BA"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #E0E0E0;" data-color="#E0E0E0"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFE0B0;" data-color="#FFE0B0"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFD0A0;" data-color="#FFD0A0"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #E0C0E0;" data-color="#E0C0E0"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Celestial</div>
+<div class="palette-description">Celestial (cosmic purples and gold)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #DDA0DD;" data-color="#DDA0DD"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BA55D3;" data-color="#BA55D3"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9370DB;" data-color="#9370DB"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #DA70D6;" data-color="#DA70D6"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B8A0C0;" data-color="#B8A0C0"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #C888D0;" data-color="#C888D0"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B878C0;" data-color="#B878C0"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A868B0;" data-color="#A868B0"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Greyscale</div>
+<div class="palette-description">Greyscale (monochromatic greys)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #333333;" data-color="#333333"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #666666;" data-color="#666666"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #555555;" data-color="#555555"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #777777;" data-color="#777777"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #444444;" data-color="#444444"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #999999;" data-color="#999999"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #888888;" data-color="#888888"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #888888;" data-color="#888888"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #888888;" data-color="#888888"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Blues</div>
+<div class="palette-description">Blues (monochromatic blue tones)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #1A3A52;" data-color="#1A3A52"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #5B9BD5;" data-color="#5B9BD5"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #2E5F8F;" data-color="#2E5F8F"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #70ADE3;" data-color="#70ADE3"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #1F4E78;" data-color="#1F4E78"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8BBDEA;" data-color="#8BBDEA"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #4A7EAD;" data-color="#4A7EAD"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #3D6A99;" data-color="#3D6A99"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #6098C7;" data-color="#6098C7"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Purples</div>
+<div class="palette-description">Purples (monochromatic purple tones)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #5B2C6F;" data-color="#5B2C6F"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #7D3C98;" data-color="#7D3C98"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A569BD;" data-color="#A569BD"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #6C3483;" data-color="#6C3483"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BB8FCE;" data-color="#BB8FCE"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8E44AD;" data-color="#8E44AD"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #7D3C98;" data-color="#7D3C98"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Earth_Tones</div>
+<div class="palette-description">Earth Tones (warm natural colors)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8B4513;" data-color="#8B4513"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #6B8E23;" data-color="#6B8E23"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #CD853F;" data-color="#CD853F"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8FBC8F;" data-color="#8FBC8F"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #D2691E;" data-color="#D2691E"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BDB76B;" data-color="#BDB76B"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #BC8F5F;" data-color="#BC8F5F"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A0753F;" data-color="#A0753F"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9A7B4F;" data-color="#9A7B4F"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Viridis</div>
+<div class="palette-description">Viridis (purple→green→yellow, perceptually uniform)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #440154;" data-color="#440154"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #22A884;" data-color="#22A884"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #414487;" data-color="#414487"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #7AD151;" data-color="#7AD151"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FDE724;" data-color="#FDE724"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #2A788E;" data-color="#2A788E"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #5DC863;" data-color="#5DC863"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B8DE29;" data-color="#B8DE29"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #482475;" data-color="#482475"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Plasma</div>
+<div class="palette-description">Plasma (blue→purple→orange→yellow)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #0D0887;" data-color="#0D0887"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #B12A90;" data-color="#B12A90"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #6A00A8;" data-color="#6A00A8"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FCA636;" data-color="#FCA636"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #F0F921;" data-color="#F0F921"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #8F0DA4;" data-color="#8F0DA4"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #E16462;" data-color="#E16462"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FCCE25;" data-color="#FCCE25"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #41049D;" data-color="#41049D"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Inferno</div>
+<div class="palette-description">Inferno (black→red→orange→yellow)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #000004;" data-color="#000004"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #CF4446;" data-color="#CF4446"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #781C6D;" data-color="#781C6D"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FB9A06;" data-color="#FB9A06"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #A52C60;" data-color="#A52C60"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #ED6925;" data-color="#ED6925"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #F7D03C;" data-color="#F7D03C"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #4A0C6B;" data-color="#4A0C6B"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Magma</div>
+<div class="palette-description">Magma (black→purple→pink→yellow)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #000004;" data-color="#000004"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #982D80;" data-color="#982D80"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #5F187F;" data-color="#5F187F"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #EB5760;" data-color="#EB5760"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FCFDBF;" data-color="#FCFDBF"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #7B2382;" data-color="#7B2382"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #D3436E;" data-color="#D3436E"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #F8765C;" data-color="#F8765C"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #410F75;" data-color="#410F75"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Cividis</div>
+<div class="palette-description">Cividis (blue→yellow, CVD-optimized)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #00204C;" data-color="#00204C"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #73807D;" data-color="#73807D"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #00447A;" data-color="#00447A"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #C5AC83;" data-color="#C5AC83"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FFEA46;" data-color="#FFEA46"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #4E6B7C;" data-color="#4E6B7C"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #9B9680;" data-color="#9B9680"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #E5C482;" data-color="#E5C482"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #25567B;" data-color="#25567B"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Turbo</div>
+<div class="palette-description">Turbo (improved rainbow)</div>
+<div class="aspect-colors">
+<div class="aspect-item"><div class="color-swatch" style="background-color: #30123B;" data-color="#30123B"></div><div class="color-label">Conjunction</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #72FE5E;" data-color="#72FE5E"></div><div class="color-label">Sextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #1FAAD2;" data-color="#1FAAD2"></div><div class="color-label">Square</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #FABA39;" data-color="#FABA39"></div><div class="color-label">Trine</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #CA2A04;" data-color="#CA2A04"></div><div class="color-label">Opposition</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #1AE4B6;" data-color="#1AE4B6"></div><div class="color-label">Semisextile</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #C8EF34;" data-color="#C8EF34"></div><div class="color-label">Semisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #F66B19;" data-color="#F66B19"></div><div class="color-label">Sesquisquare</div></div>
+<div class="aspect-item"><div class="color-swatch" style="background-color: #4662D7;" data-color="#4662D7"></div><div class="color-label">Quincunx</div></div>
+</div></div>
+</div>
+<h2>🪐 Planet Glyph Palettes</h2>
+<p>Color palettes for planet glyphs.</p>
+<div class="palette-grid">
+<div class="palette-card">
+<div class="palette-name">Default</div>
+<div class="palette-description">Default (theme color)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Element</div>
+<div class="palette-description">Element (fire/earth/air/water)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #E74C3C;" data-color="#E74C3C"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #3498DB;" data-color="#3498DB"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #27AE60;" data-color="#27AE60"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #E74C3C;" data-color="#E74C3C"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #E74C3C;" data-color="#E74C3C"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #27AE60;" data-color="#27AE60"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #3498DB;" data-color="#3498DB"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Sign_Ruler</div>
+<div class="palette-description">Rulership (traditional planetary colors)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #C0C0C0;" data-color="#C0C0C0"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FFA500;" data-color="#FFA500"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FF69B4;" data-color="#FF69B4"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #DC143C;" data-color="#DC143C"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4169E1;" data-color="#4169E1"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #2F4F4F;" data-color="#2F4F4F"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #00CED1;" data-color="#00CED1"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #7B68EE;" data-color="#7B68EE"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #8B0000;" data-color="#8B0000"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Planet_Type</div>
+<div class="palette-description">Planet Type (luminary/traditional/modern/etc.)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4169E1;" data-color="#4169E1"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4169E1;" data-color="#4169E1"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4169E1;" data-color="#4169E1"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4169E1;" data-color="#4169E1"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4169E1;" data-color="#4169E1"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9370DB;" data-color="#9370DB"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9370DB;" data-color="#9370DB"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9370DB;" data-color="#9370DB"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Luminaries</div>
+<div class="palette-description">Luminaries (Sun/Moon special, others neutral)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #FFD700;" data-color="#FFD700"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #C0C0C0;" data-color="#C0C0C0"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #222222;" data-color="#222222"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Rainbow</div>
+<div class="palette-description">Rainbow (each planet different color)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #FF0000;" data-color="#FF0000"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FF7F00;" data-color="#FF7F00"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FFFF00;" data-color="#FFFF00"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #00FF00;" data-color="#00FF00"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #0000FF;" data-color="#0000FF"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4B0082;" data-color="#4B0082"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9400D3;" data-color="#9400D3"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FF1493;" data-color="#FF1493"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #00CED1;" data-color="#00CED1"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #8B4513;" data-color="#8B4513"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Chakra</div>
+<div class="palette-description">Chakra (planetary-chakra correspondences)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #FDB827;" data-color="#FDB827"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #C77DFF;" data-color="#C77DFF"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #00BBF9;" data-color="#00BBF9"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #06D6A0;" data-color="#06D6A0"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #E63946;" data-color="#E63946"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #9B59B6;" data-color="#9B59B6"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #495057;" data-color="#495057"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #00F5FF;" data-color="#00F5FF"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #DA70D6;" data-color="#DA70D6"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #8B0000;" data-color="#8B0000"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Viridis</div>
+<div class="palette-description">Viridis (perceptually uniform)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #440154;" data-color="#440154"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #482475;" data-color="#482475"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #414487;" data-color="#414487"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #2A788E;" data-color="#2A788E"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #22A884;" data-color="#22A884"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #42BE71;" data-color="#42BE71"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #7AD151;" data-color="#7AD151"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #BBDF27;" data-color="#BBDF27"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FDE724;" data-color="#FDE724"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FDE724;" data-color="#FDE724"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Plasma</div>
+<div class="palette-description">Plasma (vibrant gradient)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #0D0887;" data-color="#0D0887"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #5302A3;" data-color="#5302A3"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #8B0AA5;" data-color="#8B0AA5"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #B83289;" data-color="#B83289"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #DB5C68;" data-color="#DB5C68"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #F48849;" data-color="#F48849"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FEBC2A;" data-color="#FEBC2A"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #F0F921;" data-color="#F0F921"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #F0F921;" data-color="#F0F921"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #F0F921;" data-color="#F0F921"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Inferno</div>
+<div class="palette-description">Inferno (dramatic gradient)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #000004;" data-color="#000004"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #320A5A;" data-color="#320A5A"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #781C6D;" data-color="#781C6D"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #BB3754;" data-color="#BB3754"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #ED6925;" data-color="#ED6925"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FB9A06;" data-color="#FB9A06"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #F7D03C;" data-color="#F7D03C"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FCFFA4;" data-color="#FCFFA4"></div><div class="color-label">Pluto</div></div>
+</div></div>
+<div class="palette-card">
+<div class="palette-name">Turbo</div>
+<div class="palette-description">Turbo (improved rainbow)</div>
+<div class="planet-colors">
+<div class="planet-item"><div class="color-swatch" style="background-color: #30123B;" data-color="#30123B"></div><div class="color-label">Sun</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #4662D7;" data-color="#4662D7"></div><div class="color-label">Moon</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #1AE4B6;" data-color="#1AE4B6"></div><div class="color-label">Mercury</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #72FE5E;" data-color="#72FE5E"></div><div class="color-label">Venus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #C8EF34;" data-color="#C8EF34"></div><div class="color-label">Mars</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #FABA39;" data-color="#FABA39"></div><div class="color-label">Jupiter</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #F66B19;" data-color="#F66B19"></div><div class="color-label">Saturn</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #CA2A04;" data-color="#CA2A04"></div><div class="color-label">Uranus</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #7A0403;" data-color="#7A0403"></div><div class="color-label">Neptune</div></div>
+<div class="planet-item"><div class="color-swatch" style="background-color: #7A0403;" data-color="#7A0403"></div><div class="color-label">Pluto</div></div>
+</div></div>
+</div>
+<h2>🎨 Chart Themes</h2>
+<p>Complete visual themes with coordinated colors across all elements.</p>
+<div class="palette-grid">
+<div class="palette-card">
+<div class="palette-name">Classic</div>
+<div class="palette-description">Classic - Professional grey/neutral (default)</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #FFFFFF;"></div><span class="theme-color-value">#FFFFFF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #999999;"></div><span class="theme-color-value">#999999</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #EEEEEE;"></div><span class="theme-color-value">#EEEEEE</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #BBBBBB;"></div><span class="theme-color-value">#BBBBBB</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #555555;"></div><span class="theme-color-value">#555555</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #222222;"></div><span class="theme-color-value">#222222</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #444444;"></div><span class="theme-color-value">#444444</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #CCCCCC;"></div><span class="theme-color-value">#CCCCCC</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #555555;"></div><span class="theme-color-value">#555555</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Dark</div>
+<div class="palette-description">Dark - Dark grey background with light text</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #1E1E1E;"></div><span class="theme-color-value">#1E1E1E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #555555;"></div><span class="theme-color-value">#555555</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #2D2D2D;"></div><span class="theme-color-value">#2D2D2D</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #666666;"></div><span class="theme-color-value">#666666</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #CCCCCC;"></div><span class="theme-color-value">#CCCCCC</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #EEEEEE;"></div><span class="theme-color-value">#EEEEEE</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #BBBBBB;"></div><span class="theme-color-value">#BBBBBB</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #555555;"></div><span class="theme-color-value">#555555</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #AAAAAA;"></div><span class="theme-color-value">#AAAAAA</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Midnight</div>
+<div class="palette-description">Midnight - Elegant night sky with deep navy and white/gold</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #0A1628;"></div><span class="theme-color-value">#0A1628</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #3A5A7C;"></div><span class="theme-color-value">#3A5A7C</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #0D1F3C;"></div><span class="theme-color-value">#0D1F3C</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #4A6FA5;"></div><span class="theme-color-value">#4A6FA5</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #E8E8E8;"></div><span class="theme-color-value">#E8E8E8</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #FFD700;"></div><span class="theme-color-value">#FFD700</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #E8E8E8;"></div><span class="theme-color-value">#E8E8E8</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #4A6FA5;"></div><span class="theme-color-value">#4A6FA5</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #E8E8E8;"></div><span class="theme-color-value">#E8E8E8</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Neon</div>
+<div class="palette-description">Neon - Cyberpunk aesthetic with bright neon colors</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #0D0D0D;"></div><span class="theme-color-value">#0D0D0D</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #00FFFF;"></div><span class="theme-color-value">#00FFFF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #1A1A1A;"></div><span class="theme-color-value">#1A1A1A</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #00FFFF;"></div><span class="theme-color-value">#00FFFF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #FF00FF;"></div><span class="theme-color-value">#FF00FF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #00FFFF;"></div><span class="theme-color-value">#00FFFF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #FF00FF;"></div><span class="theme-color-value">#FF00FF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #00FFFF;"></div><span class="theme-color-value">#00FFFF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #FF00FF;"></div><span class="theme-color-value">#FF00FF</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Sepia</div>
+<div class="palette-description">Sepia - Vintage aged paper with warm browns</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #F4ECD8;"></div><span class="theme-color-value">#F4ECD8</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #8B7355;"></div><span class="theme-color-value">#8B7355</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #E8DCC4;"></div><span class="theme-color-value">#E8DCC4</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #A68B6B;"></div><span class="theme-color-value">#A68B6B</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #5D4E37;"></div><span class="theme-color-value">#5D4E37</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #4A3728;"></div><span class="theme-color-value">#4A3728</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #6B5744;"></div><span class="theme-color-value">#6B5744</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #A68B6B;"></div><span class="theme-color-value">#A68B6B</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #5D4E37;"></div><span class="theme-color-value">#5D4E37</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Pastel</div>
+<div class="palette-description">Pastel - Soft gentle colors, light and airy</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #FAFAFA;"></div><span class="theme-color-value">#FAFAFA</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #C4C4C4;"></div><span class="theme-color-value">#C4C4C4</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #F0F0F0;"></div><span class="theme-color-value">#F0F0F0</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #D4D4D4;"></div><span class="theme-color-value">#D4D4D4</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #888888;"></div><span class="theme-color-value">#888888</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #555555;"></div><span class="theme-color-value">#555555</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #777777;"></div><span class="theme-color-value">#777777</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #D4D4D4;"></div><span class="theme-color-value">#D4D4D4</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #888888;"></div><span class="theme-color-value">#888888</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Celestial</div>
+<div class="palette-description">Celestial - Cosmic galaxy with deep purples and gold</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #1A0F2E;"></div><span class="theme-color-value">#1A0F2E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #6B4FA3;"></div><span class="theme-color-value">#6B4FA3</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #2A1A4A;"></div><span class="theme-color-value">#2A1A4A</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #7B5FAF;"></div><span class="theme-color-value">#7B5FAF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #E8D4FF;"></div><span class="theme-color-value">#E8D4FF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #FFD700;"></div><span class="theme-color-value">#FFD700</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #E8D4FF;"></div><span class="theme-color-value">#E8D4FF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #7B5FAF;"></div><span class="theme-color-value">#7B5FAF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #FFD700;"></div><span class="theme-color-value">#FFD700</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Viridis</div>
+<div class="palette-description">Viridis - Perceptually uniform purple→green→yellow (colorblind-friendly)</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #1C1C1C;"></div><span class="theme-color-value">#1C1C1C</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #414487;"></div><span class="theme-color-value">#414487</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #262626;"></div><span class="theme-color-value">#262626</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #414487;"></div><span class="theme-color-value">#414487</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #FDE724;"></div><span class="theme-color-value">#FDE724</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #22A884;"></div><span class="theme-color-value">#22A884</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #7AD151;"></div><span class="theme-color-value">#7AD151</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #2A788E;"></div><span class="theme-color-value">#2A788E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #7AD151;"></div><span class="theme-color-value">#7AD151</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Plasma</div>
+<div class="palette-description">Plasma - Vibrant blue→purple→orange→yellow gradient</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #0D0887;"></div><span class="theme-color-value">#0D0887</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #6A00A8;"></div><span class="theme-color-value">#6A00A8</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #180C4E;"></div><span class="theme-color-value">#180C4E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #B12A90;"></div><span class="theme-color-value">#B12A90</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #F0F921;"></div><span class="theme-color-value">#F0F921</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #E16462;"></div><span class="theme-color-value">#E16462</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #FCA636;"></div><span class="theme-color-value">#FCA636</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #CC4778;"></div><span class="theme-color-value">#CC4778</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #FCCE25;"></div><span class="theme-color-value">#FCCE25</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Inferno</div>
+<div class="palette-description">Inferno - Dramatic black→red→orange→yellow fire palette</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #000004;"></div><span class="theme-color-value">#000004</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #781C6D;"></div><span class="theme-color-value">#781C6D</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #1B0C41;"></div><span class="theme-color-value">#1B0C41</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #A52C60;"></div><span class="theme-color-value">#A52C60</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #FCFFA4;"></div><span class="theme-color-value">#FCFFA4</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #ED6925;"></div><span class="theme-color-value">#ED6925</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #FB9A06;"></div><span class="theme-color-value">#FB9A06</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #CF4446;"></div><span class="theme-color-value">#CF4446</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #F7D03C;"></div><span class="theme-color-value">#F7D03C</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Magma</div>
+<div class="palette-description">Magma - Subtle black→purple→pink→yellow volcanic palette</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #000004;"></div><span class="theme-color-value">#000004</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #5F187F;"></div><span class="theme-color-value">#5F187F</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #0B0924;"></div><span class="theme-color-value">#0B0924</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #7B2382;"></div><span class="theme-color-value">#7B2382</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #FCFDBF;"></div><span class="theme-color-value">#FCFDBF</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #D3436E;"></div><span class="theme-color-value">#D3436E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #EB5760;"></div><span class="theme-color-value">#EB5760</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #982D80;"></div><span class="theme-color-value">#982D80</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #F8765C;"></div><span class="theme-color-value">#F8765C</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Cividis</div>
+<div class="palette-description">Cividis - Blue→yellow palette optimized for color vision deficiency</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #00204C;"></div><span class="theme-color-value">#00204C</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #25567B;"></div><span class="theme-color-value">#25567B</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #00306E;"></div><span class="theme-color-value">#00306E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #4E6B7C;"></div><span class="theme-color-value">#4E6B7C</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #FFEA46;"></div><span class="theme-color-value">#FFEA46</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #9B9680;"></div><span class="theme-color-value">#9B9680</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #C5AC83;"></div><span class="theme-color-value">#C5AC83</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #73807D;"></div><span class="theme-color-value">#73807D</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #E5C482;"></div><span class="theme-color-value">#E5C482</span></div>
+</div></div></div>
+<div class="palette-card">
+<div class="palette-name">Turbo</div>
+<div class="palette-description">Turbo - Google's improved rainbow (high contrast)</div>
+<div class="theme-preview">
+<div class="theme-info">
+<div class="theme-color-row"><span class="theme-color-label">Background:</span><div class="theme-color-swatch" style="background-color: #1A1A2E;"></div><span class="theme-color-value">#1A1A2E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Border:</span><div class="theme-color-swatch" style="background-color: #4662D7;"></div><span class="theme-color-value">#4662D7</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Ring:</span><div class="theme-color-swatch" style="background-color: #242438;"></div><span class="theme-color-value">#242438</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Line:</span><div class="theme-color-swatch" style="background-color: #1AE4B6;"></div><span class="theme-color-value">#1AE4B6</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Zodiac Glyph:</span><div class="theme-color-swatch" style="background-color: #FABA39;"></div><span class="theme-color-value">#FABA39</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Glyph:</span><div class="theme-color-swatch" style="background-color: #72FE5E;"></div><span class="theme-color-value">#72FE5E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Planet Info:</span><div class="theme-color-swatch" style="background-color: #C8EF34;"></div><span class="theme-color-value">#C8EF34</span></div>
+<div class="theme-color-row"><span class="theme-color-label">House Line:</span><div class="theme-color-swatch" style="background-color: #72FE5E;"></div><span class="theme-color-value">#72FE5E</span></div>
+<div class="theme-color-row"><span class="theme-color-label">Angle Line:</span><div class="theme-color-swatch" style="background-color: #FABA39;"></div><span class="theme-color-value">#FABA39</span></div>
+</div></div></div>
+</div>
+
+    <hr style="margin: 40px 0; border: none; border-top: 2px solid #ddd;">
+    <p style="text-align: center; color: #888; font-size: 0.9em;">
+        Generated by <strong>Stellium</strong> - Computational Astrology Library<br>
+        For more information, visit the <a href="https://github.com/katelouie/stellium">GitHub repository</a>
+    </p>
+</body>
+</html>
