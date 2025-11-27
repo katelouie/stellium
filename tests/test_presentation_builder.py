@@ -120,14 +120,14 @@ def test_with_planet_positions_custom_options(sample_chart):
         .with_planet_positions(
             include_speed=True,
             include_house=False,
-            house_system="Placidus"
+            house_systems=["Placidus"]
         )
     )
 
     section = builder._sections[0]
     assert section.include_speed is True
     assert section.include_house is False
-    assert section.house_system == "Placidus"
+    assert section._house_systems == ["Placidus"]
 
 
 def test_with_aspects_default(sample_chart):

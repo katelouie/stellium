@@ -152,17 +152,17 @@ def test_planet_position_default_options():
     section = PlanetPositionSection()
     assert section.include_speed is False
     assert section.include_house is True
-    assert section.house_system is None
+    assert section._house_systems_mode == "all"  # Default mode is "all"
 
 
 def test_planet_position_custom_options():
     """Test PlanetPositionSection custom options."""
     section = PlanetPositionSection(
-        include_speed=True, include_house=False, house_system="Placidus"
+        include_speed=True, include_house=False, house_systems=["Placidus"]
     )
     assert section.include_speed is True
     assert section.include_house is False
-    assert section.house_system == "Placidus"
+    assert section._house_systems == ["Placidus"]
 
 
 def test_planet_position_generate_data(sample_chart):
@@ -175,7 +175,9 @@ def test_planet_position_generate_data(sample_chart):
     assert "rows" in data
     assert "Planet" in data["headers"]
     assert "Position" in data["headers"]
-    assert "House" in data["headers"]
+    # House headers are now abbreviated like "House (Pl)", "House (WS)"
+    house_headers = [h for h in data["headers"] if h.startswith("House")]
+    assert len(house_headers) > 0
 
 
 def test_planet_position_headers_with_speed(sample_chart):
@@ -215,12 +217,12 @@ def test_planet_position_filters_objects(mock_chart):
     section = PlanetPositionSection()
     data = section.generate_data(mock_chart)
 
-    # Get all position names from rows
+    # Get all position names from rows (may include glyphs like "☉ Sun")
     planet_names = [row[0] for row in data["rows"]]
 
-    # Should include Sun, Moon, etc.
-    assert "Sun" in planet_names
-    assert "Moon" in planet_names
+    # Should include Sun, Moon, etc. (with glyphs prepended)
+    assert any("Sun" in name for name in planet_names)
+    assert any("Moon" in name for name in planet_names)
 
     # Should not include angles (they're in a different category)
     # Angles might be included depending on ObjectType, but midpoints shouldn't
@@ -234,8 +236,8 @@ def test_planet_position_sorting(mock_chart):
 
     planet_names = [row[0] for row in data["rows"]]
 
-    # Sun should typically come first in the standard ordering
-    assert planet_names[0] == "Sun"
+    # Sun should typically come first in the standard ordering (with glyph)
+    assert "Sun" in planet_names[0]
 
 
 # ============================================================================
@@ -340,11 +342,12 @@ def test_aspect_section_major_only(sample_chart):
     data = section.generate_data(sample_chart)
 
     # Check that only major aspects are included
+    # Aspect names may include glyphs like "△ Trine", so check substring
     aspect_names = [row[1] for row in data["rows"]]
     major_aspects = ["Conjunction", "Opposition", "Trine", "Square", "Sextile"]
 
     for aspect_name in aspect_names:
-        assert aspect_name in major_aspects
+        assert any(major in aspect_name for major in major_aspects)
 
 
 # ============================================================================

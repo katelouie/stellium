@@ -419,6 +419,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `ChartBuilder` was passing config to engine, causing `TypeError: takes 4 positional arguments but 5 were given`
   - Also updated `EphemerisEngine` protocol to include optional `config` parameter for consistency
 
+- **Presentation Test API Mismatches**: Fixed tests to match updated `PlanetPositionSection` API
+  - Changed `house_system` (singular) to `house_systems` (plural) in tests
+  - Updated assertions for `_house_systems_mode` instead of `_house_systems` for "all" mode
+  - Fixed assertions to account for glyphs in planet names (`"☉ Sun"` not `"Sun"`)
+  - Fixed assertions for aspect names with glyphs (`"△ Trine"` not `"Trine"`)
+  - Fixed assertions for house column headers (`"House (Pl)"` not `"House"`)
+
 - **DignityComponent Protocol Signature**: Fixed `DignityComponent.calculate()` to match updated `ChartComponent` protocol
   - Added missing `house_placements_map: dict[str, dict[str, int]]` parameter
   - Protocol was updated to include house placements but component wasn't updated
