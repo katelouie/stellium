@@ -445,6 +445,7 @@ davison = ComparisonBuilder.davison(
 ```
 
 **Comparison Types:**
+
 - **Synastry**: Two natal charts overlaid (bi-wheel)
 - **Transit**: Natal chart + current/future planets
 - **Progression**: Natal chart + progressed positions
@@ -511,12 +512,14 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
 | **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
 | **[comparison_cookbook.py](examples/comparison_cookbook.py)** | 13 examples: synastry, transits, bi-wheels, compatibility |
+| **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
 
 ```bash
 # Run any cookbook
 python examples/chart_cookbook.py
 python examples/report_cookbook.py
 python examples/comparison_cookbook.py
+python examples/returns_cookbook.py
 ```
 
 ### User Guides
@@ -533,6 +536,7 @@ python examples/comparison_cookbook.py
 |---------|-------------|
 | **[THEME_GALLERY.md](docs/THEME_GALLERY.md)** | Visual showcase of all 13+ chart themes |
 | **[PALETTE_GALLERY.md](docs/PALETTE_GALLERY.md)** | Zodiac ring color palettes with previews |
+| **[HTML overview](docs/starlight_colors.html)** | Full color story overview of all themes and palettes |
 
 ### Technical Documentation
 
