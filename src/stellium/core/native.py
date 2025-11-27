@@ -18,6 +18,18 @@ from timezonefinder import TimezoneFinder
 from stellium.core.models import ChartDateTime, ChartLocation
 from stellium.utils.cache import cached
 
+# Cache TimezoneFinder instance - initialization is expensive
+_timezone_finder: TimezoneFinder | None = None
+
+
+def _get_timezone_finder() -> TimezoneFinder:
+    """Get cached TimezoneFinder instance."""
+    global _timezone_finder
+    if _timezone_finder is None:
+        _timezone_finder = TimezoneFinder()
+    return _timezone_finder
+
+
 # Define the messy input types we'll accept
 DateTimeInput = dt.datetime | ChartDateTime | dict[str, Any] | str
 LocationInput = str | ChartLocation | tuple[float, float] | dict[str, float | str]
@@ -127,7 +139,7 @@ class Native:
             lat, lon = loc_in
 
             # Find the timezone for this lat/lon
-            tf = TimezoneFinder()
+            tf = _get_timezone_finder()
             timezone_str = tf.timezone_at(lng=lon, lat=lat) or "UTC"
 
             return ChartLocation(
@@ -149,7 +161,7 @@ class Native:
             # Find timezone if not provided
             timezone_str = loc_in.get("timezone")
             if not timezone_str:
-                tf = TimezoneFinder()
+                tf = _get_timezone_finder()
                 timezone_str = tf.timezone_at(lng=lon, lat=lat) or "UTC"
 
             return ChartLocation(
@@ -447,7 +459,7 @@ def _cached_geocode(location_name: str) -> dict:
         if location:
             lat, lon = location.latitude, location.longitude
 
-            tf = TimezoneFinder()
+            tf = _get_timezone_finder()
             timezone_str = tf.timezone_at(lng=lon, lat=lat)
             return {
                 "latitude": lat,
