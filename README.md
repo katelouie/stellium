@@ -526,7 +526,6 @@ python examples/comparison_cookbook.py
 | **[VISUALIZATION.md](docs/VISUALIZATION.md)** | Complete chart drawing guide with fluent API reference |
 | **[REPORTS.md](docs/REPORTS.md)** | Report generation guide: sections, presets, PDF output |
 | **[CHART_TYPES.md](docs/CHART_TYPES.md)** | Chart types: natal, synastry, transit, composite, Davison |
-| **[USER_GUIDE.md](docs/USER_GUIDE.md)** | Getting started guide for new users |
 
 ### Visual Galleries
 
