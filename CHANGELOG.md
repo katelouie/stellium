@@ -91,6 +91,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Example 9c: Royal Stars only
   - Example 9d: Fixed stars PDF with chart wheel
 
+- **MidpointAspectsSection for Reports**: New report section showing planets that aspect midpoints
+  - `.with_midpoint_aspects()` method on ReportBuilder
+  - This is the most useful way to interpret midpoints - which planets activate them?
+  - Mode options: `"conjunction"` (default, most important), `"hard"`, or `"all"`
+  - Configurable orb (default 1.5°, tighter than regular aspects)
+  - Filter to core midpoints (Sun/Moon/ASC/MC) with `midpoint_filter="core"`
+  - Sort by `"orb"` (tightest first), `"planet"`, or `"midpoint"`
+  - Does NOT calculate midpoint-to-midpoint aspects (only planet-to-midpoint)
+  - Example 7b added to report_cookbook.py
+
 ### Changed
 
 - **SwissEphemerisEngine**: Updated to support sidereal calculations

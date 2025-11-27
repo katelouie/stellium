@@ -21,6 +21,7 @@ from .sections import (
     DignitySection,
     FixedStarsSection,
     HouseCuspsSection,
+    MidpointAspectsSection,
     MidpointSection,
     MoonPhaseSection,
     PlanetPositionSection,
@@ -192,6 +193,70 @@ class ReportBuilder:
             MidpointSection(
                 mode=mode,
                 threshold=threshold,
+            )
+        )
+        return self
+
+    def with_midpoint_aspects(
+        self,
+        mode: str = "conjunction",
+        orb: float = 1.5,
+        midpoint_filter: str = "all",
+        sort_by: str = "orb",
+    ) -> "ReportBuilder":
+        """
+        Add planets aspecting midpoints table.
+
+        This shows which planets activate which midpoints - the most useful
+        way to interpret midpoints. Typically only conjunctions matter (1-2° orb).
+
+        Args:
+            mode: Which aspects to check (DEFAULT: "conjunction")
+                - "conjunction": Only conjunctions (most common, recommended)
+                - "hard": Conjunction, square, opposition
+                - "all": All major aspects
+            orb: Maximum orb in degrees (DEFAULT: 1.5°)
+                Midpoints use tighter orbs than regular aspects.
+            midpoint_filter: Which midpoints to check (DEFAULT: "all")
+                - "all": All calculated midpoints
+                - "core": Only Sun/Moon/ASC/MC midpoints
+            sort_by: Sort order (DEFAULT: "orb")
+                - "orb": Tightest aspects first
+                - "planet": Group by aspecting planet
+                - "midpoint": Group by midpoint
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Show planets conjunct any midpoint within 1.5°
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_midpoint_aspects()
+            ...     .render())
+            >>>
+            >>> # Show hard aspects to core midpoints only
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_midpoint_aspects(
+            ...         mode="hard",
+            ...         midpoint_filter="core",
+            ...         orb=2.0
+            ...     )
+            ...     .render())
+
+        Note:
+            Requires MidpointCalculator to be added to chart builder:
+                chart = (ChartBuilder.from_native(native)
+                    .add_component(MidpointCalculator())
+                    .calculate())
+        """
+        self._sections.append(
+            MidpointAspectsSection(
+                mode=mode,
+                orb=orb,
+                midpoint_filter=midpoint_filter,
+                sort_by=sort_by,
             )
         )
         return self
@@ -475,10 +540,12 @@ class ReportBuilder:
         - Aspect patterns (Grand Trines, T-Squares, etc.)
         - House cusps
         - Essential dignities
-        - Midpoints
+        - Midpoints and midpoint aspects
+        - Fixed stars
 
         Note: Some sections require specific components to be added during
-        chart calculation (e.g., DignityComponent, AspectPatternAnalyzer).
+        chart calculation (e.g., DignityComponent, AspectPatternAnalyzer,
+        MidpointCalculator, FixedStarsComponent).
         Missing components show helpful messages rather than errors.
 
         Returns:
@@ -490,6 +557,7 @@ class ReportBuilder:
             ...     .add_component(DignityComponent())
             ...     .add_component(AspectPatternAnalyzer())
             ...     .add_component(MidpointCalculator())
+            ...     .add_component(FixedStarsComponent())
             ...     .calculate())
             >>> report = ReportBuilder().from_chart(chart).preset_full().render()
         """
@@ -497,12 +565,14 @@ class ReportBuilder:
             self.with_chart_overview()
             .with_moon_phase()
             .with_planet_positions(include_speed=True, include_house=True)
-            .with_declinations()
+            .with_house_cusps()
             .with_aspects(mode="all")
             .with_aspect_patterns()
-            .with_house_cusps()
-            .with_dignities()
+            .with_dignities(show_details=True)
+            .with_declinations()
             .with_midpoints()
+            .with_midpoint_aspects()
+            .with_fixed_stars()
         )
 
     def preset_positions_only(self) -> "ReportBuilder":
@@ -681,8 +751,10 @@ class ReportBuilder:
         return None
 
     def _to_string(
-        self, section_data: list[tuple[str, dict[str, Any]]], format: str,
-        chart_svg_path: str | None = None
+        self,
+        section_data: list[tuple[str, dict[str, Any]]],
+        format: str,
+        chart_svg_path: str | None = None,
     ) -> str:
         """
         Convert report to plaintext string (internal helper).
@@ -712,6 +784,7 @@ class ReportBuilder:
         elif format == "html":
             # HTML renderer
             from stellium.presentation.renderers import HTMLRenderer
+
             renderer = HTMLRenderer()
 
             # Load SVG if path provided
@@ -729,7 +802,8 @@ class ReportBuilder:
             raise ValueError(f"Unknown format '{format}'. Available: {available}")
 
     def _to_typst_pdf(
-        self, section_data: list[tuple[str, dict[str, Any]]],
+        self,
+        section_data: list[tuple[str, dict[str, Any]]],
         chart_svg_path: str | None = None,
         title: str | None = None,
     ) -> bytes:

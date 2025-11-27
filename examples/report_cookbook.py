@@ -18,7 +18,11 @@ import os
 from pathlib import Path
 
 from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
-from stellium.components import DignityComponent, FixedStarsComponent, MidpointCalculator
+from stellium.components import (
+    DignityComponent,
+    FixedStarsComponent,
+    MidpointCalculator,
+)
 from stellium.engines import PlacidusHouses, WholeSignHouses
 
 # Output directory for generated reports
@@ -178,11 +182,9 @@ def example_6_full_pdf():
     svg_path = OUTPUT_DIR / "einstein_chart.svg"
     print(f"Generating chart wheel to {svg_path}...")
 
-    chart.draw(str(svg_path)).with_theme("midnight").with_zodiac_palette(
-        "rainbow_midnight"
-    ).with_moon_phase(position="bottom-left").with_chart_info(
-        position="top-left"
-    ).save()
+    chart.draw(str(svg_path)).with_theme("classic").with_zodiac_palette(
+        "rainbow"
+    ).preset_detailed()
 
     # Generate full PDF
     pdf_path = OUTPUT_DIR / "einstein_complete_report.pdf"
@@ -228,6 +230,53 @@ def example_7_custom_sections():
         .with_planet_positions(include_speed=True, include_house=True)
         .with_aspects(mode="major", sort_by="planet")
         .with_midpoints(mode="core", threshold=10)
+        .with_midpoint_aspects()  # Show planets conjunct midpoints!
+        .render()
+    )
+
+
+def example_7b_midpoint_aspects():
+    """
+    Example 7b: Midpoint Aspects Report
+
+    The most important thing about midpoints is which planets aspect them.
+    A planet conjunct a midpoint "activates" that midpoint's energy.
+
+    For example, Mars conjunct the Sun/Moon midpoint brings action and
+    energy to the core self (Sun) and emotions (Moon).
+
+    Typically only conjunctions matter (with tight orbs of 1-2°).
+    """
+    section_header("Example 7b: Midpoint Aspects")
+
+    chart = (
+        ChartBuilder.from_notable("Albert Einstein")
+        .with_aspects()
+        .add_component(MidpointCalculator())
+        .calculate()
+    )
+
+    print("Generating midpoint aspects report...\n")
+    print("This shows which planets activate which midpoints.\n")
+
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_midpoint_aspects()  # Conjunctions within 1.5°
+        .render()
+    )
+
+    print("\n--- Now with hard aspects to core midpoints ---\n")
+
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_midpoint_aspects(
+            mode="hard",  # Conjunction, square, opposition
+            midpoint_filter="core",  # Sun/Moon/ASC/MC midpoints only
+            orb=2.0,  # Slightly wider orb
+        )
         .render()
     )
 
@@ -686,6 +735,7 @@ def main():
 
     # --- Part 3: Custom Reports ---
     example_7_custom_sections()
+    example_7b_midpoint_aspects()
     example_8_aspect_focused()
     example_9_positions_only()
     example_9b_fixed_stars_report()
