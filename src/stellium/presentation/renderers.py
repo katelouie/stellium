@@ -931,7 +931,7 @@ class TypstRenderer:
             "  inset: (x: 14pt, y: 10pt),",
             "  align: (col, row) => if col == 0 { left } else { center },",
             f"  fill: (col, row) => {{",
-            f'    if row == 0 {{ rgb("#4a3353") }}',  # warm primary purple for header
+            f'    if row == 0 {{ rgb("#6b4d6e") }}',  # secondary purple for table header (lighter than section headers)
             f'    else if calc.odd(row) {{ rgb("#f9f6f7") }}',  # subtle warm purple tint
             f'    else {{ rgb("#faf8f5") }}',  # cream
             "  },",

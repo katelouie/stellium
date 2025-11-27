@@ -103,6 +103,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **PDF Report Table Headers**: Changed table header color from `primary` to `secondary` purple
+  - Section headers use `primary` (`#4a3353` - deep warm purple)
+  - Table headers now use `secondary` (`#6b4d6e` - medium warm purple)
+  - Creates visual hierarchy where section banners are more prominent than table headers
+
 - **SwissEphemerisEngine**: Updated to support sidereal calculations
   - Now accepts `CalculationConfig` parameter in `calculate_positions()`
   - Sets sidereal mode via `swe.set_sid_mode()` when config specifies sidereal
@@ -447,6 +452,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Fixed assertions to account for glyphs in planet names (`"☉ Sun"` not `"Sun"`)
   - Fixed assertions for aspect names with glyphs (`"△ Trine"` not `"Trine"`)
   - Fixed assertions for house column headers (`"House (Pl)"` not `"House"`)
+
+- **AspectSection mode="all" Returned Empty Table**: Fixed bug where `mode="all"` filtered out all aspects
+  - `get_aspects_by_category("All")` returns empty list (not a valid category)
+  - Now skips filtering entirely when `mode="all"` to show all calculated aspects
 
 - **DignityComponent Protocol Signature**: Fixed `DignityComponent.calculate()` to match updated `ChartComponent` protocol
   - Added missing `house_placements_map: dict[str, dict[str, int]]` parameter

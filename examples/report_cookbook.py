@@ -24,6 +24,7 @@ from stellium.components import (
     MidpointCalculator,
 )
 from stellium.engines import PlacidusHouses, WholeSignHouses
+from stellium.engines.patterns import AspectPatternAnalyzer
 
 # Output directory for generated reports
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -175,6 +176,8 @@ def example_6_full_pdf():
         .with_aspects()
         .add_component(DignityComponent())
         .add_component(MidpointCalculator())
+        .add_component(FixedStarsComponent())
+        .add_analyzer(AspectPatternAnalyzer())
         .calculate()
     )
 
@@ -182,9 +185,7 @@ def example_6_full_pdf():
     svg_path = OUTPUT_DIR / "einstein_chart.svg"
     print(f"Generating chart wheel to {svg_path}...")
 
-    chart.draw(str(svg_path)).with_theme("classic").with_zodiac_palette(
-        "rainbow"
-    ).preset_detailed()
+    chart.draw(str(svg_path)).with_zodiac_palette("rainbow").preset_detailed().save()
 
     # Generate full PDF
     pdf_path = OUTPUT_DIR / "einstein_complete_report.pdf"
