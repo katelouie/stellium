@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2025-11-27
+
+**The Predictive Astrology Release** - Completes the "predictive trinity" with Returns, Progressions, and a massive performance improvement.
+
 ### Added
 
 #### Secondary Progressions Auto-Calculation (November 27, 2025)
@@ -38,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Backwards compatibility with legacy API
   - Edge cases: negative age, fractional age, large ages
 
+- **Progressions Cookbook** (`examples/progressions_cookbook.py`): 15 comprehensive examples covering all progression types, angle methods, and analysis techniques
+
 Example usage:
 
 ```python
@@ -61,7 +67,7 @@ for aspect in prog.cross_aspects:
     print(f"Progressed {aspect.object2.name} {aspect.aspect_name} Natal {aspect.object1.name}")
 ```
 
-#### Planetary Returns Support (November 28, 2025)
+#### Planetary Returns Support (November 27, 2025)
 
 - **ReturnBuilder**: New fluent builder for calculating planetary return charts
   - **Solar Returns**: `ReturnBuilder.solar(natal, year)` - Annual birthday charts
@@ -246,7 +252,15 @@ sr_tokyo = ReturnBuilder.solar(natal, 2025, location="Tokyo, Japan").calculate()
   - Added `ayanamsa: str | None = None` (only used for sidereal)
   - Smart `__post_init__` validation: defaults to "lahiri" if sidereal but no ayanamsa specified
 
-- Removed get_stats() (cache) call from metadata for every chart calculate() -- this was causing massive slowdowns because it was scanning the entire cache file collection EVERY time. Now considerably faster to make charts.
+### Fixed
+
+#### Major Performance Improvement (November 27, 2025)
+
+- **60x Faster Chart Calculations**: Removed expensive `get_stats()` call from `ChartBuilder.calculate()`
+  - **Root cause**: `get_stats()` was scanning 100,000+ cache files with `rglob("*.pickle")` on EVERY chart calculation
+  - **Impact**: Each chart was taking ~1000ms instead of ~10ms
+  - **Fix**: Removed automatic cache stats from chart metadata (rarely needed, now available via `stellium.utils.cache.get_cache_stats()`)
+  - **Result**: Full test suite dropped from ~5 minutes to ~5 seconds
 
 ### Technical Notes
 
