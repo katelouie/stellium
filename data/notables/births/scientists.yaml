@@ -1,3 +1,7 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
 - name: Albert Einstein
   event_type: birth
   year: 1879
@@ -64,3 +68,206 @@
   sources:
   - Stellium Test Suite
   verified: false
+- name: Isaac Newton
+  event_type: birth
+  year: 1643
+  month: 1
+  day: 4
+  hour: 1
+  minute: 38
+  latitude: 52.8055
+  longitude: -0.6378
+  location_name: Woolsthorpe Manor, Lincolnshire, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Mathematician
+  - Physicist
+  - Astronomer
+  - Astrologer
+  notable_for: British astronomer, physicist, mathematician and astrologer who showed
+    how the universe is held together through laws of motion and gravity. Often described
+    as one of the greatest names in the history of human thought. Author of "Principia
+    Mathematica" (1687).
+  astrological_notes: Sun 13 Capricorn, Moon 2 Cancer, Asc Libra
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Newton,_Isaac'
+  - 'Michael White, Isaac Newton: The Last Sorcerer (1997)'
+  verified: false
+- name: Galileo Galilei
+  event_type: birth
+  year: 1564
+  month: 2
+  day: 15
+  hour: 16
+  minute: 0
+  latitude: 43.7167
+  longitude: 10.4
+  location_name: Pisa, Italy
+  timezone: Europe/Rome
+  category: scientist
+  subcategories:
+  - Astronomer
+  - Physicist
+  - Mathematician
+  notable_for: Italian astronomer, physicist and mathematician. Known as the "father
+    of modern observational astronomy." Improved the telescope and made key astronomical
+    observations supporting heliocentrism.
+  astrological_notes: Sun 6 Pisces (Julian)
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Galileo,_Galilei'
+  - N.M. Swerdlow, Journal for the History of Astronomy
+  verified: false
+- name: Nicolaus Copernicus
+  event_type: birth
+  year: 1473
+  month: 2
+  day: 19
+  hour: 17
+  minute: 0
+  latitude: 53.0333
+  longitude: 18.5833
+  location_name: Torun, Poland
+  timezone: Europe/Warsaw
+  category: scientist
+  subcategories:
+  - Astronomer
+  - Mathematician
+  - Author
+  notable_for: Polish astronomer and author, considered the founder of modern astronomy.
+    He established the theory that the earth rotates daily on its axis and that planets
+    revolve in orbits around the sun. Author of "De revolutionibus orbium coelestium."
+  astrological_notes: Sun 10 Pisces, Moon 5 Sagittarius, Asc Virgo
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Copernicus,_Nicolaus'
+  verified: true
+- name: Johannes Kepler
+  event_type: birth
+  year: 1571
+  month: 12
+  day: 27
+  hour: 14
+  minute: 30
+  latitude: 48.75
+  longitude: 8.8667
+  location_name: Weil der Stadt, Germany
+  timezone: Europe/Berlin
+  category: scientist
+  subcategories:
+  - Mathematician
+  - Astronomer
+  - Astrologer
+  notable_for: German author, mathematician, scientist, astronomer, court astrologer
+    and teacher. Known as "the father of modern astronomy," he discovered the three
+    laws of planetary motion which paved the way for Newton's theory of gravity.
+  astrological_notes: Sun 15 Capricorn, Moon 4 Gemini, Asc Gemini
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Kepler,_Johannes'
+  verified: false
+- name: Thomas Edison
+  event_type: birth
+  year: 1847
+  month: 2
+  day: 11
+  hour: 3
+  minute: 0
+  latitude: 41.2978
+  longitude: -82.6208
+  location_name: Milan, Ohio, USA
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - Inventor
+  - Businessman
+  - Engineer
+  notable_for: American inventor and businessman who developed many devices including
+    the phonograph, motion picture camera, and practical electric light bulb. Held
+    over 1,000 patents.
+  astrological_notes: Sun 22 Aquarius
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Edison,_Thomas'
+  - Alfred Powell Morgan, The Pageant of Electricity (1939)
+  verified: false
+- name: William Lilly
+  event_type: birth
+  year: 1602
+  month: 5
+  day: 1
+  hour: 2
+  minute: 0
+  latitude: 52.8333
+  longitude: -1.2667
+  location_name: Diseworth, Leicestershire, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Astrologer
+  - Author
+  - Occultist
+  notable_for: British astrologer and author, the most famous astrologer of the 17th
+    century. Author of "Christian Astrology" (1647), the first major astrological
+    textbook in English. Predicted the Great Fire of London 14 years before it happened.
+  astrological_notes: Sun 19 Taurus, Moon 14 Capricorn, Asc Pisces
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William'
+  - Gadbury's Collection of Nativities (1661)
+  verified: true
+
+- name: Carl Sagan
+  event_type: birth
+  year: 1934
+  month: 11
+  day: 9
+  hour: 17
+  minute: 5
+  latitude: 40.6501
+  longitude: -73.9496
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+    - Astronomer
+    - Astrophysicist
+    - Author
+  notable_for: >-
+    American astronomer, astrophysicist, exobiologist, educator and popular celebrity.
+    Host of the TV series "Cosmos" which inspired a generation. Author of numerous
+    books on science and space exploration.
+  astrological_notes: Sun 16 Scorpio, Moon 21 Sagittarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Sagan,_Carl"
+  verified: true
+
+- name: Sigmund Freud
+  event_type: birth
+  year: 1856
+  month: 5
+  day: 6
+  hour: 18
+  minute: 30
+  latitude: 49.65
+  longitude: 18.1667
+  location_name: Freiberg, Moravia (now Czech Republic)
+  timezone: Europe/Prague
+  category: scientist
+  subcategories:
+    - Psychologist
+    - Neurologist
+    - Author
+  notable_for: >-
+    Austrian neurologist and founder of psychoanalysis. Developed theories of the
+    unconscious mind, dream interpretation, and the structure of personality (id, ego,
+    superego). His work profoundly influenced 20th century thought.
+  astrological_notes: Sun 15 Taurus, Moon in Gemini
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Freud,_Sigmund"
+    - "Ernest Jones, The Life and Works of Sigmund Freud (1953)"
+  verified: true

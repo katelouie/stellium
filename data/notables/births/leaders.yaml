@@ -1,3 +1,7 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
 - name: Martin Luther King Jr.
   event_type: birth
   year: 1929
@@ -42,3 +46,204 @@
   sources:
   - Stellium Test Suite
   verified: false
+- name: Abraham Lincoln
+  event_type: birth
+  year: 1809
+  month: 2
+  day: 12
+  hour: 6
+  minute: 54
+  latitude: 37.5667
+  longitude: -85.7333
+  location_name: Hodgenville, Kentucky, USA
+  timezone: America/Kentucky/Louisville
+  category: leader
+  subcategories:
+  - U.S. President
+  - Lawyer
+  - Public Speaker
+  notable_for: 16th President of the United States (1861-1865). Issued the Emancipation
+    Proclamation in 1863, preserved the Union during the Civil War, and is considered
+    one of the greatest American presidents. Assassinated in 1865.
+  astrological_notes: Sun 23 Aquarius, Moon 27 Capricorn, Asc 22 Aquarius
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Lincoln,_Abraham'
+  - William E. Barton, Women Lincoln Loved (1927)
+  - 'Carl Sandburg, Abraham Lincoln: The Prairie Years and the War Years'
+  verified: false
+- name: Barack Obama
+  event_type: birth
+  year: 1961
+  month: 8
+  day: 4
+  hour: 19
+  minute: 24
+  latitude: 21.3
+  longitude: -157.8667
+  location_name: Honolulu, Hawaii, USA
+  timezone: Pacific/Honolulu
+  category: leader
+  subcategories:
+  - U.S. President
+  - Lawyer
+  - Author
+  notable_for: 44th President of the United States (2009-2017), first African American
+    to hold the office. Won Nobel Peace Prize in 2009. Previously served as U.S. Senator
+    from Illinois.
+  astrological_notes: Sun 12 Leo, Moon 3 Gemini
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Obama,_Barack'
+  verified: true
+- name: Michelle Obama
+  event_type: birth
+  year: 1964
+  month: 1
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 41.85
+  longitude: -87.65
+  location_name: Chicago, Illinois, USA
+  timezone: America/Chicago
+  category: leader
+  subcategories:
+  - First Lady
+  - Lawyer
+  - Author
+  notable_for: American attorney, author and former First Lady of the United States
+    (2009-2017). Founded the Let's Move! initiative. Her memoir "Becoming" became
+    a bestseller.
+  astrological_notes: Sun 26 Capricorn
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Obama,_Michelle'
+  verified: false
+- name: Prince William
+  event_type: birth
+  year: 1982
+  month: 6
+  day: 21
+  hour: 21
+  minute: 3
+  latitude: 51.5167
+  longitude: -0.175
+  location_name: Paddington, London, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - Prince of Wales
+  - Royal
+  - Philanthropist
+  notable_for: Prince of Wales and heir apparent to the British throne. Elder son
+    of King Charles III and Diana, Princess of Wales. Founder of charitable initiatives
+    including The Royal Foundation.
+  astrological_notes: Sun 0 Cancer, Moon in Cancer
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/William,_Prince_of_Wales'
+  - The London Gazette, 21 June 1982, p. 8215
+  verified: true
+- name: Kate Middleton
+  event_type: birth
+  year: 1982
+  month: 1
+  day: 9
+  hour: 19
+  minute: 0
+  latitude: 51.4542
+  longitude: -0.9731
+  location_name: Reading, Berkshire, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - Princess of Wales
+  - Royal
+  - Philanthropist
+  notable_for: Catherine, Princess of Wales. Wife of William, Prince of Wales. Patron
+    of numerous charitable organizations focusing on children's welfare, mental health
+    and the arts.
+  astrological_notes: Sun 19 Capricorn
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Catherine,_Duchess_of_Cambridge'
+  verified: false
+- name: Queen Elizabeth II
+  event_type: birth
+  year: 1926
+  month: 4
+  day: 21
+  hour: 2
+  minute: 40
+  latitude: 51.5086
+  longitude: -0.1439
+  location_name: Mayfair, London, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - Queen
+  - Head of State
+  - Monarch
+  notable_for: Queen of the United Kingdom from 1952 to 2022. Longest-reigning British
+    monarch (70 years). Oversaw significant changes in British society and the transformation
+    of the British Empire into the Commonwealth.
+  astrological_notes: Sun 0 Taurus, Moon 12 Leo, Asc 21 Capricorn
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom'
+  - The Times [London], 22 April 1926, p. 14
+  verified: true
+
+- name: Queen of the United Kingdom Victoria
+  event_type: birth
+  year: 1819
+  month: 5
+  day: 24
+  hour: 4
+  minute: 15
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: Kensington Palace, London, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+    - Queen
+    - Empress
+    - Monarch
+  notable_for: >-
+    Queen of the United Kingdom from 1837 until her death in 1901. Empress of India
+    from 1876. Her reign of nearly 64 years was known as the Victorian era, a period
+    of industrial, cultural, and scientific change.
+  astrological_notes: Sun 2 Gemini, Moon 3 Gemini
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Victoria,_Queen_of_the_United_Kingdom"
+    - "The London Gazette, 26 May 1819"
+  verified: true
+
+- name: Princess of Wales Diana
+  event_type: birth
+  year: 1961
+  month: 7
+  day: 1
+  hour: 19
+  minute: 45
+  latitude: 52.8264
+  longitude: 0.5139
+  location_name: Sandringham, Norfolk, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+    - Princess
+    - Royal
+    - Humanitarian
+  notable_for: >-
+    Princess of Wales as the first wife of Charles, Prince of Wales. Known for her
+    charity work, particularly with AIDS patients and landmine victims. Her death
+    in 1997 prompted unprecedented public mourning.
+  astrological_notes: Sun 9 Cancer, Moon 25 Aquarius
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Diana,_Princess_of_Wales"
+  verified: true

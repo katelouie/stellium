@@ -1,3 +1,7 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
 - name: Maya Angelou
   event_type: birth
   year: 1928
@@ -19,4 +23,53 @@
   data_quality: C
   sources:
   - Stellium Test Suite
+  verified: false
+- name: Carl Jung
+  event_type: birth
+  year: 1875
+  month: 7
+  day: 26
+  hour: 19
+  minute: 24
+  latitude: 47.6
+  longitude: 9.3333
+  location_name: Kesswil, Switzerland
+  timezone: Europe/Zurich
+  category: writer
+  subcategories:
+  - Psychiatrist
+  - Author
+  - Astrologer
+  notable_for: Swiss psychiatrist and founder of analytical psychology; developed
+    theories of the collective unconscious, archetypes, introvert-extrovert types,
+    individuation, and synchronicity. Advocate for astrology in psychological practice.
+  astrological_notes: Sun 3 Leo, Moon 15 Taurus, Asc 1 Aquarius
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Jung,_Carl'
+  - 'Gerhard Wehr, Carl Gustav Jung: Leben, Werk, Wirkung (1985)'
+  verified: false
+- name: Fyodor Dostoevsky
+  event_type: birth
+  year: 1821
+  month: 11
+  day: 11
+  hour: 9
+  minute: 47
+  latitude: 55.75
+  longitude: 37.5833
+  location_name: Moscow, Russia
+  timezone: Europe/Moscow
+  category: writer
+  subcategories:
+  - Novelist
+  - Philosopher
+  - Essayist
+  notable_for: Russian writer, one of Russia's greatest novelists. His works include
+    "Crime and Punishment" (1866), "The Idiot" (1869), and "The Brothers Karamazov"
+    (1880). Major influence on 20th century literature and philosophy.
+  astrological_notes: Sun 18 Scorpio, Moon 10 Gemini, Asc Sagittarius
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Dostoevsky,_Fyodor'
   verified: false

@@ -1,3 +1,7 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
 - name: Oprah Winfrey
   event_type: birth
   year: 1954
@@ -21,3 +25,249 @@
   sources:
   - Stellium Test Suite
   verified: false
+- name: John Lennon
+  event_type: birth
+  year: 1940
+  month: 10
+  day: 9
+  hour: 18
+  minute: 30
+  latitude: 53.4167
+  longitude: -2.9167
+  location_name: Liverpool, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - Singer
+  - Songwriter
+  - Peace Activist
+  notable_for: British singer, songwriter and peace activist, founding member of The
+    Beatles. Wrote iconic songs including "Imagine," "Give Peace a Chance," and numerous
+    Beatles classics. Assassinated in New York City in 1980.
+  astrological_notes: Sun 16 Libra, Moon 3 Aquarius
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Lennon,_John'
+  verified: false
+- name: Yoko Ono
+  event_type: birth
+  year: 1933
+  month: 2
+  day: 18
+  hour: 20
+  minute: 30
+  latitude: 35.7
+  longitude: 139.7667
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: media
+  subcategories:
+  - Conceptual Artist
+  - Musician
+  - Peace Activist
+  notable_for: Japanese conceptual artist, musician, designer, composer, poet and
+    performer. Became widely known through her marriage to John Lennon of The Beatles.
+    Pioneer of conceptual and performance art.
+  astrological_notes: Sun 29 Aquarius, Moon in Sagittarius
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Ono,_Yoko'
+  verified: false
+- name: Paul McCartney
+  event_type: birth
+  year: 1942
+  month: 6
+  day: 18
+  hour: 14
+  minute: 0
+  latitude: 53.4167
+  longitude: -2.9167
+  location_name: Liverpool, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - Singer
+  - Songwriter
+  - Multi-instrumentalist
+  notable_for: British singer, songwriter and multi-instrumentalist, founding member
+    of The Beatles. One of the most successful composers in pop music history. Knighted
+    in 1997 for services to music.
+  astrological_notes: Sun 27 Gemini, Moon in Leo
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/McCartney,_Paul'
+  verified: false
+- name: Wolfgang Mozart
+  event_type: birth
+  year: 1756
+  month: 1
+  day: 27
+  hour: 20
+  minute: 0
+  latitude: 47.8
+  longitude: 13.0333
+  location_name: Salzburg, Austria
+  timezone: Europe/Vienna
+  category: media
+  subcategories:
+  - Composer
+  - Pianist
+  - Child Prodigy
+  notable_for: Austrian composer widely regarded as among the greatest in Western
+    music history. Child prodigy who composed over 600 works including symphonies,
+    operas, and chamber music.
+  astrological_notes: Sun 7 Aquarius
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus'
+  verified: false
+
+- name: Mozart
+  event_type: birth
+  year: 1756
+  month: 1
+  day: 27
+  hour: 20
+  minute: 0
+  latitude: 47.8
+  longitude: 13.0333
+  location_name: Salzburg, Austria
+  timezone: Europe/Vienna
+  category: media
+  subcategories:
+    - Composer
+    - Pianist
+    - Child Prodigy
+  notable_for: >-
+    Wolfgang Amadeus Mozart - Austrian composer widely regarded as among the greatest
+    in Western music history. Child prodigy who composed over 600 works including
+    symphonies, operas, and chamber music.
+  astrological_notes: Sun 7 Aquarius
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus"
+  verified: false
+- name: Brad Pitt
+  event_type: birth
+  year: 1963
+  month: 12
+  day: 18
+  hour: 6
+  minute: 31
+  latitude: 35.3333
+  longitude: -96.9333
+  location_name: Shawnee, Oklahoma, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - Actor
+  - Producer
+  - Film Star
+  notable_for: American actor and film producer. Won Academy Award for Best Supporting
+    Actor for "Once Upon a Time in Hollywood" (2019). Known for films like "Fight
+    Club," "Troy," and "Ocean's Eleven."
+  astrological_notes: Sun 26 Sagittarius, Moon in Capricorn
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Pitt,_Brad'
+  verified: false
+- name: Angelina Jolie
+  event_type: birth
+  year: 1975
+  month: 6
+  day: 4
+  hour: 9
+  minute: 9
+  latitude: 34.0922
+  longitude: -118.2944
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - Actor
+  - Filmmaker
+  - Humanitarian
+  notable_for: American actress, filmmaker and humanitarian. Won Academy Award for
+    Best Supporting Actress for "Girl, Interrupted" (1999). UNHCR Special Envoy and
+    noted humanitarian.
+  astrological_notes: Sun 13 Gemini, Moon 13 Aries, Asc 28 Cancer
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Jolie,_Angelina'
+  verified: true
+- name: Richard Burton
+  event_type: birth
+  year: 1925
+  month: 11
+  day: 10
+  hour: 15
+  minute: 0
+  latitude: 51.6333
+  longitude: -3.7333
+  location_name: Pontrhydyfen, Wales
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - Actor
+  - Stage Actor
+  - Film Star
+  notable_for: Welsh actor renowned for his Shakespearean performances and film roles.
+    Seven-time Academy Award nominee. Famous for his tumultuous relationship with
+    Elizabeth Taylor, whom he married twice.
+  astrological_notes: Sun 17 Scorpio
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Burton,_Richard_(1925)'
+  verified: false
+
+- name: Marilyn Monroe
+  event_type: birth
+  year: 1926
+  month: 6
+  day: 1
+  hour: 9
+  minute: 30
+  latitude: 34.0522
+  longitude: -118.2437
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+    - Actress
+    - Model
+    - Singer
+  notable_for: >-
+    American actress, model and singer who became a major sex symbol. Starred in
+    commercially successful films including "Some Like It Hot" and "Gentlemen Prefer
+    Blondes." One of the most iconic figures of the 20th century.
+  astrological_notes: Sun 10 Gemini, Moon 19 Aquarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Monroe,_Marilyn"
+  verified: true
+
+- name: Elizabeth Taylor
+  event_type: birth
+  year: 1932
+  month: 2
+  day: 27
+  hour: 2
+  minute: 30
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+    - Actress
+    - Humanitarian
+    - Film Star
+  notable_for: >-
+    British-American actress who became one of the great screen actresses of
+    Hollywood's Golden Age. Won two Academy Awards. Known for her violet eyes,
+    her marriages, and her AIDS activism.
+  astrological_notes: Sun 7 Pisces
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
+  verified: true

@@ -1,3 +1,7 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
 - name: Frida Kahlo
   event_type: birth
   year: 1907
@@ -42,3 +46,183 @@
   sources:
   - Stellium Test Suite
   verified: false
+- name: Georgia O'Keeffe
+  event_type: birth
+  year: 1887
+  month: 11
+  day: 15
+  hour: 6
+  minute: 30
+  latitude: 43.1833
+  longitude: -89.2167
+  location_name: Sun Prairie, Wisconsin, USA
+  timezone: America/Chicago
+  category: artist
+  subcategories:
+  - Painter
+  - Modernist
+  notable_for: American artist known as the "Mother of American modernism". Famous
+    for paintings of enlarged flowers, New York skyscrapers, and New Mexico landscapes.
+    Received Presidential Medal of Freedom (1977) and National Medal of Arts (1985).
+  astrological_notes: Sun 22 Scorpio, Moon in Virgo (approx)
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/O%27Keeffe,_Georgia'
+  - Taeger quotes Astrolog Nr. 61 via Schenk
+  verified: false
+- name: Claude Monet
+  event_type: birth
+  year: 1840
+  month: 11
+  day: 14
+  hour: 12
+  minute: 0
+  latitude: 48.8667
+  longitude: 2.3333
+  location_name: Paris, France
+  timezone: Europe/Paris
+  category: artist
+  subcategories:
+  - Painter
+  - Impressionist
+  notable_for: French painter, initiator and leader of the Impressionist movement.
+    Known for series paintings of haystacks, Rouen Cathedral, and water lilies at
+    his Giverny garden. His work achieved record-breaking popularity in museum exhibitions.
+  astrological_notes: Sun 22 Scorpio (no birth time - Moon/Asc unknown)
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Monet,_Claude'
+  - Baptismal record from Notre-Dame-de-Lorette parish, dated 20 May 1841
+  verified: false
+- name: Vincent van Gogh
+  event_type: birth
+  year: 1853
+  month: 3
+  day: 30
+  hour: 11
+  minute: 0
+  latitude: 51.4667
+  longitude: 4.8667
+  location_name: Groot-Zundert, Netherlands
+  timezone: Europe/Amsterdam
+  category: artist
+  subcategories:
+  - Painter
+  - Post-Impressionist
+  notable_for: Dutch Post-Impressionist painter, one of the most famous and influential
+    figures in Western art history. Created over 2,100 artworks including "The Starry
+    Night" and "Sunflowers."
+  astrological_notes: Sun 9 Aries
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Van_Gogh,_Vincent'
+  verified: true
+- name: Leonardo da Vinci
+  event_type: birth
+  year: 1452
+  month: 4
+  day: 23
+  hour: 21
+  minute: 40
+  latitude: 43.7833
+  longitude: 10.9167
+  location_name: Vinci, Italy
+  timezone: Europe/Rome
+  category: artist
+  subcategories:
+  - Painter
+  - Sculptor
+  - Engineer
+  - Inventor
+  - Scientist
+  - Mathematician
+  notable_for: Italian Renaissance polymath - painter, sculptor, architect, musician,
+    mathematician, engineer, inventor, anatomist, and writer. Created masterpieces
+    including the Mona Lisa and The Last Supper. His notebooks contain designs for
+    flying machines, tanks, and submarines centuries ahead of their time.
+  astrological_notes: Sun 3 Taurus, Moon 3 Pisces, Asc 6 Sagittarius
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Da_Vinci,_Leonardo'
+  - 'Family diary: ''A grandson of mine was born April 15, Saturday, three hours into
+    the night'''
+  - Leonardo da Vinci, Reynal & Co.
+  verified: true
+  calendar: julian_original
+  time_system: florentine
+- name: Wassily Kandinsky
+  event_type: birth
+  year: 1866
+  month: 12
+  day: 16
+  hour: 6
+  minute: 0
+  latitude: 55.75
+  longitude: 37.5833
+  location_name: Moscow, Russia
+  timezone: Europe/Moscow
+  category: artist
+  subcategories:
+  - Painter
+  - Expressionist
+  - Abstract Art Pioneer
+  notable_for: Russian artist and expressionist painter who helped lay the foundations
+    for abstract art in Munich before World War I. One of the pioneers of abstraction
+    in western art. Founded the influential Blue Rider group.
+  astrological_notes: Sun 24 Sagittarius, Moon 5 Aries
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Kandinsky,_Wassily'
+  verified: false
+- name: Michelangelo
+  event_type: birth
+  year: 1475
+  month: 3
+  day: 6
+  hour: 1
+  minute: 45
+  latitude: 43.6389
+  longitude: 11.9875
+  location_name: Caprese Michelangelo, Italy
+  timezone: Europe/Rome
+  category: artist
+  subcategories:
+  - Sculptor
+  - Painter
+  - Architect
+  - Poet
+  notable_for: Italian sculptor, painter, architect and poet of the High Renaissance.
+    Created the ceiling of the Sistine Chapel, the statue of David, and the Pietà.
+    Considered one of the greatest artists of all time.
+  astrological_notes: Sun 25 Pisces (Julian)
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Michelangelo'
+  - A. Gotti, Vita di Michelangelo
+  verified: false
+
+- name: Salvador Dali
+  event_type: birth
+  year: 1904
+  month: 5
+  day: 11
+  hour: 8
+  minute: 45
+  latitude: 42.2667
+  longitude: 2.9617
+  location_name: Figueres, Spain
+  timezone: Europe/Madrid
+  category: artist
+  subcategories:
+    - Painter
+    - Surrealist
+    - Sculptor
+  notable_for: >-
+    Spanish surrealist artist renowned for his technical skill and striking imagery.
+    Known for "The Persistence of Memory" and his eccentric public persona. One of
+    the most influential artists of the 20th century.
+  astrological_notes: Sun 20 Taurus
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Dali,_Salvador"
+  verified: true
