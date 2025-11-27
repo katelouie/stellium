@@ -386,8 +386,19 @@ class MockEphemerisEngine:
         datetime: ChartDateTime,
         location: ChartLocation,
         objects: list[str] | None = None,
+        config: CalculationConfig | None = None,
     ) -> list[CelestialPosition]:
-        """Return mock positions."""
+        """Return mock positions.
+
+        Args:
+            datetime: When to calculate positions (ignored in mock)
+            location: Where to calculate from (ignored in mock)
+            objects: Which objects to calculate (None = all mock objects)
+            config: Calculation config (ignored in mock)
+
+        Returns:
+            List of mock CelestialPosition objects
+        """
         if objects is None:
             objects = list(self._mock_data.keys())
 

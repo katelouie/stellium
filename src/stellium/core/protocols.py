@@ -8,7 +8,7 @@ Think of these as contracts: "If you want to be an EphemerisEngine,
 you must implement these methods with these signatures."
 """
 
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from stellium.core.models import (
     Aspect,
@@ -18,6 +18,9 @@ from stellium.core.models import (
     ChartLocation,
     HouseCusps,
 )
+
+if TYPE_CHECKING:
+    from stellium.core.config import CalculationConfig
 
 
 class EphemerisEngine(Protocol):
@@ -36,6 +39,7 @@ class EphemerisEngine(Protocol):
         datetime: ChartDateTime,
         location: ChartLocation,
         objects: list[str] | None = None,
+        config: "CalculationConfig | None" = None,
     ) -> list[CelestialPosition]:
         """
         Calculate positions for celestial objects.
@@ -44,6 +48,7 @@ class EphemerisEngine(Protocol):
             datetime: When to calculate positions
             location: Where to calculate from (for topocentric)
             objects: Which objects to calculate (None = all standard objects)
+            config: Optional calculation configuration (zodiac type, etc.)
 
         Returns:
             List of CelestialPosition objects

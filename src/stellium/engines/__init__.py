@@ -1,10 +1,11 @@
 """
-Calculation engines for ephemeris, houses, aspects, orbs, and dignities.
+Calculation engines for ephemeris, houses, aspects, orbs, dignities, and fixed stars.
 
 Common engines:
     >>> from stellium.engines import PlacidusHouses, WholeSignHouses
     >>> from stellium.engines import ModernAspectEngine, TraditionalAspectEngine
     >>> from stellium.engines import SimpleOrbEngine, LuminariesOrbEngine
+    >>> from stellium.engines import SwissEphemerisFixedStarsEngine
 """
 
 # Ephemeris
@@ -20,6 +21,9 @@ from stellium.engines.dignities import (
     TraditionalDignityCalculator,
 )
 from stellium.engines.ephemeris import SwissEphemerisEngine
+
+# Fixed Stars
+from stellium.engines.fixed_stars import SwissEphemerisFixedStarsEngine
 
 # House Systems
 from stellium.engines.houses import (
@@ -54,4 +58,6 @@ __all__ = [
     # Dignities
     "TraditionalDignityCalculator",
     "ModernDignityCalculator",
+    # Fixed Stars
+    "SwissEphemerisFixedStarsEngine",
 ]

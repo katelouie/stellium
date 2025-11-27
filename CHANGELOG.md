@@ -41,7 +41,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Notables Database
 
-- Added ~200 births to the database of varying quality
+- Added ~50 births and 4 events to the database of varying quality
+
+#### Fixed Stars Implementation (November 26, 2025)
+
+- **Complete Fixed Stars System**: Calculate and integrate fixed star positions into charts using Swiss Ephemeris
+  - **26 Stars in Registry**: 4 Royal Stars (Aldebaran, Regulus, Antares, Fomalhaut), 11 Major Stars (Sirius, Algol, Spica, etc.), 11 Extended Stars
+  - **Tiered System**: Stars organized by astrological importance (Tier 1=Royal, Tier 2=Major, Tier 3=Extended)
+  - **Swiss Ephemeris Integration**: Uses `swe.fixstar_ut()` for precise calculations with automatic precession handling
+
+- **FixedStarPosition Model**: New dataclass extending `CelestialPosition` with star-specific fields
+  - `constellation` - Traditional constellation (e.g., "Leo", "Scorpio")
+  - `bayer` - Bayer designation (e.g., "Alpha Leonis")
+  - `tier` - Importance tier (1, 2, or 3)
+  - `is_royal` - Boolean for Royal Stars of Persia
+  - `magnitude` - Apparent visual magnitude
+  - `nature` - Traditional planetary nature (e.g., "Mars/Jupiter")
+  - `keywords` - Interpretive keywords tuple
+
+- **FixedStarsComponent**: ChartBuilder component for adding fixed stars to charts
+  - `FixedStarsComponent()` - Calculate all 26 registered stars
+  - `FixedStarsComponent(royal_only=True)` - Just the four Royal Stars
+  - `FixedStarsComponent(stars=["Regulus", "Sirius"])` - Specific stars by name
+  - `FixedStarsComponent(tier=2, include_higher_tiers=True)` - Filter by tier
+
+- **SwissEphemerisFixedStarsEngine**: Engine for star position calculations
+  - `calculate_stars(julian_day, stars=None)` - Main calculation method
+  - `calculate_royal_stars(julian_day)` - Convenience method for Royal Stars
+  - `calculate_stars_by_tier(julian_day, tier)` - Filter by tier level
+  - Automatic ephemeris path configuration for `sefstars.txt`
+
+- **Registry Functions**: Helper functions for working with star metadata
+  - `get_fixed_star_info(name)` - Look up star by name
+  - `get_royal_stars()` - Get all four Royal Stars
+  - `get_stars_by_tier(tier)` - Filter stars by tier
+  - `FIXED_STARS_REGISTRY` - Direct registry access
+
+- **22 Comprehensive Tests**: Full test coverage for registry, engine, component, and integration
 
 ### Changed
 
@@ -377,6 +413,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 #### November 26, 2025
+
+- **MockEphemerisEngine Protocol Mismatch**: Fixed `MockEphemerisEngine.calculate_positions()` to accept optional `config` parameter
+  - `SwissEphemerisEngine` accepts `config: CalculationConfig | None` but Mock didn't
+  - `ChartBuilder` was passing config to engine, causing `TypeError: takes 4 positional arguments but 5 were given`
+  - Also updated `EphemerisEngine` protocol to include optional `config` parameter for consistency
 
 - **DignityComponent Protocol Signature**: Fixed `DignityComponent.calculate()` to match updated `ChartComponent` protocol
   - Added missing `house_placements_map: dict[str, dict[str, int]]` parameter

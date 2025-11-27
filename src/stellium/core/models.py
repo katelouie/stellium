@@ -221,6 +221,58 @@ class MidpointPosition(CelestialPosition):
 
 
 @dataclass(frozen=True)
+class FixedStarPosition(CelestialPosition):
+    """
+    Position of a fixed star at a specific time.
+
+    Extends CelestialPosition with fixed star-specific metadata from the registry,
+    including traditional astrological properties like planetary nature and keywords.
+
+    Fixed stars move very slowly due to precession (~1° per 72 years), so their
+    positions change slightly between charts. Swiss Ephemeris handles precession
+    automatically based on the Julian Day.
+
+    Attributes:
+        swe_name: Swiss Ephemeris lookup name
+        constellation: Traditional constellation (e.g., "Leo")
+        bayer: Bayer designation (e.g., "Alpha Leonis")
+        tier: Star tier (1=Royal, 2=Major, 3=Extended)
+        is_royal: Whether this is one of the four Royal Stars of Persia
+        magnitude: Apparent visual magnitude (lower = brighter)
+        nature: Traditional planetary nature (e.g., "Mars/Jupiter")
+        keywords: Interpretive keywords for the star
+
+    Example:
+        regulus = FixedStarPosition(
+            name="Regulus",
+            object_type=ObjectType.FIXED_STAR,
+            longitude=150.12,  # ~0° Virgo (moves slowly through precession)
+            swe_name="Regulus",
+            constellation="Leo",
+            tier=1,
+            is_royal=True,
+            magnitude=1.35,
+            nature="Mars/Jupiter",
+            keywords=("royalty", "success", "fame"),
+        )
+    """
+
+    # Fixed star-specific fields (with defaults to satisfy dataclass inheritance)
+    swe_name: str = ""
+    constellation: str = ""
+    bayer: str = ""
+    tier: int = 2  # 1=Royal, 2=Major, 3=Extended
+    is_royal: bool = False
+    magnitude: float = 0.0
+    nature: str = ""
+    keywords: tuple[str, ...] = field(default_factory=tuple)
+
+    def __str__(self) -> str:
+        tier_label = {1: "Royal", 2: "Major", 3: "Extended"}.get(self.tier, "")
+        return f"★ {self.name}: {self.sign_position} ({tier_label}, mag {self.magnitude:.1f})"
+
+
+@dataclass(frozen=True)
 class HouseCusps:
     """Immutable house cusp data."""
 

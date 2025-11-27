@@ -262,6 +262,17 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         category="Main Belt Asteroid",
         description="The asteroid of the sacred flame, devotion, focus, and sexual integrity.",
     ),
+    "Hygiea": CelestialObjectInfo(
+        name="Hygiea",
+        display_name="Hygiea",
+        object_type=ObjectType.ASTEROID,
+        glyph="⚕",
+        glyph_svg_path="assets/glyphs/hygiea.svg",
+        swiss_ephemeris_id=10010,  # AST_OFFSET (10000) + asteroid number (10)
+        category="Main Belt Asteroid",
+        aliases=["Hygeia"],
+        description="The asteroid of health, hygiene, and preventive medicine. Named for the goddess of cleanliness and sanitation.",
+    ),
     # ========================================================================
     # CENTAURS
     # ========================================================================
@@ -576,6 +587,433 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         description="Our home planet. Rarely used in geocentric charts but relevant in heliocentric calculations.",
     ),
 }
+
+
+# ============================================================================
+# FIXED STARS REGISTRY
+# ============================================================================
+
+
+@dataclass(frozen=True)
+class FixedStarInfo:
+    """
+    Complete metadata for a fixed star.
+
+    This contains everything needed to look up and interpret a fixed star,
+    from its Swiss Ephemeris name to its traditional astrological meanings.
+    """
+
+    # Core Identity
+    name: str  # Display name (e.g., "Regulus")
+    swe_name: str  # Swiss Ephemeris lookup name
+
+    # Visual
+    glyph: str = "★"  # Unicode glyph
+    glyph_svg_path: str | None = None  # Path to SVG for stars with custom glyphs
+
+    # Classification
+    constellation: str = ""  # Traditional constellation (e.g., "Leo")
+    bayer: str = ""  # Bayer designation (e.g., "Alpha Leonis")
+    tier: int = 2  # 1=Royal, 2=Major, 3=Extended
+    is_royal: bool = False  # One of the four Royal Stars of Persia
+
+    # Physical Properties
+    magnitude: float = 0.0  # Apparent magnitude (lower = brighter)
+
+    # Astrological Properties
+    nature: str = ""  # Planetary nature (e.g., "Mars/Jupiter")
+    keywords: tuple[str, ...] = field(default_factory=tuple)
+    description: str = ""
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.constellation})"
+
+
+FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
+    # ========================================================================
+    # TIER 1: ROYAL STARS (The Four Watchers of Persia)
+    # ========================================================================
+    "Aldebaran": FixedStarInfo(
+        name="Aldebaran",
+        swe_name="Aldebaran",
+        glyph_svg_path="assets/glyphs/aldebaran.svg",
+        constellation="Taurus",
+        bayer="Alpha Tauri",
+        tier=1,
+        is_royal=True,
+        magnitude=0.85,
+        nature="Mars",
+        keywords=("integrity", "eloquence", "courage", "guardian", "military honors"),
+        description="Eye of the Bull. Watcher of the East. Success only through integrity.",
+    ),
+    "Regulus": FixedStarInfo(
+        name="Regulus",
+        swe_name="Regulus",
+        glyph_svg_path="assets/glyphs/regulus.svg",
+        constellation="Leo",
+        bayer="Alpha Leonis",
+        tier=1,
+        is_royal=True,
+        magnitude=1.35,
+        nature="Mars/Jupiter",
+        keywords=("royalty", "success", "fame", "ambition", "leadership"),
+        description="Heart of the Lion. Watcher of the North. Most royal of all stars.",
+    ),
+    "Antares": FixedStarInfo(
+        name="Antares",
+        swe_name="Antares",
+        constellation="Scorpio",
+        bayer="Alpha Scorpii",
+        tier=1,
+        is_royal=True,
+        magnitude=1.09,
+        nature="Mars/Jupiter",
+        keywords=("intensity", "obsession", "strategy", "self-destruction"),
+        description="Heart of the Scorpion. Watcher of the West. Rival of Mars.",
+    ),
+    "Fomalhaut": FixedStarInfo(
+        name="Fomalhaut",
+        swe_name="Fomalhaut",
+        constellation="Piscis Austrinus",
+        bayer="Alpha Piscis Austrini",
+        tier=1,
+        is_royal=True,
+        magnitude=1.16,
+        nature="Venus/Mercury",
+        keywords=("idealism", "dreams", "magic", "immortality through art"),
+        description="Mouth of the Fish. Watcher of the South. Most mystical Royal Star.",
+    ),
+    # ========================================================================
+    # TIER 2: MAJOR STARS
+    # ========================================================================
+    "Algol": FixedStarInfo(
+        name="Algol",
+        swe_name="Algol",
+        glyph_svg_path="assets/glyphs/algol.svg",
+        constellation="Perseus",
+        bayer="Beta Persei",
+        tier=2,
+        magnitude=2.12,
+        nature="Saturn/Jupiter",
+        keywords=("intensity", "transformation", "female power", "losing one's head"),
+        description="The Demon Star. Medusa's head. Raw transformative power.",
+    ),
+    "Sirius": FixedStarInfo(
+        name="Sirius",
+        swe_name="Sirius",
+        glyph_svg_path="assets/glyphs/sirius.svg",
+        constellation="Canis Major",
+        bayer="Alpha Canis Majoris",
+        tier=2,
+        magnitude=-1.46,
+        nature="Jupiter/Mars",
+        keywords=("brilliance", "ambition", "fame", "devotion", "burning"),
+        description="The Dog Star. Brightest star in the sky. Great honor but danger of burnout.",
+    ),
+    "Spica": FixedStarInfo(
+        name="Spica",
+        swe_name="Spica",
+        constellation="Virgo",
+        bayer="Alpha Virginis",
+        tier=2,
+        magnitude=0.97,
+        nature="Venus/Mars",
+        keywords=("brilliance", "talent", "gifts", "skill", "potential"),
+        description="Ear of Wheat. One of the most fortunate stars. Great talent.",
+    ),
+    "Arcturus": FixedStarInfo(
+        name="Arcturus",
+        swe_name="Arcturus",
+        constellation="Bootes",
+        bayer="Alpha Bootis",
+        tier=2,
+        magnitude=-0.05,
+        nature="Mars/Jupiter",
+        keywords=("pathfinding", "pioneering", "different path", "prosperity"),
+        description="Bear Watcher. Success through a different approach.",
+    ),
+    "Vega": FixedStarInfo(
+        name="Vega",
+        swe_name="Vega",
+        constellation="Lyra",
+        bayer="Alpha Lyrae",
+        tier=2,
+        magnitude=0.03,
+        nature="Venus/Mercury",
+        keywords=("charisma", "artistic talent", "magic", "fleeting success"),
+        description="Falling Eagle. Lyre of Orpheus. Magical and artistic gifts.",
+    ),
+    "Capella": FixedStarInfo(
+        name="Capella",
+        swe_name="Capella",
+        glyph_svg_path="assets/glyphs/capella.svg",
+        constellation="Auriga",
+        bayer="Alpha Aurigae",
+        tier=2,
+        magnitude=0.08,
+        nature="Mars/Mercury",
+        keywords=("curiosity", "learning", "civic honors", "wealth", "independence"),
+        description="Little She-Goat. Civic and military honors.",
+    ),
+    "Rigel": FixedStarInfo(
+        name="Rigel",
+        swe_name="Rigel",
+        constellation="Orion",
+        bayer="Beta Orionis",
+        tier=2,
+        magnitude=0.13,
+        nature="Jupiter/Saturn",
+        keywords=("education", "teaching", "benevolence", "lasting fame"),
+        description="Left Foot of Orion. Good fortune and teaching ability.",
+    ),
+    "Betelgeuse": FixedStarInfo(
+        name="Betelgeuse",
+        swe_name="Betelgeuse",
+        constellation="Orion",
+        bayer="Alpha Orionis",
+        tier=2,
+        magnitude=0.42,
+        nature="Mars/Mercury",
+        keywords=("success", "fame", "martial honors", "acute mind"),
+        description="Armpit of the Giant. Everlasting fame and military success.",
+    ),
+    "Procyon": FixedStarInfo(
+        name="Procyon",
+        swe_name="Procyon",
+        glyph_svg_path="assets/glyphs/procyon.svg",
+        constellation="Canis Minor",
+        bayer="Alpha Canis Minoris",
+        tier=2,
+        magnitude=0.34,
+        nature="Mercury/Mars",
+        keywords=("quick success", "activity", "sudden rise", "sudden fall"),
+        description="Before the Dog. Quick rise to prominence, danger of quick fall.",
+    ),
+    "Pollux": FixedStarInfo(
+        name="Pollux",
+        swe_name="Pollux",
+        constellation="Gemini",
+        bayer="Beta Geminorum",
+        tier=2,
+        magnitude=1.14,
+        nature="Mars",
+        keywords=("courage", "athletics", "cruelty", "craftiness"),
+        description="The Immortal Twin. Athletic ability but potential for cunning.",
+    ),
+    # ========================================================================
+    # TIER 3: EXTENDED STARS
+    # ========================================================================
+    "Castor": FixedStarInfo(
+        name="Castor",
+        swe_name="Castor",
+        constellation="Gemini",
+        bayer="Alpha Geminorum",
+        tier=3,
+        magnitude=1.58,
+        nature="Mercury",
+        keywords=("intellect", "writing", "sudden fame", "sudden loss"),
+        description="The Mortal Twin. Intellectual gifts but instability.",
+    ),
+    "Deneb": FixedStarInfo(
+        name="Deneb",
+        swe_name="Deneb",
+        constellation="Cygnus",
+        bayer="Alpha Cygni",
+        tier=3,
+        magnitude=1.25,
+        nature="Venus/Mercury",
+        keywords=("idealism", "intelligence", "artistic talent", "psychic ability"),
+        description="Tail of the Swan. Artistic and intellectual gifts.",
+    ),
+    "Altair": FixedStarInfo(
+        name="Altair",
+        swe_name="Altair",
+        constellation="Aquila",
+        bayer="Alpha Aquilae",
+        tier=3,
+        magnitude=0.77,
+        nature="Mars/Jupiter",
+        keywords=("boldness", "ambition", "sudden wealth", "confidence"),
+        description="Flying Eagle. Bold action brings success.",
+    ),
+    "Canopus": FixedStarInfo(
+        name="Canopus",
+        swe_name="Canopus",
+        constellation="Carina",
+        bayer="Alpha Carinae",
+        tier=3,
+        magnitude=-0.74,
+        nature="Saturn/Jupiter",
+        keywords=("voyages", "navigation", "education", "changing evil to good"),
+        description="Second brightest star. Travel and turning bad situations around.",
+    ),
+    "Polaris": FixedStarInfo(
+        name="Polaris",
+        swe_name="Polaris",
+        constellation="Ursa Minor",
+        bayer="Alpha Ursae Minoris",
+        tier=3,
+        magnitude=1.98,
+        nature="Saturn/Venus",
+        keywords=("direction", "guidance", "sickness", "spiritual focus"),
+        description="North Star. Spiritual guidance but chronic troubles.",
+    ),
+    "Achernar": FixedStarInfo(
+        name="Achernar",
+        swe_name="Achernar",
+        constellation="Eridanus",
+        bayer="Alpha Eridani",
+        tier=3,
+        magnitude=0.46,
+        nature="Jupiter",
+        keywords=("success", "happiness", "high office"),
+        description="End of the River. Royal and ecclesiastical preferment.",
+    ),
+    "Hamal": FixedStarInfo(
+        name="Hamal",
+        swe_name="Hamal",
+        constellation="Aries",
+        bayer="Alpha Arietis",
+        tier=3,
+        magnitude=2.00,
+        nature="Mars/Saturn",
+        keywords=("independence", "cruelty", "headstrong"),
+        description="Head of the Ram. Independent but potentially violent.",
+    ),
+    "Alkaid": FixedStarInfo(
+        name="Alkaid",
+        swe_name="Alkaid",
+        glyph_svg_path="assets/glyphs/alkaid.svg",
+        constellation="Ursa Major",
+        bayer="Eta Ursae Majoris",
+        tier=3,
+        magnitude=1.86,
+        nature="Mars",
+        keywords=("mourning", "death", "danger", "leadership"),
+        description="End of Big Dipper's handle. Danger but also leadership.",
+    ),
+    "Vindemiatrix": FixedStarInfo(
+        name="Vindemiatrix",
+        swe_name="Vindemiatrix",
+        constellation="Virgo",
+        bayer="Epsilon Virginis",
+        tier=3,
+        magnitude=2.83,
+        nature="Saturn/Mercury",
+        keywords=("widowhood", "falsity", "disgrace", "harvest"),
+        description="Grape Gatherer. Difficult partnerships.",
+    ),
+    "Zubeneschamali": FixedStarInfo(
+        name="Zubeneschamali",
+        swe_name="Zuben Eschamali",
+        constellation="Libra",
+        bayer="Beta Librae",
+        tier=3,
+        magnitude=2.61,
+        nature="Jupiter/Mercury",
+        keywords=("good fortune", "high ambition", "honor", "riches"),
+        description="Northern Claw. One of the most fortunate stars.",
+    ),
+    "Zubenelgenubi": FixedStarInfo(
+        name="Zubenelgenubi",
+        swe_name="Zuben Elgenubi",
+        constellation="Libra",
+        bayer="Alpha Librae",
+        tier=3,
+        magnitude=2.75,
+        nature="Saturn/Mars",
+        keywords=("negative", "malevolent", "social unrest", "ill health"),
+        description="Southern Claw. Difficulties and potential for social problems.",
+    ),
+    "Alcyone": FixedStarInfo(
+        name="Alcyone",
+        swe_name="Alcyone",
+        glyph_svg_path="assets/glyphs/alcyone.svg",
+        constellation="Taurus",
+        bayer="Eta Tauri",
+        tier=2,
+        magnitude=2.87,
+        nature="Moon/Mars",
+        keywords=("ambition", "eminence", "sorrow", "blindness", "the weeping sisters"),
+        description="Brightest star of the Pleiades (Seven Sisters). Ambition but also loss.",
+    ),
+}
+
+
+# ============================================================================
+# FIXED STARS HELPER FUNCTIONS
+# ============================================================================
+
+
+def get_fixed_star_info(name: str) -> FixedStarInfo | None:
+    """
+    Get fixed star info by name.
+
+    Args:
+        name: The name of the star (e.g., "Regulus", "Algol")
+
+    Returns:
+        FixedStarInfo if found, None otherwise
+    """
+    return FIXED_STARS_REGISTRY.get(name)
+
+
+def get_royal_stars() -> list[FixedStarInfo]:
+    """
+    Get the four Royal Stars of Persia.
+
+    Returns:
+        List of the four royal stars (Aldebaran, Regulus, Antares, Fomalhaut)
+    """
+    return [star for star in FIXED_STARS_REGISTRY.values() if star.is_royal]
+
+
+def get_stars_by_tier(tier: int) -> list[FixedStarInfo]:
+    """
+    Get all fixed stars of a specific tier.
+
+    Args:
+        tier: The tier level (1=Royal, 2=Major, 3=Extended)
+
+    Returns:
+        List of FixedStarInfo matching the tier
+    """
+    return [star for star in FIXED_STARS_REGISTRY.values() if star.tier == tier]
+
+
+def get_all_fixed_stars() -> list[FixedStarInfo]:
+    """
+    Get all fixed stars in the registry.
+
+    Returns:
+        List of all FixedStarInfo objects
+    """
+    return list(FIXED_STARS_REGISTRY.values())
+
+
+def search_fixed_stars(query: str) -> list[FixedStarInfo]:
+    """
+    Search for fixed stars by name, constellation, or keywords.
+
+    Args:
+        query: Search string (case-insensitive)
+
+    Returns:
+        List of matching FixedStarInfo objects
+    """
+    query_lower = query.lower()
+    results = []
+
+    for star in FIXED_STARS_REGISTRY.values():
+        if (
+            query_lower in star.name.lower()
+            or query_lower in star.constellation.lower()
+            or query_lower in star.description.lower()
+            or any(query_lower in kw.lower() for kw in star.keywords)
+        ):
+            results.append(star)
+
+    return results
 
 
 # ============================================================================

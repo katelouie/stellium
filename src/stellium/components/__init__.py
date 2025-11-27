@@ -15,6 +15,7 @@ from stellium.components.dignity import (
     AccidentalDignityComponent,
     DignityComponent,
 )
+from stellium.components.fixed_stars import FixedStarsComponent
 from stellium.components.midpoints import MidpointCalculator
 from stellium.core.protocols import ChartComponent
 
@@ -26,4 +27,5 @@ __all__ = [
     "MidpointCalculator",
     "DignityComponent",
     "AccidentalDignityComponent",
+    "FixedStarsComponent",
 ]

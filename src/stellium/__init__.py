@@ -33,6 +33,7 @@ from stellium.core.models import (
     CelestialPosition,
     ChartDateTime,
     ChartLocation,
+    FixedStarPosition,
     HouseCusps,
     PhaseData,
 )
@@ -43,8 +44,12 @@ from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     CELESTIAL_REGISTRY,
+    FIXED_STARS_REGISTRY,
     get_aspect_info,
+    get_fixed_star_info,
     get_object_info,
+    get_royal_stars,
+    get_stars_by_tier,
 )
 
 # === Data (Notable Births) ===
@@ -66,6 +71,7 @@ __all__ = [
     # Core Models
     "CalculatedChart",
     "CelestialPosition",
+    "FixedStarPosition",
     "ChartLocation",
     "ChartDateTime",
     "Aspect",
@@ -74,8 +80,12 @@ __all__ = [
     # Registries
     "CELESTIAL_REGISTRY",
     "ASPECT_REGISTRY",
+    "FIXED_STARS_REGISTRY",
     "get_object_info",
     "get_aspect_info",
+    "get_fixed_star_info",
+    "get_royal_stars",
+    "get_stars_by_tier",
     # Visualization
     "ChartRenderer",
     # Presentation
