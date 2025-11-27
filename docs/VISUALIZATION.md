@@ -4,7 +4,7 @@
 
 Stellium's visualization system transforms your calculated charts into professional-quality SVG graphics. Whether you need a quick chart for analysis or a publication-ready visualization with custom styling, the fluent API makes it effortless.
 
-See the HTML full theme and palette reference overview [rendered here](https://html-preview.github.io/?url=https://github.com/katelouie/stellium/blob/main/examples/chart_examples/stellium_colors.html).
+See the HTML full theme and palette reference overview [rendered here](https://html-preview.github.io/?url=https://github.com/katelouie/stellium/blob/main/docs/starlight_colors.html).
 
 - [Theme Gallery](THEME_GALLERY.md) - Visual showcase of all themes
 - [Palette Gallery](PALETTE_GALLERY.md) - Visual showcase of all palettes
