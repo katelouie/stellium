@@ -8,8 +8,8 @@
 - [x] Add dignity report section (with essential and accidental modes).
 - [ ] Add midpoint aspect report section.
 - [x] Add aspect pattern report section.
-- [ ] Add Comparison chart sections (synastry, transit, progression)
-- [ ] Add Synthesis chart sections (composite, davison)
+- [x] Add Comparison chart sections (synastry, transit, progression)
+- [x] Add Synthesis chart sections (composite, davison)
 
 ## Chart Visualization
 

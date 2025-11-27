@@ -502,30 +502,60 @@ print(f"Cache hits: {stats['hits']}, misses: {stats['misses']}")
 
 ## 📖 Documentation & Learning
 
-### Examples
+### Example Cookbooks
 
-The `/examples` directory contains runnable code:
+The `/examples` directory contains comprehensive, runnable cookbooks:
 
-- `viz_examples.py` - Chart visualization techniques
-- `report_examples.py` - Terminal report generation
-- `chart_examples/` - Gallery of generated charts
-
-### Additional Documentation
-
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - How to contribute (development guide)
-- **[CHANGELOG.md](CHANGELOG.md)** - Release history
-
-### Interactive Learning
+| Cookbook | Description |
+|----------|-------------|
+| **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
+| **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
+| **[comparison_cookbook.py](examples/comparison_cookbook.py)** | 13 examples: synastry, transits, bi-wheels, compatibility |
 
 ```bash
-# Install with examples
+# Run any cookbook
+python examples/chart_cookbook.py
+python examples/report_cookbook.py
+python examples/comparison_cookbook.py
+```
+
+### User Guides
+
+| Guide | Description |
+|-------|-------------|
+| **[VISUALIZATION.md](docs/VISUALIZATION.md)** | Complete chart drawing guide with fluent API reference |
+| **[REPORTS.md](docs/REPORTS.md)** | Report generation guide: sections, presets, PDF output |
+| **[CHART_TYPES.md](docs/CHART_TYPES.md)** | Chart types: natal, synastry, transit, composite, Davison |
+| **[USER_GUIDE.md](docs/USER_GUIDE.md)** | Getting started guide for new users |
+
+### Visual Galleries
+
+| Gallery | Description |
+|---------|-------------|
+| **[THEME_GALLERY.md](docs/THEME_GALLERY.md)** | Visual showcase of all 13+ chart themes |
+| **[PALETTE_GALLERY.md](docs/PALETTE_GALLERY.md)** | Zodiac ring color palettes with previews |
+
+### Technical Documentation
+
+| Document | Description |
+|----------|-------------|
+| **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** | System architecture and design patterns |
+| **[CONTRIBUTING.md](CONTRIBUTING.md)** | How to contribute (development setup) |
+| **[CHANGELOG.md](CHANGELOG.md)** | Release history and version notes |
+| **[PUBLISHING.md](docs/PUBLISHING.md)** | Package publishing guide |
+
+### Quick Start
+
+```bash
+# Clone and install
 git clone https://github.com/katelouie/stellium.git
 cd stellium
 pip install -e .
 
-# Run examples
-python examples/viz_examples.py
-python examples/report_examples.py
+# Run example cookbooks
+python examples/chart_cookbook.py      # Generate chart SVGs
+python examples/report_cookbook.py     # Generate PDF reports
+python examples/comparison_cookbook.py # Generate synastry charts
 ```
 
 ## Architecture Philosophy
