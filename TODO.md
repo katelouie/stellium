@@ -35,7 +35,7 @@
 - [x] Add synastry
 - [x] Add composite
 - [x] Add transits
-- [x] Add progressions
+- [ ] Add progressions
 - [ ] Add returns
 - [x] Add sidereal
 - [x] Add Vedic dignities

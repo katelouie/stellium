@@ -40,6 +40,9 @@ from stellium.core.models import (
 from stellium.core.native import Native, Notable
 from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
 
+# === Returns (Solar, Lunar, Planetary) ===
+from stellium.returns import ReturnBuilder
+
 # === Registry Access ===
 from stellium.core.registry import (
     ASPECT_REGISTRY,
@@ -105,4 +108,6 @@ __all__ = [
     # Synthesis Charts
     "SynthesisBuilder",
     "SynthesisChart",
+    # Returns
+    "ReturnBuilder",
 ]

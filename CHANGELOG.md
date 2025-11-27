@@ -9,6 +9,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Planetary Returns Support (November 28, 2025)
+
+- **ReturnBuilder**: New fluent builder for calculating planetary return charts
+  - **Solar Returns**: `ReturnBuilder.solar(natal, year)` - Annual birthday charts
+  - **Lunar Returns**: `ReturnBuilder.lunar(natal, near_date=...)` - Monthly Moon returns
+  - **Planetary Returns**: `ReturnBuilder.planetary(natal, planet, occurrence=N)` - Saturn, Jupiter, Mars, etc.
+  - Composition-based design: wraps ChartBuilder rather than inheriting
+  - Full configuration delegation: `.with_house_systems()`, `.with_aspects()`, etc.
+  - Relocated returns: `ReturnBuilder.solar(natal, 2025, location="Tokyo, Japan")`
+
+- **Return Chart Metadata**: Charts include return-specific information
+  - `chart_type: "return"` - Identifies chart as a return
+  - `return_planet` - Which planet returned (Sun, Moon, Saturn, etc.)
+  - `natal_planet_longitude` - Original natal position
+  - `return_number` - Which occurrence (for Nth return queries)
+  - `return_julian_day` - Exact moment of return
+
+- **Julian Day Utilities** (`src/stellium/utils/time.py`):
+  - `datetime_to_julian_day(dt)` - Convert Python datetime to Julian Day UT
+  - `julian_day_to_datetime(jd, timezone)` - Convert JD back to datetime
+  - `offset_julian_day(jd, days)` - Simple offset helper
+  - Handles timezone conversion, delta_t correction, edge cases
+
+- **Planetary Crossing Algorithm** (`src/stellium/utils/planetary_crossing.py`):
+  - `find_planetary_crossing(planet, target_longitude, start_jd, direction)` - Binary search
+  - `find_nth_return(planet, natal_longitude, birth_jd, n)` - Find Nth return
+  - `find_return_near_date(planet, natal_longitude, target_jd)` - Find nearest
+  - Sub-arcsecond precision (~0.0001°)
+  - Correctly handles retrograde motion (only counts direct-motion crossings)
+  - Handles 360°→0° wrap-around edge case
+
+- **ChartBuilder Extension Hook**: `_extra_metadata` attribute support
+  - Allows wrapper classes (like ReturnBuilder) to inject metadata
+  - Duck-typing approach: `if hasattr(self, "_extra_metadata"): ...`
+  - Enables extension without modifying ChartBuilder
+
+- **20 Comprehensive Tests** (`tests/test_returns.py`):
+  - Solar return precision and timing tests
+  - Lunar return by date and by occurrence
+  - Saturn return timing (~29 years) and precision
+  - Jupiter return (~12 years), Mars return (~2 years)
+  - Configuration delegation tests
+  - Relocated return tests
+  - Edge cases: invalid planets, 360° boundary
+
+- **Clean API Export**: `from stellium import ReturnBuilder`
+
+- **Returns Cookbook** (`examples/returns_cookbook.py`): 14 comprehensive examples demonstrating all return types, configurations, and precision verification
+
+Example usage:
+```python
+from stellium import ReturnBuilder, ChartBuilder
+
+natal = ChartBuilder.from_notable("Albert Einstein").calculate()
+
+# 2025 Solar Return
+sr = ReturnBuilder.solar(natal, 2025).calculate()
+
+# Lunar Return nearest to a date
+lr = ReturnBuilder.lunar(natal, near_date="2025-03-15").calculate()
+
+# First Saturn Return (~age 29)
+saturn = ReturnBuilder.planetary(natal, "Saturn", occurrence=1).calculate()
+
+# Relocated Solar Return
+sr_tokyo = ReturnBuilder.solar(natal, 2025, location="Tokyo, Japan").calculate()
+```
+
 #### Sidereal Zodiac Support (November 26, 2025)
 
 - **Full Sidereal Zodiac System**: Stellium now supports both tropical (Western) and sidereal (Vedic) zodiac calculations

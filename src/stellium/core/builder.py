@@ -482,6 +482,9 @@ class ChartBuilder:
         )
 
         final_metadata = component_metadata.copy()
+        # Allow external metadata injection (used by ReturnBuilder, etc.)
+        if hasattr(self, "_extra_metadata"):
+            final_metadata.update(self._extra_metadata)
         for analyzer in self._analyzers:
             final_metadata[analyzer.metadata_name] = analyzer.analyze(provisional_chart)
 
