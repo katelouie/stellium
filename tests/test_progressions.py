@@ -15,15 +15,21 @@ from stellium import ChartBuilder, ComparisonBuilder
 from stellium.core.models import ComparisonType
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def einstein_natal():
-    """Albert Einstein's natal chart (well-documented birth data)."""
+    """Albert Einstein's natal chart (well-documented birth data).
+
+    Using scope="module" so chart is only built once per test file.
+    """
     return ChartBuilder.from_notable("Albert Einstein").calculate()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def kate_natal():
-    """Kate's natal chart for testing."""
+    """Kate's natal chart for testing.
+
+    Using scope="module" so chart is only built once per test file.
+    """
     return ChartBuilder.from_details(
         "1994-01-06 11:47",
         "Palo Alto, CA",

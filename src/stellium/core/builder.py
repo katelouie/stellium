@@ -488,9 +488,9 @@ class ChartBuilder:
         for analyzer in self._analyzers:
             final_metadata[analyzer.metadata_name] = analyzer.analyze(provisional_chart)
 
-        # Add cache statistics to the metadata
-        cache_stats = self._get_cache().get_stats()
-        final_metadata["cache_stats"] = cache_stats
+        # Note: Cache stats removed from metadata for performance.
+        # get_stats() was scanning 100k+ files on every calculate() call.
+        # Use stellium.utils.cache.get_cache_stats() directly if needed.
 
         # Add chart name to metadata if set
         if self._name is not None:
@@ -553,9 +553,8 @@ class ChartBuilder:
         # Build metadata
         final_metadata: dict = {}
 
-        # Add cache statistics to the metadata
-        cache_stats = self._get_cache().get_stats()
-        final_metadata["cache_stats"] = cache_stats
+        # Note: Cache stats removed from metadata for performance.
+        # get_stats() was scanning 100k+ files on every calculate() call.
 
         # Add chart name to metadata if set
         if self._name is not None:
