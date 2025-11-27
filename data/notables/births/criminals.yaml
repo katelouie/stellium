@@ -1,0 +1,27 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+# Note: Included for astrological research purposes only
+
+- name: Ted Bundy
+  event_type: birth
+  year: 1946
+  month: 11
+  day: 24
+  hour: 22
+  minute: 35
+  latitude: 44.4759
+  longitude: -73.2121
+  location_name: Burlington, Vermont, USA
+  timezone: America/New_York
+  category: criminal
+  subcategories:
+    - Serial Killer
+  notable_for: >-
+    American serial killer who confessed to 30 homicides committed between 1974 and
+    1978. Studied for criminological and psychological research. Executed in 1989.
+  astrological_notes: Sun 2 Sagittarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Bundy,_Ted"
+  verified: true

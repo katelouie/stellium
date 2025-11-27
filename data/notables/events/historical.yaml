@@ -1,0 +1,108 @@
+# Notable historical events from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Trinity Nuclear Test
+  event_type: event
+  year: 1945
+  month: 7
+  day: 16
+  hour: 5
+  minute: 29
+  latitude: 33.6773
+  longitude: -106.4754
+  location_name: Alamogordo, New Mexico, USA
+  timezone: America/Denver
+  category: event
+  subcategories:
+    - Nuclear
+    - Military
+    - Scientific
+  notable_for: >-
+    First detonation of a nuclear weapon. Code-named "Trinity" by J. Robert Oppenheimer.
+    Part of the Manhattan Project. The 18.6 kiloton explosion vaporized the test tower
+    and turned sand into green glass ("trinitite"). Ushered in the Atomic Age.
+  astrological_notes: Sun 23 Cancer
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Nuclear:_First_Atomic_Test"
+  verified: true
+
+- name: Moon Landing
+  event_type: event
+  year: 1969
+  month: 7
+  day: 20
+  hour: 20
+  minute: 17
+  latitude: 29.7604
+  longitude: -95.3698
+  location_name: Houston, Texas, USA (Mission Control)
+  timezone: America/Chicago
+  category: event
+  subcategories:
+    - Space
+    - Scientific
+    - Historical
+  notable_for: >-
+    Apollo 11 lunar landing. Neil Armstrong and Buzz Aldrin became the first humans
+    to walk on the Moon. "That's one small step for man, one giant leap for mankind."
+    Considered one of humanity's greatest achievements.
+  astrological_notes: Sun 27 Cancer
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Space:_Moon_Landing"
+  verified: true
+
+- name: Titanic Sinking
+  event_type: event
+  year: 1912
+  month: 4
+  day: 15
+  hour: 2
+  minute: 20
+  latitude: 41.7325
+  longitude: -49.9469
+  location_name: North Atlantic Ocean
+  timezone: UTC
+  category: event
+  subcategories:
+    - Maritime
+    - Disaster
+    - Historical
+  notable_for: >-
+    Sinking of the RMS Titanic after striking an iceberg. Over 1,500 people died,
+    making it one of the deadliest peacetime maritime disasters. The "unsinkable"
+    ship sank on her maiden voyage. Led to major improvements in maritime safety.
+  astrological_notes: Sun 25 Aries
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Historic:_Titanic_Sinking"
+  verified: true
+
+- name: September 11 Attacks
+  event_type: event
+  year: 2001
+  month: 9
+  day: 11
+  hour: 8
+  minute: 46
+  latitude: 40.7128
+  longitude: -74.0060
+  location_name: New York City, USA
+  timezone: America/New_York
+  category: event
+  subcategories:
+    - Terrorist
+    - Historical
+    - Political
+  notable_for: >-
+    Terrorist attacks on the World Trade Center. First plane struck at 8:46 AM,
+    second at 9:03 AM. Towers collapsed at 9:59 AM and 10:28 AM. Nearly 3,000 people
+    died. Changed global politics and security forever.
+  astrological_notes: Sun 18 Virgo
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Terrorist:_WTC_(2001)"
+    - "Columbia University Lamont-Doherty Earth Observatory seismograph data"
+  verified: true

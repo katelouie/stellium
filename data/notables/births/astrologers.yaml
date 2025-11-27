@@ -1,0 +1,56 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Dane Rudhyar
+  event_type: birth
+  year: 1895
+  month: 3
+  day: 23
+  hour: 0
+  minute: 42
+  latitude: 48.8566
+  longitude: 2.3522
+  location_name: Paris, France
+  timezone: Europe/Paris
+  category: astrologer
+  subcategories:
+    - Humanistic Astrologer
+    - Composer
+    - Philosopher
+  notable_for: >-
+    French-American astrologer, one of the most influential of the 20th century.
+    Pioneered humanistic and transpersonal astrology. Author of "The Astrology of
+    Personality" (1936). Also a composer, painter, and poet.
+  astrological_notes: Sun 2 Aries
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Rudhyar,_Dane"
+  verified: true
+
+- name: William Lilly
+  event_type: birth
+  year: 1602
+  month: 5
+  day: 1
+  hour: 2
+  minute: 0
+  latitude: 52.8333
+  longitude: -1.2667
+  location_name: Diseworth, Leicestershire, England
+  timezone: Europe/London
+  category: astrologer
+  subcategories:
+    - Traditional Astrologer
+    - Author
+    - Horary Master
+  notable_for: >-
+    British astrologer and author, the most famous astrologer of the 17th century.
+    Author of "Christian Astrology" (1647), the first major astrological textbook
+    in English. Predicted the Great Fire of London 14 years before it happened.
+  astrological_notes: Sun 19 Taurus, Moon 14 Capricorn, Asc Pisces
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William"
+    - "Gadbury's Collection of Nativities (1661)"
+  verified: true

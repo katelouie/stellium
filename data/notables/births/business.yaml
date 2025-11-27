@@ -1,0 +1,82 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Steve Jobs
+  event_type: birth
+  year: 1955
+  month: 2
+  day: 24
+  hour: 19
+  minute: 15
+  latitude: 37.7749
+  longitude: -122.4194
+  location_name: San Francisco, California, USA
+  timezone: America/Los_Angeles
+  category: business
+  subcategories:
+    - Entrepreneur
+    - Inventor
+    - Visionary
+  notable_for: >-
+    American business magnate and co-founder of Apple Inc. Revolutionized personal
+    computing, animated movies (Pixar), music (iPod/iTunes), phones (iPhone), and
+    tablet computing (iPad). Known for his perfectionism and design philosophy.
+  astrological_notes: Sun 5 Pisces
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
+  verified: true
+
+- name: Elon Musk
+  event_type: birth
+  year: 1971
+  month: 6
+  day: 28
+  hour: 7
+  minute: 30
+  latitude: -25.7479
+  longitude: 28.2293
+  location_name: Pretoria, South Africa
+  timezone: Africa/Johannesburg
+  category: business
+  subcategories:
+    - Entrepreneur
+    - Engineer
+    - Investor
+  notable_for: >-
+    South African-born entrepreneur and business magnate. Founder of SpaceX, CEO of
+    Tesla, owner of X (Twitter). Co-founded PayPal, Neuralink, and OpenAI.
+    Became world's richest person in 2021.
+  astrological_notes: Sun 6 Cancer
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Musk,_Elon"
+    - "Walter Isaacson, Elon Musk (2023)"
+  verified: false
+
+- name: Walt Disney
+  event_type: birth
+  year: 1901
+  month: 12
+  day: 5
+  hour: 0
+  minute: 35
+  latitude: 41.8781
+  longitude: -87.6298
+  location_name: Chicago, Illinois, USA
+  timezone: America/Chicago
+  category: business
+  subcategories:
+    - Animator
+    - Filmmaker
+    - Theme Park Creator
+  notable_for: >-
+    American animator, film producer, and entrepreneur. Created Mickey Mouse in 1928.
+    Founded The Walt Disney Company. Built Disneyland. Won 22 Academy Awards.
+    Pioneer of the American animation industry.
+  astrological_notes: Sun 12 Sagittarius, Moon 9 Libra
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
+  verified: true

@@ -193,32 +193,6 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Edison,_Thomas'
   - Alfred Powell Morgan, The Pageant of Electricity (1939)
   verified: false
-- name: William Lilly
-  event_type: birth
-  year: 1602
-  month: 5
-  day: 1
-  hour: 2
-  minute: 0
-  latitude: 52.8333
-  longitude: -1.2667
-  location_name: Diseworth, Leicestershire, England
-  timezone: Europe/London
-  category: scientist
-  subcategories:
-  - Astrologer
-  - Author
-  - Occultist
-  notable_for: British astrologer and author, the most famous astrologer of the 17th
-    century. Author of "Christian Astrology" (1647), the first major astrological
-    textbook in English. Predicted the Great Fire of London 14 years before it happened.
-  astrological_notes: Sun 19 Taurus, Moon 14 Capricorn, Asc Pisces
-  data_quality: A
-  sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William'
-  - Gadbury's Collection of Nativities (1661)
-  verified: true
-
 - name: Carl Sagan
   event_type: birth
   year: 1934

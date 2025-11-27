@@ -1,0 +1,57 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Aleister Crowley
+  event_type: birth
+  year: 1875
+  month: 10
+  day: 12
+  hour: 23
+  minute: 0
+  latitude: 52.2852
+  longitude: -1.5201
+  location_name: Leamington Spa, England
+  timezone: Europe/London
+  category: occultist
+  subcategories:
+    - Magician
+    - Author
+    - Poet
+  notable_for: >-
+    British occultist, ceremonial magician, poet, and painter. Founded the religion
+    of Thelema ("Do what thou wilt"). Leader of the British O.T.O. Member of the
+    Golden Dawn. Author of "The Book of the Law" and many other occult texts.
+  astrological_notes: Sun 19 Libra, Moon 22 Pisces
+  data_quality: B
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Crowley,_Aleister"
+    - "Confessions of Aleister Crowley"
+  verified: false
+
+- name: Nostradamus
+  event_type: birth
+  year: 1503
+  month: 12
+  day: 14  # Julian calendar
+  hour: 12
+  minute: 0
+  latitude: 43.7894
+  longitude: 4.8319
+  location_name: Saint-Remy-de-Provence, France
+  timezone: Europe/Paris
+  category: occultist
+  subcategories:
+    - Astrologer
+    - Physician
+    - Seer
+  notable_for: >-
+    French astrologer, physician, and reputed seer. Author of "Les Propheties"
+    (1555), a collection of 942 quatrains predicting future events. His prophecies
+    have been interpreted as predicting major world events for centuries.
+  astrological_notes: Sun 2 Capricorn (Julian)
+  data_quality: C
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Nostradamus"
+    - "Chavigny, La Premiere face du Janus francois (1594)"
+  verified: false

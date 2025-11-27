@@ -1,0 +1,108 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Bruce Lee
+  event_type: birth
+  year: 1940
+  month: 11
+  day: 27
+  hour: 7
+  minute: 12
+  latitude: 37.7749
+  longitude: -122.4194
+  location_name: San Francisco, California, USA
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+    - Martial Artist
+    - Actor
+    - Philosopher
+  notable_for: >-
+    Chinese-American martial artist, actor, and filmmaker. Founded Jeet Kune Do.
+    Considered the most influential martial artist of all time and a cultural icon.
+    Starred in "Enter the Dragon" and other martial arts classics.
+  astrological_notes: Sun 4 Sagittarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Lee,_Bruce"
+    - "Robert Paige quoting B.C. in Constellations '77"
+  verified: true
+
+- name: Muhammad Ali
+  event_type: birth
+  year: 1942
+  month: 1
+  day: 17
+  hour: 18
+  minute: 35
+  latitude: 38.2527
+  longitude: -85.7585
+  location_name: Louisville, Kentucky, USA
+  timezone: America/Kentucky/Louisville
+  category: athlete
+  subcategories:
+    - Boxer
+    - Activist
+    - Humanitarian
+  notable_for: >-
+    American professional boxer and activist. Nicknamed "The Greatest," he is widely
+    regarded as one of the most significant sports figures of the 20th century.
+    Three-time world heavyweight champion. Known for his activism and wit.
+  astrological_notes: Sun 27 Capricorn
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Ali,_Muhammad"
+  verified: true
+
+- name: Michael Jordan
+  event_type: birth
+  year: 1963
+  month: 2
+  day: 17
+  hour: 13
+  minute: 40
+  latitude: 40.6782
+  longitude: -73.9442
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: athlete
+  subcategories:
+    - Basketball Player
+    - Businessman
+    - Cultural Icon
+  notable_for: >-
+    American basketball player widely considered the greatest of all time. Won six
+    NBA championships with the Chicago Bulls. Five-time MVP. His Air Jordan brand
+    revolutionized sports marketing.
+  astrological_notes: Sun 28 Aquarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Jordan,_Michael"
+  verified: true
+
+- name: Serena Williams
+  event_type: birth
+  year: 1981
+  month: 9
+  day: 26
+  hour: 20
+  minute: 28
+  latitude: 43.4195
+  longitude: -83.9508
+  location_name: Saginaw, Michigan, USA
+  timezone: America/Detroit
+  category: athlete
+  subcategories:
+    - Tennis Player
+    - Entrepreneur
+    - Activist
+  notable_for: >-
+    American professional tennis player. Won 23 Grand Slam singles titles, the most
+    in the Open Era. Considered one of the greatest tennis players of all time.
+    Business owner and advocate for women's rights.
+  astrological_notes: Sun 3 Libra, Moon in Virgo
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Williams,_Serena"
+  verified: true
