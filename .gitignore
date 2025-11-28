@@ -57,3 +57,8 @@ htmlcov/
 
 # Ignore development folder
 dev/
+
+# Sphinx docs output
+docs/_build/
+docs/_static/
+docs/_templates/
