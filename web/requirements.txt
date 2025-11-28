@@ -1,1 +1,3 @@
+# Local development requirements for web/
+# For Railway deployment, see ../requirements.txt
 nicegui>=1.4.0

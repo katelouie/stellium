@@ -1,0 +1,23 @@
+# Nixpacks configuration for Railway deployment
+# https://nixpacks.com/docs/configuration/file
+
+[phases.setup]
+nixPkgs = ["python311"]
+
+[phases.install]
+cmds = [
+    "pip install --upgrade pip",
+    "pip install -e .",
+    "pip install nicegui"
+]
+
+[phases.build]
+# No build phase needed for this Python app
+
+[start]
+cmd = "cd web && python main.py"
+
+[variables]
+# Python settings
+PYTHONUNBUFFERED = "1"
+PYTHONDONTWRITEBYTECODE = "1"

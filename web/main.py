@@ -255,15 +255,24 @@ def explore():
 # =============================================================================
 
 if __name__ in {"__main__", "__mp_main__"}:
+    import os
+
+    # Get port from environment (Railway sets PORT), default to 8080 for local dev
+    port = int(os.environ.get("PORT", 8080))
+
+    # Check if running in production (Railway sets RAILWAY_ENVIRONMENT)
+    is_production = os.environ.get("RAILWAY_ENVIRONMENT") is not None
+
     print("\n" + "=" * 50)
     print("  ★  Stellium Web  ★")
     print("=" * 50)
-    print("\n  Starting server at http://localhost:8080\n")
+    print(f"\n  Starting server on port {port}\n")
 
     ui.run(
         title="Stellium",
         favicon="★",
-        port=8080,
-        reload=True,  # Hot reload during development
+        host="0.0.0.0",  # Bind to all interfaces (required for Railway)
+        port=port,
+        reload=not is_production,  # Hot reload only in development
         show=False,  # Don't auto-open browser
     )
