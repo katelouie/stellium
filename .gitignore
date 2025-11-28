@@ -26,6 +26,7 @@ build/
 !data/swisseph/ephe/semo_24.se1
 !data/swisseph/ephe/seas_18.se1
 !data/swisseph/ephe/seas_24.se1
+!data/swisseph/ephe/sefstars.txt
 
 # Include notable births and events data (package assets)
 !data/notables/births/

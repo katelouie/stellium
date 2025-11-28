@@ -38,6 +38,7 @@ dependencies = [
     "svgwrite>=1.4.3",
     "pyyaml",
     "typst",
+    "python-dateutil",
 ]
 
 [project.optional-dependencies]
