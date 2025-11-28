@@ -6,6 +6,7 @@ A searchable dropdown to select from the notable births registry.
 
 from config import COLORS
 from nicegui import ui
+
 from stellium.data import get_notable_registry
 
 
@@ -51,7 +52,7 @@ def create_notable_selector(
             on_change=on_change,
         )
         .classes("w-full")
-        .props(f'outlined dense options-dense use-input input-debounce="200"')
+        .props('outlined dense options-dense use-input input-debounce="200"')
         .props(f'placeholder="{placeholder}"')
     )
 

@@ -25,7 +25,6 @@ from state import ChartState, PDFReportState, RelationshipsState
 from stellium import ChartBuilder
 from stellium.core.comparison import ComparisonBuilder
 from stellium.core.synthesis import SynthesisBuilder
-from stellium.presentation import ReportBuilder
 from stellium.engines.houses import (
     AlcabitiusHouses,
     APCHouses,
@@ -46,6 +45,7 @@ from stellium.engines.houses import (
     VehlowEqualHouses,
     WholeSignHouses,
 )
+from stellium.presentation import ReportBuilder
 
 # House system mapping (all 18 systems)
 HOUSE_SYSTEM_MAP = {
@@ -436,8 +436,8 @@ def create_relationships_page():
             name_part = f"{p1_name}_{p2_name}".replace(" ", "_").lower()
             filename = f"{name_part}_{state.chart_type}_report.pdf"
 
-            import tempfile
             import os
+            import tempfile
 
             chart_svg_path = None
             if rs.include_chart_image and chart_svg["content"]:

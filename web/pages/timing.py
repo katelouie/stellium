@@ -4,7 +4,6 @@ Stellium Web - Timing Page
 Chart types for forecasting: Transits, Progressions, and Returns.
 """
 
-from datetime import datetime
 
 from components.chart_display import create_chart_actions, create_chart_display
 from components.header import create_header, create_nav
@@ -28,9 +27,6 @@ from state import ChartState, PDFReportState, TimingState
 # Stellium imports
 from stellium import ChartBuilder
 from stellium.core.comparison import ComparisonBuilder
-from stellium.presentation import ReportBuilder
-from stellium.returns import ReturnBuilder
-from stellium.utils.progressions import calculate_progressed_datetime
 from stellium.engines.houses import (
     AlcabitiusHouses,
     APCHouses,
@@ -51,6 +47,9 @@ from stellium.engines.houses import (
     VehlowEqualHouses,
     WholeSignHouses,
 )
+from stellium.presentation import ReportBuilder
+from stellium.returns import ReturnBuilder
+from stellium.utils.progressions import calculate_progressed_datetime
 
 # House system mapping (all 18 systems)
 HOUSE_SYSTEM_MAP = {
@@ -142,7 +141,7 @@ def create_timing_options(state: TimingState, on_change=None):
                     f"color: {COLORS['text_muted']}"
                 )
                 ui.select(
-                    {planet: desc for planet, desc in RETURN_PLANETS},
+                    dict(RETURN_PLANETS),
                     value=state.return_planet,
                     on_change=lambda e: update_field("return_planet", e.value),
                 ).classes("w-full")
@@ -627,8 +626,8 @@ def create_timing_page():
             name_part = state.natal.name.replace(" ", "_").lower() if state.natal.name else "chart"
             filename = f"{name_part}_{state.chart_type}_report.pdf"
 
-            import tempfile
             import os
+            import tempfile
 
             chart_svg_path = None
             if rs.include_chart_image and chart_svg["content"]:

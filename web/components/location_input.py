@@ -6,12 +6,11 @@ Debounces input and shows dropdown with matching locations.
 """
 
 import asyncio
-from typing import Callable
+from collections.abc import Callable
 
 from config import COLORS
 from geopy.geocoders import Nominatim
 from nicegui import ui
-
 
 # Geocoder instance (reused for all queries)
 _geolocator = Nominatim(user_agent="stellium_web_autocomplete")
@@ -150,7 +149,7 @@ def create_location_input(
             ui.element("div")
             .classes("px-3 py-2 cursor-pointer hover:bg-gray-100")
             .style(f"border-bottom: 1px solid {COLORS['border']};")
-            .on("click", lambda l=loc: select_location(l))
+            .on("click", lambda loc=loc: select_location(loc))
         ):
             # Short name (prominent)
             ui.label(loc["short_name"]).classes("text-sm font-medium").style(

@@ -22,7 +22,6 @@ from stellium.components import (
     FixedStarsComponent,
     MidpointCalculator,
 )
-from stellium.presentation import ReportBuilder
 from stellium.engines.houses import (
     AlcabitiusHouses,
     APCHouses,
@@ -44,6 +43,7 @@ from stellium.engines.houses import (
     WholeSignHouses,
 )
 from stellium.engines.patterns import AspectPatternAnalyzer
+from stellium.presentation import ReportBuilder
 
 # House system mapping (all 18 systems)
 HOUSE_SYSTEM_MAP = {
@@ -324,8 +324,8 @@ def create_natal_page():
             filename = f"{name_part}_natal_report.pdf"
 
             # For PDF with chart image, we need to save SVG to temp file
-            import tempfile
             import os
+            import tempfile
 
             chart_svg_path = None
             if rs.include_chart_image and chart_svg["content"]:

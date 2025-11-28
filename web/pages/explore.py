@@ -22,7 +22,7 @@ def create_explore_page():
     all_notables = registry.get_all()
 
     # Get unique categories
-    categories = sorted(set(n.category for n in all_notables))
+    categories = sorted({n.category for n in all_notables})
 
     # Page state
     state = {

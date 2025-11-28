@@ -10,15 +10,12 @@ This module tests all CLI commands including:
 
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 
 import pytest
 from click.testing import CliRunner
 
 from stellium.cli import cli
-from stellium.cli.cache import cache_clear_cmd, cache_group, cache_info_cmd, cache_size_cmd
-from stellium.cli.chart import chart_from_registry_cmd, chart_group
-from stellium.cli.ephemeris import ephemeris_download_cmd, ephemeris_group, ephemeris_list_cmd
 from stellium.cli.ephemeris_download import (
     EPHEMERIS_BASE_URL,
     FILE_PATTERNS,
@@ -27,7 +24,6 @@ from stellium.cli.ephemeris_download import (
     get_data_directory,
     get_required_files,
 )
-
 
 # ============================================================================
 # FIXTURES
@@ -351,9 +347,7 @@ class TestEphemerisCommands:
 
     def test_ephemeris_download_force(self, runner: CliRunner):
         """Test 'ephemeris download --force' skips confirmation."""
-        with patch(
-            "stellium.cli.ephemeris.download_file", return_value=True
-        ) as mock_download:
+        with patch("stellium.cli.ephemeris.download_file", return_value=True):
             with patch(
                 "stellium.cli.ephemeris.get_required_files",
                 return_value=["test_file.se1"],
@@ -369,9 +363,7 @@ class TestEphemerisCommands:
 
     def test_ephemeris_download_quiet(self, runner: CliRunner):
         """Test 'ephemeris download --quiet' suppresses output."""
-        with patch(
-            "stellium.cli.ephemeris.download_file", return_value=True
-        ) as mock_download:
+        with patch("stellium.cli.ephemeris.download_file", return_value=True):
             with patch(
                 "stellium.cli.ephemeris.get_required_files",
                 return_value=["test_file.se1"],
@@ -389,9 +381,7 @@ class TestEphemerisCommands:
 
     def test_ephemeris_download_with_years(self, runner: CliRunner):
         """Test 'ephemeris download --years' downloads specific range."""
-        with patch(
-            "stellium.cli.ephemeris.download_file", return_value=True
-        ) as mock_download:
+        with patch("stellium.cli.ephemeris.download_file", return_value=True):
             with patch(
                 "stellium.cli.ephemeris.get_required_files"
             ) as mock_get_files:
@@ -512,7 +502,7 @@ class TestEphemerisDownloadHelpers:
         assert "moon" in FILE_PATTERNS
         assert "asteroids" in FILE_PATTERNS
 
-        for category, config in FILE_PATTERNS.items():
+        for _category, config in FILE_PATTERNS.items():
             assert "prefix" in config
             assert "description" in config
             assert "size_kb" in config

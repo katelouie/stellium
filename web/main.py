@@ -16,11 +16,11 @@ Then visit http://localhost:8080
 
 from config import COLORS, FONTS, GOOGLE_FONTS_URL
 from nicegui import ui
+from pages.explore import create_explore_page
 from pages.home import create_home_page
 from pages.natal import create_natal_page
 from pages.relationships import create_relationships_page
 from pages.timing import create_timing_page
-from pages.explore import create_explore_page
 
 # =============================================================================
 # GLOBAL STYLES
