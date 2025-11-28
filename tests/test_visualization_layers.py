@@ -274,19 +274,30 @@ class TestZodiacBandLayerIntegration:
     @pytest.fixture
     def sample_chart(self):
         """Create a chart for rendering tests."""
-        return ChartBuilder.from_details(
-            "1990-01-15 10:00", "New York, NY"
-        ).calculate()
+        return ChartBuilder.from_details("1990-01-15 10:00", "New York, NY").calculate()
 
     def test_zodiac_band_renders_signs(self, sample_chart):
         """Test that zodiac band renders sign glyphs."""
         svg_content = sample_chart.draw().save(to_string=True)
 
         # Should contain zodiac sign glyphs (Unicode)
-        zodiac_glyphs = ["♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐", "♑", "♒", "♓"]
+        zodiac_glyphs = [
+            "♈",
+            "♉",
+            "♊",
+            "♋",
+            "♌",
+            "♍",
+            "♎",
+            "♏",
+            "♐",
+            "♑",
+            "♒",
+            "♓",
+        ]
 
         # At least some glyphs should be present
-        found_glyphs = [glyph for glyph in zodiac_glyphs if glyph in svg_content]
+        _found_glyphs = [glyph for glyph in zodiac_glyphs if glyph in svg_content]
 
         # The zodiac wheel should have at least some sign markers
         # (Text elements are in the SVG even if not zodiac names)
@@ -363,9 +374,7 @@ class TestAspectLineLayerIntegration:
     def test_aspect_palette_changes_colors(self, sample_chart):
         """Test that different aspect palettes produce different output."""
         svg_default = sample_chart.draw().save(to_string=True)
-        svg_neon = (
-            sample_chart.draw().with_aspect_palette("neon").save(to_string=True)
-        )
+        svg_neon = sample_chart.draw().with_aspect_palette("neon").save(to_string=True)
 
         # Both should be valid SVG
         assert "<svg" in svg_default
@@ -378,9 +387,7 @@ class TestHouseCuspLayerIntegration:
     @pytest.fixture
     def sample_chart(self):
         """Create a chart for rendering tests."""
-        return ChartBuilder.from_details(
-            "1990-01-15 10:00", "New York, NY"
-        ).calculate()
+        return ChartBuilder.from_details("1990-01-15 10:00", "New York, NY").calculate()
 
     def test_house_cusps_rendered(self, sample_chart):
         """Test that house cusps are rendered."""
@@ -404,9 +411,7 @@ class TestChartThemes:
     @pytest.fixture
     def sample_chart(self):
         """Create a chart for rendering tests."""
-        return ChartBuilder.from_details(
-            "1990-01-15 10:00", "New York, NY"
-        ).calculate()
+        return ChartBuilder.from_details("1990-01-15 10:00", "New York, NY").calculate()
 
     def test_default_theme(self, sample_chart):
         """Test drawing with default theme."""
