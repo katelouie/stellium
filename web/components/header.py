@@ -52,5 +52,5 @@ def create_nav():
         with ui.row().classes("max-w-4xl mx-auto justify-center gap-8 md:gap-12"):
             for label, href in nav_items:
                 ui.link(label, href, new_tab=False).classes(
-                    "no-underline text-xs tracking-[0.2em] transition-colors"
-                ).style(f"color: {COLORS['text_muted']}")
+                    "nav-link no-underline text-xs tracking-[0.2em]"
+                )

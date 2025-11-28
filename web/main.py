@@ -58,6 +58,15 @@ def setup_styles():
         a {{ color: {COLORS["gold"]}; }}
         a:hover {{ color: {COLORS["primary"]}; }}
 
+        /* Nav links */
+        .nav-link {{
+            color: {COLORS["text_muted"]} !important;
+            transition: color 0.2s ease !important;
+        }}
+        .nav-link:hover {{
+            color: {COLORS["gold"]} !important;
+        }}
+
         /* Remove NiceGUI default padding */
         .nicegui-content {{
             padding: 0 !important;
