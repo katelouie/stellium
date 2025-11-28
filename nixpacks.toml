@@ -1,13 +1,11 @@
 # Nixpacks configuration for Railway deployment
-# https://nixpacks.com/docs/configuration/file
 
-# Use Python provider
+# Tell Nixpacks to use Python provider
 [phases.setup]
-nixPkgs = ["python311", "python311Packages.pip"]
+nixPkgs = ["python311Full"]
 
 [phases.install]
 cmds = [
-    "python -m pip install --upgrade pip",
     "pip install -e .",
     "pip install nicegui"
 ]
@@ -17,4 +15,3 @@ cmd = "cd web && python main.py"
 
 [variables]
 PYTHONUNBUFFERED = "1"
-PYTHONDONTWRITEBYTECODE = "1"
