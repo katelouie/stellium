@@ -1,13 +1,12 @@
 # Nixpacks configuration for Railway deployment
 
-# Tell Nixpacks to use Python provider
-[phases.setup]
-nixPkgs = ["python311Full"]
+# Let Nixpacks auto-detect Python from requirements.txt
+# Just customize the install and start commands
 
 [phases.install]
 cmds = [
-    "pip install -e .",
-    "pip install nicegui"
+    "pip install -r requirements.txt",
+    "pip install -e ."
 ]
 
 [start]
