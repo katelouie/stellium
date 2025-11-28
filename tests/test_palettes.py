@@ -32,7 +32,6 @@ from stellium.visualization.palettes import (
     rgb_to_hex,
 )
 
-
 # ============================================================================
 # ZODIAC PALETTE TESTS
 # ============================================================================
@@ -174,7 +173,7 @@ class TestAspectPalette:
     def test_aspect_colors_are_hex_strings(self):
         """Test that all aspect colors are valid hex strings."""
         colors = get_aspect_palette_colors(AspectPalette.CLASSIC)
-        for aspect_name, color in colors.items():
+        for _aspect_name, color in colors.items():
             assert isinstance(color, str)
             assert color.startswith("#")
             assert len(color) == 7  # #RRGGBB

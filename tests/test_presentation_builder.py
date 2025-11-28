@@ -5,7 +5,6 @@ Tests the ReportBuilder class and its fluent API for creating reports.
 """
 
 import datetime as dt
-import tempfile
 from pathlib import Path
 
 import pytest
@@ -24,7 +23,6 @@ from stellium.presentation.sections import (
     MoonPhaseSection,
     PlanetPositionSection,
 )
-
 
 # ============================================================================
 # FIXTURES

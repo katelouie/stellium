@@ -3,10 +3,8 @@
 import datetime as dt
 
 import pytest
-import pytz
 
 from stellium.components.arabic_parts import (
-    ARABIC_PARTS_CATALOG,
     ArabicPartsCalculator,
 )
 from stellium.core.builder import ChartBuilder

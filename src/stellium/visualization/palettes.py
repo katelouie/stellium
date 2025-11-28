@@ -283,65 +283,137 @@ def get_palette_colors(palette: ZodiacPalette | str) -> list[str]:
     elif palette == ZodiacPalette.VIRIDIS:
         # Viridis: perceptually uniform, colorblind-friendly (purple → green → yellow)
         return [
-            "#440154", "#482475", "#414487", "#355F8D",
-            "#2A788E", "#21918C", "#22A884", "#42BE71",
-            "#7AD151", "#BBDF27", "#FDE724", "#FDE724"
+            "#440154",
+            "#482475",
+            "#414487",
+            "#355F8D",
+            "#2A788E",
+            "#21918C",
+            "#22A884",
+            "#42BE71",
+            "#7AD151",
+            "#BBDF27",
+            "#FDE724",
+            "#FDE724",
         ]
 
     elif palette == ZodiacPalette.PLASMA:
         # Plasma: vibrant (dark blue → purple → orange → yellow)
         return [
-            "#0D0887", "#41049D", "#6A00A8", "#8F0DA4",
-            "#B12A90", "#CC4778", "#E16462", "#F1844B",
-            "#FCA636", "#FCCE25", "#F0F921", "#F0F921"
+            "#0D0887",
+            "#41049D",
+            "#6A00A8",
+            "#8F0DA4",
+            "#B12A90",
+            "#CC4778",
+            "#E16462",
+            "#F1844B",
+            "#FCA636",
+            "#FCCE25",
+            "#F0F921",
+            "#F0F921",
         ]
 
     elif palette == ZodiacPalette.INFERNO:
         # Inferno: dramatic (black → red → orange → yellow → white)
         return [
-            "#000004", "#1B0C41", "#4A0C6B", "#781C6D",
-            "#A52C60", "#CF4446", "#ED6925", "#FB9A06",
-            "#F7D03C", "#FCFFA4", "#FCFFA4", "#FCFFA4"
+            "#000004",
+            "#1B0C41",
+            "#4A0C6B",
+            "#781C6D",
+            "#A52C60",
+            "#CF4446",
+            "#ED6925",
+            "#FB9A06",
+            "#F7D03C",
+            "#FCFFA4",
+            "#FCFFA4",
+            "#FCFFA4",
         ]
 
     elif palette == ZodiacPalette.MAGMA:
         # Magma: subtle (black → purple → pink → yellow → white)
         return [
-            "#000004", "#0B0924", "#231151", "#410F75",
-            "#5F187F", "#7B2382", "#982D80", "#B73779",
-            "#D3436E", "#EB5760", "#F8765C", "#FCFDBF"
+            "#000004",
+            "#0B0924",
+            "#231151",
+            "#410F75",
+            "#5F187F",
+            "#7B2382",
+            "#982D80",
+            "#B73779",
+            "#D3436E",
+            "#EB5760",
+            "#F8765C",
+            "#FCFDBF",
         ]
 
     elif palette == ZodiacPalette.CIVIDIS:
         # Cividis: optimized for color vision deficiency (blue → yellow)
         return [
-            "#00204C", "#00306E", "#00447A", "#25567B",
-            "#4E6B7C", "#73807D", "#9B9680", "#C5AC83",
-            "#E5C482", "#FDDC7D", "#FEE883", "#FFEA46"
+            "#00204C",
+            "#00306E",
+            "#00447A",
+            "#25567B",
+            "#4E6B7C",
+            "#73807D",
+            "#9B9680",
+            "#C5AC83",
+            "#E5C482",
+            "#FDDC7D",
+            "#FEE883",
+            "#FFEA46",
         ]
 
     elif palette == ZodiacPalette.TURBO:
         # Turbo: Google's improved rainbow (blue → cyan → green → yellow → red)
         return [
-            "#30123B", "#4662D7", "#1FAAD2", "#1AE4B6",
-            "#72FE5E", "#C8EF34", "#FABA39", "#F66B19",
-            "#CA2A04", "#7A0403", "#7A0403", "#7A0403"
+            "#30123B",
+            "#4662D7",
+            "#1FAAD2",
+            "#1AE4B6",
+            "#72FE5E",
+            "#C8EF34",
+            "#FABA39",
+            "#F66B19",
+            "#CA2A04",
+            "#7A0403",
+            "#7A0403",
+            "#7A0403",
         ]
 
     elif palette == ZodiacPalette.COOLWARM:
         # Coolwarm: diverging (blue → white → red)
         return [
-            "#3B4CC0", "#5E6EC5", "#7F91CB", "#A1B4D0",
-            "#C3D7D6", "#E5E5E5", "#F1D4D0", "#F3B6AF",
-            "#EC8C88", "#DD5C5C", "#C73333", "#B40426"
+            "#3B4CC0",
+            "#5E6EC5",
+            "#7F91CB",
+            "#A1B4D0",
+            "#C3D7D6",
+            "#E5E5E5",
+            "#F1D4D0",
+            "#F3B6AF",
+            "#EC8C88",
+            "#DD5C5C",
+            "#C73333",
+            "#B40426",
         ]
 
     elif palette == ZodiacPalette.SPECTRAL:
         # Spectral: diverging (red → yellow → green → blue → purple)
         return [
-            "#9E0142", "#D53E4F", "#F46D43", "#FDAE61",
-            "#FEE08B", "#FFFFBF", "#E6F598", "#ABDDA4",
-            "#66C2A5", "#3288BD", "#5E4FA2", "#5E4FA2"
+            "#9E0142",
+            "#D53E4F",
+            "#F46D43",
+            "#FDAE61",
+            "#FEE08B",
+            "#FFFFBF",
+            "#E6F598",
+            "#ABDDA4",
+            "#66C2A5",
+            "#3288BD",
+            "#5E4FA2",
+            "#5E4FA2",
         ]
 
     else:
@@ -916,11 +988,29 @@ def get_planet_glyph_color(
     elif palette == PlanetGlyphPalette.VIRIDIS:
         # Viridis colormap - 10 colors for major planets
         viridis_10 = [
-            "#440154", "#482475", "#414487", "#2A788E", "#22A884",
-            "#42BE71", "#7AD151", "#BBDF27", "#FDE724", "#FDE724"
+            "#440154",
+            "#482475",
+            "#414487",
+            "#2A788E",
+            "#22A884",
+            "#42BE71",
+            "#7AD151",
+            "#BBDF27",
+            "#FDE724",
+            "#FDE724",
         ]
-        planet_order = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                       "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        planet_order = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
         if planet_name in planet_order:
             return viridis_10[planet_order.index(planet_name)]
         return theme_default_color
@@ -928,11 +1018,29 @@ def get_planet_glyph_color(
     elif palette == PlanetGlyphPalette.PLASMA:
         # Plasma colormap - 10 colors
         plasma_10 = [
-            "#0D0887", "#5302A3", "#8B0AA5", "#B83289", "#DB5C68",
-            "#F48849", "#FEBC2A", "#F0F921", "#F0F921", "#F0F921"
+            "#0D0887",
+            "#5302A3",
+            "#8B0AA5",
+            "#B83289",
+            "#DB5C68",
+            "#F48849",
+            "#FEBC2A",
+            "#F0F921",
+            "#F0F921",
+            "#F0F921",
         ]
-        planet_order = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                       "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        planet_order = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
         if planet_name in planet_order:
             return plasma_10[planet_order.index(planet_name)]
         return theme_default_color
@@ -940,11 +1048,29 @@ def get_planet_glyph_color(
     elif palette == PlanetGlyphPalette.INFERNO:
         # Inferno colormap - 10 colors
         inferno_10 = [
-            "#000004", "#320A5A", "#781C6D", "#BB3754", "#ED6925",
-            "#FB9A06", "#F7D03C", "#FCFFA4", "#FCFFA4", "#FCFFA4"
+            "#000004",
+            "#320A5A",
+            "#781C6D",
+            "#BB3754",
+            "#ED6925",
+            "#FB9A06",
+            "#F7D03C",
+            "#FCFFA4",
+            "#FCFFA4",
+            "#FCFFA4",
         ]
-        planet_order = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                       "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        planet_order = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
         if planet_name in planet_order:
             return inferno_10[planet_order.index(planet_name)]
         return theme_default_color
@@ -952,11 +1078,29 @@ def get_planet_glyph_color(
     elif palette == PlanetGlyphPalette.TURBO:
         # Turbo colormap - 10 colors
         turbo_10 = [
-            "#30123B", "#4662D7", "#1AE4B6", "#72FE5E", "#C8EF34",
-            "#FABA39", "#F66B19", "#CA2A04", "#7A0403", "#7A0403"
+            "#30123B",
+            "#4662D7",
+            "#1AE4B6",
+            "#72FE5E",
+            "#C8EF34",
+            "#FABA39",
+            "#F66B19",
+            "#CA2A04",
+            "#7A0403",
+            "#7A0403",
         ]
-        planet_order = ["Sun", "Moon", "Mercury", "Venus", "Mars",
-                       "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+        planet_order = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
         if planet_name in planet_order:
             return turbo_10[planet_order.index(planet_name)]
         return theme_default_color
@@ -1111,29 +1255,27 @@ def adjust_color_for_contrast(
 
     # Convert original color to HSL for easier lightness manipulation
     r, g, b = hex_to_rgb(original_color)
-    h, l, s = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
+    h, lightness, s = colorsys.rgb_to_hls(r / 255.0, g / 255.0, b / 255.0)
 
     # Adjust lightness iteratively
     step = 0.05
     for _ in range(max_iterations):
         # If background is light, make color darker; if dark, make color lighter
         if bg_is_light:
-            l = max(0.0, l - step)
+            lightness = max(0.0, lightness - step)
         else:
-            l = min(1.0, l + step)
+            lightness = min(1.0, lightness + step)
 
         # Convert back to RGB then hex
-        r_adj, g_adj, b_adj = colorsys.hls_to_rgb(h, l, s)
-        adjusted_hex = rgb_to_hex(
-            int(r_adj * 255), int(g_adj * 255), int(b_adj * 255)
-        )
+        r_adj, g_adj, b_adj = colorsys.hls_to_rgb(h, lightness, s)
+        adjusted_hex = rgb_to_hex(int(r_adj * 255), int(g_adj * 255), int(b_adj * 255))
 
         # Check if we've achieved minimum contrast
         if get_contrast_ratio(adjusted_hex, background_color) >= min_contrast:
             return adjusted_hex
 
         # If we've hit the extreme (pure black or white), stop
-        if l <= 0.0 or l >= 1.0:
+        if lightness <= 0.0 or lightness >= 1.0:
             break
 
     # If we couldn't achieve the desired contrast, return pure black or white

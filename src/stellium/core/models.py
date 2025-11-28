@@ -11,6 +11,8 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any, Literal
 
+from stellium.visualization import ChartDrawBuilder
+
 
 def longitude_to_sign_and_degree(longitude: float) -> tuple[str, float]:
     """Convert position longitude to a sign and sign degree.
@@ -117,7 +119,9 @@ class CelestialPosition:
 
     # Equatorial coordinates (for declination aspects)
     declination: float | None = None  # Distance from celestial equator (-90 to +90)
-    right_ascension: float | None = None  # Like longitude but measured from vernal equinox
+    right_ascension: float | None = (
+        None  # Like longitude but measured from vernal equinox
+    )
 
     # Derived data (calculated from longitude)
     sign: str = field(init=False)
@@ -427,7 +431,9 @@ class CalculatedChart:
     # Zodiac system metadata
     zodiac_type: Any = None  # ZodiacType | None (avoiding circular import)
     ayanamsa: str | None = None  # Only set if zodiac_type is SIDEREAL
-    ayanamsa_value: float | None = None  # Actual ayanamsa offset in degrees at chart time
+    ayanamsa_value: float | None = (
+        None  # Actual ayanamsa offset in degrees at chart time
+    )
 
     # Metadata
     calculation_timestamp: dt.datetime = field(

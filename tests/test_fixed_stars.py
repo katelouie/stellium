@@ -16,7 +16,6 @@ from stellium.core.registry import (
 )
 from stellium.engines.fixed_stars import SwissEphemerisFixedStarsEngine
 
-
 # =============================================================================
 # Registry Tests
 # =============================================================================

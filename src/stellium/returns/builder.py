@@ -180,7 +180,7 @@ class ReturnBuilder:
         """
         # Default to current time if neither specified
         if near_date is None and occurrence is None:
-            near_date = dt.datetime.now(dt.timezone.utc)
+            near_date = dt.datetime.now(dt.UTC)
 
         return cls(natal, "Moon", near_date=near_date, occurrence=occurrence, location=location)
 

@@ -11,10 +11,10 @@ This test suite covers:
 """
 
 import datetime as dt
+import math
 import os
 import tempfile
-from pathlib import Path
-from unittest.mock import Mock, patch
+from unittest.mock import Mock
 
 import pytest
 import svgwrite
@@ -22,9 +22,7 @@ import svgwrite
 from stellium.core.builder import ChartBuilder
 from stellium.core.models import (
     CalculatedChart,
-    CelestialPosition,
     ChartLocation,
-    HouseCusps,
     ObjectType,
 )
 from stellium.core.native import Native
@@ -42,7 +40,6 @@ from stellium.visualization.layers import (
     ZodiacLayer,
 )
 from stellium.visualization.palettes import ZodiacPalette
-from stellium.visualization.themes import ChartTheme
 
 # ============================================================================
 # FIXTURES
@@ -534,7 +531,7 @@ class TestDrawChart:
         assert os.path.exists(filepath)
 
         # Check file has content
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             content = f.read()
             assert len(content) > 0
             assert "<svg" in content
@@ -604,7 +601,7 @@ class TestDrawChart:
         assert os.path.exists(filepath)
 
         # Verify substantial content
-        with open(filepath, "r") as f:
+        with open(filepath) as f:
             content = f.read()
             assert len(content) > 1000  # Should be substantial
 
@@ -760,7 +757,7 @@ def test_svg_well_formed(test_chart, temp_output_dir):
     filepath = os.path.join(temp_output_dir, "well_formed.svg")
     test_chart.draw(filepath).save()
 
-    with open(filepath, "r") as f:
+    with open(filepath) as f:
         content = f.read()
         assert content.startswith("<?xml") or content.startswith("<svg")
         assert "</svg>" in content
@@ -781,7 +778,3 @@ def test_coordinate_system_consistency():
         distance = (dx**2 + dy**2) ** 0.5
 
         assert abs(distance - 100) < 0.1
-
-
-# Import math for edge case tests
-import math

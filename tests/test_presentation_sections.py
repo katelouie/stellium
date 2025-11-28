@@ -28,7 +28,6 @@ from stellium.presentation.sections import (
     get_object_sort_key,
 )
 
-
 # ============================================================================
 # FIXTURES
 # ============================================================================
@@ -359,8 +358,7 @@ def test_midpoint_section_name():
     """Test MidpointSection section name."""
     assert MidpointSection(mode="all").section_name == "Midpoints"
     assert (
-        MidpointSection(mode="core").section_name
-        == "Core Midpoints (Sun/Moon/ASC/MC)"
+        MidpointSection(mode="core").section_name == "Core Midpoints (Sun/Moon/ASC/MC)"
     )
 
 
@@ -419,7 +417,7 @@ def test_midpoint_section_core_mode(chart_with_midpoints):
 
         # At least one object should be in core
         # (depending on implementation, might require both)
-        has_core = any(obj in core_objects for obj in objects)
+        any(obj in core_objects for obj in objects)
         # The section should filter to only core midpoints
         # So we verify the row format is correct
         assert len(objects) <= 2

@@ -147,7 +147,9 @@ class ChartComposer:
 
         # Build style override from theme colors
         extended_style = {
-            "text_color": renderer.style.get("planets", {}).get("info_color", "#333333"),
+            "text_color": renderer.style.get("planets", {}).get(
+                "info_color", "#333333"
+            ),
             "header_color": renderer.style.get("planets", {}).get(
                 "glyph_color", "#222222"
             ),
@@ -188,15 +190,14 @@ class ChartComposer:
             # Determine aspectarian mode
             if is_comparison:
                 # For comparison charts, default to cross-chart aspects
-                mode = "cross-chart"  # Can make configurable later
+                _mode = "cross-chart"  # Can make configurable later
             else:
-                mode = "internal"
+                _mode = "internal"
 
             # Create aspectarian layer
             aspectarian_layer = AspectarianLayer(
                 x_offset=int(table_bbox.position.x),
                 y_offset=int(table_bbox.position.y),
-                # mode=mode,
                 object_types=self.config.tables.object_types,
                 config=self.config,
                 style_override=extended_style,

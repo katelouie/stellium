@@ -1,7 +1,5 @@
 """Chart generation commands."""
 
-import json
-from pathlib import Path
 
 import click
 

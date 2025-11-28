@@ -16,7 +16,6 @@ from stellium.core.models import CelestialPosition, ObjectType
 from stellium.core.registry import ASPECT_REGISTRY
 from stellium.engines.orbs import ComplexOrbEngine, LuminariesOrbEngine, SimpleOrbEngine
 
-
 # ============================================================================
 # FIXTURES
 # ============================================================================

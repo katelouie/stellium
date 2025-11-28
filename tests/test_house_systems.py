@@ -13,15 +13,18 @@ This test suite covers:
 import datetime as dt
 
 import pytest
-import pytz
 
 from stellium.core.builder import ChartBuilder
-from stellium.core.models import CelestialPosition, ChartDateTime, ChartLocation, ObjectType
+from stellium.core.models import (
+    CelestialPosition,
+    ChartLocation,
+    ObjectType,
+)
 from stellium.core.native import Native
 from stellium.engines.houses import (
     HOUSE_SYSTEM_CODES,
-    APCHouses,
     AlcabitiusHouses,
+    APCHouses,
     AxialRotationHouses,
     CampanusHouses,
     EqualHouses,
@@ -40,7 +43,6 @@ from stellium.engines.houses import (
     VehlowEqualHouses,
     WholeSignHouses,
 )
-
 
 # ============================================================================
 # FIXTURES
@@ -627,7 +629,7 @@ def test_koch_vs_placidus_difference(standard_native):
     # (except potentially at the equator or specific latitudes)
     # Check that at least some cusps are different
     differences = sum(
-        1 for k, p in zip(koch_cusps.cusps, placidus_cusps.cusps)
+        1 for k, p in zip(koch_cusps.cusps, placidus_cusps.cusps, strict=False)
         if abs(k - p) > 0.1
     )
 

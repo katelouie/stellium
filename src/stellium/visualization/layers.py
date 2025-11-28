@@ -6,19 +6,21 @@ Each class knows how to draw one specific part of a chart,
 reading its data from the CalculatedChart object.
 """
 
-import math
 from typing import Any
 
 import svgwrite
 
-from stellium.core.models import CalculatedChart, CelestialPosition, HouseCusps, UnknownTimeChart
+from stellium.core.models import (
+    CalculatedChart,
+    CelestialPosition,
+    HouseCusps,
+    UnknownTimeChart,
+)
 
 from .core import (
     ANGLE_GLYPHS,
-    PLANET_GLYPHS,
     ZODIAC_GLYPHS,
     ChartRenderer,
-    get_display_name,
     get_glyph,
 )
 from .palettes import (
@@ -108,18 +110,39 @@ class HeaderLayer:
         # Dispatch to appropriate renderer based on chart type
         if isinstance(chart, SynthesisChart):
             self._render_synthesis_header(
-                dwg, chart, header_left, header_right, header_top, header_width,
-                name_color, info_color, renderer
+                dwg,
+                chart,
+                header_left,
+                header_right,
+                header_top,
+                header_width,
+                name_color,
+                info_color,
+                renderer,
             )
         elif isinstance(chart, Comparison):
             self._render_comparison_header(
-                dwg, chart, header_left, header_right, header_top, header_width,
-                name_color, info_color, renderer
+                dwg,
+                chart,
+                header_left,
+                header_right,
+                header_top,
+                header_width,
+                name_color,
+                info_color,
+                renderer,
             )
         else:
             self._render_single_header(
-                dwg, chart, header_left, header_right, header_top, header_width,
-                name_color, info_color, renderer
+                dwg,
+                chart,
+                header_left,
+                header_right,
+                header_top,
+                header_width,
+                name_color,
+                info_color,
+                renderer,
             )
 
     def _parse_location_name(self, location_name: str) -> tuple[str, str | None]:
@@ -170,8 +193,16 @@ class HeaderLayer:
         return (short_name, country)
 
     def _render_single_header(
-        self, dwg, chart, left: float, right: float, top: float, width: float,
-        name_color: str, info_color: str, renderer
+        self,
+        dwg,
+        chart,
+        left: float,
+        right: float,
+        top: float,
+        width: float,
+        name_color: str,
+        info_color: str,
+        renderer,
     ) -> None:
         """Render header for a single natal chart."""
         # Get native info
@@ -281,8 +312,16 @@ class HeaderLayer:
             )
 
     def _render_comparison_header(
-        self, dwg, chart, left: float, right: float, top: float, width: float,
-        name_color: str, info_color: str, renderer
+        self,
+        dwg,
+        chart,
+        left: float,
+        right: float,
+        top: float,
+        width: float,
+        name_color: str,
+        info_color: str,
+        renderer,
     ) -> None:
         """Render two-column header for comparison/biwheel chart."""
         # Calculate column boundaries with padding in the middle
@@ -293,19 +332,41 @@ class HeaderLayer:
 
         # Left column: chart1 (inner wheel) - left aligned
         self._render_chart_column(
-            dwg, chart.chart1, left, left_col_right, top, "start",
-            name_color, info_color, renderer
+            dwg,
+            chart.chart1,
+            left,
+            left_col_right,
+            top,
+            "start",
+            name_color,
+            info_color,
+            renderer,
         )
 
         # Right column: chart2 (outer wheel) - right aligned
         self._render_chart_column(
-            dwg, chart.chart2, right_col_left, right, top, "end",
-            name_color, info_color, renderer
+            dwg,
+            chart.chart2,
+            right_col_left,
+            right,
+            top,
+            "end",
+            name_color,
+            info_color,
+            renderer,
         )
 
     def _render_chart_column(
-        self, dwg, chart, col_left: float, col_right: float, top: float, anchor: str,
-        name_color: str, info_color: str, renderer
+        self,
+        dwg,
+        chart,
+        col_left: float,
+        col_right: float,
+        top: float,
+        anchor: str,
+        name_color: str,
+        info_color: str,
+        renderer,
     ) -> None:
         """Render a single column of chart info (used for biwheel headers)."""
         current_y = top
@@ -377,8 +438,16 @@ class HeaderLayer:
             )
 
     def _render_synthesis_header(
-        self, dwg, chart, left: float, right: float, top: float, width: float,
-        name_color: str, info_color: str, renderer
+        self,
+        dwg,
+        chart,
+        left: float,
+        right: float,
+        top: float,
+        width: float,
+        name_color: str,
+        info_color: str,
+        renderer,
     ) -> None:
         """Render header for synthesis (composite/davison) chart."""
         current_y = top
@@ -644,9 +713,7 @@ class HouseCuspLayer:
         self.system_name = house_system_name
         self.style = style_override or {}
 
-    def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
-    ) -> None:
+    def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render house cusps and house numbers.
 
         Handles both CalculatedChart and Comparison objects.
@@ -787,9 +854,7 @@ class OuterHouseCuspLayer:
         self.system_name = house_system_name
         self.style = style_override or {}
 
-    def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
-    ) -> None:
+    def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render outer house cusps for chart2 (biwheel only).
 
         Handles both CalculatedChart and Comparison objects.
@@ -874,9 +939,7 @@ class AngleLayer:
     def __init__(self, style_override: dict[str, Any] | None = None) -> None:
         self.style = style_override or {}
 
-    def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
-    ) -> None:
+    def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render chart angles.
 
         Handles both CalculatedChart and Comparison objects.
@@ -961,9 +1024,7 @@ class OuterAngleLayer:
     def __init__(self, style_override: dict[str, Any] | None = None) -> None:
         self.style = style_override or {}
 
-    def render(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart
-    ) -> None:
+    def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render outer wheel angles.
 
         For Comparison, uses chart2 (outer wheel) angles.
@@ -1006,12 +1067,9 @@ class OuterAngleLayer:
                 # Extend to just past outer planets
                 # Use outer_cusp_end as a good stopping point
                 outer_radius = renderer.radii.get(
-                    "outer_cusp_end",
-                    renderer.radii["zodiac_ring_outer"] + 35
+                    "outer_cusp_end", renderer.radii["zodiac_ring_outer"] + 35
                 )
-                x2, y2 = renderer.polar_to_cartesian(
-                    angle.longitude, outer_radius
-                )
+                x2, y2 = renderer.polar_to_cartesian(angle.longitude, outer_radius)
                 dwg.add(
                     dwg.line(
                         start=(x1, y1),
@@ -1023,11 +1081,15 @@ class OuterAngleLayer:
 
             # Draw angle glyph - positioned outside zodiac ring
             # Position near the outer house numbers
-            glyph_radius = renderer.radii.get(
-                "outer_house_number",
-                renderer.radii["zodiac_ring_outer"] + 20
-            ) - 5  # Slightly inside house numbers
-            x_glyph, y_glyph = renderer.polar_to_cartesian(angle.longitude, glyph_radius)
+            glyph_radius = (
+                renderer.radii.get(
+                    "outer_house_number", renderer.radii["zodiac_ring_outer"] + 20
+                )
+                - 5
+            )  # Slightly inside house numbers
+            x_glyph, y_glyph = renderer.polar_to_cartesian(
+                angle.longitude, glyph_radius
+            )
 
             # Apply directional offset based on angle name
             offset = 6  # Smaller offset than inner angles
@@ -1186,7 +1248,9 @@ class PlanetLayer:
 
                 # Degrees
                 deg_str = f"{int(planet.sign_degree)}°"
-                x_deg, y_deg = renderer.polar_to_cartesian(adjusted_long, degrees_radius)
+                x_deg, y_deg = renderer.polar_to_cartesian(
+                    adjusted_long, degrees_radius
+                )
                 dwg.add(
                     dwg.text(
                         deg_str,
@@ -1230,7 +1294,9 @@ class PlanetLayer:
 
                 # Minutes
                 min_str = f"{int((planet.sign_degree % 1) * 60):02d}'"
-                x_min, y_min = renderer.polar_to_cartesian(adjusted_long, minutes_radius)
+                x_min, y_min = renderer.polar_to_cartesian(
+                    adjusted_long, minutes_radius
+                )
                 dwg.add(
                     dwg.text(
                         min_str,
@@ -2227,12 +2293,10 @@ class ChartShapeLayer:
         """Render chart shape information."""
         from stellium.utils.chart_shape import (
             detect_chart_shape,
-            get_chart_shape_description,
         )
 
         # Detect shape
         shape, metadata = detect_chart_shape(chart)
-        description = get_chart_shape_description(shape, metadata)
 
         # Build lines
         lines = []
@@ -2412,7 +2476,7 @@ class OuterBorderLayer:
             dwg.circle(
                 center=(
                     renderer.center + renderer.x_offset,
-                    renderer.center + renderer.y_offset
+                    renderer.center + renderer.y_offset,
                 ),
                 r=border_radius,
                 fill="none",
@@ -2493,19 +2557,28 @@ class MoonRangeLayer:
         end_lon = moon_range.end_longitude
 
         # Get the four corner points using the renderer's coordinate system
-        outer_start_x, outer_start_y = renderer.polar_to_cartesian(start_lon, outer_radius)
+        outer_start_x, outer_start_y = renderer.polar_to_cartesian(
+            start_lon, outer_radius
+        )
         outer_end_x, outer_end_y = renderer.polar_to_cartesian(end_lon, outer_radius)
-        inner_start_x, inner_start_y = renderer.polar_to_cartesian(start_lon, inner_radius)
+        inner_start_x, inner_start_y = renderer.polar_to_cartesian(
+            start_lon, inner_radius
+        )
         inner_end_x, inner_end_y = renderer.polar_to_cartesian(end_lon, inner_radius)
 
         # Create the arc path
         path_data = self._create_arc_path(
-            outer_start_x, outer_start_y,
-            outer_end_x, outer_end_y,
-            inner_start_x, inner_start_y,
-            inner_end_x, inner_end_y,
-            inner_radius, outer_radius,
-            moon_range.arc_size
+            outer_start_x,
+            outer_start_y,
+            outer_end_x,
+            outer_end_y,
+            inner_start_x,
+            inner_start_y,
+            inner_end_x,
+            inner_end_y,
+            inner_radius,
+            outer_radius,
+            moon_range.arc_size,
         )
 
         # Draw the shaded arc
@@ -2531,11 +2604,16 @@ class MoonRangeLayer:
 
     def _create_arc_path(
         self,
-        outer_start_x: float, outer_start_y: float,
-        outer_end_x: float, outer_end_y: float,
-        inner_start_x: float, inner_start_y: float,
-        inner_end_x: float, inner_end_y: float,
-        inner_r: float, outer_r: float,
+        outer_start_x: float,
+        outer_start_y: float,
+        outer_end_x: float,
+        outer_end_y: float,
+        inner_start_x: float,
+        inner_start_y: float,
+        inner_end_x: float,
+        inner_end_y: float,
+        inner_r: float,
+        outer_r: float,
         arc_size_deg: float,
     ) -> str:
         """

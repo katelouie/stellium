@@ -6,14 +6,11 @@ These tests verify that ReturnBuilder correctly calculates:
 - Planetary Returns (Saturn, Jupiter, etc.)
 """
 
-import datetime as dt
 
 import pytest
-import pytz
 
 from stellium.core.builder import ChartBuilder
 from stellium.returns import ReturnBuilder
-
 
 # Precision threshold for return calculations
 # Returns should match natal position within 0.02 degrees

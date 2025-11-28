@@ -10,7 +10,6 @@ from typing import Protocol
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, UnknownTimeChart
 from stellium.visualization.config import ChartVisualizationConfig
-from stellium.visualization.themes import get_theme_style
 from stellium.visualization.layers import (
     AngleLayer,
     AspectCountsLayer,
@@ -27,8 +26,9 @@ from stellium.visualization.layers import (
     PlanetLayer,
     ZodiacLayer,
 )
-from stellium.visualization.moon_phase import MoonPhaseLayer
 from stellium.visualization.layout.engine import LayoutResult
+from stellium.visualization.moon_phase import MoonPhaseLayer
+from stellium.visualization.themes import get_theme_style
 
 
 class IRenderLayer(Protocol):

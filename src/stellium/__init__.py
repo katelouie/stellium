@@ -38,10 +38,6 @@ from stellium.core.models import (
     PhaseData,
 )
 from stellium.core.native import Native, Notable
-from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
-
-# === Returns (Solar, Lunar, Planetary) ===
-from stellium.returns import ReturnBuilder
 
 # === Registry Access ===
 from stellium.core.registry import (
@@ -54,12 +50,16 @@ from stellium.core.registry import (
     get_royal_stars,
     get_stars_by_tier,
 )
+from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
 
 # === Data (Notable Births) ===
 from stellium.data import get_notable_registry
 
 # === Presentation (Reports) ===
 from stellium.presentation import ReportBuilder
+
+# === Returns (Solar, Lunar, Planetary) ===
+from stellium.returns import ReturnBuilder
 
 # === Visualization (High-Level) ===
 from stellium.visualization import ChartRenderer

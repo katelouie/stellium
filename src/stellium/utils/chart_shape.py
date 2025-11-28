@@ -9,7 +9,6 @@ from typing import Literal
 
 from stellium.core.models import CalculatedChart, CelestialPosition, ObjectType
 
-
 ChartShape = Literal[
     "Bundle",
     "Bowl",

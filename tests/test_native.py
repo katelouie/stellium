@@ -1,7 +1,8 @@
 """Tests for Native class, including datetime string parsing."""
 
-import pytest
 from datetime import datetime
+
+import pytest
 
 from stellium.core.native import Native
 

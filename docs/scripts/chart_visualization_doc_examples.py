@@ -2,7 +2,7 @@
 
 import os
 
-from stellium import ChartBuilder, ComparisonBuilder, ComparisonType
+from stellium import ChartBuilder, ComparisonBuilder
 from stellium.engines import PlacidusHouses, WholeSignHouses
 
 FILEDIR = "docs/images"

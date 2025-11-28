@@ -11,8 +11,8 @@ Davison: Midpoint in time and space, then regular chart calculation
 from __future__ import annotations
 
 import datetime as dt
-from dataclasses import dataclass, field
-from math import atan2, cos, floor, radians, degrees, sin, sqrt
+from dataclasses import dataclass
+from math import atan2, cos, degrees, floor, radians, sin, sqrt
 from typing import TYPE_CHECKING, Any
 
 import pytz
@@ -529,7 +529,7 @@ class SynthesisBuilder:
         6. Return SynthesisChart with all data
         """
         from stellium.core.builder import ChartBuilder
-        from stellium.core.models import CelestialPosition, ObjectType
+        from stellium.core.models import CelestialPosition
         from stellium.core.native import Native
         from stellium.engines.aspects import ModernAspectEngine
 

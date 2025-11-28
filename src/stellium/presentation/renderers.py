@@ -318,7 +318,7 @@ class PlainTextRenderer:
         lines = []
 
         # Header row
-        header_cells = [h.ljust(w) for h, w in zip(headers, col_widths)]
+        header_cells = [h.ljust(w) for h, w in zip(headers, col_widths, strict=False)]
         lines.append("| " + " | ".join(header_cells) + " |")
 
         # Separator
@@ -330,7 +330,9 @@ class PlainTextRenderer:
             # Pad row if needed
             padded_row = row + [""] * (len(headers) - len(row))
 
-            row_cells = [cell.ljust(w) for cell, w in zip(padded_row, col_widths)]
+            row_cells = [
+                cell.ljust(w) for cell, w in zip(padded_row, col_widths, strict=False)
+            ]
             lines.append("| " + " | ".join(row_cells) + " |")
 
         return "\n".join(lines)
@@ -915,7 +917,7 @@ class TypstRenderer:
             return ""
 
         num_cols = len(headers)
-        num_rows = len(rows)
+        _num_rows = len(rows)
 
         # Wrap table in a block with rounded corners and clip
         # Use a box to contain the table with rounded corners
@@ -930,10 +932,10 @@ class TypstRenderer:
             "  stroke: none,",  # Remove internal strokes, we have the outer border
             "  inset: (x: 14pt, y: 10pt),",
             "  align: (col, row) => if col == 0 { left } else { center },",
-            f"  fill: (col, row) => {{",
-            f'    if row == 0 {{ rgb("#6b4d6e") }}',  # secondary purple for table header (lighter than section headers)
-            f'    else if calc.odd(row) {{ rgb("#f9f6f7") }}',  # subtle warm purple tint
-            f'    else {{ rgb("#faf8f5") }}',  # cream
+            "  fill: (col, row) => {",
+            '    if row == 0 { rgb("#6b4d6e") }',  # secondary purple for table header (lighter than section headers)
+            '    else if calc.odd(row) { rgb("#f9f6f7") }',  # subtle warm purple tint
+            '    else { rgb("#faf8f5") }',  # cream
             "  },",
         ]
 

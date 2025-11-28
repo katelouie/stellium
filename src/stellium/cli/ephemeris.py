@@ -1,7 +1,5 @@
 """Ephemeris management commands."""
 
-from pathlib import Path
-
 import click
 
 from stellium.cli.ephemeris_download import (
@@ -41,7 +39,7 @@ def ephemeris_download_cmd(force, years, quiet):
                 "❌ Invalid year range format. Use: START-END (e.g., 1000-3000)",
                 err=True,
             )
-            raise click.Abort()
+            raise click.Abort() from ValueError
 
     # Get required files
     required_files = get_required_files(start_year, end_year)

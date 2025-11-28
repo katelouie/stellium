@@ -160,9 +160,7 @@ class SwissEphemerisFixedStarsEngine:
         Returns:
             List of FixedStarPosition objects for the four royal stars
         """
-        royal_names = [
-            name for name, info in self.registry.items() if info.is_royal
-        ]
+        royal_names = [name for name, info in self.registry.items() if info.is_royal]
         return self.calculate_stars(julian_day, stars=royal_names)
 
     def calculate_stars_by_tier(
@@ -180,9 +178,7 @@ class SwissEphemerisFixedStarsEngine:
         Returns:
             List of FixedStarPosition objects for stars of the specified tier
         """
-        tier_names = [
-            name for name, info in self.registry.items() if info.tier == tier
-        ]
+        tier_names = [name for name, info in self.registry.items() if info.tier == tier]
         return self.calculate_stars(julian_day, stars=tier_names)
 
     def _calculate_single_star(
@@ -241,7 +237,8 @@ class SwissEphemerisFixedStarsEngine:
             import warnings
 
             warnings.warn(
-                f"Failed to calculate position for star '{star_info.name}': {e}"
+                f"Failed to calculate position for star '{star_info.name}': {e}",
+                stacklevel=2,
             )
             return None
 

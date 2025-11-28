@@ -21,7 +21,6 @@ For full documentation, see docs/CHART_TYPES.md
 """
 
 import os
-from datetime import datetime
 from pathlib import Path
 
 from stellium import ChartBuilder, ReportBuilder, ReturnBuilder
@@ -62,7 +61,7 @@ def example_1_simple_solar_return():
     # Calculate 1905 Solar Return (Einstein's "Miracle Year"!)
     sr_1905 = ReturnBuilder.solar(natal, 1905).calculate()
 
-    print(f"\n1905 Solar Return:")
+    print("\n1905 Solar Return:")
     print(f"  Date: {sr_1905.datetime.utc_datetime}")
     print(f"  Sun: {sr_1905.get_object('Sun').longitude:.4f}°")
     print(f"  Chart type: {sr_1905.metadata.get('chart_type')}")
@@ -87,7 +86,7 @@ def example_2_multiple_solar_returns():
         name="Kate"
     ).with_aspects().calculate()
 
-    print(f"Natal chart created for Kate")
+    print("Natal chart created for Kate")
     print(f"Natal Sun: {natal.get_object('Sun').longitude:.4f}° {natal.get_object('Sun').sign}")
 
     # Calculate Solar Returns for several years
@@ -135,25 +134,25 @@ def example_3_relocated_solar_return():
     sr_ny = ReturnBuilder.solar(natal, 1903, location=(40.7128, -74.0060)).calculate()
 
     print("1903 Solar Return comparison:")
-    print(f"\nParis:")
+    print("\nParis:")
     print(f"  Location: {sr_paris.location.latitude:.2f}°N, {sr_paris.location.longitude:.2f}°E")
     print(f"  Ascendant: {sr_paris.get_object('ASC').sign}")
     print(f"  MC: {sr_paris.get_object('MC').sign}")
 
-    print(f"\nNew York:")
+    print("\nNew York:")
     print(f"  Location: {sr_ny.location.latitude:.2f}°N, {sr_ny.location.longitude:.2f}°W")
     print(f"  Ascendant: {sr_ny.get_object('ASC').sign}")
     print(f"  MC: {sr_ny.get_object('MC').sign}")
 
     # Note: Sun position is identical in both!
-    print(f"\nSun position (same in both):")
+    print("\nSun position (same in both):")
     print(f"  Paris: {sr_paris.get_object('Sun').longitude:.4f}°")
     print(f"  NY: {sr_ny.get_object('Sun').longitude:.4f}°")
 
     # Save charts
     sr_paris.draw(str(OUTPUT_DIR / "03_relocated_paris.svg")).with_header().save()
     sr_ny.draw(str(OUTPUT_DIR / "03_relocated_newyork.svg")).with_header().save()
-    print(f"\nCreated: 03_relocated_paris.svg, 03_relocated_newyork.svg")
+    print("\nCreated: 03_relocated_paris.svg, 03_relocated_newyork.svg")
 
 
 # =============================================================================
@@ -179,7 +178,7 @@ def example_4_lunar_return_near_date():
     lr = ReturnBuilder.lunar(natal, near_date="1954-07-13").calculate()
 
     asc = lr.get_object('ASC')
-    print(f"\nLunar Return nearest to July 13, 1954:")
+    print("\nLunar Return nearest to July 13, 1954:")
     print(f"  Date: {lr.datetime.utc_datetime}")
     print(f"  Moon: {lr.get_object('Moon').longitude:.4f}°")
     print(f"  Ascendant: {asc.sign if asc else 'N/A'}")
@@ -232,7 +231,7 @@ def example_6_lunar_return_default():
     # No date specified - finds return nearest to NOW
     lr_now = ReturnBuilder.lunar(natal).calculate()
 
-    print(f"Current Lunar Return for Tesla's chart:")
+    print("Current Lunar Return for Tesla's chart:")
     print(f"  Date: {lr_now.datetime.utc_datetime}")
     print(f"  Moon: {lr_now.get_object('Moon').longitude:.4f}° {lr_now.get_object('Moon').sign}")
 
@@ -266,7 +265,7 @@ def example_7_saturn_return():
     # Calculate age at return
     years = (sr1.datetime.julian_day - natal.datetime.julian_day) / 365.25
 
-    print(f"\nFirst Saturn Return:")
+    print("\nFirst Saturn Return:")
     print(f"  Date: {sr1.datetime.utc_datetime.strftime('%Y-%m-%d %H:%M')}")
     print(f"  Age: {years:.1f} years")
     print(f"  Saturn: {sr1.get_object('Saturn').longitude:.4f}°")
@@ -315,7 +314,7 @@ def example_9_mars_return():
     mr = ReturnBuilder.planetary(natal, "Mars", near_date="1974-10-30").calculate()
 
     print(f"Natal Mars: {natal.get_object('Mars').longitude:.4f}° {natal.get_object('Mars').sign}")
-    print(f"\nMars Return near Oct 30, 1974:")
+    print("\nMars Return near Oct 30, 1974:")
     print(f"  Date: {mr.datetime.utc_datetime.strftime('%Y-%m-%d')}")
     print(f"  Mars: {mr.get_object('Mars').longitude:.4f}°")
 
@@ -348,11 +347,11 @@ def example_10_return_with_house_systems():
     )
 
     print("1912 Solar Return with multiple house systems:")
-    print(f"\nPlacidus houses:")
+    print("\nPlacidus houses:")
     for i, cusp in enumerate(sr.house_systems["Placidus"].cusps[:6], 1):
         print(f"  House {i}: {cusp:.1f}°")
 
-    print(f"\nWhole Sign houses:")
+    print("\nWhole Sign houses:")
     for i, cusp in enumerate(sr.house_systems["Whole Sign"].cusps[:6], 1):
         print(f"  House {i}: {cusp:.1f}°")
 
@@ -462,7 +461,7 @@ def example_13_return_metadata():
     return_sun = sr.get_object("Sun").longitude
     diff = abs(return_sun - natal_sun)
 
-    print(f"\nPrecision check:")
+    print("\nPrecision check:")
     print(f"  Natal Sun: {natal_sun:.6f}°")
     print(f"  Return Sun: {return_sun:.6f}°")
     print(f"  Difference: {diff:.6f}° (should be < 0.001°)")

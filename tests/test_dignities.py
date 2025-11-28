@@ -45,7 +45,6 @@ from stellium.engines.dignities import (
     TraditionalDignityCalculator,
 )
 
-
 # =============================================================================
 # DIGNITIES DATA STRUCTURE TESTS
 # =============================================================================
@@ -108,9 +107,7 @@ def test_fire_signs_have_fire_element():
     fire_signs = ["Aries", "Leo", "Sagittarius"]
 
     for sign in fire_signs:
-        assert (
-            DIGNITIES[sign]["element"] == "Fire"
-        ), f"{sign} should have Fire element"
+        assert DIGNITIES[sign]["element"] == "Fire", f"{sign} should have Fire element"
 
 
 def test_rulerships_are_correct():
@@ -133,9 +130,9 @@ def test_rulerships_are_correct():
 
     for sign, ruler in rulerships.items():
         traditional_ruler = DIGNITIES[sign]["traditional"]["ruler"]
-        assert (
-            traditional_ruler == ruler
-        ), f"{sign} traditional ruler should be {ruler}, got {traditional_ruler}"
+        assert traditional_ruler == ruler, (
+            f"{sign} traditional ruler should be {ruler}, got {traditional_ruler}"
+        )
 
 
 # =============================================================================
@@ -234,7 +231,9 @@ def test_sun_in_aquarius_detriment():
     assert result["planet"] == "Sun"
     assert "detriment" in result["dignities"]
     # Sun gets -5 for detriment, but may have other dignities (like term/triplicity) that add points
-    assert result["score"] < 0, "Sun in Aquarius should have negative score due to detriment"
+    assert result["score"] < 0, (
+        "Sun in Aquarius should have negative score due to detriment"
+    )
     # Verify interpretation indicates weakness/challenge
     interp = result["interpretation"].lower()
     assert "challenged" in interp or "weak" in interp or "debility" in interp
@@ -317,13 +316,22 @@ def test_multiple_planets_calculation():
 
     positions = [
         CelestialPosition(
-            name="Sun", object_type=ObjectType.PLANET, longitude=135.0, speed_longitude=1.0
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=135.0,
+            speed_longitude=1.0,
         ),  # Leo (rulership)
         CelestialPosition(
-            name="Moon", object_type=ObjectType.PLANET, longitude=100.0, speed_longitude=13.0
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=100.0,
+            speed_longitude=13.0,
         ),  # Cancer (rulership)
         CelestialPosition(
-            name="Mars", object_type=ObjectType.PLANET, longitude=15.0, speed_longitude=0.5
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=15.0,
+            speed_longitude=0.5,
         ),  # Aries (rulership)
     ]
 
@@ -350,7 +358,10 @@ def test_outer_planets_excluded_from_traditional():
 
     # Uranus test
     uranus = CelestialPosition(
-        name="Uranus", object_type=ObjectType.PLANET, longitude=15.0, speed_longitude=0.05
+        name="Uranus",
+        object_type=ObjectType.PLANET,
+        longitude=15.0,
+        speed_longitude=0.05,
     )
 
     result = calc.calculate_dignities(uranus)
@@ -378,13 +389,22 @@ def test_modern_includes_outer_planets():
 
     positions = [
         CelestialPosition(
-            name="Uranus", object_type=ObjectType.PLANET, longitude=315.0, speed_longitude=0.05
+            name="Uranus",
+            object_type=ObjectType.PLANET,
+            longitude=315.0,
+            speed_longitude=0.05,
         ),  # Aquarius
         CelestialPosition(
-            name="Neptune", object_type=ObjectType.PLANET, longitude=345.0, speed_longitude=0.03
+            name="Neptune",
+            object_type=ObjectType.PLANET,
+            longitude=345.0,
+            speed_longitude=0.03,
         ),  # Pisces
         CelestialPosition(
-            name="Pluto", object_type=ObjectType.PLANET, longitude=225.0, speed_longitude=0.02
+            name="Pluto",
+            object_type=ObjectType.PLANET,
+            longitude=225.0,
+            speed_longitude=0.02,
         ),  # Scorpio
     ]
 
@@ -393,7 +413,6 @@ def test_modern_includes_outer_planets():
     for pos in positions:
         dignity = calc.calculate_dignities(pos)
         result[pos.name] = dignity
-
 
     # Modern calculator includes outer planets
     assert "Uranus" in result
@@ -511,7 +530,7 @@ def test_mutual_reception_sun_moon():
     # Find the Sun-Moon reception
     sun_moon_reception = None
     for reception in receptions:
-        planets = set([reception["planet1"], reception["planet2"]])
+        planets = set(reception["planet1"], reception["planet2"])  # type: ignore[misc]
         if planets == {"Sun", "Moon"}:
             sun_moon_reception = reception
             break
@@ -550,7 +569,7 @@ def test_mutual_reception_venus_mars():
     # Find Venus-Mars reception
     venus_mars_reception = None
     for reception in receptions:
-        planets = set([reception["planet1"], reception["planet2"]])
+        planets = set(reception["planet1"], reception["planet2"])  # type: ignore[misc]
         if planets == {"Venus", "Mars"}:
             venus_mars_reception = reception
             break
@@ -564,10 +583,16 @@ def test_no_mutual_reception():
 
     positions = [
         CelestialPosition(
-            name="Sun", object_type=ObjectType.PLANET, longitude=135.0, speed_longitude=1.0
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=135.0,
+            speed_longitude=1.0,
         ),  # Leo (Sun's own sign)
         CelestialPosition(
-            name="Moon", object_type=ObjectType.PLANET, longitude=100.0, speed_longitude=13.0
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=100.0,
+            speed_longitude=13.0,
         ),  # Cancer (Moon's own sign)
     ]
 
@@ -575,10 +600,13 @@ def test_no_mutual_reception():
 
     # Sun and Moon are in their own signs, not each other's
     sun_moon_reception = any(
-        set([r["planet1"], r["planet2"]]) == {"Sun", "Moon"} for r in receptions
+        set(r["planet1"], r["planet2"]) == {"Sun", "Moon"}  # type: ignore[misc]
+        for r in receptions
     )
 
-    assert not sun_moon_reception, "Should not find mutual reception when planets are in own signs"
+    assert not sun_moon_reception, (
+        "Should not find mutual reception when planets are in own signs"
+    )
 
 
 # =============================================================================
@@ -602,7 +630,9 @@ def test_unknown_planet_handling():
 
     # Should return a result with note about not being a traditional planet
     assert result["planet"] == "UnknownPlanet"
-    assert "note" in result or "dignities" in result  # Either not calculated or empty dignities
+    assert (
+        "note" in result or "dignities" in result
+    )  # Either not calculated or empty dignities
 
 
 def test_planet_at_sign_boundary():
@@ -697,19 +727,34 @@ def test_full_dignity_analysis_integration():
     # Create a chart with mixed dignities
     positions = [
         CelestialPosition(
-            name="Sun", object_type=ObjectType.PLANET, longitude=135.0, speed_longitude=1.0
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=135.0,
+            speed_longitude=1.0,
         ),  # Leo - strong
         CelestialPosition(
-            name="Moon", object_type=ObjectType.PLANET, longitude=315.0, speed_longitude=13.0
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=315.0,
+            speed_longitude=13.0,
         ),  # Aquarius - weak
         CelestialPosition(
-            name="Mercury", object_type=ObjectType.PLANET, longitude=60.0, speed_longitude=1.2
+            name="Mercury",
+            object_type=ObjectType.PLANET,
+            longitude=60.0,
+            speed_longitude=1.2,
         ),  # Gemini - strong
         CelestialPosition(
-            name="Venus", object_type=ObjectType.PLANET, longitude=195.0, speed_longitude=1.1
+            name="Venus",
+            object_type=ObjectType.PLANET,
+            longitude=195.0,
+            speed_longitude=1.1,
         ),  # Libra - strong
         CelestialPosition(
-            name="Mars", object_type=ObjectType.PLANET, longitude=0.0, speed_longitude=0.5
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=0.0,
+            speed_longitude=0.5,
         ),  # Aries - strong
     ]
 
@@ -730,17 +775,17 @@ def test_full_dignity_analysis_integration():
     assert len(modern_result) == 5  # Same planets (no outer planets in this chart)
 
     # Mutual reception analysis
-    receptions = reception_analyzer.find_mutual_receptions(positions)
+    reception_analyzer.find_mutual_receptions(positions)
     # May or may not find receptions depending on positions
 
     # Verify structure of results
-    for planet_name, dignity_data in trad_result.items():
+    for _planet_name, dignity_data in trad_result.items():
         assert "sign" in dignity_data
         assert "dignities" in dignity_data
         assert "score" in dignity_data
         assert "interpretation" in dignity_data
         assert isinstance(dignity_data["dignities"], list)
-        assert isinstance(dignity_data["score"], (int, float))
+        assert isinstance(dignity_data["score"], int | float)
 
 
 if __name__ == "__main__":

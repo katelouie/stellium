@@ -6,9 +6,7 @@ Grand Crosses, and Stelliums.
 This module implements the "Analyzer" protocol.
 """
 
-from collections import Counter
 from itertools import combinations
-from typing import Any
 
 from stellium.core.models import (
     Aspect,

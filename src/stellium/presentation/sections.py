@@ -13,7 +13,6 @@ from stellium.core.models import CalculatedChart, MidpointPosition, ObjectType
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     CELESTIAL_REGISTRY,
-    FIXED_STARS_REGISTRY,
     get_aspects_by_category,
 )
 from stellium.engines.dignities import DIGNITIES

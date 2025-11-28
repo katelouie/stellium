@@ -845,7 +845,7 @@ class HouseCuspTableLayer:
             if len(house_systems) > 1:
                 # Use abbreviated system name as header prefix
                 abbrev = self._abbreviate_house_system(system_name)
-                headers.extend([f"{abbrev}", f"Deg"])
+                headers.extend([f"{abbrev}", "Deg"])
             else:
                 headers.extend(["Sign", "Degree"])
 

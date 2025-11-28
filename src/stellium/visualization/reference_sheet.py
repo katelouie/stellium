@@ -5,7 +5,6 @@ Generates comprehensive HTML reference sheets showing all available
 themes, palettes, and their colors for easy reference.
 """
 
-from typing import Any
 
 from .palettes import (
     AspectPalette,

@@ -4,10 +4,8 @@ Tests for the Notable system (Notable class and NotableRegistry).
 OPTIMIZED VERSION - uses dicts with timezone to avoid slow TimezoneFinder lookups.
 """
 
-from datetime import datetime
 
 import pytest
-import pytz
 
 from stellium.core.builder import ChartBuilder
 from stellium.core.models import ChartDateTime, ChartLocation

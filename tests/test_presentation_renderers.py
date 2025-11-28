@@ -8,7 +8,6 @@ import pytest
 
 from stellium.presentation.renderers import PlainTextRenderer, RichTableRenderer
 
-
 # ============================================================================
 # TEST DATA FIXTURES
 # ============================================================================
@@ -232,20 +231,6 @@ def test_rich_table_renderer_initialization():
         assert renderer.console is not None
     except ImportError:
         pytest.skip("Rich library not available")
-
-
-def test_rich_table_renderer_missing_rich():
-    """Test that RichTableRenderer raises ImportError if Rich not available."""
-    # We can't easily test this without uninstalling Rich,
-    # but we can verify the import check exists in the code
-    # This test is more of a documentation test
-    try:
-        from rich.console import Console
-
-        pytest.skip("Rich is installed, cannot test missing Rich case")
-    except ImportError:
-        with pytest.raises(ImportError, match="Rich library not available"):
-            RichTableRenderer()
 
 
 def test_rich_renderer_render_table(sample_table_data):

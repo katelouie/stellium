@@ -2,12 +2,12 @@
 
 import hashlib
 import json
-import os
 import pickle
 import time
+from collections.abc import Callable
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any
 
 
 class Cache:
@@ -48,7 +48,7 @@ class Cache:
         """Get the file path for a cache entry."""
         return self.cache_dir / cache_type / f"{key}.pickle"
 
-    def get(self, cache_type: str, key: str) -> Optional[Any]:
+    def get(self, cache_type: str, key: str) -> Any | None:
         """Get a value from cache if it exists and is not expired."""
         cache_path = self._get_cache_path(cache_type, key)
 
@@ -67,7 +67,7 @@ class Cache:
             # If there's any error reading cache, remove it
             try:
                 cache_path.unlink()
-            except:
+            except Exception:
                 pass
             return None
 
@@ -81,7 +81,7 @@ class Cache:
         except Exception as e:
             print(f"Warning: Could not write to cache: {e}")
 
-    def clear(self, cache_type: Optional[str] = None) -> int:
+    def clear(self, cache_type: str | None = None) -> int:
         """Clear cache entries. Returns number of files removed."""
         removed = 0
 
@@ -92,7 +92,7 @@ class Cache:
                     try:
                         cache_file.unlink()
                         removed += 1
-                    except:
+                    except Exception:
                         pass
         else:
             # Clear all cache
@@ -100,12 +100,12 @@ class Cache:
                 try:
                     cache_file.unlink()
                     removed += 1
-                except:
+                except Exception:
                     pass
 
         return removed
 
-    def size(self, cache_type: Optional[str] = None) -> Dict[str, int]:
+    def size(self, cache_type: str | None = None) -> dict[str, int]:
         """Get cache size information."""
         sizes = {}
 

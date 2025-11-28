@@ -36,10 +36,8 @@ import datetime as dt
 import pytest
 import swisseph as swe
 
-from stellium.core.builder import ChartBuilder
 from stellium.core.models import (
     Aspect,
-    AspectPattern,
     CalculatedChart,
     CelestialPosition,
     ChartDateTime,
@@ -49,7 +47,6 @@ from stellium.core.models import (
 from stellium.engines.aspects import ModernAspectEngine
 from stellium.engines.orbs import SimpleOrbEngine
 from stellium.engines.patterns import AspectPatternAnalyzer
-
 
 # =============================================================================
 # HELPER FUNCTIONS

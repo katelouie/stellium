@@ -1,13 +1,9 @@
 """Test core data models."""
 
-import datetime as dt
-
 import pytest
-import pytz
 
 from stellium.core.models import (
     CelestialPosition,
-    ChartDateTime,
     ChartLocation,
     HouseCusps,
     ObjectType,
@@ -41,9 +37,9 @@ def test_celestial_position_immutability():
     assert not pos.is_retrograde
 
     # Verify immutability
-    with pytest.raises(Exception):
+    with pytest.raises(Exception) as _e:
         # Will raise AttributeError or FrozenInstanceError
-        pos.longitude = 50.0
+        pos.longitude = 50.0  # type: ignore
 
 
 def test_house_cusps_validation():

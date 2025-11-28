@@ -1,7 +1,5 @@
 """Tests for the Aspect Registry."""
 
-import pytest
-
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     get_aspect_by_alias,
@@ -276,7 +274,7 @@ class TestAspectRegistryMetadata:
         for aspect in major:
             assert "line_width" in aspect.metadata
             assert "dash_pattern" in aspect.metadata
-            assert isinstance(aspect.metadata["line_width"], (int, float))
+            assert isinstance(aspect.metadata["line_width"], int | float)
             assert isinstance(aspect.metadata["dash_pattern"], str)
 
 

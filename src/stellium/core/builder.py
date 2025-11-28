@@ -7,7 +7,6 @@ and components to build a complete chart.
 
 import datetime as dt
 
-import pytz
 import swisseph as swe
 
 from stellium.core.ayanamsa import ZodiacType
@@ -36,7 +35,7 @@ from stellium.engines.aspects import ModernAspectEngine
 from stellium.engines.ephemeris import SwissEphemerisEngine
 from stellium.engines.houses import PlacidusHouses
 from stellium.engines.orbs import SimpleOrbEngine
-from stellium.utils.cache import Cache, cached, get_default_cache
+from stellium.utils.cache import Cache, get_default_cache
 
 
 class ChartBuilder:

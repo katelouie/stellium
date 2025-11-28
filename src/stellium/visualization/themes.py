@@ -15,7 +15,6 @@ from .palettes import (
     PlanetGlyphPalette,
     ZodiacPalette,
     build_aspect_styles_from_palette,
-    get_aspect_palette_colors,
 )
 
 

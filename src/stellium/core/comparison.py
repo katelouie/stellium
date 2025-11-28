@@ -60,6 +60,7 @@ from stellium.core.models import (
 )
 from stellium.core.native import Native
 from stellium.core.protocols import OrbEngine
+from stellium.visualization import ChartDrawBuilder
 
 
 @dataclass(frozen=True)
@@ -437,8 +438,12 @@ class ComparisonBuilder:
     @classmethod
     def compare(
         cls,
-        data1: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
-        data2: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        data1: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        data2: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
         comparison_type: str,
         chart1_label: str = "Chart 1",
         chart2_label: str = "Chart 2",
@@ -534,8 +539,12 @@ class ComparisonBuilder:
     @classmethod
     def synastry(
         cls,
-        data1: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
-        data2: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        data1: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        data2: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
         chart1_label: str = "Person 1",
         chart2_label: str = "Person 2",
     ) -> "ComparisonBuilder":
@@ -580,8 +589,12 @@ class ComparisonBuilder:
     @classmethod
     def transit(
         cls,
-        natal_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
-        transit_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict | None],
+        natal_data: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        transit_data: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict | None],
         natal_label: str = "Natal",
         transit_label: str = "Transit",
     ) -> "ComparisonBuilder":
@@ -624,13 +637,20 @@ class ComparisonBuilder:
             ...     ("2024-11-24 14:30", None)
             ... ).calculate()
         """
-        return cls.compare(natal_data, transit_data, "transit", natal_label, transit_label)
+        return cls.compare(
+            natal_data, transit_data, "transit", natal_label, transit_label
+        )
 
     @classmethod
     def progression(
         cls,
-        natal_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
-        progressed_data: CalculatedChart | Native | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict] | None = None,
+        natal_data: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        progressed_data: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict]
+        | None = None,
         *,
         target_date: str | datetime | None = None,
         age: float | None = None,
@@ -686,7 +706,6 @@ class ComparisonBuilder:
             >>> prog = ComparisonBuilder.progression(natal, progressed_chart).calculate()
         """
         from stellium.utils.progressions import (
-            adjust_angles_by_arc,
             calculate_naibod_arc,
             calculate_progressed_datetime,
             calculate_solar_arc,
@@ -721,7 +740,9 @@ class ComparisonBuilder:
         # Determine progressed chart
         if progressed_data is not None:
             # Legacy path: use provided chart directly
-            progressed_chart = to_chart(progressed_data, location_fallback=natal_chart.location)
+            progressed_chart = to_chart(
+                progressed_data, location_fallback=natal_chart.location
+            )
         else:
             # Auto-calculate path
             natal_datetime = natal_chart.datetime.local_datetime

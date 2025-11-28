@@ -3,11 +3,10 @@
 import datetime as dt
 
 import pytest
-import pytz
 
 from stellium.components.midpoints import MidpointCalculator
 from stellium.core.builder import ChartBuilder
-from stellium.core.models import CelestialPosition, ChartLocation, ObjectType
+from stellium.core.models import ChartLocation, ObjectType
 from stellium.core.native import Native
 
 

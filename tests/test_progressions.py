@@ -272,7 +272,6 @@ class TestEdgeCases:
 
     def test_progression_with_different_house_systems(self, kate_natal):
         """Progression should work with custom house system configuration."""
-        from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
         # TODO: This would require extending the API to support .with_house_systems()
         # For now, just verify basic functionality

@@ -791,7 +791,7 @@ class ReportBuilder:
             svg_content = None
             if chart_svg_path:
                 try:
-                    with open(chart_svg_path, "r") as f:
+                    with open(chart_svg_path) as f:
                         svg_content = f.read()
                 except Exception:
                     pass  # Silently skip if can't load

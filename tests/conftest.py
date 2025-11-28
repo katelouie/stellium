@@ -60,10 +60,9 @@ Fixtures help reduce code duplication and make tests more maintainable.
 """
 
 import datetime as dt
-from typing import Generator
+from collections.abc import Generator
 
 import pytest
-import pytz
 
 from stellium.core.builder import ChartBuilder
 from stellium.core.models import (
@@ -85,7 +84,6 @@ from stellium.engines.houses import (
     WholeSignHouses,
 )
 from stellium.engines.orbs import LuminariesOrbEngine, SimpleOrbEngine
-
 
 # ============================================================================
 # DATETIME FIXTURES

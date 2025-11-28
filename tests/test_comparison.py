@@ -9,7 +9,7 @@ These tests validate that:
 """
 
 import datetime as dt
-from datetime import datetime, timezone
+from datetime import datetime
 
 from stellium.core.builder import ChartBuilder
 from stellium.core.comparison import ComparisonBuilder
@@ -42,7 +42,7 @@ def test_synastry_cross_aspects_only():
 
     # Validate NO internal aspects leaked in
     chart_a_positions = set(chart_a.positions)
-    chart_b_positions = set(chart_b.positions)
+    _chart_b_positions = set(chart_b.positions)
 
     for asp in synastry.cross_aspects:
         obj1_in_a = asp.object1 in chart_a_positions
@@ -181,8 +181,7 @@ class TestComparisonBuilderConvenienceMethods:
     def test_synastry_with_string_tuples(self):
         """Test .synastry() with (datetime, location) string tuples."""
         comparison = ComparisonBuilder.synastry(
-            ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("2000-01-01 17:00", "Seattle, WA")
+            ("1994-01-06 11:47", "Palo Alto, CA"), ("2000-01-01 17:00", "Seattle, WA")
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.SYNASTRY
@@ -206,7 +205,7 @@ class TestComparisonBuilderConvenienceMethods:
             ("1994-01-06 11:47", "Palo Alto, CA"),
             ("2000-01-01 17:00", "Seattle, WA"),
             chart1_label="Kate",
-            chart2_label="Partner"
+            chart2_label="Partner",
         ).calculate()
 
         assert comparison.chart1_label == "Kate"
@@ -216,7 +215,7 @@ class TestComparisonBuilderConvenienceMethods:
         """Test .transit() with None location (uses natal location)."""
         comparison = ComparisonBuilder.transit(
             ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("2024-11-24 14:30", None)  # Uses Palo Alto
+            ("2024-11-24 14:30", None),  # Uses Palo Alto
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.TRANSIT
@@ -226,8 +225,7 @@ class TestComparisonBuilderConvenienceMethods:
     def test_transit_with_different_location(self):
         """Test .transit() with different location for transit."""
         comparison = ComparisonBuilder.transit(
-            ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("2024-11-24 14:30", "New York, NY")
+            ("1994-01-06 11:47", "Palo Alto, CA"), ("2024-11-24 14:30", "New York, NY")
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.TRANSIT
@@ -238,14 +236,14 @@ class TestComparisonBuilderConvenienceMethods:
         """Test .progression() with date strings."""
         comparison = ComparisonBuilder.progression(
             ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("1994-02-05 11:47", "Palo Alto, CA")  # 30 days later = age 30
+            ("1994-02-05 11:47", "Palo Alto, CA"),  # 30 days later = age 30
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.PROGRESSION
         # 30 days difference
         delta = (
-            comparison.chart2.datetime.local_datetime -
-            comparison.chart1.datetime.local_datetime
+            comparison.chart2.datetime.local_datetime
+            - comparison.chart1.datetime.local_datetime
         )
         assert delta.days == 30
 
@@ -254,7 +252,7 @@ class TestComparisonBuilderConvenienceMethods:
         comparison = ComparisonBuilder.compare(
             ("1994-01-06 11:47", "Palo Alto, CA"),
             ("2000-01-01 17:00", "Seattle, WA"),
-            "synastry"
+            "synastry",
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.SYNASTRY
@@ -262,9 +260,7 @@ class TestComparisonBuilderConvenienceMethods:
     def test_compare_general_method_transit(self):
         """Test .compare() general method with transit type."""
         comparison = ComparisonBuilder.compare(
-            ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("2024-11-24 14:30", None),
-            "transit"
+            ("1994-01-06 11:47", "Palo Alto, CA"), ("2024-11-24 14:30", None), "transit"
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.TRANSIT
@@ -274,7 +270,7 @@ class TestComparisonBuilderConvenienceMethods:
         comparison = ComparisonBuilder.compare(
             ("1994-01-06 11:47", "Palo Alto, CA"),
             ("1994-02-05 11:47", "Palo Alto, CA"),
-            "progression"
+            "progression",
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.PROGRESSION
@@ -283,9 +279,7 @@ class TestComparisonBuilderConvenienceMethods:
         """Test .compare() with Native object and tuple."""
         native1 = Native("1994-01-06 11:47", "Palo Alto, CA")
         comparison = ComparisonBuilder.compare(
-            native1,
-            ("2024-11-24 14:30", "New York, NY"),
-            "transit"
+            native1, ("2024-11-24 14:30", "New York, NY"), "transit"
         ).calculate()
 
         assert comparison.comparison_type == ComparisonType.TRANSIT
@@ -300,7 +294,7 @@ class TestComparisonBuilderConvenienceMethods:
             ComparisonBuilder.compare(
                 ("1994-01-06 11:47", "Palo Alto, CA"),
                 ("2000-01-01 17:00", "Seattle, WA"),
-                "invalid_type"
+                "invalid_type",
             )
 
         assert "Invalid comparison type" in str(exc_info.value)
@@ -310,7 +304,7 @@ class TestComparisonBuilderConvenienceMethods:
         """Test that US date format strings work with convenience methods."""
         comparison = ComparisonBuilder.synastry(
             ("01/06/1994 11:47 AM", "Palo Alto, CA"),
-            ("01/01/2000 5:00 PM", "Seattle, WA")
+            ("01/01/2000 5:00 PM", "Seattle, WA"),
         ).calculate()
 
         assert comparison.chart1.datetime.local_datetime.year == 1994
@@ -321,8 +315,7 @@ class TestComparisonBuilderConvenienceMethods:
         """Test that convenience methods produce same results as old API."""
         # New convenience API
         comparison1 = ComparisonBuilder.synastry(
-            ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("2000-01-01 17:00", "Seattle, WA")
+            ("1994-01-06 11:47", "Palo Alto, CA"), ("2000-01-01 17:00", "Seattle, WA")
         ).calculate()
 
         # Old API (using string locations for easy comparison)
@@ -332,7 +325,9 @@ class TestComparisonBuilderConvenienceMethods:
         native2 = Native("2000-01-01 17:00", "Seattle, WA")
         chart2 = ChartBuilder.from_native(native2).calculate()
 
-        comparison2 = ComparisonBuilder.from_native(chart1).with_partner(chart2).calculate()
+        comparison2 = (
+            ComparisonBuilder.from_native(chart1).with_partner(chart2).calculate()
+        )
 
         # Should have same number of cross aspects
         assert len(comparison1.cross_aspects) == len(comparison2.cross_aspects)

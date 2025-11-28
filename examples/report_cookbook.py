@@ -628,7 +628,7 @@ def example_13_plain_text():
         show=False,
     )
 
-    print(f"Done! Contents:\n")
+    print("Done! Contents:\n")
 
     # Show first 40 lines
     with open(output_file) as f:

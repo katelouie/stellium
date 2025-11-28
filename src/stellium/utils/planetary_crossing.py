@@ -9,7 +9,6 @@ import swisseph as swe
 
 from stellium.core.registry import CELESTIAL_REGISTRY
 
-
 # Approximate orbital periods (days) for stepping through time
 # These are used for initial coarse search before binary refinement
 PLANET_PERIODS = {

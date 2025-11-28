@@ -3,6 +3,11 @@
 from .builder import ChartDrawBuilder
 from .core import ChartRenderer
 from .extended_canvas import AspectarianLayer, HouseCuspTableLayer, PositionTableLayer
+from .grid import (
+    draw_chart_grid,
+    draw_palette_comparison,
+    draw_theme_comparison,
+)
 from .layers import (
     AngleLayer,
     AspectCountsLayer,
@@ -27,6 +32,12 @@ from .palettes import (
     get_planet_glyph_color,
     get_planet_glyph_palette_description,
 )
+from .reference_sheet import (
+    generate_aspect_palette_reference,
+    generate_html_reference,
+    generate_theme_reference,
+    generate_zodiac_palette_reference,
+)
 from .themes import (
     ChartTheme,
     get_theme_default_aspect_palette,
@@ -34,17 +45,6 @@ from .themes import (
     get_theme_default_planet_palette,
     get_theme_description,
     get_theme_style,
-)
-from .reference_sheet import (
-    generate_html_reference,
-    generate_zodiac_palette_reference,
-    generate_aspect_palette_reference,
-    generate_theme_reference,
-)
-from .grid import (
-    draw_chart_grid,
-    draw_theme_comparison,
-    draw_palette_comparison,
 )
 
 __all__ = [

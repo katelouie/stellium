@@ -29,8 +29,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
-from stellium.core.models import ComparisonType
+from stellium import ChartBuilder, ComparisonBuilder
 
 # Output directory for generated files
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -68,7 +67,7 @@ def example_1_simple_progression_by_age():
     # Calculate progressions for age 26 (when Einstein published special relativity!)
     prog = ComparisonBuilder.progression(natal, age=26).calculate()
 
-    print(f"\nProgressions at Age 26 (1905 - 'Miracle Year'):")
+    print("\nProgressions at Age 26 (1905 - 'Miracle Year'):")
     print(f"  Progressed Sun: {prog.chart2.get_object('Sun').longitude:.2f}° {prog.chart2.get_object('Sun').sign}")
     print(f"  Progressed Moon: {prog.chart2.get_object('Moon').longitude:.2f}° {prog.chart2.get_object('Moon').sign}")
     print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° {prog.chart2.get_object('ASC').sign}")
@@ -279,7 +278,7 @@ def example_7_solar_arc_angles():
     if solar_arc < 0:
         solar_arc += 360
 
-    print(f"Solar Arc Method:")
+    print("Solar Arc Method:")
     print(f"  Solar Arc: {solar_arc:.2f}° (Sun's motion in 30 years)")
     print(f"\n  Natal ASC: {natal.get_object('ASC').longitude:.2f}°")
     print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° (natal + {solar_arc:.2f}°)")
@@ -319,7 +318,7 @@ def example_8_naibod_angles():
     naibod_rate = 59.1333 / 60  # degrees per year
     expected_arc = 30 * naibod_rate
 
-    print(f"Naibod Method (mean Sun rate: 59'08\"/year):")
+    print("Naibod Method (mean Sun rate: 59'08\"/year):")
     print(f"  Expected arc for 30 years: {expected_arc:.2f}°")
     print(f"\n  Natal ASC: {natal.get_object('ASC').longitude:.2f}°")
     print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° (natal + {expected_arc:.2f}°)")
@@ -514,8 +513,8 @@ def example_14_draw_progression_biwheel():
     prog.draw(str(output)).save()
 
     print(f"Created progression bi-wheel: {output}")
-    print(f"  Inner ring: Natal chart")
-    print(f"  Outer ring: Progressed (age 30)")
+    print("  Inner ring: Natal chart")
+    print("  Outer ring: Progressed (age 30)")
 
 
 def example_15_progression_with_solar_arc_biwheel():
@@ -540,7 +539,7 @@ def example_15_progression_with_solar_arc_biwheel():
     prog.draw(str(output)).save()
 
     print(f"Created: {output}")
-    print(f"  Solar arc used for angle progression")
+    print("  Solar arc used for angle progression")
 
 
 # =============================================================================
