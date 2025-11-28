@@ -1,8 +1,7 @@
 {
     "$schema": "https://railway.app/railway.schema.json",
     "build": {
-        "builder": "NIXPACKS",
-        "buildCommand": "pip install -e . && pip install nicegui"
+        "builder": "NIXPACKS"
     },
     "deploy": {
         "startCommand": "cd web && python main.py",
