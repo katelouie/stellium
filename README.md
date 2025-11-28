@@ -1,14 +1,16 @@
 # 🌟 Stellium
 
-**A modern, extensible Python library for computational astrology**
-
-Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings professional astrological calculations to Python with a clean, composable architecture that works for everyone, from quick scripts to production applications.
-
 [![PyPI version](https://badge.fury.io/py/stellium.svg)](https://badge.fury.io/py/stellium)
 [![Python Version](https://img.shields.io/pypi/pyversions/stellium.svg)](https://pypi.org/project/stellium/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen.svg)]()
+[![Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen.svg)](https://github.com/katelouie/stellium)
+[![Tests](https://github.com/katelouie/stellium/actions/workflows/tests.yml/badge.svg)](https://github.com/katelouie/stellium/actions/workflows/tests.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/katelouie/stellium)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+
+**A modern, extensible Python library for computational astrology**
+
+Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings professional astrological calculations to Python with a clean, composable architecture that works for everyone, from quick scripts to production applications.
 
 ---
 
