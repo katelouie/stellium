@@ -1,16 +1,8 @@
-# Stellium Web App - Railway Deployment Requirements
-# This file is used by Railway for deployment
+# Stellium Web App - Railway Deployment
+# Install the local stellium package and web dependencies
+
+# Install stellium from local source (reads pyproject.toml)
+-e .
 
 # Web framework
 nicegui>=1.4.0
-
-# Core Stellium dependencies
-pyswisseph>=2.10.3
-pytz>=2024.1
-timezonefinder>=6.5.0
-geopy>=2.4.0
-rich>=13.9.0
-svgwrite>=1.4.3
-pyyaml
-typst
-python-dateutil
