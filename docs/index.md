@@ -20,6 +20,10 @@ THEME_GALLERY
 PALETTE_GALLERY
 ```
 
+```{raw} html
+<p><strong>Interactive Reference:</strong> <a href="starlight_colors.html" target="_blank">Full Color & Theme Reference (HTML)</a> - Complete interactive reference with all themes, palettes, and hex values</p>
+```
+
 ```{toctree}
 :maxdepth: 2
 :caption: Architecture
@@ -77,6 +81,7 @@ api/accidental_dignity_structure
 - **[Chart Types](CHART_TYPES.md)** - Natal, synastry, transit, composite charts
 - **[Theme Gallery](THEME_GALLERY.md)** - Visual showcase of all themes
 - **[Palette Gallery](PALETTE_GALLERY.md)** - Zodiac ring color palettes
+- **[Color Reference (HTML)](starlight_colors.html)** - Interactive color & theme reference with hex values
 - **[API Reference](api/index.md)** - Complete autodoc from source code
 
 ## Project Links

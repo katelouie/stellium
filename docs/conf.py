@@ -157,6 +157,7 @@ html_title = "Stellium"
 html_short_title = "Stellium"
 
 html_static_path = ["_static"]
+html_extra_path = ["starlight_colors.html"]  # Copy HTML reference to build output
 html_css_files = [
     "custom.css",
 ]
