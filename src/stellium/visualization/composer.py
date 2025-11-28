@@ -26,7 +26,9 @@ class ChartComposer:
         self.layout_engine = LayoutEngine(config)
         self.layer_factory = LayerFactory(config)
 
-    def compose(self, chart: CalculatedChart | Comparison) -> str:
+    def compose(
+        self, chart: CalculatedChart | Comparison, to_string: bool = False
+    ) -> str:
         """
         Compose and render a complete chart visualization.
 
@@ -57,10 +59,13 @@ class ChartComposer:
         if self.config.tables.enabled:
             self._render_tables(canvas, renderer, chart, layout)
 
-        # Step 7: Save
-        canvas.save()
+        if to_string:
+            return canvas.tostring()
+        else:
+            # Step 7: Save
+            canvas.save()
 
-        return self.config.filename
+            return self.config.filename
 
     def _create_canvas(self, layout: LayoutResult) -> svgwrite.Drawing:
         """Create SVG canvas with correct dimensions (only once)."""

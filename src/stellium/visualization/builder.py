@@ -620,7 +620,7 @@ class ChartDrawBuilder:
 
     # === Execute ===
 
-    def save(self) -> str:
+    def save(self, to_string: bool = False) -> str:
         """
         Build and save the chart visualization using the composer.
 
@@ -749,4 +749,4 @@ class ChartDrawBuilder:
 
         # Create composer and render
         composer = ChartComposer(config)
-        return composer.compose(self._chart)
+        return composer.compose(self._chart, to_string=to_string)
