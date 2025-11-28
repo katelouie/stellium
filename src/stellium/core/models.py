@@ -233,7 +233,7 @@ class FixedStarPosition(CelestialPosition):
     Extends CelestialPosition with fixed star-specific metadata from the registry,
     including traditional astrological properties like planetary nature and keywords.
 
-    Fixed stars move very slowly due to precession (~1° per 72 years), so their
+    Fixed stars move very slowly due to precession (~1 degree per 72 years), so their
     positions change slightly between charts. Swiss Ephemeris handles precession
     automatically based on the Julian Day.
 
@@ -247,11 +247,12 @@ class FixedStarPosition(CelestialPosition):
         nature: Traditional planetary nature (e.g., "Mars/Jupiter")
         keywords: Interpretive keywords for the star
 
-    Example:
+    Example::
+
         regulus = FixedStarPosition(
             name="Regulus",
             object_type=ObjectType.FIXED_STAR,
-            longitude=150.12,  # ~0° Virgo (moves slowly through precession)
+            longitude=150.12,  # ~0 Virgo (moves slowly through precession)
             swe_name="Regulus",
             constellation="Leo",
             tier=1,
@@ -708,16 +709,15 @@ class CalculatedChart:
         Returns:
             ChartDrawBuilder instance for chaining
 
-        Example:
+        Example::
+
             # Simple preset
             chart.draw("my_chart.svg").preset_standard().save()
 
             # Custom configuration
-            chart.draw("custom.svg") \\
-                .with_theme("dark") \\
-                .with_moon_phase(position="top-left", show_label=True) \\
-                .with_chart_info(position="top-right") \\
-                .save()
+            chart.draw("custom.svg").with_theme("dark").with_moon_phase(
+                position="top-left", show_label=True
+            ).with_chart_info(position="top-right").save()
         """
         from stellium.visualization.builder import ChartDrawBuilder
 

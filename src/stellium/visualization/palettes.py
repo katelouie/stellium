@@ -499,8 +499,8 @@ def get_aspect_palette_colors(palette: AspectPalette) -> dict[str, str]:
     Get aspect colors for a given palette.
 
     Returns a dictionary mapping aspect names to hex colors.
-    Includes: Conjunction, Sextile, Square, Trine, Opposition,
-              and minor aspects (Semisextile, Semisquare, Sesquisquare, Quincunx)
+    Includes Conjunction, Sextile, Square, Trine, Opposition,
+    and minor aspects (Semisextile, Semisquare, Sesquisquare, Quincunx).
     Results are cached in memory for performance.
 
     Args:

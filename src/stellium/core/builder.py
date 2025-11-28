@@ -42,7 +42,8 @@ class ChartBuilder:
     """
     Fluent builder for creating astrological charts.
 
-    Usage:
+    Example::
+
         chart = (
             ChartBuilder.from_native(native)
             .with_ephemeris(SwissEphemeris())

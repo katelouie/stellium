@@ -307,16 +307,15 @@ class Comparison:
         Returns:
             ChartDrawBuilder instance for chaining
 
-        Example:
+        Example::
+
             # Simple synastry preset
             comparison.draw("synastry.svg").preset_synastry().save()
 
             # Custom configuration
-            comparison.draw("custom.svg") \\
-                .with_theme("celestial") \\
-                .with_moon_phase(position="top-left") \\
-                .with_chart_info(position="top-right") \\
-                .save()
+            comparison.draw("custom.svg").with_theme("celestial").with_moon_phase(
+                position="top-left"
+            ).with_chart_info(position="top-right").save()
         """
         from stellium.visualization.builder import ChartDrawBuilder
 

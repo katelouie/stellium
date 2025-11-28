@@ -264,14 +264,15 @@ class ReportSection(Protocol):
         """
         Extract and structure data from the chart.
 
-        Returns a standardized dictionary format that renderers understand:
-        {
-            "type": "table" | "text" | "key_value",
-            "headers": [...],      # For tables
-            "rows": [...],         # For tables
-            "text": "...",         # For text blocks
-            "data": {...},         # For key-value pairs
-        }
+        Returns a standardized dictionary format that renderers understand::
+
+            {
+                "type": "table" | "text" | "key_value",
+                "headers": [...],      # For tables
+                "rows": [...],         # For tables
+                "text": "...",         # For text blocks
+                "data": {...},         # For key-value pairs
+            }
 
         Args:
             chart: The calculated chart to extract data from

@@ -291,7 +291,8 @@ class SynthesisBuilder:
     """
     Builder for synthesizing two charts into one (composite or davison).
 
-    Examples:
+    Example::
+
         # Simple davison
         davison = SynthesisBuilder.davison(chart1, chart2).calculate()
 

@@ -32,7 +32,8 @@ class ReportBuilder:
     """
     Builder for chart reports.
 
-    Usage:
+    Example::
+
         report = (
             ReportBuilder()
             .from_chart(chart)
@@ -351,7 +352,8 @@ class ReportBuilder:
         Returns:
             Self for chaining
 
-        Example:
+        Example::
+
             class MyCustomSection:
                 @property
                 def section_name(self) -> str:

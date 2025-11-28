@@ -31,16 +31,15 @@ class ChartDrawBuilder:
     chart visualizations. It wraps the lower-level draw_chart() function
     with a fluent interface and convenient presets.
 
-    Usage:
+    Example::
+
         # Simple preset
         chart.draw("chart.svg").preset_standard().save()
 
         # Custom configuration
-        chart.draw("custom.svg") \\
-            .with_size(800) \\
-            .with_theme("midnight") \\
-            .with_moon_phase(position="top-left", show_label=True) \\
-            .save()
+        chart.draw("custom.svg").with_size(800).with_theme("midnight").with_moon_phase(
+            position="top-left", show_label=True
+        ).save()
 
         # Comparison charts
         comparison.draw("synastry.svg").preset_synastry().save()
@@ -435,13 +434,14 @@ class ChartDrawBuilder:
                 indicator in each cell. If False (default), show larger glyphs only.
             show_object_types: List of object types to include in tables.
                 If None, uses default (planet, asteroid, point, node, angle).
-                Examples: ["planet", "asteroid", "midpoint"]
-                         ["planet", "asteroid", "point", "node", "angle", "arabic_part"]
+                Example values: ``["planet", "asteroid", "midpoint"]`` or
+                ``["planet", "asteroid", "point", "node", "angle", "arabic_part"]``
 
         Returns:
             Self for chaining
 
-        Example:
+        Example::
+
             # Standard extended canvas
             builder.with_tables(position="right")
 
@@ -452,10 +452,7 @@ class ChartDrawBuilder:
             builder.with_tables(position="right", show_house_cusps=True)
 
             # Custom aspectarian mode for synastry
-            builder.with_tables(
-                position="right",
-                aspectarian_mode="all"  # Show all aspect grids
-            )
+            builder.with_tables(position="right", aspectarian_mode="all")
 
             # Detailed aspectarian with orb and applying/separating
             builder.with_tables(position="right", aspectarian_detailed=True)

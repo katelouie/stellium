@@ -1,0 +1,50 @@
+/* Warm mystical enhancements */
+
+/* Heading font - elegant serif for that mystical feel */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.sidebar-brand-text {
+    font-family: 'Crimson Pro', 'Georgia', serif;
+    letter-spacing: 0.02em;
+}
+
+/* Add subtle decorative elements to main headings */
+.content h1 {
+    border-bottom: 2px solid #8e6b8a;
+    padding-bottom: 0.3em;
+    margin-bottom: 1em;
+}
+
+.content h2 {
+    border-bottom: 1px solid #d4cdc3;
+    padding-bottom: 0.25em;
+    margin-top: 1.5em;
+}
+
+/* Subtle warm shadow for code blocks */
+.highlight {
+    border-left: 3px solid #8e6b8a;
+    box-shadow: 0 1px 3px rgba(74, 51, 83, 0.1);
+}
+
+/* API documentation styling */
+.sig-name {
+    font-weight: 600;
+    color: #4a3353;
+}
+
+/* Warm glow on hover for links */
+a:hover {
+    text-decoration-color: #b8953d;
+}
+
+/* Subtle texture (optional - remove if too much) */
+.sidebar-drawer {
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(142, 107, 138, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(74, 51, 83, 0.03) 0%, transparent 50%);
+}
