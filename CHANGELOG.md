@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.4.0] - 2025-11-28
+
+### Added
+
 #### Stellium Web Application (November 27, 2025)
 
 - **Complete NiceGUI Web Application**: Full-featured web interface for Stellium (`web/` module, 5,600+ lines)
