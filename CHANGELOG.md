@@ -9,6 +9,103 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Stellium Web Application (November 27, 2025)
+
+- **Complete NiceGUI Web Application**: Full-featured web interface for Stellium (`web/` module, 5,600+ lines)
+  - **5 Pages**: Home, Natal, Relationships, Timing, Explore
+  - **11 Reusable Components**: Birth input, chart display, chart options, code preview, header, location input, notable selector, PDF options, report options, time input, unified birth input
+  - Built with NiceGUI for reactive, modern UI
+  - Beautiful design with Crimson Pro and Cinzel fonts
+
+- **Home Page** (`web/pages/home.py`): Landing page with navigation and introduction
+
+- **Natal Chart Page** (`web/pages/natal.py`): Interactive natal chart builder
+  - Birth data input with date/time/location
+  - Notable person selector from registry
+  - Full chart visualization options (themes, palettes, house systems)
+  - PDF report generation with customizable sections
+  - Live code preview showing equivalent Python code
+
+- **Relationships Page** (`web/pages/relationships.py`): Relationship chart analysis
+  - Support for synastry, composite, and Davison charts
+  - Dual chart input with swappable inner/outer positions
+  - Cross-aspect analysis
+  - Relationship-specific visualization options
+
+- **Timing Page** (`web/pages/timing.py`): Predictive astrology charts
+  - Solar, lunar, and planetary returns
+  - Secondary progressions with angle methods (quotidian, solar arc, naibod)
+  - Transits analysis
+  - Transit-to-natal cross-aspects
+
+- **Explore Page** (`web/pages/explore.py`): Notable births browser
+  - Search and filter through notables database
+  - Quick chart generation from any notable
+
+- **Railway Deployment Configuration**: Production-ready deployment setup
+  - `requirements.txt` with all dependencies
+  - `Procfile` for Railway/Heroku
+  - `railway.json` with healthcheck and restart policy
+  - Dynamic PORT binding for cloud deployment
+  - Production mode detection via `RAILWAY_ENVIRONMENT`
+
+#### Extended Test Coverage (November 27, 2025)
+
+- **242 New Tests** across 6 test files for improved code coverage:
+
+- **CLI Tests** (`tests/test_cli.py`, 46 tests):
+  - Main CLI group and version command
+  - Cache management commands (info, clear, size)
+  - Chart generation from registry
+  - Ephemeris download commands (download, list)
+  - File pattern matching and size calculation
+  - Error handling for invalid inputs
+
+- **Visualization Layers Tests** (`tests/test_visualization_layers.py`, 29 tests):
+  - HeaderLayer initialization and custom values
+  - Location parsing (US addresses, international, short, empty, None)
+  - Header rendering for single charts, comparisons, and unknown time charts
+  - Layer integration tests (zodiac band, planet glyphs, aspects, house cusps)
+  - Theme variations (default, dark, classic, sepia)
+  - Palette changes (zodiac, planet glyph, aspect)
+
+- **Extended Canvas Tests** (`tests/test_visualization_extended_canvas.py`, 37 tests):
+  - `_is_comparison()` helper function validation
+  - `_filter_objects_for_tables()` filtering logic
+  - PositionTableLayer initialization and style merging
+  - HouseCuspTableLayer rendering
+  - AspectarianLayer modes and configurations
+  - Table layer rendering with different chart types
+
+- **ChartBuilder Extended Tests** (`tests/test_chart_builder_extended.py`, 38 tests):
+  - `from_notable()` factory method
+  - Sidereal zodiac with various ayanamsas
+  - `with_name()` method
+  - `with_house_systems()` validation and errors
+  - `add_house_system()` incremental building
+  - Unknown time chart calculation
+  - Cache configuration
+  - Component and analyzer integration
+
+- **Comparison Extended Tests** (`tests/test_comparison_extended.py`, 55 tests):
+  - Comparison dataclass properties
+  - ComparisonBuilder configuration methods
+  - Progression auto-calculation (by age, by target date)
+  - Angle methods (quotidian, solar arc, naibod)
+  - House overlay queries
+  - Compatibility scoring
+  - `to_dict()` serialization
+  - `draw()` visualization integration
+
+- **Returns Builder Tests** (`tests/test_returns_builder.py`, 37 tests):
+  - Solar return factory and calculation
+  - Lunar return by date and occurrence
+  - Planetary returns (Saturn, Jupiter, Mars)
+  - Deferred configuration delegation
+  - Relocated returns
+  - Return moment precision
+  - Error handling for invalid inputs
+
 ### Changed
 
 ### Fixed
