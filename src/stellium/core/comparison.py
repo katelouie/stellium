@@ -42,7 +42,7 @@ Builder Methods:
 import datetime as dt
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from stellium.core.builder import ChartBuilder
 from stellium.core.config import AspectConfig
@@ -60,7 +60,9 @@ from stellium.core.models import (
 )
 from stellium.core.native import Native
 from stellium.core.protocols import OrbEngine
-from stellium.visualization import ChartDrawBuilder
+
+if TYPE_CHECKING:
+    from stellium.visualization import ChartDrawBuilder
 
 
 @dataclass(frozen=True)

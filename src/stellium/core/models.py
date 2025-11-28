@@ -9,9 +9,10 @@ They represent the OUTPUT of calculations, not the process.
 import datetime as dt
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
-from stellium.visualization import ChartDrawBuilder
+if TYPE_CHECKING:
+    from stellium.visualization import ChartDrawBuilder
 
 
 def longitude_to_sign_and_degree(longitude: float) -> tuple[str, float]:

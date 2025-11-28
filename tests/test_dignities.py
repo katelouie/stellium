@@ -530,7 +530,7 @@ def test_mutual_reception_sun_moon():
     # Find the Sun-Moon reception
     sun_moon_reception = None
     for reception in receptions:
-        planets = set(reception["planet1"], reception["planet2"])  # type: ignore[misc]
+        planets = set([reception["planet1"], reception["planet2"]])  # noqa: C405
         if planets == {"Sun", "Moon"}:
             sun_moon_reception = reception
             break
@@ -569,7 +569,7 @@ def test_mutual_reception_venus_mars():
     # Find Venus-Mars reception
     venus_mars_reception = None
     for reception in receptions:
-        planets = set(reception["planet1"], reception["planet2"])  # type: ignore[misc]
+        planets = set([reception["planet1"], reception["planet2"]])  # noqa: C405
         if planets == {"Venus", "Mars"}:
             venus_mars_reception = reception
             break
@@ -600,7 +600,7 @@ def test_no_mutual_reception():
 
     # Sun and Moon are in their own signs, not each other's
     sun_moon_reception = any(
-        set(r["planet1"], r["planet2"]) == {"Sun", "Moon"}  # type: ignore[misc]
+        set([r["planet1"], r["planet2"]]) == {"Sun", "Moon"}  # noqa: C405
         for r in receptions
     )
 
