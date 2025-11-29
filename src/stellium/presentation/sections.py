@@ -16,6 +16,7 @@ from stellium.core.registry import (
     get_aspects_by_category,
 )
 from stellium.engines.dignities import DIGNITIES
+from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 
 def get_object_display(name: str) -> tuple[str, str]:
@@ -273,6 +274,13 @@ class ChartOverviewSection:
             if "dignities" in chart.metadata:
                 sect = chart.metadata["dignities"].get("sect", "unknown")
                 data["Chart Sect"] = f"{sect.title()} Chart"
+
+            # Chart Ruler
+            try:
+                ruler, asc_sign = get_chart_ruler_from_chart(chart)
+                data["Chart Ruler"] = f"{ruler} ({asc_sign} Rising)"
+            except (ValueError, KeyError):
+                pass  # Skip if ASC not found
 
         return {
             "type": "key_value",
