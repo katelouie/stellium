@@ -136,3 +136,25 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Miller,_Arthur'
   verified: false
+- name: Terry Pratchett
+  event_type: birth
+  year: 1948
+  month: 4
+  day: 28
+  hour: 12
+  minute: 0
+  latitude: 51.6
+  longitude: -0.65
+  location_name: Beaconsfield, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - novelist
+  - humorist
+  notable_for: British fantasy author, creator of the hugely popular 41-volume Discworld series; knighted in 2009; wrote over 70 books; diagnosed with posterior cortical atrophy (rare early-onset Alzheimer’s) in 2007 and became a prominent campaigner for assisted dying; died 12 March 2015.
+  astrological_notes: Sun 08° Taurus, Moon 08° Capricorn
+  data_quality: X
+  sources:
+  - 'https://www.astrotheme.com/astrology/Terry_Pratchett'
+  - 'https://en.wikipedia.org/wiki/Terry_Pratchett'
+  verified: false

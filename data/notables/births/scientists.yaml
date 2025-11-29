@@ -286,3 +286,46 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Hawking,_Stephen'
   verified: false
+- name: Ada Lovelace
+  event_type: birth
+  year: 1815
+  month: 12
+  day: 10
+  hour: 13
+  minute: 0
+  latitude: 51.5
+  longitude: -0.1667
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - mathematician
+  - computer pioneer
+  notable_for: British noted family, the Countess of Lovelace. Daughter and only legitimate child of the sixth Lord Byron, whose marriage to her mom lasted a year. Mom was obsessive and dominating, giving her a good education but with massive social repression. Showed early gift in math from age five, formed ambition to work as a mathematician. Byron was an accomplished harpist. With few friends, married an older man at 19 and had three kids before 24. Met Cambridge professor Charles Babbage on 5 June 1833 at a party. Became friends, lost interest in household and social life, offered to work as his assistant in 1842. Did brilliant technical annotations to his calculator. Recognized as having genius, often called "the first programmer." In 1841, greatly upset by expose of family scandal alleging her dad had incestuous relationship with her half-sister. Byron had health problems and mood swings from elation to fatalism, treated with opium and brandy. Had an impulsive love affair. Found to have uterine cancer, Byron died just before her 37th birthday on 28 November 1852.
+  astrological_notes: Sun 18° Sagittarius, Moon in Aries, Ascendant 28° Pisces approx
+  data_quality: B
+  sources:
+  - 'https://www.astro.com/astro-databank/Lovelace,_Ada'
+  verified: false
+- name: Alan Turing
+  event_type: birth
+  year: 1912
+  month: 6
+  day: 23
+  hour: 2
+  minute: 15
+  latitude: 51.5
+  longitude: -0.1667
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - mathematician
+  - computer scientist
+  - cryptanalyst
+  notable_for: British mathematician, logician, scientist and the technical genius behind Britain’s successful efforts to break German codes in World War II; made inestimable contributions to cybernetics; his "Computable Numbers," 1937, is considered one of the outstanding scientific papers of the 20th century, a blueprint for what would become the electronic digital computer; his "Universal Turing Machine" was an ancestor for the entire information age; second-born of two sons to a member of the British civil service in India; raised in foster households in England, separated from parents; enrolled at Sherbourne School at 13, showed gift for mathematics; fell in love with another boy who died of tuberculosis, driving him into atheism and materialistic explanations; failed twice to win fellowship at Trinity College, Cambridge, but received one from King’s College; served in Government Code and Cypher School during WWII, invented primitive machine to decipher Nazi Enigma codes; post-war, created Turing machine at British National Physical Laboratory but left due to bureaucracy, joined University of Manchester; convicted of gross indecency in 1952 for homosexual relations, given probation and estrogen injections; committed suicide by eating apple laced with cyanide on 7 June 1954; pardoned by Queen Elizabeth II on 24 December 2013.
+  astrological_notes: Sun 01° Cancer, Moon 24° Scorpio, Ascendant 18° Gemini
+  data_quality: A
+  sources:
+  - 'https://www.astro.com/astro-databank/Turing,_Alan'
+  verified: false
