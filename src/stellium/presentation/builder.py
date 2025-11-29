@@ -698,6 +698,7 @@ class ReportBuilder:
             .with_aspect_patterns()
             .with_dignities(show_details=True)
             .with_declinations()
+            .with_declination_aspects()
             .with_midpoints()
             .with_midpoint_aspects()
             .with_fixed_stars()
