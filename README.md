@@ -35,8 +35,8 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 
 - **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
 - **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more
-- **Declination calculations** with out-of-bounds planet detection
-- **Bi-wheel charts** for synastry, transits, progressions, returns, and composite analysis
+- **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
+- **Bi-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
 - **Sect-aware calculations** with proper day/night chart handling
 - **25+ Arabic Parts** with traditional formulas
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
