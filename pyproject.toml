@@ -39,6 +39,7 @@ dependencies = [
     "pyyaml",
     "typst",
     "python-dateutil",
+    "graphviz"
 ]
 
 [project.optional-dependencies]

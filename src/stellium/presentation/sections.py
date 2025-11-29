@@ -1376,8 +1376,10 @@ class MidpointAspectsSection:
 
         # Get planets/points to check (exclude midpoints and fixed stars)
         planets = [
-            p for p in chart.positions
-            if p.object_type in (
+            p
+            for p in chart.positions
+            if p.object_type
+            in (
                 ObjectType.PLANET,
                 ObjectType.NODE,
                 ObjectType.POINT,
@@ -1405,13 +1407,15 @@ class MidpointAspectsSection:
                         # Parse midpoint display name
                         mp_display = self._get_midpoint_display(midpoint)
 
-                        found_aspects.append({
-                            "planet": planet,
-                            "aspect": aspect_name,
-                            "midpoint": midpoint,
-                            "midpoint_display": mp_display,
-                            "orb": orb,
-                        })
+                        found_aspects.append(
+                            {
+                                "planet": planet,
+                                "aspect": aspect_name,
+                                "midpoint": midpoint,
+                                "midpoint_display": mp_display,
+                                "orb": orb,
+                            }
+                        )
 
         if not found_aspects:
             return {
@@ -1423,15 +1427,19 @@ class MidpointAspectsSection:
         if self.sort_by == "orb":
             found_aspects.sort(key=lambda x: x["orb"])
         elif self.sort_by == "planet":
-            found_aspects.sort(key=lambda x: (
-                get_object_sort_key(x["planet"]),
-                x["orb"],
-            ))
+            found_aspects.sort(
+                key=lambda x: (
+                    get_object_sort_key(x["planet"]),
+                    x["orb"],
+                )
+            )
         else:  # midpoint
-            found_aspects.sort(key=lambda x: (
-                x["midpoint_display"],
-                x["orb"],
-            ))
+            found_aspects.sort(
+                key=lambda x: (
+                    x["midpoint_display"],
+                    x["orb"],
+                )
+            )
 
         # Build table
         headers = ["Planet", "Aspect", "Midpoint", "Orb"]
@@ -1443,7 +1451,9 @@ class MidpointAspectsSection:
             planet_label = f"{glyph} {display_name}" if glyph else display_name
 
             aspect_name, aspect_glyph = get_aspect_display(asp["aspect"])
-            aspect_label = f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            aspect_label = (
+                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            )
 
             orb_str = f"{asp['orb']:.2f}°"
 
@@ -1455,9 +1465,7 @@ class MidpointAspectsSection:
             "rows": rows,
         }
 
-    def _calculate_orb(
-        self, lon1: float, lon2: float, aspect_angle: float
-    ) -> float:
+    def _calculate_orb(self, lon1: float, lon2: float, aspect_angle: float) -> float:
         """Calculate orb between two longitudes for a given aspect."""
         diff = abs(lon1 - lon2)
         if diff > 180:
@@ -1666,8 +1674,7 @@ class FixedStarsSection:
         """Generate fixed stars table data."""
         # Get fixed stars from chart positions
         fixed_stars = [
-            p for p in chart.positions
-            if p.object_type == ObjectType.FIXED_STAR
+            p for p in chart.positions if p.object_type == ObjectType.FIXED_STAR
         ]
 
         if not fixed_stars:
@@ -1692,9 +1699,7 @@ class FixedStarsSection:
 
         # Sort stars
         if self.sort_by == "magnitude":
-            fixed_stars = sorted(
-                fixed_stars, key=lambda s: getattr(s, "magnitude", 99)
-            )
+            fixed_stars = sorted(fixed_stars, key=lambda s: getattr(s, "magnitude", 99))
         elif self.sort_by == "tier":
             fixed_stars = sorted(
                 fixed_stars, key=lambda s: (getattr(s, "tier", 9), s.longitude)
@@ -1804,7 +1809,11 @@ class ProfectionSection:
         if self.age is not None:
             return f"Profections (Age {self.age})"
         elif self.date:
-            date_str = self.date if isinstance(self.date, str) else self.date.strftime("%Y-%m-%d")
+            date_str = (
+                self.date
+                if isinstance(self.date, str)
+                else self.date.strftime("%Y-%m-%d")
+            )
             return f"Profections ({date_str})"
         return "Profections"
 
@@ -1949,12 +1958,14 @@ class ProfectionSection:
             if result.ruler in CELESTIAL_REGISTRY:
                 ruler_glyph = CELESTIAL_REGISTRY[result.ruler].glyph
 
-            rows.append([
-                f"{point_glyph} {point}" if point_glyph else point,
-                f"House {result.profected_house}",
-                f"{sign_glyph} {result.profected_sign}",
-                f"{ruler_glyph} {result.ruler}",
-            ])
+            rows.append(
+                [
+                    f"{point_glyph} {point}" if point_glyph else point,
+                    f"House {result.profected_house}",
+                    f"{sign_glyph} {result.profected_sign}",
+                    f"{ruler_glyph} {result.ruler}",
+                ]
+            )
 
         return {
             "type": "table",
@@ -2024,12 +2035,14 @@ class ProfectionSection:
             if entry.units == current_age:
                 age_str = f"→ {entry.units} ←"
 
-            rows.append([
-                age_str,
-                f"House {entry.profected_house}",
-                f"{sign_glyph} {entry.profected_sign}",
-                f"{ruler_glyph} {entry.ruler}",
-            ])
+            rows.append(
+                [
+                    age_str,
+                    f"House {entry.profected_house}",
+                    f"{sign_glyph} {entry.profected_sign}",
+                    f"{ruler_glyph} {entry.ruler}",
+                ]
+            )
 
         return {
             "type": "table",
@@ -2147,7 +2160,9 @@ class DeclinationAspectSection:
 
             # Aspect with glyph
             aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            aspect_display = (
+                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+            )
 
             # Planet 2 with glyph
             name2, glyph2 = get_object_display(aspect.object2.name)
@@ -2169,3 +2184,171 @@ class DeclinationAspectSection:
             rows.append(row)
 
         return {"type": "table", "headers": headers, "rows": rows}
+
+
+class DispositorSection:
+    """
+    Dispositor analysis section.
+
+    Shows planetary and/or house-based dispositor chains, final dispositor(s),
+    and mutual receptions. Text summary only - graphviz rendering is separate.
+
+    Example:
+        >>> section = DispositorSection(mode="both")
+        >>> data = section.generate_data(chart)
+    """
+
+    def __init__(
+        self,
+        mode: str = "both",
+        rulership: str = "traditional",
+        house_system: str | None = None,
+        show_chains: bool = True,
+    ) -> None:
+        """
+        Initialize dispositor section.
+
+        Args:
+            mode: Which dispositor analysis to show:
+                - "planetary": Traditional planet-disposes-planet
+                - "house": Kate's house-based innovation
+                - "both": Show both (DEFAULT)
+            rulership: "traditional" or "modern" rulership system
+            house_system: House system for house-based mode (defaults to chart's default)
+            show_chains: Whether to show full chain details
+        """
+        self.mode = mode
+        self.rulership = rulership
+        self.house_system = house_system
+        self.show_chains = show_chains
+
+    @property
+    def section_name(self) -> str:
+        if self.mode == "planetary":
+            return "Planetary Dispositors"
+        elif self.mode == "house":
+            return "House Dispositors"
+        return "Dispositors"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """
+        Generate dispositor analysis.
+
+        Returns a compound section with subsections for planetary and/or house
+        dispositors, each showing final dispositor and mutual receptions.
+        """
+        from stellium.engines.dispositors import DispositorEngine
+
+        engine = DispositorEngine(
+            chart,
+            rulership_system=self.rulership,
+            house_system=self.house_system,
+        )
+
+        sections = []
+
+        # Planetary dispositors
+        if self.mode in ("planetary", "both"):
+            planetary = engine.planetary()
+            sections.append(self._format_result(planetary, "Planetary"))
+
+        # House dispositors
+        if self.mode in ("house", "both"):
+            house = engine.house_based()
+            sections.append(self._format_result(house, "House-Based"))
+
+        # If only one mode, return that directly (as text with section content)
+        if len(sections) == 1:
+            title, data = sections[0]
+            return {
+                "type": "text",
+                "text": data.get("content", ""),
+            }
+
+        # Otherwise return compound section (list of tuples)
+        return {
+            "type": "compound",
+            "sections": sections,
+        }
+
+    def _format_result(self, result, title: str) -> dict[str, Any]:
+        """Format a DispositorResult for display."""
+        from stellium.core.registry import CELESTIAL_REGISTRY
+
+        lines = []
+
+        # Final dispositor
+        if result.final_dispositor:
+            if isinstance(result.final_dispositor, tuple):
+                if result.mode == "planetary":
+                    # Format with glyphs
+                    fd_parts = []
+                    for planet in result.final_dispositor:
+                        if planet in CELESTIAL_REGISTRY:
+                            glyph = CELESTIAL_REGISTRY[planet].glyph
+                            fd_parts.append(f"{glyph} {planet}")
+                        else:
+                            fd_parts.append(planet)
+                    fd_str = " ↔ ".join(fd_parts)
+                    lines.append(f"Final Dispositor: {fd_str} (mutual reception)")
+                else:
+                    fd_str = " ↔ ".join([f"House {h}" for h in result.final_dispositor])
+                    lines.append(f"Final Dispositor: {fd_str} (mutual reception)")
+            else:
+                if result.mode == "planetary":
+                    if result.final_dispositor in CELESTIAL_REGISTRY:
+                        glyph = CELESTIAL_REGISTRY[result.final_dispositor].glyph
+                        lines.append(
+                            f"Final Dispositor: {glyph} {result.final_dispositor}"
+                        )
+                    else:
+                        lines.append(f"Final Dispositor: {result.final_dispositor}")
+                else:
+                    lines.append(f"Final Dispositor: House {result.final_dispositor}")
+        else:
+            lines.append("Final Dispositor: None (complex loop structure)")
+
+        # Mutual receptions
+        if result.mutual_receptions:
+            lines.append("")
+            lines.append("Mutual Receptions:")
+            for mr in result.mutual_receptions:
+                if result.mode == "planetary":
+                    glyph1 = CELESTIAL_REGISTRY.get(mr.node1, {})
+                    glyph2 = CELESTIAL_REGISTRY.get(mr.node2, {})
+                    g1 = glyph1.glyph if hasattr(glyph1, "glyph") else ""
+                    g2 = glyph2.glyph if hasattr(glyph2, "glyph") else ""
+                    lines.append(f"  {g1} {mr.node1} ↔ {g2} {mr.node2}")
+                else:
+                    # House mode - include ruling planets
+                    lines.append(
+                        f"  House {mr.node1} ({mr.planet1}) ↔ "
+                        f"House {mr.node2} ({mr.planet2})"
+                    )
+
+        # Chains (optional)
+        if self.show_chains and result.chains:
+            lines.append("")
+            lines.append("Disposition Chains:")
+            for _start, chain in sorted(result.chains.items()):
+                if result.mode == "planetary":
+                    # Format with glyphs
+                    chain_parts = []
+                    for node in chain:
+                        if node in CELESTIAL_REGISTRY:
+                            chain_parts.append(CELESTIAL_REGISTRY[node].glyph)
+                        else:
+                            chain_parts.append(node)
+                    chain_str = " → ".join(chain_parts)
+                else:
+                    chain_str = " → ".join(chain)
+                lines.append(f"  {chain_str}")
+
+        # Return as tuple of (title, data) for compound rendering
+        return (
+            f"{title} Dispositors",
+            {
+                "type": "text",
+                "content": "\n".join(lines),
+            },
+        )

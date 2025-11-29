@@ -21,6 +21,15 @@ from stellium.engines.dignities import (
     ModernDignityCalculator,
     TraditionalDignityCalculator,
 )
+
+# Dispositors
+from stellium.engines.dispositors import (
+    DispositorEngine,
+    DispositorResult,
+    MutualReception,
+    render_both_dispositors,
+    render_dispositor_graph,
+)
 from stellium.engines.ephemeris import SwissEphemerisEngine
 
 # Fixed Stars
@@ -75,4 +84,10 @@ __all__ = [
     "ProfectionResult",
     "MultiProfectionResult",
     "ProfectionTimeline",
+    # Dispositors
+    "DispositorEngine",
+    "DispositorResult",
+    "MutualReception",
+    "render_dispositor_graph",
+    "render_both_dispositors",
 ]

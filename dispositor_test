@@ -1,0 +1,17 @@
+// Dispositor Test
+digraph {
+	bgcolor="#F5F0E6"
+	node [color="#8B7355" fillcolor="#E8E0D4" fontcolor="#4A4A4A" fontname="Crimson Pro" fontsize=14 height=0.8 penwidth=1.5 shape=circle style=filled width=0.8]
+	edge [arrowsize=0.8 color="#9B8AA6" penwidth=1.5]
+	H11 [label=11]
+	H3 [label=3]
+	H5 [label=5]
+	H7 [label=7]
+	H9 [label=9]
+	H2 [label=2]
+	H11 -> H3
+	H3 -> H5
+	H7 -> H5
+	H9 -> H2
+	H2 -> H9
+}

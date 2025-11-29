@@ -20,6 +20,7 @@ from .sections import (
     DeclinationAspectSection,
     DeclinationSection,
     DignitySection,
+    DispositorSection,
     FixedStarsSection,
     HouseCuspsSection,
     MidpointAspectsSection,
@@ -527,6 +528,55 @@ class ReportBuilder:
         )
         return self
 
+    def with_dispositors(
+        self,
+        mode: str = "both",
+        rulership: str = "traditional",
+        house_system: str | None = None,
+        show_chains: bool = True,
+    ) -> "ReportBuilder":
+        """
+        Add dispositor analysis section.
+
+        Shows planetary and/or house-based dispositor chains, final dispositor(s),
+        and mutual receptions.
+
+        Args:
+            mode: Which dispositor analysis to show (DEFAULT: "both")
+                - "planetary": Traditional planet-disposes-planet
+                - "house": Kate's house-based innovation (life area flow)
+                - "both": Show both analyses
+            rulership: "traditional" or "modern" rulership system (DEFAULT: "traditional")
+            house_system: House system for house-based mode (defaults to chart's default)
+            show_chains: Whether to show full disposition chain details (DEFAULT: True)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_chart_overview()
+            ...     .with_dispositors(mode="both")
+            ...     .render())
+
+        Note:
+            For graphical output (SVG), use the DispositorEngine directly:
+                from stellium.engines.dispositors import DispositorEngine, render_both_dispositors
+                engine = DispositorEngine(chart)
+                graph = render_both_dispositors(engine.planetary(), engine.house_based())
+                graph.render("dispositors", format="svg")
+        """
+        self._sections.append(
+            DispositorSection(
+                mode=mode,
+                rulership=rulership,
+                house_system=house_system,
+                show_chains=show_chains,
+            )
+        )
+        return self
+
     def with_fixed_stars(
         self,
         tier: int | None = None,
@@ -697,6 +747,7 @@ class ReportBuilder:
             .with_aspects(mode="all")
             .with_aspect_patterns()
             .with_dignities(show_details=True)
+            .with_dispositors()
             .with_declinations()
             .with_declination_aspects()
             .with_midpoints()

@@ -9,6 +9,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Dispositor Graphs (November 28, 2025)
+
+- **DispositorEngine**: Calculate planetary and house-based dispositor chains
+  - **Planetary Dispositors**: Traditional planet-rules-planet chain analysis
+    - Each planet is "disposed" by the ruler of the sign it occupies
+    - Find final dispositor: the planet that rules its own sign (e.g., Mars in Aries)
+    - Detect mutual receptions: when two planets rule each other's signs
+  - **House-Based Dispositors** (Kate's innovation): Life-area flow analysis
+    - Traces "what planet rules this house's cusp, and what house is THAT planet in?"
+    - Shows how areas of life flow into and support each other
+    - Find final dispositor house: the life area that feeds the others
+    - Mutual receptions between houses (with ruling planet info)
+
+- **Graphviz rendering** for beautiful SVG output:
+  - `render_dispositor_graph()` - Single graph (planetary OR house)
+  - `render_both_dispositors()` - Both as labeled subgraphs in one SVG
+  - Stellium palette: cream background, warm beige nodes, purple edges
+  - Gold highlighting for final dispositor(s)
+  - Purple tinting for mutual reception nodes
+  - Bidirectional arrows for mutual receptions
+  - Planet glyphs (☉♀♂♃♄) for planetary mode
+
+- **ReportBuilder integration**:
+  - `.with_dispositors(mode="both")` - Add dispositor analysis to reports
+  - Mode options: "planetary", "house", or "both"
+  - Shows final dispositor, mutual receptions, and full disposition chains
+  - Text output with planet glyphs for CLI
+
+- **26 comprehensive tests** covering engine, rendering, and integration
+
 #### Arc Directions (November 28, 2025)
 
 - **ComparisonBuilder.arc_direction()**: Create arc direction comparisons (natal vs directed chart)
