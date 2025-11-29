@@ -16,7 +16,7 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 
 Read the extensive documentation and API autodocs at [Read The Docs](https://stellium.readthedocs.io/en/latest/?badge=latest)
 
-**✨ Stellium The Webapp is live! [Visit it here!](https://stellium.up.railway.app/) ✨**
+**✨ Stellium The Webapp is live! [Visit it here!](https://www.stelliumastro.app/) ✨**
 
 *Star the repo if you find it useful!* ⭐
 
