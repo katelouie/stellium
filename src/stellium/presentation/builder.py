@@ -25,6 +25,7 @@ from .sections import (
     MidpointSection,
     MoonPhaseSection,
     PlanetPositionSection,
+    ProfectionSection,
 )
 
 
@@ -336,6 +337,72 @@ class ReportBuilder:
             AspectPatternSection(
                 pattern_types=pattern_types,
                 sort_by=sort_by,
+            )
+        )
+        return self
+
+    def with_profections(
+        self,
+        age: int | None = None,
+        date: str | None = None,
+        include_monthly: bool = True,
+        include_multi_point: bool = True,
+        include_timeline: bool = False,
+        timeline_range: tuple[int, int] | None = None,
+        points: list[str] | None = None,
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ) -> "ReportBuilder":
+        """
+        Add profection timing analysis section.
+
+        Profections are a Hellenistic technique where the ASC advances
+        one sign per year. The planet ruling that sign becomes the
+        "Lord of the Year."
+
+        Args:
+            age: Age for profection (either age OR date required)
+            date: Target date as ISO string (e.g., "2025-06-15")
+            include_monthly: Show monthly profection when date is provided
+            include_multi_point: Show lords for ASC, Sun, Moon, MC
+            include_timeline: Show timeline table of Lords
+            timeline_range: Custom range for timeline (e.g., (25, 40))
+            points: Custom points for multi-point analysis
+            house_system: House system to use (default: prefers Whole Sign)
+            rulership: "traditional" or "modern"
+
+        Returns:
+            Self for chaining
+
+        Example::
+
+            # By age
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_profections(age=30)
+                .render()
+            )
+
+            # By date with timeline
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_profections(date="2025-06-15", include_timeline=True)
+                .render()
+            )
+        """
+        self._sections.append(
+            ProfectionSection(
+                age=age,
+                date=date,
+                include_monthly=include_monthly,
+                include_multi_point=include_multi_point,
+                include_timeline=include_timeline,
+                timeline_range=timeline_range,
+                points=points,
+                house_system=house_system,
+                rulership=rulership,
             )
         )
         return self

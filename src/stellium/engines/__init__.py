@@ -40,6 +40,14 @@ from stellium.engines.orbs import (
     SimpleOrbEngine,
 )
 
+# Profections
+from stellium.engines.profections import (
+    MultiProfectionResult,
+    ProfectionEngine,
+    ProfectionResult,
+    ProfectionTimeline,
+)
+
 __all__ = [
     # Ephemeris
     "SwissEphemerisEngine",
@@ -60,4 +68,9 @@ __all__ = [
     "ModernDignityCalculator",
     # Fixed Stars
     "SwissEphemerisFixedStarsEngine",
+    # Profections
+    "ProfectionEngine",
+    "ProfectionResult",
+    "MultiProfectionResult",
+    "ProfectionTimeline",
 ]

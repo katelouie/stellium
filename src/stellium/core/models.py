@@ -695,6 +695,167 @@ class CalculatedChart:
         dignity_data = self.metadata.get("dignities", {})
         return dignity_data.get("sect")
 
+    # =========================================================================
+    # Profections
+    # =========================================================================
+
+    def profection(
+        self,
+        age: int | None = None,
+        date: "dt.datetime | str | None" = None,
+        point: str = "ASC",
+        include_monthly: bool = True,
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ):
+        """
+        Calculate profections for this chart.
+
+        Profections move a point forward one sign per year. The planet
+        ruling the profected sign becomes the "Lord of the Year."
+
+        Args:
+            age: Age in completed years (either age OR date required)
+            date: Specific date (datetime or ISO string)
+            point: Point to profect (default "ASC")
+            include_monthly: Whether to include monthly profection (date only)
+            house_system: House system to use (default: prefers Whole Sign)
+            rulership: "traditional" or "modern" rulers
+
+        Returns:
+            ProfectionResult, or tuple(annual, monthly) if include_monthly
+
+        Example::
+
+            # By age
+            result = chart.profection(age=30)
+            print(f"Lord of Year 30: {result.ruler}")
+
+            # By date (gets both annual and monthly)
+            annual, monthly = chart.profection(date="2025-06-15")
+            print(f"Annual: {annual.ruler}, Monthly: {monthly.ruler}")
+        """
+        from stellium.engines.profections import ProfectionEngine
+
+        engine = ProfectionEngine(self, house_system, rulership)
+
+        if date is not None:
+            return engine.for_date(date, point, include_monthly)
+        elif age is not None:
+            if include_monthly:
+                raise ValueError(
+                    "Monthly profections require a date, not just age. "
+                    "Use include_monthly=False or provide a date."
+                )
+            return engine.annual(age, point)
+        else:
+            raise ValueError("Either age or date must be provided")
+
+    def profections(
+        self,
+        age: int | None = None,
+        date: "dt.datetime | str | None" = None,
+        points: list[str] | None = None,
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ):
+        """
+        Profect multiple points at once.
+
+        Args:
+            age: Age in completed years (either age OR date required)
+            date: Specific date (datetime or ISO string)
+            points: Points to profect (default: ASC, Sun, Moon, MC)
+            house_system: House system to use
+            rulership: "traditional" or "modern" rulers
+
+        Returns:
+            MultiProfectionResult with all profections
+
+        Example::
+
+            result = chart.profections(age=30)
+            print(result.lords)  # {"ASC": "Saturn", "Sun": "Mars", ...}
+        """
+        from stellium.engines.profections import ProfectionEngine
+
+        engine = ProfectionEngine(self, house_system, rulership)
+
+        if date is not None:
+            return engine.multi_for_date(date, points)
+        elif age is not None:
+            return engine.multi(age, points)
+        else:
+            raise ValueError("Either age or date must be provided")
+
+    def profection_timeline(
+        self,
+        start_age: int,
+        end_age: int,
+        point: str = "ASC",
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ):
+        """
+        Generate profections for a range of ages.
+
+        Args:
+            start_age: First age (inclusive)
+            end_age: Last age (inclusive)
+            point: Point to profect (default "ASC")
+            house_system: House system to use
+            rulership: "traditional" or "modern" rulers
+
+        Returns:
+            ProfectionTimeline with all entries
+
+        Example::
+
+            timeline = chart.profection_timeline(25, 35)
+            for entry in timeline.entries:
+                print(f"Age {entry.units}: {entry.ruler}")
+        """
+        from stellium.engines.profections import ProfectionEngine
+
+        engine = ProfectionEngine(self, house_system, rulership)
+        return engine.timeline(start_age, end_age, point)
+
+    def lord_of_year(
+        self,
+        age: int,
+        point: str = "ASC",
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ) -> str:
+        """
+        Quick access to Lord of the Year.
+
+        The Lord of the Year is the planet ruling the profected sign
+        for a given age. It's one of the most important predictive
+        indicators in Hellenistic astrology.
+
+        Args:
+            age: Age in completed years
+            point: Point to profect (default "ASC")
+            house_system: House system to use
+            rulership: "traditional" or "modern" rulers
+
+        Returns:
+            Name of the ruling planet
+
+        Example::
+
+            print(chart.lord_of_year(30))  # "Saturn"
+        """
+        from stellium.engines.profections import ProfectionEngine
+
+        engine = ProfectionEngine(self, house_system, rulership)
+        return engine.lord_of_year(age, point)
+
+    # =========================================================================
+    # Visualization
+    # =========================================================================
+
     def draw(self, filename: str = "chart.svg") -> "ChartDrawBuilder":
         """
         Start building a chart visualization with fluent API.

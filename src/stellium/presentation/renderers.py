@@ -51,6 +51,8 @@ class RichTableRenderer:
             return self._render_text(section_name, section_data)
         elif data_type == "side_by_side_tables":
             return self._render_side_by_side_tables(section_name, section_data)
+        elif data_type == "compound":
+            return self._render_compound(section_name, section_data)
         else:
             return f"Unknown section type: {data_type}"
 
@@ -80,6 +82,8 @@ class RichTableRenderer:
                 console.print(section_data.get("text", ""))
             elif data_type == "side_by_side_tables":
                 self._print_side_by_side_tables(console, section_data)
+            elif data_type == "compound":
+                self._print_compound(console, section_data)
             else:
                 console.print(f"Unknown section type: {data_type}")
 
@@ -151,6 +155,37 @@ class RichTableRenderer:
     def _render_text(self, section_name: str, data: dict[str, Any]) -> str:
         """Render plain text block."""
         return data.get("text", "")
+
+    def _render_compound(self, section_name: str, data: dict[str, Any]) -> str:
+        """Render compound section with multiple sub-sections."""
+        parts = []
+        for sub_name, sub_data in data.get("sections", []):
+            sub_type = sub_data.get("type")
+            if sub_type == "table":
+                parts.append(self._render_table(sub_name, sub_data))
+            elif sub_type == "key_value":
+                parts.append(self._render_key_value(sub_name, sub_data))
+            elif sub_type == "text":
+                parts.append(f"\n{sub_name}:\n{sub_data.get('content', sub_data.get('text', ''))}")
+            else:
+                parts.append(f"\n{sub_name}: (unknown type {sub_type})")
+        return "\n".join(parts)
+
+    def _print_compound(self, console: Console, data: dict[str, Any]) -> None:
+        """Print compound section with multiple sub-sections."""
+        for sub_name, sub_data in data.get("sections", []):
+            # Print sub-section header
+            console.print(f"\n  {sub_name}", style="bold yellow")
+
+            sub_type = sub_data.get("type")
+            if sub_type == "table":
+                self._print_table(console, sub_data)
+            elif sub_type == "key_value":
+                self._print_key_value(console, sub_data)
+            elif sub_type == "text":
+                console.print(f"  {sub_data.get('content', sub_data.get('text', ''))}")
+            else:
+                console.print(f"  (unknown type {sub_type})")
 
     def _print_table(self, console: Console, data: dict[str, Any]) -> None:
         """Print table directly to console with Rich formatting."""
@@ -266,8 +301,29 @@ class PlainTextRenderer:
             return section_data.get("text", "")
         elif data_type == "side_by_side_tables":
             return self._render_side_by_side_tables(section_name, section_data)
+        elif data_type == "compound":
+            return self._render_compound(section_name, section_data)
         else:
             return f"Unknown section type: {data_type}"
+
+    def _render_compound(self, section_name: str, data: dict[str, Any]) -> str:
+        """Render compound section with multiple sub-sections."""
+        parts = []
+        for sub_name, sub_data in data.get("sections", []):
+            # Sub-section header
+            parts.append(f"\n  {sub_name}")
+            parts.append("  " + "-" * len(sub_name))
+
+            sub_type = sub_data.get("type")
+            if sub_type == "table":
+                parts.append(self._render_table(sub_name, sub_data))
+            elif sub_type == "key_value":
+                parts.append(self._render_key_value(sub_name, sub_data))
+            elif sub_type == "text":
+                parts.append(f"  {sub_data.get('content', sub_data.get('text', ''))}")
+            else:
+                parts.append(f"  (unknown type {sub_type})")
+        return "\n".join(parts)
 
     def render_report(self, sections: list[tuple[str, dict[str, Any]]]) -> str:
         """Render complete report as plain text."""

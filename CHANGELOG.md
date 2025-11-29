@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Profections Engine (November 28, 2025)
+
+- **ProfectionEngine**: Comprehensive Hellenistic timing technique implementation
+  - Annual profections: Calculate activated house and Lord of Year for any age
+  - Monthly profections: Solar ingress method for monthly timing within profection years
+  - Multi-point profections: Profect ASC, Sun, Moon, MC, or any point simultaneously
+  - Timeline generation: View sequence of Lords across a range of ages
+  - Supports Whole Sign (traditional default) or any house system
+  - Traditional and modern rulership options
+
+- **CalculatedChart convenience methods**:
+  - `chart.profection(age=30)` - Quick annual profection
+  - `chart.profection(date="2025-06-15")` - Get annual and monthly for a date
+  - `chart.profections(age=30)` - Multi-point profection
+  - `chart.profection_timeline(25, 35)` - Generate timeline
+  - `chart.lord_of_year(30)` - Quick Lord of Year access
+
+- **Data Models**:
+  - `ProfectionResult`: Full details including source, profected house/sign, ruler, ruler position, planets in house
+  - `MultiProfectionResult`: Multiple points profected at once with `.lords` property
+  - `ProfectionTimeline`: Range of profections with `.lords_sequence()` and `.find_by_lord()` methods
+
+- **46 comprehensive tests** covering all profection functionality
+
+- Added Profections report section (detailed in cookbook file)
+
 ### Changed
 
 ### Fixed

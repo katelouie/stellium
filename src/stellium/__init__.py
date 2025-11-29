@@ -55,6 +55,14 @@ from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
 # === Data (Notable Births) ===
 from stellium.data import get_notable_registry
 
+# === Profections (Hellenistic Timing) ===
+from stellium.engines.profections import (
+    MultiProfectionResult,
+    ProfectionEngine,
+    ProfectionResult,
+    ProfectionTimeline,
+)
+
 # === Presentation (Reports) ===
 from stellium.presentation import ReportBuilder
 
@@ -110,4 +118,9 @@ __all__ = [
     "SynthesisChart",
     # Returns
     "ReturnBuilder",
+    # Profections
+    "ProfectionEngine",
+    "ProfectionResult",
+    "MultiProfectionResult",
+    "ProfectionTimeline",
 ]

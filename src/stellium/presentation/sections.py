@@ -1750,3 +1750,289 @@ class FixedStarsSection:
             "headers": headers,
             "rows": rows,
         }
+
+
+class ProfectionSection:
+    """
+    Profection timing analysis section.
+
+    Shows annual profections with Lord of the Year, activated house,
+    and optionally monthly profections and multi-point analysis.
+    """
+
+    def __init__(
+        self,
+        age: int | None = None,
+        date: dt.datetime | str | None = None,
+        include_monthly: bool = True,
+        include_multi_point: bool = True,
+        include_timeline: bool = False,
+        timeline_range: tuple[int, int] | None = None,
+        points: list[str] | None = None,
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ) -> None:
+        """
+        Initialize profection section.
+
+        Args:
+            age: Age for profection (either age OR date required)
+            date: Target date for profection (datetime or ISO string)
+            include_monthly: Show monthly profection (when date provided)
+            include_multi_point: Show profections for ASC, Sun, Moon, MC
+            include_timeline: Show timeline of Lords
+            timeline_range: Range for timeline, e.g., (25, 40). If None, uses age±5
+            points: Custom points for multi-point (default: ASC, Sun, Moon, MC)
+            house_system: House system to use (default: prefers Whole Sign)
+            rulership: "traditional" or "modern"
+        """
+        if age is None and date is None:
+            raise ValueError("Either age or date must be provided for profections")
+
+        self.age = age
+        self.date = date
+        self.include_monthly = include_monthly
+        self.include_multi_point = include_multi_point
+        self.include_timeline = include_timeline
+        self.timeline_range = timeline_range
+        self.points = points
+        self.house_system = house_system
+        self.rulership = rulership
+
+    @property
+    def section_name(self) -> str:
+        if self.age is not None:
+            return f"Profections (Age {self.age})"
+        elif self.date:
+            date_str = self.date if isinstance(self.date, str) else self.date.strftime("%Y-%m-%d")
+            return f"Profections ({date_str})"
+        return "Profections"
+
+    def generate_data(self, chart: CalculatedChart) -> dict:
+        """
+        Generate profection analysis data.
+        """
+        from stellium.engines.profections import ProfectionEngine
+
+        # Create engine
+        try:
+            engine = ProfectionEngine(chart, self.house_system, self.rulership)
+        except ValueError as e:
+            return {
+                "type": "text",
+                "content": f"Could not calculate profections: {e}",
+            }
+
+        # Calculate the age
+        if self.date is not None:
+            if isinstance(self.date, str):
+                target_date = dt.datetime.fromisoformat(self.date)
+            else:
+                target_date = self.date
+            age = engine._calculate_age_at_date(target_date)
+        else:
+            age = self.age
+            target_date = None
+
+        # Build result sections
+        sections = []
+
+        # Section 1: Annual Profection Summary
+        annual = engine.annual(age)
+        summary_data = self._build_annual_summary(annual, engine.house_system)
+        sections.append(("Annual Profection", summary_data))
+
+        # Section 2: Monthly Profection (if date provided)
+        if self.include_monthly and target_date is not None:
+            annual_result, monthly_result = engine.for_date(target_date)
+            monthly_data = self._build_monthly_summary(monthly_result, age)
+            sections.append(("Monthly Profection", monthly_data))
+
+        # Section 3: Multi-Point Lords
+        if self.include_multi_point:
+            multi = engine.multi(age, self.points)
+            multi_data = self._build_multi_point_table(multi)
+            sections.append(("All Lords", multi_data))
+
+        # Section 4: Planets in Profected House
+        if annual.planets_in_house:
+            planets_data = self._build_planets_in_house(annual)
+            sections.append(("Natal Planets in Activated House", planets_data))
+
+        # Section 5: Lord's Natal Condition
+        lord_data = self._build_lord_condition(annual)
+        sections.append(("Lord of Year - Natal Condition", lord_data))
+
+        # Section 6: Timeline (if enabled)
+        if self.include_timeline:
+            if self.timeline_range:
+                start, end = self.timeline_range
+            else:
+                # Default: age ± 5
+                start = max(0, age - 5)
+                end = age + 5
+
+            timeline = engine.timeline(start, end)
+            timeline_data = self._build_timeline_table(timeline, age)
+            sections.append((f"Timeline (Ages {start}-{end})", timeline_data))
+
+        # Build compound result
+        return {
+            "type": "compound",
+            "sections": sections,
+        }
+
+    def _build_annual_summary(self, result, house_system: str) -> dict:
+        """Build the annual profection summary."""
+        # Get ruler glyph
+        ruler_glyph = ""
+        if result.ruler in CELESTIAL_REGISTRY:
+            ruler_glyph = CELESTIAL_REGISTRY[result.ruler].glyph
+
+        # Get sign glyph
+        sign_glyph = get_sign_glyph(result.profected_sign)
+
+        data = {
+            "Age": str(result.units),
+            "Activated House": f"House {result.profected_house}",
+            "Activated Sign": f"{sign_glyph} {result.profected_sign}",
+            "Lord of the Year": f"{ruler_glyph} {result.ruler}",
+            "House System": house_system,
+        }
+
+        if result.ruler_modern:
+            modern_glyph = ""
+            if result.ruler_modern in CELESTIAL_REGISTRY:
+                modern_glyph = CELESTIAL_REGISTRY[result.ruler_modern].glyph
+            data["Modern Ruler"] = f"{modern_glyph} {result.ruler_modern}"
+
+        return {
+            "type": "key_value",
+            "data": data,
+        }
+
+    def _build_monthly_summary(self, result, age: int) -> dict:
+        """Build monthly profection summary."""
+        month = result.units - age
+
+        ruler_glyph = ""
+        if result.ruler in CELESTIAL_REGISTRY:
+            ruler_glyph = CELESTIAL_REGISTRY[result.ruler].glyph
+
+        sign_glyph = get_sign_glyph(result.profected_sign)
+
+        data = {
+            "Month in Year": str(month),
+            "Activated House": f"House {result.profected_house}",
+            "Activated Sign": f"{sign_glyph} {result.profected_sign}",
+            "Lord of the Month": f"{ruler_glyph} {result.ruler}",
+        }
+
+        return {
+            "type": "key_value",
+            "data": data,
+        }
+
+    def _build_multi_point_table(self, multi) -> dict:
+        """Build multi-point lords table."""
+        headers = ["Point", "Activated House", "Sign", "Lord"]
+        rows = []
+
+        for point, result in multi.results.items():
+            point_glyph = ""
+            if point in CELESTIAL_REGISTRY:
+                point_glyph = CELESTIAL_REGISTRY[point].glyph
+
+            sign_glyph = get_sign_glyph(result.profected_sign)
+
+            ruler_glyph = ""
+            if result.ruler in CELESTIAL_REGISTRY:
+                ruler_glyph = CELESTIAL_REGISTRY[result.ruler].glyph
+
+            rows.append([
+                f"{point_glyph} {point}" if point_glyph else point,
+                f"House {result.profected_house}",
+                f"{sign_glyph} {result.profected_sign}",
+                f"{ruler_glyph} {result.ruler}",
+            ])
+
+        return {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+        }
+
+    def _build_planets_in_house(self, result) -> dict:
+        """Build list of natal planets in the activated house."""
+        planet_names = []
+        for planet in result.planets_in_house:
+            glyph = ""
+            if planet.name in CELESTIAL_REGISTRY:
+                glyph = CELESTIAL_REGISTRY[planet.name].glyph
+            planet_names.append(f"{glyph} {planet.name}" if glyph else planet.name)
+
+        return {
+            "type": "text",
+            "content": f"House {result.profected_house} contains: {', '.join(planet_names)}",
+        }
+
+    def _build_lord_condition(self, result) -> dict:
+        """Build Lord of Year natal condition details."""
+        if result.ruler_position is None:
+            return {
+                "type": "text",
+                "content": f"{result.ruler} position not found in chart.",
+            }
+
+        pos = result.ruler_position
+        ruler_glyph = ""
+        if result.ruler in CELESTIAL_REGISTRY:
+            ruler_glyph = CELESTIAL_REGISTRY[result.ruler].glyph
+
+        sign_glyph = get_sign_glyph(pos.sign)
+
+        # Format degree/minute
+        degree = int(pos.sign_degree)
+        minute = int((pos.sign_degree % 1) * 60)
+
+        data = {
+            "Planet": f"{ruler_glyph} {result.ruler}",
+            "Natal Sign": f"{sign_glyph} {pos.sign}",
+            "Natal Degree": f"{degree}°{minute:02d}'",
+            "Natal House": f"House {result.ruler_house}" if result.ruler_house else "—",
+            "Retrograde": "Yes ℞" if pos.is_retrograde else "No",
+        }
+
+        return {
+            "type": "key_value",
+            "data": data,
+        }
+
+    def _build_timeline_table(self, timeline, current_age: int) -> dict:
+        """Build timeline table with Lords sequence."""
+        headers = ["Age", "House", "Sign", "Lord"]
+        rows = []
+
+        for entry in timeline.entries:
+            sign_glyph = get_sign_glyph(entry.profected_sign)
+            ruler_glyph = ""
+            if entry.ruler in CELESTIAL_REGISTRY:
+                ruler_glyph = CELESTIAL_REGISTRY[entry.ruler].glyph
+
+            # Mark current age
+            age_str = str(entry.units)
+            if entry.units == current_age:
+                age_str = f"→ {entry.units} ←"
+
+            rows.append([
+                age_str,
+                f"House {entry.profected_house}",
+                f"{sign_glyph} {entry.profected_sign}",
+                f"{ruler_glyph} {entry.ruler}",
+            ])
+
+        return {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+        }

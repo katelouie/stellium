@@ -154,7 +154,7 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -v --tb=short --cov=src --cov-report=term-missing --strict-markers --strict-config"
+addopts = "-ra -q --tb=short --strict-markers --strict-config"
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
