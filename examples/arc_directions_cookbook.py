@@ -103,7 +103,7 @@ def example_2_solar_arc_by_date():
 
     natal = ChartBuilder.from_notable("Steve Jobs").with_aspects().calculate()
 
-    print(f"Natal chart for: Steve Jobs")
+    print("Natal chart for: Steve Jobs")
     print(f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}")
 
     # Calculate directions to a specific date
@@ -114,7 +114,7 @@ def example_2_solar_arc_by_date():
     arc = directed.chart2.metadata.get("arc_degrees", 0)
     years = directed.chart2.metadata.get("years_elapsed", 0)
 
-    print(f"\nDirections to June 15, 2025:")
+    print("\nDirections to June 15, 2025:")
     print(f"  Years elapsed: {years:.2f}")
     print(f"  Solar arc: {arc:.2f}°")
 
@@ -203,7 +203,7 @@ def example_4_lunar_arc():
     solar = ComparisonBuilder.arc_direction(natal, age=5, arc_type="solar_arc").calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
 
-    print(f"\nComparison at age 5:")
+    print("\nComparison at age 5:")
     print(f"  Lunar arc: {arc:.2f}°")
     print(f"  Solar arc: {solar_arc:.2f}°")
     print(f"  Lunar is {arc/solar_arc:.1f}x faster!")
@@ -242,7 +242,7 @@ def example_5_sect_arc():
     # Check if day or night chart
     sun = einstein.get_object("Sun")
     asc = einstein.get_object("ASC")
-    print(f"Einstein's Chart:")
+    print("Einstein's Chart:")
     print(f"  Sun: {sun.longitude:.2f}° {sun.sign}")
     print(f"  ASC: {asc.longitude:.2f}° {asc.sign}")
 
@@ -254,7 +254,7 @@ def example_5_sect_arc():
     effective_type = directed.chart2.metadata.get("effective_arc_type", "unknown")
     arc = directed.chart2.metadata.get("arc_degrees", 0)
 
-    print(f"\nSect Arc at Age 26:")
+    print("\nSect Arc at Age 26:")
     print(f"  Effective type: {effective_type}")
     print(f"  Arc: {arc:.2f}°")
 
@@ -305,7 +305,7 @@ def example_6_chart_ruler_arc_traditional():
     effective_type = directed.chart2.metadata.get("effective_arc_type", "unknown")
     arc = directed.chart2.metadata.get("arc_degrees", 0)
 
-    print(f"\nChart Ruler Arc (Traditional) at Age 30:")
+    print("\nChart Ruler Arc (Traditional) at Age 30:")
     print(f"  Chart ruler: {effective_type.title()}")
     print(f"  Arc: {arc:.2f}°")
 
@@ -313,7 +313,7 @@ def example_6_chart_ruler_arc_traditional():
     solar = ComparisonBuilder.arc_direction(natal, age=30, arc_type="solar_arc").calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
 
-    print(f"\nComparison:")
+    print("\nComparison:")
     print(f"  Chart ruler arc: {arc:.2f}°")
     print(f"  Solar arc: {solar_arc:.2f}°")
 
@@ -353,12 +353,12 @@ def example_7_chart_ruler_arc_modern():
     trad_arc = trad.chart2.metadata.get("arc_degrees", 0)
     modern_arc = modern.chart2.metadata.get("arc_degrees", 0)
 
-    print(f"\nChart Ruler at Age 30:")
+    print("\nChart Ruler at Age 30:")
     print(f"  Traditional: {trad_ruler.title()} → arc: {trad_arc:.2f}°")
     print(f"  Modern: {modern_ruler.title()} → arc: {modern_arc:.2f}°")
 
     if trad_ruler != modern_ruler:
-        print(f"\n  Note: Different rulers give different arcs!")
+        print("\n  Note: Different rulers give different arcs!")
 
     # Save chart
     output_file = OUTPUT_DIR / "07_chart_ruler_modern.svg"
@@ -432,7 +432,7 @@ def example_9_venus_arc():
         if asp.object2.name == "Venus"
     ]
 
-    print(f"\nDirected Venus aspects to natal chart:")
+    print("\nDirected Venus aspects to natal chart:")
     for asp in sorted(venus_aspects, key=lambda a: a.orb)[:5]:
         print(f"  D.Venus {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)")
 
