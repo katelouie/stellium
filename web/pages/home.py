@@ -52,7 +52,9 @@ def create_home_page():
                 ui.button(
                     "Explore Celebrity Charts",
                     on_click=lambda: ui.navigate.to("/explore"),
-                ).classes("px-8 py-4 text-base tracking-wide rounded").props("outline").style(
+                ).classes("px-8 py-4 text-base tracking-wide rounded").props(
+                    "outline"
+                ).style(
                     f"color: {COLORS['primary']} !important; border-color: {COLORS['primary']} !important;"
                 )
 
@@ -69,7 +71,7 @@ def create_home_page():
                 .classes("mb-12 py-4 px-6 text-center rounded")
                 .style(f"background-color: {COLORS['primary']}; color: white;")
             ):
-                ui.label("☆  FEATURES").classes(
+                ui.label("☆  Features").classes(
                     "font-display text-base tracking-[0.15em]"
                 ).style("color: white; font-weight: 700;")
 
