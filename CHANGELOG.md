@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Notables Database
 
 - Added 40 births and 6 events.
+- Added indexing script and INDEX.md of all entries in the database.
 
 ### Changed
 
