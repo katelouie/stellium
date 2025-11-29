@@ -40,6 +40,7 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 - **Sect-aware calculations** with proper day/night chart handling
 - **25+ Arabic Parts** with traditional formulas
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
+- **Chart rulership and profections** for traditional astrology
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Notable births database** for quick exploration and learning
@@ -522,6 +523,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[comparison_cookbook.py](examples/comparison_cookbook.py)** | 13 examples: synastry, transits, bi-wheels, compatibility |
 | **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
 | **[progressions_cookbook.py](examples/progressions_cookbook.py)** | 15 examples: set by date, current date or age; various angle progression methods |
+| **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
 
 ```bash
 # Run any cookbook
@@ -530,6 +532,7 @@ python examples/report_cookbook.py
 python examples/comparison_cookbook.py
 python examples/returns_cookbook.py
 python examples/progressions_cookbook.py
+python examples/profections_cookbook.py
 ```
 
 ### User Guides
