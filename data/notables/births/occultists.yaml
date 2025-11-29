@@ -119,3 +119,212 @@
   - 'Astrotheme: https://www.astrotheme.com/astrology/Arthur_Edward_Waite'
   - Wikipedia: https://en.wikipedia.org/wiki/A._E._Waite
   verified: false
+- name: Sri Ramakrishna
+  event_type: birth
+  year: 1836
+  month: 2
+  day: 18
+  hour: 5
+  minute: 0
+  latitude: 22.9258
+  longitude: 88.4067
+  location_name: Kamarpukur, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - mystic
+  - spiritual teacher
+  notable_for: Indian mystic and spiritual leader
+  astrological_notes: Aquarius Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ramakrishna-horoscope'
+  verified: false
+- name: Ramana Maharshi
+  event_type: birth
+  year: 1879
+  month: 12
+  day: 30
+  hour: 1
+  minute: 0
+  latitude: 9.9167
+  longitude: 78.1167
+  location_name: Madurai, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - mystic
+  - philosopher
+  notable_for: Indian sage and jivanmukta
+  astrological_notes: Capricorn Sun, Cancer Moon
+  data_quality: B
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ramana-maharishi-horoscope'
+  verified: false
+- name: Swami Vivekananda
+  event_type: birth
+  year: 1863
+  month: 1
+  day: 12
+  hour: 6
+  minute: 33
+  latitude: 22.5726
+  longitude: 88.3639
+  location_name: Kolkata, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - philosopher
+  - monk
+  notable_for: Indian Hindu monk and philosopher
+  astrological_notes: Capricorn Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/swami-vivekananda-horoscope'
+  verified: false
+- name: Paramahansa Yogananda
+  event_type: birth
+  year: 1893
+  month: 1
+  day: 5
+  hour: 20
+  minute: 38
+  latitude: 26.7667
+  longitude: 83.3667
+  location_name: Gorakhpur, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - yogi
+  - guru
+  notable_for: Indian monk and yogi who introduced Kriya Yoga to the West
+  astrological_notes: Capricorn Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Yogananda,_Paramahansa'
+  verified: false
+- name: Jiddu Krishnamurti
+  event_type: birth
+  year: 1895
+  month: 5
+  day: 12
+  hour: 0
+  minute: 30
+  latitude: 13.7333
+  longitude: 79.5167
+  location_name: Madanapalle, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - philosopher
+  - speaker
+  notable_for: Indian philosopher and speaker
+  astrological_notes: Taurus Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Krishnamurti,_Jiddu'
+  verified: false
+- name: Sri Aurobindo
+  event_type: birth
+  year: 1872
+  month: 8
+  day: 15
+  hour: 5
+  minute: 0
+  latitude: 22.5726
+  longitude: 88.3639
+  location_name: Kolkata, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - philosopher
+  - yogi
+  notable_for: Indian philosopher, yogi, and nationalist
+  astrological_notes: Leo Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/sri-aurobindo-horoscope'
+  verified: false
+- name: Thich Nhat Hanh
+  event_type: birth
+  year: 1926
+  month: 10
+  day: 11
+  hour: 12
+  minute: 0
+  latitude: 15.9167
+  longitude: 107.8333
+  location_name: Tha Tien, Vietnam
+  timezone: Asia/Ho_Chi_Minh
+  category: occultist
+  subcategories:
+  - Zen master
+  - peace activist
+  notable_for: Vietnamese Zen Buddhist monk and peace activist
+  astrological_notes: Libra Sun, Sagittarius Moon
+  data_quality: X
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Nhat_Hanh'
+  verified: false
+- name: Sadhguru
+  event_type: birth
+  year: 1957
+  month: 9
+  day: 3
+  hour: 23
+  minute: 54
+  latitude: 12.3167
+  longitude: 76.65
+  location_name: Mysore, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - yogi
+  - mystic
+  notable_for: Indian yogi and author
+  astrological_notes: Virgo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Vasudev,_Jaggi'
+  verified: false
+- name: Osho Rajneesh
+  event_type: birth
+  year: 1931
+  month: 12
+  day: 11
+  hour: 17
+  minute: 13
+  latitude: 23.0833
+  longitude: 77.5833
+  location_name: Kuchwada, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - guru
+  - mystic
+  notable_for: Indian spiritual leader
+  astrological_notes: Sagittarius Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Rajneesh,_Bhagwan_Shree'
+  verified: false
+- name: Chinmayananda Saraswati
+  event_type: birth
+  year: 1916
+  month: 5
+  day: 8
+  hour: 19
+  minute: 10
+  latitude: 9.9667
+  longitude: 76.2833
+  location_name: Ernakulam, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - spiritual teacher
+  notable_for: Indian spiritual leader and teacher
+  astrological_notes: Taurus Sun
+  data_quality: A
+  sources:
+  - 'AstroSage: https://celebrity.astrosage.com/chinmayananda-birth-chart.asp'
+  verified: false

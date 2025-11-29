@@ -446,3 +446,229 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Prince_(musician)'
   - BC/BR in hand from Frank C. Clifford
   verified: false
+- name: Leslie Cheung
+  event_type: birth
+  year: 1956
+  month: 9
+  day: 12
+  hour: 18
+  minute: 15
+  latitude: 22.2856
+  longitude: 114.1577
+  location_name: Hong Kong
+  timezone: Asia/Hong_Kong
+  category: media
+  subcategories:
+  - singer
+  - actor
+  notable_for: Hong Kong singer-songwriter, actor, and film director; icon of Cantopop and queer culture
+  astrological_notes: Virgo Sun, Pisces Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/leslie-cheung-horoscope'
+  verified: false
+- name: Anita Mui
+  event_type: birth
+  year: 1963
+  month: 10
+  day: 10
+  hour: 8
+  minute: 35
+  latitude: 22.2856
+  longitude: 114.1577
+  location_name: Hong Kong
+  timezone: Asia/Hong_Kong
+  category: media
+  subcategories:
+  - singer
+  - actress
+  notable_for: Hong Kong singer and actress, known as the Madonna of the East
+  astrological_notes: Libra Sun, Aries Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/anita-mui-horoscope'
+  verified: false
+- name: Selena Quintanilla
+  event_type: birth
+  year: 1971
+  month: 4
+  day: 16
+  hour: 7
+  minute: 30
+  latitude: 29.0297
+  longitude: -95.4008
+  location_name: Lake Jackson, Texas, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - singer
+  - Tejano musician
+  notable_for: American Tejano singer-songwriter and fashion designer
+  astrological_notes: Aries Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Selena'
+  verified: false
+- name: Teresa Teng
+  event_type: birth
+  year: 1953
+  month: 1
+  day: 29
+  hour: 5
+  minute: 0
+  latitude: 25.0478
+  longitude: 121.5319
+  location_name: Taipei, Taiwan
+  timezone: Asia/Taipei
+  category: media
+  subcategories:
+  - singer
+  notable_for: Taiwanese singer known as the Voice of Asia
+  astrological_notes: Aquarius Sun, Leo Moon
+  data_quality: A
+  sources:
+  - 'Facebook: https://www.facebook.com/61562750093865/posts/teresa-teng-was-born-on-january-29-1953-at-5-am-her-sun-was-in-aquarius-her-moon/122159929790425003/'
+  verified: false
+- name: Wong Kar-wai
+  event_type: birth
+  year: 1958
+  month: 7
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 31.2222
+  longitude: 121.4581
+  location_name: Shanghai, China
+  timezone: Asia/Shanghai
+  category: media
+  subcategories:
+  - filmmaker
+  notable_for: Hong Kong filmmaker known for In the Mood for Love
+  astrological_notes: Cancer Sun
+  data_quality: X
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/kar-wai-wong-horoscope'
+  verified: false
+- name: Faye Wong
+  event_type: birth
+  year: 1969
+  month: 8
+  day: 8
+  hour: 11
+  minute: 30
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: media
+  subcategories:
+  - singer
+  - actress
+  notable_for: Chinese singer-songwriter and actress
+  astrological_notes: Leo Sun, Gemini Moon
+  data_quality: A
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/faye-wong-horoscope'
+  verified: false
+- name: Chow Yun-fat
+  event_type: birth
+  year: 1955
+  month: 5
+  day: 18
+  hour: 12
+  minute: 0
+  latitude: 22.2856
+  longitude: 114.1577
+  location_name: Hong Kong
+  timezone: Asia/Hong_Kong
+  category: media
+  subcategories:
+  - actor
+  notable_for: Hong Kong actor known for Crouching Tiger, Hidden Dragon
+  astrological_notes: Taurus Sun
+  data_quality: X
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/yun-fat-chow-horoscope'
+  verified: false
+- name: Miriam Makeba
+  event_type: birth
+  year: 1932
+  month: 3
+  day: 4
+  hour: 12
+  minute: 0
+  latitude: -26.2023
+  longitude: 28.0436
+  location_name: Johannesburg, South Africa
+  timezone: Africa/Johannesburg
+  category: media
+  subcategories:
+  - singer
+  - activist
+  notable_for: South African singer and civil rights activist
+  astrological_notes: Pisces Sun
+  data_quality: X
+  sources:
+  - 'Astro-Charts: https://astro-charts.com/persons/chart/miriam-makeba/'
+  verified: false
+- name: Shah Rukh Khan
+  event_type: birth
+  year: 1965
+  month: 11
+  day: 2
+  hour: 6
+  minute: 25
+  latitude: 28.6139
+  longitude: 77.2090
+  location_name: Delhi, India
+  timezone: Asia/Kolkata
+  category: media
+  subcategories:
+  - actor
+  notable_for: Indian actor known as the King of Bollywood
+  astrological_notes: Scorpio Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Khan,_Shah_Rukh'
+  verified: false
+- name: Aishwarya Rai
+  event_type: birth
+  year: 1973
+  month: 11
+  day: 1
+  hour: 4
+  minute: 5
+  latitude: 12.8833
+  longitude: 74.85
+  location_name: Mangalore, India
+  timezone: Asia/Kolkata
+  category: media
+  subcategories:
+  - actress
+  notable_for: Indian actress and former Miss World
+  astrological_notes: Scorpio Sun, Capricorn Moon
+  data_quality: AA
+  sources:
+  - 'AstroSage: https://astrosage.com/celebrity-horoscope/aishwarya-rai-bachchan-birth-chart.asp'
+  verified: false
+- name: Ryuichi Sakamoto
+  event_type: birth
+  year: 1952
+  month: 1
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 35.6895
+  longitude: 139.6917
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: media
+  subcategories:
+  - composer
+  - musician
+  notable_for: Japanese composer and musician
+  astrological_notes: Capricorn Sun
+  data_quality: X
+  sources:
+  - 'Astro-Charts: https://astro-charts.com/persons/chart/ryuichi-sakamoto/'
+  verified: false

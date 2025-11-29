@@ -236,3 +236,123 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Military:_Pearl_Harbor'
   - Nick Campion, p.486, between 7:30 and 7:55 AM with a note that Parnell’s "History of the Second World War" gives 7:55 and adds that the Japanese planes took off at 6:00 AM.
   verified: false
+- name: Indian Independence
+  event_type: event
+  year: 1947
+  month: 8
+  day: 15
+  hour: 0
+  minute: 0
+  latitude: 28.6139
+  longitude: 77.2090
+  location_name: Delhi, India
+  timezone: Asia/Kolkata
+  category: historic
+  subcategories:
+  - independence
+  notable_for: India gains independence from British rule
+  astrological_notes: Leo Sun
+  data_quality: AA
+  sources:
+  - 'Hindustan Times: https://www.hindustantimes.com/astrology/horoscope/independence-day-2022-some-lesser-known-astrological-trivia-about-india-101660452002383.html'
+  verified: false
+- name: People’s Republic of China founding
+  event_type: event
+  year: 1949
+  month: 10
+  day: 1
+  hour: 15
+  minute: 1
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: historic
+  subcategories:
+  - founding
+  notable_for: Establishment of the People's Republic of China
+  astrological_notes: Libra Sun
+  data_quality: AA
+  sources:
+  - 'Astrologicalmusings: https://astrologicalmusings.com/foundation-chart-of-china-and-chances-of-its-involvement-in-wars-in-2016/'
+  verified: false
+- name: Tiananmen Square protests climax
+  event_type: event
+  year: 1989
+  month: 6
+  day: 4
+  hour: 4
+  minute: 30
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: historic
+  subcategories:
+  - protest
+  notable_for: Climax of the Tiananmen Square protests
+  astrological_notes: Gemini Sun
+  data_quality: A
+  sources:
+  - 'Rappler: https://www.rappler.com/world/asia-pacific/china-tiananmen-square-massacre-timeline/'
+  verified: false
+- name: Death of Mao Zedong
+  event_type: event
+  year: 1976
+  month: 9
+  day: 9
+  hour: 0
+  minute: 10
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: historic
+  subcategories:
+  - death
+  notable_for: Death of Chinese leader Mao Zedong
+  astrological_notes: Virgo Sun
+  data_quality: AA
+  sources:
+  - 'Wikipedia: https://en.wikipedia.org/wiki/Death_and_state_funeral_of_Mao_Zedong'
+  verified: false
+- name: Fukushima Daiichi meltdown
+  event_type: event
+  year: 2011
+  month: 3
+  day: 11
+  hour: 14
+  minute: 46
+  latitude: 37.4214
+  longitude: 141.0325
+  location_name: Okuma, Japan
+  timezone: Asia/Tokyo
+  category: accident
+  subcategories:
+  - nuclear disaster
+  notable_for: Fukushima Daiichi nuclear disaster
+  astrological_notes: Pisces Sun
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Accident:_Fukushima_nuclear_disaster'
+  verified: false
+- name: Arab Spring begins Tunisia
+  event_type: event
+  year: 2010
+  month: 12
+  day: 17
+  hour: 16
+  minute: 0
+  latitude: 33.8869
+  longitude: 9.5375
+  location_name: Sidi Bouzid, Tunisia
+  timezone: Africa/Tunis
+  category: historic
+  subcategories:
+  - protest
+  notable_for: Beginning of the Arab Spring in Tunisia
+  astrological_notes: Sagittarius Sun
+  data_quality: A
+  sources:
+  - 'Al Jazeera: https://www.aljazeera.com/news/2021/1/14/arab-spring-ten-years-on'
+  verified: false

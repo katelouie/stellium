@@ -352,3 +352,224 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Onassis,_Jacqueline_Kennedy'
   - Southampton Hospital records
   verified: false
+- name: Dalai Lama XIV
+  event_type: birth
+  year: 1935
+  month: 7
+  day: 6
+  hour: 4
+  minute: 38
+  latitude: 36.3833
+  longitude: 101.8667
+  location_name: Taktser, China
+  timezone: Asia/Urumqi
+  category: leader
+  subcategories:
+  - spiritual leader
+  notable_for: Tibetan spiritual leader and Nobel Peace Prize laureate
+  astrological_notes: Cancer Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://astro.com/samples/sp_dlama_e.htm'
+  verified: false
+- name: Fidel Castro
+  event_type: birth
+  year: 1926
+  month: 8
+  day: 13
+  hour: 2
+  minute: 0
+  latitude: 20.55
+  longitude: -75.8833
+  location_name: Birán, Cuba
+  timezone: America/Havana
+  category: leader
+  subcategories:
+  - revolutionary
+  notable_for: Cuban revolutionary and politician
+  astrological_notes: Leo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/fidel-castro-horoscope'
+  verified: false
+- name: Che Guevara
+  event_type: birth
+  year: 1928
+  month: 5
+  day: 14
+  hour: 3
+  minute: 5
+  latitude: -32.9468
+  longitude: -60.6393
+  location_name: Rosario, Argentina
+  timezone: America/Argentina/Cordoba
+  category: leader
+  subcategories:
+  - revolutionary
+  notable_for: Argentine Marxist revolutionary
+  astrological_notes: Taurus Sun, Taurus Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ernesto-che-guevara-horoscope'
+  verified: false
+- name: Hugo Chávez
+  event_type: birth
+  year: 1954
+  month: 7
+  day: 28
+  hour: 4
+  minute: 0
+  latitude: 8.7667
+  longitude: -69.9333
+  location_name: Sabaneta, Venezuela
+  timezone: America/Caracas
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Venezuelan politician and president
+  astrological_notes: Leo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/hugo-chavez-horoscope'
+  verified: false
+- name: Patrice Lumumba
+  event_type: birth
+  year: 1925
+  month: 7
+  day: 2
+  hour: 12
+  minute: 0
+  latitude: 0.0667
+  longitude: 22.3667
+  location_name: Onalua, Congo
+  timezone: Africa/Kinshasa
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Congolese independence leader and prime minister
+  astrological_notes: Cancer Sun
+  data_quality: X
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Patrice_Lumumba'
+  verified: false
+- name: Thomas Sankara
+  event_type: birth
+  year: 1949
+  month: 12
+  day: 21
+  hour: 11
+  minute: 50
+  latitude: 12.75
+  longitude: -1.7833
+  location_name: Yako, Burkina Faso
+  timezone: Africa/Ouagadougou
+  category: leader
+  subcategories:
+  - revolutionary
+  notable_for: Burkinabé military officer and president
+  astrological_notes: Capricorn Sun
+  data_quality: A
+  sources:
+  - 'Infospacetalk: https://www.infospacetalk.com/astrovolta-horoscope-databank/categories/world-leader/capt-thomas-sankara'
+  verified: false
+- name: Gamal Abdel Nasser
+  event_type: birth
+  year: 1918
+  month: 1
+  day: 15
+  hour: 4
+  minute: 28
+  latitude: 31.2
+  longitude: 29.9
+  location_name: Alexandria, Egypt
+  timezone: Africa/Cairo
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Egyptian politician and president
+  astrological_notes: Capricorn Sun
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Nasser,_Gamal_Abdel'
+  verified: false
+- name: Wangari Maathai
+  event_type: birth
+  year: 1940
+  month: 4
+  day: 1
+  hour: 12
+  minute: 0
+  latitude: -0.55
+  longitude: 36.8333
+  location_name: Ihithe, Kenya
+  timezone: Africa/Nairobi
+  category: leader
+  subcategories:
+  - activist
+  - environmentalist
+  notable_for: Kenyan environmental and political activist, Nobel Peace Prize laureate
+  astrological_notes: Aries Sun
+  data_quality: X
+  sources:
+  - 'Astro-Charts: https://astro-charts.com/persons/chart/wangari-maathai/'
+  verified: false
+- name: Rigoberta Menchú
+  event_type: birth
+  year: 1959
+  month: 1
+  day: 9
+  hour: 8
+  minute: 0
+  latitude: 15.3333
+  longitude: -90.8333
+  location_name: Chimel, Guatemala
+  timezone: America/Guatemala
+  category: leader
+  subcategories:
+  - activist
+  notable_for: Guatemalan human rights activist, Nobel Peace Prize laureate
+  astrological_notes: Capricorn Sun, Capricorn Moon
+  data_quality: A
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/rigoberta-menchu-horoscope'
+  verified: false
+- name: Benazir Bhutto
+  event_type: birth
+  year: 1953
+  month: 6
+  day: 21
+  hour: 19
+  minute: 21
+  latitude: 24.8667
+  longitude: 67.05
+  location_name: Karachi, Pakistan
+  timezone: Asia/Karachi
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Pakistani politician and prime minister
+  astrological_notes: Cancer Sun, Capricorn Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/benazir-bhutto-horoscope'
+  verified: false
+- name: Indira Gandhi
+  event_type: birth
+  year: 1917
+  month: 11
+  day: 19
+  hour: 23
+  minute: 11
+  latitude: 25.45
+  longitude: 81.85
+  location_name: Allahabad, India
+  timezone: Asia/Kolkata
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Indian politician and prime minister
+  astrological_notes: Scorpio Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Gandhi,_Indira'
+  verified: false

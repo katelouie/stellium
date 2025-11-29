@@ -97,3 +97,45 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Leo,_Alan'
   verified: false
+- name: B.V. Raman
+  event_type: birth
+  year: 1912
+  month: 8
+  day: 8
+  hour: 19
+  minute: 43
+  latitude: 12.9716
+  longitude: 77.5946
+  location_name: Bangalore, India
+  timezone: Asia/Kolkata
+  category: astrologer
+  subcategories:
+  - Vedic astrologer
+  - author
+  notable_for: Indian Vedic astrologer and author
+  astrological_notes: Leo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Raman,_Bangalore_Venkata'
+  verified: false
+- name: K.N. Rao
+  event_type: birth
+  year: 1931
+  month: 10
+  day: 12
+  hour: 7
+  minute: 54
+  latitude: 16.1833
+  longitude: 81.1333
+  location_name: Machilipatnam, India
+  timezone: Asia/Kolkata
+  category: astrologer
+  subcategories:
+  - Vedic astrologer
+  - author
+  notable_for: Indian Vedic astrologer and teacher
+  astrological_notes: Libra Sun, Scorpio Ascendant
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Rao,_K.N.'
+  verified: false
