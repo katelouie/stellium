@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.5.0] - 2025-11-28
+
+### Added
+
 #### Dispositor Graphs (November 28, 2025)
 
 - **DispositorEngine**: Calculate planetary and house-based dispositor chains

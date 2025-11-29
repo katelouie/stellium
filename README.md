@@ -41,6 +41,7 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 - **25+ Arabic Parts** with traditional formulas
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
 - **Chart rulership and profections** for traditional astrology
+- **Dispositor graphs** for planets and (experimentally) houses in reports
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Notable births database** for quick exploration and learning
