@@ -60,6 +60,7 @@ Fixtures help reduce code duplication and make tests more maintainable.
 """
 
 import datetime as dt
+import os
 from collections.abc import Generator
 
 import pytest
@@ -606,17 +607,114 @@ def pytest_generate_tests(metafunc):
 # ============================================================================
 
 
-@pytest.fixture
-def disable_geocoding(monkeypatch):
-    """
-    Disable geocoding for tests that don't need it.
+# Pre-geocoded locations for CI testing (avoids Nominatim network calls)
+# These are used when CI=true environment variable is set (GitHub Actions)
+GEOCODED_LOCATIONS = {
+    # US Locations
+    "Palo Alto, CA": {
+        "latitude": 37.4419,
+        "longitude": -122.1430,
+        "address": "Palo Alto, Santa Clara County, California, USA",
+        "timezone": "America/Los_Angeles",
+    },
+    "New York, NY": {
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "address": "New York, New York, USA",
+        "timezone": "America/New_York",
+    },
+    "Seattle, WA": {
+        "latitude": 47.6062,
+        "longitude": -122.3321,
+        "address": "Seattle, King County, Washington, USA",
+        "timezone": "America/Los_Angeles",
+    },
+    "Los Angeles, CA": {
+        "latitude": 34.0522,
+        "longitude": -118.2437,
+        "address": "Los Angeles, Los Angeles County, California, USA",
+        "timezone": "America/Los_Angeles",
+    },
+    "San Francisco, CA": {
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "address": "San Francisco, San Francisco County, California, USA",
+        "timezone": "America/Los_Angeles",
+    },
+    # International Locations
+    "Ulm, Germany": {
+        "latitude": 48.4011,
+        "longitude": 9.9876,
+        "address": "Ulm, Baden-Württemberg, Germany",
+        "timezone": "Europe/Berlin",
+    },
+    "Tokyo, Japan": {
+        "latitude": 35.6762,
+        "longitude": 139.6503,
+        "address": "Tokyo, Japan",
+        "timezone": "Asia/Tokyo",
+    },
+    "London, UK": {
+        "latitude": 51.5074,
+        "longitude": -0.1278,
+        "address": "London, Greater London, England, United Kingdom",
+        "timezone": "Europe/London",
+    },
+    "Sydney, Australia": {
+        "latitude": -33.8688,
+        "longitude": 151.2093,
+        "address": "Sydney, New South Wales, Australia",
+        "timezone": "Australia/Sydney",
+    },
+    "Fairbanks, AK": {
+        "latitude": 64.8378,
+        "longitude": -147.7164,
+        "address": "Fairbanks, Fairbanks North Star Borough, Alaska, USA",
+        "timezone": "America/Anchorage",
+    },
+}
 
-    Use this when: You want to avoid network calls in tests.
-    Example: Unit tests that use ChartLocation directly.
+
+@pytest.fixture(autouse=True)
+def mock_geocoding_in_ci(monkeypatch):
     """
-    # This would mock the geocoding service
-    # For now, we just document the pattern
-    pass
+    Mock geocoding when running in CI to avoid network calls.
+
+    GitHub Actions sets CI=true. Locally, real geocoding is used with the
+    file-based cache (~/.cache/geocoding/).
+
+    This fixture is autouse=True, so it applies to ALL tests automatically.
+    """
+    # Only mock in CI environments
+    if not os.environ.get("CI"):
+        return  # Local dev - use real geocoding with cache
+
+    def mock_cached_geocode(location_name: str) -> dict:
+        """Mock implementation of _cached_geocode for CI testing."""
+        normalized = location_name.strip()
+
+        # Check exact match first
+        if normalized in GEOCODED_LOCATIONS:
+            return GEOCODED_LOCATIONS[normalized]
+
+        # Check case-insensitive partial match
+        for key, value in GEOCODED_LOCATIONS.items():
+            if key.lower() in normalized.lower() or normalized.lower() in key.lower():
+                return value
+
+        # Fallback: return a default location (prevents test failure)
+        # This handles any locations we haven't pre-geocoded
+        return {
+            "latitude": 0.0,
+            "longitude": 0.0,
+            "address": normalized,
+            "timezone": "UTC",
+        }
+
+    monkeypatch.setattr(
+        "stellium.core.native._cached_geocode",
+        mock_cached_geocode
+    )
 
 
 @pytest.fixture
