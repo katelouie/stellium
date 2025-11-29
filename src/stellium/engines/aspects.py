@@ -381,3 +381,105 @@ class CrossChartAspectEngine:
                         break
 
         return aspects
+
+
+class DeclinationAspectEngine:
+    """
+    Calculates declination aspects (Parallel and Contraparallel).
+
+    Declination aspects are based on celestial equatorial coordinates:
+    - Parallel: Two bodies at the SAME declination (both north or both south).
+      Interpreted similarly to a conjunction - blending of energies.
+    - Contraparallel: Two bodies at the SAME declination magnitude but
+      OPPOSITE hemispheres. Interpreted similarly to an opposition - polarity.
+
+    Unlike longitude-based aspects which use variable orbs by planet,
+    declination aspects traditionally use a fixed tight orb (1.0-1.5 degrees).
+
+    Example:
+        >>> engine = DeclinationAspectEngine(orb=1.0)
+        >>> aspects = engine.calculate_aspects(chart.positions)
+        >>> for asp in aspects:
+        ...     print(asp)
+        Sun Parallel Moon (orb: 0.45°)
+        Mars Contraparallel Saturn (orb: 0.78°)
+    """
+
+    def __init__(
+        self,
+        orb: float = 1.0,
+        include_types: set[ObjectType] | None = None,
+    ) -> None:
+        """
+        Initialize the declination aspect engine.
+
+        Args:
+            orb: Maximum orb allowance in degrees (default 1.0°).
+                 Traditional range is 1.0-1.5°. Declination aspects
+                 use tighter orbs than longitude aspects.
+            include_types: Which ObjectTypes to calculate aspects for.
+                          Default: PLANET, NODE. Can also include ANGLE,
+                          ASTEROID, POINT.
+        """
+        self.orb = orb
+        self.include_types = include_types or {ObjectType.PLANET, ObjectType.NODE}
+
+    def calculate_aspects(
+        self,
+        positions: list[CelestialPosition],
+        orb_engine: OrbEngine | None = None,  # Ignored but included for protocol compatibility
+    ) -> list[Aspect]:
+        """
+        Calculate parallel and contraparallel aspects.
+
+        Args:
+            positions: List of CelestialPosition objects to check.
+                      Only positions with non-None declination are used.
+            orb_engine: Ignored. Declination aspects use fixed orb.
+                       Included for compatibility with AspectEngine protocol.
+
+        Returns:
+            List of Aspect objects for detected declination aspects.
+        """
+        aspects = []
+
+        # Filter to valid objects with declination data
+        valid_objects = [
+            p
+            for p in positions
+            if p.object_type in self.include_types and p.declination is not None
+        ]
+
+        for obj1, obj2 in combinations(valid_objects, 2):
+            # Skip axis pairs
+            if _are_axis_pair(obj1, obj2):
+                continue
+
+            dec1, dec2 = obj1.declination, obj2.declination
+
+            # Determine if same hemisphere (both north or both south)
+            same_hemisphere = (dec1 >= 0) == (dec2 >= 0)
+
+            # Calculate orb as difference in declination magnitude
+            orb = abs(abs(dec1) - abs(dec2))
+
+            if orb > self.orb:
+                continue
+
+            # Parallel = same hemisphere, same declination magnitude
+            # Contraparallel = opposite hemispheres, same declination magnitude
+            aspect_name = "Parallel" if same_hemisphere else "Contraparallel"
+            aspect_degree = 0 if same_hemisphere else 180
+
+            aspects.append(
+                Aspect(
+                    object1=obj1,
+                    object2=obj2,
+                    aspect_name=aspect_name,
+                    aspect_degree=aspect_degree,
+                    orb=orb,
+                    is_applying=None,  # Would need declination velocity to determine
+                )
+            )
+
+        return aspects

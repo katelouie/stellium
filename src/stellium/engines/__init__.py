@@ -11,6 +11,7 @@ Common engines:
 # Ephemeris
 # Aspects
 from stellium.engines.aspects import (
+    DeclinationAspectEngine,
     HarmonicAspectEngine,
     ModernAspectEngine,
 )
@@ -59,6 +60,7 @@ __all__ = [
     # Aspects
     "ModernAspectEngine",
     "HarmonicAspectEngine",
+    "DeclinationAspectEngine",
     # Orbs
     "SimpleOrbEngine",
     "LuminariesOrbEngine",

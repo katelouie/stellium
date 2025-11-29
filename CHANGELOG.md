@@ -9,6 +9,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Declination Aspects (November 28, 2025)
+
+- **DeclinationAspectEngine**: Calculate Parallel and Contraparallel aspects
+  - Parallel: Two bodies at the same declination (same hemisphere) - interpreted like a conjunction
+  - Contraparallel: Two bodies at equal declination but opposite hemispheres - interpreted like an opposition
+  - Configurable orb (default 1.0°, traditional range 1.0-1.5°)
+  - Configurable ObjectTypes to include (default: PLANET, NODE)
+
+- **ChartBuilder integration**:
+  - `.with_declination_aspects(orb=1.0)` - Enable declination aspect calculation
+  - Results stored in separate `chart.declination_aspects` field
+
+- **CalculatedChart convenience methods**:
+  - `chart.get_declination_aspects()` - Get all declination aspects
+  - `chart.get_parallels()` - Get only parallel aspects
+  - `chart.get_contraparallels()` - Get only contraparallel aspects
+
+- **Registry entries**: Added "Parallel" (∥) and "Contraparallel" (⋕) to ASPECT_REGISTRY with appropriate glyphs and colors
+
+- **ReportBuilder integration**:
+  - `.with_declination_aspects()` - Add declination aspects table to reports
+  - Shows Planet 1, Aspect (with glyph), Planet 2, Orb, and OOB status
+  - Filterable by mode: "all", "parallel", or "contraparallel"
+
+- **19 tests** covering engine, integration, and registry
+
 #### Profections Engine (November 28, 2025)
 
 - **ProfectionEngine**: Comprehensive Hellenistic timing technique implementation

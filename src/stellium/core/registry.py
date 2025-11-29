@@ -1374,6 +1374,32 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         description="A spiritual 160° aspect (H9) indicating spiritual mastery and enlightenment.",
         metadata={"line_width": 0.6, "dash_pattern": "1,5", "opacity": 0.4},
     ),
+    # ========================================================================
+    # DECLINATION ASPECTS
+    # ========================================================================
+    "Parallel": AspectInfo(
+        name="Parallel",
+        angle=0.0,  # Conceptually similar to conjunction
+        category="Declination",
+        family="Declination",
+        glyph="∥",  # U+2225 - Parallel to
+        color="#34495E",  # Same as conjunction (blending)
+        default_orb=1.0,
+        description="Two planets at the same declination (both north or both south of celestial equator), interpreted like a conjunction.",
+        metadata={"line_width": 1.5, "dash_pattern": "3,1", "opacity": 0.7},
+    ),
+    "Contraparallel": AspectInfo(
+        name="Contraparallel",
+        angle=180.0,  # Conceptually similar to opposition
+        category="Declination",
+        family="Declination",
+        glyph="⋕",  # U+22D5 - Equal and parallel to
+        color="#E74C3C",  # Same as opposition (polarity)
+        default_orb=1.0,
+        aliases=["Contra-parallel"],
+        description="Two planets at equal declination magnitude but opposite hemispheres, interpreted like an opposition.",
+        metadata={"line_width": 1.5, "dash_pattern": "3,1", "opacity": 0.7},
+    ),
 }
 
 

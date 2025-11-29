@@ -428,6 +428,7 @@ class CalculatedChart:
     # chart.placements["Placidus"]["Sun"] -> 10
     house_placements: dict[str, dict[str, int]] = field(default_factory=dict)
     aspects: tuple[Aspect, ...] = ()
+    declination_aspects: tuple[Aspect, ...] = ()
     metadata: dict[str, Any] = field(default_factory=dict)
 
     # Zodiac system metadata
@@ -499,6 +500,29 @@ class CalculatedChart:
     def get_nodes(self) -> list[CelestialPosition]:
         """Get all nodes (True Node, South Node, etc.)."""
         return [p for p in self.positions if p.object_type == ObjectType.NODE]
+
+    def get_declination_aspects(self, aspect_type: str | None = None) -> list[Aspect]:
+        """
+        Get declination aspects (Parallel and Contraparallel).
+
+        Args:
+            aspect_type: Filter to "Parallel" or "Contraparallel".
+                        None returns all declination aspects.
+
+        Returns:
+            List of declination aspects
+        """
+        if aspect_type is None:
+            return list(self.declination_aspects)
+        return [a for a in self.declination_aspects if a.aspect_name == aspect_type]
+
+    def get_parallels(self) -> list[Aspect]:
+        """Get all parallel aspects (same declination, same hemisphere)."""
+        return self.get_declination_aspects("Parallel")
+
+    def get_contraparallels(self) -> list[Aspect]:
+        """Get all contraparallel aspects (same declination, opposite hemispheres)."""
+        return self.get_declination_aspects("Contraparallel")
 
     def get_dignities(self, system: str = "traditional") -> dict[str, Any]:
         """
@@ -930,6 +954,15 @@ class CalculatedChart:
                     "orb": a.orb,
                 }
                 for a in self.aspects
+            ],
+            "declination_aspects": [
+                {
+                    "object1": a.object1.name,
+                    "object2": a.object2.name,
+                    "aspect": a.aspect_name,
+                    "orb": a.orb,
+                }
+                for a in self.declination_aspects
             ],
         }
 

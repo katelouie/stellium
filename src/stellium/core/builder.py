@@ -88,6 +88,9 @@ class ChartBuilder:
         # Optional chart name (for display purposes)
         self._name: str | None = None
 
+        # Declination aspect engine (optional)
+        self._declination_aspect_engine = None
+
         # Unknown time flag
         self._time_unknown: bool = False
 
@@ -339,6 +342,48 @@ class ChartBuilder:
         self._analyzers.append(analyzer)
         return self
 
+    def with_declination_aspects(
+        self,
+        orb: float = 1.0,
+        include_types: set | None = None,
+    ) -> "ChartBuilder":
+        """
+        Enable declination aspect calculation (Parallel/Contraparallel).
+
+        Declination aspects are based on equatorial coordinates rather than
+        ecliptic longitude. They use a tighter orb (default 1.0°) than
+        longitude-based aspects.
+
+        - Parallel: Two bodies at the same declination (same hemisphere).
+          Interpreted like a conjunction.
+        - Contraparallel: Two bodies at equal declination but opposite
+          hemispheres. Interpreted like an opposition.
+
+        Args:
+            orb: Maximum orb in degrees (default 1.0°, range 1.0-1.5° typical)
+            include_types: Which ObjectTypes to include. Default: PLANET, NODE.
+                          Can also include ANGLE, ASTEROID, POINT.
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_aspects()
+            ...     .with_declination_aspects(orb=1.0)
+            ...     .calculate())
+            >>> for asp in chart.declination_aspects:
+            ...     print(asp.description)
+            >>> parallels = chart.get_parallels()
+            >>> contraparallels = chart.get_contraparallels()
+        """
+        from stellium.engines.aspects import DeclinationAspectEngine
+
+        self._declination_aspect_engine = DeclinationAspectEngine(
+            orb=orb, include_types=include_types
+        )
+        return self
+
     def with_unknown_time(self) -> "ChartBuilder":
         """
         Mark this chart as having unknown birth time.
@@ -468,6 +513,13 @@ class ChartBuilder:
                 self._orb_engine,  # Pass the configured orb engine
             )
 
+        # Step 6b: Calculate declination aspects (if engine provided)
+        declination_aspects = []
+        if self._declination_aspect_engine:
+            declination_aspects = self._declination_aspect_engine.calculate_aspects(
+                positions
+            )
+
         # Run analyzers
         # --- Create a "provisional" chart object ---
         # Analyzers need the *full chart* to work on.
@@ -478,6 +530,7 @@ class ChartBuilder:
             house_systems=house_systems_map,
             house_placements=house_placements_map,
             aspects=tuple(aspects),
+            declination_aspects=tuple(declination_aspects),
             metadata=component_metadata,  # Start with component metadata
         )
 
@@ -513,6 +566,7 @@ class ChartBuilder:
             house_systems=house_systems_map,
             house_placements=house_placements_map,
             aspects=tuple(aspects),
+            declination_aspects=tuple(declination_aspects),
             metadata=final_metadata,
             zodiac_type=self._config.zodiac_type,
             ayanamsa=self._config.ayanamsa,

@@ -2036,3 +2036,136 @@ class ProfectionSection:
             "headers": headers,
             "rows": rows,
         }
+
+
+class DeclinationAspectSection:
+    """
+    Table of declination aspects (Parallel and Contraparallel).
+
+    Shows:
+    - Planet 1 (with glyph)
+    - Aspect type (Parallel ∥ or Contraparallel ⋕)
+    - Planet 2 (with glyph)
+    - Orb (optional)
+    - Out-of-bounds status (if either planet is OOB)
+    """
+
+    def __init__(
+        self,
+        mode: str = "all",
+        show_orbs: bool = True,
+        show_oob_status: bool = True,
+        sort_by: str = "orb",
+    ) -> None:
+        """
+        Initialize declination aspect section.
+
+        Args:
+            mode: "all", "parallel", or "contraparallel"
+            show_orbs: Whether to show the orb column
+            show_oob_status: Whether to show out-of-bounds status
+            sort_by: How to sort aspects ("orb", "planet", "aspect_type")
+        """
+        if mode not in ("all", "parallel", "contraparallel"):
+            raise ValueError(
+                f"mode must be 'all', 'parallel', or 'contraparallel', got {mode}"
+            )
+        if sort_by not in ("orb", "planet", "aspect_type"):
+            raise ValueError(
+                f"sort_by must be 'orb', 'planet', or 'aspect_type', got {sort_by}"
+            )
+
+        self.mode = mode
+        self.show_orbs = show_orbs
+        self.show_oob_status = show_oob_status
+        self.sort_by = sort_by
+
+    @property
+    def section_name(self) -> str:
+        if self.mode == "parallel":
+            return "Parallel Aspects"
+        elif self.mode == "contraparallel":
+            return "Contraparallel Aspects"
+        return "Declination Aspects"
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate declination aspects table."""
+        # Get declination aspects
+        aspects = list(chart.declination_aspects)
+
+        if not aspects:
+            return {
+                "type": "text",
+                "content": (
+                    "No declination aspects calculated. Enable with:\n\n"
+                    "  chart = (ChartBuilder.from_native(native)\n"
+                    "      .with_aspects()\n"
+                    "      .with_declination_aspects(orb=1.0)\n"
+                    "      .calculate())"
+                ),
+            }
+
+        # Filter by mode
+        if self.mode == "parallel":
+            aspects = [a for a in aspects if a.aspect_name == "Parallel"]
+        elif self.mode == "contraparallel":
+            aspects = [a for a in aspects if a.aspect_name == "Contraparallel"]
+
+        if not aspects:
+            return {
+                "type": "text",
+                "content": f"No {self.mode} aspects found.",
+            }
+
+        # Sort
+        if self.sort_by == "orb":
+            aspects = sorted(aspects, key=lambda a: a.orb)
+        elif self.sort_by == "aspect_type":
+            aspects = sorted(aspects, key=lambda a: a.aspect_name)
+        elif self.sort_by == "planet":
+            aspects = sorted(
+                aspects,
+                key=lambda a: (
+                    get_object_sort_key(a.object1),
+                    get_object_sort_key(a.object2),
+                ),
+            )
+
+        # Build headers
+        headers = ["Planet 1", "Aspect", "Planet 2"]
+        if self.show_orbs:
+            headers.append("Orb")
+        if self.show_oob_status:
+            headers.append("OOB")
+
+        # Build rows
+        rows = []
+        for aspect in aspects:
+            # Planet 1 with glyph
+            name1, glyph1 = get_object_display(aspect.object1.name)
+            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+
+            # Aspect with glyph
+            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            aspect_display = f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
+
+            # Planet 2 with glyph
+            name2, glyph2 = get_object_display(aspect.object2.name)
+            planet2 = f"{glyph2} {name2}" if glyph2 else name2
+
+            row = [planet1, aspect_display, planet2]
+
+            if self.show_orbs:
+                row.append(f"{aspect.orb:.2f}°")
+
+            if self.show_oob_status:
+                oob_markers = []
+                if aspect.object1.is_out_of_bounds:
+                    oob_markers.append(aspect.object1.name[:2])
+                if aspect.object2.is_out_of_bounds:
+                    oob_markers.append(aspect.object2.name[:2])
+                row.append(", ".join(oob_markers) if oob_markers else "")
+
+            rows.append(row)
+
+        return {"type": "table", "headers": headers, "rows": rows}

@@ -17,6 +17,7 @@ from .sections import (
     AspectSection,
     ChartOverviewSection,
     CrossChartAspectSection,
+    DeclinationAspectSection,
     DeclinationSection,
     DignitySection,
     FixedStarsSection,
@@ -466,6 +467,64 @@ class ReportBuilder:
             ...     .render())
         """
         self._sections.append(DeclinationSection())
+        return self
+
+    def with_declination_aspects(
+        self,
+        mode: str = "all",
+        show_orbs: bool = True,
+        show_oob_status: bool = True,
+        sort_by: str = "orb",
+    ) -> "ReportBuilder":
+        """
+        Add declination aspects table (Parallel and Contraparallel).
+
+        Declination aspects are based on equatorial coordinates rather than
+        ecliptic longitude. They represent a different type of planetary
+        relationship.
+
+        - Parallel: Two planets at the same declination (same hemisphere).
+          Interpreted like a conjunction.
+        - Contraparallel: Two planets at equal declination but opposite
+          hemispheres. Interpreted like an opposition.
+
+        Args:
+            mode: Which aspects to show (DEFAULT: "all")
+                - "all": Both parallel and contraparallel
+                - "parallel": Only parallel aspects
+                - "contraparallel": Only contraparallel aspects
+            show_orbs: Show orb column (DEFAULT: True)
+            show_oob_status: Show out-of-bounds status (DEFAULT: True)
+            sort_by: How to sort aspects (DEFAULT: "orb")
+                - "orb": Tightest aspects first
+                - "planet": Group by planet
+                - "aspect_type": Group by Parallel/Contraparallel
+
+        Returns:
+            Self for chaining
+
+        Note:
+            Requires .with_declination_aspects() on ChartBuilder:
+                chart = (ChartBuilder.from_native(native)
+                    .with_aspects()
+                    .with_declination_aspects(orb=1.0)
+                    .calculate())
+
+        Example:
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_chart_overview()
+            ...     .with_declination_aspects(mode="all")
+            ...     .render())
+        """
+        self._sections.append(
+            DeclinationAspectSection(
+                mode=mode,
+                show_orbs=show_orbs,
+                show_oob_status=show_oob_status,
+                sort_by=sort_by,
+            )
+        )
         return self
 
     def with_fixed_stars(
