@@ -1195,20 +1195,20 @@ class PlanetLayer:
             # Override with retro color if retrograde
             color = style["retro_color"] if planet.is_retrograde else base_color
 
-            # Draw position tick at true position on zodiac ring inner edge
+            # Draw position tick at true position, extending inward from zodiac ring
             if self.show_position_ticks:
-                tick_radius_inner = renderer.radii["zodiac_ring_inner"]
-                tick_length = 8
-                x_tick_inner, y_tick_inner = renderer.polar_to_cartesian(
-                    original_long, tick_radius_inner
-                )
+                tick_radius_outer = renderer.radii["zodiac_ring_inner"]
+                tick_length = 6
                 x_tick_outer, y_tick_outer = renderer.polar_to_cartesian(
-                    original_long, tick_radius_inner + tick_length
+                    original_long, tick_radius_outer
+                )
+                x_tick_inner, y_tick_inner = renderer.polar_to_cartesian(
+                    original_long, tick_radius_outer - tick_length
                 )
                 dwg.add(
                     dwg.line(
-                        start=(x_tick_inner, y_tick_inner),
-                        end=(x_tick_outer, y_tick_outer),
+                        start=(x_tick_outer, y_tick_outer),
+                        end=(x_tick_inner, y_tick_inner),
                         stroke=color,
                         stroke_width=1.5,
                     )
