@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Notables Database
+
+- Added 32 births and 6 events.
+
 ### Changed
 
 ### Fixed

@@ -106,3 +106,63 @@
   sources:
     - "AstroDatabank: https://www.astro.com/astro-databank/Williams,_Serena"
   verified: true
+- name: Pelé
+  event_type: birth
+  year: 1940
+  month: 10
+  day: 21
+  hour: 3
+  minute: 0
+  latitude: -21.7149
+  longitude: -45.2533
+  location_name: Três Corações (Minas Gerais), Brazil
+  timezone: America/Sao_Paulo
+  category: athlete
+  subcategories:
+  - Soccer Player
+  notable_for: Brazilian soccer player who competed as a forward and was named Athlete of the Century by the International Olympic Committee in 1999, and labelled "the greatest" by FIFA. Pelé became a national Brazilian hero and probably the best player in soccer history, with 1,279 goals in 1,363 games recognized as a Guinness World Record.
+  astrological_notes: Ascendant 27°41' 22°00', Sun sign Scorpio
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Pelé'
+  verified: false
+- name: Usain Bolt
+  event_type: birth
+  year: 1986
+  month: 8
+  day: 21
+  hour: 12
+  minute: 0
+  latitude: 18.3
+  longitude: -77.65
+  location_name: Falmouth, Jamaica
+  timezone: America/Jamaica
+  category: athlete
+  subcategories:
+  - Track and Field
+  notable_for: Jamaican athlete, the best sprinter since Carl Lewis, and the world record holder in the 100 m, 200 m, and 4×100 m relay. Nicknamed "Lightning Bolt," he won eight gold medals at the 2008, 2012 and 2016 Olympics (100m, 200m, and 4×100 m relay).
+  astrological_notes: 28°20'
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Bolt,_Usain'
+  verified: false
+- name: Joe DiMaggio
+  event_type: birth
+  year: 1914
+  month: 11
+  day: 25
+  hour: 7
+  minute: 0
+  latitude: 38.0167
+  longitude: -122.1333
+  location_name: Martinez, California, USA
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+  - baseball player
+  notable_for: American baseball center fielder, nicknamed "Joltin' Joe" and "The Yankee Clipper," considered one of the greatest outfielders in baseball history; played entire 13-year career with New York Yankees, 56-game hitting streak, 10 World Series, 11 All-star games.
+  astrological_notes: Asc. 14°31'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/DiMaggio,_Joe'
+  verified: false

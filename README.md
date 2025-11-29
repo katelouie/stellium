@@ -16,7 +16,7 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 
 [Read The Docs](https://stellium.readthedocs.io/en/latest/?badge=latest)
 
-**Stellium The Webapp is live! [Visit it here!](https://stellium.up.railway.app/)**
+**✨ Stellium The Webapp is live! [Visit it here!](https://stellium.up.railway.app/) ✨**
 
 ---
 
@@ -44,7 +44,7 @@ Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings p
 - **Dispositor graphs** for planets and (experimentally) houses in reports
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
-- **Notable births database** for quick exploration and learning
+- **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
 
 ### Visual Chart Example
 
@@ -105,7 +105,7 @@ chart.draw("einstein.svg").save()
 
 **That's it!** You now have a beautiful natal chart SVG for Einstein.
 
-The `from_notable()` factory method uses our curated database of famous births. Other notables include: "Carl Jung", "Frida Kahlo", "Marie Curie", and more.
+The `from_notable()` factory method uses our curated database of famous births. Other notables include: "Carl Jung", "Frida Kahlo", "Marie Curie", and more. [Check out the current list](data/notables/INDEX.md).
 
 ### Beautiful Visualizations, Zero Config
 

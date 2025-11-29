@@ -245,3 +245,44 @@
     - "AstroDatabank: https://www.astro.com/astro-databank/Freud,_Sigmund"
     - "Ernest Jones, The Life and Works of Sigmund Freud (1953)"
   verified: true
+- name: Charles Darwin
+  event_type: birth
+  year: 1809
+  month: 2
+  day: 12
+  hour: 3
+  minute: 0
+  latitude: 52.72
+  longitude: -2.75
+  location_name: Shrewsbury, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Naturalist
+  - Biologist
+  notable_for: English naturalist and author of "Origin of the Species" 1859, causing a storm of debate. His theories of evolution through natural selection instigated a revolution in biological science.
+  astrological_notes: 23°04' 21°28 Asc. 07°19'
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Darwin,_Charles'
+  verified: false
+- name: Stephen Hawking
+  event_type: birth
+  year: 1942
+  month: 1
+  day: 8
+  hour: 12
+  minute: 0
+  latitude: 51.75
+  longitude: -1.0833
+  location_name: Oxford, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Physicist
+  notable_for: British theoretical physicist who was a Professor at the University of Oxford. He studied at Oxford, then spent his career in Cambridge, holding a chair there from 1977. His work was concerned with cosmology in a variety of aspects, dealing with black holes, singularities, and the "big bang" theory of the origin of the universe.
+  astrological_notes: 17°33'
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Hawking,_Stephen'
+  verified: false

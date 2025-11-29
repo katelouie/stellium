@@ -271,3 +271,134 @@
   sources:
     - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
   verified: true
+- name: Beyoncé
+  event_type: birth
+  year: 1981
+  month: 9
+  day: 4
+  hour: 21
+  minute: 47
+  latitude: 29.76
+  longitude: -95.37
+  location_name: Houston, Texas
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - Singer
+  - Songwriter
+  - Dancer
+  notable_for: American singer, songwriter, and dancer noted for her boundary-pushing artistry and her vocal prowess. Her success has made her a cultural icon and earned her the nickname "Queen Bey".
+  astrological_notes: Virgo Sun sign with a Scorpio moon and Libra rising.
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Beyoncé'
+  verified: false
+- name: Tom Hanks
+  event_type: birth
+  year: 1956
+  month: 7
+  day: 9
+  hour: 11
+  minute: 17
+  latitude: 37.99
+  longitude: -122.02
+  location_name: Concord, California
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - Actor
+  - Film Producer
+  notable_for: American actor and film producer, the winner of an Oscar for Best Actor in 1994 for Philadelphia and a second Oscar in 1995 for Forest Gump. Hanks and Spencer Tracy are the only two actors to win the Academy Award for Best Actor in consecutive years.
+  astrological_notes: Ascendant 17°29', Sun 09°52', Moon 21°45'.
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Hanks,_Tom'
+  verified: false
+- name: Jay-Z
+  event_type: birth
+  year: 1969
+  month: 12
+  day: 4
+  hour: 0
+  minute: 10
+  latitude: 40.6333
+  longitude: -73.9333
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - rapper
+  - record producer
+  - entrepreneur
+  notable_for: American rapper, record producer, and entrepreneur; one of the most financially successful hip-hop artists; net worth nearly $500 million in 2012.
+  astrological_notes: Ascendant 05°12'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Jay_Z'
+  verified: false
+- name: Eminem
+  event_type: birth
+  year: 1972
+  month: 10
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 39.7667
+  longitude: -94.85
+  location_name: Saint Joseph, Missouri, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - rapper
+  - songwriter
+  notable_for: American rapper, songwriter, and record producer, credited with popularizing hip-hop in Middle America; regarded as one of the greatest rappers of all time; best-selling music artist with over 220 million records sold.
+  astrological_notes: Sun 24°25' Libra
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Eminem'
+  - Missouri birth certificate
+  verified: false
+- name: Mariah Carey
+  event_type: birth
+  year: 1969
+  month: 3
+  day: 27
+  hour: 7
+  minute: 27
+  latitude: 40.8667
+  longitude: -73.4333
+  location_name: Huntington, New York, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - singer
+  - songwriter
+  notable_for: American singer, songwriter, record producer, and actress; superstar with a voice spanning more than five octaves; one of the top pop divas of the 90s, selling over 80 million albums worldwide.
+  astrological_notes: Sun 06°40' Aries; Moon 22°54'; Ascendant 15°20'
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Carey,_Mariah'
+  - Rolling Stone magazine
+  verified: false
+- name: Dr. Dre
+  event_type: birth
+  year: 1965
+  month: 2
+  day: 18
+  hour: 10
+  minute: 56
+  latitude: 34.05
+  longitude: -118.25
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - rapper
+  - producer
+  notable_for: American rap musician, producer, and businessman; founder of Aftermath Entertainment and Death Row Records; influential in hip-hop; creator of Beats by Dr. Dre, sold to Apple for $3 billion.
+  astrological_notes: Sun 29°55' Aquarius; Moon 07°06'; Ascendant 00°56'
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Dr._Dre'
+  - Birth certificate
+  verified: false

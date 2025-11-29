@@ -55,3 +55,45 @@
     - "AstroDatabank: https://www.astro.com/astro-databank/Nostradamus"
     - "Chavigny, La Premiere face du Janus francois (1594)"
   verified: false
+- name: Helena Blavatsky
+  event_type: birth
+  year: 1831
+  month: 8
+  day: 12
+  hour: 2
+  minute: 17
+  latitude: 48.45
+  longitude: 34.9833
+  location_name: Ekaterinoslav, Ukraine
+  timezone: Europe/Kyiv
+  category: occultist
+  subcategories:
+  - Spiritualist
+  - Mystic
+  notable_for: Russian spiritualist and mystic, the founder of the Theosophical Society. The daughter of minor Russo-German aristocrats, she married Nikifor Blavatsky, vice-Governor of Yerevan in the Caucasus on 7 July 1848 when she was 17 and he, over 40, and fled from him a few weeks later.
+  astrological_notes: Ascendant 18°29', Sun sign Leo
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Blavatsky,_Helena'
+  verified: false
+- name: Edgar Cayce
+  event_type: birth
+  year: 1877
+  month: 3
+  day: 18
+  hour: 15
+  minute: 20
+  latitude: 36.85
+  longitude: -87.48
+  location_name: Hopkinsville, Kentucky
+  timezone: America/Chicago
+  category: occultist
+  subcategories:
+  - Mystic
+  - Psychic
+  notable_for: American mystic known as "The Sleeping Prophet." While in a sleep state he could discuss history, geology, metaphysics, philosophy and medicine. He gave approximately 30,000 life-readings and medical diagnosis to people during his lifetime.
+  astrological_notes: Ascendant 28°24', Sun 12°23', Moon 24°29'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Cayce,_Edgar'
+  verified: false

@@ -54,3 +54,46 @@
     - "AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William"
     - "Gadbury's Collection of Nativities (1661)"
   verified: true
+- name: Evangeline Adams
+  event_type: birth
+  year: 1868
+  month: 2
+  day: 8
+  hour: 8
+  minute: 30
+  latitude: 40.7333
+  longitude: -74.0833
+  location_name: Jersey City, New Jersey
+  timezone: America/New_York
+  category: astrologer
+  subcategories:
+  - Astrologer
+  notable_for: American astrologer with a clientele of nearly 100,000 people including the Prince of Wales, Mary Garden, J.P. Morgan and Enrico Caruso. She warned the hotel owner of danger and the following day on 17 March the hotel had a bad fire in which there were several deaths; a grim success.
+  astrological_notes: 19°07' 21°23 Asc. 22°05'
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Adams,_Evangeline'
+  verified: false
+
+- name: Alan Leo
+  event_type: birth
+  year: 1860
+  month: 8
+  day: 7
+  hour: 5
+  minute: 49
+  latitude: 51.5000
+  longitude: -0.1500
+  location_name: Westminster, England
+  timezone: Europe/London
+  category: astrologer
+  subcategories:
+  - theosophist
+  - author
+  - publisher
+  notable_for: British astrologer, businessman and author, considered the father of modern astrology; founded Modern Astrology magazine and an organization that remains active; shifted focus from prediction to personal analysis; wrote popular astrological textbooks.
+  astrological_notes: Ascendant 15°19 (end of Leo)
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Leo,_Alan'
+  verified: false

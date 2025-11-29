@@ -80,3 +80,68 @@
   sources:
     - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
   verified: true
+
+- name: Warren Buffett
+  event_type: birth
+  year: 1930
+  month: 8
+  day: 30
+  hour: 15
+  minute: 0
+  latitude: 41.16
+  longitude: -95.93
+  location_name: Omaha, Nebraska
+  timezone: America/Chicago
+  category: business
+  subcategories:
+  - Investor
+  - Philanthropist
+  notable_for: American investor, business tycoon, philanthropist, and the chairman and CEO of Berkshire Hathaway, an American multinational conglomerate holding company headquartered in Omaha, Nebraska. Following a finance accounting field in college, Buffett received a BS and MS in Economics. He is considered one of the most savvy investors in the world and has a net worth of over US$85.6 billion as of December 2020, making him the world's fourth-wealthiest person.
+  astrological_notes: 06°45' 05°18 Asc. 25°30'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Buffett,_Warren'
+  verified: false
+- name: Bill Gates
+  event_type: birth
+  year: 1955
+  month: 10
+  day: 28
+  hour: 22
+  minute: 0
+  latitude: 47.6000
+  longitude: -122.3333
+  location_name: Seattle, Washington, USA
+  timezone: America/Los_Angeles
+  category: business
+  subcategories:
+  - software developer
+  - investor
+  - philanthropist
+  notable_for: American business magnate, co-founder of Microsoft Corporation, known for pioneering the microcomputer revolution and holding the title of the richest person in the world for most years from 1995 to 2017.
+  astrological_notes: Ascendant 08°15'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Gates,_Bill'
+  verified: false
+- name: Aristotle Onassis
+  event_type: birth
+  year: 1906
+  month: 1
+  day: 20
+  hour: 12
+  minute: 0
+  latitude: 38.4237
+  longitude: 27.1428
+  location_name: Izmir, Turkey
+  timezone: Europe/Istanbul
+  category: business
+  subcategories:
+  - entrepreneur
+  - shipping magnate
+  notable_for: Greek businessman who built a global shipping empire; one of the wealthiest men in the world; amassed the world's largest privately owned shipping fleet; married to Athina Mary Livanos and Jacqueline Kennedy; affair with Maria Callas.
+  astrological_notes: Sun in Capricorn
+  data_quality: X
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Aristotle_Onassis'
+  verified: false

@@ -73,3 +73,66 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Dostoevsky,_Fyodor'
   verified: false
+- name: William Shakespeare
+  event_type: birth
+  year: 1564
+  month: 4
+  day: 23
+  hour: 8
+  minute: 30
+  latitude: 52.2
+  longitude: -1.6833
+  location_name: Stratford-Upon-Avon, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - Playwright
+  - Poet
+  - Actor
+  notable_for: English playwright, poet, and actor, generally considered the greatest dramatist the world has known, as well as the finest poet of the English language. He is historically known as a true literary giant and is often called England's national poet and the "Bard of Avon".
+  astrological_notes: Ascendant 12°43', Sun 07°59', Moon 18°48'
+  data_quality: XX
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Shakespeare,_William'
+  verified: false
+- name: Jane Austen
+  event_type: birth
+  year: 1775
+  month: 12
+  day: 16
+  hour: 23
+  minute: 45
+  latitude: 51.38
+  longitude: -1.2
+  location_name: Steventon, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - Novelist
+  notable_for: Jane Austen was a British writer and the first renowned female novelist of England, known for her six major novels that interpret, critique, and comment upon the British landed gentry at the end of the 18th century, exploring themes of women's dependence on marriage for social standing and economic security through biting irony, realism, humour, and social commentary.
+  astrological_notes: Ascendant 24°08'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Austen,_Jane'
+  verified: false
+- name: Arthur Miller
+  event_type: birth
+  year: 1915
+  month: 10
+  day: 17
+  hour: 5
+  minute: 12
+  latitude: 40.7167
+  longitude: -74.0000
+  location_name: New York, New York, USA
+  timezone: America/New_York
+  category: writer
+  subcategories:
+  - playwright
+  - writer
+  notable_for: American writer who won awards for "All My Sons" and the Pulitzer Prize for "Death Of A Salesman," 1949; noted dramatist and contemporary playwright.
+  astrological_notes: Asc. 16°25'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Miller,_Arthur'
+  verified: false

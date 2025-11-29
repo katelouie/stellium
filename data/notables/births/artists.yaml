@@ -226,3 +226,91 @@
   sources:
     - "AstroDatabank: https://www.astro.com/astro-databank/Dali,_Salvador"
   verified: true
+- name: Andy Warhol
+  event_type: birth
+  year: 1928
+  month: 8
+  day: 6
+  hour: 6
+  minute: 30
+  latitude: 40.43
+  longitude: -80.0
+  location_name: Pittsburgh, Pennsylvania
+  timezone: America/New_York
+  category: artist
+  subcategories:
+  - painter
+  - filmmaker
+  - pop artist
+  notable_for: American underground artist and filmmaker who had a genius for creating attention. An androgyne and voyeur himself, his salon became the New York center of the freak scene in the '60s.
+  astrological_notes: Asc. 13°49'
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Warhol,_Andy'
+  - Ultra Violet, "Famous For 15 Minutes"
+  verified: false
+- name: Henri Matisse
+  event_type: birth
+  year: 1869
+  month: 12
+  day: 31
+  hour: 20
+  minute: 0
+  latitude: 50.06
+  longitude: 3.33
+  location_name: Le Cateau, France
+  timezone: Europe/Paris
+  category: artist
+  subcategories:
+  - Painter
+  - Sculptor
+  - Lithographer
+  notable_for: French painter, sculptor and lithographer, noted for being one of the foremost decorative French painters of his time and one of the most influential of the 1900s. While his superbly simple line drawings rank among the greatest works of graphic art he is best known for his abstract, intellectual use of color.
+  astrological_notes: 10°15' 25°19 Asc. 24°29'
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Matisse,_Henri'
+  - Birth certificate in Didier Geslain archive, 'sculpteurs' pdf file, p. 78
+  verified: false
+- name: Diego Rivera
+  event_type: birth
+  year: 1886
+  month: 12
+  day: 8
+  hour: 19
+  minute: 30
+  latitude: 21.0167
+  longitude: -101.2500
+  location_name: Guanajuato, Mexico
+  timezone: America/Mexico_City
+  category: artist
+  subcategories:
+  - painter
+  - muralist
+  notable_for: Mexican artist, controversial painter expressing political views through art; communist with themes of revolution and labor; noted for paintings of children; led campaign for Mexican artists to decorate government buildings with murals; tumultuous marriage to Frida Kahlo.
+  astrological_notes: Ascendant 16°59' 18°33'
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Rivera,_Diego'
+  verified: false
+- name: Alfred Stieglitz
+  event_type: birth
+  year: 1864
+  month: 1
+  day: 1
+  hour: 12
+  minute: 0
+  latitude: 40.7439
+  longitude: -74.0322
+  location_name: Hoboken, New Jersey, USA
+  timezone: America/New_York
+  category: artist
+  subcategories:
+  - photographer
+  - modern art promoter
+  notable_for: American photographer and modern art promoter who was instrumental over his 50-year career in making photography an accepted art form. In addition to his photography, Stieglitz was known for the New York art galleries that he ran in the early part of the 20th century, where he introduced many avant-garde European artists to the U.S. He was married to painter Georgia O’Keeffe.
+  astrological_notes: Sun sign Capricorn, Ascendant Aries, Moon sign Libra
+  data_quality: X
+  sources:
+  - 'Astrologify: https://astrologify.com/people/alfred-stieglitz/'
+  verified: false

@@ -247,3 +247,108 @@
   sources:
     - "AstroDatabank: https://www.astro.com/astro-databank/Diana,_Princess_of_Wales"
   verified: true
+- name: Nelson Mandela
+  event_type: birth
+  year: 1918
+  month: 7
+  day: 18
+  hour: 14
+  minute: 54
+  latitude: -31.95
+  longitude: 28.52
+  location_name: Mvezo, South Africa
+  timezone: Africa/Johannesburg
+  category: leader
+  subcategories:
+  - Politician
+  - Activist
+  notable_for: South African President, a civil rights hero and martyr who claimed victory in his lifetime crusade to establish a non-racial democracy for South Africa. He was arrested as a political prisoner on August 5, 1962 and spent 27 years in prison, released on February 11, 1990.
+  astrological_notes: Ascendant 20°15', Sun sign Cancer
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Mandela,_Nelson'
+  verified: false
+- name: Mohandas Gandhi
+  event_type: birth
+  year: 1869
+  month: 10
+  day: 2
+  hour: 7
+  minute: 8
+  latitude: 21.17
+  longitude: 69.6
+  location_name: Porbandar, India
+  timezone: Asia/Kolkata
+  category: leader
+  subcategories:
+  - Political Activist
+  - Lawyer
+  notable_for: Indian lawyer and civil rights champion, the spiritual and political leader of India through her tempestuous birth of independence. Known as Mahatma, (great soul), he began the freedom movement in 1919 with nonviolent disobedience. India broke from England in August 1947 and Gandhi's rank as a saint and holy man was assured in history.
+  astrological_notes: Asc. 08°56' 19°56' 25°47'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Gandhi,_Mohandas'
+  verified: false
+- name: John F. Kennedy
+  event_type: birth
+  year: 1917
+  month: 5
+  day: 29
+  hour: 15
+  minute: 0
+  latitude: 42.3333
+  longitude: -71.1167
+  location_name: Brookline, Massachusetts, USA
+  timezone: America/New_York
+  category: leader
+  subcategories:
+  - U.S. President
+  - author
+  notable_for: American author, politician and the 35th U.S. President from 1961-63, the first Catholic and the youngest man to win the nation's highest office.
+  astrological_notes: Asc. 17°13'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Kennedy,_John_F.'
+  verified: false
+- name: Prince Philip
+  event_type: birth
+  year: 1921
+  month: 6
+  day: 10
+  hour: 10
+  minute: 0
+  latitude: 39.6000
+  longitude: 19.9333
+  location_name: Mon Repos, Greece
+  timezone: Europe/Athens
+  category: leader
+  subcategories:
+  - royal family
+  notable_for: Greek-Danish-British husband of Queen Elizabeth II from 1947 until his death in 2021, longest-serving consort of a reigning British monarch, oldest ever male member of the British royal family at death; served in British Navy during WWII, pilot-Captain General of the Royal Marines, yachtsman, polo player, wildlife conservationist.
+  astrological_notes: Sun 18°53', Asc. 15°08'
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh'
+  verified: false
+- name: Jacqueline Kennedy Onassis
+  event_type: birth
+  year: 1929
+  month: 7
+  day: 28
+  hour: 14
+  minute: 30
+  latitude: 40.8833
+  longitude: -72.3833
+  location_name: Southampton, New York, USA
+  timezone: America/New_York
+  category: leader
+  subcategories:
+  - first lady
+  - editor
+  notable_for: American First Lady, wife of US President John F. Kennedy; socialite, public figure, publisher; married and widowed twice to powerful men; journalist; mother of Caroline and John Jr.
+  astrological_notes: Sun in Leo; Ascendant 05°10'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Onassis,_Jacqueline_Kennedy'
+  - Southampton Hospital records
+  verified: false
