@@ -529,6 +529,7 @@ class ZodiacLayer:
         self,
         palette: ZodiacPalette | str = ZodiacPalette.GREY,
         style_override: dict[str, Any] | None = None,
+        show_degree_ticks: bool = False,
     ) -> None:
         """
         Initialize the zodiac layer.
@@ -536,6 +537,7 @@ class ZodiacLayer:
         Args:
             palette: The color palette to use (ZodiacPalette enum, palette name, or "single_color:#RRGGBB")
             style_override: Optional style overrides
+            show_degree_ticks: If True, show 1° tick marks between the 5° marks
         """
         # Try to convert string to enum, but allow pass-through for special formats
         if isinstance(palette, str):
@@ -547,6 +549,7 @@ class ZodiacLayer:
         else:
             self.palette = palette
         self.style = style_override or {}
+        self.show_degree_ticks = show_degree_ticks
 
     def render(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
@@ -608,31 +611,40 @@ class ZodiacLayer:
                 )
             )
 
-        # Draw degree tick marks (5° increments within each sign)
+        # Draw degree tick marks
         # Use angles line color for all tick marks
         tick_color = renderer.style["angles"]["line_color"]
         for sign_index in range(12):
             sign_start = sign_index * 30.0
 
-            # Draw ticks at 5°, 10°, 15°, 20°, 25° within each sign
-            # (0° is handled by sign boundary lines)
-            for degree_in_sign in [5, 10, 15, 20, 25]:
+            # Determine which degrees to draw ticks for
+            # Always draw at 5°, 10°, 15°, 20°, 25° (0° is handled by sign boundary lines)
+            # Optionally draw 1° ticks for all other degrees
+            if self.show_degree_ticks:
+                degrees_to_draw = list(range(1, 30))  # 1-29 (skip 0)
+            else:
+                degrees_to_draw = [5, 10, 15, 20, 25]
+
+            for degree_in_sign in degrees_to_draw:
                 absolute_degree = sign_start + degree_in_sign
 
-                # Longer ticks at 10° and 20° marks
+                # Tick sizing hierarchy: 10°/20° > 5°/15°/25° > 1° ticks
                 if degree_in_sign in [10, 20]:
                     tick_length = 10
                     tick_width = 0.8
-                else:  # Shorter ticks at 5°, 15°, 25° marks
+                elif degree_in_sign in [5, 15, 25]:
                     tick_length = 7
                     tick_width = 0.5
+                else:  # 1° ticks (smallest)
+                    tick_length = 4
+                    tick_width = 0.3
 
-                # Draw tick from zodiac_ring_outer inward
-                x_outer, y_outer = renderer.polar_to_cartesian(
-                    absolute_degree, renderer.radii["zodiac_ring_outer"]
-                )
+                # Draw tick from zodiac_ring_inner outward
                 x_inner, y_inner = renderer.polar_to_cartesian(
-                    absolute_degree, renderer.radii["zodiac_ring_outer"] - tick_length
+                    absolute_degree, renderer.radii["zodiac_ring_inner"]
+                )
+                x_outer, y_outer = renderer.polar_to_cartesian(
+                    absolute_degree, renderer.radii["zodiac_ring_inner"] + tick_length
                 )
 
                 dwg.add(
@@ -1127,6 +1139,7 @@ class PlanetLayer:
         use_outer_wheel_color: bool = False,
         info_stack_direction: str = "inward",
         show_info_stack: bool = True,
+        show_position_ticks: bool = False,
     ) -> None:
         """
         Args:
@@ -1136,6 +1149,8 @@ class PlanetLayer:
             use_outer_wheel_color: If True, use the theme's outer_wheel_planet_color.
             info_stack_direction: "inward" (toward center) or "outward" (away from center).
             show_info_stack: If False, hide info stacks (glyph only).
+            show_position_ticks: If True, draw colored tick marks at true planet positions
+                                 on the zodiac ring inner edge.
         """
         self.planets = planet_set
         self.radius_key = radius_key
@@ -1143,6 +1158,7 @@ class PlanetLayer:
         self.use_outer_wheel_color = use_outer_wheel_color
         self.info_stack_direction = info_stack_direction
         self.show_info_stack = show_info_stack
+        self.show_position_ticks = show_position_ticks
 
     def render(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
@@ -1163,30 +1179,8 @@ class PlanetLayer:
             adjusted_long = adjusted_positions[planet]["longitude"]
             is_adjusted = adjusted_positions[planet]["adjusted"]
 
-            # Draw connector line if position was adjusted
-            if is_adjusted:
-                x_original, y_original = renderer.polar_to_cartesian(
-                    original_long, base_radius
-                )
-                x_adjusted, y_adjusted = renderer.polar_to_cartesian(
-                    adjusted_long, base_radius
-                )
-                dwg.add(
-                    dwg.line(
-                        start=(x_original, y_original),
-                        end=(x_adjusted, y_adjusted),
-                        stroke="#999999",
-                        stroke_width=0.5,
-                        stroke_dasharray="2,2",
-                        opacity=0.6,
-                    )
-                )
-
-            # Draw planet glyph at adjusted position
-            glyph_info = get_glyph(planet.name)
-            x, y = renderer.polar_to_cartesian(adjusted_long, base_radius)
-
             # Determine glyph color using planet glyph palette if available
+            # (moved up so we can use it for position ticks too)
             if self.use_outer_wheel_color and "outer_wheel_planet_color" in style:
                 # Use outer wheel color for comparison charts
                 base_color = style["outer_wheel_planet_color"]
@@ -1200,6 +1194,58 @@ class PlanetLayer:
 
             # Override with retro color if retrograde
             color = style["retro_color"] if planet.is_retrograde else base_color
+
+            # Draw position tick at true position on zodiac ring inner edge
+            if self.show_position_ticks:
+                tick_radius_inner = renderer.radii["zodiac_ring_inner"]
+                tick_length = 8
+                x_tick_inner, y_tick_inner = renderer.polar_to_cartesian(
+                    original_long, tick_radius_inner
+                )
+                x_tick_outer, y_tick_outer = renderer.polar_to_cartesian(
+                    original_long, tick_radius_inner + tick_length
+                )
+                dwg.add(
+                    dwg.line(
+                        start=(x_tick_inner, y_tick_inner),
+                        end=(x_tick_outer, y_tick_outer),
+                        stroke=color,
+                        stroke_width=1.5,
+                    )
+                )
+
+            # Draw connector line if position was adjusted
+            if is_adjusted:
+                # Glyph is at adjusted position on planet ring
+                x_glyph, y_glyph = renderer.polar_to_cartesian(
+                    adjusted_long, base_radius
+                )
+
+                if self.show_position_ticks:
+                    # Connect to the position tick on zodiac ring inner edge
+                    x_target, y_target = renderer.polar_to_cartesian(
+                        original_long, renderer.radii["zodiac_ring_inner"]
+                    )
+                else:
+                    # Original behavior: connect to true position on planet ring
+                    x_target, y_target = renderer.polar_to_cartesian(
+                        original_long, base_radius
+                    )
+
+                dwg.add(
+                    dwg.line(
+                        start=(x_glyph, y_glyph),
+                        end=(x_target, y_target),
+                        stroke="#999999",
+                        stroke_width=0.5,
+                        stroke_dasharray="2,2",
+                        opacity=0.6,
+                    )
+                )
+
+            # Draw planet glyph at adjusted position
+            glyph_info = get_glyph(planet.name)
+            x, y = renderer.polar_to_cartesian(adjusted_long, base_radius)
 
             if glyph_info["type"] == "svg":
                 # Render SVG image

@@ -50,6 +50,10 @@ class ChartWheelConfig:
     planet_glyph_palette: str | None = None  # None = use theme default
     color_sign_info: bool = False
 
+    # Tick marks
+    show_degree_ticks: bool = False  # Show 1° tick marks on zodiac ring
+    show_planet_ticks: bool = True  # Show colored planet position ticks
+
 
 @dataclass(frozen=True)
 class HeaderConfig:

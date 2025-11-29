@@ -88,6 +88,7 @@ class LayerFactory:
         layers.append(
             ZodiacLayer(
                 palette=self.config.wheel.zodiac_palette or "grey",
+                show_degree_ticks=self.config.wheel.show_degree_ticks,
             )
         )
 
@@ -161,6 +162,7 @@ class LayerFactory:
                 PlanetLayer(
                     planet_set=inner_planets,
                     radius_key="planet_ring_inner",
+                    show_position_ticks=self.config.wheel.show_planet_ticks,
                 )
             )
 
@@ -177,6 +179,7 @@ class LayerFactory:
                     use_outer_wheel_color=True,
                     info_stack_direction="outward",  # Flip stack direction
                     show_info_stack=show_outer_info,  # Hide if position table enabled
+                    show_position_ticks=self.config.wheel.show_planet_ticks,
                 )
             )
         else:
@@ -186,6 +189,7 @@ class LayerFactory:
                 PlanetLayer(
                     planet_set=planets,
                     radius_key="planet_ring",
+                    show_position_ticks=self.config.wheel.show_planet_ticks,
                 )
             )
 

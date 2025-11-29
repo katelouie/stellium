@@ -70,6 +70,10 @@ class ChartDrawBuilder:
         self._planet_glyph_palette: str | None = None
         self._color_sign_info: bool | None = None
 
+        # Tick marks - None = use config defaults
+        self._show_degree_ticks: bool | None = None
+        self._show_planet_ticks: bool | None = None
+
         # Moon phase - None = use config defaults
         self._moon_phase: bool | None = None
         self._moon_phase_position: str | None = None
@@ -217,6 +221,47 @@ class ChartDrawBuilder:
             This setting only controls the tiny sign glyphs in planet info stacks.
         """
         self._color_sign_info = sign_info
+        return self
+
+    def with_degree_ticks(self, enabled: bool = True) -> "ChartDrawBuilder":
+        """
+        Enable or disable 1-degree tick marks on the zodiac ring.
+
+        When enabled, adds small tick marks at every degree (1°-29° within each sign),
+        in addition to the standard 5° and 10° tick marks.
+
+        Args:
+            enabled: True to show 1° ticks, False to hide them (default: True)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            chart.draw().with_degree_ticks().save()  # Enable detailed ticks
+            chart.draw().with_degree_ticks(False).save()  # Explicitly disable
+        """
+        self._show_degree_ticks = enabled
+        return self
+
+    def with_planet_ticks(self, enabled: bool = True) -> "ChartDrawBuilder":
+        """
+        Enable or disable colored planet position tick marks.
+
+        When enabled (default), draws small colored tick marks on the inner edge
+        of the zodiac ring at each planet's true position. The ticks use the
+        planet's glyph color. When planets are spread out due to collision
+        detection, the dashed connector line goes from the glyph to the tick.
+
+        Args:
+            enabled: True to show planet ticks, False to hide them (default: True)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            chart.draw().with_planet_ticks(False).save()  # Disable planet ticks
+        """
+        self._show_planet_ticks = enabled
         return self
 
     def with_house_systems(self, systems: str | list[str]) -> "ChartDrawBuilder":
@@ -661,6 +706,10 @@ class ChartDrawBuilder:
             wheel_kwargs["planet_glyph_palette"] = self._planet_glyph_palette
         if self._color_sign_info is not None:
             wheel_kwargs["color_sign_info"] = self._color_sign_info
+        if self._show_degree_ticks is not None:
+            wheel_kwargs["show_degree_ticks"] = self._show_degree_ticks
+        if self._show_planet_ticks is not None:
+            wheel_kwargs["show_planet_ticks"] = self._show_planet_ticks
 
         # Auto-hide chart shape if moon phase is in bottom-right (they would overlap)
         moon_in_bottom_right = (
