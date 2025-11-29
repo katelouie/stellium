@@ -402,3 +402,47 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Dr._Dre'
   - Birth certificate
   verified: false
+- name: Kurt Cobain
+  event_type: birth
+  year: 1967
+  month: 2
+  day: 20
+  hour: 19
+  minute: 38
+  latitude: 46.9833
+  longitude: -123.8167
+  location_name: Aberdeen, Washington, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - musician
+  - singer
+  notable_for: American musician, lead singer whose anguished lyrics helped sell millions of records featuring the gritty sound of grunge rock 'n roll of "Nirvana," a head banging punk metal band formed in 1991.
+  astrological_notes: Sun 01°49' Pisces, Moon 13°24' Cancer, Asc. 23°21' Virgo
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Cobain,_Kurt'
+  - BC/BR in hand
+  verified: false
+- name: Prince
+  event_type: birth
+  year: 1958
+  month: 6
+  day: 7
+  hour: 18
+  minute: 17
+  latitude: 44.9833
+  longitude: -93.2667
+  location_name: Minneapolis, Minnesota, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - musician
+  - singer
+  notable_for: American singer, composer and all-around rock actor; he signed with Warner Bros Records in 1977 on the basis of a one-man demo tape. His first film was "Purple Rain," 1982. A workaholic obsessed with his music, he is admittedly "not normal, exactly."
+  astrological_notes: Sun 16°41' Gemini, Moon 01°59' Pisces, Asc. 16°42' Scorpio
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Prince_(musician)'
+  - BC/BR in hand from Frank C. Clifford
+  verified: false

@@ -145,3 +145,25 @@
   sources:
   - 'Astrotheme: https://www.astrotheme.com/astrology/Aristotle_Onassis'
   verified: false
+- name: Steve Wozniak
+  event_type: birth
+  year: 1950
+  month: 8
+  day: 11
+  hour: 9
+  minute: 45
+  latitude: 37.3333
+  longitude: -121.9
+  location_name: San Jose, California, USA
+  timezone: America/Los_Angeles
+  category: business
+  subcategories:
+  - inventor
+  - engineer
+  notable_for: American entrepreneur, a self-taught computer engineer who designed virtually the entire product line that enabled Apple Corporation to go from a two-man garage operation to a half-billion dollar a year business in six years. He built his first computer at the age of 13 and as an adult, co-founded the corporation that now has more than 3,000 employees.
+  astrological_notes: Sun 18°26' Leo, Moon 24°11' Cancer, Asc. 29°07' Virgo
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Wozniak,_Steve'
+  - Quoted BC/BR
+  verified: false
