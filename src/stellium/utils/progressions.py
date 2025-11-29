@@ -175,3 +175,53 @@ def normalize_arc(arc: float) -> float:
     while arc >= 360:
         arc -= 360
     return arc
+
+
+def calculate_lunar_arc(
+    natal_moon_longitude: float,
+    progressed_moon_longitude: float,
+) -> float:
+    """
+    Calculate lunar arc (difference between progressed Moon and natal Moon).
+
+    Lunar arc directions move all points at the rate the progressed Moon moves.
+    The Moon moves ~12-13 degrees per year in progressions.
+
+    Args:
+        natal_moon_longitude: Natal Moon position in degrees
+        progressed_moon_longitude: Progressed Moon position in degrees
+
+    Returns:
+        Lunar arc in degrees (normalized to 0-360)
+
+    Example:
+        >>> arc = calculate_lunar_arc(150.0, 280.0)  # Moon moved ~130°
+        >>> print(f"Lunar arc: {arc:.2f}°")
+    """
+    arc = progressed_moon_longitude - natal_moon_longitude
+    return normalize_arc(arc)
+
+
+def calculate_planetary_arc(
+    natal_planet_longitude: float,
+    progressed_planet_longitude: float,
+) -> float:
+    """
+    Calculate arc based on any planet's motion.
+
+    This generic function supports Mars arc, Venus arc, Jupiter arc, etc.
+    Used for custom planetary arcs and chart ruler arcs.
+
+    Args:
+        natal_planet_longitude: Natal planet position in degrees
+        progressed_planet_longitude: Progressed planet position in degrees
+
+    Returns:
+        Planetary arc in degrees (normalized to 0-360)
+
+    Example:
+        >>> arc = calculate_planetary_arc(45.0, 75.0)  # Planet moved ~30°
+        >>> print(f"Planet arc: {arc:.2f}°")
+    """
+    arc = progressed_planet_longitude - natal_planet_longitude
+    return normalize_arc(arc)

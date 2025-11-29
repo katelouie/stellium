@@ -836,6 +836,222 @@ class ComparisonBuilder:
 
         return builder
 
+    @classmethod
+    def arc_direction(
+        cls,
+        natal_data: CalculatedChart
+        | Native
+        | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
+        *,
+        target_date: str | datetime | None = None,
+        age: float | None = None,
+        arc_type: str = "solar_arc",
+        rulership_system: Literal["traditional", "modern"] = "traditional",
+        natal_label: str = "Natal",
+        directed_label: str = "Directed",
+    ) -> "ComparisonBuilder":
+        """
+        Create an arc direction comparison (natal vs directed chart).
+
+        Arc directions move ALL points by the same angular distance, preserving
+        natal relationships. This differs from progressions where each planet
+        moves at its own rate.
+
+        Arc types supported:
+            - "solar_arc": Arc = progressed Sun - natal Sun (~1°/year actual)
+            - "naibod": Arc = 0.9856° × years (mean solar motion)
+            - "lunar": Arc = progressed Moon - natal Moon (~12-13°/year)
+            - "chart_ruler": Arc based on planet ruling the Ascendant sign
+            - "sect": Day charts use solar arc, night charts use lunar arc
+            - Any planet name (e.g., "Mars", "Venus"): Uses that planet's arc
+
+        Args:
+            natal_data: Natal chart data (Native, CalculatedChart, or tuple)
+            target_date: Target date for directions (either this or age required)
+            age: Age in years (alternative to target_date)
+            arc_type: Type of arc to use (see above)
+            rulership_system: "traditional" or "modern" (for chart_ruler arc)
+            natal_label: Label for natal chart (default: "Natal")
+            directed_label: Label for directed chart (default: "Directed")
+
+        Returns:
+            ComparisonBuilder instance ready to configure and calculate
+
+        Examples:
+            >>> # Solar arc directions at age 30
+            >>> directed = ComparisonBuilder.arc_direction(
+            ...     natal_chart, age=30, arc_type="solar_arc"
+            ... ).calculate()
+
+            >>> # Naibod arc directions to a specific date
+            >>> directed = ComparisonBuilder.arc_direction(
+            ...     natal_chart, target_date="2025-06-15", arc_type="naibod"
+            ... ).calculate()
+
+            >>> # Chart ruler arc (uses planet ruling ASC sign)
+            >>> directed = ComparisonBuilder.arc_direction(
+            ...     natal_chart, age=30, arc_type="chart_ruler"
+            ... ).calculate()
+
+            >>> # Sect-based arc (solar for day charts, lunar for night)
+            >>> directed = ComparisonBuilder.arc_direction(
+            ...     natal_chart, age=30, arc_type="sect"
+            ... ).calculate()
+
+            >>> # Mars arc directions
+            >>> directed = ComparisonBuilder.arc_direction(
+            ...     natal_chart, age=30, arc_type="Mars"
+            ... ).calculate()
+        """
+        from stellium.utils.progressions import (
+            calculate_lunar_arc,
+            calculate_naibod_arc,
+            calculate_planetary_arc,
+            calculate_progressed_datetime,
+            calculate_solar_arc,
+            calculate_years_elapsed,
+        )
+
+        # Helper to convert input to CalculatedChart
+        def to_chart(data, location_fallback=None) -> CalculatedChart:
+            if isinstance(data, CalculatedChart):
+                return data
+            elif isinstance(data, Native):
+                return ChartBuilder.from_native(data).calculate()
+            elif isinstance(data, tuple) and len(data) == 2:
+                datetime_input, location_input = data
+                if location_input is None:
+                    if location_fallback is None:
+                        raise ValueError("Location cannot be None")
+                    location_input = location_fallback
+                native = Native(datetime_input, location_input)
+                return ChartBuilder.from_native(native).calculate()
+            else:
+                raise TypeError(f"Invalid data type: {type(data)}")
+
+        # Convert natal data to chart
+        natal_chart = to_chart(natal_data)
+        natal_datetime = natal_chart.datetime.local_datetime
+
+        # Determine target date
+        if age is not None:
+            target = natal_datetime + timedelta(days=age * 365.25)
+        elif target_date is not None:
+            if isinstance(target_date, str):
+                temp_native = Native(target_date, natal_chart.location)
+                target = temp_native.datetime.local_datetime
+            else:
+                target = target_date
+        else:
+            target = datetime.now()
+
+        years_elapsed = calculate_years_elapsed(natal_datetime, target)
+
+        # Calculate progressed chart for position-based arcs
+        progressed_dt = calculate_progressed_datetime(natal_datetime, target)
+        progressed_chart = ChartBuilder.from_details(
+            progressed_dt, natal_chart.location
+        ).calculate()
+
+        # Build position dictionaries for arc calculation
+        natal_positions = {pos.name: pos.longitude for pos in natal_chart.positions}
+        progressed_positions = {
+            pos.name: pos.longitude for pos in progressed_chart.positions
+        }
+
+        # Resolve special arc types
+        effective_arc_type = arc_type.lower()
+        original_arc_type = arc_type
+
+        if effective_arc_type == "chart_ruler":
+            # Get the planet ruling the Ascendant sign
+            from stellium.utils.chart_ruler import get_chart_ruler
+
+            asc = natal_chart.get_object("ASC")
+            if asc:
+                ruler_name = get_chart_ruler(asc.sign, rulership_system)
+                effective_arc_type = ruler_name.lower()
+            else:
+                effective_arc_type = "solar_arc"  # Fallback
+
+        elif effective_arc_type == "sect":
+            # Determine if day or night chart
+            sun = natal_chart.get_object("Sun")
+            asc = natal_chart.get_object("ASC")
+            if sun and asc:
+                # Simple sect check: Sun above horizon = day chart
+                # Sun is above horizon if its longitude is between ASC and DSC
+                # going through MC (upper hemisphere)
+                asc_lon = asc.longitude
+                dsc_lon = (asc_lon + 180) % 360
+                sun_lon = sun.longitude
+
+                # Check if Sun is in upper hemisphere
+                if asc_lon < dsc_lon:
+                    is_day = asc_lon <= sun_lon < dsc_lon
+                else:
+                    is_day = sun_lon >= asc_lon or sun_lon < dsc_lon
+
+                effective_arc_type = "solar_arc" if is_day else "lunar"
+            else:
+                effective_arc_type = "solar_arc"  # Fallback
+
+        # Calculate the arc
+        if effective_arc_type == "naibod":
+            arc = calculate_naibod_arc(years_elapsed)
+        elif effective_arc_type == "solar_arc":
+            arc = calculate_solar_arc(
+                natal_positions["Sun"], progressed_positions["Sun"]
+            )
+        elif effective_arc_type == "lunar":
+            arc = calculate_lunar_arc(
+                natal_positions["Moon"], progressed_positions["Moon"]
+            )
+        else:
+            # Assume it's a planet name (Mars, Venus, Jupiter, Saturn, Mercury)
+            planet = effective_arc_type.title()
+            if planet not in natal_positions:
+                raise ValueError(
+                    f"Unknown arc type or planet not found: '{arc_type}'. "
+                    f"Available: solar_arc, naibod, lunar, chart_ruler, sect, "
+                    f"or a planet name like 'Mars', 'Venus', etc."
+                )
+            arc = calculate_planetary_arc(
+                natal_positions[planet], progressed_positions[planet]
+            )
+
+        # Create directed chart by applying arc to ALL natal positions
+        directed_positions = []
+        for pos in natal_chart.positions:
+            new_longitude = (pos.longitude + arc) % 360
+            directed_positions.append(replace(pos, longitude=new_longitude))
+
+        # Create a new CalculatedChart with the directed positions
+        name = natal_chart.metadata.get("name", "Chart")
+        directed_chart = CalculatedChart(
+            datetime=natal_chart.datetime,  # Keep natal datetime for reference
+            location=natal_chart.location,
+            positions=tuple(directed_positions),
+            house_systems=natal_chart.house_systems,
+            house_placements=natal_chart.house_placements,
+            aspects=(),  # Cross-chart aspects will be calculated
+            metadata={
+                "arc_type": original_arc_type,
+                "effective_arc_type": effective_arc_type,
+                "arc_degrees": arc,
+                "years_elapsed": years_elapsed,
+                "target_date": target.isoformat() if target else None,
+                "name": f"{name} - Directed",
+            },
+        )
+
+        # Create builder
+        builder = cls(natal_chart, ComparisonType.ARC_DIRECTION, natal_label)
+        builder._chart2 = directed_chart
+        builder._chart2_label = directed_label
+
+        return builder
+
     # ===== Configuration Methods =====
     def with_partner(
         self,
@@ -1142,6 +1358,20 @@ class ComparisonBuilder:
                 "Trine": 1.0,
                 "Opposition": 1.0,
                 # Minor aspects (rarely used in progressions)
+                "Semisextile": 0.5,
+                "Semisquare": 0.5,
+                "Sesquisquare": 0.5,
+                "Quincunx": 0.5,
+            }
+        elif self._comparison_type == ComparisonType.ARC_DIRECTION:
+            # Arc Directions: Same as progressions (symbolic timing, 1° = 1 year)
+            orb_map = {
+                "Conjunction": 1.0,
+                "Sextile": 1.0,
+                "Square": 1.0,
+                "Trine": 1.0,
+                "Opposition": 1.0,
+                # Minor aspects
                 "Semisextile": 0.5,
                 "Semisquare": 0.5,
                 "Sesquisquare": 0.5,

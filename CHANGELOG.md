@@ -9,6 +9,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Arc Directions (November 28, 2025)
+
+- **ComparisonBuilder.arc_direction()**: Create arc direction comparisons (natal vs directed chart)
+  - Arc directions move ALL points by the same angular distance, preserving natal relationships
+  - Supports multiple arc types:
+    - `solar_arc`: Progressed Sun - natal Sun (~1°/year actual)
+    - `naibod`: Mean solar motion (0.9856°/year)
+    - `lunar`: Progressed Moon - natal Moon (~12-13°/year)
+    - `chart_ruler`: Uses planet ruling the Ascendant sign
+    - `sect`: Day charts use solar arc, night charts use lunar arc
+    - Any traditional planet: `"Mars"`, `"Venus"`, `"Jupiter"`, `"Saturn"`, `"Mercury"`
+  - Traditional and modern rulership system options for chart_ruler
+  - Full biwheel chart support with cross-chart aspects
+
+- **New ComparisonType.ARC_DIRECTION** enum value
+
+- **Arc calculation utilities** in `utils/progressions.py`:
+  - `calculate_lunar_arc()`: Arc from Moon's progressed motion
+  - `calculate_planetary_arc()`: Arc from any planet's motion
+
+- **18 comprehensive tests** covering all arc types and edge cases
+
 #### Declination Aspects (November 28, 2025)
 
 - **DeclinationAspectEngine**: Calculate Parallel and Contraparallel aspects

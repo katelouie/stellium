@@ -64,6 +64,7 @@ class ComparisonType(Enum):
     SYNASTRY = "synastry"
     TRANSIT = "transit"
     PROGRESSION = "progression"
+    ARC_DIRECTION = "arc_direction"
 
 
 @dataclass(frozen=True)

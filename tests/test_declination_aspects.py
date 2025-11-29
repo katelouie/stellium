@@ -6,7 +6,6 @@ from stellium import ChartBuilder
 from stellium.core.models import CelestialPosition, ObjectType
 from stellium.engines.aspects import DeclinationAspectEngine
 
-
 # =============================================================================
 # Unit Tests for DeclinationAspectEngine
 # =============================================================================
