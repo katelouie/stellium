@@ -97,3 +97,25 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Cayce,_Edgar'
   verified: false
+- name: Arthur Edward Waite
+  event_type: birth
+  year: 1857
+  month: 10
+  day: 2
+  hour: 13
+  minute: 0
+  latitude: 40.65
+  longitude: -73.95
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: occultist
+  subcategories:
+  - mystic
+  - author
+  notable_for: American-born British poet and scholarly mystic who wrote extensively on occult and esoteric matters, and was the co-creator of the Rider-Waite tarot deck. He authored its companion volume, the Pictorial Key to the Tarot (1911), a guide to tarot reading. Waite joined the Hermetic Order of the Golden Dawn, was a Freemason, and founded several esoteric orders. He was a prolific author on divination, esotericism, Freemasonry, ceremonial magic, Kabbalah, and alchemy.
+  astrological_notes: Sun 9°28' Libra, Ascendant 4°12' Capricorn
+  data_quality: B
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Arthur_Edward_Waite'
+  - Wikipedia: https://en.wikipedia.org/wiki/A._E._Waite
+  verified: false

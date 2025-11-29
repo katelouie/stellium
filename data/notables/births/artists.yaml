@@ -314,3 +314,25 @@
   sources:
   - 'Astrologify: https://astrologify.com/people/alfred-stieglitz/'
   verified: false
+- name: Pamela Colman Smith
+  event_type: birth
+  year: 1878
+  month: 2
+  day: 16
+  hour: 12
+  minute: 0
+  latitude: 51.4833
+  longitude: -0.3667
+  location_name: Heston Middlesex, England
+  timezone: Europe/London
+  category: artist
+  subcategories:
+  - illustrator
+  - commercial artist
+  notable_for: British artist known for illustrating the Rider-Waite tarot deck, published in December 1909, the first deck where the pip cards (ace through ten) were fully illustrated. A member of the Order of the Golden Dawn, she worked on the deck in partnership with Arthur E. Waite, publisher of The Pictorial Key to the Tarot in 1911. The deck is now called the Waite-Smith deck and is the biggest-selling tarot deck of the 20th century.
+  astrological_notes: Sun 27°44' Aquarius
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Smith,_Pamela_Colman'
+  - LMR quotes Elizabeth Hazel who speculates 3:30 PM
+  verified: false
