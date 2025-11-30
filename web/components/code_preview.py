@@ -24,7 +24,9 @@ def generate_python_code(state: ChartState, report_state: PDFReportState) -> str
             f"{hs.replace(' ', '').replace('(', '').replace(')', '')}Houses"
             for hs in state.house_systems
         ]
-        imports.append(f"from stellium.engines.houses import {', '.join(house_imports)}")
+        imports.append(
+            f"from stellium.engines.houses import {', '.join(house_imports)}"
+        )
 
     components = []
     if state.include_dignities:

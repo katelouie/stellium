@@ -28,7 +28,9 @@ class CelestialObjectInfo:
 
     # Visual Representation
     glyph: str  # Unicode astrological glyph (e.g., "☽", "☊", "⚸")
-    glyph_svg_path: str | None = None  # Path to SVG image for objects without Unicode glyphs
+    glyph_svg_path: str | None = (
+        None  # Path to SVG image for objects without Unicode glyphs
+    )
 
     # Ephemeris/Calculation Data
     swiss_ephemeris_id: int | None = None  # Swiss Ephemeris object ID (if applicable)

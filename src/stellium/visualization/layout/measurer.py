@@ -79,7 +79,9 @@ class ContentMeasurer:
         show_speed = True
 
         # Get house systems to display (may be multiple)
-        house_systems = self._get_house_systems_to_display(chart, config) if show_house else []
+        house_systems = (
+            self._get_house_systems_to_display(chart, config) if show_house else []
+        )
 
         # Add a "house" column for each house system
         for _ in house_systems:
@@ -96,7 +98,9 @@ class ContentMeasurer:
                 single_table_width += gap_between_cols
 
         # Account for multiple tables (for comparison charts)
-        total_width = (single_table_width * num_tables) + (gap_between_tables * (num_tables - 1))
+        total_width = (single_table_width * num_tables) + (
+            gap_between_tables * (num_tables - 1)
+        )
 
         # Height: padding + header + rows + padding
         # For comparison: also add title height (20px) above each table
@@ -141,11 +145,15 @@ class ContentMeasurer:
 
         # For comparisons, we have 2 chart tables
         num_chart_tables = 2 if isinstance(chart, Comparison) else 1
-        total_width = (single_table_width * num_chart_tables) + (gap_between_tables * (num_chart_tables - 1))
+        total_width = (single_table_width * num_chart_tables) + (
+            gap_between_tables * (num_chart_tables - 1)
+        )
 
         # Height: padding + title (for comparison) + header + 12 rows + padding
         title_height = 20 if num_chart_tables == 2 else 0
-        total_height = padding + title_height + line_height + (12 * line_height) + padding
+        total_height = (
+            padding + title_height + line_height + (12 * line_height) + padding
+        )
 
         return Dimensions(total_width, total_height)
 

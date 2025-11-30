@@ -72,12 +72,14 @@ async def search_locations(query: str, limit: int = 5) -> list[dict]:
 
             short_name = ", ".join(parts) if parts else loc.address
 
-            locations.append({
-                "display_name": loc.address,
-                "short_name": short_name,
-                "latitude": loc.latitude,
-                "longitude": loc.longitude,
-            })
+            locations.append(
+                {
+                    "display_name": loc.address,
+                    "short_name": short_name,
+                    "latitude": loc.latitude,
+                    "longitude": loc.longitude,
+                }
+            )
 
         return locations
 
@@ -198,6 +200,7 @@ def create_location_input(
 
     def on_blur(e):
         """Hide dropdown when input loses focus (with delay for click)."""
+
         async def delayed_hide():
             await asyncio.sleep(0.2)  # Allow click to register
             state["show_dropdown"] = False

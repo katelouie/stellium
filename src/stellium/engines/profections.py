@@ -55,7 +55,9 @@ def index_to_sign(index: int) -> str:
     return SIGNS[index % 12]
 
 
-def get_sign_ruler(sign: str, system: Literal["traditional", "modern"] = "traditional") -> str:
+def get_sign_ruler(
+    sign: str, system: Literal["traditional", "modern"] = "traditional"
+) -> str:
     """
     Get the planetary ruler of a zodiac sign.
 
@@ -258,8 +260,7 @@ class ProfectionEngine:
                 self.house_system = matching[0]
             else:
                 raise ValueError(
-                    f"House system '{house_system}' not found. "
-                    f"Available: {available}"
+                    f"House system '{house_system}' not found. Available: {available}"
                 ) from err
 
     # =========================================================================

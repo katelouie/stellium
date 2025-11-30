@@ -33,7 +33,9 @@ from stellium.presentation.sections import (
 def sample_chart():
     """Create a sample chart for testing reports."""
     datetime = dt.datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)
-    location = ChartLocation(latitude=37.7749, longitude=-122.4194, name="San Francisco, CA")
+    location = ChartLocation(
+        latitude=37.7749, longitude=-122.4194, name="San Francisco, CA"
+    )
     native = Native(datetime, location)
 
     return (
@@ -48,7 +50,9 @@ def sample_chart():
 def mock_chart():
     """Create a chart with mock ephemeris for faster testing."""
     datetime = dt.datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)
-    location = ChartLocation(latitude=37.7749, longitude=-122.4194, name="Test Location")
+    location = ChartLocation(
+        latitude=37.7749, longitude=-122.4194, name="Test Location"
+    )
     native = Native(datetime, location)
 
     return (
@@ -116,9 +120,7 @@ def test_with_planet_positions_custom_options(sample_chart):
         ReportBuilder()
         .from_chart(sample_chart)
         .with_planet_positions(
-            include_speed=True,
-            include_house=False,
-            house_systems=["Placidus"]
+            include_speed=True, include_house=False, house_systems=["Placidus"]
         )
     )
 
@@ -166,9 +168,7 @@ def test_with_midpoints_default(mock_chart):
 def test_with_midpoints_custom_options(mock_chart):
     """Test adding midpoints with custom options."""
     builder = (
-        ReportBuilder()
-        .from_chart(mock_chart)
-        .with_midpoints(mode="core", threshold=10)
+        ReportBuilder().from_chart(mock_chart).with_midpoints(mode="core", threshold=10)
     )
 
     section = builder._sections[0]
@@ -186,6 +186,7 @@ def test_with_moon_phase(sample_chart):
 
 def test_with_section_custom(mock_chart):
     """Test adding a custom section."""
+
     class CustomSection:
         @property
         def section_name(self):
@@ -249,11 +250,7 @@ def test_render_without_chart():
 
 def test_render_plain_table(mock_chart):
     """Test rendering with plain table format."""
-    builder = (
-        ReportBuilder()
-        .from_chart(mock_chart)
-        .with_chart_overview()
-    )
+    builder = ReportBuilder().from_chart(mock_chart).with_chart_overview()
 
     # Should not raise
     result = builder.render(format="plain_table", show=False)
@@ -262,11 +259,7 @@ def test_render_plain_table(mock_chart):
 
 def test_render_rich_table(mock_chart):
     """Test rendering with rich table format."""
-    builder = (
-        ReportBuilder()
-        .from_chart(mock_chart)
-        .with_chart_overview()
-    )
+    builder = ReportBuilder().from_chart(mock_chart).with_chart_overview()
 
     # Should not raise
     result = builder.render(format="rich_table", show=False)
@@ -292,11 +285,7 @@ def test_render_to_file(mock_chart, tmp_path):
 
 def test_render_file_content(mock_chart, tmp_path):
     """Test that rendered file contains expected content."""
-    builder = (
-        ReportBuilder()
-        .from_chart(mock_chart)
-        .with_chart_overview()
-    )
+    builder = ReportBuilder().from_chart(mock_chart).with_chart_overview()
 
     output_file = tmp_path / "report.txt"
     builder.render(format="plain_table", file=str(output_file), show=False)
@@ -462,11 +451,7 @@ def test_render_file_and_show(mock_chart, tmp_path, capsys):
     builder = ReportBuilder().from_chart(mock_chart).with_chart_overview()
 
     output_file = tmp_path / "report.txt"
-    result = builder.render(
-        format="plain_table",
-        file=str(output_file),
-        show=True
-    )
+    result = builder.render(format="plain_table", file=str(output_file), show=True)
 
     # Should create file
     assert result == str(output_file)

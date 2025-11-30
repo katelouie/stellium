@@ -62,15 +62,21 @@ class TestComparisonDataclass:
 
     def test_chart2_datetime_property(self, synastry_comparison):
         """Test chart2_datetime property."""
-        assert synastry_comparison.chart2_datetime == synastry_comparison.chart2.datetime
+        assert (
+            synastry_comparison.chart2_datetime == synastry_comparison.chart2.datetime
+        )
 
     def test_chart2_location_property(self, synastry_comparison):
         """Test chart2_location property."""
-        assert synastry_comparison.chart2_location == synastry_comparison.chart2.location
+        assert (
+            synastry_comparison.chart2_location == synastry_comparison.chart2.location
+        )
 
     def test_chart2_positions_property(self, synastry_comparison):
         """Test chart2_positions property."""
-        assert synastry_comparison.chart2_positions == synastry_comparison.chart2.positions
+        assert (
+            synastry_comparison.chart2_positions == synastry_comparison.chart2.positions
+        )
 
     def test_chart2_houses_property(self, synastry_comparison):
         """Test chart2_houses property."""
@@ -129,7 +135,9 @@ class TestComparisonQueryMethods:
         angles = synastry.get_angles(chart=1)
         assert len(angles) > 0
         angle_names = [a.name for a in angles]
-        assert "Ascendant" in angle_names or "ASC" in angle_names or len(angle_names) > 0
+        assert (
+            "Ascendant" in angle_names or "ASC" in angle_names or len(angle_names) > 0
+        )
 
     def test_get_angles_from_chart2(self, synastry):
         """Test get_angles() from chart2."""
@@ -558,9 +566,7 @@ class TestProgressionAutoCalculation:
         """Test progression() with age parameter."""
         natal = Native("1990-01-15 10:00", "New York, NY")
 
-        comparison = ComparisonBuilder.progression(
-            natal, age=30
-        ).calculate()
+        comparison = ComparisonBuilder.progression(natal, age=30).calculate()
 
         assert comparison.comparison_type == ComparisonType.PROGRESSION
         # Progressed chart should be ~30 days after natal
@@ -677,9 +683,7 @@ class TestComparisonDefaultOrbs:
         """Test progression uses very tight orbs (1°)."""
         natal = Native("1990-01-15 10:00", "New York, NY")
 
-        comparison = ComparisonBuilder.progression(
-            natal, age=30
-        ).calculate()
+        comparison = ComparisonBuilder.progression(natal, age=30).calculate()
 
         # Progression orbs are very tight (1°)
         for aspect in comparison.cross_aspects:

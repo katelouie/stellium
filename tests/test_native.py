@@ -102,7 +102,7 @@ class TestNativeTimezoneHandling:
         """Test that same local time in different timezones produces different UTC."""
         # Same local time in two different timezones
         native_ca = Native("2024-11-24 14:30", "Palo Alto, CA")  # PST
-        native_ny = Native("2024-11-24 14:30", "New York, NY")   # EST
+        native_ny = Native("2024-11-24 14:30", "New York, NY")  # EST
 
         # Local times are the same
         assert native_ca.datetime.local_datetime.hour == 14
@@ -110,7 +110,10 @@ class TestNativeTimezoneHandling:
 
         # But UTC times differ by 3 hours
         utc_diff = abs(
-            (native_ca.datetime.utc_datetime - native_ny.datetime.utc_datetime).total_seconds() / 3600
+            (
+                native_ca.datetime.utc_datetime - native_ny.datetime.utc_datetime
+            ).total_seconds()
+            / 3600
         )
         assert utc_diff == 3.0
 

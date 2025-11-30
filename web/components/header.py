@@ -22,7 +22,9 @@ def create_header():
             "w-full max-w-6xl mx-auto flex items-center justify-center"
         ):
             # Center: Logo (clickable link to home)
-            with ui.element("a").classes("no-underline cursor-pointer").props('href="/"'):
+            with (
+                ui.element("a").classes("no-underline cursor-pointer").props('href="/"')
+            ):
                 with ui.row().classes("items-center gap-2"):
                     ui.label("★").classes("text-sm").style(f"color: {COLORS['gold']}")
                     ui.label("Stellium").classes(

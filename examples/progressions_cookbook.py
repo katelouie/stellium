@@ -60,22 +60,36 @@ def example_1_simple_progression_by_age():
     # Create natal chart
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    print(f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}")
-    print(f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}")
-    print(f"Natal ASC: {natal.get_object('ASC').longitude:.2f}° {natal.get_object('ASC').sign}")
+    print(
+        f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}"
+    )
+    print(
+        f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}"
+    )
+    print(
+        f"Natal ASC: {natal.get_object('ASC').longitude:.2f}° {natal.get_object('ASC').sign}"
+    )
 
     # Calculate progressions for age 26 (when Einstein published special relativity!)
     prog = ComparisonBuilder.progression(natal, age=26).calculate()
 
     print("\nProgressions at Age 26 (1905 - 'Miracle Year'):")
-    print(f"  Progressed Sun: {prog.chart2.get_object('Sun').longitude:.2f}° {prog.chart2.get_object('Sun').sign}")
-    print(f"  Progressed Moon: {prog.chart2.get_object('Moon').longitude:.2f}° {prog.chart2.get_object('Moon').sign}")
-    print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° {prog.chart2.get_object('ASC').sign}")
+    print(
+        f"  Progressed Sun: {prog.chart2.get_object('Sun').longitude:.2f}° {prog.chart2.get_object('Sun').sign}"
+    )
+    print(
+        f"  Progressed Moon: {prog.chart2.get_object('Moon').longitude:.2f}° {prog.chart2.get_object('Moon').sign}"
+    )
+    print(
+        f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° {prog.chart2.get_object('ASC').sign}"
+    )
 
     # Show cross-aspects between progressed and natal
     print(f"\nProgressed-to-Natal Aspects: {len(prog.cross_aspects)}")
     for asp in sorted(prog.cross_aspects, key=lambda a: a.orb)[:5]:
-        print(f"  P.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)")
+        print(
+            f"  P.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)"
+        )
 
 
 def example_2_progressed_sun_motion():
@@ -86,13 +100,19 @@ def example_2_progressed_sun_motion():
     """
     section_header("Example 2: Progressed Sun Motion (~1°/year)")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),  # Palo Alto coordinates
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details(
+            "1994-01-06 11:47",
+            (37.4419, -122.1430),  # Palo Alto coordinates
+            name="Kate",
+        )
+        .with_aspects()
+        .calculate()
+    )
 
-    print(f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}")
+    print(
+        f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}"
+    )
 
     # Track Sun motion at different ages
     ages = [0, 10, 20, 30, 40]
@@ -100,19 +120,21 @@ def example_2_progressed_sun_motion():
     print("\nProgressed Sun at different ages:")
     print("-" * 50)
 
-    prev_sun = natal.get_object('Sun').longitude
+    prev_sun = natal.get_object("Sun").longitude
     for age in ages:
         if age == 0:
-            sun = natal.get_object('Sun')
+            sun = natal.get_object("Sun")
             motion = 0
         else:
             prog = ComparisonBuilder.progression(natal, age=age).calculate()
-            sun = prog.chart2.get_object('Sun')
+            sun = prog.chart2.get_object("Sun")
             motion = sun.longitude - prev_sun
             if motion < 0:
                 motion += 360
 
-        print(f"  Age {age:2d}: {sun.longitude:6.2f}° {sun.sign:12s} (moved {motion:.1f}° from prev)")
+        print(
+            f"  Age {age:2d}: {sun.longitude:6.2f}° {sun.sign:12s} (moved {motion:.1f}° from prev)"
+        )
         prev_sun = sun.longitude
 
 
@@ -125,26 +147,28 @@ def example_3_progressed_moon_cycle():
     """
     section_header("Example 3: Progressed Moon Cycle (~12°/year)")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
-    print(f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}")
+    print(
+        f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}"
+    )
 
     # Track Moon through approximate sign changes (~2.5 years per sign)
     print("\nProgressed Moon sign changes (approximate):")
     print("-" * 50)
 
-    current_sign = natal.get_object('Moon').sign
+    current_sign = natal.get_object("Moon").sign
 
     for age in range(0, 31, 3):
         if age == 0:
-            moon = natal.get_object('Moon')
+            moon = natal.get_object("Moon")
         else:
             prog = ComparisonBuilder.progression(natal, age=age).calculate()
-            moon = prog.chart2.get_object('Moon')
+            moon = prog.chart2.get_object("Moon")
 
         sign_change = "← SIGN CHANGE" if moon.sign != current_sign else ""
         print(f"  Age {age:2d}: {moon.longitude:6.2f}° {moon.sign:12s} {sign_change}")
@@ -170,7 +194,7 @@ def example_4_progression_by_target_date():
     # Progressions for when Einstein received the Nobel Prize (1921)
     prog = ComparisonBuilder.progression(
         natal,
-        target_date="1921-11-09"  # Nobel Prize announcement
+        target_date="1921-11-09",  # Nobel Prize announcement
     ).calculate()
 
     print("Progressions for November 9, 1921 (Nobel Prize)")
@@ -193,11 +217,11 @@ def example_5_current_progressions():
     """
     section_header("Example 5: Current Progressions")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     # Progressions for NOW
     prog = ComparisonBuilder.progression(natal).calculate()
@@ -208,9 +232,15 @@ def example_5_current_progressions():
     current_age = (now - birth_dt).days / 365.25
 
     print(f"Current progressions (age ~{current_age:.1f}):")
-    print(f"  Progressed Sun: {prog.chart2.get_object('Sun').longitude:.2f}° {prog.chart2.get_object('Sun').sign}")
-    print(f"  Progressed Moon: {prog.chart2.get_object('Moon').longitude:.2f}° {prog.chart2.get_object('Moon').sign}")
-    print(f"  Progressed Venus: {prog.chart2.get_object('Venus').longitude:.2f}° {prog.chart2.get_object('Venus').sign}")
+    print(
+        f"  Progressed Sun: {prog.chart2.get_object('Sun').longitude:.2f}° {prog.chart2.get_object('Sun').sign}"
+    )
+    print(
+        f"  Progressed Moon: {prog.chart2.get_object('Moon').longitude:.2f}° {prog.chart2.get_object('Moon').sign}"
+    )
+    print(
+        f"  Progressed Venus: {prog.chart2.get_object('Venus').longitude:.2f}° {prog.chart2.get_object('Venus').sign}"
+    )
 
 
 # =============================================================================
@@ -228,24 +258,32 @@ def example_6_quotidian_angles():
     """
     section_header("Example 6: Quotidian Angles (Default)")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     # Quotidian is the default (most accurate method)
     prog = ComparisonBuilder.progression(
         natal,
         age=30,
-        angle_method="quotidian"  # This is the default
+        angle_method="quotidian",  # This is the default
     ).calculate()
 
     print("Quotidian Angles (actual ephemeris motion):")
-    print(f"  Natal ASC: {natal.get_object('ASC').longitude:.2f}° {natal.get_object('ASC').sign}")
-    print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° {prog.chart2.get_object('ASC').sign}")
-    print(f"  Natal MC: {natal.get_object('MC').longitude:.2f}° {natal.get_object('MC').sign}")
-    print(f"  Progressed MC: {prog.chart2.get_object('MC').longitude:.2f}° {prog.chart2.get_object('MC').sign}")
+    print(
+        f"  Natal ASC: {natal.get_object('ASC').longitude:.2f}° {natal.get_object('ASC').sign}"
+    )
+    print(
+        f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° {prog.chart2.get_object('ASC').sign}"
+    )
+    print(
+        f"  Natal MC: {natal.get_object('MC').longitude:.2f}° {natal.get_object('MC').sign}"
+    )
+    print(
+        f"  Progressed MC: {prog.chart2.get_object('MC').longitude:.2f}° {prog.chart2.get_object('MC').sign}"
+    )
 
 
 def example_7_solar_arc_angles():
@@ -259,21 +297,19 @@ def example_7_solar_arc_angles():
     """
     section_header("Example 7: Solar Arc Angles")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     prog = ComparisonBuilder.progression(
-        natal,
-        age=30,
-        angle_method="solar_arc"
+        natal, age=30, angle_method="solar_arc"
     ).calculate()
 
     # Calculate the solar arc
-    natal_sun = natal.get_object('Sun').longitude
-    prog_sun = prog.chart2.get_object('Sun').longitude
+    natal_sun = natal.get_object("Sun").longitude
+    prog_sun = prog.chart2.get_object("Sun").longitude
     solar_arc = prog_sun - natal_sun
     if solar_arc < 0:
         solar_arc += 360
@@ -281,9 +317,13 @@ def example_7_solar_arc_angles():
     print("Solar Arc Method:")
     print(f"  Solar Arc: {solar_arc:.2f}° (Sun's motion in 30 years)")
     print(f"\n  Natal ASC: {natal.get_object('ASC').longitude:.2f}°")
-    print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° (natal + {solar_arc:.2f}°)")
+    print(
+        f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° (natal + {solar_arc:.2f}°)"
+    )
     print(f"\n  Natal MC: {natal.get_object('MC').longitude:.2f}°")
-    print(f"  Progressed MC: {prog.chart2.get_object('MC').longitude:.2f}° (natal + {solar_arc:.2f}°)")
+    print(
+        f"  Progressed MC: {prog.chart2.get_object('MC').longitude:.2f}° (natal + {solar_arc:.2f}°)"
+    )
 
     # Verify the metadata
     print(f"\n  Metadata: angle_method = {prog.chart2.metadata.get('angle_method')}")
@@ -302,16 +342,14 @@ def example_8_naibod_angles():
     """
     section_header("Example 8: Naibod Angles")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     prog = ComparisonBuilder.progression(
-        natal,
-        age=30,
-        angle_method="naibod"
+        natal, age=30, angle_method="naibod"
     ).calculate()
 
     # Calculate expected Naibod arc
@@ -321,10 +359,12 @@ def example_8_naibod_angles():
     print("Naibod Method (mean Sun rate: 59'08\"/year):")
     print(f"  Expected arc for 30 years: {expected_arc:.2f}°")
     print(f"\n  Natal ASC: {natal.get_object('ASC').longitude:.2f}°")
-    print(f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° (natal + {expected_arc:.2f}°)")
+    print(
+        f"  Progressed ASC: {prog.chart2.get_object('ASC').longitude:.2f}° (natal + {expected_arc:.2f}°)"
+    )
 
     # Verify the metadata
-    actual_arc = prog.chart2.metadata.get('angle_arc', 0)
+    actual_arc = prog.chart2.metadata.get("angle_arc", 0)
     print(f"\n  Metadata: angle_arc = {actual_arc:.2f}°")
 
 
@@ -336,13 +376,13 @@ def example_9_compare_angle_methods():
     """
     section_header("Example 9: Compare Angle Methods")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
-    natal_asc = natal.get_object('ASC').longitude
+    natal_asc = natal.get_object("ASC").longitude
 
     print(f"Natal ASC: {natal_asc:.2f}°\n")
     print(f"{'Method':<12} {'Progressed ASC':>15} {'Difference':>12}")
@@ -350,12 +390,10 @@ def example_9_compare_angle_methods():
 
     for method in ["quotidian", "solar_arc", "naibod"]:
         prog = ComparisonBuilder.progression(
-            natal,
-            age=30,
-            angle_method=method
+            natal, age=30, angle_method=method
         ).calculate()
 
-        prog_asc = prog.chart2.get_object('ASC').longitude
+        prog_asc = prog.chart2.get_object("ASC").longitude
         diff = prog_asc - natal_asc
         if diff < 0:
             diff += 360
@@ -403,11 +441,11 @@ def example_11_house_overlays():
     """
     section_header("Example 11: Progressed Planets in Natal Houses")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     prog = ComparisonBuilder.progression(natal, age=30).calculate()
 
@@ -438,11 +476,11 @@ def example_12_legacy_explicit_chart():
     from datetime import timedelta
 
     # Create natal chart
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     # Manually calculate progressed datetime (30 days = 30 years)
     natal_dt = natal.datetime.local_datetime
@@ -450,9 +488,7 @@ def example_12_legacy_explicit_chart():
 
     # Manually create progressed chart
     progressed = ChartBuilder.from_details(
-        progressed_dt,
-        natal.location,
-        name="Kate - Progressed (manual)"
+        progressed_dt, natal.location, name="Kate - Progressed (manual)"
     ).calculate()
 
     # Legacy API: pass both charts explicitly
@@ -479,7 +515,9 @@ def example_13_tuple_format():
 
     print("Tuple format works!")
     print(f"  Comparison type: {prog.comparison_type}")
-    print(f"  Days between: {prog.chart2.datetime.julian_day - prog.chart1.datetime.julian_day:.1f}")
+    print(
+        f"  Days between: {prog.chart2.datetime.julian_day - prog.chart1.datetime.julian_day:.1f}"
+    )
 
 
 # =============================================================================
@@ -495,17 +533,14 @@ def example_14_draw_progression_biwheel():
     """
     section_header("Example 14: Progression Bi-Wheel Chart")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        (37.4419, -122.1430),
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     prog = ComparisonBuilder.progression(
-        natal,
-        age=30,
-        natal_label="Natal",
-        progressed_label="Progressed Age 30"
+        natal, age=30, natal_label="Natal", progressed_label="Progressed Age 30"
     ).calculate()
 
     # Draw the bi-wheel
@@ -532,7 +567,7 @@ def example_15_progression_with_solar_arc_biwheel():
         age=26,
         angle_method="solar_arc",
         natal_label="Einstein Natal",
-        progressed_label="Progressed 1905"
+        progressed_label="Progressed 1905",
     ).calculate()
 
     output = OUTPUT_DIR / "15_einstein_1905_solar_arc.svg"

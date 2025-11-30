@@ -256,7 +256,11 @@ class PositionTableLayer:
             gap = 5
 
         # Determine which house systems to show
-        house_systems = self._get_house_systems_to_display(chart) if self.style["show_house"] else []
+        house_systems = (
+            self._get_house_systems_to_display(chart)
+            if self.style["show_house"]
+            else []
+        )
 
         # Header row with column mapping
         col_names = ["planet", "sign", "degree"]
@@ -467,7 +471,7 @@ class PositionTableLayer:
         )
 
         # Get column widths from config if available
-        if self.config and hasattr(self.config.tables, 'position_col_widths'):
+        if self.config and hasattr(self.config.tables, "position_col_widths"):
             col_widths = self.config.tables.position_col_widths
             padding = self.config.tables.padding
             gap = self.config.tables.gap_between_columns
@@ -559,7 +563,7 @@ class PositionTableLayer:
         y_start = y_offset
 
         # Get column widths from config if available, otherwise use hardcoded style
-        if self.config and hasattr(self.config.tables, 'position_col_widths'):
+        if self.config and hasattr(self.config.tables, "position_col_widths"):
             col_widths = self.config.tables.position_col_widths
             padding = self.config.tables.padding
             gap = self.config.tables.gap_between_columns
@@ -826,7 +830,7 @@ class HouseCuspTableLayer:
         y_start = self.y_offset
 
         # Get column widths from config if available
-        if self.config and hasattr(self.config.tables, 'house_col_widths'):
+        if self.config and hasattr(self.config.tables, "house_col_widths"):
             col_widths = self.config.tables.house_col_widths
             padding = self.config.tables.padding
             gap = self.config.tables.gap_between_columns
@@ -863,8 +867,18 @@ class HouseCuspTableLayer:
 
         # Sign names for conversion
         sign_names = [
-            "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
-            "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+            "Aries",
+            "Taurus",
+            "Gemini",
+            "Cancer",
+            "Leo",
+            "Virgo",
+            "Libra",
+            "Scorpio",
+            "Sagittarius",
+            "Capricorn",
+            "Aquarius",
+            "Pisces",
         ]
 
         # Render headers
@@ -964,7 +978,7 @@ class HouseCuspTableLayer:
             return
 
         # Get config values
-        if self.config and hasattr(self.config.tables, 'house_col_widths'):
+        if self.config and hasattr(self.config.tables, "house_col_widths"):
             col_widths = self.config.tables.house_col_widths
             padding = self.config.tables.padding
             gap_between_cols = self.config.tables.gap_between_columns
@@ -1009,7 +1023,16 @@ class HouseCuspTableLayer:
 
         # Render chart 1 house table (offset by title height)
         self._render_house_table_for_chart(
-            renderer, dwg, houses1, x_chart1, y_start + 20, col_widths, padding, gap_between_cols, text_color, header_color
+            renderer,
+            dwg,
+            houses1,
+            x_chart1,
+            y_start + 20,
+            col_widths,
+            padding,
+            gap_between_cols,
+            text_color,
+            header_color,
         )
 
         # Render Chart 2 house table (right, with spacing)
@@ -1032,12 +1055,30 @@ class HouseCuspTableLayer:
 
         # Render chart 2 house table (offset by title height)
         self._render_house_table_for_chart(
-            renderer, dwg, houses2, x_chart2, y_start + 20, col_widths, padding, gap_between_cols, text_color, header_color
+            renderer,
+            dwg,
+            houses2,
+            x_chart2,
+            y_start + 20,
+            col_widths,
+            padding,
+            gap_between_cols,
+            text_color,
+            header_color,
         )
 
     def _render_house_table_for_chart(
-        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, houses, x_offset, y_offset,
-        col_widths, padding, gap, text_color, header_color
+        self,
+        renderer: ChartRenderer,
+        dwg: svgwrite.Drawing,
+        houses,
+        x_offset,
+        y_offset,
+        col_widths,
+        padding,
+        gap,
+        text_color,
+        header_color,
     ) -> None:
         """Render a house cusp table for a specific chart."""
         x_start = x_offset
@@ -1693,7 +1734,9 @@ def generate_aspectarian_svg(
     dwg.add(dwg.rect(insert=(0, 0), size=(width, height), fill=bg_color))
 
     # Create and render aspectarian layer
-    actual_cell_size = cell_size if cell_size is not None else config.tables.aspectarian_cell_size
+    actual_cell_size = (
+        cell_size if cell_size is not None else config.tables.aspectarian_cell_size
+    )
     layer = AspectarianLayer(
         x_offset=actual_padding,
         y_offset=actual_padding,

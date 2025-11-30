@@ -180,10 +180,7 @@ def calculate_location_midpoint(
         bx = cos(lat2) * cos(d_lon)
         by = cos(lat2) * sin(d_lon)
 
-        mid_lat = atan2(
-            sin(lat1) + sin(lat2),
-            sqrt((cos(lat1) + bx) ** 2 + by ** 2)
-        )
+        mid_lat = atan2(sin(lat1) + sin(lat2), sqrt((cos(lat1) + bx) ** 2 + by**2))
         mid_lon = lon1 + atan2(by, cos(lat1) + bx)
 
         # Convert back to degrees
@@ -316,7 +313,9 @@ class SynthesisBuilder:
 
         # Configuration (with defaults)
         self._midpoint_method = "short_arc"  # Composite: "short_arc" or "long_arc"
-        self._houses: bool | str = True  # Composite: True (derived), False (none), "place"
+        self._houses: bool | str = (
+            True  # Composite: True (derived), False (none), "place"
+        )
         self._location_method = "great_circle"  # Davison: "great_circle" or "simple"
         self._chart1_label = "Chart 1"
         self._chart2_label = "Chart 2"

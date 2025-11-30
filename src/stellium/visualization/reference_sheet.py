@@ -5,7 +5,6 @@ Generates comprehensive HTML reference sheets showing all available
 themes, palettes, and their colors for easy reference.
 """
 
-
 from .palettes import (
     AspectPalette,
     PlanetGlyphPalette,
@@ -195,9 +194,9 @@ def generate_html_reference(
 
     # Zodiac Palettes Section
     if include_zodiac:
-        html_parts.append('<h2>🌈 Zodiac Wheel Palettes</h2>')
+        html_parts.append("<h2>🌈 Zodiac Wheel Palettes</h2>")
         html_parts.append(
-            '<p>Color palettes for the 12 zodiac signs on the outer wheel.</p>'
+            "<p>Color palettes for the 12 zodiac signs on the outer wheel.</p>"
         )
         html_parts.append('<div class="palette-grid">')
 
@@ -240,8 +239,8 @@ def generate_html_reference(
 
     # Aspect Palettes Section
     if include_aspects:
-        html_parts.append('<h2>🔷 Aspect Line Palettes</h2>')
-        html_parts.append('<p>Color palettes for aspect lines in the chart center.</p>')
+        html_parts.append("<h2>🔷 Aspect Line Palettes</h2>")
+        html_parts.append("<p>Color palettes for aspect lines in the chart center.</p>")
         html_parts.append('<div class="palette-grid">')
 
         for palette in AspectPalette:
@@ -261,7 +260,7 @@ def generate_html_reference(
                     f'<div class="color-swatch" style="background-color: {color};" '
                     f'data-color="{color}"></div>'
                     f'<div class="color-label">{aspect_name}</div>'
-                    f'</div>'
+                    f"</div>"
                 )
 
             html_parts.append("</div></div>")
@@ -270,8 +269,8 @@ def generate_html_reference(
 
     # Planet Glyph Palettes Section
     if include_planet_glyphs:
-        html_parts.append('<h2>🪐 Planet Glyph Palettes</h2>')
-        html_parts.append('<p>Color palettes for planet glyphs.</p>')
+        html_parts.append("<h2>🪐 Planet Glyph Palettes</h2>")
+        html_parts.append("<p>Color palettes for planet glyphs.</p>")
         html_parts.append('<div class="palette-grid">')
 
         planet_names = [
@@ -304,7 +303,7 @@ def generate_html_reference(
                     f'<div class="color-swatch" style="background-color: {color};" '
                     f'data-color="{color}"></div>'
                     f'<div class="color-label">{planet_name}</div>'
-                    f'</div>'
+                    f"</div>"
                 )
 
             html_parts.append("</div></div>")
@@ -313,9 +312,9 @@ def generate_html_reference(
 
     # Themes Section
     if include_themes:
-        html_parts.append('<h2>🎨 Chart Themes</h2>')
+        html_parts.append("<h2>🎨 Chart Themes</h2>")
         html_parts.append(
-            '<p>Complete visual themes with coordinated colors across all elements.</p>'
+            "<p>Complete visual themes with coordinated colors across all elements.</p>"
         )
         html_parts.append('<div class="palette-grid">')
 
@@ -349,7 +348,7 @@ def generate_html_reference(
                     f'<span class="theme-color-label">{label}:</span>'
                     f'<div class="theme-color-swatch" style="background-color: {color};"></div>'
                     f'<span class="theme-color-value">{color}</span>'
-                    f'</div>'
+                    f"</div>"
                 )
 
             html_parts.append("</div></div></div>")

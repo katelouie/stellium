@@ -56,7 +56,9 @@ def example_1_simple_solar_return():
     # First, create the natal chart
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    print(f"Natal Sun: {natal.get_object('Sun').longitude:.4f}° {natal.get_object('Sun').sign}")
+    print(
+        f"Natal Sun: {natal.get_object('Sun').longitude:.4f}° {natal.get_object('Sun').sign}"
+    )
 
     # Calculate 1905 Solar Return (Einstein's "Miracle Year"!)
     sr_1905 = ReturnBuilder.solar(natal, 1905).calculate()
@@ -80,14 +82,16 @@ def example_2_multiple_solar_returns():
     """
     section_header("Example 2: Multiple Solar Returns")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
     print("Natal chart created for Kate")
-    print(f"Natal Sun: {natal.get_object('Sun').longitude:.4f}° {natal.get_object('Sun').sign}")
+    print(
+        f"Natal Sun: {natal.get_object('Sun').longitude:.4f}° {natal.get_object('Sun').sign}"
+    )
 
     # Calculate Solar Returns for several years
     years = [2020, 2023, 2025, 2030]
@@ -95,11 +99,13 @@ def example_2_multiple_solar_returns():
     for year in years:
         sr = ReturnBuilder.solar(natal, year).calculate()
 
-        asc = sr.get_object('ASC')
+        asc = sr.get_object("ASC")
         print(f"\n{year} Solar Return:")
         print(f"  Date: {sr.datetime.utc_datetime.strftime('%Y-%m-%d %H:%M')}")
         print(f"  Sun: {sr.get_object('Sun').longitude:.4f}°")
-        print(f"  Moon: {sr.get_object('Moon').sign} ({sr.get_object('Moon').longitude:.1f}°)")
+        print(
+            f"  Moon: {sr.get_object('Moon').sign} ({sr.get_object('Moon').longitude:.1f}°)"
+        )
         print(f"  Ascendant: {asc.sign if asc else 'N/A'}")
 
         output = OUTPUT_DIR / f"02_solar_return_{year}.svg"
@@ -135,12 +141,16 @@ def example_3_relocated_solar_return():
 
     print("1903 Solar Return comparison:")
     print("\nParis:")
-    print(f"  Location: {sr_paris.location.latitude:.2f}°N, {sr_paris.location.longitude:.2f}°E")
+    print(
+        f"  Location: {sr_paris.location.latitude:.2f}°N, {sr_paris.location.longitude:.2f}°E"
+    )
     print(f"  Ascendant: {sr_paris.get_object('ASC').sign}")
     print(f"  MC: {sr_paris.get_object('MC').sign}")
 
     print("\nNew York:")
-    print(f"  Location: {sr_ny.location.latitude:.2f}°N, {sr_ny.location.longitude:.2f}°W")
+    print(
+        f"  Location: {sr_ny.location.latitude:.2f}°N, {sr_ny.location.longitude:.2f}°W"
+    )
     print(f"  Ascendant: {sr_ny.get_object('ASC').sign}")
     print(f"  MC: {sr_ny.get_object('MC').sign}")
 
@@ -171,13 +181,15 @@ def example_4_lunar_return_near_date():
 
     natal = ChartBuilder.from_notable("Frida Kahlo").with_aspects().calculate()
 
-    print(f"Natal Moon: {natal.get_object('Moon').longitude:.4f}° {natal.get_object('Moon').sign}")
+    print(
+        f"Natal Moon: {natal.get_object('Moon').longitude:.4f}° {natal.get_object('Moon').sign}"
+    )
 
     # Find Lunar Return nearest to a significant date
     # (July 13, 1954 - date of her last public appearance)
     lr = ReturnBuilder.lunar(natal, near_date="1954-07-13").calculate()
 
-    asc = lr.get_object('ASC')
+    asc = lr.get_object("ASC")
     print("\nLunar Return nearest to July 13, 1954:")
     print(f"  Date: {lr.datetime.utc_datetime}")
     print(f"  Moon: {lr.get_object('Moon').longitude:.4f}°")
@@ -197,11 +209,13 @@ def example_5_lunar_return_by_occurrence():
     """
     section_header("Example 5: Nth Lunar Return")
 
-    natal = ChartBuilder.from_details(
-        "2000-06-15 10:30",
-        "Seattle, WA",
-        name="Sample Native"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details(
+            "2000-06-15 10:30", "Seattle, WA", name="Sample Native"
+        )
+        .with_aspects()
+        .calculate()
+    )
 
     print("Calculating first 5 Lunar Returns after birth...")
 
@@ -233,7 +247,9 @@ def example_6_lunar_return_default():
 
     print("Current Lunar Return for Tesla's chart:")
     print(f"  Date: {lr_now.datetime.utc_datetime}")
-    print(f"  Moon: {lr_now.get_object('Moon').longitude:.4f}° {lr_now.get_object('Moon').sign}")
+    print(
+        f"  Moon: {lr_now.get_object('Moon').longitude:.4f}° {lr_now.get_object('Moon').sign}"
+    )
 
 
 # =============================================================================
@@ -251,13 +267,15 @@ def example_7_saturn_return():
     """
     section_header("Example 7: Saturn Return")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_aspects()
+        .calculate()
+    )
 
-    print(f"Natal Saturn: {natal.get_object('Saturn').longitude:.4f}° {natal.get_object('Saturn').sign}")
+    print(
+        f"Natal Saturn: {natal.get_object('Saturn').longitude:.4f}° {natal.get_object('Saturn').sign}"
+    )
 
     # First Saturn Return (~age 29)
     sr1 = ReturnBuilder.planetary(natal, "Saturn", occurrence=1).calculate()
@@ -287,7 +305,9 @@ def example_8_jupiter_return():
 
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    print(f"Natal Jupiter: {natal.get_object('Jupiter').longitude:.4f}° {natal.get_object('Jupiter').sign}")
+    print(
+        f"Natal Jupiter: {natal.get_object('Jupiter').longitude:.4f}° {natal.get_object('Jupiter').sign}"
+    )
 
     # First three Jupiter Returns
     for n in range(1, 4):
@@ -313,7 +333,9 @@ def example_9_mars_return():
     # Mars Return near his famous "Rumble in the Jungle" fight (Oct 30, 1974)
     mr = ReturnBuilder.planetary(natal, "Mars", near_date="1974-10-30").calculate()
 
-    print(f"Natal Mars: {natal.get_object('Mars').longitude:.4f}° {natal.get_object('Mars').sign}")
+    print(
+        f"Natal Mars: {natal.get_object('Mars').longitude:.4f}° {natal.get_object('Mars').sign}"
+    )
     print("\nMars Return near Oct 30, 1974:")
     print(f"  Date: {mr.datetime.utc_datetime.strftime('%Y-%m-%d')}")
     print(f"  Mars: {mr.get_object('Mars').longitude:.4f}°")
@@ -405,11 +427,13 @@ def example_12_return_report():
     """
     section_header("Example 12: Return Report")
 
-    natal = ChartBuilder.from_details(
-        "1990-05-20 14:30",
-        "Los Angeles, CA",
-        name="Sample Native"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details(
+            "1990-05-20 14:30", "Los Angeles, CA", name="Sample Native"
+        )
+        .with_aspects()
+        .calculate()
+    )
 
     # 2025 Solar Return
     sr = ReturnBuilder.solar(natal, 2025).calculate()
@@ -476,11 +500,11 @@ def example_14_precision_demonstration():
     """
     section_header("Example 14: Precision Demonstration")
 
-    natal = ChartBuilder.from_details(
-        "1985-07-04 09:15",
-        "Boston, MA",
-        name="Test"
-    ).with_aspects().calculate()
+    natal = (
+        ChartBuilder.from_details("1985-07-04 09:15", "Boston, MA", name="Test")
+        .with_aspects()
+        .calculate()
+    )
 
     planets = ["Sun", "Moon", "Mars", "Jupiter", "Saturn"]
 
@@ -496,13 +520,17 @@ def example_14_precision_demonstration():
         elif planet == "Moon":
             ret = ReturnBuilder.lunar(natal, near_date="2025-06-01").calculate()
         else:
-            ret = ReturnBuilder.planetary(natal, planet, near_date="2025-01-01").calculate()
+            ret = ReturnBuilder.planetary(
+                natal, planet, near_date="2025-01-01"
+            ).calculate()
 
         return_pos = ret.get_object(planet).longitude
         diff_deg = abs(return_pos - natal_pos)
         diff_arcsec = diff_deg * 3600  # Convert to arcseconds
 
-        print(f"{planet:<10} {natal_pos:<15.4f} {return_pos:<15.4f} {diff_arcsec:<15.2f}")
+        print(
+            f"{planet:<10} {natal_pos:<15.4f} {return_pos:<15.4f} {diff_arcsec:<15.2f}"
+        )
 
 
 # =============================================================================

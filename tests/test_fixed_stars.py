@@ -384,9 +384,7 @@ def test_fixed_stars_to_dict():
     data = chart.to_dict()
 
     # Find Regulus in positions
-    regulus_data = next(
-        (p for p in data["positions"] if p["name"] == "Regulus"), None
-    )
+    regulus_data = next((p for p in data["positions"] if p["name"] == "Regulus"), None)
     assert regulus_data is not None
     assert regulus_data["type"] == "fixed_star"
     assert 0 <= regulus_data["longitude"] <= 360

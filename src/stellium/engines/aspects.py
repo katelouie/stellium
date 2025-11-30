@@ -427,7 +427,8 @@ class DeclinationAspectEngine:
     def calculate_aspects(
         self,
         positions: list[CelestialPosition],
-        orb_engine: OrbEngine | None = None,  # Ignored but included for protocol compatibility
+        orb_engine: OrbEngine
+        | None = None,  # Ignored but included for protocol compatibility
     ) -> list[Aspect]:
         """
         Calculate parallel and contraparallel aspects.

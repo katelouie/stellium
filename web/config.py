@@ -238,8 +238,16 @@ TIMING_CHART_TYPES = [
     ("transits", "Transits", "Current sky positions compared to natal"),
     ("progressions", "Secondary Progressions", "1 day = 1 year symbolic progression"),
     ("solar_return", "Solar Return", "Annual chart when Sun returns to natal position"),
-    ("lunar_return", "Lunar Return", "Monthly chart when Moon returns to natal position"),
-    ("planetary_return", "Planetary Return", "Chart when a planet returns to natal position"),
+    (
+        "lunar_return",
+        "Lunar Return",
+        "Monthly chart when Moon returns to natal position",
+    ),
+    (
+        "planetary_return",
+        "Planetary Return",
+        "Chart when a planet returns to natal position",
+    ),
 ]
 
 # =============================================================================

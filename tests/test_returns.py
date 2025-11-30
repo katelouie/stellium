@@ -6,7 +6,6 @@ These tests verify that ReturnBuilder correctly calculates:
 - Planetary Returns (Saturn, Jupiter, etc.)
 """
 
-
 import pytest
 
 from stellium.core.builder import ChartBuilder
@@ -45,7 +44,9 @@ class TestSolarReturns:
         return_sun = sr.get_object("Sun").longitude
 
         diff = abs(return_sun - natal_sun)
-        assert diff < PRECISION_THRESHOLD, f"Sun position diff {diff}° exceeds threshold"
+        assert diff < PRECISION_THRESHOLD, (
+            f"Sun position diff {diff}° exceeds threshold"
+        )
 
     def test_solar_return_date_is_near_birthday(self, einstein_natal):
         """Solar Return should occur near the birthday each year."""
@@ -73,7 +74,9 @@ class TestSolarReturns:
         for year in [2020, 2023, 2025, 2030]:
             sr = ReturnBuilder.solar(kate_natal, year).calculate()
             diff = abs(sr.get_object("Sun").longitude - natal_sun)
-            assert diff < PRECISION_THRESHOLD, f"Year {year}: diff {diff}° exceeds threshold"
+            assert diff < PRECISION_THRESHOLD, (
+                f"Year {year}: diff {diff}° exceeds threshold"
+            )
 
 
 class TestLunarReturns:
@@ -87,7 +90,9 @@ class TestLunarReturns:
         return_moon = lr.get_object("Moon").longitude
 
         diff = abs(return_moon - natal_moon)
-        assert diff < PRECISION_THRESHOLD, f"Moon position diff {diff}° exceeds threshold"
+        assert diff < PRECISION_THRESHOLD, (
+            f"Moon position diff {diff}° exceeds threshold"
+        )
 
     def test_lunar_return_by_occurrence(self, kate_natal):
         """Lunar Return by occurrence number should work."""
@@ -150,7 +155,9 @@ class TestPlanetaryReturns:
         """Jupiter Return should work (period ~12 years)."""
         natal_jupiter = einstein_natal.get_object("Jupiter").longitude
 
-        jr = ReturnBuilder.planetary(einstein_natal, "Jupiter", occurrence=1).calculate()
+        jr = ReturnBuilder.planetary(
+            einstein_natal, "Jupiter", occurrence=1
+        ).calculate()
         diff = abs(jr.get_object("Jupiter").longitude - natal_jupiter)
 
         assert diff < PRECISION_THRESHOLD
@@ -164,7 +171,9 @@ class TestPlanetaryReturns:
         """Mars Return should work (period ~2 years)."""
         natal_mars = kate_natal.get_object("Mars").longitude
 
-        mr = ReturnBuilder.planetary(kate_natal, "Mars", near_date="1996-01-01").calculate()
+        mr = ReturnBuilder.planetary(
+            kate_natal, "Mars", near_date="1996-01-01"
+        ).calculate()
         diff = abs(mr.get_object("Mars").longitude - natal_mars)
 
         assert diff < PRECISION_THRESHOLD

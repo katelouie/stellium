@@ -101,7 +101,9 @@ class TestSolarReturnRelocated:
     def test_relocated_solar_return_tuple_location(self, natal_chart):
         """Test relocated solar return with (lat, lon) tuple."""
         sr = ReturnBuilder.solar(
-            natal_chart, 2025, location=(34.0522, -118.2437)  # Los Angeles
+            natal_chart,
+            2025,
+            location=(34.0522, -118.2437),  # Los Angeles
         ).calculate()
 
         assert sr is not None
@@ -120,9 +122,7 @@ class TestLunarReturn:
 
     def test_lunar_return_near_date(self, natal_chart):
         """Test lunar return nearest to a specific date."""
-        lr = ReturnBuilder.lunar(
-            natal_chart, near_date="2025-03-15"
-        ).calculate()
+        lr = ReturnBuilder.lunar(natal_chart, near_date="2025-03-15").calculate()
 
         assert lr is not None
         assert len(lr.positions) > 0
@@ -173,9 +173,7 @@ class TestPlanetaryReturn:
     def test_saturn_return_by_occurrence(self, natal_chart):
         """Test first Saturn return calculation."""
         # Saturn return takes ~29 years
-        sr = ReturnBuilder.planetary(
-            natal_chart, "Saturn", occurrence=1
-        ).calculate()
+        sr = ReturnBuilder.planetary(natal_chart, "Saturn", occurrence=1).calculate()
 
         assert sr is not None
         assert sr.metadata.get("return_planet") == "Saturn"
@@ -280,11 +278,7 @@ class TestReturnBuilderConfiguration:
     def test_with_orbs(self, natal_chart):
         """Test with_orbs() deferred configuration."""
         custom_orbs = SimpleOrbEngine(orb_map={"Conjunction": 5.0, "Trine": 4.0})
-        sr = (
-            ReturnBuilder.solar(natal_chart, 2025)
-            .with_orbs(custom_orbs)
-            .calculate()
-        )
+        sr = ReturnBuilder.solar(natal_chart, 2025).with_orbs(custom_orbs).calculate()
 
         assert sr is not None
 
@@ -316,11 +310,7 @@ class TestReturnBuilderConfiguration:
         from stellium.core.config import CalculationConfig
 
         config = CalculationConfig(include_chiron=False)
-        sr = (
-            ReturnBuilder.solar(natal_chart, 2025)
-            .with_config(config)
-            .calculate()
-        )
+        sr = ReturnBuilder.solar(natal_chart, 2025).with_config(config).calculate()
 
         position_names = [p.name for p in sr.positions]
         assert "Chiron" not in position_names
@@ -402,9 +392,7 @@ class TestReturnNearDateParsing:
 
     def test_near_date_string_iso_format(self, natal_chart):
         """Test near_date with ISO format string."""
-        lr = ReturnBuilder.lunar(
-            natal_chart, near_date="2025-03-15"
-        ).calculate()
+        lr = ReturnBuilder.lunar(natal_chart, near_date="2025-03-15").calculate()
 
         assert lr is not None
 
@@ -512,7 +500,9 @@ class TestReturnLocationResolution:
         sr = ReturnBuilder.solar(natal_chart, 2025).calculate()
 
         # Should use natal location (New York)
-        assert "New York" in sr.location.name or abs(sr.location.longitude - (-74.0)) < 1.0
+        assert (
+            "New York" in sr.location.name or abs(sr.location.longitude - (-74.0)) < 1.0
+        )
 
     def test_resolve_location_chart_location_object(self, natal_chart):
         """Test location with ChartLocation object."""

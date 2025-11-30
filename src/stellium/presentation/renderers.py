@@ -170,7 +170,9 @@ class RichTableRenderer:
             elif sub_type == "key_value":
                 parts.append(self._render_key_value(sub_name, sub_data))
             elif sub_type == "text":
-                parts.append(f"\n{sub_name}:\n{sub_data.get('content', sub_data.get('text', ''))}")
+                parts.append(
+                    f"\n{sub_name}:\n{sub_data.get('content', sub_data.get('text', ''))}"
+                )
             elif sub_type == "compound":
                 # Recursive: render nested compound section
                 parts.append(f"\n{sub_name}:")
@@ -188,6 +190,7 @@ class RichTableRenderer:
         svg_content = data.get("content", "")
         # Extract dimensions if possible
         import re
+
         width_match = re.search(r'width="(\d+)(?:px)?"', svg_content)
         height_match = re.search(r'height="(\d+)(?:px)?"', svg_content)
         width = width_match.group(1) if width_match else "?"
@@ -199,13 +202,18 @@ class RichTableRenderer:
         svg_content = data.get("content", "")
         # Extract dimensions if possible
         import re
+
         width_match = re.search(r'width="(\d+)(?:px)?"', svg_content)
         height_match = re.search(r'height="(\d+)(?:px)?"', svg_content)
         width = width_match.group(1) if width_match else "?"
         height = height_match.group(1) if height_match else "?"
-        console.print(f"[SVG: {width}x{height}px - use HTML/PDF output to view]", style="dim")
+        console.print(
+            f"[SVG: {width}x{height}px - use HTML/PDF output to view]", style="dim"
+        )
 
-    def _print_compound(self, console: Console, data: dict[str, Any], indent: int = 0) -> None:
+    def _print_compound(
+        self, console: Console, data: dict[str, Any], indent: int = 0
+    ) -> None:
         """Print compound section with multiple sub-sections (supports nesting)."""
         prefix = "  " * indent
         for sub_name, sub_data in data.get("sections", []):
@@ -218,7 +226,9 @@ class RichTableRenderer:
             elif sub_type == "key_value":
                 self._print_key_value(console, sub_data)
             elif sub_type == "text":
-                console.print(f"{prefix}  {sub_data.get('content', sub_data.get('text', ''))}")
+                console.print(
+                    f"{prefix}  {sub_data.get('content', sub_data.get('text', ''))}"
+                )
             elif sub_type == "compound":
                 # Recursive: print nested compound section
                 self._print_compound(console, sub_data, indent + 1)

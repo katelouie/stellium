@@ -215,7 +215,12 @@ def draw_chart_grid(
             p
             for p in chart.positions
             if p.object_type
-            in (ObjectType.PLANET, ObjectType.ASTEROID, ObjectType.NODE, ObjectType.POINT)
+            in (
+                ObjectType.PLANET,
+                ObjectType.ASTEROID,
+                ObjectType.NODE,
+                ObjectType.POINT,
+            )
         ]
 
         # Assemble layers
@@ -304,7 +309,9 @@ def draw_theme_comparison(
         ]
 
     # Create labels from theme names
-    labels = [t.value.title() if hasattr(t, "value") else str(t).title() for t in themes]
+    labels = [
+        t.value.title() if hasattr(t, "value") else str(t).title() for t in themes
+    ]
 
     # Create grid with one chart per theme
     return draw_chart_grid(
@@ -358,7 +365,9 @@ def draw_palette_comparison(
         ]
 
     # Create labels from palette names
-    labels = [p.value.title() if hasattr(p, "value") else str(p).title() for p in palettes]
+    labels = [
+        p.value.title() if hasattr(p, "value") else str(p).title() for p in palettes
+    ]
 
     # Create grid with same theme but different palettes
     return draw_chart_grid(

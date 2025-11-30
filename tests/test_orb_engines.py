@@ -240,7 +240,9 @@ class TestLuminariesOrbEngine:
         lum_orb = engine.get_orb_allowance(sun_position, moon_position, "Opposition")
 
         # Non-luminary aspect
-        reg_orb = engine.get_orb_allowance(mercury_position, saturn_position, "Opposition")
+        reg_orb = engine.get_orb_allowance(
+            mercury_position, saturn_position, "Opposition"
+        )
 
         assert lum_orb > reg_orb
 
@@ -342,7 +344,9 @@ class TestComplexOrbEngine:
         assert sun_orb == 8.0
 
         # Saturn involved - should use 4.0 (but Sun's 8.0 is higher)
-        sun_saturn_orb = engine.get_orb_allowance(sun_position, saturn_position, "Square")
+        sun_saturn_orb = engine.get_orb_allowance(
+            sun_position, saturn_position, "Square"
+        )
         assert sun_saturn_orb == 8.0  # Max of 8.0 and 4.0
 
         # Saturn without Sun - should use 4.0
@@ -353,7 +357,10 @@ class TestComplexOrbEngine:
         """Test pair-specific orbs (highest priority)."""
         config = {
             "by_pair": {
-                "Moon-Sun": {"Square": 10.0, "default": 8.0}  # Note: alphabetically sorted
+                "Moon-Sun": {
+                    "Square": 10.0,
+                    "default": 8.0,
+                }  # Note: alphabetically sorted
             },
             "by_planet": {"Sun": {"default": 6.0}},
             "by_aspect": {"Square": 5.0},
@@ -406,7 +413,9 @@ class TestComplexOrbEngine:
         orb = engine.get_orb_allowance(sun_position, saturn_position, "Trine")
         assert orb == 8.0
 
-    def test_aspect_specific_overrides_planet_default(self, sun_position, moon_position):
+    def test_aspect_specific_overrides_planet_default(
+        self, sun_position, moon_position
+    ):
         """Test that planet aspect-specific overrides planet default."""
         config = {
             "by_planet": {
@@ -422,12 +431,12 @@ class TestComplexOrbEngine:
         assert square_orb == 10.0  # aspect-specific
         assert trine_orb == 6.0  # default
 
-    def test_cascading_priority(self, sun_position, moon_position, mars_position, saturn_position):
+    def test_cascading_priority(
+        self, sun_position, moon_position, mars_position, saturn_position
+    ):
         """Test complete cascading priority system."""
         config = {
-            "by_pair": {
-                "Moon-Sun": {"Square": 12.0, "default": 10.0}
-            },
+            "by_pair": {"Moon-Sun": {"Square": 12.0, "default": 10.0}},
             "by_planet": {
                 "Sun": {"Opposition": 9.0, "default": 8.0},
                 "Mars": {"default": 5.0},
@@ -469,7 +478,9 @@ class TestComplexOrbEngine:
         assert orb6 == 5.0  # Mars planet default (no Conjunction-specific rule)
 
         # 7. True global default (neither planet has rules)
-        orb7 = engine.get_orb_allowance(saturn_position, jupiter_position, "Conjunction")
+        orb7 = engine.get_orb_allowance(
+            saturn_position, jupiter_position, "Conjunction"
+        )
         assert orb7 == 3.0  # Global default (no rules for Saturn or Jupiter)
 
     def test_empty_config_uses_fallback(self, sun_position, moon_position):
@@ -525,8 +536,12 @@ class TestOrbEngineComparisons:
         simple = SimpleOrbEngine()
         luminaries = LuminariesOrbEngine()
 
-        simple_orb = simple.get_orb_allowance(jupiter_position, saturn_position, "Trine")
-        lum_orb = luminaries.get_orb_allowance(jupiter_position, saturn_position, "Trine")
+        simple_orb = simple.get_orb_allowance(
+            jupiter_position, saturn_position, "Trine"
+        )
+        lum_orb = luminaries.get_orb_allowance(
+            jupiter_position, saturn_position, "Trine"
+        )
 
         # For non-luminaries, both should give same result
         assert simple_orb == lum_orb
@@ -544,7 +559,9 @@ class TestOrbEngineComparisons:
         for aspect in aspects:
             assert simple.get_orb_allowance(sun_position, moon_position, aspect) > 0
             assert luminaries.get_orb_allowance(sun_position, moon_position, aspect) > 0
-            assert complex_eng.get_orb_allowance(sun_position, moon_position, aspect) > 0
+            assert (
+                complex_eng.get_orb_allowance(sun_position, moon_position, aspect) > 0
+            )
 
 
 # ============================================================================
@@ -598,7 +615,9 @@ class TestOrbEngineEdgeCases:
         orb2 = engine.get_orb_allowance(sun_position, moon_position, "square")
         assert orb2 == 2.0  # fallback
 
-    def test_complex_engine_missing_by_planet_section(self, sun_position, moon_position):
+    def test_complex_engine_missing_by_planet_section(
+        self, sun_position, moon_position
+    ):
         """Test ComplexOrbEngine without by_planet section."""
         config = {
             "by_aspect": {"Trine": 8.0},

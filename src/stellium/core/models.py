@@ -446,6 +446,21 @@ class ZRPeriod:
     angle_from_lot: int | None  # 1, 4, 7, or 10 if angular
     is_loosing_bond: bool  # Does this L2+ period trigger LB?
     is_peak: bool
+    # Qualitative analysis
+    ruler_role: str | None = None  # eg "sect_benefic"
+    tenant_roles: list[str] = field(default_factory=list)  # eg ["sect_benefic"]
+
+    # Calculated "vibe score" for heatmaps
+    # Scale: +3 (Excellent) to -3 (Difficult)
+    score: int = 0
+
+    @property
+    def sentiment(self) -> str:
+        if self.score >= 2:
+            return "positive"
+        if self.score <= -2:
+            return "challenging"
+        return "neutral"
 
 
 @dataclass
@@ -889,7 +904,7 @@ class CalculatedChart:
         else:
             return "Severely challenged - very difficult condition"
 
-    def sect(self) -> bool | None:
+    def sect(self) -> str | None:
         """
         Check which sect this chart is (day or night) (Sun above the horizon).
 
@@ -897,6 +912,14 @@ class CalculatedChart:
             "day" or "night"
         """
         dignity_data = self.metadata.get("dignities", {})
+
+        if not dignity_data:
+            # Lazy import to avoid circular dependency
+            from stellium.components.dignity import determine_sect
+
+            return determine_sect(
+                [x for x in self.positions if x.name in ["Sun", "ASC"]]
+            )
         return dignity_data.get("sect")
 
     # =========================================================================

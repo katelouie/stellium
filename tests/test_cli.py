@@ -260,8 +260,12 @@ class TestChartCommands:
         assert result.exit_code != 0
         assert "Error" in result.output or "Aborted" in result.output
 
-    @pytest.mark.parametrize("house_system", ["Placidus", "Whole Sign", "Koch", "Equal"])
-    def test_chart_from_registry_house_systems(self, runner: CliRunner, house_system: str):
+    @pytest.mark.parametrize(
+        "house_system", ["Placidus", "Whole Sign", "Koch", "Equal"]
+    )
+    def test_chart_from_registry_house_systems(
+        self, runner: CliRunner, house_system: str
+    ):
         """Test 'chart from-registry' with different house systems."""
         with runner.isolated_filesystem():
             result = runner.invoke(
@@ -343,7 +347,9 @@ class TestEphemerisCommands:
 
         # Should ask for confirmation and respect 'n'
         assert result.exit_code == 0
-        assert "Continue with download?" in result.output or "cancelled" in result.output
+        assert (
+            "Continue with download?" in result.output or "cancelled" in result.output
+        )
 
     def test_ephemeris_download_force(self, runner: CliRunner):
         """Test 'ephemeris download --force' skips confirmation."""
@@ -382,9 +388,7 @@ class TestEphemerisCommands:
     def test_ephemeris_download_with_years(self, runner: CliRunner):
         """Test 'ephemeris download --years' downloads specific range."""
         with patch("stellium.cli.ephemeris.download_file", return_value=True):
-            with patch(
-                "stellium.cli.ephemeris.get_required_files"
-            ) as mock_get_files:
+            with patch("stellium.cli.ephemeris.get_required_files") as mock_get_files:
                 mock_get_files.return_value = ["sepl_18.se1"]
                 with patch(
                     "stellium.cli.ephemeris.calculate_download_size", return_value=1.0
@@ -400,9 +404,7 @@ class TestEphemerisCommands:
 
     def test_ephemeris_download_invalid_years(self, runner: CliRunner):
         """Test 'ephemeris download' with invalid year format."""
-        result = runner.invoke(
-            cli, ["ephemeris", "download", "--years", "not-a-range"]
-        )
+        result = runner.invoke(cli, ["ephemeris", "download", "--years", "not-a-range"])
 
         assert result.exit_code != 0
         assert "Invalid year range" in result.output or "Aborted" in result.output

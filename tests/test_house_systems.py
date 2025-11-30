@@ -233,7 +233,9 @@ def test_calculate_house_data(house_system, standard_native):
 
     # Gauquelin is a 36-sector system, which is not currently supported by HouseCusps model
     if system.system_name == "Gauquelin":
-        pytest.skip("Gauquelin uses 36 sectors, not currently supported by HouseCusps model")
+        pytest.skip(
+            "Gauquelin uses 36 sectors, not currently supported by HouseCusps model"
+        )
 
     cusps, angles = system.calculate_house_data(
         standard_native.datetime,
@@ -356,7 +358,9 @@ def test_angles_valid_longitudes(standard_native):
     )
 
     for angle in angles:
-        assert 0 <= angle.longitude < 360, f"{angle.name} has invalid longitude: {angle.longitude}"
+        assert 0 <= angle.longitude < 360, (
+            f"{angle.name} has invalid longitude: {angle.longitude}"
+        )
 
 
 # ============================================================================
@@ -463,7 +467,9 @@ def test_southern_hemisphere(house_system):
 
     # Gauquelin is a 36-sector system, not currently supported by HouseCusps model
     if system.system_name == "Gauquelin":
-        pytest.skip("Gauquelin uses 36 sectors, not currently supported by HouseCusps model")
+        pytest.skip(
+            "Gauquelin uses 36 sectors, not currently supported by HouseCusps model"
+        )
 
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 
@@ -547,7 +553,11 @@ def test_multiple_house_systems_simultaneously(standard_native):
     """Test calculating multiple house systems at once."""
     systems = [PlacidusHouses(), KochHouses(), EqualHouses(), WholeSignHouses()]
 
-    chart = ChartBuilder.from_native(standard_native).with_house_systems(systems).calculate()
+    chart = (
+        ChartBuilder.from_native(standard_native)
+        .with_house_systems(systems)
+        .calculate()
+    )
 
     assert len(chart.house_systems) == 4
     assert "Placidus" in chart.house_systems
@@ -601,7 +611,12 @@ def test_house_cusp_order_ascending():
     """Test that house cusps are returned in order (1-12)."""
     native = Native(
         dt.datetime(2000, 1, 1, 12, 0, tzinfo=dt.UTC),
-        ChartLocation(latitude=40.7128, longitude=-74.0060, name="NYC", timezone="America/New_York"),
+        ChartLocation(
+            latitude=40.7128,
+            longitude=-74.0060,
+            name="NYC",
+            timezone="America/New_York",
+        ),
     )
 
     system = PlacidusHouses()
@@ -629,7 +644,8 @@ def test_koch_vs_placidus_difference(standard_native):
     # (except potentially at the equator or specific latitudes)
     # Check that at least some cusps are different
     differences = sum(
-        1 for k, p in zip(koch_cusps.cusps, placidus_cusps.cusps, strict=False)
+        1
+        for k, p in zip(koch_cusps.cusps, placidus_cusps.cusps, strict=False)
         if abs(k - p) > 0.1
     )
 
@@ -672,7 +688,12 @@ def test_midnight_calculation():
     """Test house calculation at midnight."""
     native = Native(
         dt.datetime(2000, 1, 1, 0, 0, tzinfo=dt.UTC),
-        ChartLocation(latitude=37.7749, longitude=-122.4194, name="SF", timezone="America/Los_Angeles"),
+        ChartLocation(
+            latitude=37.7749,
+            longitude=-122.4194,
+            name="SF",
+            timezone="America/Los_Angeles",
+        ),
     )
 
     system = PlacidusHouses()
@@ -686,7 +707,12 @@ def test_noon_calculation():
     """Test house calculation at noon."""
     native = Native(
         dt.datetime(2000, 1, 1, 12, 0, tzinfo=dt.UTC),
-        ChartLocation(latitude=37.7749, longitude=-122.4194, name="SF", timezone="America/Los_Angeles"),
+        ChartLocation(
+            latitude=37.7749,
+            longitude=-122.4194,
+            name="SF",
+            timezone="America/Los_Angeles",
+        ),
     )
 
     system = PlacidusHouses()
@@ -700,7 +726,9 @@ def test_historical_date():
     """Test house calculation for historical date."""
     native = Native(
         dt.datetime(1900, 1, 1, 12, 0),
-        ChartLocation(latitude=51.5074, longitude=-0.1278, name="London", timezone="Europe/London"),
+        ChartLocation(
+            latitude=51.5074, longitude=-0.1278, name="London", timezone="Europe/London"
+        ),
     )
 
     system = PlacidusHouses()
@@ -714,7 +742,12 @@ def test_future_date():
     """Test house calculation for future date."""
     native = Native(
         dt.datetime(2100, 12, 31, 12, 0, tzinfo=dt.UTC),
-        ChartLocation(latitude=40.7128, longitude=-74.0060, name="NYC", timezone="America/New_York"),
+        ChartLocation(
+            latitude=40.7128,
+            longitude=-74.0060,
+            name="NYC",
+            timezone="America/New_York",
+        ),
     )
 
     system = PlacidusHouses()

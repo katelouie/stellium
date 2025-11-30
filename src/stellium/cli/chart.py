@@ -1,6 +1,5 @@
 """Chart generation commands."""
 
-
 import click
 
 

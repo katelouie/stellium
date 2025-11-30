@@ -194,7 +194,9 @@ class TimingState:
     chart_type: str = "transits"  # transits, progressions, solar_return, lunar_return, planetary_return
 
     # Timing date (when to cast the transit/progressed chart)
-    timing_date: str = ""  # For transits: the transit date; for returns: the year/date to find
+    timing_date: str = (
+        ""  # For transits: the transit date; for returns: the year/date to find
+    )
 
     # For returns: optional relocation
     relocate: bool = False
@@ -204,7 +206,9 @@ class TimingState:
     return_planet: str = "Saturn"  # Jupiter, Saturn, Mars, etc.
 
     # For returns: occurrence number (1 = first, 2 = second) vs near_date
-    return_mode: str = "year"  # year (solar), near_date (lunar/planetary), occurrence (planetary)
+    return_mode: str = (
+        "year"  # year (solar), near_date (lunar/planetary), occurrence (planetary)
+    )
     return_occurrence: int = 1  # For occurrence mode
 
     # House system

@@ -248,7 +248,11 @@ class SwissEphemerisEngine:
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_single_position(
-        self, julian_day: float, object_id: int, object_name: str, config: CalculationConfig
+        self,
+        julian_day: float,
+        object_id: int,
+        object_name: str,
+        config: CalculationConfig,
     ) -> CelestialPosition:
         """
         Calculate position for a single object (cached).

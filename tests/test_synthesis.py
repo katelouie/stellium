@@ -153,7 +153,9 @@ class TestLocationMidpoint:
     def test_great_circle_midpoint_nearby_points(self):
         """Test great circle midpoint for nearby points (should be similar to simple)."""
         # SF and LA - nearby on same coast
-        loc1 = ChartLocation(latitude=37.7749, longitude=-122.4194, name="San Francisco")
+        loc1 = ChartLocation(
+            latitude=37.7749, longitude=-122.4194, name="San Francisco"
+        )
         loc2 = ChartLocation(latitude=34.0522, longitude=-118.2437, name="Los Angeles")
 
         mid = calculate_location_midpoint(loc1, loc2, method="great_circle")
@@ -234,11 +236,13 @@ class TestSynthesisBuilderAPI:
     def sample_charts(self):
         """Create two sample charts for testing."""
         chart1 = ChartBuilder.from_details(
-            "1994-01-06 11:47", (37.4419, -122.1430)  # Palo Alto
+            "1994-01-06 11:47",
+            (37.4419, -122.1430),  # Palo Alto
         ).calculate()
 
         chart2 = ChartBuilder.from_details(
-            "2000-06-15 17:00", (47.6062, -122.3321)  # Seattle
+            "2000-06-15 17:00",
+            (47.6062, -122.3321),  # Seattle
         ).calculate()
 
         return chart1, chart2
@@ -273,11 +277,13 @@ class TestDavisonChart:
     def sample_charts(self):
         """Create two sample charts for testing."""
         chart1 = ChartBuilder.from_details(
-            "1994-01-06 11:47", (37.4419, -122.1430)  # Palo Alto
+            "1994-01-06 11:47",
+            (37.4419, -122.1430),  # Palo Alto
         ).calculate()
 
         chart2 = ChartBuilder.from_details(
-            "2000-06-15 17:00", (47.6062, -122.3321)  # Seattle
+            "2000-06-15 17:00",
+            (47.6062, -122.3321),  # Seattle
         ).calculate()
 
         return chart1, chart2
@@ -444,11 +450,13 @@ class TestCompositeChart:
     def sample_charts(self):
         """Create two sample charts for testing."""
         chart1 = ChartBuilder.from_details(
-            "1994-01-06 11:47", (37.4419, -122.1430)  # Palo Alto
+            "1994-01-06 11:47",
+            (37.4419, -122.1430),  # Palo Alto
         ).calculate()
 
         chart2 = ChartBuilder.from_details(
-            "2000-06-15 17:00", (47.6062, -122.3321)  # Seattle
+            "2000-06-15 17:00",
+            (47.6062, -122.3321),  # Seattle
         ).calculate()
 
         return chart1, chart2
@@ -525,9 +533,7 @@ class TestCompositeChart:
         """Test composite chart with no houses."""
         chart1, chart2 = sample_charts
         composite = (
-            SynthesisBuilder.composite(chart1, chart2)
-            .with_houses(False)
-            .calculate()
+            SynthesisBuilder.composite(chart1, chart2).with_houses(False).calculate()
         )
 
         assert len(composite.house_systems) == 0
@@ -537,9 +543,7 @@ class TestCompositeChart:
         """Test composite chart with reference place method."""
         chart1, chart2 = sample_charts
         composite = (
-            SynthesisBuilder.composite(chart1, chart2)
-            .with_houses("place")
-            .calculate()
+            SynthesisBuilder.composite(chart1, chart2).with_houses("place").calculate()
         )
 
         assert len(composite.house_systems) > 0

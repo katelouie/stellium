@@ -80,7 +80,9 @@ def create_natal_page():
     state = ChartState()
     report_state = PDFReportState()  # Report options - always available
     chart_svg: dict[str, str | None] = {"content": None}
-    calculated_chart: dict[str, object | None] = {"ref": None}  # Store the CalculatedChart
+    calculated_chart: dict[str, object | None] = {
+        "ref": None
+    }  # Store the CalculatedChart
     chart_container: dict[str, ui.element | None] = {"ref": None}
     actions_container: dict[str, ui.element | None] = {"ref": None}
 
@@ -134,9 +136,13 @@ def create_natal_page():
             if state.include_fixed_stars:
                 # Configure fixed stars based on mode
                 if state.fixed_stars_mode == "royal":
-                    builder = builder.add_component(FixedStarsComponent(royal_only=True))
+                    builder = builder.add_component(
+                        FixedStarsComponent(royal_only=True)
+                    )
                 elif state.fixed_stars_mode == "major":
-                    builder = builder.add_component(FixedStarsComponent(tier=2, include_higher_tiers=True))
+                    builder = builder.add_component(
+                        FixedStarsComponent(tier=2, include_higher_tiers=True)
+                    )
                 else:  # all
                     builder = builder.add_component(FixedStarsComponent())
             if state.include_patterns:
@@ -204,6 +210,7 @@ def create_natal_page():
         except Exception as e:
             ui.notify(f"Error: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     def refresh_chart_display():
@@ -342,7 +349,9 @@ def create_natal_page():
                     format="pdf",
                     show=False,
                     chart_svg_path=chart_svg_path,
-                    title=f"{state.name} — Natal Chart" if state.name else "Natal Chart Report",
+                    title=f"{state.name} — Natal Chart"
+                    if state.name
+                    else "Natal Chart Report",
                 )
 
                 # If render returns a filename (when file= is used), read it
@@ -361,7 +370,9 @@ def create_natal_page():
                     file=pdf_path,
                     show=False,
                     chart_svg_path=chart_svg_path,
-                    title=f"{state.name} — Natal Chart" if state.name else "Natal Chart Report",
+                    title=f"{state.name} — Natal Chart"
+                    if state.name
+                    else "Natal Chart Report",
                 )
 
                 # Read PDF bytes and trigger download
@@ -382,6 +393,7 @@ def create_natal_page():
         except Exception as e:
             ui.notify(f"Error generating PDF: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     # ===== PAGE LAYOUT =====
@@ -437,7 +449,9 @@ def create_natal_page():
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
-                        create_chart_options(state, on_change=sync_report_state_from_chart)
+                        create_chart_options(
+                            state, on_change=sync_report_state_from_chart
+                        )
 
                     # Report Options accordion
                     with (

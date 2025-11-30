@@ -4,7 +4,6 @@ Stellium Web - Timing Page
 Chart types for forecasting: Transits, Progressions, and Returns.
 """
 
-
 from components.chart_display import create_chart_actions, create_chart_display
 from components.header import create_header, create_nav
 from components.report_options import create_report_options
@@ -275,7 +274,9 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                         ui.checkbox(
                             "Color sign glyphs",
                             value=state.color_sign_info,
-                            on_change=lambda e: update_field("color_sign_info", e.value),
+                            on_change=lambda e: update_field(
+                                "color_sign_info", e.value
+                            ),
                         ).props("dense")
 
         # ===== DISPLAY OPTIONS =====
@@ -383,21 +384,30 @@ def create_timing_page():
             ui.notify("Please fill in natal birth details", type="warning")
             return
 
-        if not state.timing_date and state.chart_type not in ("lunar_return", "planetary_return"):
+        if not state.timing_date and state.chart_type not in (
+            "lunar_return",
+            "planetary_return",
+        ):
             ui.notify("Please enter a date or year", type="warning")
             return
 
         try:
             # Build natal chart first
-            natal_dt = natal.date if natal.time_unknown else f"{natal.date} {natal.time}"
-            natal_builder = ChartBuilder.from_details(natal_dt, natal.location, name=natal.name)
+            natal_dt = (
+                natal.date if natal.time_unknown else f"{natal.date} {natal.time}"
+            )
+            natal_builder = ChartBuilder.from_details(
+                natal_dt, natal.location, name=natal.name
+            )
 
             if natal.time_unknown:
                 natal_builder = natal_builder.with_unknown_time()
 
             # Add house system
             if state.house_system in HOUSE_SYSTEM_MAP:
-                natal_builder = natal_builder.with_house_systems([HOUSE_SYSTEM_MAP[state.house_system]()])
+                natal_builder = natal_builder.with_house_systems(
+                    [HOUSE_SYSTEM_MAP[state.house_system]()]
+                )
 
             if state.include_aspects:
                 natal_builder = natal_builder.with_aspects()
@@ -410,11 +420,13 @@ def create_timing_page():
                 transit_builder = ChartBuilder.from_details(
                     state.timing_date,
                     natal.location,  # Use natal location for transits
-                    name=f"Transits - {state.timing_date}"
+                    name=f"Transits - {state.timing_date}",
                 )
 
                 if state.house_system in HOUSE_SYSTEM_MAP:
-                    transit_builder = transit_builder.with_house_systems([HOUSE_SYSTEM_MAP[state.house_system]()])
+                    transit_builder = transit_builder.with_house_systems(
+                        [HOUSE_SYSTEM_MAP[state.house_system]()]
+                    )
 
                 if state.include_aspects:
                     transit_builder = transit_builder.with_aspects()
@@ -435,20 +447,25 @@ def create_timing_page():
             elif state.chart_type == "progressions":
                 # Calculate progressed datetime
                 from dateutil.parser import parse
+
                 natal_datetime = parse(natal_dt)
                 target_date = parse(state.timing_date)
 
-                progressed_datetime = calculate_progressed_datetime(natal_datetime, target_date)
+                progressed_datetime = calculate_progressed_datetime(
+                    natal_datetime, target_date
+                )
 
                 # Build progressed chart
                 progressed_builder = ChartBuilder.from_details(
                     progressed_datetime,
                     natal.location,
-                    name=f"{natal.name or 'Chart'} - Progressed to {state.timing_date}"
+                    name=f"{natal.name or 'Chart'} - Progressed to {state.timing_date}",
                 )
 
                 if state.house_system in HOUSE_SYSTEM_MAP:
-                    progressed_builder = progressed_builder.with_house_systems([HOUSE_SYSTEM_MAP[state.house_system]()])
+                    progressed_builder = progressed_builder.with_house_systems(
+                        [HOUSE_SYSTEM_MAP[state.house_system]()]
+                    )
 
                 if state.include_aspects:
                     progressed_builder = progressed_builder.with_aspects()
@@ -477,7 +494,9 @@ def create_timing_page():
                 )
 
                 if state.house_system in HOUSE_SYSTEM_MAP:
-                    return_builder = return_builder.with_house_systems([HOUSE_SYSTEM_MAP[state.house_system]()])
+                    return_builder = return_builder.with_house_systems(
+                        [HOUSE_SYSTEM_MAP[state.house_system]()]
+                    )
 
                 if state.include_aspects:
                     return_builder = return_builder.with_aspects()
@@ -497,7 +516,9 @@ def create_timing_page():
                 )
 
                 if state.house_system in HOUSE_SYSTEM_MAP:
-                    return_builder = return_builder.with_house_systems([HOUSE_SYSTEM_MAP[state.house_system]()])
+                    return_builder = return_builder.with_house_systems(
+                        [HOUSE_SYSTEM_MAP[state.house_system]()]
+                    )
 
                 if state.include_aspects:
                     return_builder = return_builder.with_aspects()
@@ -518,7 +539,9 @@ def create_timing_page():
                 )
 
                 if state.house_system in HOUSE_SYSTEM_MAP:
-                    return_builder = return_builder.with_house_systems([HOUSE_SYSTEM_MAP[state.house_system]()])
+                    return_builder = return_builder.with_house_systems(
+                        [HOUSE_SYSTEM_MAP[state.house_system]()]
+                    )
 
                 if state.include_aspects:
                     return_builder = return_builder.with_aspects()
@@ -567,13 +590,16 @@ def create_timing_page():
                 "progressions": "Progressed",
                 "solar_return": "Solar Return",
                 "lunar_return": "Lunar Return",
-                "planetary_return": f"{state.return_planet} Return"
+                "planetary_return": f"{state.return_planet} Return",
             }
-            ui.notify(f"{type_names[state.chart_type]} chart generated!", type="positive")
+            ui.notify(
+                f"{type_names[state.chart_type]} chart generated!", type="positive"
+            )
 
         except Exception as e:
             ui.notify(f"Error: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     def refresh_chart_display():
@@ -596,7 +622,11 @@ def create_timing_page():
     def download_svg():
         """Download the chart as an SVG file."""
         if chart_svg["content"]:
-            name_part = state.natal.name.replace(" ", "_").lower() if state.natal.name else "chart"
+            name_part = (
+                state.natal.name.replace(" ", "_").lower()
+                if state.natal.name
+                else "chart"
+            )
             filename = f"{name_part}_{state.chart_type}_chart.svg"
             ui.download(chart_svg["content"].encode("utf-8"), filename, "image/svg+xml")
 
@@ -623,7 +653,11 @@ def create_timing_page():
                 builder = builder.with_aspects(mode=rs.aspects_mode)
 
             # Generate filename
-            name_part = state.natal.name.replace(" ", "_").lower() if state.natal.name else "chart"
+            name_part = (
+                state.natal.name.replace(" ", "_").lower()
+                if state.natal.name
+                else "chart"
+            )
             filename = f"{name_part}_{state.chart_type}_report.pdf"
 
             import os
@@ -631,12 +665,16 @@ def create_timing_page():
 
             chart_svg_path = None
             if rs.include_chart_image and chart_svg["content"]:
-                with tempfile.NamedTemporaryFile(mode="w", suffix=".svg", delete=False) as f:
+                with tempfile.NamedTemporaryFile(
+                    mode="w", suffix=".svg", delete=False
+                ) as f:
                     f.write(chart_svg["content"])
                     chart_svg_path = f.name
 
             try:
-                with tempfile.NamedTemporaryFile(mode="wb", suffix=".pdf", delete=False) as pdf_file:
+                with tempfile.NamedTemporaryFile(
+                    mode="wb", suffix=".pdf", delete=False
+                ) as pdf_file:
                     pdf_path = pdf_file.name
 
                 type_names = {
@@ -644,9 +682,11 @@ def create_timing_page():
                     "progressions": "Secondary Progressions",
                     "solar_return": "Solar Return",
                     "lunar_return": "Lunar Return",
-                    "planetary_return": f"{state.return_planet} Return"
+                    "planetary_return": f"{state.return_planet} Return",
                 }
-                title = f"{state.natal.name or 'Chart'} - {type_names[state.chart_type]}"
+                title = (
+                    f"{state.natal.name or 'Chart'} - {type_names[state.chart_type]}"
+                )
 
                 builder.render(
                     format="pdf",
@@ -670,6 +710,7 @@ def create_timing_page():
         except Exception as e:
             ui.notify(f"Error generating PDF: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     def update_chart_type(value):
@@ -695,9 +736,9 @@ def create_timing_page():
                 ui.label("Timing & Forecasts").classes(
                     "font-display text-3xl md:text-4xl tracking-wide"
                 ).style(f"color: {COLORS['text']}")
-                ui.label("Transits, Progressions & Returns").classes("text-base mt-2").style(
-                    f"color: {COLORS['text_muted']}"
-                )
+                ui.label("Transits, Progressions & Returns").classes(
+                    "text-base mt-2"
+                ).style(f"color: {COLORS['text_muted']}")
 
             # Two column layout
             with ui.row().classes("w-full gap-8 flex-wrap lg:flex-nowrap"):
@@ -721,10 +762,12 @@ def create_timing_page():
 
                         # Description for selected type
                         with ui.element("div").classes("mt-2 ml-6"):
-                            desc_map = {code: desc for code, name, desc in TIMING_CHART_TYPES}
-                            ui.label(desc_map.get(state.chart_type, "")).classes("text-xs").style(
-                                f"color: {COLORS['text_muted']}"
-                            )
+                            desc_map = {
+                                code: desc for code, name, desc in TIMING_CHART_TYPES
+                            }
+                            ui.label(desc_map.get(state.chart_type, "")).classes(
+                                "text-xs"
+                            ).style(f"color: {COLORS['text_muted']}")
 
                     # Natal birth data input
                     with (
@@ -744,7 +787,9 @@ def create_timing_page():
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
-                        timing_options_container["ref"] = ui.element("div").classes("w-full")
+                        timing_options_container["ref"] = ui.element("div").classes(
+                            "w-full"
+                        )
                         with timing_options_container["ref"]:
                             create_timing_options(state, on_change=None)
 

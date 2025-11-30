@@ -1,6 +1,5 @@
 """Tests for the Celestial Objects Registry."""
 
-
 from stellium.core.models import ObjectType
 from stellium.core.registry import (
     CELESTIAL_REGISTRY,

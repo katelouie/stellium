@@ -152,7 +152,9 @@ class LayoutEngine:
         return LayoutResult(
             canvas_dimensions=canvas_dims,
             header_enabled=self.config.header.enabled,
-            header_height=self.config.header.height if self.config.header.enabled else 0,
+            header_height=self.config.header.height
+            if self.config.header.enabled
+            else 0,
             wheel_position=wheel_pos,
             wheel_size=wheel_size,
             wheel_radii=wheel_radii,
@@ -265,9 +267,7 @@ class LayoutEngine:
             table_positions["positions"] = Position(x=0, y=0)
             table_dimensions["positions"] = positions_dims
 
-            table_positions["houses"] = Position(
-                x=positions_dims.width + gap, y=0
-            )
+            table_positions["houses"] = Position(x=positions_dims.width + gap, y=0)
             table_dimensions["houses"] = houses_dims
 
             top_row_width = positions_dims.width + gap + houses_dims.width
@@ -278,9 +278,7 @@ class LayoutEngine:
                 aspectarian_dims = next(
                     dims for name, dims in tables if name == "aspectarian"
                 )
-                table_positions["aspectarian"] = Position(
-                    x=0, y=top_row_height + gap
-                )
+                table_positions["aspectarian"] = Position(x=0, y=top_row_height + gap)
                 table_dimensions["aspectarian"] = aspectarian_dims
 
                 total_width = max(top_row_width, aspectarian_dims.width)
@@ -393,7 +391,8 @@ class LayoutEngine:
         )
 
         multipliers = (
-            self.config.wheel.biwheel_radii if is_biwheel
+            self.config.wheel.biwheel_radii
+            if is_biwheel
             else self.config.wheel.single_radii
         )
 
@@ -412,11 +411,13 @@ class LayoutEngine:
             # Will be refined in layer_factory which has access to show_info_stack
             if self.config.tables.enabled and self.config.tables.show_positions:
                 radii["outer_containment_border"] = radii.get(
-                    "outer_containment_border_compact", radii.get("outer_containment_border_full", 0)
+                    "outer_containment_border_compact",
+                    radii.get("outer_containment_border_full", 0),
                 )
             else:
                 radii["outer_containment_border"] = radii.get(
-                    "outer_containment_border_full", radii.get("outer_containment_border_compact", 0)
+                    "outer_containment_border_full",
+                    radii.get("outer_containment_border_compact", 0),
                 )
 
         return radii
@@ -470,25 +471,25 @@ class LayoutEngine:
                 # Position above and to the left of wheel
                 pos = Position(
                     wheel_pos.x - dims.width - corner_gap,
-                    wheel_pos.y - dims.height - corner_gap
+                    wheel_pos.y - dims.height - corner_gap,
                 )
             elif position == "top-right":
                 # Aspect counter: TEST with 50px offset
                 pos = Position(
                     wheel_pos.x + wheel_size + corner_gap + 50,
-                    wheel_pos.y - dims.height - corner_gap - 50
+                    wheel_pos.y - dims.height - corner_gap - 50,
                 )
             elif position == "bottom-left":
                 # Element modality table: TEST with 50px offset
                 pos = Position(
                     wheel_pos.x - dims.width - corner_gap - 50,
-                    wheel_pos.y + wheel_size + corner_gap + 50
+                    wheel_pos.y + wheel_size + corner_gap + 50,
                 )
             else:  # "bottom-right"
                 # Position below and to the right of wheel
                 pos = Position(
                     wheel_pos.x + wheel_size + corner_gap,
-                    wheel_pos.y + wheel_size + corner_gap
+                    wheel_pos.y + wheel_size + corner_gap,
                 )
 
             corners[name] = BoundingBox(position=pos, dimensions=dims)
@@ -561,7 +562,9 @@ class LayoutEngine:
 
         if not self.config.auto_center:
             # Simple top-left positioning with margin, accounting for header
-            return Position(self.config.min_margin, self.config.min_margin + header_offset)
+            return Position(
+                self.config.min_margin, self.config.min_margin + header_offset
+            )
 
         if not self.config.tables.enabled:
             # Simple centering when no tables

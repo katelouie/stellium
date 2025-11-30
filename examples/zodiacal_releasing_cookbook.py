@@ -25,6 +25,14 @@ Key Concepts:
 - **Peak (10th from Lot)**: Heightened activity and visibility
 - **Angular (1st, 4th, 7th, 10th)**: Significant, impactful periods
 - **Loosing of the Bond**: When L2+ enters an angular sign, shifts focus
+
+New in Version 0.6.0:
+- **Qualitative Analysis**: Periods scored by sect, benefic/malefic placement
+- **Ruler Roles**: Sect benefic, contrary benefic, sect malefic, contrary malefic
+- **Tenant Roles**: Planets present in the period's sign
+- **Scoring System**: +3 (excellent) to -3 (difficult) based on planetary condition
+- **Sentiment Analysis**: Positive, neutral, or challenging period quality
+- **Valens Method (Default)**: Traditional method with proper loosing of the bond
 """
 
 from datetime import UTC, datetime
@@ -192,7 +200,9 @@ def example_5_l1_timeline():
         elif period.is_angular:
             status = f"Angular ({period.angle_from_lot})"
 
-        print(f"{period.sign:<12} {period.ruler:<10} {age_start:3.0f} - {age_end:3.0f}    {status}")
+        print(
+            f"{period.sign:<12} {period.ruler:<10} {age_start:3.0f} - {age_end:3.0f}    {status}"
+        )
 
 
 # =============================================================================
@@ -483,6 +493,248 @@ def example_14_comparing_fortune_spirit():
 
 
 # =============================================================================
+# PART 6: QUALITATIVE ANALYSIS (NEW in 0.6.0)
+# =============================================================================
+
+
+def example_15_period_quality_scoring():
+    """
+    Example 15: Period Quality and Scoring
+
+    NEW: ZR periods now include qualitative analysis based on sect,
+    benefics, malefics, and planetary placements.
+    """
+    section_header("Example 15: Period Quality Scoring")
+
+    chart = (
+        ChartBuilder.from_details(
+            "1994-01-06 11:47",
+            "Palo Alto, CA",
+        )
+        .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune"]))
+        .calculate()
+    )
+
+    snapshot = chart.zr_at_age(30)
+
+    print(f"Chart Sect: {chart.sect()}")
+    print()
+    print("L1 Period Quality:")
+    print(f"  Sign: {snapshot.l1.sign}")
+    print(f"  Ruler: {snapshot.l1.ruler}")
+    print(f"  Ruler Role: {snapshot.l1.ruler_role or 'neutral'}")
+    print(
+        f"  Tenants: {', '.join(snapshot.l1.tenant_roles) if snapshot.l1.tenant_roles else 'none'}"
+    )
+    print(f"  Score: {snapshot.l1.score:+d}")
+    print(f"  Sentiment: {snapshot.l1.sentiment}")
+    print()
+    print("L2 Period Quality:")
+    print(f"  Sign: {snapshot.l2.sign}")
+    print(f"  Ruler: {snapshot.l2.ruler}")
+    print(f"  Ruler Role: {snapshot.l2.ruler_role or 'neutral'}")
+    print(
+        f"  Tenants: {', '.join(snapshot.l2.tenant_roles) if snapshot.l2.tenant_roles else 'none'}"
+    )
+    print(f"  Score: {snapshot.l2.score:+d}")
+    print(f"  Sentiment: {snapshot.l2.sentiment}")
+
+
+def example_16_timeline_with_quality():
+    """
+    Example 16: L1 Timeline with Quality Scores
+
+    View entire L1 timeline with quality indicators.
+    """
+    section_header("Example 16: Timeline with Quality Analysis")
+
+    chart = (
+        ChartBuilder.from_details(
+            "1994-01-06 11:47",
+            "Palo Alto, CA",
+        )
+        .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune"]))
+        .calculate()
+    )
+
+    timeline = chart.zodiacal_releasing("Part of Fortune")
+    l1_periods = timeline.l1_periods()
+
+    print(f"Chart Sect: {chart.sect()}")
+    print()
+    print(f"L1 Timeline with Quality Scores from {timeline.lot_sign}:\n")
+    print(
+        f"{'Sign':<12} {'Ruler':<10} {'Ages':<12} {'Score':<6} {'Sentiment':<12} {'Status'}"
+    )
+    print("-" * 74)
+
+    for period in l1_periods[:10]:  # Show first 10 periods
+        age_start = (period.start - timeline.birth_date).days / 365.25
+        age_end = (period.end - timeline.birth_date).days / 365.25
+
+        status = ""
+        if period.is_peak:
+            status = "★ Peak"
+        elif period.is_angular:
+            status = f"◆ Angular ({period.angle_from_lot})"
+
+        print(
+            f"{period.sign:<12} {period.ruler:<10} "
+            f"{age_start:3.0f} - {age_end:3.0f}    "
+            f"{period.score:+3d}   "
+            f"{period.sentiment:<12} "
+            f"{status}"
+        )
+
+
+def example_17_finding_best_periods():
+    """
+    Example 17: Finding Highest Quality Periods
+
+    Use scoring to identify the most favorable periods.
+    """
+    section_header("Example 17: Finding Best Periods")
+
+    chart = (
+        ChartBuilder.from_details(
+            "1994-01-06 11:47",
+            "Palo Alto, CA",
+        )
+        .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune"]))
+        .calculate()
+    )
+
+    timeline = chart.zodiacal_releasing("Part of Fortune")
+
+    # Get L2 periods and sort by score
+    l2_periods = timeline.periods[2]
+    best_periods = sorted(l2_periods, key=lambda p: p.score, reverse=True)[:10]
+
+    print("Top 10 Highest Quality L2 Periods:")
+    print(f"{'Sign':<12} {'Ruler':<10} {'Period':<24} {'Score':<6} {'Roles'}")
+    print("-" * 82)
+
+    for period in best_periods:
+        start_str = period.start.strftime("%b %Y")
+        end_str = period.end.strftime("%b %Y")
+        period_str = f"{start_str} - {end_str}"
+
+        roles = []
+        if period.ruler_role:
+            roles.append(period.ruler_role)
+        if period.tenant_roles:
+            roles.extend(period.tenant_roles)
+        roles_str = ", ".join(roles[:2]) if roles else "—"
+
+        print(
+            f"{period.sign:<12} {period.ruler:<10} "
+            f"{period_str:<24} "
+            f"{period.score:+3d}   "
+            f"{roles_str}"
+        )
+
+
+def example_18_sect_based_analysis():
+    """
+    Example 18: Understanding Sect-Based Roles
+
+    Demonstrate how day/night chart affects period quality.
+    """
+    section_header("Example 18: Sect-Based Period Quality")
+
+    # Day chart example
+    day_chart = (
+        ChartBuilder.from_details(
+            "1994-01-06 11:47",  # Day chart
+            "Palo Alto, CA",
+        )
+        .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune"]))
+        .calculate()
+    )
+
+    # Night chart example
+    night_chart = (
+        ChartBuilder.from_details(
+            "1994-01-06 23:47",  # Night chart
+            "Palo Alto, CA",
+        )
+        .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune"]))
+        .calculate()
+    )
+
+    print("DAY CHART Sect Roles:")
+    print(f"  Chart Sect: {day_chart.sect()}")
+    print("  Sect Benefic: Jupiter (+2)")
+    print("  Contrary Benefic: Venus (+1)")
+    print("  Sect Malefic: Saturn (-1, constructive difficulty)")
+    print("  Contrary Malefic: Mars (-2, destructive difficulty)")
+    print()
+
+    print("NIGHT CHART Sect Roles:")
+    print(f"  Chart Sect: {night_chart.sect()}")
+    print("  Sect Benefic: Venus (+2)")
+    print("  Contrary Benefic: Jupiter (+1)")
+    print("  Sect Malefic: Mars (-1, constructive difficulty)")
+    print("  Contrary Malefic: Saturn (-2, destructive difficulty)")
+    print()
+
+    # Show age 30 for both
+    day_snap = day_chart.zr_at_age(30)
+    night_snap = night_chart.zr_at_age(30)
+
+    print("Same Age (30), Different Sect Quality:")
+    print()
+    print(f"Day Chart L1: {day_snap.l1.sign} ({day_snap.l1.ruler})")
+    print(f"  Ruler Role: {day_snap.l1.ruler_role or 'neutral'}")
+    print(f"  Score: {day_snap.l1.score:+d}")
+    print()
+    print(f"Night Chart L1: {night_snap.l1.sign} ({night_snap.l1.ruler})")
+    print(f"  Ruler Role: {night_snap.l1.ruler_role or 'neutral'}")
+    print(f"  Score: {night_snap.l1.score:+d}")
+
+
+def example_19_valens_method():
+    """
+    Example 19: Valens Method (New Default)
+
+    The traditional Valens method is now the default, with proper
+    loosing of the bond implementation.
+    """
+    section_header("Example 19: Valens Method (Default)")
+
+    chart = (
+        ChartBuilder.from_notable("Albert Einstein")
+        .add_analyzer(
+            ZodiacalReleasingAnalyzer(
+                ["Part of Fortune"],
+                # No need to specify method - "valens" is now default
+            )
+        )
+        .calculate()
+    )
+
+    timeline = chart.zodiacal_releasing("Part of Fortune")
+
+    print("Valens Method Features:")
+    print("  - L1: Years (sign_period * 365.25)")
+    print("  - L2: Months (sign_period * 30.437)")
+    print("  - L3: Days (sign_period * 1.0146)")
+    print("  - L4: Hours (sign_period * 0.0417)")
+    print("  - Loosing of Bond: Jump to opposite sign after first cycle")
+    print()
+
+    # Find loosing bonds
+    lb_periods = timeline.find_loosing_bonds(level=2)
+    print(f"Found {len(lb_periods)} L2 Loosing of Bond periods")
+    print()
+    print("First 3 LB periods:")
+    for period in lb_periods[:3]:
+        start_str = period.start.strftime("%b %Y")
+        end_str = period.end.strftime("%b %Y")
+        print(f"  {period.sign} ({period.ruler}): {start_str} - {end_str}")
+
+
+# =============================================================================
 # MAIN
 # =============================================================================
 
@@ -517,6 +769,13 @@ def main():
     example_12_direct_engine_usage()
     example_13_custom_lifespan()
     example_14_comparing_fortune_spirit()
+
+    # Part 6: Qualitative Analysis (NEW in 0.6.0)
+    example_15_period_quality_scoring()
+    example_16_timeline_with_quality()
+    example_17_finding_best_periods()
+    example_18_sect_based_analysis()
+    example_19_valens_method()
 
     print("\n" + "=" * 70)
     print("  COOKBOOK COMPLETE!")

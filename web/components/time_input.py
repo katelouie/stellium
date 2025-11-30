@@ -107,10 +107,7 @@ def create_time_input(
             )
             .classes("minimal-input")
             .props("borderless dense maxlength=2")
-            .style(
-                f"width: 3rem; text-align: center; "
-                f"color: {COLORS['text']};"
-            )
+            .style(f"width: 3rem; text-align: center; color: {COLORS['text']};")
         )
         if disabled:
             hour_input.props("disable")
@@ -127,10 +124,7 @@ def create_time_input(
             )
             .classes("minimal-input")
             .props("borderless dense maxlength=2")
-            .style(
-                f"width: 3rem; text-align: center; "
-                f"color: {COLORS['text']};"
-            )
+            .style(f"width: 3rem; text-align: center; color: {COLORS['text']};")
         )
         refs["minute_input"] = minute_input
         if disabled:

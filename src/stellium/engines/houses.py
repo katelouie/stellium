@@ -1,6 +1,5 @@
 """House system calculation engines."""
 
-
 import swisseph as swe
 
 from stellium.core.ayanamsa import ZodiacType, get_ayanamsa
@@ -78,8 +77,12 @@ class SwissHouseSystemBase:
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_swiss_houses(
-        self, julian_day: float, latitude: float, longitude: float, system_code: bytes,
-        config: CalculationConfig | None = None
+        self,
+        julian_day: float,
+        latitude: float,
+        longitude: float,
+        system_code: bytes,
+        config: CalculationConfig | None = None,
     ) -> tuple:
         """Cached Swiss Ephemeris house calculation.
 
@@ -100,7 +103,9 @@ class SwissHouseSystemBase:
         flags = self._get_calculation_flags(config)
 
         # Use houses_ex for sidereal support
-        return swe.houses_ex(julian_day, latitude, longitude, hsys=system_code, flags=flags)
+        return swe.houses_ex(
+            julian_day, latitude, longitude, hsys=system_code, flags=flags
+        )
 
     def assign_houses(
         self, positions: list[CelestialPosition], cusps: HouseCusps
@@ -133,8 +138,10 @@ class SwissHouseSystemBase:
         return 1  # fallback
 
     def calculate_house_data(
-        self, datetime: ChartDateTime, location: ChartLocation,
-        config: CalculationConfig | None = None
+        self,
+        datetime: ChartDateTime,
+        location: ChartLocation,
+        config: CalculationConfig | None = None,
     ) -> tuple[HouseCusps, list[CelestialPosition]]:
         """Calculate house system's house cusps and chart angles.
 

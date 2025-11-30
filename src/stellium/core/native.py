@@ -105,7 +105,9 @@ class Native:
                 int(datetime_input["year"]),
                 int(datetime_input["month"]),
                 int(datetime_input["day"]),
-                12, 0, 0
+                12,
+                0,
+                0,
             )
 
         # Handle ChartDateTime (extract date, set to noon)
@@ -113,7 +115,9 @@ class Native:
             utc = datetime_input.utc_datetime
             return dt.datetime(utc.year, utc.month, utc.day, 12, 0, 0)
 
-        raise TypeError(f"Cannot normalize datetime input of type: {type(datetime_input)}")
+        raise TypeError(
+            f"Cannot normalize datetime input of type: {type(datetime_input)}"
+        )
 
     def _process_location(self, loc_in: LocationInput) -> ChartLocation:
         """Internal helper to parse any location input."""

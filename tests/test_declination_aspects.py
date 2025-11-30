@@ -155,7 +155,8 @@ class TestDeclinationAspectEngine:
     def test_custom_object_types(self):
         """Test filtering by ObjectType."""
         engine = DeclinationAspectEngine(
-            orb=1.0, include_types={ObjectType.PLANET}  # Exclude nodes
+            orb=1.0,
+            include_types={ObjectType.PLANET},  # Exclude nodes
         )
 
         sun = CelestialPosition(

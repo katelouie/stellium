@@ -53,7 +53,9 @@ from stellium.engines.patterns import AspectPatternAnalyzer
 # =============================================================================
 
 
-def create_test_chart(positions: list[CelestialPosition], aspects: list[Aspect]) -> CalculatedChart:
+def create_test_chart(
+    positions: list[CelestialPosition], aspects: list[Aspect]
+) -> CalculatedChart:
     """
     Helper function to create a minimal CalculatedChart for testing pattern detection.
 
@@ -106,7 +108,9 @@ def test_grand_trine_detection(grand_trine_positions):
     gt = grand_trines[0]
     assert len(gt.planets) == 3, "Grand Trine should have 3 planets"
     assert len(gt.aspects) == 3, "Grand Trine should have 3 trine aspects"
-    assert all(a.aspect_name == "Trine" for a in gt.aspects), "All aspects should be trines"
+    assert all(a.aspect_name == "Trine" for a in gt.aspects), (
+        "All aspects should be trines"
+    )
 
     # All planets should be in fire signs (Aries, Leo, Sagittarius)
     # So element should be "Fire"
@@ -187,7 +191,9 @@ def test_no_grand_trine():
     patterns = analyzer.analyze(chart)
     grand_trines = [p for p in patterns if p.name == "Grand Trine"]
 
-    assert len(grand_trines) == 0, "Should not detect Grand Trine when pattern isn't present"
+    assert len(grand_trines) == 0, (
+        "Should not detect Grand Trine when pattern isn't present"
+    )
 
 
 # =============================================================================
@@ -219,7 +225,9 @@ def test_t_square_detection(t_square_positions):
 
     ts = t_squares[0]
     assert len(ts.planets) == 3, "T-Square should have 3 planets"
-    assert len(ts.aspects) == 3, "T-Square should have 3 aspects (1 opposition, 2 squares)"
+    assert len(ts.aspects) == 3, (
+        "T-Square should have 3 aspects (1 opposition, 2 squares)"
+    )
 
     # Verify we have 1 opposition and 2 squares
     aspect_names = [a.aspect_name for a in ts.aspects]
@@ -227,7 +235,9 @@ def test_t_square_detection(t_square_positions):
     assert aspect_names.count("Square") == 2, "Should have 2 squares"
 
     # All in cardinal signs (Aries, Cancer, Libra)
-    assert ts.quality == "Cardinal", "T-Square in cardinal signs should have Cardinal quality"
+    assert ts.quality == "Cardinal", (
+        "T-Square in cardinal signs should have Cardinal quality"
+    )
 
 
 def test_multiple_t_squares():
@@ -235,13 +245,43 @@ def test_multiple_t_squares():
     # Create positions that form two different T-Squares
     positions = [
         # First T-Square: Sun-Mars opposition, Pluto apex
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=0.0, speed_longitude=1.0),
-        CelestialPosition(name="Mars", object_type=ObjectType.PLANET, longitude=180.0, speed_longitude=0.5),
-        CelestialPosition(name="Pluto", object_type=ObjectType.PLANET, longitude=90.0, speed_longitude=0.01),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=0.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=180.0,
+            speed_longitude=0.5,
+        ),
+        CelestialPosition(
+            name="Pluto",
+            object_type=ObjectType.PLANET,
+            longitude=90.0,
+            speed_longitude=0.01,
+        ),
         # Second T-Square: Moon-Venus opposition, Saturn apex
-        CelestialPosition(name="Moon", object_type=ObjectType.PLANET, longitude=30.0, speed_longitude=13.0),
-        CelestialPosition(name="Venus", object_type=ObjectType.PLANET, longitude=210.0, speed_longitude=1.1),
-        CelestialPosition(name="Saturn", object_type=ObjectType.PLANET, longitude=120.0, speed_longitude=0.05),
+        CelestialPosition(
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=30.0,
+            speed_longitude=13.0,
+        ),
+        CelestialPosition(
+            name="Venus",
+            object_type=ObjectType.PLANET,
+            longitude=210.0,
+            speed_longitude=1.1,
+        ),
+        CelestialPosition(
+            name="Saturn",
+            object_type=ObjectType.PLANET,
+            longitude=120.0,
+            speed_longitude=0.05,
+        ),
     ]
 
     aspect_engine = ModernAspectEngine()
@@ -330,9 +370,24 @@ def test_no_yod_without_quincunx():
     """Test that Yod is not detected without proper quincunx aspects."""
     # Sextile exists but no quincunxes
     positions = [
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=0.0, speed_longitude=1.0),
-        CelestialPosition(name="Moon", object_type=ObjectType.PLANET, longitude=60.0, speed_longitude=13.0),
-        CelestialPosition(name="Mars", object_type=ObjectType.PLANET, longitude=120.0, speed_longitude=0.5),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=0.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=60.0,
+            speed_longitude=13.0,
+        ),
+        CelestialPosition(
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=120.0,
+            speed_longitude=0.5,
+        ),
     ]
 
     aspect_engine = ModernAspectEngine()
@@ -406,7 +461,9 @@ def test_grand_cross_detection():
 
     gc = grand_crosses[0]
     assert len(gc.planets) == 4, "Grand Cross should have 4 planets"
-    assert len(gc.aspects) == 6, "Grand Cross should have 6 aspects (2 oppositions, 4 squares)"
+    assert len(gc.aspects) == 6, (
+        "Grand Cross should have 6 aspects (2 oppositions, 4 squares)"
+    )
 
     # Verify aspect types
     aspect_names = [a.aspect_name for a in gc.aspects]
@@ -414,7 +471,9 @@ def test_grand_cross_detection():
     assert aspect_names.count("Square") == 4, "Should have 4 squares"
 
     # All in cardinal signs
-    assert gc.quality == "Cardinal", "Grand Cross in cardinal signs should have Cardinal quality"
+    assert gc.quality == "Cardinal", (
+        "Grand Cross in cardinal signs should have Cardinal quality"
+    )
 
 
 # =============================================================================
@@ -435,10 +494,30 @@ def test_kite_detection():
     # Grand Trine: Sun (0° Aries), Moon (120° Leo), Jupiter (240° Sagittarius)
     # Focal point: Saturn opposite Sun and sextile to Moon/Jupiter
     positions = [
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=0.0, speed_longitude=1.0),
-        CelestialPosition(name="Moon", object_type=ObjectType.PLANET, longitude=120.0, speed_longitude=13.0),
-        CelestialPosition(name="Jupiter", object_type=ObjectType.PLANET, longitude=240.0, speed_longitude=0.08),
-        CelestialPosition(name="Saturn", object_type=ObjectType.PLANET, longitude=180.0, speed_longitude=0.05),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=0.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=120.0,
+            speed_longitude=13.0,
+        ),
+        CelestialPosition(
+            name="Jupiter",
+            object_type=ObjectType.PLANET,
+            longitude=240.0,
+            speed_longitude=0.08,
+        ),
+        CelestialPosition(
+            name="Saturn",
+            object_type=ObjectType.PLANET,
+            longitude=180.0,
+            speed_longitude=0.05,
+        ),
     ]
 
     aspect_engine = ModernAspectEngine()
@@ -460,7 +539,9 @@ def test_kite_detection():
 
     kite = kites[0]
     assert len(kite.planets) == 4, "Kite should have 4 planets"
-    assert len(kite.aspects) == 6, "Kite should have 6 aspects (3 trines, 1 opposition, 2 sextiles)"
+    assert len(kite.aspects) == 6, (
+        "Kite should have 6 aspects (3 trines, 1 opposition, 2 sextiles)"
+    )
 
 
 # =============================================================================
@@ -479,10 +560,30 @@ def test_mystic_rectangle_detection():
     """
     # Create positions forming a Mystic Rectangle
     positions = [
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=0.0, speed_longitude=1.0),
-        CelestialPosition(name="Moon", object_type=ObjectType.PLANET, longitude=60.0, speed_longitude=13.0),
-        CelestialPosition(name="Venus", object_type=ObjectType.PLANET, longitude=180.0, speed_longitude=1.1),
-        CelestialPosition(name="Mars", object_type=ObjectType.PLANET, longitude=240.0, speed_longitude=0.5),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=0.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=60.0,
+            speed_longitude=13.0,
+        ),
+        CelestialPosition(
+            name="Venus",
+            object_type=ObjectType.PLANET,
+            longitude=180.0,
+            speed_longitude=1.1,
+        ),
+        CelestialPosition(
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=240.0,
+            speed_longitude=0.5,
+        ),
     ]
 
     aspect_engine = ModernAspectEngine()
@@ -539,9 +640,24 @@ def test_stellium_detection(stellium_positions):
 def test_stellium_custom_threshold():
     """Test Stellium detection with custom threshold (4 planets minimum)."""
     positions = [
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=45.0, speed_longitude=1.0),
-        CelestialPosition(name="Mercury", object_type=ObjectType.PLANET, longitude=50.0, speed_longitude=1.2),
-        CelestialPosition(name="Venus", object_type=ObjectType.PLANET, longitude=55.0, speed_longitude=1.1),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=45.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Mercury",
+            object_type=ObjectType.PLANET,
+            longitude=50.0,
+            speed_longitude=1.2,
+        ),
+        CelestialPosition(
+            name="Venus",
+            object_type=ObjectType.PLANET,
+            longitude=55.0,
+            speed_longitude=1.1,
+        ),
         # Only 3 planets - should NOT be detected with min=4
     ]
 
@@ -551,20 +667,52 @@ def test_stellium_custom_threshold():
     patterns = analyzer.analyze(chart)
     stelliums = [p for p in patterns if p.name == "Stellium"]
 
-    assert len(stelliums) == 0, "Should not detect Stellium with only 3 planets when min=4"
+    assert len(stelliums) == 0, (
+        "Should not detect Stellium with only 3 planets when min=4"
+    )
 
 
 def test_multiple_stelliums():
     """Test detection of multiple Stelliums in different signs."""
     positions = [
         # Stellium in Taurus
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=45.0, speed_longitude=1.0),
-        CelestialPosition(name="Mercury", object_type=ObjectType.PLANET, longitude=50.0, speed_longitude=1.2),
-        CelestialPosition(name="Venus", object_type=ObjectType.PLANET, longitude=55.0, speed_longitude=1.1),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=45.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Mercury",
+            object_type=ObjectType.PLANET,
+            longitude=50.0,
+            speed_longitude=1.2,
+        ),
+        CelestialPosition(
+            name="Venus",
+            object_type=ObjectType.PLANET,
+            longitude=55.0,
+            speed_longitude=1.1,
+        ),
         # Stellium in Scorpio
-        CelestialPosition(name="Mars", object_type=ObjectType.PLANET, longitude=225.0, speed_longitude=0.5),
-        CelestialPosition(name="Saturn", object_type=ObjectType.PLANET, longitude=230.0, speed_longitude=0.05),
-        CelestialPosition(name="Pluto", object_type=ObjectType.PLANET, longitude=235.0, speed_longitude=0.01),
+        CelestialPosition(
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=225.0,
+            speed_longitude=0.5,
+        ),
+        CelestialPosition(
+            name="Saturn",
+            object_type=ObjectType.PLANET,
+            longitude=230.0,
+            speed_longitude=0.05,
+        ),
+        CelestialPosition(
+            name="Pluto",
+            object_type=ObjectType.PLANET,
+            longitude=235.0,
+            speed_longitude=0.01,
+        ),
     ]
 
     analyzer = AspectPatternAnalyzer(stellium_min=3)
@@ -590,9 +738,24 @@ def test_no_patterns_detected():
     """Test that no patterns are detected when none exist."""
     # Random positions with no significant patterns
     positions = [
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=10.0, speed_longitude=1.0),
-        CelestialPosition(name="Moon", object_type=ObjectType.PLANET, longitude=95.0, speed_longitude=13.0),
-        CelestialPosition(name="Mars", object_type=ObjectType.PLANET, longitude=200.0, speed_longitude=0.5),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=10.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=95.0,
+            speed_longitude=13.0,
+        ),
+        CelestialPosition(
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=200.0,
+            speed_longitude=0.5,
+        ),
     ]
 
     aspect_engine = ModernAspectEngine()
@@ -622,12 +785,37 @@ def test_complex_chart_with_multiple_patterns():
     # Create a configuration with both Grand Trine and T-Square
     positions = [
         # Grand Trine in Fire
-        CelestialPosition(name="Sun", object_type=ObjectType.PLANET, longitude=0.0, speed_longitude=1.0),
-        CelestialPosition(name="Moon", object_type=ObjectType.PLANET, longitude=120.0, speed_longitude=13.0),
-        CelestialPosition(name="Jupiter", object_type=ObjectType.PLANET, longitude=240.0, speed_longitude=0.08),
+        CelestialPosition(
+            name="Sun",
+            object_type=ObjectType.PLANET,
+            longitude=0.0,
+            speed_longitude=1.0,
+        ),
+        CelestialPosition(
+            name="Moon",
+            object_type=ObjectType.PLANET,
+            longitude=120.0,
+            speed_longitude=13.0,
+        ),
+        CelestialPosition(
+            name="Jupiter",
+            object_type=ObjectType.PLANET,
+            longitude=240.0,
+            speed_longitude=0.08,
+        ),
         # T-Square participants
-        CelestialPosition(name="Mars", object_type=ObjectType.PLANET, longitude=180.0, speed_longitude=0.5),
-        CelestialPosition(name="Saturn", object_type=ObjectType.PLANET, longitude=90.0, speed_longitude=0.05),
+        CelestialPosition(
+            name="Mars",
+            object_type=ObjectType.PLANET,
+            longitude=180.0,
+            speed_longitude=0.5,
+        ),
+        CelestialPosition(
+            name="Saturn",
+            object_type=ObjectType.PLANET,
+            longitude=90.0,
+            speed_longitude=0.05,
+        ),
     ]
 
     aspect_engine = ModernAspectEngine()
@@ -645,7 +833,9 @@ def test_complex_chart_with_multiple_patterns():
 
     # Verify pattern diversity
     pattern_names = [p.name for p in patterns]
-    assert "Grand Trine" in pattern_names or "Kite" in pattern_names, "Should find Grand Trine or Kite"
+    assert "Grand Trine" in pattern_names or "Kite" in pattern_names, (
+        "Should find Grand Trine or Kite"
+    )
 
 
 if __name__ == "__main__":

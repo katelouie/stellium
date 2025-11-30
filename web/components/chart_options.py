@@ -152,9 +152,9 @@ def create_chart_options(state: ChartState, on_change=None):
                     ui.label(
                         "Minor: Semi-sextile, Semi-square, Sesquiquadrate, Quincunx"
                     ).classes("text-xs").style(f"color: {COLORS['accent']}")
-                    ui.label("Harmonic: Quintile, Bi-quintile, Septile, Novile").classes(
-                        "text-xs"
-                    ).style(f"color: {COLORS['accent']}")
+                    ui.label(
+                        "Harmonic: Quintile, Bi-quintile, Septile, Novile"
+                    ).classes("text-xs").style(f"color: {COLORS['accent']}")
 
         # ===== CALCULATIONS / COMPONENTS =====
         with (
@@ -288,7 +288,9 @@ def create_chart_options(state: ChartState, on_change=None):
                         ui.checkbox(
                             "Color sign glyphs",
                             value=state.color_sign_info,
-                            on_change=lambda e: update_field("color_sign_info", e.value),
+                            on_change=lambda e: update_field(
+                                "color_sign_info", e.value
+                            ),
                         ).props("dense")
 
         # ===== VISUALIZATION - DISPLAY =====

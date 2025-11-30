@@ -73,11 +73,7 @@ class TestChartBuilderZodiacMethods:
     def test_with_sidereal_default_lahiri(self):
         """Test with_sidereal() uses Lahiri ayanamsa by default."""
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_sidereal()
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_sidereal().calculate()
 
         assert chart.zodiac_type.value == "sidereal"
         assert chart.ayanamsa == "lahiri"
@@ -88,9 +84,7 @@ class TestChartBuilderZodiacMethods:
         """Test with_sidereal() with Fagan-Bradley ayanamsa."""
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
         chart = (
-            ChartBuilder.from_native(native)
-            .with_sidereal("fagan_bradley")
-            .calculate()
+            ChartBuilder.from_native(native).with_sidereal("fagan_bradley").calculate()
         )
 
         assert chart.zodiac_type.value == "sidereal"
@@ -124,22 +118,14 @@ class TestChartBuilderNameMethod:
     def test_with_name_sets_metadata(self):
         """Test with_name() sets name in chart metadata."""
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_name("Kate Louie")
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_name("Kate Louie").calculate()
 
         assert chart.metadata.get("name") == "Kate Louie"
 
     def test_with_name_overrides_native_name(self):
         """Test with_name() can override name from Native."""
         native = Native("1994-01-06 11:47", "Palo Alto, CA", name="Original Name")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_name("New Name")
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_name("New Name").calculate()
 
         assert chart.metadata.get("name") == "New Name"
 
@@ -208,22 +194,14 @@ class TestChartBuilderUnknownTime:
     def test_with_unknown_time_returns_unknown_time_chart(self):
         """Test with_unknown_time() returns UnknownTimeChart."""
         native = Native("1994-01-06", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_unknown_time()
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_unknown_time().calculate()
 
         assert isinstance(chart, UnknownTimeChart)
 
     def test_unknown_time_chart_has_no_houses(self):
         """Test UnknownTimeChart has empty house systems."""
         native = Native("1994-01-06", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_unknown_time()
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_unknown_time().calculate()
 
         assert chart.house_systems == {}
         assert chart.house_placements == {}
@@ -231,11 +209,7 @@ class TestChartBuilderUnknownTime:
     def test_unknown_time_chart_has_moon_range(self):
         """Test UnknownTimeChart includes moon_range."""
         native = Native("1994-01-06", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_unknown_time()
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_unknown_time().calculate()
 
         assert chart.moon_range is not None
         assert chart.moon_range.start_longitude is not None
@@ -245,11 +219,7 @@ class TestChartBuilderUnknownTime:
     def test_unknown_time_metadata_flag(self):
         """Test UnknownTimeChart has time_unknown flag in metadata."""
         native = Native("1994-01-06", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_unknown_time()
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_unknown_time().calculate()
 
         assert chart.metadata.get("time_unknown") is True
 
@@ -271,11 +241,7 @@ class TestChartBuilderUnknownTime:
         # Find a date where Moon might cross sign boundary
         # Moon travels ~13 degrees per day
         native = Native("1994-01-06", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_unknown_time()
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_unknown_time().calculate()
 
         # Check that crosses_sign_boundary is a boolean
         assert isinstance(chart.moon_range.crosses_sign_boundary, bool)
@@ -348,11 +314,7 @@ class TestChartBuilderWithConfig:
         )
 
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_config(config)
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_config(config).calculate()
 
         # Chiron and True Node should not be in positions
         position_names = [p.name for p in chart.positions]
@@ -374,11 +336,7 @@ class TestChartBuilderAspectsAndOrbs:
         """Test with_aspects() with custom engine."""
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
         custom_engine = ModernAspectEngine()
-        chart = (
-            ChartBuilder.from_native(native)
-            .with_aspects(custom_engine)
-            .calculate()
-        )
+        chart = ChartBuilder.from_native(native).with_aspects(custom_engine).calculate()
 
         assert len(chart.aspects) > 0
 
@@ -393,11 +351,7 @@ class TestChartBuilderAspectsAndOrbs:
         """Test with_orbs() with custom orb engine."""
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
         custom_orbs = SimpleOrbEngine(orb_map={"Conjunction": 10.0, "Trine": 8.0})
-        builder = (
-            ChartBuilder.from_native(native)
-            .with_aspects()
-            .with_orbs(custom_orbs)
-        )
+        builder = ChartBuilder.from_native(native).with_aspects().with_orbs(custom_orbs)
 
         assert builder._orb_engine is custom_orbs
 
@@ -425,9 +379,8 @@ class TestChartBuilderComponents:
         from stellium.components.arabic_parts import ArabicPartsCalculator
 
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
-        builder = (
-            ChartBuilder.from_native(native)
-            .add_component(ArabicPartsCalculator())
+        builder = ChartBuilder.from_native(native).add_component(
+            ArabicPartsCalculator()
         )
 
         assert isinstance(builder, ChartBuilder)

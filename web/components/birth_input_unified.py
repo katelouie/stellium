@@ -117,7 +117,9 @@ def create_unified_birth_input(
                     with (
                         ui.element("div")
                         .classes("p-3 rounded mt-2")
-                        .style(f"background-color: {COLORS['cream']}; border: 1px solid {COLORS['border']};")
+                        .style(
+                            f"background-color: {COLORS['cream']}; border: 1px solid {COLORS['border']};"
+                        )
                     ):
                         ui.label("Selected:").classes("text-xs").style(
                             f"color: {COLORS['text_muted']}"
@@ -126,9 +128,9 @@ def create_unified_birth_input(
                             f"color: {COLORS['text']}"
                         )
                         if state.date:
-                            ui.label(f"{state.date} {state.time}").classes("text-sm").style(
-                                f"color: {COLORS['text_muted']}"
-                            )
+                            ui.label(f"{state.date} {state.time}").classes(
+                                "text-sm"
+                            ).style(f"color: {COLORS['text_muted']}")
                         if state.location:
                             ui.label(state.location).classes("text-sm").style(
                                 f"color: {COLORS['accent']}"
@@ -150,9 +152,9 @@ def create_unified_birth_input(
 
                 # Location field with autocomplete
                 with ui.row().classes("items-center gap-4 w-full"):
-                    ui.label("Birth place:").classes("w-28 flex-shrink-0 text-base").style(
-                        f"color: {COLORS['text']}"
-                    )
+                    ui.label("Birth place:").classes(
+                        "w-28 flex-shrink-0 text-base"
+                    ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
                         create_location_input(
                             value=state.location,
@@ -162,9 +164,9 @@ def create_unified_birth_input(
 
                 # Date field
                 with ui.row().classes("items-center gap-4 w-full"):
-                    ui.label("Birth date:").classes("w-28 flex-shrink-0 text-base").style(
-                        f"color: {COLORS['text']}"
-                    )
+                    ui.label("Birth date:").classes(
+                        "w-28 flex-shrink-0 text-base"
+                    ).style(f"color: {COLORS['text']}")
                     ui.input(
                         value=state.date,
                         placeholder="YYYY-MM-DD",
@@ -173,9 +175,9 @@ def create_unified_birth_input(
 
                 # Time field with hour/minute/AM-PM
                 with ui.row().classes("items-center gap-4 w-full"):
-                    ui.label("Birth time:").classes("w-28 flex-shrink-0 text-base").style(
-                        f"color: {COLORS['text']}"
-                    )
+                    ui.label("Birth time:").classes(
+                        "w-28 flex-shrink-0 text-base"
+                    ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
                         create_time_input(
                             hour_value=hour,

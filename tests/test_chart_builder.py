@@ -62,8 +62,7 @@ class TestChartBuilderFromDetails:
     def test_from_details_with_string_inputs(self):
         """Test from_details with string datetime and string location."""
         chart = ChartBuilder.from_details(
-            "1994-01-06 11:47",
-            "Palo Alto, CA"
+            "1994-01-06 11:47", "Palo Alto, CA"
         ).calculate()
 
         assert chart.datetime.local_datetime.year == 1994
@@ -74,8 +73,7 @@ class TestChartBuilderFromDetails:
     def test_from_details_with_us_format(self):
         """Test from_details with US date format."""
         chart = ChartBuilder.from_details(
-            "01/06/1994 11:47",
-            "Palo Alto, CA"
+            "01/06/1994 11:47", "Palo Alto, CA"
         ).calculate()
 
         assert chart.datetime.local_datetime.year == 1994
@@ -84,8 +82,7 @@ class TestChartBuilderFromDetails:
     def test_from_details_with_tuple_coordinates(self):
         """Test from_details with (lat, lon) tuple."""
         chart = ChartBuilder.from_details(
-            "2024-11-24 14:30",
-            (37.4419, -122.1430)
+            "2024-11-24 14:30", (37.4419, -122.1430)
         ).calculate()
 
         assert chart.location.latitude == 37.4419
@@ -94,19 +91,13 @@ class TestChartBuilderFromDetails:
     def test_from_details_with_datetime_object(self):
         """Test from_details with datetime object (backward compatibility)."""
         dt_obj = dt.datetime(1994, 1, 6, 11, 47)
-        chart = ChartBuilder.from_details(
-            dt_obj,
-            "Palo Alto, CA"
-        ).calculate()
+        chart = ChartBuilder.from_details(dt_obj, "Palo Alto, CA").calculate()
 
         assert chart.datetime.local_datetime.year == 1994
 
     def test_from_details_stores_native_reference(self):
         """Test that from_details creates and stores Native internally."""
-        builder = ChartBuilder.from_details(
-            "1994-01-06 11:47",
-            "Palo Alto, CA"
-        )
+        builder = ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA")
 
         assert builder.native is not None
         assert isinstance(builder.native, Native)
@@ -114,12 +105,11 @@ class TestChartBuilderFromDetails:
 
     def test_from_details_chainable_with_aspects(self):
         """Test that from_details can chain with other builder methods."""
-        chart = (ChartBuilder.from_details(
-            "1994-01-06 11:47",
-            "Palo Alto, CA"
+        chart = (
+            ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA")
+            .with_aspects()
+            .calculate()
         )
-        .with_aspects()
-        .calculate())
 
         assert len(chart.aspects) > 0
 
@@ -127,8 +117,7 @@ class TestChartBuilderFromDetails:
         """Test that from_details produces equivalent chart to from_native."""
         # Using from_details
         chart1 = ChartBuilder.from_details(
-            "1994-01-06 11:47",
-            "Palo Alto, CA"
+            "1994-01-06 11:47", "Palo Alto, CA"
         ).calculate()
 
         # Using from_native (old way)

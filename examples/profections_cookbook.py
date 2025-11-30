@@ -74,7 +74,9 @@ def example_1_simple_annual_profection():
     # Where is the Lord natally?
     if result.ruler_position:
         print(f"\n  {result.ruler} natally:")
-        print(f"    Position: {result.ruler_position.longitude:.2f}° {result.ruler_position.sign}")
+        print(
+            f"    Position: {result.ruler_position.longitude:.2f}° {result.ruler_position.sign}"
+        )
         print(f"    House: {result.ruler_house}")
 
 
@@ -86,11 +88,11 @@ def example_2_profection_cycle():
     """
     section_header("Example 2: The 12-Year Profection Cycle")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_house_systems([WholeSignHouses()]).calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_house_systems([WholeSignHouses()])
+        .calculate()
+    )
 
     engine = ProfectionEngine(natal)
 
@@ -100,7 +102,9 @@ def example_2_profection_cycle():
 
     for age in range(12):
         result = engine.annual(age)
-        print(f"{age:<6} {result.profected_house:<8} {result.profected_sign:<14} {result.ruler:<10}")
+        print(
+            f"{age:<6} {result.profected_house:<8} {result.profected_sign:<14} {result.ruler:<10}"
+        )
 
     print("\n(This pattern repeats at ages 12-23, 24-35, etc.)")
 
@@ -114,9 +118,7 @@ def example_3_lord_of_year():
     section_header("Example 3: Quick Lord of the Year Access")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -168,9 +170,7 @@ def example_5_planets_in_profected_house():
     section_header("Example 5: Planets in Profected House")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -180,7 +180,9 @@ def example_5_planets_in_profected_house():
         result = engine.annual(age)
         if result.planets_in_house:
             planets = ", ".join(p.name for p in result.planets_in_house)
-            print(f"Age {age}: House {result.profected_house} ({result.profected_sign})")
+            print(
+                f"Age {age}: House {result.profected_house} ({result.profected_sign})"
+            )
             print(f"         Planets present: {planets}")
             print()
 
@@ -230,9 +232,7 @@ def example_7_traditional_vs_modern():
     section_header("Example 7: Traditional vs Modern Rulers")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
 
     # Traditional engine (default)
@@ -255,8 +255,10 @@ def example_7_traditional_vs_modern():
         else:
             marker = ""
 
-        print(f"{age:<6} {trad_result.profected_sign:<14} "
-              f"{trad_result.ruler:<12} {mod_result.ruler:<12}{marker}")
+        print(
+            f"{age:<6} {trad_result.profected_sign:<14} "
+            f"{trad_result.ruler:<12} {mod_result.ruler:<12}{marker}"
+        )
 
     print("\n* = different rulers (Scorpio, Aquarius, Pisces)")
 
@@ -284,8 +286,10 @@ def example_8_monthly_profections():
 
     for month in range(12):
         result = engine.monthly(26, month)
-        print(f"{month:<8} {result.profected_house:<8} "
-              f"{result.profected_sign:<14} {result.ruler:<10}")
+        print(
+            f"{month:<8} {result.profected_house:<8} "
+            f"{result.profected_sign:<14} {result.ruler:<10}"
+        )
 
 
 def example_9_solar_ingress_monthly():
@@ -297,11 +301,11 @@ def example_9_solar_ingress_monthly():
     """
     section_header("Example 9: Date-Based Profections")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_house_systems([WholeSignHouses()]).calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_house_systems([WholeSignHouses()])
+        .calculate()
+    )
 
     engine = ProfectionEngine(natal)
 
@@ -329,9 +333,7 @@ def example_10_chart_for_date():
     section_header("Example 10: Chart Convenience - By Date")
 
     chart = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
 
     # Get both annual and monthly
@@ -383,9 +385,7 @@ def example_12_custom_points():
     section_header("Example 12: Custom Points")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -429,9 +429,7 @@ def example_14_timeline():
     section_header("Example 14: Profection Timeline")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -442,8 +440,10 @@ def example_14_timeline():
     print("-" * 42)
 
     for entry in timeline.entries:
-        print(f"{entry.units:<6} {entry.profected_house:<8} "
-              f"{entry.profected_sign:<14} {entry.ruler:<10}")
+        print(
+            f"{entry.units:<6} {entry.profected_house:<8} "
+            f"{entry.profected_sign:<14} {entry.ruler:<10}"
+        )
 
 
 def example_15_find_lord_years():
@@ -455,9 +455,7 @@ def example_15_find_lord_years():
     section_header("Example 15: Find Years by Lord")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -468,7 +466,9 @@ def example_15_find_lord_years():
 
     print("Saturn Years in first 48 years of life:\n")
     for entry in saturn_years:
-        print(f"  Age {entry.units}: House {entry.profected_house} ({entry.profected_sign})")
+        print(
+            f"  Age {entry.units}: House {entry.profected_house} ({entry.profected_sign})"
+        )
 
 
 def example_16_lords_sequence():
@@ -480,9 +480,7 @@ def example_16_lords_sequence():
     section_header("Example 16: Lords Sequence")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -502,9 +500,7 @@ def example_17_chart_timeline():
     section_header("Example 17: Chart Timeline")
 
     chart = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
 
     timeline = chart.profection_timeline(25, 35)
@@ -530,13 +526,11 @@ def example_18_whole_sign_default():
     section_header("Example 18: Whole Sign Houses")
 
     # Build chart with Whole Sign houses
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_house_systems(
-        [WholeSignHouses()]
-    ).calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_house_systems([WholeSignHouses()])
+        .calculate()
+    )
 
     engine = ProfectionEngine(natal)
 
@@ -557,13 +551,11 @@ def example_19_explicit_house_system():
     """
     section_header("Example 19: Explicit House System")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_house_systems(
-        [PlacidusHouses(), WholeSignHouses()]
-    ).calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_house_systems([PlacidusHouses(), WholeSignHouses()])
+        .calculate()
+    )
 
     # Force Placidus (non-traditional but possible)
     engine = ProfectionEngine(natal, house_system="Placidus")
@@ -614,9 +606,7 @@ def example_21_profecting_moon():
     section_header("Example 21: Profecting the Moon")
 
     natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
     engine = ProfectionEngine(natal)
 
@@ -660,9 +650,11 @@ def example_23_comprehensive_reading():
     """
     section_header("Example 23: Comprehensive Reading")
 
-    natal = ChartBuilder.from_notable("Albert Einstein").with_house_systems(
-        [WholeSignHouses()]
-    ).calculate()
+    natal = (
+        ChartBuilder.from_notable("Albert Einstein")
+        .with_house_systems([WholeSignHouses()])
+        .calculate()
+    )
 
     age = 26
     engine = ProfectionEngine(natal)
@@ -707,13 +699,11 @@ def example_24_output_file():
     """
     section_header("Example 24: Save to File")
 
-    natal = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
-    ).with_house_systems(
-        [WholeSignHouses()]
-    ).calculate()
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA", name="Kate")
+        .with_house_systems([WholeSignHouses()])
+        .calculate()
+    )
 
     engine = ProfectionEngine(natal)
 
@@ -759,10 +749,7 @@ def example_25_basic_profection_report():
 
     # Create report with profections section
     report = (
-        ReportBuilder()
-        .from_chart(chart)
-        .with_chart_overview()
-        .with_profections(age=26)
+        ReportBuilder().from_chart(chart).with_chart_overview().with_profections(age=26)
     )
 
     # Display in terminal
@@ -780,9 +767,7 @@ def example_26_profection_report_with_timeline():
     from stellium import ReportBuilder
 
     chart = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
 
     # Include timeline with custom range
@@ -810,9 +795,7 @@ def example_27_profection_report_by_date():
     from stellium import ReportBuilder
 
     chart = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
 
     # Use date instead of age - gets annual AND monthly
@@ -866,9 +849,7 @@ def example_29_profection_report_modern_rulers():
     from stellium import ReportBuilder
 
     chart = ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
-        name="Kate"
+        "1994-01-06 11:47", "Palo Alto, CA", name="Kate"
     ).calculate()
 
     # Use modern rulership

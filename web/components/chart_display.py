@@ -18,7 +18,9 @@ def make_svg_responsive(svg_content: str) -> tuple[str, float]:
         Tuple of (modified SVG string, aspect ratio as height/width)
     """
     # Extract dimensions from viewBox (more reliable than width/height attributes)
-    viewbox_match = re.search(r'viewBox=["\'](\d+)\s+(\d+)\s+(\d+)\s+(\d+)["\']', svg_content)
+    viewbox_match = re.search(
+        r'viewBox=["\'](\d+)\s+(\d+)\s+(\d+)\s+(\d+)["\']', svg_content
+    )
 
     if viewbox_match:
         # viewBox format: "minX minY width height"

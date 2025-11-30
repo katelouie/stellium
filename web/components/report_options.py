@@ -47,7 +47,9 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ui.checkbox(
                     "Planet Positions",
                     value=report_state.include_planet_positions,
-                    on_change=lambda e: update_field("include_planet_positions", e.value),
+                    on_change=lambda e: update_field(
+                        "include_planet_positions", e.value
+                    ),
                 ).props("dense")
 
                 with ui.element("div").bind_visibility_from(
@@ -133,7 +135,9 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ui.checkbox(
                     "Aspect Patterns",
                     value=report_state.include_aspect_patterns,
-                    on_change=lambda e: update_field("include_aspect_patterns", e.value),
+                    on_change=lambda e: update_field(
+                        "include_aspect_patterns", e.value
+                    ),
                 ).props("dense")
                 ui.label("Grand Trines, T-Squares, Yods, etc.").classes(
                     "text-xs ml-6 -mt-1"
@@ -201,7 +205,9 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ui.checkbox(
                     "Midpoint Aspects",
                     value=report_state.include_midpoint_aspects,
-                    on_change=lambda e: update_field("include_midpoint_aspects", e.value),
+                    on_change=lambda e: update_field(
+                        "include_midpoint_aspects", e.value
+                    ),
                 ).props("dense")
 
                 with ui.element("div").bind_visibility_from(

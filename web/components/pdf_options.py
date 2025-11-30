@@ -129,9 +129,11 @@ def create_pdf_options_dialog(
                                 "include_declinations", e.value
                             ),
                         ).props("dense")
-                        ui.label("Equatorial coordinates, out-of-bounds detection").classes(
-                            "text-xs ml-6 -mt-1"
-                        ).style(f"color: {COLORS['accent']}")
+                        ui.label(
+                            "Equatorial coordinates, out-of-bounds detection"
+                        ).classes("text-xs ml-6 -mt-1").style(
+                            f"color: {COLORS['accent']}"
+                        )
 
                 # ===== ASPECTS SECTION =====
                 with (
@@ -143,7 +145,9 @@ def create_pdf_options_dialog(
                         ui.checkbox(
                             "Include Aspects Table",
                             value=report_state.include_aspects,
-                            on_change=lambda e: update_field("include_aspects", e.value),
+                            on_change=lambda e: update_field(
+                                "include_aspects", e.value
+                            ),
                         ).props("dense")
 
                         with ui.element("div").bind_visibility_from(
@@ -362,8 +366,10 @@ def create_pdf_options_dialog(
                             ).props("dense").classes("ml-6")
 
         # Footer with action buttons
-        with ui.row().classes("w-full justify-end gap-2 mt-4 pt-4").style(
-            f"border-top: 1px solid {COLORS['border']}"
+        with (
+            ui.row()
+            .classes("w-full justify-end gap-2 mt-4 pt-4")
+            .style(f"border-top: 1px solid {COLORS['border']}")
         ):
             ui.button("Cancel", on_click=dialog.close).props("outline").style(
                 f"color: {COLORS['text_muted']} !important; border-color: {COLORS['border']} !important;"

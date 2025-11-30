@@ -196,7 +196,9 @@ def create_relationships_chart_options(state: RelationshipsState, on_change=None
                         ui.checkbox(
                             "Color sign glyphs",
                             value=state.color_sign_info,
-                            on_change=lambda e: update_field("color_sign_info", e.value),
+                            on_change=lambda e: update_field(
+                                "color_sign_info", e.value
+                            ),
                         ).props("dense")
 
         # ===== DISPLAY OPTIONS =====
@@ -374,12 +376,19 @@ def create_relationships_page():
             chart_svg["content"] = drawer.save(to_string=True)
             refresh_chart_display()
 
-            type_names = {"synastry": "Synastry", "composite": "Composite", "davison": "Davison"}
-            ui.notify(f"{type_names[state.chart_type]} chart generated!", type="positive")
+            type_names = {
+                "synastry": "Synastry",
+                "composite": "Composite",
+                "davison": "Davison",
+            }
+            ui.notify(
+                f"{type_names[state.chart_type]} chart generated!", type="positive"
+            )
 
         except Exception as e:
             ui.notify(f"Error: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     def refresh_chart_display():
@@ -441,15 +450,23 @@ def create_relationships_page():
 
             chart_svg_path = None
             if rs.include_chart_image and chart_svg["content"]:
-                with tempfile.NamedTemporaryFile(mode="w", suffix=".svg", delete=False) as f:
+                with tempfile.NamedTemporaryFile(
+                    mode="w", suffix=".svg", delete=False
+                ) as f:
                     f.write(chart_svg["content"])
                     chart_svg_path = f.name
 
             try:
-                with tempfile.NamedTemporaryFile(mode="wb", suffix=".pdf", delete=False) as pdf_file:
+                with tempfile.NamedTemporaryFile(
+                    mode="wb", suffix=".pdf", delete=False
+                ) as pdf_file:
                     pdf_path = pdf_file.name
 
-                type_names = {"synastry": "Synastry", "composite": "Composite", "davison": "Davison"}
+                type_names = {
+                    "synastry": "Synastry",
+                    "composite": "Composite",
+                    "davison": "Davison",
+                }
                 title = f"{state.person1.name or 'Person 1'} & {state.person2.name or 'Person 2'} — {type_names[state.chart_type]}"
 
                 builder.render(
@@ -474,6 +491,7 @@ def create_relationships_page():
         except Exception as e:
             ui.notify(f"Error generating PDF: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     def update_chart_type(value):
@@ -498,9 +516,9 @@ def create_relationships_page():
                 ui.label("Relationship Charts").classes(
                     "font-display text-3xl md:text-4xl tracking-wide"
                 ).style(f"color: {COLORS['text']}")
-                ui.label("Synastry, Composite & Davison").classes("text-base mt-2").style(
-                    f"color: {COLORS['text_muted']}"
-                )
+                ui.label("Synastry, Composite & Davison").classes(
+                    "text-base mt-2"
+                ).style(f"color: {COLORS['text_muted']}")
 
             # Two column layout
             with ui.row().classes("w-full gap-8 flex-wrap lg:flex-nowrap"):

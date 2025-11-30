@@ -63,9 +63,15 @@ def example_1_solar_arc_by_age():
     # Create natal chart
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    print(f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}")
-    print(f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}")
-    print(f"Natal MC: {natal.get_object('MC').longitude:.2f}° {natal.get_object('MC').sign}")
+    print(
+        f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}"
+    )
+    print(
+        f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}"
+    )
+    print(
+        f"Natal MC: {natal.get_object('MC').longitude:.2f}° {natal.get_object('MC').sign}"
+    )
 
     # Calculate solar arc directions for age 26 (1905 - Einstein's "Miracle Year")
     directed = ComparisonBuilder.arc_direction(
@@ -77,14 +83,22 @@ def example_1_solar_arc_by_age():
     print(f"\nSolar Arc at Age 26: {arc:.2f}°")
 
     print("\nDirected Positions (all moved by same arc):")
-    print(f"  Directed Sun: {directed.chart2.get_object('Sun').longitude:.2f}° {directed.chart2.get_object('Sun').sign}")
-    print(f"  Directed Moon: {directed.chart2.get_object('Moon').longitude:.2f}° {directed.chart2.get_object('Moon').sign}")
-    print(f"  Directed MC: {directed.chart2.get_object('MC').longitude:.2f}° {directed.chart2.get_object('MC').sign}")
+    print(
+        f"  Directed Sun: {directed.chart2.get_object('Sun').longitude:.2f}° {directed.chart2.get_object('Sun').sign}"
+    )
+    print(
+        f"  Directed Moon: {directed.chart2.get_object('Moon').longitude:.2f}° {directed.chart2.get_object('Moon').sign}"
+    )
+    print(
+        f"  Directed MC: {directed.chart2.get_object('MC').longitude:.2f}° {directed.chart2.get_object('MC').sign}"
+    )
 
     # Show cross-aspects between directed and natal
     print(f"\nDirected-to-Natal Aspects: {len(directed.cross_aspects)}")
     for asp in sorted(directed.cross_aspects, key=lambda a: a.orb)[:5]:
-        print(f"  D.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)")
+        print(
+            f"  D.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)"
+        )
 
     # Save chart
     output_file = OUTPUT_DIR / "01_solar_arc_age26.svg"
@@ -104,7 +118,9 @@ def example_2_solar_arc_by_date():
     natal = ChartBuilder.from_notable("Steve Jobs").with_aspects().calculate()
 
     print("Natal chart for: Steve Jobs")
-    print(f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}")
+    print(
+        f"Natal Sun: {natal.get_object('Sun').longitude:.2f}° {natal.get_object('Sun').sign}"
+    )
 
     # Calculate directions to a specific date
     directed = ComparisonBuilder.arc_direction(
@@ -150,8 +166,12 @@ def example_3_naibod_arc():
     # Compare solar arc vs naibod at the same age
     age = 30
 
-    solar = ComparisonBuilder.arc_direction(natal, age=age, arc_type="solar_arc").calculate()
-    naibod = ComparisonBuilder.arc_direction(natal, age=age, arc_type="naibod").calculate()
+    solar = ComparisonBuilder.arc_direction(
+        natal, age=age, arc_type="solar_arc"
+    ).calculate()
+    naibod = ComparisonBuilder.arc_direction(
+        natal, age=age, arc_type="naibod"
+    ).calculate()
 
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
     naibod_arc = naibod.chart2.metadata.get("arc_degrees", 0)
@@ -200,13 +220,15 @@ def example_4_lunar_arc():
     print("(The Moon moves ~12-13° per year in progressions)")
 
     # Compare to solar arc at same age
-    solar = ComparisonBuilder.arc_direction(natal, age=5, arc_type="solar_arc").calculate()
+    solar = ComparisonBuilder.arc_direction(
+        natal, age=5, arc_type="solar_arc"
+    ).calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
 
     print("\nComparison at age 5:")
     print(f"  Lunar arc: {arc:.2f}°")
     print(f"  Solar arc: {solar_arc:.2f}°")
-    print(f"  Lunar is {arc/solar_arc:.1f}x faster!")
+    print(f"  Lunar is {arc / solar_arc:.1f}x faster!")
 
     print("\nLunar arc is useful for:")
     print("  - Emotional/domestic events")
@@ -310,7 +332,9 @@ def example_6_chart_ruler_arc_traditional():
     print(f"  Arc: {arc:.2f}°")
 
     # Compare to solar arc
-    solar = ComparisonBuilder.arc_direction(natal, age=30, arc_type="solar_arc").calculate()
+    solar = ComparisonBuilder.arc_direction(
+        natal, age=30, arc_type="solar_arc"
+    ).calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
 
     print("\nComparison:")
@@ -395,7 +419,9 @@ def example_8_mars_arc():
     print("\nAll Planetary Arcs at Age 30:")
     for planet in ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]:
         try:
-            d = ComparisonBuilder.arc_direction(natal, age=30, arc_type=planet).calculate()
+            d = ComparisonBuilder.arc_direction(
+                natal, age=30, arc_type=planet
+            ).calculate()
             p_arc = d.chart2.metadata.get("arc_degrees", 0)
             print(f"  {planet:10} arc: {p_arc:7.2f}°")
         except ValueError:
@@ -428,8 +454,7 @@ def example_9_venus_arc():
 
     # Show directed Venus aspects to natal chart
     venus_aspects = [
-        asp for asp in directed.cross_aspects
-        if asp.object2.name == "Venus"
+        asp for asp in directed.cross_aspects if asp.object2.name == "Venus"
     ]
 
     print("\nDirected Venus aspects to natal chart:")
@@ -458,14 +483,20 @@ def example_10_jupiter_saturn_arcs():
     age = 30
 
     # Calculate both arcs
-    jupiter = ComparisonBuilder.arc_direction(natal, age=age, arc_type="Jupiter").calculate()
-    saturn = ComparisonBuilder.arc_direction(natal, age=age, arc_type="Saturn").calculate()
+    jupiter = ComparisonBuilder.arc_direction(
+        natal, age=age, arc_type="Jupiter"
+    ).calculate()
+    saturn = ComparisonBuilder.arc_direction(
+        natal, age=age, arc_type="Saturn"
+    ).calculate()
 
     jup_arc = jupiter.chart2.metadata.get("arc_degrees", 0)
     sat_arc = saturn.chart2.metadata.get("arc_degrees", 0)
 
     # Compare to solar arc
-    solar = ComparisonBuilder.arc_direction(natal, age=age, arc_type="solar_arc").calculate()
+    solar = ComparisonBuilder.arc_direction(
+        natal, age=age, arc_type="solar_arc"
+    ).calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
 
     print(f"Arcs at Age {age}:")
@@ -513,7 +544,9 @@ def example_11_finding_exact_aspects():
     # Show results
     print(f"\nFound {len(tight_aspects)} tight aspects:")
     for age, asp in sorted(tight_aspects, key=lambda x: x[1].orb)[:10]:
-        print(f"  Age {age}: D.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} ({asp.orb:.2f}°)")
+        print(
+            f"  Age {age}: D.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} ({asp.orb:.2f}°)"
+        )
 
 
 def example_12_comparing_arc_types():

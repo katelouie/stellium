@@ -182,7 +182,9 @@ class ReturnBuilder:
         if near_date is None and occurrence is None:
             near_date = dt.datetime.now(dt.UTC)
 
-        return cls(natal, "Moon", near_date=near_date, occurrence=occurrence, location=location)
+        return cls(
+            natal, "Moon", near_date=near_date, occurrence=occurrence, location=location
+        )
 
     @classmethod
     def planetary(
@@ -217,9 +219,13 @@ class ReturnBuilder:
             ... ).calculate()
         """
         if near_date is None and occurrence is None:
-            raise ValueError("Must specify either near_date or occurrence for planetary returns")
+            raise ValueError(
+                "Must specify either near_date or occurrence for planetary returns"
+            )
 
-        return cls(natal, planet, near_date=near_date, occurrence=occurrence, location=location)
+        return cls(
+            natal, planet, near_date=near_date, occurrence=occurrence, location=location
+        )
 
     # ---- Delegated Configuration Methods ----
     # These mirror ChartBuilder's fluent API but store config for later
@@ -323,7 +329,9 @@ class ReturnBuilder:
             "return_julian_day": return_info.return_jd,
         }
         if return_info.return_number is not None:
-            self._inner_builder._extra_metadata["return_number"] = return_info.return_number  # type: ignore[attr-defined]
+            self._inner_builder._extra_metadata["return_number"] = (
+                return_info.return_number
+            )  # type: ignore[attr-defined]
 
     def _calculate_return_info(self) -> ReturnInfo:
         """Calculate the return moment based on configuration."""
@@ -360,6 +368,7 @@ class ReturnBuilder:
             if isinstance(self._near_date, str):
                 # Parse string date
                 from dateutil.parser import parse
+
                 target_dt = parse(self._near_date)
                 if target_dt.tzinfo is None:
                     target_dt = pytz.UTC.localize(target_dt)

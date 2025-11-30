@@ -18,11 +18,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - L3/L4: Finer timing divisions (weeks/days)
   - Uses traditional planetary periods: Moon (25), Mercury (20), Venus (8), Sun (19), Mars (15), Jupiter (12), Saturn (27)
   - 208-year full cycle through all 12 signs
+  - **NEW: Valens method is now the default** (traditional method with proper loosing of the bond)
+    - L1: Years (sign_period × 365.25)
+    - L2: Months (sign_period × 30.437)
+    - L3: Days (sign_period × 1.0146)
+    - L4: Hours (sign_period × 0.0417)
 
 - **Peak and Angular Detection**:
   - Identifies angular signs (1st, 4th, 7th, 10th from Lot)
   - Marks Peak periods (10th from Lot) - times of heightened visibility
   - Detects Loosing of the Bond at L2+ for angular signs
+
+- **NEW: Qualitative Period Analysis**:
+  - **Sect-Based Scoring**: Periods evaluated based on chart sect (day/night)
+  - **Ruler Roles**: Each period's ruler analyzed for its role in the chart
+    - Sect benefic (+2): Jupiter (day) or Venus (night)
+    - Contrary benefic (+1): Venus (day) or Jupiter (night)
+    - Sect malefic (-1): Saturn (day) or Mars (night) - constructive difficulty
+    - Contrary malefic (-2): Mars (day) or Saturn (night) - destructive difficulty
+    - Sect light (+1): Sun (day) or Moon (night)
+    - Contrary light (0): Moon (day) or Sun (night)
+  - **Tenant Roles**: Planets present in the period's sign add their influence
+  - **Period Scoring**: Combined score from ruler + tenants (scale: +3 to -3)
+    - Peak periods amplify scores (good becomes better, difficult becomes harder)
+  - **Sentiment Property**: Quick classification (positive/neutral/challenging)
+  - `ZRPeriod` fields: `ruler_role`, `tenant_roles`, `score`, `sentiment`
 
 - **Data Models** (in `core/models.py`):
   - `ZRPeriod`: Individual period at any level with sign, ruler, dates, and status flags
@@ -45,12 +65,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Query by date or age (defaults to current time)
   - Configurable L3/L4 context window (default ±2 periods)
   - Status indicators: ★ (Peak), ◆ (Angular), ⚡ (Current), LB (Loosing of Bond)
+  - **NEW: Quality column** displays score, sentiment icons (✓/—/✗), and ruler roles
+  - Legend includes quality score explanation (+/- = Quality Score)
 
 - **Updated `preset_full()`** to include ZR for Part of Fortune and Part of Spirit
 
 - **68 comprehensive tests** covering engine, data models, timeline queries, and integration
 
-- **Cookbook**: `examples/zodiacal_releasing_cookbook.py` with 14 examples
+- **Cookbook**: `examples/zodiacal_releasing_cookbook.py` with 19 examples
+  - **NEW Examples 15-19**: Qualitative analysis demonstrations
+  - Example 15: Period quality scoring with ruler roles and tenants
+  - Example 16: Timeline with quality scores
+  - Example 17: Finding best periods by score
+  - Example 18: Sect-based analysis (day vs night charts)
+  - Example 19: Valens method details
 
 #### Standalone Aspectarian Generator (November 29, 2025)
 

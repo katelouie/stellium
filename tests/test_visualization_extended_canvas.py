@@ -63,9 +63,7 @@ class TestFilterObjectsForTables:
     @pytest.fixture
     def sample_chart(self):
         """Create a chart with various position types."""
-        return ChartBuilder.from_details(
-            "1990-01-15 10:00", "New York, NY"
-        ).calculate()
+        return ChartBuilder.from_details("1990-01-15 10:00", "New York, NY").calculate()
 
     def test_filter_default_includes_planets(self, sample_chart):
         """Test default filter includes planets."""
@@ -111,8 +109,7 @@ class TestFilterObjectsForTables:
         planet_names = [p.name for p in filtered]
         # Should include one of: North Node, True Node, Mean Node
         has_north = any(
-            name in planet_names
-            for name in ["North Node", "True Node", "Mean Node"]
+            name in planet_names for name in ["North Node", "True Node", "Mean Node"]
         )
         assert has_north
 
@@ -308,9 +305,7 @@ class TestAspectarianLayer:
 
     def test_init_with_style_override(self):
         """Test AspectarianLayer merges style override."""
-        layer = AspectarianLayer(
-            style_override={"cell_size": 32, "show_grid": False}
-        )
+        layer = AspectarianLayer(style_override={"cell_size": 32, "show_grid": False})
 
         assert layer.style["cell_size"] == 32
         assert layer.style["show_grid"] is False
@@ -384,9 +379,7 @@ class TestHouseCuspTableLayerRendering:
     @pytest.fixture
     def sample_chart(self):
         """Create a chart for rendering tests."""
-        return ChartBuilder.from_details(
-            "1990-01-15 10:00", "New York, NY"
-        ).calculate()
+        return ChartBuilder.from_details("1990-01-15 10:00", "New York, NY").calculate()
 
     def test_render_single_chart(self, sample_chart):
         """Test rendering house cusp table produces SVG."""

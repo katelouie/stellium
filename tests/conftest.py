@@ -160,7 +160,9 @@ def sf_location() -> ChartLocation:
     Use this when: You need a real-world US location.
     Example: Testing Pacific timezone handling, US-based charts.
     """
-    return ChartLocation(latitude=37.7749, longitude=-122.4194, name="San Francisco, CA")
+    return ChartLocation(
+        latitude=37.7749, longitude=-122.4194, name="San Francisco, CA"
+    )
 
 
 @pytest.fixture
@@ -182,7 +184,9 @@ def sydney_location() -> ChartLocation:
     Use this when: Testing Southern Hemisphere house calculations.
     Example: Verifying houses work correctly below the equator.
     """
-    return ChartLocation(latitude=-33.8688, longitude=151.2093, name="Sydney, Australia")
+    return ChartLocation(
+        latitude=-33.8688, longitude=151.2093, name="Sydney, Australia"
+    )
 
 
 @pytest.fixture
@@ -711,10 +715,7 @@ def mock_geocoding_in_ci(monkeypatch):
             "timezone": "UTC",
         }
 
-    monkeypatch.setattr(
-        "stellium.core.native._cached_geocode",
-        mock_cached_geocode
-    )
+    monkeypatch.setattr("stellium.core.native._cached_geocode", mock_cached_geocode)
 
 
 @pytest.fixture

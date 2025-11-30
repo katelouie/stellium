@@ -53,7 +53,8 @@ def create_explore_page():
         query = state["search_query"].lower().strip()
         if query:
             results = [
-                n for n in results
+                n
+                for n in results
                 if query in n.name.lower()
                 or query in n.notable_for.lower()
                 or query in n.category.lower()
@@ -93,8 +94,7 @@ def create_explore_page():
                 ui.element("div")
                 .classes("p-3 rounded cursor-pointer mb-2 transition-all")
                 .style(
-                    f"background-color: {bg_color}; "
-                    f"border: 1px solid {border_color};"
+                    f"background-color: {bg_color}; border: 1px solid {border_color};"
                 )
                 .on("click", lambda n=notable: select_notable(n))
             ):
@@ -103,9 +103,9 @@ def create_explore_page():
                         ui.label(notable.name).classes("font-medium").style(
                             f"color: {COLORS['text']}"
                         )
-                        ui.label(f"{notable.category.title()}").classes("text-xs").style(
-                            f"color: {COLORS['accent']}"
-                        )
+                        ui.label(f"{notable.category.title()}").classes(
+                            "text-xs"
+                        ).style(f"color: {COLORS['accent']}")
                     # Birth year
                     ui.label(str(notable.datetime.local_datetime.year)).classes(
                         "text-sm"
@@ -142,7 +142,9 @@ def create_explore_page():
             # Category and subcategories
             cats = [notable.category.title()]
             if notable.subcategories:
-                cats.extend(sub.replace("_", " ").title() for sub in notable.subcategories)
+                cats.extend(
+                    sub.replace("_", " ").title() for sub in notable.subcategories
+                )
             ui.label(" · ".join(cats)).classes("text-sm").style(
                 f"color: {COLORS['accent']}"
             )
@@ -200,6 +202,7 @@ def create_explore_page():
         except Exception as e:
             ui.notify(f"Error generating chart: {str(e)}", type="negative")
             import traceback
+
             traceback.print_exc()
 
     def refresh_chart_display():
@@ -305,7 +308,9 @@ def create_explore_page():
                             .classes("w-full rounded-lg")
                             .style("max-height: 55vh; overflow-y: auto;")
                         ):
-                            refs["results_container"] = ui.element("div").classes("w-full")
+                            refs["results_container"] = ui.element("div").classes(
+                                "w-full"
+                            )
                             with refs["results_container"]:
                                 create_results_list()
 

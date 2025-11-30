@@ -20,16 +20,20 @@ class TestSynthesisVisualization:
     def davison_chart(self):
         """Create a davison chart for testing."""
         chart1 = ChartBuilder.from_details(
-            "1994-01-06 11:47", (37.4419, -122.1430)  # Palo Alto
+            "1994-01-06 11:47",
+            (37.4419, -122.1430),  # Palo Alto
         ).calculate()
 
         chart2 = ChartBuilder.from_details(
-            "2000-06-15 17:00", (47.6062, -122.3321)  # Seattle
+            "2000-06-15 17:00",
+            (47.6062, -122.3321),  # Seattle
         ).calculate()
 
-        return SynthesisBuilder.davison(chart1, chart2).with_labels(
-            "Person A", "Person B"
-        ).calculate()
+        return (
+            SynthesisBuilder.davison(chart1, chart2)
+            .with_labels("Person A", "Person B")
+            .calculate()
+        )
 
     def test_draw_method_exists(self, davison_chart):
         """Test that SynthesisChart has inherited draw() method."""
@@ -82,12 +86,14 @@ class TestSynthesisVisualization:
         with tempfile.TemporaryDirectory() as tmpdir:
             filepath = os.path.join(tmpdir, "davison_custom.svg")
 
-            (davison_chart.draw(filepath)
+            (
+                davison_chart.draw(filepath)
                 .with_theme("celestial")
                 .with_size(800)
                 .with_moon_phase(position="top-left")
                 .with_chart_info(position="top-right")
-                .save())
+                .save()
+            )
 
             assert os.path.exists(filepath)
 

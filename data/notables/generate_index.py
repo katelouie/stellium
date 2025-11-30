@@ -46,13 +46,15 @@ def main():
 
                 if category not in births:
                     births[category] = []
-                births[category].append({
-                    "name": name,
-                    "year": year,
-                    "subcategories": subcats,
-                    "notable_for": notable_for,
-                    "source_file": yaml_file.name,
-                })
+                births[category].append(
+                    {
+                        "name": name,
+                        "year": year,
+                        "subcategories": subcats,
+                        "notable_for": notable_for,
+                        "source_file": yaml_file.name,
+                    }
+                )
 
     # Scan events directory
     events_dir = script_dir / "events"
@@ -64,12 +66,14 @@ def main():
                 year = entry.get("year", "?")
                 notable_for = entry.get("notable_for", "")
 
-                events.append({
-                    "name": name,
-                    "year": year,
-                    "notable_for": notable_for,
-                    "source_file": yaml_file.name,
-                })
+                events.append(
+                    {
+                        "name": name,
+                        "year": year,
+                        "notable_for": notable_for,
+                        "source_file": yaml_file.name,
+                    }
+                )
 
     # Generate the index markdown
     lines = [
@@ -92,7 +96,9 @@ def main():
 
         # Sort by name
         for entry in sorted(entries, key=lambda x: x["name"]):
-            subcats = ", ".join(entry["subcategories"]) if entry["subcategories"] else ""
+            subcats = (
+                ", ".join(entry["subcategories"]) if entry["subcategories"] else ""
+            )
             subcat_str = f" ({subcats})" if subcats else ""
             lines.append(f"- **{entry['name']}** ({entry['year']}){subcat_str}")
 
@@ -114,7 +120,9 @@ def main():
         f.write("\n".join(lines))
 
     print(f"Generated {index_path}")
-    print(f"  Births: {sum(len(v) for v in births.values())} entries across {len(births)} categories")
+    print(
+        f"  Births: {sum(len(v) for v in births.values())} entries across {len(births)} categories"
+    )
     print(f"  Events: {len(events)} entries")
 
 

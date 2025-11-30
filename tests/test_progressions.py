@@ -263,9 +263,7 @@ class TestEdgeCases:
         prog = ComparisonBuilder.progression(kate_natal, age=30).calculate()
 
         # Locations should match
-        assert (
-            abs(prog.chart1.location.latitude - prog.chart2.location.latitude) < 0.01
-        )
+        assert abs(prog.chart1.location.latitude - prog.chart2.location.latitude) < 0.01
         assert (
             abs(prog.chart1.location.longitude - prog.chart2.location.longitude) < 0.01
         )

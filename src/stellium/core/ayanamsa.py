@@ -124,9 +124,7 @@ def get_ayanamsa(name: str) -> AyanamsaInfo:
 
     if key not in AYANAMSA_REGISTRY:
         available = ", ".join(sorted(AYANAMSA_REGISTRY.keys()))
-        raise ValueError(
-            f"Unknown ayanamsa '{name}'. Available options: {available}"
-        )
+        raise ValueError(f"Unknown ayanamsa '{name}'. Available options: {available}")
 
     return AYANAMSA_REGISTRY[key]
 
