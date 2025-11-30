@@ -6,6 +6,7 @@ These are pure data containers - no business logic, no calculations.
 They represent the OUTPUT of calculations, not the process.
 """
 
+import bisect
 import datetime as dt
 from dataclasses import dataclass, field
 from enum import Enum
@@ -408,6 +409,184 @@ class AspectPattern:
         if self.name in ("T-Square", "Yod"):
             return self.planets[2]  # Last planet is apex
         return None
+
+
+# =============================================================================
+# Zodiacal Releasing Models
+# =============================================================================
+
+
+@dataclass
+class ZRPeriod:
+    """A single Zodiacal Releasing period at any level.
+
+    Represents a time period during which a particular sign is activated
+    in the Zodiacal Releasing technique.
+
+    Attributes:
+        level: The period level (1=major, 2=sub, 3=sub-sub, 4=sub-sub-sub)
+        sign: The zodiac sign activated during this period
+        ruler: The traditional ruler of the sign
+        start: When this period begins
+        end: When this period ends
+        length_days: Duration in days
+        is_angular: Whether this sign is angular to the Lot (1st, 4th, 7th, 10th)
+        angle_from_lot: The angular position (1, 4, 7, or 10) or None
+        is_loosing_bond: Whether this period triggers Loosing of the Bond (L2+)
+        is_peak: Whether this is a peak period (10th from Lot)
+    """
+
+    level: int  # 1,2,3,4
+    sign: str
+    ruler: str
+    start: dt.datetime
+    end: dt.datetime
+    length_days: float
+    is_angular: bool  # Is this sign angular to the Lot?
+    angle_from_lot: int | None  # 1, 4, 7, or 10 if angular
+    is_loosing_bond: bool  # Does this L2+ period trigger LB?
+    is_peak: bool
+
+
+@dataclass
+class ZRSnapshot:
+    """Complete Zodiacal Releasing state at a moment in time.
+
+    Captures which periods are active at all levels for a specific date.
+
+    Attributes:
+        lot: Name of the lot (e.g., "Part of Fortune")
+        lot_sign: The sign the lot is placed in
+        date: The queried date
+        age: Age in years at this date
+        l1: The active Level 1 (major) period
+        l2: The active Level 2 (sub) period
+        l3: The active Level 3 period (if calculated)
+        l4: The active Level 4 period (if calculated)
+    """
+
+    lot: str
+    lot_sign: str
+    date: dt.datetime
+    age: float
+
+    l1: ZRPeriod
+    l2: ZRPeriod
+    l3: ZRPeriod | None
+    l4: ZRPeriod | None
+
+    @property
+    def is_peak(self) -> bool:
+        """Are we in a 10th-from-Lot period at any level?"""
+        return (
+            self.l1.is_peak
+            or self.l2.is_peak
+            or (self.l3 is not None and self.l3.is_peak)
+            or (self.l4 is not None and self.l4.is_peak)
+        )
+
+    @property
+    def is_lb(self) -> bool:
+        """Is Loosing of the Bond active at any level?"""
+        return (
+            self.l2.is_loosing_bond
+            or (self.l3 is not None and self.l3.is_loosing_bond)
+            or (self.l4 is not None and self.l4.is_loosing_bond)
+        )
+
+    @property
+    def rulers(self) -> list[str]:
+        """All currently active rulers."""
+        rulers = [self.l1.ruler, self.l2.ruler]
+        if self.l3 is not None:
+            rulers.append(self.l3.ruler)
+        if self.l4 is not None:
+            rulers.append(self.l4.ruler)
+        return rulers
+
+
+@dataclass
+class ZRTimeline:
+    """Complete Zodiacal Releasing timeline for a life.
+
+    Contains all calculated periods at all levels and provides
+    methods to query the timeline at specific dates or ages.
+
+    Attributes:
+        lot: Name of the lot (e.g., "Part of Fortune")
+        lot_sign: The sign the lot is placed in
+        birth_date: The native's birth date
+        periods: Dict mapping level (1-4) to list of periods
+        max_level: Maximum level calculated (1-4)
+    """
+
+    lot: str
+    lot_sign: str
+    birth_date: dt.datetime
+    periods: dict[int, list[ZRPeriod]]  # All periods for entire life
+    max_level: int
+
+    def _find_period_at_date(self, level: int, date: dt.datetime) -> ZRPeriod | None:
+        """Find the period at a given level that contains the date using binary search."""
+        periods = self.periods[level]
+
+        if not periods:
+            return None
+
+        # Find insertion point based on start date
+        start_dates = [p.start for p in periods]
+        idx = bisect.bisect_right(start_dates, date) - 1
+
+        if idx < 0:
+            return None
+
+        period = periods[idx]
+
+        # Verify date is within this period
+        if period.start <= date < period.end:
+            return period
+
+        return None
+
+    def at_date(self, date: dt.datetime) -> ZRSnapshot:
+        """Get complete ZR state at a specific date."""
+        l1 = self._find_period_at_date(1, date)
+        l2 = self._find_period_at_date(2, date)
+        l3 = self._find_period_at_date(3, date) if self.max_level >= 3 else None
+        l4 = self._find_period_at_date(4, date) if self.max_level >= 4 else None
+
+        if l1 is None or l2 is None:
+            raise ValueError(f"Date {date} is outside calculated timeline.")
+
+        age = (date - self.birth_date).days / 365.25
+
+        return ZRSnapshot(
+            lot=self.lot,
+            lot_sign=self.lot_sign,
+            date=date,
+            age=age,
+            l1=l1,
+            l2=l2,
+            l3=l3,
+            l4=l4,
+        )
+
+    def at_age(self, age: float | int) -> ZRSnapshot:
+        """Get complete ZR state at a specific age."""
+        date = self.birth_date + dt.timedelta(days=age * 365.25)
+        return self.at_date(date)
+
+    def find_peaks(self, level: int = 1) -> list[ZRPeriod]:
+        """Find all peak periods (10th from Lot) at a given level."""
+        return [p for p in self.periods[level] if p.is_peak]
+
+    def find_loosing_bonds(self, level: int = 2) -> list[ZRPeriod]:
+        """Find all Loosing of the Bond periods at a given level."""
+        return [p for p in self.periods[level] if p.is_loosing_bond]
+
+    def l1_periods(self) -> list[ZRPeriod]:
+        """Get all L1 periods (the major life chapters)."""
+        return self.periods[1]
 
 
 @dataclass(frozen=True)
@@ -876,6 +1055,41 @@ class CalculatedChart:
 
         engine = ProfectionEngine(self, house_system, rulership)
         return engine.lord_of_year(age, point)
+
+    def zodiacal_releasing(self, lot: str = "Part of Fortune") -> ZRTimeline:
+        """Get the zodiacal releasing full life timeline for a given lot.
+
+        Args:
+            lot: Name of timeline's lot (defaults to 'Part of Fortune')
+
+        Returns:
+            Zodiacal releasing full timeline object
+        """
+        return self.metadata["zodiacal_releasing"][lot]
+
+    def zr_at_date(self, date: dt.datetime, lot: str = "Part of Fortune") -> ZRSnapshot:
+        """Get the zodiacal releasing periods for a given date.
+
+        Args:
+            date: datetime to fetch for
+            lot: Name of lot (defaults to 'Part of Fortune')
+
+        Returns:
+            Snapshot of ZR for that datetime
+        """
+        return self.metadata["zodiacal_releasing"][lot].at_date(date)
+
+    def zr_at_age(self, age: float, lot: str = "Part of Fortune") -> ZRSnapshot:
+        """Get the zodiacal releasing periods for a given age.
+
+        Args:
+            age: age in years (float) to fetch for
+            lot: Name of lot (defaults to 'Part of Fortune')
+
+        Returns:
+            Snapshot of ZR for that age's datetime
+        """
+        return self.metadata["zodiacal_releasing"][lot].at_age(age)
 
     # =========================================================================
     # Visualization

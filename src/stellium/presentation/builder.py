@@ -28,6 +28,7 @@ from .sections import (
     MoonPhaseSection,
     PlanetPositionSection,
     ProfectionSection,
+    ZodiacalReleasingSection,
 )
 
 
@@ -409,6 +410,92 @@ class ReportBuilder:
         )
         return self
 
+    def with_zodiacal_releasing(
+        self,
+        lots: str | list[str] | None = None,
+        mode: str = "both",
+        query_date: str | None = None,
+        query_age: float | None = None,
+        context_periods: int = 2,
+    ) -> "ReportBuilder":
+        """
+        Add Zodiacal Releasing timing analysis section.
+
+        Zodiacal Releasing is a Hellenistic predictive technique that divides
+        life into major periods ruled by signs, showing when different life
+        themes are activated.
+
+        Args:
+            lots: Which lot(s) to display:
+                - str: Single lot name (e.g., "Part of Fortune")
+                - list[str]: Multiple lots (e.g., ["Part of Fortune", "Part of Spirit"])
+                - None: All lots calculated in the chart (DEFAULT)
+            mode: Display mode:
+                - "snapshot": Current periods only
+                - "timeline": L1 timeline only
+                - "both": Both snapshot and timeline (DEFAULT)
+            query_date: Date for snapshot as ISO string (defaults to now)
+            query_age: Age for snapshot (alternative to query_date)
+            context_periods: Number of L3/L4 periods to show before/after current (default: 2)
+
+        Returns:
+            Self for chaining
+
+        Note:
+            Requires ZodiacalReleasingAnalyzer to be added during chart calculation:
+
+                from stellium.engines.releasing import ZodiacalReleasingAnalyzer
+
+                chart = (
+                    ChartBuilder.from_native(native)
+                    .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune", "Part of Spirit"]))
+                    .calculate()
+                )
+
+        Example::
+
+            # Show current ZR state for all calculated lots
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_zodiacal_releasing()
+                .render()
+            )
+
+            # Show ZR for specific lot at specific age
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_zodiacal_releasing(
+                    lots="Part of Fortune",
+                    mode="snapshot",
+                    query_age=30
+                )
+                .render()
+            )
+
+            # Show only L1 timeline for Fortune and Spirit
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_zodiacal_releasing(
+                    lots=["Part of Fortune", "Part of Spirit"],
+                    mode="timeline"
+                )
+                .render()
+            )
+        """
+        self._sections.append(
+            ZodiacalReleasingSection(
+                lots=lots,
+                mode=mode,
+                query_date=query_date,
+                query_age=query_age,
+                context_periods=context_periods,
+            )
+        )
+        return self
+
     def with_section(self, section: ReportSection) -> "ReportBuilder":
         """
         Add a custom section.
@@ -720,10 +807,11 @@ class ReportBuilder:
         - Essential dignities
         - Midpoints and midpoint aspects
         - Fixed stars
+        - Zodiacal Releasing (Part of Fortune and Part of Spirit)
 
         Note: Some sections require specific components to be added during
         chart calculation (e.g., DignityComponent, AspectPatternAnalyzer,
-        MidpointCalculator, FixedStarsComponent).
+        MidpointCalculator, FixedStarsComponent, ZodiacalReleasingAnalyzer).
         Missing components show helpful messages rather than errors.
 
         Returns:
@@ -736,6 +824,7 @@ class ReportBuilder:
             ...     .add_component(AspectPatternAnalyzer())
             ...     .add_component(MidpointCalculator())
             ...     .add_component(FixedStarsComponent())
+            ...     .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune", "Part of Spirit"]))
             ...     .calculate())
             >>> report = ReportBuilder().from_chart(chart).preset_full().render()
         """
@@ -753,6 +842,10 @@ class ReportBuilder:
             .with_midpoints()
             .with_midpoint_aspects()
             .with_fixed_stars()
+            .with_zodiacal_releasing(
+                lots=["Part of Fortune", "Part of Spirit"],
+                mode="both",
+            )
         )
 
     def preset_positions_only(self) -> "ReportBuilder":

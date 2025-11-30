@@ -9,6 +9,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Zodiacal Releasing (November 29, 2025)
+
+- **ZodiacalReleasingEngine**: Full implementation of the Hellenistic predictive timing technique
+  - Calculates multi-level periods (L1-L4) based on traditional planetary periods
+  - L1 (Major): Life chapters lasting years to decades
+  - L2 (Sub): Sub-periods within each L1
+  - L3/L4: Finer timing divisions (weeks/days)
+  - Uses traditional planetary periods: Moon (25), Mercury (20), Venus (8), Sun (19), Mars (15), Jupiter (12), Saturn (27)
+  - 208-year full cycle through all 12 signs
+
+- **Peak and Angular Detection**:
+  - Identifies angular signs (1st, 4th, 7th, 10th from Lot)
+  - Marks Peak periods (10th from Lot) - times of heightened visibility
+  - Detects Loosing of the Bond at L2+ for angular signs
+
+- **Data Models** (in `core/models.py`):
+  - `ZRPeriod`: Individual period at any level with sign, ruler, dates, and status flags
+  - `ZRSnapshot`: Complete ZR state at a moment (all active levels)
+  - `ZRTimeline`: Full life timeline with query methods
+
+- **ZodiacalReleasingAnalyzer**: Analyzer for ChartBuilder integration
+  - Configure multiple lots: `["Part of Fortune", "Part of Spirit"]`
+  - Configurable max_level (1-4) and lifespan
+
+- **CalculatedChart convenience methods**:
+  - `chart.zodiacal_releasing(lot)` - Get full timeline
+  - `chart.zr_at_date(date, lot)` - Get snapshot at specific date
+  - `chart.zr_at_age(age, lot)` - Get snapshot at specific age
+
+- **ReportBuilder integration**:
+  - `.with_zodiacal_releasing()` - Add ZR section to reports
+  - Supports multiple lots (single, list, or all calculated)
+  - Three display modes: "snapshot", "timeline", or "both" (default)
+  - Query by date or age (defaults to current time)
+  - Configurable L3/L4 context window (default ±2 periods)
+  - Status indicators: ★ (Peak), ◆ (Angular), ⚡ (Current), LB (Loosing of Bond)
+
+- **Updated `preset_full()`** to include ZR for Part of Fortune and Part of Spirit
+
+- **68 comprehensive tests** covering engine, data models, timeline queries, and integration
+
+- **Cookbook**: `examples/zodiacal_releasing_cookbook.py` with 14 examples
+
 #### Notables Database
 
 - Added 78 births and 12 events.
@@ -17,6 +60,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+
+- **ZodiacalReleasingEngine**: Fixed sign index wrapping at position 12 (was causing IndexError)
+- **Rich Renderer**: Added recursive handling for nested compound sections
 
 ## [0.5.0] - 2025-11-28
 

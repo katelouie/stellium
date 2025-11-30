@@ -157,7 +157,7 @@ class RichTableRenderer:
         return data.get("text", "")
 
     def _render_compound(self, section_name: str, data: dict[str, Any]) -> str:
-        """Render compound section with multiple sub-sections."""
+        """Render compound section with multiple sub-sections (supports nesting)."""
         parts = []
         for sub_name, sub_data in data.get("sections", []):
             sub_type = sub_data.get("type")
@@ -167,15 +167,20 @@ class RichTableRenderer:
                 parts.append(self._render_key_value(sub_name, sub_data))
             elif sub_type == "text":
                 parts.append(f"\n{sub_name}:\n{sub_data.get('content', sub_data.get('text', ''))}")
+            elif sub_type == "compound":
+                # Recursive: render nested compound section
+                parts.append(f"\n{sub_name}:")
+                parts.append(self._render_compound(sub_name, sub_data))
             else:
                 parts.append(f"\n{sub_name}: (unknown type {sub_type})")
         return "\n".join(parts)
 
-    def _print_compound(self, console: Console, data: dict[str, Any]) -> None:
-        """Print compound section with multiple sub-sections."""
+    def _print_compound(self, console: Console, data: dict[str, Any], indent: int = 0) -> None:
+        """Print compound section with multiple sub-sections (supports nesting)."""
+        prefix = "  " * indent
         for sub_name, sub_data in data.get("sections", []):
             # Print sub-section header
-            console.print(f"\n  {sub_name}", style="bold yellow")
+            console.print(f"\n{prefix}  {sub_name}", style="bold yellow")
 
             sub_type = sub_data.get("type")
             if sub_type == "table":
@@ -183,9 +188,12 @@ class RichTableRenderer:
             elif sub_type == "key_value":
                 self._print_key_value(console, sub_data)
             elif sub_type == "text":
-                console.print(f"  {sub_data.get('content', sub_data.get('text', ''))}")
+                console.print(f"{prefix}  {sub_data.get('content', sub_data.get('text', ''))}")
+            elif sub_type == "compound":
+                # Recursive: print nested compound section
+                self._print_compound(console, sub_data, indent + 1)
             else:
-                console.print(f"  (unknown type {sub_type})")
+                console.print(f"{prefix}  (unknown type {sub_type})")
 
     def _print_table(self, console: Console, data: dict[str, Any]) -> None:
         """Print table directly to console with Rich formatting."""

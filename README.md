@@ -530,6 +530,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[progressions_cookbook.py](examples/progressions_cookbook.py)** | 15 examples: set by date, current date or age; various angle progression methods |
 | **[arc_directions_cookbook.py](examples/arc_directions_cookbook.py)** | 14 examples: solar arc, naibod, lunar, chart ruler, sect, planetary arcs |
 | **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
+| **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
 
 ```bash
 # Run any cookbook
@@ -540,6 +541,7 @@ python examples/returns_cookbook.py
 python examples/progressions_cookbook.py
 python examples/arc_directions_cookbook.py
 python examples/profections_cookbook.py
+python examples/zodiacal_releasing_cookbook.py
 ```
 
 ### User Guides

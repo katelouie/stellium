@@ -54,7 +54,12 @@ class ChartBuilder:
         )
     """
 
-    def __init__(self, datetime: ChartDateTime, location: ChartLocation, native: Native | None = None) -> None:
+    def __init__(
+        self,
+        datetime: ChartDateTime,
+        location: ChartLocation,
+        native: Native | None = None,
+    ) -> None:
         """
         Initialize builder with required data.
 
@@ -203,7 +208,9 @@ class ChartBuilder:
             ... ).calculate()
         """
         # Create Native internally (it handles all the parsing)
-        native = Native(datetime_input, location_input, name=name, time_unknown=time_unknown)
+        native = Native(
+            datetime_input, location_input, name=name, time_unknown=time_unknown
+        )
         # Use from_native which stores the native reference
         return cls.from_native(native)
 
@@ -456,7 +463,9 @@ class ChartBuilder:
                 continue  # Avoid duplicate calculations
 
             # Call the efficient protocol method
-            cusps, angles = engine.calculate_house_data(self._datetime, self._location, self._config)
+            cusps, angles = engine.calculate_house_data(
+                self._datetime, self._location, self._config
+            )
 
             house_systems_map[system_name] = cusps
 
@@ -553,9 +562,10 @@ class ChartBuilder:
         ayanamsa_value = None
         if self._config.zodiac_type == ZodiacType.SIDEREAL:
             from stellium.core.ayanamsa import get_ayanamsa_value
+
             ayanamsa_value = get_ayanamsa_value(
                 self._datetime.julian_day,
-                self._config.ayanamsa  # type: ignore  # Already validated in config.__post_init__
+                self._config.ayanamsa,  # type: ignore  # Already validated in config.__post_init__
             )
 
         # Step 7: Build final chart
