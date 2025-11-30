@@ -923,16 +923,31 @@ class AspectSection:
     - Planet 2
     - Orb (optional)
     - Applying/Separating (optional)
+
+    Optionally includes an aspectarian grid SVG (triangle for single charts).
     """
 
     def __init__(
-        self, mode: str = "all", orbs: bool = True, sort_by: str = "orb"
+        self,
+        mode: str = "all",
+        orbs: bool = True,
+        sort_by: str = "orb",
+        include_aspectarian: bool = True,
+        aspectarian_detailed: bool = False,
+        aspectarian_cell_size: int | None = None,
+        aspectarian_theme: str | None = None,
     ) -> None:
         """
         Initialize aspect section.
 
         Args:
             mode: "all", "major", "minor", or "harmonic"
+            orbs: Show orb column in table
+            sort_by: "orb", "planet", or "aspect_type"
+            include_aspectarian: Include aspectarian grid SVG (default: True)
+            aspectarian_detailed: Show orb and A/S in aspectarian cells (default: False)
+            aspectarian_cell_size: Override cell size for aspectarian (default: config default)
+            aspectarian_theme: Theme for aspectarian rendering (default: None)
         """
         if mode not in ("all", "major", "minor", "harmonic"):
             raise ValueError(
@@ -946,6 +961,10 @@ class AspectSection:
         self.mode = mode
         self.orb_display = orbs
         self.sort_by = sort_by
+        self.include_aspectarian = include_aspectarian
+        self.aspectarian_detailed = aspectarian_detailed
+        self.aspectarian_cell_size = aspectarian_cell_size
+        self.aspectarian_theme = aspectarian_theme
 
     @property
     def section_name(self) -> str:
@@ -958,7 +977,7 @@ class AspectSection:
         return "Aspects"
 
     def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
-        """Generate aspects table."""
+        """Generate aspects table with optional aspectarian SVG."""
         # Filter aspects based on mode
         aspects = chart.aspects
 
@@ -1022,7 +1041,30 @@ class AspectSection:
 
             rows.append(row)
 
-        return {"type": "table", "headers": headers, "rows": rows}
+        table_data = {"type": "table", "headers": headers, "rows": rows}
+
+        # Include aspectarian SVG if requested
+        if self.include_aspectarian:
+            from stellium.visualization.extended_canvas import generate_aspectarian_svg
+
+            svg_string = generate_aspectarian_svg(
+                chart,
+                output_path=None,  # Return string
+                cell_size=self.aspectarian_cell_size,
+                detailed=self.aspectarian_detailed,
+                theme=self.aspectarian_theme,
+            )
+
+            # Return compound section with SVG first, then table
+            return {
+                "type": "compound",
+                "sections": [
+                    ("Aspectarian", {"type": "svg", "content": svg_string}),
+                    ("Aspect List", table_data),
+                ],
+            }
+
+        return table_data
 
 
 class CrossChartAspectSection:

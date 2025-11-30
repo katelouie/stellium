@@ -273,8 +273,8 @@ def test_aspect_section_default_options():
 
 
 def test_aspect_section_generate_data(sample_chart):
-    """Test AspectSection data generation."""
-    section = AspectSection(mode="major")
+    """Test AspectSection data generation (without aspectarian for table testing)."""
+    section = AspectSection(mode="major", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     assert data["type"] == "table"
@@ -287,7 +287,7 @@ def test_aspect_section_generate_data(sample_chart):
 
 def test_aspect_section_with_orbs(sample_chart):
     """Test aspect section with orb display."""
-    section = AspectSection(orbs=True)
+    section = AspectSection(orbs=True, include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     headers = data["headers"]
@@ -297,7 +297,7 @@ def test_aspect_section_with_orbs(sample_chart):
 
 def test_aspect_section_without_orbs(sample_chart):
     """Test aspect section without orb display."""
-    section = AspectSection(orbs=False)
+    section = AspectSection(orbs=False, include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     headers = data["headers"]
@@ -307,7 +307,7 @@ def test_aspect_section_without_orbs(sample_chart):
 
 def test_aspect_section_sort_by_orb(sample_chart):
     """Test sorting aspects by orb."""
-    section = AspectSection(sort_by="orb")
+    section = AspectSection(sort_by="orb", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     if len(data["rows"]) > 1:
@@ -319,7 +319,7 @@ def test_aspect_section_sort_by_orb(sample_chart):
 
 def test_aspect_section_sort_by_planet(sample_chart):
     """Test sorting aspects by planet."""
-    section = AspectSection(sort_by="planet")
+    section = AspectSection(sort_by="planet", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     # Just verify it doesn't raise - actual sorting is complex
@@ -328,7 +328,7 @@ def test_aspect_section_sort_by_planet(sample_chart):
 
 def test_aspect_section_sort_by_aspect_type(sample_chart):
     """Test sorting aspects by aspect type."""
-    section = AspectSection(sort_by="aspect_type")
+    section = AspectSection(sort_by="aspect_type", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     # Just verify it doesn't raise
@@ -337,7 +337,7 @@ def test_aspect_section_sort_by_aspect_type(sample_chart):
 
 def test_aspect_section_major_only(sample_chart):
     """Test filtering to major aspects only."""
-    section = AspectSection(mode="major")
+    section = AspectSection(mode="major", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
     # Check that only major aspects are included
@@ -347,6 +347,30 @@ def test_aspect_section_major_only(sample_chart):
 
     for aspect_name in aspect_names:
         assert any(major in aspect_name for major in major_aspects)
+
+
+def test_aspect_section_with_aspectarian(sample_chart):
+    """Test aspect section with aspectarian SVG (default behavior)."""
+    section = AspectSection(mode="major", include_aspectarian=True)
+    data = section.generate_data(sample_chart)
+
+    # Should be a compound section
+    assert data["type"] == "compound"
+    assert "sections" in data
+    assert len(data["sections"]) == 2
+
+    # First section should be the aspectarian SVG
+    aspectarian_name, aspectarian_data = data["sections"][0]
+    assert aspectarian_name == "Aspectarian"
+    assert aspectarian_data["type"] == "svg"
+    assert "content" in aspectarian_data
+    assert aspectarian_data["content"].startswith("<svg")
+
+    # Second section should be the aspect list table
+    table_name, table_data = data["sections"][1]
+    assert table_name == "Aspect List"
+    assert table_data["type"] == "table"
+    assert "rows" in table_data
 
 
 # ============================================================================
@@ -602,7 +626,7 @@ def test_all_sections_with_real_chart(sample_chart):
     sections = [
         ChartOverviewSection(),
         PlanetPositionSection(),
-        AspectSection(mode="major"),
+        AspectSection(mode="major", include_aspectarian=False),
         MoonPhaseSection(),
     ]
 
@@ -610,6 +634,14 @@ def test_all_sections_with_real_chart(sample_chart):
         data = section.generate_data(sample_chart)
         assert "type" in data
         assert data["type"] in ["table", "key_value", "text"]
+
+
+def test_all_sections_with_aspectarian(sample_chart):
+    """Test AspectSection with aspectarian returns compound type."""
+    section = AspectSection(mode="major", include_aspectarian=True)
+    data = section.generate_data(sample_chart)
+    assert "type" in data
+    assert data["type"] == "compound"
 
 
 def test_sections_generate_valid_data_structure(mock_chart):

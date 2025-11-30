@@ -52,6 +52,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Cookbook**: `examples/zodiacal_releasing_cookbook.py` with 14 examples
 
+#### Standalone Aspectarian Generator (November 29, 2025)
+
+- **`generate_aspectarian_svg()`**: Generate standalone aspectarian SVG files
+  - Triangle grid for single charts, square grid for comparison/synastry charts
+  - Returns SVG string or saves to file
+  - Configurable cell size, padding, theme, and aspect palette
+  - Optional detailed mode showing orb and applying/separating indicators
+  - Uses `ContentMeasurer` for consistent dimension calculations
+
+- **`get_aspectarian_dimensions()`**: Calculate aspectarian dimensions without rendering
+
+- **AspectSection integration**:
+  - `.with_aspects()` now includes aspectarian SVG by default (`include_aspectarian=True`)
+  - New parameters: `aspectarian_detailed`, `aspectarian_cell_size`, `aspectarian_theme`
+  - Returns compound section with aspectarian SVG + aspect table
+  - Terminal output shows placeholder with dimensions; HTML/PDF renders the SVG
+
+- **SVG type support in Rich renderer**:
+  - New `_render_svg()` and `_print_svg()` methods
+  - Terminal shows `[SVG: WxHpx - use HTML/PDF output to view]` placeholder
+  - SVG content preserved in data for HTML/PDF rendering
+
 #### Notables Database
 
 - Added 78 births and 12 events.

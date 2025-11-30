@@ -2,7 +2,13 @@
 
 from .builder import ChartDrawBuilder
 from .core import ChartRenderer
-from .extended_canvas import AspectarianLayer, HouseCuspTableLayer, PositionTableLayer
+from .extended_canvas import (
+    AspectarianLayer,
+    HouseCuspTableLayer,
+    PositionTableLayer,
+    generate_aspectarian_svg,
+    get_aspectarian_dimensions,
+)
 from .grid import (
     draw_chart_grid,
     draw_palette_comparison,
@@ -66,6 +72,9 @@ __all__ = [
     "MoonPhaseLayer",
     "PositionTableLayer",
     "HouseCuspTableLayer",
+    # Standalone aspectarian generator
+    "generate_aspectarian_svg",
+    "get_aspectarian_dimensions",
     # Palettes
     "ZodiacPalette",
     "AspectPalette",

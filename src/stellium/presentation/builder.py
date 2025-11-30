@@ -118,23 +118,39 @@ class ReportBuilder:
         mode: str = "all",
         orbs: bool = True,
         sort_by: str = "orb",  # or "planet" or "aspect_type"
+        include_aspectarian: bool = True,
+        aspectarian_detailed: bool = False,
+        aspectarian_cell_size: int | None = None,
+        aspectarian_theme: str | None = None,
     ) -> "ReportBuilder":
         """
-        Add aspects table.
+        Add aspects table with optional aspectarian grid.
 
         Args:
             mode: "all", "major", "minor", or "harmonic"
-            orb_display: Show orb column
-            sort_by: How to sort aspects
+            orbs: Show orb column
+            sort_by: How to sort aspects ("orb", "planet", or "aspect_type")
+            include_aspectarian: Include aspectarian grid SVG (default: True)
+            aspectarian_detailed: Show orb and A/S in aspectarian cells (default: False)
+            aspectarian_cell_size: Override cell size for aspectarian (default: config default)
+            aspectarian_theme: Theme for aspectarian rendering (default: None)
 
         Returns:
             Self for chaining
+
+        Note:
+            The aspectarian SVG is displayed in HTML/PDF output. Terminal output
+            shows a placeholder with dimensions.
         """
         self._sections.append(
             AspectSection(
                 mode=mode,
                 orbs=orbs,
                 sort_by=sort_by,
+                include_aspectarian=include_aspectarian,
+                aspectarian_detailed=aspectarian_detailed,
+                aspectarian_cell_size=aspectarian_cell_size,
+                aspectarian_theme=aspectarian_theme,
             )
         )
         return self

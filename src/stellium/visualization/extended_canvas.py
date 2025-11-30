@@ -1593,3 +1593,171 @@ class AspectarianLayer:
                     font_weight=self.style["font_weight"],
                 )
             )
+
+
+# =============================================================================
+# Standalone Aspectarian Generator
+# =============================================================================
+
+
+def generate_aspectarian_svg(
+    chart,
+    output_path: str | None = None,
+    cell_size: int | None = None,
+    detailed: bool = False,
+    theme: str | None = None,
+    aspect_palette: str | None = None,
+    padding: int | None = None,
+) -> str:
+    """
+    Generate a standalone aspectarian SVG (triangle for single charts, square for comparisons).
+
+    Args:
+        chart: CalculatedChart or Comparison object
+        output_path: Optional path to save SVG file. If None, returns SVG string.
+        cell_size: Size of each grid cell in pixels (default: from config, typically 24)
+        detailed: If True, show orb and applying/separating indicator (default: False)
+        theme: Optional theme name (e.g., "dark", "midnight")
+        aspect_palette: Optional aspect color palette
+        padding: Padding around the grid in pixels (default: from config, typically 10)
+
+    Returns:
+        SVG string if output_path is None, otherwise the output_path
+
+    Example:
+        # Generate and save triangle aspectarian
+        chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
+        generate_aspectarian_svg(chart, "einstein_aspects.svg")
+
+        # Generate square aspectarian for synastry
+        comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
+        svg_string = generate_aspectarian_svg(comparison)
+
+        # With styling
+        generate_aspectarian_svg(
+            chart,
+            "aspects.svg",
+            cell_size=28,
+            detailed=True,
+            theme="midnight",
+        )
+    """
+    from stellium.visualization.config import (
+        ChartVisualizationConfig,
+        ChartWheelConfig,
+        InfoCornerConfig,
+        TableConfig,
+    )
+    from stellium.visualization.layout.measurer import ContentMeasurer
+
+    # Create config with overrides
+    table_config_kwargs = {"aspectarian_detailed": detailed}
+    if cell_size is not None:
+        table_config_kwargs["aspectarian_cell_size"] = cell_size
+    if padding is not None:
+        table_config_kwargs["padding"] = padding
+
+    table_config = TableConfig(**table_config_kwargs)
+    is_comparison = _is_comparison(chart)
+    config = ChartVisualizationConfig(
+        wheel=ChartWheelConfig(chart_type="biwheel" if is_comparison else "single"),
+        corners=InfoCornerConfig(),
+        tables=table_config,
+    )
+
+    # Use measurer for dimensions
+    measurer = ContentMeasurer()
+    dims = measurer.measure_aspectarian(chart, config)
+
+    # Add padding
+    actual_padding = padding if padding is not None else config.tables.padding
+    width = dims.width + (2 * actual_padding)
+    height = dims.height + (2 * actual_padding)
+
+    # Create renderer (for style/font info)
+    renderer = ChartRenderer(
+        size=max(width, height),
+        theme=theme,
+        aspect_palette=aspect_palette,
+    )
+
+    # Create SVG drawing
+    dwg = svgwrite.Drawing(
+        filename=output_path or "aspectarian.svg",
+        size=(f"{width}px", f"{height}px"),
+        profile="full",
+    )
+
+    # Add background
+    bg_color = renderer.style.get("background_color", "#FFFFFF")
+    dwg.add(dwg.rect(insert=(0, 0), size=(width, height), fill=bg_color))
+
+    # Create and render aspectarian layer
+    actual_cell_size = cell_size if cell_size is not None else config.tables.aspectarian_cell_size
+    layer = AspectarianLayer(
+        x_offset=actual_padding,
+        y_offset=actual_padding,
+        style_override={"cell_size": actual_cell_size},
+        detailed=detailed,
+    )
+    layer.render(renderer, dwg, chart)
+
+    # Save or return
+    if output_path:
+        dwg.saveas(output_path)
+        return output_path
+    else:
+        return dwg.tostring()
+
+
+def get_aspectarian_dimensions(
+    chart,
+    cell_size: int | None = None,
+    padding: int | None = None,
+) -> tuple[int, int]:
+    """
+    Calculate the dimensions of an aspectarian SVG without rendering.
+
+    Uses the ContentMeasurer for consistency with the rest of the visualization system.
+
+    Args:
+        chart: CalculatedChart or Comparison object
+        cell_size: Size of each grid cell in pixels (default: from config, typically 24)
+        padding: Padding around the grid in pixels (default: from config, typically 10)
+
+    Returns:
+        Tuple of (width, height) in pixels
+    """
+    from stellium.visualization.config import (
+        ChartVisualizationConfig,
+        ChartWheelConfig,
+        InfoCornerConfig,
+        TableConfig,
+    )
+    from stellium.visualization.layout.measurer import ContentMeasurer
+
+    # Create config with overrides
+    table_config_kwargs = {}
+    if cell_size is not None:
+        table_config_kwargs["aspectarian_cell_size"] = cell_size
+    if padding is not None:
+        table_config_kwargs["padding"] = padding
+
+    table_config = TableConfig(**table_config_kwargs)
+    is_comparison = _is_comparison(chart)
+    config = ChartVisualizationConfig(
+        wheel=ChartWheelConfig(chart_type="biwheel" if is_comparison else "single"),
+        corners=InfoCornerConfig(),
+        tables=table_config,
+    )
+
+    # Use measurer
+    measurer = ContentMeasurer()
+    dims = measurer.measure_aspectarian(chart, config)
+
+    # Add padding
+    actual_padding = padding if padding is not None else config.tables.padding
+    width = dims.width + (2 * actual_padding)
+    height = dims.height + (2 * actual_padding)
+
+    return (width, height)

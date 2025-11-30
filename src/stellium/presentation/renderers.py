@@ -53,6 +53,8 @@ class RichTableRenderer:
             return self._render_side_by_side_tables(section_name, section_data)
         elif data_type == "compound":
             return self._render_compound(section_name, section_data)
+        elif data_type == "svg":
+            return self._render_svg(section_name, section_data)
         else:
             return f"Unknown section type: {data_type}"
 
@@ -84,6 +86,8 @@ class RichTableRenderer:
                 self._print_side_by_side_tables(console, section_data)
             elif data_type == "compound":
                 self._print_compound(console, section_data)
+            elif data_type == "svg":
+                self._print_svg(console, section_data)
             else:
                 console.print(f"Unknown section type: {data_type}")
 
@@ -171,9 +175,35 @@ class RichTableRenderer:
                 # Recursive: render nested compound section
                 parts.append(f"\n{sub_name}:")
                 parts.append(self._render_compound(sub_name, sub_data))
+            elif sub_type == "svg":
+                # SVG in compound - show placeholder in terminal
+                parts.append(self._render_svg(sub_name, sub_data))
             else:
                 parts.append(f"\n{sub_name}: (unknown type {sub_type})")
         return "\n".join(parts)
+
+    def _render_svg(self, section_name: str, data: dict[str, Any]) -> str:
+        """Render SVG placeholder for terminal output."""
+        # Terminal can't display SVGs - show info message
+        svg_content = data.get("content", "")
+        # Extract dimensions if possible
+        import re
+        width_match = re.search(r'width="(\d+)(?:px)?"', svg_content)
+        height_match = re.search(r'height="(\d+)(?:px)?"', svg_content)
+        width = width_match.group(1) if width_match else "?"
+        height = height_match.group(1) if height_match else "?"
+        return f"[SVG: {width}x{height}px - use HTML/PDF output to view]"
+
+    def _print_svg(self, console: Console, data: dict[str, Any]) -> None:
+        """Print SVG placeholder for terminal output."""
+        svg_content = data.get("content", "")
+        # Extract dimensions if possible
+        import re
+        width_match = re.search(r'width="(\d+)(?:px)?"', svg_content)
+        height_match = re.search(r'height="(\d+)(?:px)?"', svg_content)
+        width = width_match.group(1) if width_match else "?"
+        height = height_match.group(1) if height_match else "?"
+        console.print(f"[SVG: {width}x{height}px - use HTML/PDF output to view]", style="dim")
 
     def _print_compound(self, console: Console, data: dict[str, Any], indent: int = 0) -> None:
         """Print compound section with multiple sub-sections (supports nesting)."""
@@ -192,6 +222,9 @@ class RichTableRenderer:
             elif sub_type == "compound":
                 # Recursive: print nested compound section
                 self._print_compound(console, sub_data, indent + 1)
+            elif sub_type == "svg":
+                # SVG in compound - show placeholder
+                self._print_svg(console, sub_data)
             else:
                 console.print(f"{prefix}  (unknown type {sub_type})")
 
