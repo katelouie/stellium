@@ -9,6 +9,105 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Uranian Dial Charts (December 1, 2025)
+
+- **Complete Dial Chart Visualization**: Full implementation of Uranian/Hamburg school dial charts
+  - **90-degree dial**: Most common, compresses zodiac by 4x - conjunctions, squares, and oppositions all appear as conjunctions
+  - **45-degree dial**: Compresses by 8x - also shows semi-squares and sesquiquadrates
+  - **360-degree dial**: Full zodiac with rotatable pointer for aspect analysis
+
+- **DialDrawBuilder**: Fluent API for dial chart configuration
+  - `chart.draw_dial("dial.svg")` - Basic 90° dial
+  - `chart.draw_dial("dial.svg", degrees=45)` - 45° dial
+  - `chart.draw_dial("dial.svg", degrees=360)` - 360° dial with pointer
+  - `.with_size(800)` - Custom size in pixels
+  - `.with_theme("midnight")` - Theme inheritance from main chart themes
+  - `.with_rotation(15.0)` - Rotate dial by degrees
+
+- **Dial Layers**:
+  - **Background Layer**: Outer border circle
+  - **Graduation Layer**: Tick marks every 1° with labels every 5° (or 10° for 360° dial)
+  - **Cardinal Points Layer**: 0°/Cardinal, 15°/Fixed, 22.5°/Mutable markers
+  - **Modality Wheel**: Inner wheel divided into 3 sectors with zodiac glyphs
+  - **Planet Layer**: Natal planet glyphs with collision detection and connector lines
+  - **Midpoint Layer**: Midpoints on outer ring (enabled by default) with tick/full notation options
+  - **Outer Ring Layer**: For transits, directions, etc. with borders and collision detection
+  - **Pointer Layer**: Rotatable pointer for 360° dial analysis
+
+- **Collision Detection**: Adapted from main chart visualization, scaled for dial compression
+  - Planets displaced to avoid overlap, with dashed connector lines to true position
+  - Midpoints and outer ring positions also use collision detection
+
+- **Midpoint Configuration**:
+  - `.with_midpoints(notation="full")` - Show both planet glyphs (e.g., "☉/☽")
+  - `.with_midpoints(notation="tick")` - Clean tick marks only
+  - `.without_midpoints()` - Hide midpoints
+
+- **Outer Rings for Transits**:
+  - `.with_outer_ring(transit.get_planets(), label="Transits")` - Add transit planets
+  - Supports multiple outer rings: `ring="outer_ring_1"`, `"outer_ring_2"`, etc.
+  - Border circles with tick marks and connector lines
+
+- **360° Dial Pointer**:
+  - `.with_pointer("Sun")` - Point to a planet's position
+  - `.with_pointer(45.0)` - Point to a specific degree
+  - `.without_pointer()` - Hide pointer
+
+- **16-Example Cookbook**: `examples/dial_cookbook.py` demonstrating all dial features
+  - Basic dials, dial sizes, themes, midpoints, pointers, transits, outer rings
+  - Professional Uranian and Cosmobiology style examples
+
+#### TNO and Uranian Planet Support (December 1, 2025)
+
+- **ChartBuilder Methods**:
+  - `.with_tnos()` - Include Trans-Neptunian Objects: Eris, Sedna, Makemake, Haumea, Orcus, Quaoar
+  - `.with_uranian()` - Include Hamburg hypothetical planets: Cupido, Hades, Zeus, Kronos, Apollon, Admetos, Vulkanus, Poseidon
+
+- **DialDrawBuilder Methods**:
+  - `.with_tnos()` / `.without_tnos()` - Toggle TNOs on dial (default: on)
+  - `.with_uranian()` / `.without_uranian()` - Toggle Hamburg planets on dial (default: on)
+
+- **Dial Planet Layer**: Automatically includes TNOs and Hamburg planets if present in chart
+
+#### Graceful Ephemeris File Handling (December 1, 2025)
+
+- **SwissEphemerisEngine**: Now gracefully handles missing asteroid ephemeris files
+  - Returns `None` instead of raising error when `.se1` file is missing
+  - Prints helpful warning message with download instructions (once per object per session)
+  - Chart calculation continues with available objects
+  - Properly handles `AST_OFFSET` (10000) for asteroid MPC numbers
+
+- **Warning Message Format**:
+  ```
+  ⚠️  Missing ephemeris file for Eris (skipping)
+     To download, run: stellium ephemeris download-asteroid 136199
+     Or manually download from: ast136/ folder
+  ```
+
+#### Asteroid Ephemeris Download CLI (December 1, 2025)
+
+- **New CLI Command**: `stellium ephemeris download-asteroid`
+  - Download individual asteroids: `stellium ephemeris download-asteroid 136199`
+  - Download by name: `stellium ephemeris download-asteroid eris`
+  - Download multiple: `stellium ephemeris download-asteroid 136199,90377,50000`
+  - Download all common TNOs: `stellium ephemeris download-asteroid --tnos`
+  - List available asteroids: `stellium ephemeris download-asteroid --list`
+
+- **Supported Asteroids**:
+  - Eris (#136199), Sedna (#90377), Makemake (#136472)
+  - Haumea (#136108), Orcus (#90482), Quaoar (#50000)
+
+- **Download Source**: Uses https://ephe.scryr.io/ephe2/ for long-range asteroid files (6000 year coverage)
+
+- **Download Functions** (in `cli/ephemeris_download.py`):
+  - `get_asteroid_filename(number)` - Generate `.se1` filename (long-range format)
+  - `get_asteroid_folder(number)` - Determine `ast{n}/` folder
+  - `download_asteroid_file(number)` - Download single asteroid with validation
+  - `download_common_asteroids()` - Download all common TNOs
+  - `resolve_asteroid_input(input)` - Parse numbers, names, or "tnos"
+
+- **File Validation**: Downloads are verified to contain binary ephemeris data, not HTML error pages
+
 #### MultiWheel Charts - Phase 1 (December 1, 2025)
 
 - **MultiWheel dataclass**: Core data structure for 2-4 chart comparisons
@@ -203,6 +302,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **ZodiacalReleasingEngine**: Fixed sign index wrapping at position 12 (was causing IndexError)
 - **Rich Renderer**: Added recursive handling for nested compound sections
+- **Asteroid ID Offset**: Fixed `SWISS_EPHEMERIS_IDS` to include `AST_OFFSET` (10000) for TNO asteroid numbers - Swiss Ephemeris requires this offset for MPC-numbered asteroids
+- **Ephemeris Download Path**: Fixed `get_data_directory()` in CLI to download to `data/swisseph/ephe/` at project root instead of inside `src/stellium/`
+- **SVG Glyph Rendering in Dial Charts**: Fixed inline SVG glyph rendering for objects with custom SVG glyphs (e.g., Eris)
+  - Previously, SVG glyphs were rendered as `<image>` references which don't work across all browsers
+  - Now embeds SVG content inline as nested `<svg>` elements with proper path data
+  - Uses `debug=False` to bypass svgwrite's strict path validation for complex path commands
+  - Updated `get_glyph()` to return SVG content string instead of file path
+  - Added `embed_svg_glyph()` helper function in dial layers for parsing and embedding
 
 ## [0.5.0] - 2025-11-28
 

@@ -270,6 +270,72 @@ class ChartBuilder:
         self._config = config
         return self
 
+    def with_tnos(self) -> "ChartBuilder":
+        """
+        Include Trans-Neptunian Objects in the calculation.
+
+        Adds the major TNOs:
+        - Eris (dwarf planet, discord)
+        - Sedna (isolation, deep healing)
+        - Makemake (resourcefulness, manifestation)
+        - Haumea (rebirth, fertility)
+        - Orcus (oaths, consequences)
+        - Quaoar (creation, harmony)
+
+        Note: TNOs require additional Swiss Ephemeris asteroid files (se1 files)
+        to be present in your ephemeris data directory. Download them from:
+        https://www.astro.com/ftp/swisseph/ephe/
+
+        Example::
+
+            chart = ChartBuilder.from_native(native).with_tnos().calculate()
+        """
+        tno_names = ["Eris", "Sedna", "Makemake", "Haumea", "Orcus", "Quaoar"]
+        for name in tno_names:
+            if name not in self._config.include_asteroids:
+                self._config.include_asteroids.append(name)
+        return self
+
+    def with_uranian(self) -> "ChartBuilder":
+        """
+        Include Hamburg/Uranian hypothetical planets in the calculation.
+
+        Adds the 8 transneptunian points (TNPs) used in Uranian astrology:
+        - Cupido (family, groups, art, community)
+        - Hades (decay, the past, what's hidden)
+        - Zeus (leadership, fire, directed energy)
+        - Kronos (authority, expertise, high position)
+        - Apollon (expansion, science, commerce, success)
+        - Admetos (depth, stagnation, raw materials)
+        - Vulkanus (immense power, force, intensity)
+        - Poseidon (spirituality, enlightenment, clarity)
+
+        These are hypothetical planets developed by Alfred Witte and the
+        Hamburg School of Astrology.
+
+        Example::
+
+            # Just Uranian planets
+            chart = ChartBuilder.from_native(native).with_uranian().calculate()
+
+            # Full Uranian setup (TNOs + TNPs)
+            chart = ChartBuilder.from_native(native).with_tnos().with_uranian().calculate()
+        """
+        hamburg_names = [
+            "Cupido",
+            "Hades",
+            "Zeus",
+            "Kronos",
+            "Apollon",
+            "Admetos",
+            "Vulkanus",
+            "Poseidon",
+        ]
+        for name in hamburg_names:
+            if name not in self._config.include_asteroids:
+                self._config.include_asteroids.append(name)
+        return self
+
     def with_sidereal(self, ayanamsa: str = "lahiri") -> "ChartBuilder":
         """
         Use sidereal zodiac for calculations.

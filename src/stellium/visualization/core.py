@@ -83,14 +83,29 @@ def get_glyph(object_name: str) -> dict[str, str]:
     Returns:
         Dictionary with:
         - "type": "unicode" or "svg"
-        - "value": glyph string or SVG file path
+        - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """
+    from pathlib import Path
+
     # Try registry first
     obj_info = get_object_info(object_name)
     if obj_info:
         # Check if there's an SVG path
         if obj_info.glyph_svg_path:
-            return {"type": "svg", "value": obj_info.glyph_svg_path}
+            # Resolve to absolute path for SVG reading
+            # The path is relative to project root
+            svg_path = Path(obj_info.glyph_svg_path)
+            if not svg_path.is_absolute():
+                # Go up from visualization/core.py to project root
+                # visualization/ -> stellium/ -> src/ -> project_root/
+                project_root = Path(__file__).parent.parent.parent.parent
+                svg_path = project_root / obj_info.glyph_svg_path
+            if svg_path.exists():
+                # Read SVG content for inline embedding
+                svg_content = svg_path.read_text()
+                return {"type": "svg", "value": svg_content}
+            # Fall back to unicode glyph if SVG doesn't exist
+            return {"type": "unicode", "value": obj_info.glyph}
         return {"type": "unicode", "value": obj_info.glyph}
 
     # Fall back to legacy dictionaries (always unicode)

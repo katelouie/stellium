@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
     from stellium.visualization import ChartDrawBuilder
+    from stellium.visualization.dial import DialDrawBuilder
 
 
 def longitude_to_sign_and_degree(longitude: float) -> tuple[str, float]:
@@ -1145,6 +1146,45 @@ class CalculatedChart:
         from stellium.visualization.builder import ChartDrawBuilder
 
         return ChartDrawBuilder(self).with_filename(filename)
+
+    def draw_dial(
+        self, filename: str = "dial.svg", degrees: int = 90
+    ) -> "DialDrawBuilder":
+        """
+        Draw a Uranian/Hamburg school dial chart.
+
+        Creates a dial visualization that compresses the zodiac to reveal
+        hard aspects. On a 90° dial, conjunctions, squares, and oppositions
+        all appear as conjunctions.
+
+        Args:
+            filename: Output filename for the SVG
+            degrees: Dial size - 90 (default), 45, or 360
+
+        Returns:
+            DialDrawBuilder instance for chaining
+
+        Example::
+
+            # Basic 90° dial
+            chart.draw_dial("dial.svg").save()
+
+            # With theme
+            chart.draw_dial("dial.svg").with_theme("midnight").save()
+
+            # With transits on outer ring
+            chart.draw_dial("dial.svg")
+                .with_outer_ring(transit_chart.get_planets(), label="Transits")
+                .save()
+
+            # 360° dial with pointer to Sun
+            chart.draw_dial("dial.svg", degrees=360)
+                .with_pointer(pointing_to="Sun")
+                .save()
+        """
+        from stellium.visualization.dial import DialDrawBuilder
+
+        return DialDrawBuilder(self, filename=filename, dial_degrees=degrees)
 
     def to_dict(self) -> dict[str, Any]:
         """

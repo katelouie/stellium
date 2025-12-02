@@ -4,6 +4,7 @@
 
 - [ ] Add "text" option to presentation reports that outputs sentences of information.
 - [ ] Midpoint trees
+- [ ] Uranian: Modulus 90 sort
 
 ## Chart Visualization
 
@@ -17,5 +18,8 @@
 - [ ] Heliocentric calculations
 - [ ] Draconic charts (nodal)
 - [ ] Topocentric parallax corrections for planet coordinates
+- [x] Uranian degree dial chart
+- [ ] Uranian-style midpoint calculation (A + B - C = D)
+- [ ] Add Aries Point to objects (uranian)
 
 ## Testing

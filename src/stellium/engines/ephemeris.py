@@ -92,23 +92,21 @@ SWISS_EPHEMERIS_IDS = {
     "Ascendant": -2,  # SE_ASC constant
     "Midheaven": -3,  # SE_MC constant
     "Vertex": -5,  # SE_VERTEX constant
-    # --- How to use Asteroid Numbers ---
+    # --- Trans-Neptunian Objects (TNOs) ---
     #
-    # Asteroids not in the main list are calculated by their
-    # Minor Planet Center (MPC) number.
+    # For asteroids/TNOs with MPC numbers, you must add swe.AST_OFFSET (10000)
+    # to the MPC number. Swiss Ephemeris uses this to identify external asteroids.
     #
-    # You do NOT add the offset. The `pyswisseph` library handles it.
+    # E.g., Eris (MPC 136199) is passed as 136199 + 10000 = 146199
+    # The ephemeris file is still named by MPC number: s136199s.se1
     #
-    # E.g., to get Eris (MPC number 136199):
-    # swe.calc_ut(julian_day, 136199, flags)
-    #
-    # Here are a few common examples you might want to map:
-    "Eris": 136199,
-    "Sedna": 90377,
-    "Quaoar": 50000,
-    "Makemake": 136472,
-    "Haumea": 136108,
-    "Orcus": 90482,
+    # Common TNOs (MPC number + 10000):
+    "Eris": 136199 + 10000,  # MPC 136199
+    "Sedna": 90377 + 10000,  # MPC 90377
+    "Quaoar": 50000 + 10000,  # MPC 50000
+    "Makemake": 136472 + 10000,  # MPC 136472
+    "Haumea": 136108 + 10000,  # MPC 136108
+    "Orcus": 90482 + 10000,  # MPC 90482
 }
 
 
@@ -119,6 +117,10 @@ class SwissEphemerisEngine:
     This is our default, high-precision ephemeris calculator. Uses the pyswisseph
     library for accurate planetary positions.
     """
+
+    # Class-level set to track which missing ephemeris warnings have been shown
+    # This prevents repeated warnings for the same object across multiple calculations
+    _warned_missing_ephemeris: set[str] = set()
 
     def __init__(self):
         """Initialize Swiss Ephemeris."""
@@ -199,7 +201,9 @@ class SwissEphemerisEngine:
             position = self._calculate_single_position(
                 datetime.julian_day, obj_id, obj_name, config
             )
-            positions.append(position)
+            # Skip objects that couldn't be calculated (missing ephemeris files)
+            if position is not None:
+                positions.append(position)
 
         # Add South Node (opposite of True Node)
         if "True Node" in objects:
@@ -253,7 +257,7 @@ class SwissEphemerisEngine:
         object_id: int,
         object_name: str,
         config: CalculationConfig,
-    ) -> CelestialPosition:
+    ) -> CelestialPosition | None:
         """
         Calculate position for a single object (cached).
 
@@ -264,7 +268,8 @@ class SwissEphemerisEngine:
             config: Calculation configuration (for zodiac type)
 
         Returns:
-            CelestialPosition with ecliptic AND equatorial coordinates
+            CelestialPosition with ecliptic AND equatorial coordinates,
+            or None if the ephemeris file is missing (with warning printed)
         """
         try:
             # Get appropriate flags for zodiac type
@@ -297,7 +302,56 @@ class SwissEphemerisEngine:
                 phase=phase_data,
             )
         except swe.Error as e:
+            error_msg = str(e)
+            # Check if this is a missing ephemeris file error
+            if "not found" in error_msg.lower() and ".se1" in error_msg.lower():
+                self._warn_missing_ephemeris(object_name, object_id, error_msg)
+                return None
+            # Re-raise other errors
             raise RuntimeError(f"Failed to calculate {object_name}: {e}") from swe.Error
+
+    def _warn_missing_ephemeris(
+        self, object_name: str, object_id: int, error_msg: str
+    ) -> None:
+        """
+        Print a helpful warning when an ephemeris file is missing.
+
+        Only warns once per object per session to avoid spam.
+
+        Args:
+            object_name: Name of the object
+            object_id: Swiss Ephemeris ID (includes AST_OFFSET for asteroids)
+            error_msg: Original error message
+        """
+        # Only warn once per object
+        if object_name in SwissEphemerisEngine._warned_missing_ephemeris:
+            return
+        SwissEphemerisEngine._warned_missing_ephemeris.add(object_name)
+
+        import sys
+
+        # For asteroids, the object_id includes AST_OFFSET (10000)
+        # We need to show the MPC number (without offset) in the message
+        mpc_number = object_id
+        if object_id >= swe.AST_OFFSET:
+            mpc_number = object_id - swe.AST_OFFSET
+
+        # Determine the asteroid folder (ast0, ast1, etc.)
+        # Files are grouped: ast0 has 0-999, ast1 has 1000-1999, etc.
+        folder_num = mpc_number // 1000
+
+        print(
+            f"\n⚠️  Missing ephemeris file for {object_name} (skipping)",
+            file=sys.stderr,
+        )
+        print(
+            f"   To download, run: stellium ephemeris download-asteroid {mpc_number}",
+            file=sys.stderr,
+        )
+        print(
+            f"   Or manually download from: ast{folder_num}/ folder",
+            file=sys.stderr,
+        )
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_phase(
