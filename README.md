@@ -570,6 +570,10 @@ python examples/zodiacal_releasing_cookbook.py
 | **[CHANGELOG.md](CHANGELOG.md)** | Release history and version notes |
 | **[PUBLISHING.md](docs/PUBLISHING.md)** | Package publishing guide |
 
+### Lists of Implemented Options
+
+- See the [full documentation list](docs/options_list.md)
+
 ### Quick Start
 
 ```bash

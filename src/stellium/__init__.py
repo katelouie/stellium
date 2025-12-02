@@ -27,6 +27,7 @@ from stellium.core.comparison import (
     ComparisonType,
     HouseOverlay,
 )
+from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 from stellium.core.models import (
     Aspect,
     CalculatedChart,
@@ -113,6 +114,9 @@ __all__ = [
     "ComparisonType",
     "ComparisonAspect",
     "HouseOverlay",
+    # MultiWheel
+    "MultiWheel",
+    "MultiWheelBuilder",
     # Synthesis Charts
     "SynthesisBuilder",
     "SynthesisChart",

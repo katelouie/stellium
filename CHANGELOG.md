@@ -9,6 +9,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### MultiWheel Charts - Phase 1 (December 1, 2025)
+
+- **MultiWheel dataclass**: Core data structure for 2-4 chart comparisons
+  - Holds tuple of `CalculatedChart` objects
+  - Auto-generated or custom labels per chart
+  - Optional cross-chart aspects between any pair of charts
+  - Convenience properties: `chart_count`, `chart1`, `chart2`, `chart3`, `chart4`
+
+- **MultiWheelBuilder**: Fluent API for creating MultiWheel objects
+  - `MultiWheelBuilder.from_charts([chart1, chart2, chart3])`
+  - `.with_labels(["Natal", "Transit", "Progressed"])`
+  - `.with_cross_aspects()` - enables cross-chart aspect calculation
+  - `.calculate()` - returns configured MultiWheel
+
+- **Exports**: Available from `stellium` and `stellium.core`
+
+- **Design Plan**: Full implementation plan at `docs/development/multiwheel.md`
+  - Phases 2-13 will add visualization support for tri/quad-wheel charts
+  - All charts will render INSIDE the zodiac ring (not outside)
+  - Each ring gets alternating house fills, dividers, and compact planet info
+
+*Note: The `.draw()` method exists but visualization support is not yet implemented.*
+
 #### Zodiacal Releasing (November 29, 2025)
 
 - **ZodiacalReleasingEngine**: Full implementation of the Hellenistic predictive timing technique

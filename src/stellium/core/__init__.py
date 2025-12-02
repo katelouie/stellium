@@ -10,6 +10,7 @@ Exports the fundamental classes for working with charts:
 
 from stellium.core.builder import ChartBuilder
 from stellium.core.comparison import Comparison, ComparisonBuilder
+from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 from stellium.core.config import CalculationConfig
 from stellium.core.models import (
     Aspect,
@@ -35,10 +36,12 @@ from stellium.core.registry import (
 __all__ = [
     # Builders
     "ChartBuilder",
+    "MultiWheelBuilder",
     "Native",
     "Notable",
     # Models
     "CalculatedChart",
+    "MultiWheel",
     "CelestialPosition",
     "MidpointPosition",
     "ChartLocation",
