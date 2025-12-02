@@ -3,11 +3,17 @@
 import click
 
 from stellium.cli.ephemeris_download import (
+    COMMON_ASTEROIDS,
     EPHEMERIS_BASE_URL,
     calculate_download_size,
+    download_asteroid_file,
+    download_common_asteroids,
     download_file,
+    get_asteroid_filename,
+    get_asteroid_folder,
     get_data_directory,
     get_required_files,
+    resolve_asteroid_input,
 )
 
 
@@ -81,6 +87,94 @@ def ephemeris_download_cmd(force, years, quiet):
             click.echo("🎉 All ephemeris files downloaded successfully!")
         else:
             click.echo("⚠️  Some files failed to download.", err=True)
+
+
+@ephemeris_group.command("download-asteroid")
+@click.argument("asteroids", required=False)
+@click.option("--force", is_flag=True, help="Overwrite existing files")
+@click.option("--tnos", is_flag=True, help="Download all common TNO files")
+@click.option("--list", "list_only", is_flag=True, help="List available asteroids")
+def download_asteroid_cmd(asteroids, force, tnos, list_only):
+    """
+    Download asteroid ephemeris files.
+
+    ASTEROIDS can be:
+
+    \b
+      - A number: 136199
+      - Multiple numbers: 136199,90377,50000
+      - A name: eris, sedna, makemake
+      - Special keyword: tnos (all common TNOs)
+
+    Examples:
+
+    \b
+      stellium ephemeris download-asteroid 136199
+      stellium ephemeris download-asteroid eris
+      stellium ephemeris download-asteroid --tnos
+      stellium ephemeris download-asteroid 136199,90377
+    """
+    # List mode
+    if list_only:
+        click.echo("🌟 Common TNO/Dwarf Planet Asteroids")
+        click.echo("=" * 50)
+        for name, number in COMMON_ASTEROIDS.items():
+            folder = get_asteroid_folder(number)
+            filename = get_asteroid_filename(number)
+            click.echo(f"   {name:12} #{number:>6}  ({folder}/{filename})")
+        click.echo()
+        click.echo("Usage: stellium ephemeris download-asteroid <number or name>")
+        click.echo("       stellium ephemeris download-asteroid --tnos")
+        return
+
+    # Download all TNOs
+    if tnos:
+        download_common_asteroids(force=force)
+        return
+
+    # Need asteroids argument
+    if not asteroids:
+        click.echo("❌ Please specify asteroid number(s) or use --tnos")
+        click.echo()
+        click.echo("Examples:")
+        click.echo("   stellium ephemeris download-asteroid 136199")
+        click.echo("   stellium ephemeris download-asteroid eris")
+        click.echo("   stellium ephemeris download-asteroid --tnos")
+        click.echo()
+        click.echo("Use --list to see common asteroids")
+        raise click.Abort()
+
+    # Resolve input to asteroid numbers
+    numbers = resolve_asteroid_input(asteroids)
+
+    if not numbers:
+        click.echo(f"❌ Could not parse asteroid input: {asteroids}")
+        raise click.Abort()
+
+    # Download each asteroid
+    click.echo("🌟 Downloading asteroid ephemeris files...")
+    click.echo("-" * 50)
+
+    success_count = 0
+    for number in numbers:
+        # Try to find a name for display
+        name = None
+        for n, num in COMMON_ASTEROIDS.items():
+            if num == number:
+                name = n
+                break
+
+        display = f"{name} (#{number})" if name else f"#{number}"
+        click.echo(f"   {display}...")
+
+        if download_asteroid_file(number, force=force, quiet=True):
+            success_count += 1
+            click.echo(f"   ✅ {display}")
+        else:
+            click.echo(f"   ❌ {display} (failed)")
+
+    click.echo("-" * 50)
+    click.echo(f"✅ Downloaded {success_count}/{len(numbers)} files")
 
 
 @ephemeris_group.command("list")

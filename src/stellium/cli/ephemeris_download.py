@@ -4,6 +4,19 @@ Download full Swiss Ephemeris dataset for extended date ranges.
 This script downloads the complete Swiss Ephemeris dataset (~334MB) which covers
 the period from 13201 BCE to 17191 CE. The basic Stellium installation includes
 only essential files covering 1800-2400 CE (~7.8MB).
+
+Asteroid files are stored separately in ast0/, ast1/, etc. folders, where:
+- ast0/ contains asteroids 0-999
+- ast1/ contains asteroids 1000-1999
+- etc.
+
+Common asteroid numbers:
+- Eris: 136199 (ast136/)
+- Sedna: 90377 (ast90/)
+- Makemake: 136472 (ast136/)
+- Haumea: 136108 (ast136/)
+- Orcus: 90482 (ast90/)
+- Quaoar: 50000 (ast50/)
 """
 
 import urllib.error
@@ -13,6 +26,20 @@ from pathlib import Path
 # Swiss Ephemeris official download URLs
 EPHEMERIS_BASE_URL = "https://www.astro.com/ftp/swisseph/ephe/"
 DROPBOX_BASE_URL = "https://www.dropbox.com/scl/fo/y3naz62gy6f6qfrhquu7u/h/ephe/"
+
+# Asteroid ephemeris download server (thanks to scryr.io for hosting!)
+# Contains long-range asteroid files (6000 year coverage)
+ASTEROID_BASE_URL = "https://ephe.scryr.io/ephe2/"
+
+# Common TNO and dwarf planet asteroid numbers for easy reference
+COMMON_ASTEROIDS = {
+    "Eris": 136199,
+    "Sedna": 90377,
+    "Makemake": 136472,
+    "Haumea": 136108,
+    "Orcus": 90482,
+    "Quaoar": 50000,
+}
 
 # File patterns and their descriptions
 FILE_PATTERNS = {
@@ -78,9 +105,22 @@ YEAR_RANGES = [
 
 
 def get_data_directory() -> Path:
-    """Get the ephemeris data directory."""
+    """Get the ephemeris data directory.
+
+    The ephemeris data is stored at the project root level:
+    /project_root/data/swisseph/ephe/
+
+    This matches where SwissEphemerisEngine looks for files.
+    """
+    # Path: .../src/stellium/cli/ephemeris_download.py
+    # Go up 4 levels to get to the project root:
+    # .parent -> cli
+    # .parent -> stellium
+    # .parent -> src
+    # .parent -> project_root
     script_dir = Path(__file__).parent
-    data_dir = script_dir.parent / "data" / "swisseph" / "ephe"
+    project_root = script_dir.parent.parent.parent
+    data_dir = project_root / "data" / "swisseph" / "ephe"
     data_dir.mkdir(parents=True, exist_ok=True)
     return data_dir
 
@@ -111,25 +151,31 @@ def get_required_files(
     return sorted(set(required_files))
 
 
-def download_file(url: str, filepath: Path, force: bool = False) -> bool:
+def download_file(
+    url: str, filepath: Path, force: bool = False, quiet: bool = False
+) -> bool:
     """Download a single ephemeris file."""
     if filepath.exists() and not force:
-        print(f"⏭️  Skipping {filepath.name} (already exists)")
+        if not quiet:
+            print(f"⏭️  Skipping {filepath.name} (already exists)")
         return True
 
-    print(f"📥 Downloading {filepath.name}...")
+    if not quiet:
+        print(f"📥 Downloading {filepath.name}...")
 
     try:
         # Try primary URL first
         try:
             urllib.request.urlretrieve(url, filepath)
-            print(f"✅ Downloaded {filepath.name}")
+            if not quiet:
+                print(f"✅ Downloaded {filepath.name}")
             return True
         except urllib.error.URLError:
             # Try dropbox URL as fallback
             dropbox_url = url.replace(EPHEMERIS_BASE_URL, DROPBOX_BASE_URL) + "?dl=1"
             urllib.request.urlretrieve(dropbox_url, filepath)
-            print(f"✅ Downloaded {filepath.name} (via dropbox)")
+            if not quiet:
+                print(f"✅ Downloaded {filepath.name} (via dropbox)")
             return True
 
     except Exception as e:
@@ -146,3 +192,178 @@ def calculate_download_size(files: list[str]) -> float:
                 total_kb += config["size_kb"]
                 break
     return total_kb / 1024  # Convert to MB
+
+
+# =============================================================================
+# ASTEROID FILE FUNCTIONS
+# =============================================================================
+
+
+def get_asteroid_filename(asteroid_number: int) -> str:
+    """
+    Get the Swiss Ephemeris filename for an asteroid number.
+
+    Long-range asteroid files (6000 year coverage) follow the pattern:
+    - For numbers < 100000: se{number}.se1 (5-digit zero-padded)
+    - For numbers >= 100000: s{number}.se1 (no zero-padding)
+
+    Note: Short-range files have an 's' suffix (e.g., s136199s.se1) but
+    we download long-range files for better coverage.
+
+    Args:
+        asteroid_number: The MPC (Minor Planet Center) number
+
+    Returns:
+        Filename like "se00005.se1" or "s136199.se1"
+    """
+    # Long-range files (no 's' suffix)
+    if asteroid_number < 100000:
+        return f"se{asteroid_number:05d}.se1"
+    else:
+        return f"s{asteroid_number}.se1"
+
+
+def get_asteroid_folder(asteroid_number: int) -> str:
+    """
+    Get the folder name for an asteroid number.
+
+    Asteroids are grouped in folders: ast0 (0-999), ast1 (1000-1999), etc.
+
+    Args:
+        asteroid_number: The MPC number
+
+    Returns:
+        Folder name like "ast0", "ast136", etc.
+    """
+    return f"ast{asteroid_number // 1000}"
+
+
+def download_asteroid_file(
+    asteroid_number: int, force: bool = False, quiet: bool = False
+) -> bool:
+    """
+    Download an asteroid ephemeris file.
+
+    Downloads long-range ephemeris files (6000 year coverage) from
+    ephe.scryr.io.
+
+    Args:
+        asteroid_number: The MPC (Minor Planet Center) number
+        force: Overwrite existing file
+        quiet: Suppress output
+
+    Returns:
+        True if download succeeded, False otherwise
+    """
+    data_dir = get_data_directory()
+    filename = get_asteroid_filename(asteroid_number)
+    folder = get_asteroid_folder(asteroid_number)
+    filepath = data_dir / filename
+
+    if filepath.exists() and not force:
+        if not quiet:
+            print(f"⏭️  Skipping {filename} (already exists)")
+        return True
+
+    if not quiet:
+        print(f"📥 Downloading {filename} from {folder}/...")
+
+    # Download from ephe.scryr.io (primary source for asteroid files)
+    url = f"{ASTEROID_BASE_URL}{folder}/{filename}"
+
+    try:
+        urllib.request.urlretrieve(url, filepath)
+        # Verify we got actual data, not an error page
+        if filepath.stat().st_size < 1000:
+            with open(filepath, "rb") as f:
+                header = f.read(50)
+                if b"<!DOCTYPE" in header or b"<html" in header:
+                    filepath.unlink()
+                    raise ValueError("Downloaded HTML instead of ephemeris data")
+        if not quiet:
+            print(f"✅ Downloaded {filename}")
+        return True
+    except Exception as e:
+        if filepath.exists():
+            filepath.unlink()  # Remove partial/invalid file
+        print(f"❌ Failed to download {filename}: {e}")
+        return False
+
+
+def download_common_asteroids(force: bool = False, quiet: bool = False) -> int:
+    """
+    Download ephemeris files for common TNOs and dwarf planets.
+
+    Downloads: Eris, Sedna, Makemake, Haumea, Orcus, Quaoar
+
+    Args:
+        force: Overwrite existing files
+        quiet: Suppress output
+
+    Returns:
+        Number of successfully downloaded files
+    """
+    success_count = 0
+    if not quiet:
+        print("🌟 Downloading common TNO/dwarf planet ephemeris files...")
+        print("-" * 50)
+
+    for name, number in COMMON_ASTEROIDS.items():
+        if not quiet:
+            print(f"   {name} (#{number})...")
+        if download_asteroid_file(number, force=force, quiet=True):
+            success_count += 1
+            if not quiet:
+                print(f"   ✅ {name}")
+        else:
+            if not quiet:
+                print(f"   ❌ {name} (failed)")
+
+    if not quiet:
+        print("-" * 50)
+        print(f"✅ Downloaded {success_count}/{len(COMMON_ASTEROIDS)} files")
+
+    return success_count
+
+
+def resolve_asteroid_input(input_str: str) -> list[int]:
+    """
+    Resolve asteroid input to a list of asteroid numbers.
+
+    Accepts:
+    - Single number: "136199"
+    - Comma-separated: "136199,90377,50000"
+    - Named asteroids: "eris", "sedna", "makemake"
+    - Special keywords: "tnos", "all-common"
+
+    Args:
+        input_str: User input string
+
+    Returns:
+        List of asteroid numbers
+    """
+    input_str = input_str.strip().lower()
+
+    # Special keywords
+    if input_str in ("tnos", "all-common", "common"):
+        return list(COMMON_ASTEROIDS.values())
+
+    # Check if it's a named asteroid
+    for name, number in COMMON_ASTEROIDS.items():
+        if input_str == name.lower():
+            return [number]
+
+    # Parse as numbers (comma-separated)
+    numbers = []
+    for part in input_str.split(","):
+        part = part.strip()
+        try:
+            numbers.append(int(part))
+        except ValueError:
+            # Try as a name again
+            for name, number in COMMON_ASTEROIDS.items():
+                if part == name.lower():
+                    numbers.append(number)
+                    break
+
+    return numbers
