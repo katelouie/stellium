@@ -7,7 +7,7 @@ The main chart building experience.
 from components.birth_input import create_birth_input_form
 from components.chart_display import create_chart_actions, create_chart_display
 from components.chart_options import create_chart_options
-from components.code_preview import create_code_preview_dialog
+from components.code_preview import create_natal_code_preview_dialog
 from components.header import create_header, create_nav
 from components.report_options import create_report_options
 from config import COLORS
@@ -243,7 +243,7 @@ def create_natal_page():
 
     def show_code():
         """Show the Python code dialog."""
-        dialog = create_code_preview_dialog(state, report_state)
+        dialog = create_natal_code_preview_dialog(state, report_state)
         dialog.open()
 
     def sync_report_state_from_chart():

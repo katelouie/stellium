@@ -5,6 +5,7 @@ Chart types for comparing two people: Synastry, Composite, Davison.
 """
 
 from components.chart_display import create_chart_actions, create_chart_display
+from components.code_preview import create_relationships_code_preview_dialog
 from components.header import create_header, create_nav
 from components.report_options import create_report_options
 from config import (
@@ -391,6 +392,11 @@ def create_relationships_page():
 
             traceback.print_exc()
 
+    def show_code():
+        """Show the Python code dialog."""
+        dialog = create_relationships_code_preview_dialog(state, report_state)
+        dialog.open()
+
     def refresh_chart_display():
         """Refresh the chart display area and action buttons."""
         if chart_container["ref"]:
@@ -404,7 +410,7 @@ def create_relationships_page():
                 create_chart_actions(
                     on_download_svg=download_svg,
                     on_download_pdf=download_pdf,
-                    on_view_code=lambda: ui.notify("Code preview coming soon!"),
+                    on_view_code=show_code,
                     enabled=chart_svg["content"] is not None,
                 )
 
@@ -602,6 +608,6 @@ def create_relationships_page():
                         create_chart_actions(
                             on_download_svg=download_svg,
                             on_download_pdf=download_pdf,
-                            on_view_code=lambda: ui.notify("Code preview coming soon!"),
+                            on_view_code=show_code,
                             enabled=False,
                         )
