@@ -44,9 +44,9 @@ class TestSolarReturns:
         return_sun = sr.get_object("Sun").longitude
 
         diff = abs(return_sun - natal_sun)
-        assert diff < PRECISION_THRESHOLD, (
-            f"Sun position diff {diff}° exceeds threshold"
-        )
+        assert (
+            diff < PRECISION_THRESHOLD
+        ), f"Sun position diff {diff}° exceeds threshold"
 
     def test_solar_return_date_is_near_birthday(self, einstein_natal):
         """Solar Return should occur near the birthday each year."""
@@ -74,9 +74,9 @@ class TestSolarReturns:
         for year in [2020, 2023, 2025, 2030]:
             sr = ReturnBuilder.solar(kate_natal, year).calculate()
             diff = abs(sr.get_object("Sun").longitude - natal_sun)
-            assert diff < PRECISION_THRESHOLD, (
-                f"Year {year}: diff {diff}° exceeds threshold"
-            )
+            assert (
+                diff < PRECISION_THRESHOLD
+            ), f"Year {year}: diff {diff}° exceeds threshold"
 
 
 class TestLunarReturns:
@@ -90,9 +90,9 @@ class TestLunarReturns:
         return_moon = lr.get_object("Moon").longitude
 
         diff = abs(return_moon - natal_moon)
-        assert diff < PRECISION_THRESHOLD, (
-            f"Moon position diff {diff}° exceeds threshold"
-        )
+        assert (
+            diff < PRECISION_THRESHOLD
+        ), f"Moon position diff {diff}° exceeds threshold"
 
     def test_lunar_return_by_occurrence(self, kate_natal):
         """Lunar Return by occurrence number should work."""

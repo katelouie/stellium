@@ -358,9 +358,9 @@ def test_angles_valid_longitudes(standard_native):
     )
 
     for angle in angles:
-        assert 0 <= angle.longitude < 360, (
-            f"{angle.name} has invalid longitude: {angle.longitude}"
-        )
+        assert (
+            0 <= angle.longitude < 360
+        ), f"{angle.name} has invalid longitude: {angle.longitude}"
 
 
 # ============================================================================

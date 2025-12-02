@@ -60,7 +60,6 @@ Fixtures help reduce code duplication and make tests more maintainable.
 """
 
 import datetime as dt
-import os
 from collections.abc import Generator
 
 import pytest
@@ -89,6 +88,15 @@ from stellium.engines.orbs import LuminariesOrbEngine, SimpleOrbEngine
 # ============================================================================
 # DATETIME FIXTURES
 # ============================================================================
+
+
+# Register custom markers
+def pytest_configure(config):
+    """Register custom pytest markers."""
+    config.addinivalue_line(
+        "markers",
+        "uses_real_geocoding: mark test to use real Nominatim geocoding (skip mock)",
+    )
 
 
 @pytest.fixture
@@ -680,18 +688,29 @@ GEOCODED_LOCATIONS = {
 
 
 @pytest.fixture(autouse=True)
-def mock_geocoding_in_ci(monkeypatch):
+def mock_geocoding(monkeypatch, request):
     """
-    Mock geocoding when running in CI to avoid network calls.
+    Mock geocoding by default to avoid rate limiting from Nominatim.
 
-    GitHub Actions sets CI=true. Locally, real geocoding is used with the
-    file-based cache (~/.cache/geocoding/).
+    Most tests don't actually need real geocoding - they just need valid
+    coordinates to proceed with chart calculations. This fixture provides
+    pre-geocoded locations for common test locations.
+
+    To test REAL geocoding functionality, mark your test with:
+        @pytest.mark.uses_real_geocoding
+
+    Example:
+        @pytest.mark.uses_real_geocoding
+        def test_geocoding_unknown_city():
+            # This test will hit the real Nominatim service
+            native = Native(datetime.now(), "Some Random City, Country")
+            ...
 
     This fixture is autouse=True, so it applies to ALL tests automatically.
     """
-    # Only mock in CI environments
-    if not os.environ.get("CI"):
-        return  # Local dev - use real geocoding with cache
+    # Skip mocking if test explicitly needs real geocoding
+    if request.node.get_closest_marker("uses_real_geocoding"):
+        return  # Use real geocoding for this test
 
     def mock_cached_geocode(location_name: str) -> dict:
         """Mock implementation of _cached_geocode for CI testing."""

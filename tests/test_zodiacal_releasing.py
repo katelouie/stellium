@@ -844,15 +844,15 @@ class TestIntegration:
         l1_periods = timeline.l1_periods()
 
         # Verify we have more than 12 L1 periods
-        assert len(l1_periods) >= 13, (
-            "Should have 13+ L1 periods to demonstrate loosing of bond"
-        )
+        assert (
+            len(l1_periods) >= 13
+        ), "Should have 13+ L1 periods to demonstrate loosing of bond"
 
         # The 13th period should be the opposite of what would be next in sequence
         # (i.e., loosing of bond has occurred)
-        assert age_0.l1.sign != age_208.l1.sign, (
-            "After loosing of bond, sign should be different"
-        )
+        assert (
+            age_0.l1.sign != age_208.l1.sign
+        ), "After loosing of bond, sign should be different"
 
     def test_notable_chart_zr(self):
         """Test ZR on a notable's chart."""
@@ -1021,15 +1021,15 @@ class TestValensMethodDebug:
             print(f"  Difference: {abs(total_l2_duration - l1.length_days):.1f} days")
 
             # L2 should not exceed L1 (but may be less due to truncation)
-            assert total_l2_duration <= l1.length_days + 1.0, (
-                f"L2 exceeds L1: {total_l2_duration:.1f} > {l1.length_days:.1f}"
-            )
+            assert (
+                total_l2_duration <= l1.length_days + 1.0
+            ), f"L2 exceeds L1: {total_l2_duration:.1f} > {l1.length_days:.1f}"
 
             # If there are 12 L2 children (full cycle), they should sum to L1
             if len(l2_children) == 12:
-                assert abs(total_l2_duration - l1.length_days) < 1.0, (
-                    f"Full L2 cycle doesn't sum to L1: {total_l2_duration:.1f} != {l1.length_days:.1f}"
-                )
+                assert (
+                    abs(total_l2_duration - l1.length_days) < 1.0
+                ), f"Full L2 cycle doesn't sum to L1: {total_l2_duration:.1f} != {l1.length_days:.1f}"
 
     def test_loosing_bond_position(self, kate_natal):
         """Debug where loosing of bond occurs in the sequence.
@@ -1222,6 +1222,6 @@ class TestValensMethodDebug:
         print(f"  Total coverage: {total_years:.1f} years")
 
         # Should cover close to the configured lifespan
-        assert total_years >= lifespan - 1, (
-            f"Coverage {total_years:.1f} < lifespan {lifespan}"
-        )
+        assert (
+            total_years >= lifespan - 1
+        ), f"Coverage {total_years:.1f} < lifespan {lifespan}"

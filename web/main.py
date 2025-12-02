@@ -39,7 +39,7 @@ def setup_styles():
         warning=COLORS["gold"],
     )
 
-    ui.add_head_html(f'''
+    ui.add_head_html(f"""
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="{GOOGLE_FONTS_URL}" rel="stylesheet">
@@ -207,7 +207,7 @@ def setup_styles():
             background: {COLORS["secondary"]};
         }}
     </style>
-    ''')
+    """)
 
 
 # =============================================================================

@@ -161,9 +161,9 @@ class TestAngleMethods:
         expected_asc = (natal_asc + solar_arc) % 360
         actual_asc = prog.chart2.get_object("ASC").longitude
 
-        assert abs(actual_asc - expected_asc) < 0.01, (
-            f"ASC: expected {expected_asc:.2f}°, got {actual_asc:.2f}°"
-        )
+        assert (
+            abs(actual_asc - expected_asc) < 0.01
+        ), f"ASC: expected {expected_asc:.2f}°, got {actual_asc:.2f}°"
 
     def test_naibod_angles(self, kate_natal):
         """Naibod should move angles by mean Sun rate (59'08"/year)."""
@@ -180,9 +180,9 @@ class TestAngleMethods:
         expected_asc = (natal_asc + naibod_arc) % 360
         actual_asc = prog.chart2.get_object("ASC").longitude
 
-        assert abs(actual_asc - expected_asc) < 0.01, (
-            f"ASC: expected {expected_asc:.2f}°, got {actual_asc:.2f}°"
-        )
+        assert (
+            abs(actual_asc - expected_asc) < 0.01
+        ), f"ASC: expected {expected_asc:.2f}°, got {actual_asc:.2f}°"
 
     def test_angle_method_in_metadata(self, kate_natal):
         """Angle method should be recorded in chart metadata."""

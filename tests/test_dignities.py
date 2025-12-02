@@ -130,9 +130,9 @@ def test_rulerships_are_correct():
 
     for sign, ruler in rulerships.items():
         traditional_ruler = DIGNITIES[sign]["traditional"]["ruler"]
-        assert traditional_ruler == ruler, (
-            f"{sign} traditional ruler should be {ruler}, got {traditional_ruler}"
-        )
+        assert (
+            traditional_ruler == ruler
+        ), f"{sign} traditional ruler should be {ruler}, got {traditional_ruler}"
 
 
 # =============================================================================
@@ -231,9 +231,9 @@ def test_sun_in_aquarius_detriment():
     assert result["planet"] == "Sun"
     assert "detriment" in result["dignities"]
     # Sun gets -5 for detriment, but may have other dignities (like term/triplicity) that add points
-    assert result["score"] < 0, (
-        "Sun in Aquarius should have negative score due to detriment"
-    )
+    assert (
+        result["score"] < 0
+    ), "Sun in Aquarius should have negative score due to detriment"
     # Verify interpretation indicates weakness/challenge
     interp = result["interpretation"].lower()
     assert "challenged" in interp or "weak" in interp or "debility" in interp
@@ -604,9 +604,9 @@ def test_no_mutual_reception():
         for r in receptions
     )
 
-    assert not sun_moon_reception, (
-        "Should not find mutual reception when planets are in own signs"
-    )
+    assert (
+        not sun_moon_reception
+    ), "Should not find mutual reception when planets are in own signs"
 
 
 # =============================================================================

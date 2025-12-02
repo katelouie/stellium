@@ -853,7 +853,7 @@ class TypstRenderer:
             import os
 
             abs_path = os.path.abspath(chart_svg_path)
-            parts.append(f'''
+            parts.append(f"""
     #align(center)[
     #box(
         stroke: 1.5pt + gold,
@@ -864,7 +864,7 @@ class TypstRenderer:
         image("{abs_path}", width: 80%)
     )
     ]
-    ''')
+    """)
 
         # Push remaining space to bottom
         parts.append("#v(1fr)")
@@ -1195,7 +1195,7 @@ class TypstRenderer:
 
         # Make path absolute for Typst to find it
         abs_path = os.path.abspath(svg_path)
-        return f'''
+        return f"""
 #align(center)[
   #box(
     stroke: 1pt + rgb("#e2e8f0"),
@@ -1206,7 +1206,7 @@ class TypstRenderer:
   )
 ]
 #v(0.5em)
-'''
+"""
 
     def _escape(self, text: str) -> str:
         """Escape special Typst characters in text."""
@@ -1269,7 +1269,7 @@ class TypstRenderer:
 
         abs_path = os.path.abspath(svg_path)
 
-        return f'''
+        return f"""
 #align(center)[
   #box(
     stroke: 1pt + gold,
@@ -1281,4 +1281,4 @@ class TypstRenderer:
   )
 ]
 #v(0.5em)
-'''
+"""

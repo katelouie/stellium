@@ -167,12 +167,12 @@ def test_internal_aspects_calculated_if_missing():
     )
 
     # After calculation, internal charts should have aspects
-    assert len(synastry.chart1.aspects) > 0, (
-        "Chart1 should have internal aspects calculated"
-    )
-    assert len(synastry.chart2.aspects) > 0, (
-        "Chart2 should have internal aspects calculated"
-    )
+    assert (
+        len(synastry.chart1.aspects) > 0
+    ), "Chart1 should have internal aspects calculated"
+    assert (
+        len(synastry.chart2.aspects) > 0
+    ), "Chart2 should have internal aspects calculated"
 
 
 class TestComparisonBuilderConvenienceMethods:

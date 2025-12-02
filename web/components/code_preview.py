@@ -235,7 +235,9 @@ def generate_relationships_code(
     dt1 = p1.date if p1.time_unknown else f"{p1.date} {p1.time}"
     name1 = p1.name or "Person 1"
     lines.append(f"# Build chart for {name1}")
-    lines.append(f'chart1 = (ChartBuilder.from_details("{dt1}", "{p1.location}", name="{name1}")')
+    lines.append(
+        f'chart1 = (ChartBuilder.from_details("{dt1}", "{p1.location}", name="{name1}")'
+    )
     if p1.time_unknown:
         lines.append("    .with_unknown_time()")
     if state.include_aspects:
@@ -247,7 +249,9 @@ def generate_relationships_code(
     dt2 = p2.date if p2.time_unknown else f"{p2.date} {p2.time}"
     name2 = p2.name or "Person 2"
     lines.append(f"# Build chart for {name2}")
-    lines.append(f'chart2 = (ChartBuilder.from_details("{dt2}", "{p2.location}", name="{name2}")')
+    lines.append(
+        f'chart2 = (ChartBuilder.from_details("{dt2}", "{p2.location}", name="{name2}")'
+    )
     if p2.time_unknown:
         lines.append("    .with_unknown_time()")
     if state.include_aspects:
@@ -267,7 +271,9 @@ def generate_relationships_code(
         lines.append('comparison.draw("synastry_chart.svg")')
     elif state.chart_type == "composite":
         lines.append("# Create composite chart (midpoint method)")
-        lines.append("composite = SynthesisBuilder.composite(chart1, chart2).calculate()")
+        lines.append(
+            "composite = SynthesisBuilder.composite(chart1, chart2).calculate()"
+        )
         lines.append("")
         lines.append("# Generate composite chart")
         lines.append('composite.draw("composite_chart.svg")')
@@ -289,9 +295,7 @@ def generate_relationships_code(
         lines.append("    .without_header()")
 
     if state.show_moon_phase:
-        lines.append(
-            f'    .with_moon_phase(position="{state.moon_phase_position}")'
-        )
+        lines.append(f'    .with_moon_phase(position="{state.moon_phase_position}")')
 
     lines.append("    .save()")
     lines.append("")
@@ -347,7 +351,9 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
     if state.chart_type in ("transits", "progressions"):
         lines.append("from stellium.core.comparison import ComparisonBuilder")
     if state.chart_type == "progressions":
-        lines.append("from stellium.utils.progressions import calculate_progressed_datetime")
+        lines.append(
+            "from stellium.utils.progressions import calculate_progressed_datetime"
+        )
     if state.chart_type in ("solar_return", "lunar_return", "planetary_return"):
         lines.append("from stellium.returns import ReturnBuilder")
 
@@ -363,7 +369,9 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
 
     # Build natal chart
     lines.append("# Build natal chart")
-    lines.append(f'natal = (ChartBuilder.from_details("{natal_dt}", "{natal.location}", name="{natal_name}")')
+    lines.append(
+        f'natal = (ChartBuilder.from_details("{natal_dt}", "{natal.location}", name="{natal_name}")'
+    )
     if natal.time_unknown:
         lines.append("    .with_unknown_time()")
     if state.include_aspects:
@@ -377,7 +385,9 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
     # Build timing chart based on type
     if state.chart_type == "transits":
         lines.append(f"# Build transit chart for {state.timing_date}")
-        lines.append(f'transits = (ChartBuilder.from_details("{state.timing_date}", "{natal.location}")')
+        lines.append(
+            f'transits = (ChartBuilder.from_details("{state.timing_date}", "{natal.location}")'
+        )
         if state.include_aspects:
             lines.append("    .with_aspects()")
         lines.append("    .calculate())")
@@ -394,10 +404,14 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
         lines.append("from dateutil.parser import parse")
         lines.append(f'natal_datetime = parse("{natal_dt}")')
         lines.append(f'target_date = parse("{state.timing_date}")')
-        lines.append("progressed_datetime = calculate_progressed_datetime(natal_datetime, target_date)")
+        lines.append(
+            "progressed_datetime = calculate_progressed_datetime(natal_datetime, target_date)"
+        )
         lines.append("")
         lines.append("# Build progressed chart")
-        lines.append(f'progressed = (ChartBuilder.from_details(progressed_datetime, "{natal.location}")')
+        lines.append(
+            f'progressed = (ChartBuilder.from_details(progressed_datetime, "{natal.location}")'
+        )
         if state.include_aspects:
             lines.append("    .with_aspects()")
         lines.append("    .calculate())")
@@ -411,8 +425,12 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
 
     elif state.chart_type == "solar_return":
         lines.append(f"# Calculate Solar Return for {state.timing_date}")
-        location_arg = f', location="{state.relocation_location}"' if state.relocate else ""
-        lines.append(f"solar_return = (ReturnBuilder.solar(natal, {state.timing_date}{location_arg})")
+        location_arg = (
+            f', location="{state.relocation_location}"' if state.relocate else ""
+        )
+        lines.append(
+            f"solar_return = (ReturnBuilder.solar(natal, {state.timing_date}{location_arg})"
+        )
         if state.include_aspects:
             lines.append("    .with_aspects()")
         lines.append("    .calculate())")
@@ -421,7 +439,9 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
     elif state.chart_type == "lunar_return":
         lines.append("# Calculate Lunar Return")
         near_date_arg = f'near_date="{state.timing_date}"' if state.timing_date else ""
-        location_arg = f', location="{state.relocation_location}"' if state.relocate else ""
+        location_arg = (
+            f', location="{state.relocation_location}"' if state.relocate else ""
+        )
         args = ", ".join(filter(None, [near_date_arg, location_arg.lstrip(", ")]))
         lines.append(f"lunar_return = (ReturnBuilder.lunar(natal, {args})")
         if state.include_aspects:
@@ -432,9 +452,13 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
     elif state.chart_type == "planetary_return":
         lines.append(f"# Calculate {state.return_planet} Return")
         near_date_arg = f'near_date="{state.timing_date}"' if state.timing_date else ""
-        location_arg = f', location="{state.relocation_location}"' if state.relocate else ""
+        location_arg = (
+            f', location="{state.relocation_location}"' if state.relocate else ""
+        )
         args = ", ".join(filter(None, [near_date_arg, location_arg.lstrip(", ")]))
-        lines.append(f'planetary_return = (ReturnBuilder.planetary(natal, "{state.return_planet}", {args})')
+        lines.append(
+            f'planetary_return = (ReturnBuilder.planetary(natal, "{state.return_planet}", {args})'
+        )
         if state.include_aspects:
             lines.append("    .with_aspects()")
         lines.append("    .calculate())")
@@ -515,7 +539,7 @@ def create_code_preview_dialog(
                 "Copy to Clipboard",
                 icon="content_copy",
                 on_click=lambda: (
-                    ui.run_javascript(f'navigator.clipboard.writeText({repr(code)})'),
+                    ui.run_javascript(f"navigator.clipboard.writeText({repr(code)})"),
                     ui.notify("Copied to clipboard!", type="positive"),
                 ),
             ).style(
@@ -549,9 +573,7 @@ def create_relationships_code_preview_dialog(
     return create_code_preview_dialog(code, f"{type_names[state.chart_type]} Code")
 
 
-def create_timing_code_preview_dialog(
-    state: TimingState, report_state: PDFReportState
-):
+def create_timing_code_preview_dialog(state: TimingState, report_state: PDFReportState):
     """Create a code preview dialog for timing charts."""
     code = generate_timing_code(state, report_state)
     type_names = {
