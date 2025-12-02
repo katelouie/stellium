@@ -465,6 +465,19 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         description="Hypothetical planet representing spirituality, enlightenment, and clarity.",
     ),
     # ========================================================================
+    # URANIAN REFERENCE POINTS
+    # ========================================================================
+    "Aries Point": CelestialObjectInfo(
+        name="Aries Point",
+        display_name="Aries Point",
+        object_type=ObjectType.POINT,
+        glyph="♈",
+        swiss_ephemeris_id=None,  # Fixed at 0° longitude, no ephemeris calculation needed
+        category="Uranian Point",
+        aliases=["AP", "Aries 0", "Vernal Point", "Spring Equinox"],
+        description="The first degree of Aries (0° longitude). A fundamental reference point in Uranian astrology representing public events, worldly manifestation, and the intersection of personal and collective.",
+    ),
+    # ========================================================================
     # FIXED STARS (Selected Notable Stars)
     # ========================================================================
     "Algol": CelestialObjectInfo(

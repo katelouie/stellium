@@ -298,7 +298,7 @@ class ChartBuilder:
 
     def with_uranian(self) -> "ChartBuilder":
         """
-        Include Hamburg/Uranian hypothetical planets in the calculation.
+        Include Hamburg/Uranian hypothetical planets and points in the calculation.
 
         Adds the 8 transneptunian points (TNPs) used in Uranian astrology:
         - Cupido (family, groups, art, community)
@@ -309,6 +309,10 @@ class ChartBuilder:
         - Admetos (depth, stagnation, raw materials)
         - Vulkanus (immense power, force, intensity)
         - Poseidon (spirituality, enlightenment, clarity)
+
+        Also adds the Aries Point (0° Aries), a fundamental reference point
+        in Uranian astrology representing worldly manifestation and the
+        intersection of personal and collective.
 
         These are hypothetical planets developed by Alfred Witte and the
         Hamburg School of Astrology.
@@ -321,7 +325,7 @@ class ChartBuilder:
             # Full Uranian setup (TNOs + TNPs)
             chart = ChartBuilder.from_native(native).with_tnos().with_uranian().calculate()
         """
-        hamburg_names = [
+        uranian_names = [
             "Cupido",
             "Hades",
             "Zeus",
@@ -330,8 +334,9 @@ class ChartBuilder:
             "Admetos",
             "Vulkanus",
             "Poseidon",
+            "Aries Point",
         ]
-        for name in hamburg_names:
+        for name in uranian_names:
             if name not in self._config.include_asteroids:
                 self._config.include_asteroids.append(name)
         return self

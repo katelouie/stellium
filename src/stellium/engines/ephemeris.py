@@ -218,6 +218,18 @@ class SwissEphemerisEngine:
             )
             positions.append(south_node)
 
+        # Add Aries Point (fixed at 0° longitude - fundamental reference in Uranian astrology)
+        if "Aries Point" in objects:
+            aries_point = CelestialPosition(
+                name="Aries Point",
+                object_type=ObjectType.POINT,
+                longitude=0.0,
+                latitude=0.0,
+                speed_longitude=0.0,
+                speed_latitude=0.0,
+            )
+            positions.append(aries_point)
+
         return positions
 
     def _setup_sidereal_mode(self, config: CalculationConfig) -> None:

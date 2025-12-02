@@ -57,17 +57,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Basic dials, dial sizes, themes, midpoints, pointers, transits, outer rings
   - Professional Uranian and Cosmobiology style examples
 
+- 65 tests added
+
 #### TNO and Uranian Planet Support (December 1, 2025)
 
 - **ChartBuilder Methods**:
   - `.with_tnos()` - Include Trans-Neptunian Objects: Eris, Sedna, Makemake, Haumea, Orcus, Quaoar
-  - `.with_uranian()` - Include Hamburg hypothetical planets: Cupido, Hades, Zeus, Kronos, Apollon, Admetos, Vulkanus, Poseidon
+  - `.with_uranian()` - Include Hamburg hypothetical planets + Aries Point: Cupido, Hades, Zeus, Kronos, Apollon, Admetos, Vulkanus, Poseidon, Aries Point
+
+- **Aries Point**: Added to the celestial registry as a fundamental Uranian reference point
+  - Fixed at 0° Aries (0° longitude)
+  - Represents worldly manifestation and the intersection of personal and collective
+  - Aliases: AP, Aries 0, Vernal Point, Spring Equinox
 
 - **DialDrawBuilder Methods**:
   - `.with_tnos()` / `.without_tnos()` - Toggle TNOs on dial (default: on)
-  - `.with_uranian()` / `.without_uranian()` - Toggle Hamburg planets on dial (default: on)
+  - `.with_uranian()` / `.without_uranian()` - Toggle Hamburg planets + Aries Point on dial (default: on)
 
-- **Dial Planet Layer**: Automatically includes TNOs and Hamburg planets if present in chart
+- **Dial Planet Layer**: Automatically includes TNOs, Hamburg planets, and Aries Point if present in chart
 
 #### Graceful Ephemeris File Handling (December 1, 2025)
 
@@ -78,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Properly handles `AST_OFFSET` (10000) for asteroid MPC numbers
 
 - **Warning Message Format**:
+
   ```
   ⚠️  Missing ephemeris file for Eris (skipping)
      To download, run: stellium ephemeris download-asteroid 136199
@@ -97,7 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Eris (#136199), Sedna (#90377), Makemake (#136472)
   - Haumea (#136108), Orcus (#90482), Quaoar (#50000)
 
-- **Download Source**: Uses https://ephe.scryr.io/ephe2/ for long-range asteroid files (6000 year coverage)
+- **Download Source**: Uses <https://ephe.scryr.io/ephe2/> for long-range asteroid files (6000 year coverage)
 
 - **Download Functions** (in `cli/ephemeris_download.py`):
   - `get_asteroid_filename(number)` - Generate `.se1` filename (long-range format)
@@ -236,6 +244,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Cleaner API reduces boilerplate for PDF generation
 
 - **Before/After comparison**:
+
   ```python
   # Before (verbose)
   chart.draw("chart.svg").with_theme("celestial").save()

@@ -148,8 +148,8 @@ SIGN_GLYPHS = {
 # These are important for Uranian astrology
 TNO_NAMES = {"Eris", "Sedna", "Makemake", "Haumea", "Orcus", "Quaoar"}
 
-# Hamburg/Uranian School hypothetical planets
-# These 8 theoretical points are fundamental to Uranian astrology
+# Hamburg/Uranian School hypothetical planets and reference points
+# These 8 theoretical planets + Aries Point are fundamental to Uranian astrology
 HAMBURG_NAMES = {
     "Cupido",
     "Hades",
@@ -159,6 +159,7 @@ HAMBURG_NAMES = {
     "Admetos",
     "Vulkanus",
     "Poseidon",
+    "Aries Point",
 }
 
 

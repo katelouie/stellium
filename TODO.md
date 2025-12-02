@@ -19,7 +19,8 @@
 - [ ] Draconic charts (nodal)
 - [ ] Topocentric parallax corrections for planet coordinates
 - [x] Uranian degree dial chart
+- [ ] Add chart info overview (header) to Uranian dial viz
 - [ ] Uranian-style midpoint calculation (A + B - C = D)
-- [ ] Add Aries Point to objects (uranian)
+- [x] Add Aries Point to objects (uranian)
 
 ## Testing
