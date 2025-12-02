@@ -12,4 +12,10 @@
 
 ## Core Functions
 
+- [ ] Primary Directions
+- [ ] Orb moieties (sum orb of two planets and get average)
+- [ ] Heliocentric calculations
+- [ ] Draconic charts (nodal)
+- [ ] Topocentric parallax corrections for planet coordinates
+
 ## Testing

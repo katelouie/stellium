@@ -38,17 +38,18 @@ If you want to support development [you can leave a tip if you like](https://ko-
 ### **For Astrologers**
 
 - **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
-- **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more
+- **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md))
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
 - **Bi-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
 - **Sect-aware calculations** with proper day/night chart handling
-- **25+ Arabic Parts** with traditional formulas
+- **25+ Arabic Parts** with traditional formulas (see the [full list](docs/options_list.md))
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
 - **Chart rulership and profections** for traditional astrology
 - **Dispositor graphs** for planets and (experimentally) houses in reports
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
 - **Zodiacal Releasing** for 25+ lots (including Fortune and Spirit) and optional "fractal" calculation mode
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
+- **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
 
 ### Visual Chart Example
