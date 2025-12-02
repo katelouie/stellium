@@ -57,7 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Basic dials, dial sizes, themes, midpoints, pointers, transits, outer rings
   - Professional Uranian and Cosmobiology style examples
 
-- 65 tests added
+- 65 tests added in `tests/test_dial_charts.py`
 
 #### TNO and Uranian Planet Support (December 1, 2025)
 
