@@ -27,7 +27,6 @@ from stellium.core.comparison import (
     ComparisonType,
     HouseOverlay,
 )
-from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 from stellium.core.models import (
     Aspect,
     CalculatedChart,
@@ -38,6 +37,7 @@ from stellium.core.models import (
     HouseCusps,
     PhaseData,
 )
+from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 from stellium.core.native import Native, Notable
 
 # === Registry Access ===
