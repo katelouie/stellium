@@ -183,7 +183,7 @@ def create_location_input(
         if on_select:
             on_select(loc)
 
-    async def on_input_change(e):
+    def on_input_change(e):
         """Handle input change with debouncing."""
         query = e.value or ""
         state["value"] = query
@@ -196,7 +196,7 @@ def create_location_input(
             on_change(query)
 
         # Debounced search
-        await do_search(query)
+        asyncio.create_task(do_search(query))
 
     def on_blur(e):
         """Hide dropdown when input loses focus (with delay for click)."""
