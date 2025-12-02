@@ -48,6 +48,7 @@ If you want to support development [you can leave a tip if you like](https://ko-
 - **Dispositor graphs** for planets and (experimentally) houses in reports
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
 - **Zodiacal Releasing** for 25+ lots (including Fortune and Spirit) and optional "fractal" calculation mode
+- **Uranian astrology** including Trans-Neptunian Planets and 45/90/360-degree dials with pointers.
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
@@ -533,6 +534,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[arc_directions_cookbook.py](examples/arc_directions_cookbook.py)** | 14 examples: solar arc, naibod, lunar, chart ruler, sect, planetary arcs |
 | **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
 | **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
+| **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
 
 ```bash
 # Run any cookbook
@@ -544,6 +546,7 @@ python examples/progressions_cookbook.py
 python examples/arc_directions_cookbook.py
 python examples/profections_cookbook.py
 python examples/zodiacal_releasing_cookbook.py
+python examples/dial_cookbook.py
 ```
 
 ### User Guides
