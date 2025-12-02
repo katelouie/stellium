@@ -80,6 +80,73 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Example 18: Sect-based analysis (day vs night charts)
   - Example 19: Valens method details
 
+#### Web App Code Preview for All Pages (December 1, 2025)
+
+- **Python code preview now available on all pages**:
+  - Natal Chart page: Already had code preview, updated to use new API
+  - Relationships page: New code preview for synastry, composite, and davison charts
+  - Timing page: New code preview for transits, progressions, and returns
+
+- **Refactored `code_preview.py` component**:
+  - `generate_natal_code()`: Generates Python code for natal charts with full visualization options
+  - `generate_relationships_code()`: Generates code for ComparisonBuilder (synastry) and SynthesisBuilder (composite/davison)
+  - `generate_timing_code()`: Generates code for transits, progressions, solar/lunar/planetary returns
+  - All generated code uses the new `with_chart_image()` and `with_title()` API
+
+- **Working "Copy to Clipboard" button** in code preview dialogs
+
+#### ReportBuilder API Improvements (December 1, 2025)
+
+- **New `with_chart_image(path=None)` method**:
+  - Include a chart wheel image in PDF/HTML reports
+  - Called without arguments: auto-generates chart SVG alongside the output file
+  - With path argument: uses an existing SVG file
+  - Auto-generated charts use `preset_standard()` styling
+  - SVG saved as `{output_name}_chart.svg` in same directory as PDF
+
+- **New `with_title(title)` method**:
+  - Set a custom title for the report cover page
+  - If not set, defaults to `"{chart_name} — Natal Chart"` or `"Natal Chart Report"`
+
+- **Simplified `render()` method**:
+  - Removed `chart_svg_path` and `title` parameters (use builder methods instead)
+  - Smart `show` defaults: `True` for terminal formats, `False` for PDF/HTML
+  - Cleaner API reduces boilerplate for PDF generation
+
+- **Before/After comparison**:
+  ```python
+  # Before (verbose)
+  chart.draw("chart.svg").with_theme("celestial").save()
+  ReportBuilder().from_chart(chart).preset_full().render(
+      format="pdf", file="report.pdf", chart_svg_path="chart.svg",
+      title="My Report", show=False
+  )
+
+  # After (clean)
+  ReportBuilder().from_chart(chart).preset_full()
+      .with_chart_image().with_title("My Report")
+      .render(format="pdf", file="report.pdf")
+  ```
+
+- **Updated cookbook examples** to use new API (9 examples simplified)
+
+#### TypstRenderer Compound Section Support (December 1, 2025)
+
+- **Fixed "unknown section type: compound" in PDF reports**:
+  - Added `_render_compound()` method to TypstRenderer
+  - Handles nested compound sections with level-3 headings
+  - Recursively processes tables, key-value, text, side-by-side tables, and SVGs
+
+- **Added `_render_svg_section()` method**:
+  - Saves inline SVG content to temp file for Typst embedding
+  - Styled box with gold border matching report theme
+
+- **Affected sections now render correctly in PDFs**:
+  - Aspectarian (SVG + table compound)
+  - Annual Profections timeline
+  - Dispositor section
+  - Zodiacal Releasing timeline and snapshot
+
 #### Standalone Aspectarian Generator (November 29, 2025)
 
 - **`generate_aspectarian_svg()`**: Generate standalone aspectarian SVG files
