@@ -25,6 +25,7 @@ from stellium.components import (
 )
 from stellium.engines import PlacidusHouses, WholeSignHouses
 from stellium.engines.patterns import AspectPatternAnalyzer
+from stellium.engines.releasing import ZodiacalReleasingAnalyzer
 
 # Output directory for generated reports
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -138,24 +139,17 @@ def example_5_pdf_with_chart():
         .calculate()
     )
 
-    # First, generate the chart wheel SVG
-    svg_path = OUTPUT_DIR / "jung_chart.svg"
-    print(f"Generating chart wheel to {svg_path}...")
-
-    chart.draw(str(svg_path)).with_theme("celestial").with_zodiac_palette(
-        "rainbow_celestial"
-    ).with_moon_phase(position="bottom-left").save()
-
-    # Then generate the PDF report with the chart embedded
+    # Generate PDF with auto-generated chart image
     pdf_path = OUTPUT_DIR / "jung_full_report.pdf"
-    print(f"Generating PDF report to {pdf_path}...")
+    print(f"Generating PDF report with chart to {pdf_path}...")
 
-    ReportBuilder().from_chart(chart).preset_detailed().render(
-        format="pdf",
-        file=str(pdf_path),
-        chart_svg_path=str(svg_path),
-        title="Carl Jung - Natal Chart Analysis",
-        show=False,
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .preset_detailed()
+        .with_chart_image()  # Auto-generates chart wheel
+        .with_title("Carl Jung - Natal Chart Analysis")
+        .render(format="pdf", file=str(pdf_path))
     )
 
     print(f"Done! Open {pdf_path} to see the result.")
@@ -178,25 +172,23 @@ def example_6_full_pdf():
         .add_component(MidpointCalculator())
         .add_component(FixedStarsComponent())
         .add_analyzer(AspectPatternAnalyzer())
+        .add_analyzer(
+            ZodiacalReleasingAnalyzer(lots=["Part of Fortune", "Part of Spirit"])
+        )
         .calculate()
     )
 
-    # Generate chart wheel
-    svg_path = OUTPUT_DIR / "einstein_chart.svg"
-    print(f"Generating chart wheel to {svg_path}...")
-
-    chart.draw(str(svg_path)).with_zodiac_palette("rainbow").preset_detailed().save()
-
-    # Generate full PDF
+    # Generate full PDF with auto-generated chart
     pdf_path = OUTPUT_DIR / "einstein_complete_report.pdf"
     print(f"Generating complete PDF report to {pdf_path}...")
 
-    ReportBuilder().from_chart(chart).preset_full().render(
-        format="pdf",
-        file=str(pdf_path),
-        chart_svg_path=str(svg_path),
-        title="Albert Einstein - Complete Natal Analysis",
-        show=False,
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .preset_full()
+        .with_chart_image()  # Auto-generates chart wheel
+        .with_title("Albert Einstein - Complete Natal Analysis")
+        .render(format="pdf", file=str(pdf_path))
     )
 
     print(f"Done! Open {pdf_path} to see the result.")
@@ -293,10 +285,6 @@ def example_8_aspect_focused():
     chart = ChartBuilder.from_notable("Mozart").with_aspects().calculate()
 
     output_file = OUTPUT_DIR / "mozart_aspects.pdf"
-    svg_path = OUTPUT_DIR / "mozart_chart.svg"
-
-    # Generate minimal chart (aspects visible)
-    chart.draw(str(svg_path)).preset_minimal().save()
 
     print(f"Generating aspect-focused PDF to {output_file}...")
 
@@ -305,13 +293,9 @@ def example_8_aspect_focused():
         .from_chart(chart)
         .with_chart_overview()
         .with_aspects(mode="all", orbs=True, sort_by="orb")
-        .render(
-            format="pdf",
-            file=str(output_file),
-            chart_svg_path=str(svg_path),
-            title="Wolfgang Mozart - Aspects Analysis",
-            show=False,
-        )
+        .with_chart_image()
+        .with_title("Wolfgang Mozart - Aspects Analysis")
+        .render(format="pdf", file=str(output_file))
     )
 
     print(f"Done! Open {output_file} to see the result.")
@@ -427,11 +411,6 @@ def example_9d_fixed_stars_pdf():
         .calculate()
     )
 
-    # Generate chart
-    svg_path = OUTPUT_DIR / "nostradamus_chart.svg"
-    print(f"Generating chart to {svg_path}...")
-    chart.draw(str(svg_path)).with_theme("midnight").save()
-
     # Generate PDF with fixed stars
     pdf_path = OUTPUT_DIR / "nostradamus_fixed_stars.pdf"
     print(f"Generating fixed stars PDF to {pdf_path}...")
@@ -444,13 +423,9 @@ def example_9d_fixed_stars_pdf():
         .with_fixed_stars(sort_by="magnitude")  # Brightest first
         .with_aspects(mode="major")
         .with_dignities()
-        .render(
-            format="pdf",
-            file=str(pdf_path),
-            chart_svg_path=str(svg_path),
-            title="Nostradamus - Natal Chart with Fixed Stars",
-            show=False,
-        )
+        .with_chart_image()
+        .with_title("Nostradamus - Natal Chart with Fixed Stars")
+        .render(format="pdf", file=str(pdf_path))
     )
 
     print(f"Done! Open {pdf_path} to see the result.")
@@ -480,22 +455,17 @@ def example_10_synastry_report():
         .calculate()
     )
 
-    # Generate biwheel chart
-    svg_path = OUTPUT_DIR / "lennon_ono_biwheel.svg"
-    print(f"Generating biwheel chart to {svg_path}...")
-
-    synastry.draw(str(svg_path)).with_theme("celestial").save()
-
-    # Generate synastry PDF
+    # Generate synastry PDF with auto-generated biwheel
     pdf_path = OUTPUT_DIR / "lennon_ono_synastry.pdf"
     print(f"Generating synastry PDF to {pdf_path}...")
 
-    ReportBuilder().from_chart(synastry).preset_synastry().render(
-        format="pdf",
-        file=str(pdf_path),
-        chart_svg_path=str(svg_path),
-        title="John Lennon & Yoko Ono - Synastry",
-        show=False,
+    (
+        ReportBuilder()
+        .from_chart(synastry)
+        .preset_synastry()
+        .with_chart_image()  # Auto-generates biwheel
+        .with_title("John Lennon & Yoko Ono - Synastry")
+        .render(format="pdf", file=str(pdf_path))
     )
 
     print(f"Done! Open {pdf_path} to see the result.")
@@ -538,11 +508,12 @@ def example_11_transit_report():
     pdf_path = OUTPUT_DIR / "einstein_transits.pdf"
     print(f"Generating transit PDF to {pdf_path}...")
 
-    ReportBuilder().from_chart(transits).preset_transit().render(
-        format="pdf",
-        file=str(pdf_path),
-        title="Albert Einstein - Transits for Jan 1, 2025",
-        show=False,
+    (
+        ReportBuilder()
+        .from_chart(transits)
+        .preset_transit()
+        .with_title("Albert Einstein - Transits for Jan 1, 2025")
+        .render(format="pdf", file=str(pdf_path))
     )
 
     print(f"Done! Open {pdf_path} to see the result.")
@@ -575,13 +546,7 @@ def example_12_custom_synastry():
         .calculate()
     )
 
-    # Generate biwheel
-    svg_path = OUTPUT_DIR / "royal_biwheel.svg"
-    print(f"Generating biwheel to {svg_path}...")
-
-    synastry.draw(str(svg_path)).with_theme("midnight").with_tables().save()
-
-    # Custom detailed synastry report
+    # Custom detailed synastry report with auto-generated biwheel
     pdf_path = OUTPUT_DIR / "royal_synastry_detailed.pdf"
     print(f"Generating detailed synastry PDF to {pdf_path}...")
 
@@ -592,13 +557,9 @@ def example_12_custom_synastry():
         .with_planet_positions(include_house=True, include_speed=True)
         .with_cross_aspects(mode="all", sort_by="orb")
         .with_house_cusps()
-        .render(
-            format="pdf",
-            file=str(pdf_path),
-            chart_svg_path=str(svg_path),
-            title="Prince William & Kate Middleton - Detailed Synastry",
-            show=False,
-        )
+        .with_chart_image()
+        .with_title("Prince William & Kate Middleton - Detailed Synastry")
+        .render(format="pdf", file=str(pdf_path))
     )
 
     print(f"Done! Open {pdf_path} to see the result.")
@@ -691,18 +652,15 @@ def example_15_batch_reports():
         # Safe filename
         filename = name.lower().replace(" ", "_")
 
-        # Generate chart SVG
-        svg_path = OUTPUT_DIR / f"{filename}_chart.svg"
-        chart.draw(str(svg_path)).with_theme("celestial").with_moon_phase().save()
-
-        # Generate PDF
+        # Generate PDF with auto-generated chart
         pdf_path = OUTPUT_DIR / f"{filename}_report.pdf"
-        ReportBuilder().from_chart(chart).preset_standard().render(
-            format="pdf",
-            file=str(pdf_path),
-            chart_svg_path=str(svg_path),
-            title=f"{name} - Natal Chart",
-            show=False,
+        (
+            ReportBuilder()
+            .from_chart(chart)
+            .preset_standard()
+            .with_chart_image()
+            .with_title(f"{name} - Natal Chart")
+            .render(format="pdf", file=str(pdf_path))
         )
 
         print(f"  Created {pdf_path}")

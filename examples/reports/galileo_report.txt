@@ -9,6 +9,7 @@ Chart Overview
 [1mCoordinates: [0m43.7167°, 10.4000°
 [1mHouse System: [0mPlacidus
 [1mZodiac: [0mTropical
+[1mChart Ruler: [0mSun (Leo Rising)
 
 
 Planet Positions

@@ -9,6 +9,7 @@ Chart Overview
  Coordinates: 52.8055°, -0.6378°
 House System: Placidus
       Zodiac: Tropical
+ Chart Ruler: Venus (Libra Rising)
 
 
 Planet Positions
@@ -34,47 +35,54 @@ Planet Positions
 
 Major Aspects
 =============
-| Planet 1            | Aspect        | Planet 2            | Orb   | Applying |
-|---------------------|---------------|---------------------|-------|----------|
-| ♃ Jupiter           | ⚹ Sextile     | ☉ Sun               | 0.45° | A→       |
-| ☊ North Node        | △ Trine       | ⚷ Chiron            | 0.97° | A→       |
-| ⚷ Chiron            | ⚹ Sextile     | ☋ South Node        | 0.97° | ←S       |
-| ☿ Mercury           | □ Square      | ♄ Saturn            | 1.05° | ←S       |
-| ♀ Venus             | △ Trine       | ASC                 | 1.38° | —        |
-| ♃ Jupiter           | △ Trine       | ♅ Uranus            | 1.54° | A→       |
-| ♇ Pluto             | ☍ Opposition  | ♆ Neptune           | 1.63° | A→       |
-| ⚸ Black Moon Lilith | □ Square      | ♅ Uranus            | 1.94° | ←S       |
-| ☉ Sun               | ⚹ Sextile     | ♅ Uranus            | 1.99° | A→       |
-| ♀ Venus             | □ Square      | 🜊 Vertex            | 2.30° | —        |
-| ♇ Pluto             | ⚹ Sextile     | MC                  | 2.41° | —        |
-| ♂ Mars              | □ Square      | MC                  | 2.51° | —        |
-| ☿ Mercury           | △ Trine       | ⚸ Black Moon Lilith | 3.33° | ←S       |
-| ⚷ Chiron            | ⚹ Sextile     | MC                  | 3.46° | —        |
-| ♆ Neptune           | □ Square      | ♀ Venus             | 3.77° | A→       |
-| ♆ Neptune           | △ Trine       | MC                  | 4.04° | —        |
-| ♄ Saturn            | △ Trine       | ♅ Uranus            | 4.23° | ←S       |
-| ☉ Sun               | □ Square      | ☋ South Node        | 4.24° | ←S       |
-| ☉ Sun               | □ Square      | ☊ North Node        | 4.24° | ←S       |
-| ☊ North Node        | ⚹ Sextile     | MC                  | 4.44° | —        |
-| ☋ South Node        | △ Trine       | MC                  | 4.44° | —        |
-| ☿ Mercury           | ⚹ Sextile     | ASC                 | 4.89° | —        |
-| ♄ Saturn            | ⚹ Sextile     | 🜊 Vertex            | 5.01° | —        |
-| ♂ Mars              | ⚹ Sextile     | ☽ Moon              | 5.08° | A→       |
-| ♀ Venus             | △ Trine       | ☽ Moon              | 5.24° | ←S       |
-| ♇ Pluto             | □ Square      | ♀ Venus             | 5.40° | A→       |
-| ♃ Jupiter           | □ Square      | ⚷ Chiron            | 5.66° | ←S       |
-| ♃ Jupiter           | ☌ Conjunction | ♄ Saturn            | 5.76° | A→       |
-| ♇ Pluto             | ☌ Conjunction | ⚷ Chiron            | 5.87° | A→       |
-| ♆ Neptune           | ☍ Opposition  | 🜊 Vertex            | 6.07° | —        |
-| ☉ Sun               | △ Trine       | ♂ Mars              | 6.16° | ←S       |
-| ☽ Moon              | △ Trine       | ASC                 | 6.62° | —        |
-| ♃ Jupiter           | □ Square      | ☿ Mercury           | 6.81° | ←S       |
-| ☊ North Node        | △ Trine       | ♇ Pluto             | 6.84° | A→       |
-| ☊ North Node        | □ Square      | ☽ Moon              | 7.00° | A→       |
-| ☽ Moon              | □ Square      | ☋ South Node        | 7.00° | A→       |
-| ⚸ Black Moon Lilith | □ Square      | 🜊 Vertex            | 7.29° | —        |
-| ♆ Neptune           | ☍ Opposition  | ⚷ Chiron            | 7.50° | A→       |
-| ♇ Pluto             | ☌ Conjunction | 🜊 Vertex            | 7.70° | —        |
+
+  Aspectarian
+  -----------
+  (unknown type svg)
+
+  Aspect List
+  -----------
+| Planet 1            | Aspect        | Planet 2     | Orb   | Applying |
+|---------------------|---------------|--------------|-------|----------|
+| ♃ Jupiter           | ⚹ Sextile     | ☉ Sun        | 0.45° | A→       |
+| ⚷ Chiron            | △ Trine       | ☊ North Node | 0.97° | A→       |
+| ⚷ Chiron            | ⚹ Sextile     | ☋ South Node | 0.97° | ←S       |
+| ♄ Saturn            | □ Square      | ☿ Mercury    | 1.05° | ←S       |
+| ♀ Venus             | △ Trine       | ASC          | 1.38° | —        |
+| ♃ Jupiter           | △ Trine       | ♅ Uranus     | 1.54° | A→       |
+| ♇ Pluto             | ☍ Opposition  | ♆ Neptune    | 1.63° | A→       |
+| ⚸ Black Moon Lilith | □ Square      | ♅ Uranus     | 1.94° | ←S       |
+| ☉ Sun               | ⚹ Sextile     | ♅ Uranus     | 1.99° | A→       |
+| ♀ Venus             | □ Square      | 🜊 Vertex     | 2.30° | —        |
+| ♇ Pluto             | ⚹ Sextile     | MC           | 2.41° | —        |
+| ♂ Mars              | □ Square      | MC           | 2.51° | —        |
+| ⚸ Black Moon Lilith | △ Trine       | ☿ Mercury    | 3.33° | ←S       |
+| ⚷ Chiron            | ⚹ Sextile     | MC           | 3.46° | —        |
+| ♀ Venus             | □ Square      | ♆ Neptune    | 3.77° | A→       |
+| ♆ Neptune           | △ Trine       | MC           | 4.04° | —        |
+| ♄ Saturn            | △ Trine       | ♅ Uranus     | 4.23° | ←S       |
+| ☉ Sun               | □ Square      | ☋ South Node | 4.24° | ←S       |
+| ☉ Sun               | □ Square      | ☊ North Node | 4.24° | ←S       |
+| ☊ North Node        | ⚹ Sextile     | MC           | 4.44° | —        |
+| ☋ South Node        | △ Trine       | MC           | 4.44° | —        |
+| ☿ Mercury           | ⚹ Sextile     | ASC          | 4.89° | —        |
+| ♄ Saturn            | ⚹ Sextile     | 🜊 Vertex     | 5.01° | —        |
+| ♂ Mars              | ⚹ Sextile     | ☽ Moon       | 5.08° | A→       |
+| ♀ Venus             | △ Trine       | ☽ Moon       | 5.24° | ←S       |
+| ♀ Venus             | □ Square      | ♇ Pluto      | 5.40° | A→       |
+| ♃ Jupiter           | □ Square      | ⚷ Chiron     | 5.66° | ←S       |
+| ♃ Jupiter           | ☌ Conjunction | ♄ Saturn     | 5.76° | A→       |
+| ♇ Pluto             | ☌ Conjunction | ⚷ Chiron     | 5.87° | A→       |
+| ♆ Neptune           | ☍ Opposition  | 🜊 Vertex     | 6.07° | —        |
+| ☉ Sun               | △ Trine       | ♂ Mars       | 6.16° | ←S       |
+| ☽ Moon              | △ Trine       | ASC          | 6.62° | —        |
+| ♃ Jupiter           | □ Square      | ☿ Mercury    | 6.81° | ←S       |
+| ♇ Pluto             | △ Trine       | ☊ North Node | 6.84° | A→       |
+| ☽ Moon              | □ Square      | ☊ North Node | 7.00° | A→       |
+| ☽ Moon              | □ Square      | ☋ South Node | 7.00° | A→       |
+| ⚸ Black Moon Lilith | □ Square      | 🜊 Vertex     | 7.29° | —        |
+| ♆ Neptune           | ☍ Opposition  | ⚷ Chiron     | 7.50° | A→       |
+| ♇ Pluto             | ☌ Conjunction | 🜊 Vertex     | 7.70° | —        |
 
 
 House Cusps
