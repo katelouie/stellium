@@ -216,35 +216,35 @@ def setup_styles():
 
 
 @ui.page("/")
-def home():
+async def home():
     """Home/landing page."""
     setup_styles()
     create_home_page()
 
 
 @ui.page("/natal")
-def natal():
+async def natal():
     """Natal chart builder page."""
     setup_styles()
     create_natal_page()
 
 
 @ui.page("/relationships")
-def relationships():
+async def relationships():
     """Relationships chart page (synastry, composite, davison)."""
     setup_styles()
     create_relationships_page()
 
 
 @ui.page("/timing")
-def timing():
+async def timing():
     """Timing chart page (transits, progressions, returns)."""
     setup_styles()
     create_timing_page()
 
 
 @ui.page("/explore")
-def explore():
+async def explore():
     """Notable births explorer."""
     setup_styles()
     create_explore_page()
@@ -263,10 +263,12 @@ if __name__ in {"__main__", "__mp_main__"}:
     # Check if running in production (Railway sets RAILWAY_ENVIRONMENT)
     is_production = os.environ.get("RAILWAY_ENVIRONMENT") is not None
 
-    print("\n" + "=" * 50)
-    print("  ★  Stellium Web  ★")
-    print("=" * 50)
-    print(f"\n  Starting server on port {port}\n")
+    # Only print startup message in main process (not multiprocessing worker)
+    if __name__ == "__main__":
+        print("\n" + "=" * 50)
+        print("  ★  Stellium Web  ★")
+        print("=" * 50)
+        print(f"\n  Starting server on port {port}\n")
 
     ui.run(
         title="Stellium",

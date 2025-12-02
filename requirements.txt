@@ -4,5 +4,5 @@
 # Install stellium from local source (reads pyproject.toml)
 -e .
 
-# Web framework
-nicegui>=1.4.0
+# Web framework (3.x compatible - page functions are async)
+nicegui>=3.0.0
