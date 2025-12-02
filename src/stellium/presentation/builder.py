@@ -51,6 +51,9 @@ class ReportBuilder:
         """Initialize an empty report builder."""
         self._chart: CalculatedChart | Comparison | None = None
         self._sections: list[ReportSection] = []
+        self._chart_image_path: str | None = None
+        self._auto_generate_chart_image: bool = False
+        self._title: str | None = None
 
     def from_chart(self, chart: CalculatedChart | Comparison) -> "ReportBuilder":
         """
@@ -68,6 +71,54 @@ class ReportBuilder:
     def _is_comparison(self) -> bool:
         """Check if the current chart is a Comparison object."""
         return isinstance(self._chart, Comparison)
+
+    def with_chart_image(self, path: str | None = None) -> "ReportBuilder":
+        """
+        Include a chart wheel image in the report.
+
+        When called without arguments, automatically generates a chart SVG
+        using the chart's default draw settings.
+
+        Args:
+            path: Optional path to an existing SVG file. If not provided,
+                  a chart image will be auto-generated when rendering.
+
+        Returns:
+            Self for chaining
+
+        Examples:
+            # Auto-generate chart image
+            report.with_chart_image()
+
+            # Use existing SVG file
+            report.with_chart_image("my_chart.svg")
+        """
+        if path:
+            self._chart_image_path = path
+            self._auto_generate_chart_image = False
+        else:
+            self._auto_generate_chart_image = True
+        return self
+
+    def with_title(self, title: str) -> "ReportBuilder":
+        """
+        Set a custom title for the report.
+
+        The title appears on the cover page of PDF reports.
+        If not set, a default title is generated from the chart's name.
+
+        Args:
+            title: Custom title string
+
+        Returns:
+            Self for chaining
+
+        Examples:
+            report.with_title("Birth Chart Analysis")
+            report.with_title("Albert Einstein - Complete Natal Analysis")
+        """
+        self._title = title
+        return self
 
     # -------------------------------------------------------------------------
     # Section Adding Methods
@@ -971,9 +1022,7 @@ class ReportBuilder:
         self,
         format: str = "rich_table",
         file: str | None = None,
-        show: bool = True,
-        chart_svg_path: str | None = None,
-        title: str | None = None,
+        show: bool | None = None,
     ) -> str | None:
         """
         Render the report with flexible output options.
@@ -981,9 +1030,9 @@ class ReportBuilder:
         Args:
             format: Output format ("rich_table", "plain_table", "text", "pdf", "html")
             file: Optional filename to save to
-            show: Whether to display in terminal (default True, ignored for pdf/html)
-            chart_svg_path: Optional path to chart SVG file (for pdf/html formats)
-            title: Optional report title (for pdf format)
+            show: Whether to display in terminal. Defaults to True for terminal
+                  formats (rich_table, plain_table, text) and False for file
+                  formats (pdf, html).
 
         Returns:
             Filename if saved to file, None otherwise
@@ -994,7 +1043,7 @@ class ReportBuilder:
 
         Examples:
             # Show in terminal with Rich formatting
-            report.render(format="rich_table")
+            report.render()
 
             # Save to file (with terminal preview)
             report.render(format="plain_table", file="chart.txt")
@@ -1002,23 +1051,32 @@ class ReportBuilder:
             # Save quietly (no terminal output)
             report.render(format="plain_table", file="chart.txt", show=False)
 
-            # Generate beautiful PDF with Typst (uses Cinzel fonts and star dividers!)
-            report.render(format="pdf", file="report.pdf", chart_svg_path="chart.svg")
-
-            # Generate HTML
-            report.render(format="html", file="report.html", chart_svg_path="chart.svg")
+            # Generate PDF with chart image and title (configured via builder)
+            report.with_chart_image().with_title("My Report").render(
+                format="pdf", file="report.pdf"
+            )
         """
         if not self._chart:
             raise ValueError("No chart set. Call .from_chart(chart) before rendering.")
+
+        # Terminal-friendly formats
+        terminal_formats = {"rich_table", "plain_table", "text"}
+
+        # Default show behavior: True for terminal formats, False for file formats
+        if show is None:
+            show = format in terminal_formats
+
+        # Resolve chart image path (auto-generate if requested)
+        chart_svg_path = self._resolve_chart_image_path(file)
+
+        # Resolve title (use instance var or generate default)
+        title = self._title
 
         # Generate section data once
         section_data = [
             (section.section_name, section.generate_data(self._chart))
             for section in self._sections
         ]
-
-        # Terminal-friendly formats
-        terminal_formats = {"rich_table", "plain_table", "text"}
 
         # Show in terminal if requested and format supports it
         if show and format in terminal_formats:
@@ -1036,6 +1094,45 @@ class ReportBuilder:
                 with open(file, "w", encoding="utf-8") as f:
                     f.write(content)
             return file
+
+        return None
+
+    def _resolve_chart_image_path(self, output_file: str | None) -> str | None:
+        """
+        Resolve the chart image path for rendering.
+
+        If a path was explicitly set via with_chart_image(path), use that.
+        If auto-generate was requested via with_chart_image(), generate a temp SVG.
+        Otherwise return None.
+
+        Args:
+            output_file: The output file path (used to determine temp file location)
+
+        Returns:
+            Path to chart SVG file, or None
+        """
+        import os
+        import tempfile
+
+        # Explicit path provided
+        if self._chart_image_path:
+            return self._chart_image_path
+
+        # Auto-generate requested
+        if self._auto_generate_chart_image and self._chart:
+            # Generate temp file path based on output file or use system temp
+            if output_file:
+                base_dir = os.path.dirname(os.path.abspath(output_file))
+                base_name = os.path.splitext(os.path.basename(output_file))[0]
+                svg_path = os.path.join(base_dir, f"{base_name}_chart.svg")
+            else:
+                # Use temp directory
+                fd, svg_path = tempfile.mkstemp(suffix=".svg", prefix="stellium_chart_")
+                os.close(fd)
+
+            # Generate the chart
+            self._chart.draw(svg_path).preset_standard().save()
+            return svg_path
 
         return None
 

@@ -1010,6 +1010,11 @@ class TypstRenderer:
             parts.append(self._render_text(section_data))
         elif data_type == "side_by_side_tables":
             parts.append(self._render_side_by_side_tables(section_data))
+        elif data_type == "compound":
+            parts.append(self._render_compound(section_data))
+        elif data_type == "svg":
+            # SVG sections need special handling
+            parts.append(self._render_svg_section(section_data))
         else:
             parts.append(f"Unknown section type: {data_type}")
 
@@ -1214,3 +1219,66 @@ class TypstRenderer:
         for char in ["#", "*", "_", "@", "$", "`"]:
             text = text.replace(char, "\\" + char)
         return text
+
+    def _render_compound(self, data: dict[str, Any]) -> str:
+        """Render compound section with multiple sub-sections."""
+        parts = []
+        for sub_name, sub_data in data.get("sections", []):
+            sub_type = sub_data.get("type")
+
+            # Add subsection heading
+            parts.append(f"\n=== {self._escape(sub_name)}\n")
+
+            if sub_type == "table":
+                parts.append(self._render_table(sub_data))
+            elif sub_type == "key_value":
+                parts.append(self._render_key_value(sub_data))
+            elif sub_type == "text":
+                parts.append(self._render_text(sub_data))
+            elif sub_type == "side_by_side_tables":
+                parts.append(self._render_side_by_side_tables(sub_data))
+            elif sub_type == "svg":
+                parts.append(self._render_svg_section(sub_data))
+            elif sub_type == "compound":
+                # Recursive: nested compound section
+                parts.append(self._render_compound(sub_data))
+            else:
+                parts.append(f"(unknown sub-section type: {sub_type})")
+
+        return "\n".join(parts)
+
+    def _render_svg_section(self, data: dict[str, Any]) -> str:
+        """Render an inline SVG section.
+
+        For Typst, we need to save the SVG to a temp file and reference it,
+        or note that SVG embedding requires special handling.
+        """
+        import os
+        import tempfile
+
+        svg_content = data.get("content", "")
+        if not svg_content:
+            return "_No SVG content available_"
+
+        # Write SVG to a temporary file
+        with tempfile.NamedTemporaryFile(
+            mode="w", suffix=".svg", delete=False, encoding="utf-8"
+        ) as f:
+            f.write(svg_content)
+            svg_path = f.name
+
+        abs_path = os.path.abspath(svg_path)
+
+        return f'''
+#align(center)[
+  #box(
+    stroke: 1pt + gold,
+    radius: 4pt,
+    clip: true,
+    inset: 8pt,
+    fill: white,
+    image("{abs_path}", width: 90%)
+  )
+]
+#v(0.5em)
+'''
