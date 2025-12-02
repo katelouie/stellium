@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+#### Webapp
+
+- Make all page functions async to be able to use NiceGUI >= 3.0.0
+
 ## [0.6.0] - 2025-12-02
 
 ### Added
