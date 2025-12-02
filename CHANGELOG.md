@@ -86,7 +86,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Warning Message Format**:
 
-  ```
+  ```sh
   ⚠️  Missing ephemeris file for Eris (skipping)
      To download, run: stellium ephemeris download-asteroid 136199
      Or manually download from: ast136/ folder
@@ -313,12 +313,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Rich Renderer**: Added recursive handling for nested compound sections
 - **Asteroid ID Offset**: Fixed `SWISS_EPHEMERIS_IDS` to include `AST_OFFSET` (10000) for TNO asteroid numbers - Swiss Ephemeris requires this offset for MPC-numbered asteroids
 - **Ephemeris Download Path**: Fixed `get_data_directory()` in CLI to download to `data/swisseph/ephe/` at project root instead of inside `src/stellium/`
-- **SVG Glyph Rendering in Dial Charts**: Fixed inline SVG glyph rendering for objects with custom SVG glyphs (e.g., Eris)
+- **SVG Glyph Rendering**: Fixed inline SVG glyph rendering for objects with custom SVG glyphs (e.g., Eris)
   - Previously, SVG glyphs were rendered as `<image>` references which don't work across all browsers
   - Now embeds SVG content inline as nested `<svg>` elements with proper path data
   - Uses `debug=False` to bypass svgwrite's strict path validation for complex path commands
   - Updated `get_glyph()` to return SVG content string instead of file path
-  - Added `embed_svg_glyph()` helper function in dial layers for parsing and embedding
+  - Added `embed_svg_glyph()` helper function in `visualization/core.py` for parsing and embedding
+  - Fixed in both dial charts (`dial/layers.py`) and normal charts (`layers.py`)
 
 ## [0.5.0] - 2025-11-28
 

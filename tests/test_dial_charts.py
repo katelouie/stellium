@@ -27,7 +27,7 @@ from stellium.core.models import (
 )
 from stellium.core.native import Native
 from stellium.core.registry import get_object_info
-from stellium.visualization.core import get_glyph
+from stellium.visualization.core import embed_svg_glyph, get_glyph
 from stellium.visualization.dial.builder import DialDrawBuilder
 from stellium.visualization.dial.config import (
     DialConfig,
@@ -45,7 +45,6 @@ from stellium.visualization.dial.layers import (
     DialOuterRingLayer,
     DialPlanetLayer,
     DialPointerLayer,
-    embed_svg_glyph,
     resolve_dial_collisions,
 )
 from stellium.visualization.dial.renderer import DialRenderer

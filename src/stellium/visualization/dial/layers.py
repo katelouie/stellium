@@ -6,104 +6,14 @@ Each layer draws one specific part of the dial chart.
 """
 
 import math
-import re
 from typing import Protocol
 
 import svgwrite
 
 from stellium.core.models import CalculatedChart, CelestialPosition
-from stellium.visualization.core import get_glyph
+from stellium.visualization.core import embed_svg_glyph, get_glyph
 from stellium.visualization.dial.config import DialStyle
 from stellium.visualization.dial.renderer import DialRenderer
-
-
-def embed_svg_glyph(
-    dwg: svgwrite.Drawing,
-    svg_content: str,
-    x: float,
-    y: float,
-    size: float,
-    fill_color: str | None = None,
-) -> None:
-    """
-    Embed an SVG glyph inline as a nested SVG element.
-
-    Args:
-        dwg: The svgwrite Drawing to add the element to
-        svg_content: The raw SVG content string
-        x: Center x coordinate for the glyph
-        y: Center y coordinate for the glyph
-        size: Desired size (width and height) in pixels
-        fill_color: Optional color to override stroke/fill (for theming)
-    """
-    # Extract viewBox from the SVG content using regex (simpler than XML parsing)
-    viewbox_match = re.search(r'viewBox="([^"]+)"', svg_content)
-    viewbox = viewbox_match.group(1) if viewbox_match else "0 0 16 16"
-
-    # Calculate position (center the glyph)
-    svg_x = x - size / 2
-    svg_y = y - size / 2
-
-    # Create nested SVG element with proper positioning
-    nested_svg = dwg.svg(
-        insert=(svg_x, svg_y),
-        size=(size, size),
-        viewBox=viewbox,
-    )
-
-    # Extract path data using regex (handles namespaced SVGs better)
-    # First, find all path elements
-    path_elements = re.findall(r"<path[^>]+/>", svg_content)
-
-    for path_elem in path_elements:
-        # Extract d attribute
-        d_match = re.search(r'd="([^"]+)"', path_elem)
-        path_d = d_match.group(1) if d_match else ""
-
-        # Extract style attribute
-        style_match = re.search(r'style="([^"]+)"', path_elem)
-        style = style_match.group(1) if style_match else ""
-
-        if not path_d:
-            continue
-
-        # Parse style into attributes
-        stroke = fill_color or "#000"
-        stroke_width = 0.6
-        fill = "none"
-
-        if "stroke-width:" in style:
-            sw_match = re.search(r"stroke-width:([^;]+)", style)
-            if sw_match:
-                try:
-                    stroke_width = float(sw_match.group(1).strip())
-                except ValueError:
-                    pass
-
-        if "fill:" in style:
-            fill_match = re.search(r"fill:([^;]+)", style)
-            if fill_match:
-                fill = fill_match.group(1).strip()
-
-        # Create the path using svgwrite with debug mode disabled
-        # to bypass the strict path validation
-        from svgwrite.path import Path as SvgPath
-
-        # Create path with the actual d value, but first disable validation
-        # by creating a drawing-less path
-        path = SvgPath(
-            d=path_d,
-            fill=fill,
-            stroke=stroke,
-            stroke_width=stroke_width,
-            debug=False,  # Disable validation
-        )
-        path["stroke-linecap"] = "round"
-        path["stroke-linejoin"] = "round"
-
-        nested_svg.add(path)
-
-    dwg.add(nested_svg)
 
 
 class IDialLayer(Protocol):

@@ -21,6 +21,7 @@ from .core import (
     ANGLE_GLYPHS,
     ZODIAC_GLYPHS,
     ChartRenderer,
+    embed_svg_glyph,
     get_glyph,
 )
 from .palettes import (
@@ -1248,18 +1249,15 @@ class PlanetLayer:
             x, y = renderer.polar_to_cartesian(adjusted_long, base_radius)
 
             if glyph_info["type"] == "svg":
-                # Render SVG image
+                # Render inline SVG glyph (works across all browsers)
                 glyph_size_px = float(style["glyph_size"][:-2])
-                # Center the image on the position
-                image_x = x - (glyph_size_px / 2)
-                image_y = y - (glyph_size_px / 2)
-
-                dwg.add(
-                    dwg.image(
-                        href=glyph_info["value"],
-                        insert=(image_x, image_y),
-                        size=(glyph_size_px, glyph_size_px),
-                    )
+                embed_svg_glyph(
+                    dwg,
+                    glyph_info["value"],
+                    x,
+                    y,
+                    glyph_size_px,
+                    fill_color=color,
                 )
             else:
                 # Render Unicode text glyph
