@@ -47,6 +47,7 @@ If you want to support development [you can leave a tip if you like](https://ko-
 - **Chart rulership and profections** for traditional astrology
 - **Dispositor graphs** for planets and (experimentally) houses in reports
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
+- **Zodiacal Releasing** for 25+ lots (including Fortune and Spirit) and optional "fractal" calculation mode
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
 
