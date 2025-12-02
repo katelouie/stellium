@@ -61,5 +61,9 @@ dev/
 # Sphinx docs output
 docs/_build/
 
+# Internal docs
+docs/development/
+docs/planning/
+
 # Claude planning files
 .claude/
