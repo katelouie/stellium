@@ -2811,3 +2811,296 @@ class ZodiacalReleasingSection:
     def _format_rulers(self, rulers: list[str]) -> list[str]:
         """Format multiple rulers with glyphs."""
         return [self._format_ruler(r) for r in rulers]
+
+
+class ArabicPartsSection:
+    """
+    Table of Arabic Parts (Lots).
+
+    Shows calculated Arabic Parts with their positions, house placements,
+    and optionally their formulas and descriptions.
+
+    Modes:
+    - "all": All calculated parts
+    - "core": 7 Hermetic Lots (Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis)
+    - "family": Family & Relationship Lots (Father, Mother, Marriage, Children, Siblings)
+    - "life": Life Topic Lots (Action, Profession, Passion, Illness, Death, etc.)
+    - "planetary": Planetary Exaltation Lots (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn)
+    """
+
+    # Category definitions for filtering
+    CORE_PARTS = {
+        "Part of Fortune",
+        "Part of Spirit",
+        "Part of Eros (Love)",
+        "Part of Eros (Planetary)",
+        "Part of Necessity (Ananke)",
+        "Part of Courage (Tolma)",
+        "Part of Victory (Nike)",
+        "Part of Nemesis",
+    }
+
+    FAMILY_PARTS = {
+        "Part of Father",
+        "Part of Mother",
+        "Part of Marriage",
+        "Part of Children",
+        "Part of Siblings",
+    }
+
+    LIFE_PARTS = {
+        "Part of Action (Praxis)",
+        "Part of Profession (User)",
+        "Part of Passion / Lust",
+        "Part of Illness / Disease",
+        "Part of Death",
+        "Part of Debt / Bondage",
+        "Part of Travel",
+        "Part of Friends / Associates",
+    }
+
+    PLANETARY_PARTS = {
+        "Part of the Sun (Exaltation)",
+        "Part of the Moon (Exaltation)",
+        "Part of Mercury (Exaltation)",
+        "Part of Venus (Exaltation)",
+        "Part of Mars (Exaltation)",
+        "Part of Jupiter (Exaltation)",
+        "Part of Saturn (Exaltation)",
+    }
+
+    # Import the catalog for formula lookups
+    from stellium.components.arabic_parts import ARABIC_PARTS_CATALOG
+
+    def __init__(
+        self,
+        mode: str = "all",
+        show_formula: bool = True,
+        show_description: bool = False,
+    ) -> None:
+        """
+        Initialize Arabic Parts section.
+
+        Args:
+            mode: Which parts to display:
+                - "all": All calculated parts (default)
+                - "core": 7 Hermetic Lots
+                - "family": Family & Relationship Lots
+                - "life": Life Topic Lots
+                - "planetary": Planetary Exaltation Lots
+            show_formula: Include the formula column (default True)
+            show_description: Include part descriptions (default False)
+        """
+        valid_modes = ("all", "core", "family", "life", "planetary")
+        if mode not in valid_modes:
+            raise ValueError(f"mode must be one of {valid_modes}, got {mode}")
+
+        self.mode = mode
+        self.show_formula = show_formula
+        self.show_description = show_description
+
+    @property
+    def section_name(self) -> str:
+        mode_names = {
+            "all": "Arabic Parts",
+            "core": "Arabic Parts (Hermetic Lots)",
+            "family": "Arabic Parts (Family & Relationships)",
+            "life": "Arabic Parts (Life Topics)",
+            "planetary": "Arabic Parts (Planetary Exaltation)",
+        }
+        return mode_names.get(self.mode, "Arabic Parts")
+
+    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate Arabic Parts table."""
+        # Get all Arabic Parts from the chart
+        parts = [p for p in chart.positions if p.object_type == ObjectType.ARABIC_PART]
+
+        if not parts:
+            return {
+                "type": "text",
+                "content": (
+                    "No Arabic Parts calculated. Add ArabicPartsCalculator:\n\n"
+                    "  from stellium.components.arabic_parts import ArabicPartsCalculator\n\n"
+                    "  chart = (\n"
+                    "      ChartBuilder.from_native(native)\n"
+                    "      .add_component(ArabicPartsCalculator())\n"
+                    "      .calculate()\n"
+                    "  )"
+                ),
+            }
+
+        # Filter by mode
+        parts = self._filter_by_mode(parts)
+
+        if not parts:
+            return {
+                "type": "text",
+                "content": f"No {self.mode} Arabic Parts found in this chart.",
+            }
+
+        # Sort parts by category order, then alphabetically within category
+        parts = self._sort_parts(parts)
+
+        # Get house systems and their placements
+        house_systems = list(chart.house_systems.keys()) if chart.house_systems else []
+
+        # Build table headers
+        headers = ["Part", "Position"]
+
+        # Add house columns - one per system with abbreviated labels
+        if len(house_systems) == 1:
+            # Single system: just "House"
+            headers.append("House")
+        elif len(house_systems) > 1:
+            # Multiple systems: abbreviated labels
+            for system in house_systems:
+                abbrev = self._abbreviate_house_system(system)
+                headers.append(abbrev)
+        else:
+            # No house systems
+            headers.append("House")
+
+        if self.show_formula:
+            headers.append("Formula")
+        if self.show_description:
+            headers.append("Description")
+
+        rows = []
+        for part in parts:
+            # Part name (clean up for display)
+            display_name = self._format_part_name(part.name)
+
+            # Position (degree° Sign minute')
+            degree = int(part.sign_degree)
+            minute = int((part.sign_degree % 1) * 60)
+            sign_glyph = get_sign_glyph(part.sign)
+            position = f"{degree}°{sign_glyph}{part.sign} {minute:02d}'"
+
+            row = [display_name, position]
+
+            # House placements - one column per system
+            if len(house_systems) == 0:
+                row.append("—")
+            else:
+                for system in house_systems:
+                    placements = chart.house_placements.get(system, {})
+                    house = placements.get(part.name, "—")
+                    house_str = str(house) if house != "—" else "—"
+                    row.append(house_str)
+
+            # Formula (optional)
+            if self.show_formula:
+                formula = self._get_formula(part.name)
+                row.append(formula)
+
+            # Description (optional)
+            if self.show_description:
+                description = self._get_description(part.name)
+                row.append(description)
+
+            rows.append(row)
+
+        return {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+        }
+
+    def _filter_by_mode(self, parts: list) -> list:
+        """Filter parts based on selected mode."""
+        if self.mode == "all":
+            return parts
+
+        mode_sets = {
+            "core": self.CORE_PARTS,
+            "family": self.FAMILY_PARTS,
+            "life": self.LIFE_PARTS,
+            "planetary": self.PLANETARY_PARTS,
+        }
+
+        filter_set = mode_sets.get(self.mode, set())
+        return [p for p in parts if p.name in filter_set]
+
+    def _sort_parts(self, parts: list) -> list:
+        """Sort parts by category, then alphabetically."""
+        # Define category order
+        category_order = {
+            "core": 0,
+            "family": 1,
+            "life": 2,
+            "planetary": 3,
+            "other": 4,
+        }
+
+        def get_category(part_name: str) -> str:
+            if part_name in self.CORE_PARTS:
+                return "core"
+            elif part_name in self.FAMILY_PARTS:
+                return "family"
+            elif part_name in self.LIFE_PARTS:
+                return "life"
+            elif part_name in self.PLANETARY_PARTS:
+                return "planetary"
+            return "other"
+
+        def sort_key(part):
+            category = get_category(part.name)
+            return (category_order[category], part.name)
+
+        return sorted(parts, key=sort_key)
+
+    def _format_part_name(self, name: str) -> str:
+        """Format part name for display (shorter version)."""
+        # Remove "Part of the " prefix first (longer, more specific)
+        if name.startswith("Part of the "):
+            return name[12:]  # Remove "Part of the "
+        # Then check for "Part of " prefix
+        if name.startswith("Part of "):
+            return name[8:]  # Remove "Part of "
+        return name
+
+    def _get_formula(self, part_name: str) -> str:
+        """Get the formula string for a part."""
+        if part_name not in self.ARABIC_PARTS_CATALOG:
+            return "—"
+
+        config = self.ARABIC_PARTS_CATALOG[part_name]
+        points = config["points"]
+        sect_flip = config["sect_flip"]
+
+        # Format: ASC + Point2 - Point3 (or note if flips)
+        formula = f"{points[0]} + {points[1]} - {points[2]}"
+        if sect_flip:
+            formula += " *"  # Asterisk indicates sect-aware
+
+        return formula
+
+    def _get_description(self, part_name: str) -> str:
+        """Get the description for a part."""
+        if part_name not in self.ARABIC_PARTS_CATALOG:
+            return "—"
+
+        config = self.ARABIC_PARTS_CATALOG[part_name]
+        description = config.get("description", "—")
+
+        # Truncate long descriptions
+        if len(description) > 80:
+            description = description[:77] + "..."
+
+        return description
+
+    def _abbreviate_house_system(self, system_name: str) -> str:
+        """Get abbreviated label for a house system."""
+        abbreviations = {
+            "Placidus": "Plac",
+            "Whole Sign": "WS",
+            "Equal": "Eq",
+            "Koch": "Koch",
+            "Regiomontanus": "Regio",
+            "Campanus": "Camp",
+            "Porphyry": "Porph",
+            "Morinus": "Morin",
+            "Alcabitius": "Alcab",
+            "Topocentric": "Topo",
+        }
+        return abbreviations.get(system_name, system_name[:4])

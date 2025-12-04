@@ -13,6 +13,7 @@ from stellium.core.protocols import ReportRenderer, ReportSection
 
 from .renderers import PlainTextRenderer, RichTableRenderer
 from .sections import (
+    ArabicPartsSection,
     AspectPatternSection,
     AspectSection,
     ChartOverviewSection,
@@ -329,6 +330,62 @@ class ReportBuilder:
                 orb=orb,
                 midpoint_filter=midpoint_filter,
                 sort_by=sort_by,
+            )
+        )
+        return self
+
+    def with_arabic_parts(
+        self,
+        mode: str = "all",
+        show_formula: bool = True,
+        show_description: bool = False,
+    ) -> "ReportBuilder":
+        """
+        Add Arabic Parts (Lots) table.
+
+        Args:
+            mode: Which parts to display (DEFAULT: "all")
+                - "all": All calculated parts
+                - "core": 7 Hermetic Lots (Fortune, Spirit, Eros, etc.)
+                - "family": Family & Relationship Lots
+                - "life": Life Topic Lots
+                - "planetary": Planetary Exaltation Lots
+            show_formula: Include the formula column (DEFAULT: True)
+                Formula shows as "ASC + Point2 - Point3" with * for sect-aware parts
+            show_description: Include part descriptions (DEFAULT: False)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Show all Arabic Parts with formulas
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_arabic_parts()
+            ...     .render())
+            >>>
+            >>> # Show only core Hermetic Lots with descriptions
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_arabic_parts(
+            ...         mode="core",
+            ...         show_description=True
+            ...     )
+            ...     .render())
+
+        Note:
+            Requires ArabicPartsCalculator to be added to chart builder:
+                from stellium.components.arabic_parts import ArabicPartsCalculator
+
+                chart = (ChartBuilder.from_native(native)
+                    .add_component(ArabicPartsCalculator())
+                    .calculate())
+        """
+        self._sections.append(
+            ArabicPartsSection(
+                mode=mode,
+                show_formula=show_formula,
+                show_description=show_description,
             )
         )
         return self
