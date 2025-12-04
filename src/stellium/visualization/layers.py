@@ -1078,6 +1078,66 @@ class OuterHouseCuspLayer:
             )
 
 
+class RingBoundaryLayer:
+    """
+    Renders circular boundary lines between chart rings in a multiwheel chart.
+
+    Draws circles at the boundaries between:
+    - Each chart ring (chart1_ring_outer, chart2_ring_outer, etc.)
+    - The outermost chart and the zodiac ring (zodiac_ring_inner)
+
+    Uses the theme's ring_border styling for color and width.
+    """
+
+    def __init__(
+        self,
+        chart_count: int = 2,
+        style_override: dict[str, Any] | None = None,
+    ) -> None:
+        """
+        Args:
+            chart_count: Number of charts in the multiwheel (2, 3, or 4)
+            style_override: Optional style overrides for border color/width
+        """
+        self.chart_count = chart_count
+        self.style = style_override or {}
+
+    def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
+        """Render ring boundary circles."""
+        # Get ring border styling from theme (with fallbacks)
+        style = renderer.style.get("ring_border", {})
+        style = {**style, **self.style}  # Apply overrides
+
+        border_color = style.get("color", renderer.style.get("border_color", "#CCCCCC"))
+        border_width = style.get("width", 0.8)
+
+        # Collect the radii where we need to draw boundaries
+        boundary_radii = []
+
+        # Add boundary at each chart ring's outer edge
+        for chart_num in range(1, self.chart_count + 1):
+            ring_outer_key = f"chart{chart_num}_ring_outer"
+            if ring_outer_key in renderer.radii:
+                boundary_radii.append(renderer.radii[ring_outer_key])
+
+        # Add boundary at zodiac ring inner edge (between outermost chart and zodiac)
+        if "zodiac_ring_inner" in renderer.radii:
+            boundary_radii.append(renderer.radii["zodiac_ring_inner"])
+
+        # Draw circular boundaries
+        cx, cy = renderer.center
+        for radius in boundary_radii:
+            dwg.add(
+                dwg.circle(
+                    center=(cx, cy),
+                    r=radius,
+                    fill="none",
+                    stroke=border_color,
+                    stroke_width=border_width,
+                )
+            )
+
+
 class AngleLayer:
     """Renders the primary chart angles (ASC, MC, DSC, IC).
 
@@ -1329,6 +1389,8 @@ class PlanetLayer:
         show_position_ticks: bool = False,
         wheel_index: int = 0,
         info_mode: str = "full",
+        info_stack_distance: float = 0.8,
+        glyph_size_override: str | None = None,
     ) -> None:
         """
         Args:
@@ -1343,6 +1405,9 @@ class PlanetLayer:
                                  on the zodiac ring inner edge.
             wheel_index: Which chart ring to render (0=innermost, used for multiwheel).
             info_mode: "full" (degree+sign+minutes), "compact" (degree only), "none" (glyph only).
+            info_stack_distance: Multiplier for distance between glyph and info stack (default 0.8).
+                                Smaller values move the info stack closer to the glyph.
+            glyph_size_override: If set, overrides the theme's glyph_size (e.g., "24px" for smaller).
         """
         self.planets = planet_set
         self.radius_key = radius_key
@@ -1353,12 +1418,18 @@ class PlanetLayer:
         self.show_position_ticks = show_position_ticks
         self.wheel_index = wheel_index
         self.info_mode = info_mode
+        self.info_stack_distance = info_stack_distance
+        self.glyph_size_override = glyph_size_override
 
     def render(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
     ) -> None:
         style = renderer.style["planets"].copy()
         style.update(self.style)
+
+        # Determine glyph size (use override if provided)
+        glyph_size_str = self.glyph_size_override or style["glyph_size"]
+        glyph_size_px = float(glyph_size_str[:-2])  # Remove "px" suffix
 
         # Determine radius based on wheel_index or explicit radius_key
         chart_num = self.wheel_index + 1
@@ -1461,7 +1532,6 @@ class PlanetLayer:
 
             if glyph_info["type"] == "svg":
                 # Render inline SVG glyph (works across all browsers)
-                glyph_size_px = float(style["glyph_size"][:-2])
                 embed_svg_glyph(
                     dwg,
                     glyph_info["value"],
@@ -1478,7 +1548,7 @@ class PlanetLayer:
                         insert=(x, y),
                         text_anchor="middle",
                         dominant_baseline="central",
-                        font_size=style["glyph_size"],
+                        font_size=glyph_size_str,
                         fill=color,
                         font_family=renderer.style["font_family_glyphs"],
                     )
@@ -1489,19 +1559,19 @@ class PlanetLayer:
             # - "compact": Degree only (single value, e.g., "15°")
             # - "none": No info stack
             if effective_info_mode != "none":
-                glyph_size_px = float(style["glyph_size"][:-2])
-
                 # Calculate radii for info rings based on direction
+                # Use info_stack_distance multiplier (default 0.8, smaller = closer to glyph)
+                dist = self.info_stack_distance
                 if self.info_stack_direction == "outward":
                     # Stack extends AWAY from center (for outer wheel)
-                    degrees_radius = base_radius + (glyph_size_px * 0.8)
-                    sign_radius = base_radius + (glyph_size_px * 1.2)
-                    minutes_radius = base_radius + (glyph_size_px * 1.6)
+                    degrees_radius = base_radius + (glyph_size_px * dist)
+                    sign_radius = base_radius + (glyph_size_px * (dist + 0.4))
+                    minutes_radius = base_radius + (glyph_size_px * (dist + 0.8))
                 else:
                     # Stack extends TOWARD center (default, for inner wheel)
-                    degrees_radius = base_radius - (glyph_size_px * 0.8)
-                    sign_radius = base_radius - (glyph_size_px * 1.2)
-                    minutes_radius = base_radius - (glyph_size_px * 1.6)
+                    degrees_radius = base_radius - (glyph_size_px * dist)
+                    sign_radius = base_radius - (glyph_size_px * (dist + 0.4))
+                    minutes_radius = base_radius - (glyph_size_px * (dist + 0.8))
 
                 # Degrees (shown in both "full" and "compact" modes)
                 deg_str = f"{int(planet.sign_degree)}°"

@@ -27,6 +27,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 23 tests added in `tests/test_presentation_sections.py`
 
+#### MultiWheel Visualization Improvements (December 3, 2025)
+
+- **RingBoundaryLayer**: New layer that draws circular boundary lines between chart rings
+  - Draws at each `chart{N}_ring_outer` radius and at `zodiac_ring_inner`
+  - Uses theme's `ring_border` styling (falls back to `border_color` if not set)
+  - Automatically added to all multiwheel charts (2, 3, or 4 wheels)
+
+- **PlanetLayer new parameters** for better multiwheel rendering:
+  - `info_stack_distance` (default 0.8): Controls distance between glyph and info stack (degree/sign/minute). Smaller values move info closer to glyph.
+  - `glyph_size_override` (default None): Override theme's glyph size for smaller rings
+
+- **Automatic scaling for tri/quad wheels** via LayerFactory:
+  - Biwheel (2 charts): Normal glyph size (32px), normal info distance (0.8)
+  - Triwheel (3 charts): 85% glyph size (27px), tighter info distance (0.6)
+  - Quadwheel (4 charts): 75% glyph size (24px), even tighter info distance (0.5)
+
 ### Changed
 
 ### Fixed

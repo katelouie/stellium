@@ -25,6 +25,7 @@ from stellium.visualization.layers import (
     OuterBorderLayer,
     OuterHouseCuspLayer,
     PlanetLayer,
+    RingBoundaryLayer,
     ZodiacLayer,
 )
 from stellium.visualization.layout.engine import LayoutResult
@@ -396,9 +397,29 @@ class LayerFactory:
             )
         )
 
-        # Layers 2-N: Chart rings from OUTER to INNER
-        # (outer charts rendered first so inner charts draw on top)
+        # Layer 2: Ring boundary lines (between chart rings and zodiac)
         chart_count = chart.chart_count
+        layers.append(RingBoundaryLayer(chart_count=chart_count))
+
+        # Determine glyph size and info stack distance based on chart count
+        # Biwheel (2): normal size, normal distance
+        # Triwheel (3): 85% size, tighter distance
+        # Quadwheel (4): 75% size, even tighter distance
+        glyph_size_map = {
+            2: None,  # Use default (32px)
+            3: "27px",  # ~85% of 32
+            4: "24px",  # 75% of 32
+        }
+        info_stack_distance_map = {
+            2: 0.8,  # Normal
+            3: 0.6,  # Tighter
+            4: 0.5,  # Even tighter
+        }
+        glyph_size_override = glyph_size_map.get(chart_count)
+        info_stack_dist = info_stack_distance_map.get(chart_count, 0.8)
+
+        # Layers 3-N: Chart rings from OUTER to INNER
+        # (outer charts rendered first so inner charts draw on top)
         for wheel_idx in range(chart_count - 1, -1, -1):  # Reverse: outer to inner
             current_chart = chart.charts[wheel_idx]
 
@@ -438,6 +459,8 @@ class LayerFactory:
                     wheel_index=wheel_idx,
                     info_mode=info_mode,
                     show_position_ticks=self.config.wheel.show_planet_ticks,
+                    glyph_size_override=glyph_size_override,
+                    info_stack_distance=info_stack_dist,
                 )
             )
 
