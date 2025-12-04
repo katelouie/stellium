@@ -58,6 +58,13 @@ from stellium.engines.profections import (
     ProfectionTimeline,
 )
 
+# Longitude Search
+from stellium.engines.search import (
+    LongitudeCrossing,
+    find_all_longitude_crossings,
+    find_longitude_crossing,
+)
+
 __all__ = [
     # Ephemeris
     "SwissEphemerisEngine",
@@ -90,4 +97,8 @@ __all__ = [
     "MutualReception",
     "render_dispositor_graph",
     "render_both_dispositors",
+    # Longitude Search
+    "find_longitude_crossing",
+    "find_all_longitude_crossings",
+    "LongitudeCrossing",
 ]

@@ -76,6 +76,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Equalized quadwheel radii**: Chart rings 2/3/4 now have equal width (0.09), with chart 1 slightly larger (0.11)
 
+#### Longitude Search Engine (December 3, 2025)
+
+- **New `engines/search.py`**: Find when celestial objects reach specific longitudes
+  - `find_longitude_crossing()`: Find exact time when object crosses a degree
+    - Hybrid Newton-Raphson / bisection algorithm for fast, reliable convergence
+    - Uses planetary speed from Swiss Ephemeris for quick iteration
+    - Handles retrograde motion and stations gracefully (bisection fallback when speed ≈ 0)
+    - Proper 360°/0° wraparound handling
+    - Forward or backward search direction
+  - `find_all_longitude_crossings()`: Find ALL crossings in a date range
+    - Useful for Moon transits (~monthly), Mercury retrograde crossings (up to 3)
+  - `LongitudeCrossing`: Rich result dataclass with datetime, longitude, speed, is_retrograde
+
+- **Use cases enabled**:
+  - Persona charts (when Sun first reaches each natal planet position after birth)
+  - Transit searches ("when does Mars hit my natal Venus?")
+  - Ingress calculations (equinoxes, solstices, sign ingresses)
+  - Transit timeline generation
+
+- **39 tests added** in `tests/test_search.py` covering:
+  - Angle normalization helper for 360°/0° wraparound
+  - `LongitudeCrossing` dataclass properties and immutability
+  - Single crossing search (Sun equinoxes/solstices, Moon, Mars, Mercury)
+  - Multiple crossing search (Moon ~13/year, Mercury retrograde multiples)
+  - Integration tests with known astronomical events (2024 equinoxes/solstices)
+  - Edge cases (longitude normalization, slow outer planets like Chiron)
+
 ### Changed
 
 ### Fixed
