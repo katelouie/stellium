@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Arabic Parts Report Section (December 3, 2025)
+
+- **ArabicPartsSection**: New report section for displaying Arabic Parts (Lots)
+  - Columns: Part name, Position (degree°Sign minute'), House, Formula (optional), Description (optional)
+  - **Modes** for filtering:
+    - `mode="all"` - All calculated parts (default)
+    - `mode="core"` - 7 Hermetic Lots (Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis)
+    - `mode="family"` - Family & Relationship Lots (Father, Mother, Marriage, Children, Siblings)
+    - `mode="life"` - Life Topic Lots (Action, Profession, Passion, Illness, Death, etc.)
+    - `mode="planetary"` - Planetary Exaltation Lots (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn)
+  - **Formula column** (on by default): Shows calculation formula with `*` indicator for sect-aware parts
+  - **Description column** (off by default): Shows part meaning/interpretation
+  - **Multi-house system support**: Shows abbreviated column headers (Plac, WS, Eq, etc.) when multiple house systems are calculated
+
+- **ReportBuilder method**: `.with_arabic_parts(mode="all", show_formula=True, show_description=False)`
+
+- 23 tests added in `tests/test_presentation_sections.py`
+
 ### Changed
 
 ### Fixed
