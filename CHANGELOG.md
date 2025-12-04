@@ -29,6 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### MultiWheel Visualization Improvements (December 3, 2025)
 
+- **Automatic canvas scaling for multiwheels**: Charts with more rings automatically get larger canvases for better readability
+  - Biwheel (2 charts): 1.0× base size (same as single chart)
+  - Triwheel (3 charts): 1.15× base size (15% larger)
+  - Quadwheel (4 charts): 1.3× base size (30% larger)
+  - Configurable via `multiwheel_canvas_scales` in `ChartWheelConfig`
+  - Works with `auto_grow_wheel` - canvas scaling applies first, then auto-grow can expand further if tables extend the canvas
+
 - **RingBoundaryLayer**: New layer that draws circular boundary lines between chart rings
   - Draws at each `chart{N}_ring_outer` radius and at `zodiac_ring_inner`
   - Uses theme's `ring_border` styling (falls back to `border_color` if not set)
