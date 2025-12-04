@@ -116,27 +116,30 @@ class LayoutEngine:
         Steps:
         1. Measure all enabled elements
         2. Calculate table positions and sizes
-        3. Calculate required canvas size
+        3. Calculate required canvas size (scaled for multiwheel)
         4. Calculate wheel size (possibly grown)
         5. Center everything
         6. Position info corners (with collision detection)
         7. Return complete layout specification
         """
+        # Step 0: Determine effective base size (scale up for multiwheels)
+        effective_base_size = self._get_effective_base_size(chart)
+
         # Step 1: Measure everything
         measurements = self._measure_all_elements(chart)
 
         # Step 2: Calculate table layout
         table_layout = self._calculate_table_layout(measurements)
 
-        # Step 3: Calculate canvas size
+        # Step 3: Calculate canvas size (using scaled base for multiwheel)
         canvas_dims = self._calculate_canvas_size(
-            base_wheel_size=self.config.base_size,
+            base_wheel_size=effective_base_size,
             table_layout=table_layout,
             measurements=measurements,
         )
 
         # Step 4: Calculate wheel size (auto-grow if enabled)
-        wheel_size = self._calculate_wheel_size(canvas_dims)
+        wheel_size = self._calculate_wheel_size(canvas_dims, effective_base_size)
 
         # Step 5: Position the wheel
         wheel_pos = self._position_wheel(canvas_dims, wheel_size, table_layout)
@@ -163,7 +166,7 @@ class LayoutEngine:
             wheel_radii=wheel_radii,
             corners=corners,
             tables=final_tables,
-            wheel_grew=(wheel_size > self.config.base_size),
+            wheel_grew=(wheel_size > effective_base_size),
             actual_margins=self._calculate_margins(
                 canvas_dims, wheel_pos, wheel_size, final_tables
             ),
@@ -362,23 +365,43 @@ class LayoutEngine:
             table_dimensions=table_dimensions,
         )
 
-    def _calculate_wheel_size(self, canvas_dims: Dimensions) -> int:
+    def _get_effective_base_size(
+        self, chart: CalculatedChart | Comparison | MultiWheel
+    ) -> int:
+        """
+        Get the effective base size, scaled for multiwheel charts.
+
+        MultiWheel charts with more rings get larger canvases by default
+        to keep the information readable.
+        """
+        if isinstance(chart, MultiWheel):
+            scale = self.config.wheel.get_multiwheel_canvas_scale(chart.chart_count)
+            return int(self.config.base_size * scale)
+        return self.config.base_size
+
+    def _calculate_wheel_size(
+        self, canvas_dims: Dimensions, effective_base_size: int
+    ) -> int:
         """
         Calculate wheel size, potentially growing it if canvas is large.
+
+        Args:
+            canvas_dims: The calculated canvas dimensions
+            effective_base_size: The base size (possibly scaled for multiwheel)
         """
         if not self.config.auto_grow_wheel:
-            return self.config.base_size
+            return effective_base_size
 
         # If canvas is significantly larger than base size, grow the wheel
         # This keeps the chart from looking tiny in a huge canvas
         max_dim = max(canvas_dims.width, canvas_dims.height)
 
-        if max_dim > self.config.base_size * 2:
+        if max_dim > effective_base_size * 2:
             # Grow wheel by up to 30%
-            growth_factor = min(1.3, max_dim / (self.config.base_size * 2))
-            return int(self.config.base_size * growth_factor)
+            growth_factor = min(1.3, max_dim / (effective_base_size * 2))
+            return int(effective_base_size * growth_factor)
 
-        return self.config.base_size
+        return effective_base_size
 
     def _calculate_wheel_radii(
         self, wheel_size: int, chart: CalculatedChart | Comparison | MultiWheel

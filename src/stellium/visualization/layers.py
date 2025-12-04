@@ -1108,24 +1108,30 @@ class RingBoundaryLayer:
         style = renderer.style.get("ring_border", {})
         style = {**style, **self.style}  # Apply overrides
 
-        border_color = style.get("color", renderer.style.get("border_color", "#CCCCCC"))
-        border_width = style.get("width", 0.8)
+        # Use houses line color as default (matches house cusp lines)
+        default_color = renderer.style.get("houses", {}).get(
+            "line_color", renderer.style.get("border_color", "#CCCCCC")
+        )
+        border_color = style.get("color", default_color)
+        border_width = style.get("width", 1.0)
 
-        # Collect the radii where we need to draw boundaries
-        boundary_radii = []
+        # Collect the radii where we need to draw boundaries (using set to avoid duplicates)
+        boundary_radii = set()
 
         # Add boundary at each chart ring's outer edge
         for chart_num in range(1, self.chart_count + 1):
             ring_outer_key = f"chart{chart_num}_ring_outer"
             if ring_outer_key in renderer.radii:
-                boundary_radii.append(renderer.radii[ring_outer_key])
+                boundary_radii.add(renderer.radii[ring_outer_key])
 
         # Add boundary at zodiac ring inner edge (between outermost chart and zodiac)
         if "zodiac_ring_inner" in renderer.radii:
-            boundary_radii.append(renderer.radii["zodiac_ring_inner"])
+            boundary_radii.add(renderer.radii["zodiac_ring_inner"])
 
         # Draw circular boundaries
-        cx, cy = renderer.center
+        # Center coordinates account for any canvas offsets
+        cx = renderer.x_offset + renderer.center
+        cy = renderer.y_offset + renderer.center
         for radius in boundary_radii:
             dwg.add(
                 dwg.circle(

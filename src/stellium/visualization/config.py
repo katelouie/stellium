@@ -138,6 +138,55 @@ class ChartWheelConfig:
     show_degree_ticks: bool = False  # Show 1° tick marks on zodiac ring
     show_planet_ticks: bool = True  # Show colored planet position ticks
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # MULTIWHEEL GLYPH SIZING
+    # Glyph sizes and info stack distances for multiwheel charts.
+    # Keys are chart count (2, 3, 4). Values: glyph size string or None for default.
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    # Glyph sizes per wheel count (e.g., "24px" or None for theme default 32px)
+    multiwheel_glyph_sizes: dict[int, str | None] = field(
+        default_factory=lambda: {
+            2: None,  # Biwheel: use default 32px
+            3: "20px",  # Triwheel: 75%
+            4: "16px",  # Quadwheel: ~62%
+        }
+    )
+
+    # Info stack distance multiplier per wheel count (smaller = closer to glyph)
+    multiwheel_info_distances: dict[int, float] = field(
+        default_factory=lambda: {
+            2: 0.8,  # Biwheel: normal
+            3: 0.8,  # Triwheel: tighter
+            4: 0.8,  # Quadwheel: even tighter
+        }
+    )
+
+    # ═══════════════════════════════════════════════════════════════════════════
+    # MULTIWHEEL CANVAS SCALING
+    # Scale factors for base canvas size. More charts = larger canvas for clarity.
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    # Canvas scale factor per wheel count (multiplied against base_size)
+    multiwheel_canvas_scales: dict[int, float] = field(
+        default_factory=lambda: {
+            2: 1.0,  # Biwheel: same size as single chart
+            3: 1.15,  # Triwheel: 15% larger
+            4: 1.3,  # Quadwheel: 30% larger
+        }
+    )
+
+    def get_multiwheel_canvas_scale(self, chart_count: int) -> float:
+        """Get the canvas scale factor for a multiwheel with N charts.
+
+        Args:
+            chart_count: Number of charts (2, 3, or 4)
+
+        Returns:
+            Scale factor to multiply against base_size
+        """
+        return self.multiwheel_canvas_scales.get(chart_count, 1.0)
+
     def get_multiwheel_radii(self, chart_count: int) -> dict[str, float]:
         """Get the appropriate radii config for a multiwheel with N charts.
 

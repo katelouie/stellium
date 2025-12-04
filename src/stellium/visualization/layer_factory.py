@@ -397,33 +397,18 @@ class LayerFactory:
             )
         )
 
-        # Layer 2: Ring boundary lines (between chart rings and zodiac)
         chart_count = chart.chart_count
-        layers.append(RingBoundaryLayer(chart_count=chart_count))
 
-        # Determine glyph size and info stack distance based on chart count
-        # Biwheel (2): normal size, normal distance
-        # Triwheel (3): 85% size, tighter distance
-        # Quadwheel (4): 75% size, even tighter distance
-        glyph_size_map = {
-            2: None,  # Use default (32px)
-            3: "27px",  # ~85% of 32
-            4: "24px",  # 75% of 32
-        }
-        info_stack_distance_map = {
-            2: 0.8,  # Normal
-            3: 0.6,  # Tighter
-            4: 0.5,  # Even tighter
-        }
-        glyph_size_override = glyph_size_map.get(chart_count)
-        info_stack_dist = info_stack_distance_map.get(chart_count, 0.8)
+        # Get glyph size and info stack distance from config
+        glyph_size_override = self.config.wheel.multiwheel_glyph_sizes.get(chart_count)
+        info_stack_dist = self.config.wheel.multiwheel_info_distances.get(
+            chart_count, 0.8
+        )
 
-        # Layers 3-N: Chart rings from OUTER to INNER
-        # (outer charts rendered first so inner charts draw on top)
+        # Layers 2-N: House cusps for all chart rings (OUTER to INNER)
+        # These render first so fills don't cover other elements
         for wheel_idx in range(chart_count - 1, -1, -1):  # Reverse: outer to inner
             current_chart = chart.charts[wheel_idx]
-
-            # House cusps for this ring
             layers.append(
                 HouseCuspLayer(
                     house_system_name=current_chart.default_house_system,
@@ -431,6 +416,14 @@ class LayerFactory:
                     chart=current_chart,
                 )
             )
+
+        # Ring boundary lines (between chart rings and zodiac)
+        # Drawn AFTER house cusps so boundaries appear on top of fills
+        layers.append(RingBoundaryLayer(chart_count=chart_count))
+
+        # Angles and planets for each chart ring
+        for wheel_idx in range(chart_count - 1, -1, -1):  # Reverse: outer to inner
+            current_chart = chart.charts[wheel_idx]
 
             # Angles only for innermost chart (wheel_index=0)
             # Other charts typically use natal houses, so angles would be confusing
