@@ -2,6 +2,7 @@ import svgwrite
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.config import ChartVisualizationConfig
 from stellium.visualization.core import ChartRenderer
 from stellium.visualization.extended_canvas import (
@@ -27,7 +28,7 @@ class ChartComposer:
         self.layer_factory = LayerFactory(config)
 
     def compose(
-        self, chart: CalculatedChart | Comparison, to_string: bool = False
+        self, chart: CalculatedChart | Comparison | MultiWheel, to_string: bool = False
     ) -> str:
         """
         Compose and render a complete chart visualization.
@@ -90,7 +91,7 @@ class ChartComposer:
         return dwg
 
     def _create_renderer(
-        self, layout: LayoutResult, chart: CalculatedChart | Comparison
+        self, layout: LayoutResult, chart: CalculatedChart | Comparison | MultiWheel
     ) -> ChartRenderer:
         """Create renderer with pre-calculated radii."""
         renderer = ChartRenderer(
@@ -121,14 +122,19 @@ class ChartComposer:
             return style.get("background_color", "#FFFFFF")
         return "#FFFFFF"
 
-    def _get_rotation_angle(self, chart: CalculatedChart | Comparison) -> float:
+    def _get_rotation_angle(
+        self, chart: CalculatedChart | Comparison | MultiWheel
+    ) -> float:
         """
         Calculate chart rotation based on ASC.
 
         For single charts, rotates to put ASC on the left.
         For comparisons, uses chart1's ASC.
+        For multiwheels, uses the innermost chart's (chart[0]) ASC.
         """
-        if isinstance(chart, Comparison):
+        if isinstance(chart, MultiWheel):
+            chart = chart.charts[0]  # Use innermost chart
+        elif isinstance(chart, Comparison):
             chart = chart.chart1
 
         # Get the ASC angle

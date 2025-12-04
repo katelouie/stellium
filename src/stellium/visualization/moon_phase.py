@@ -102,17 +102,22 @@ class MoonPhaseLayer:
         Args:
             renderer: ChartRenderer instance
             dwg: SVG drawing object
-            chart: Calculated chart
+            chart: Calculated chart (or MultiWheel - uses innermost chart)
         """
+        from stellium.core.multiwheel import MultiWheel
+
+        # Handle MultiWheel: use innermost chart
+        actual_chart = chart.charts[0] if isinstance(chart, MultiWheel) else chart
+
         # Find the Moon
-        moon = chart.get_object("Moon")
+        moon = actual_chart.get_object("Moon")
         if not moon or not moon.phase:
             return
 
         # Auto-detect position if not explicitly set
         if self.position is None:
             # Smart default: bottom-right if aspects present, center if not
-            if chart.aspects and len(chart.aspects) > 0:
+            if actual_chart.aspects and len(actual_chart.aspects) > 0:
                 actual_position = "bottom-right"
             else:
                 actual_position = "center"

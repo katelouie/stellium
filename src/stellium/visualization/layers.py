@@ -87,6 +87,7 @@ class HeaderLayer:
     ) -> None:
         """Render the header band."""
         from stellium.core.comparison import Comparison
+        from stellium.core.multiwheel import MultiWheel
         from stellium.core.synthesis import SynthesisChart
 
         # Get theme colors
@@ -111,6 +112,19 @@ class HeaderLayer:
         # Dispatch to appropriate renderer based on chart type
         if isinstance(chart, SynthesisChart):
             self._render_synthesis_header(
+                dwg,
+                chart,
+                header_left,
+                header_right,
+                header_top,
+                header_width,
+                name_color,
+                info_color,
+                renderer,
+            )
+        elif isinstance(chart, MultiWheel):
+            # For multiwheel, render using innermost chart's info
+            self._render_multiwheel_header(
                 dwg,
                 chart,
                 header_left,
@@ -438,6 +452,73 @@ class HeaderLayer:
                 )
             )
 
+    def _render_multiwheel_header(
+        self,
+        dwg,
+        chart,  # MultiWheel
+        left: float,
+        right: float,
+        top: float,
+        width: float,
+        name_color: str,
+        info_color: str,
+        renderer,
+    ) -> None:
+        """Render header for multiwheel chart.
+
+        Shows labels for all charts in the multiwheel, similar to comparison header.
+        """
+        current_y = top
+        chart_count = chart.chart_count
+
+        # Build title from labels
+        if chart.labels:
+            labels_str = " • ".join(chart.labels)
+            title = f"MultiWheel: {labels_str}"
+        else:
+            title = f"MultiWheel ({chart_count} charts)"
+
+        dwg.add(
+            dwg.text(
+                title,
+                insert=(left, current_y),
+                text_anchor="start",
+                dominant_baseline="hanging",
+                font_size=self.name_font_size,
+                fill=name_color,
+                font_family=self.name_font_family,
+                font_weight=self.name_font_weight,
+                font_style=self.name_font_style,
+            )
+        )
+        current_y += int(float(self.name_font_size[:-2]) * 1.3)
+
+        # Show innermost chart's location and datetime as reference
+        inner_chart = chart.charts[0]
+        if inner_chart.location:
+            short_name, country = self._parse_location_name(inner_chart.location.name)
+            lat = inner_chart.location.latitude
+            lon = inner_chart.location.longitude
+            lat_dir = "N" if lat >= 0 else "S"
+            lon_dir = "E" if lon >= 0 else "W"
+            coord_str = f"{abs(lat):.{self.coord_precision}f}°{lat_dir}, {abs(lon):.{self.coord_precision}f}°{lon_dir}"
+
+            location_line = f"{short_name} ({coord_str})"
+            if country:
+                location_line += f", {country}"
+
+            dwg.add(
+                dwg.text(
+                    f"Base: {location_line}",
+                    insert=(left, current_y),
+                    text_anchor="start",
+                    dominant_baseline="hanging",
+                    font_size=self.details_font_size,
+                    fill=info_color,
+                    font_family=renderer.style["font_family_text"],
+                )
+            )
+
     def _render_synthesis_header(
         self,
         dwg,
@@ -713,36 +794,69 @@ class HouseCuspLayer:
     Renders a *single* set of house cusps and numbers.
 
     To draw multiple systems, add multiple layers.
+
+    For multiwheel charts, use wheel_index to specify which chart ring to render:
+    - wheel_index=0: Chart 1 (innermost)
+    - wheel_index=1: Chart 2
+    - wheel_index=2: Chart 3
+    - wheel_index=3: Chart 4 (outermost, just inside zodiac)
+
+    The layer will look up radii from the renderer using keys like:
+    - chart{N}_ring_outer, chart{N}_ring_inner (ring bounds)
+    - chart{N}_house_number (number placement)
+
+    And fill colors from theme:
+    - chart{N}_fill_1, chart{N}_fill_2 (alternating fills)
     """
 
     def __init__(
-        self, house_system_name: str, style_override: dict[str, Any] | None = None
+        self,
+        house_system_name: str,
+        style_override: dict[str, Any] | None = None,
+        wheel_index: int = 0,
+        chart: "CalculatedChart | None" = None,
     ) -> None:
         """
         Args:
-            house_system_name: The name of the system to pull from the CalculatedChart (eg "Pladicus")
+            house_system_name: The name of the system to pull from the CalculatedChart (eg "Placidus")
             style_override: Optional style changes for this specific layer (eg. {"line_color": "red})
+            wheel_index: Which chart ring to render (0=innermost, used for multiwheel)
+            chart: Optional chart to render (for multiwheel, each layer gets its own chart)
         """
         self.system_name = house_system_name
         self.style = style_override or {}
+        self.wheel_index = wheel_index
+        self._chart = (
+            chart  # Explicit chart for multiwheel; if None, derives from passed chart
+        )
 
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render house cusps and house numbers.
 
-        Handles both CalculatedChart and Comparison objects.
-        For Comparison, uses chart1 (inner wheel).
+        Handles CalculatedChart, Comparison, and MultiWheel objects.
+        Uses wheel_index to determine which chart ring to render and which radii to use.
         """
+        from stellium.core.multiwheel import MultiWheel
         from stellium.visualization.extended_canvas import _is_comparison
 
         style = renderer.style["houses"].copy()
         style.update(self.style)
 
-        # Handle Comparison vs CalculatedChart
-        if _is_comparison(chart):
-            # For comparison: use chart1 (inner wheel)
-            actual_chart = chart.chart1
+        # Determine the actual chart to render
+        if self._chart is not None:
+            # Explicit chart provided (multiwheel mode)
+            actual_chart = self._chart
+        elif isinstance(chart, MultiWheel):
+            # MultiWheel: use chart at wheel_index
+            if self.wheel_index < len(chart.charts):
+                actual_chart = chart.charts[self.wheel_index]
+            else:
+                return  # wheel_index out of range
+        elif _is_comparison(chart):
+            # Legacy Comparison: wheel_index 0 = chart1 (inner), 1 = chart2 (outer)
+            actual_chart = chart.chart1 if self.wheel_index == 0 else chart.chart2
         else:
-            # For single chart: use as-is
+            # Single chart: use as-is
             actual_chart = chart
 
         try:
@@ -752,6 +866,31 @@ class HouseCuspLayer:
                 f"Warning: House system '{self.system_name}' not found in chart data."
             )
             return
+
+        # Determine radii based on wheel_index
+        # For multiwheel: use chart{N}_ring_outer, chart{N}_ring_inner, chart{N}_house_number
+        # For single/legacy: fall back to zodiac_ring_inner, aspect_ring_inner, house_number_ring
+        chart_num = self.wheel_index + 1  # wheel_index 0 -> chart1, etc.
+        ring_outer_key = f"chart{chart_num}_ring_outer"
+        ring_inner_key = f"chart{chart_num}_ring_inner"
+        house_number_key = f"chart{chart_num}_house_number"
+
+        # Get radii with fallbacks for backward compatibility
+        ring_outer = renderer.radii.get(
+            ring_outer_key, renderer.radii.get("zodiac_ring_inner")
+        )
+        ring_inner = renderer.radii.get(
+            ring_inner_key, renderer.radii.get("aspect_ring_inner")
+        )
+        house_number_radius = renderer.radii.get(
+            house_number_key, renderer.radii.get("house_number_ring")
+        )
+
+        # Determine fill colors based on wheel_index
+        fill_1_key = f"chart{chart_num}_fill_1"
+        fill_2_key = f"chart{chart_num}_fill_2"
+        fill_color_1 = style.get(fill_1_key, style.get("fill_color_1", "#F5F5F5"))
+        fill_color_2 = style.get(fill_2_key, style.get("fill_color_2", "#FFFFFF"))
 
         # Draw alternating fill wedges FIRST (if enabled)
         if style.get("fill_alternate", False):
@@ -764,23 +903,16 @@ class HouseCuspLayer:
                     next_cusp_deg += 360
 
                 # Alternate between two fill colors
-                fill_color = (
-                    style["fill_color_1"] if i % 2 == 0 else style["fill_color_2"]
-                )
+                fill_color = fill_color_1 if i % 2 == 0 else fill_color_2
 
-                # Create a pie wedge path
-                # Start at center, go to inner radius at cusp_deg, arc to next_cusp, back to center
-                x_start, y_start = renderer.polar_to_cartesian(
-                    cusp_deg, renderer.radii["aspect_ring_inner"]
-                )
-                x_end, y_end = renderer.polar_to_cartesian(
-                    next_cusp_deg, renderer.radii["aspect_ring_inner"]
-                )
+                # Create a pie wedge path from ring_inner to ring_outer
+                x_start, y_start = renderer.polar_to_cartesian(cusp_deg, ring_inner)
+                x_end, y_end = renderer.polar_to_cartesian(next_cusp_deg, ring_inner)
                 x_outer_start, y_outer_start = renderer.polar_to_cartesian(
-                    cusp_deg, renderer.radii["zodiac_ring_inner"]
+                    cusp_deg, ring_outer
                 )
                 x_outer_end, y_outer_end = renderer.polar_to_cartesian(
-                    next_cusp_deg, renderer.radii["zodiac_ring_inner"]
+                    next_cusp_deg, ring_outer
                 )
 
                 # Determine if we need the large arc flag (for arcs > 180 degrees)
@@ -789,9 +921,11 @@ class HouseCuspLayer:
 
                 # Create path: outer arc + line + inner arc + line back
                 path_data = f"M {x_outer_start},{y_outer_start} "
-                path_data += f"A {renderer.radii['zodiac_ring_inner']},{renderer.radii['zodiac_ring_inner']} 0 {large_arc},0 {x_outer_end},{y_outer_end} "
+                path_data += f"A {ring_outer},{ring_outer} 0 {large_arc},0 {x_outer_end},{y_outer_end} "
                 path_data += f"L {x_end},{y_end} "
-                path_data += f"A {renderer.radii['aspect_ring_inner']},{renderer.radii['aspect_ring_inner']} 0 {large_arc},1 {x_start},{y_start} "
+                path_data += (
+                    f"A {ring_inner},{ring_inner} 0 {large_arc},1 {x_start},{y_start} "
+                )
                 path_data += "Z"
 
                 dwg.add(
@@ -805,13 +939,9 @@ class HouseCuspLayer:
         for i, cusp_deg in enumerate(house_cusps.cusps):
             house_num = i + 1
 
-            # Draw cusp line
-            x1, y1 = renderer.polar_to_cartesian(
-                cusp_deg, renderer.radii["zodiac_ring_inner"]
-            )
-            x2, y2 = renderer.polar_to_cartesian(
-                cusp_deg, renderer.radii["aspect_ring_inner"]
-            )
+            # Draw cusp line from ring_outer to ring_inner
+            x1, y1 = renderer.polar_to_cartesian(cusp_deg, ring_outer)
+            x2, y2 = renderer.polar_to_cartesian(cusp_deg, ring_inner)
 
             dwg.add(
                 dwg.line(
@@ -823,17 +953,14 @@ class HouseCuspLayer:
                 )
             )
 
-            # Draw house number
-            # find the midpoint angle of the house
+            # Draw house number at midpoint of house
             next_cusp_deg = house_cusps.cusps[(i + 1) % 12]
             if next_cusp_deg < cusp_deg:
                 next_cusp_deg += 360  # Handle 0-degree wrap
 
             mid_deg = (cusp_deg + next_cusp_deg) / 2.0
 
-            x_num, y_num = renderer.polar_to_cartesian(
-                mid_deg, renderer.radii["house_number_ring"]
-            )
+            x_num, y_num = renderer.polar_to_cartesian(mid_deg, house_number_radius)
 
             dwg.add(
                 dwg.text(
@@ -854,6 +981,11 @@ class OuterHouseCuspLayer:
 
     This draws house cusp lines and numbers outside the zodiac ring,
     with a distinct visual style from the inner chart's houses.
+
+    .. deprecated::
+        Use HouseCuspLayer(wheel_index=1) instead. This class renders outside
+        the zodiac ring (legacy biwheel style), while the new multiwheel system
+        renders all charts inside the zodiac ring.
     """
 
     def __init__(
@@ -947,31 +1079,68 @@ class OuterHouseCuspLayer:
 
 
 class AngleLayer:
-    """Renders the primary chart angles (ASC, MC, DSC, IC)"""
+    """Renders the primary chart angles (ASC, MC, DSC, IC).
 
-    def __init__(self, style_override: dict[str, Any] | None = None) -> None:
+    For multiwheel charts, use wheel_index to specify which chart's angles to render.
+    Typically only wheel_index=0 (innermost chart) has meaningful angles since
+    transit/progressed charts use the natal houses.
+    """
+
+    def __init__(
+        self,
+        style_override: dict[str, Any] | None = None,
+        wheel_index: int = 0,
+        chart: "CalculatedChart | None" = None,
+    ) -> None:
+        """
+        Args:
+            style_override: Style overrides for this layer.
+            wheel_index: Which chart's angles to render (0=innermost).
+            chart: Optional explicit chart (for multiwheel).
+        """
         self.style = style_override or {}
+        self.wheel_index = wheel_index
+        self._chart = chart
 
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render chart angles.
 
-        Handles both CalculatedChart and Comparison objects.
-        For Comparison, uses chart1 (inner wheel) angles.
+        Handles CalculatedChart, Comparison, and MultiWheel objects.
+        Uses wheel_index to determine which chart's angles to render.
         """
+        from stellium.core.multiwheel import MultiWheel
         from stellium.visualization.extended_canvas import _is_comparison
 
         style = renderer.style["angles"].copy()
         style.update(self.style)
 
-        # Handle Comparison vs CalculatedChart
-        if _is_comparison(chart):
-            # For comparison: use chart1 angles (inner wheel)
-            actual_chart = chart.chart1
+        # Determine the actual chart to render
+        if self._chart is not None:
+            actual_chart = self._chart
+        elif isinstance(chart, MultiWheel):
+            if self.wheel_index < len(chart.charts):
+                actual_chart = chart.charts[self.wheel_index]
+            else:
+                return
+        elif _is_comparison(chart):
+            actual_chart = chart.chart1 if self.wheel_index == 0 else chart.chart2
         else:
-            # For single chart: use as-is
             actual_chart = chart
 
         angles = actual_chart.get_angles()
+
+        # Determine radii based on wheel_index
+        chart_num = self.wheel_index + 1
+        ring_outer_key = f"chart{chart_num}_ring_outer"
+        ring_inner_key = f"chart{chart_num}_ring_inner"
+
+        # Get radii with fallbacks for backward compatibility
+        ring_outer = renderer.radii.get(
+            ring_outer_key, renderer.radii.get("zodiac_ring_inner")
+        )
+        ring_inner = renderer.radii.get(
+            ring_inner_key, renderer.radii.get("aspect_ring_inner")
+        )
 
         for angle in angles:
             if angle.name not in ANGLE_GLYPHS:
@@ -987,12 +1156,9 @@ class AngleLayer:
             )
 
             if angle.name in ("ASC", "MC", "DSC", "IC"):
-                x1, y1 = renderer.polar_to_cartesian(
-                    angle.longitude, renderer.radii["zodiac_ring_outer"]
-                )
-                x2, y2 = renderer.polar_to_cartesian(
-                    angle.longitude, renderer.radii["aspect_ring_inner"]
-                )
+                # Line spans from ring_outer to ring_inner
+                x1, y1 = renderer.polar_to_cartesian(angle.longitude, ring_outer)
+                x2, y2 = renderer.polar_to_cartesian(angle.longitude, ring_inner)
                 dwg.add(
                     dwg.line(
                         start=(x1, y1),
@@ -1002,9 +1168,11 @@ class AngleLayer:
                     )
                 )
 
-            # Draw angle glyph - positioned just inside the border with directional offset
-            base_radius = renderer.radii["zodiac_ring_inner"] + 10
-            x_glyph, y_glyph = renderer.polar_to_cartesian(angle.longitude, base_radius)
+            # Draw angle glyph - positioned just inside the ring outer edge
+            glyph_radius = ring_outer - 10
+            x_glyph, y_glyph = renderer.polar_to_cartesian(
+                angle.longitude, glyph_radius
+            )
 
             # Apply directional offset based on angle name
             offset = 8  # pixels to nudge
@@ -1032,7 +1200,13 @@ class AngleLayer:
 
 
 class OuterAngleLayer:
-    """Renders the outer wheel angles (for comparison charts)."""
+    """Renders the outer wheel angles (for comparison charts).
+
+    .. deprecated::
+        Use AngleLayer(wheel_index=1) instead. This class renders outside
+        the zodiac ring (legacy biwheel style), while the new multiwheel system
+        renders all charts inside the zodiac ring.
+    """
 
     def __init__(self, style_override: dict[str, Any] | None = None) -> None:
         self.style = style_override or {}
@@ -1130,7 +1304,19 @@ class OuterAngleLayer:
 
 
 class PlanetLayer:
-    """Renders a set of planets at a specific radius."""
+    """Renders a set of planets at a specific radius.
+
+    For multiwheel charts, use wheel_index to specify which chart ring to render:
+    - wheel_index=0: Chart 1 (innermost)
+    - wheel_index=1: Chart 2
+    - wheel_index=2: Chart 3
+    - wheel_index=3: Chart 4 (outermost, just inside zodiac)
+
+    The info_mode parameter controls how much detail to show:
+    - "full": Degree + sign glyph + minutes (default for single charts)
+    - "compact": Degree only, e.g. "15°" (good for multiwheel)
+    - "none": No info stack, glyph only
+    """
 
     def __init__(
         self,
@@ -1141,17 +1327,22 @@ class PlanetLayer:
         info_stack_direction: str = "inward",
         show_info_stack: bool = True,
         show_position_ticks: bool = False,
+        wheel_index: int = 0,
+        info_mode: str = "full",
     ) -> None:
         """
         Args:
             planet_set: The list of CelestialPosition objects to draw.
             radius_key: The key from renderer.radii to use (e.g., "planet_ring").
+                        For multiwheel, this is auto-derived from wheel_index if not specified.
             style_override: Style overrides for this layer.
-            use_outer_wheel_color: If True, use the theme's outer_wheel_planet_color.
+            use_outer_wheel_color: If True, use the theme's outer_wheel_planet_color (legacy).
             info_stack_direction: "inward" (toward center) or "outward" (away from center).
-            show_info_stack: If False, hide info stacks (glyph only).
+            show_info_stack: If False, hide info stacks (glyph only). Deprecated, use info_mode.
             show_position_ticks: If True, draw colored tick marks at true planet positions
                                  on the zodiac ring inner edge.
+            wheel_index: Which chart ring to render (0=innermost, used for multiwheel).
+            info_mode: "full" (degree+sign+minutes), "compact" (degree only), "none" (glyph only).
         """
         self.planets = planet_set
         self.radius_key = radius_key
@@ -1160,6 +1351,8 @@ class PlanetLayer:
         self.info_stack_direction = info_stack_direction
         self.show_info_stack = show_info_stack
         self.show_position_ticks = show_position_ticks
+        self.wheel_index = wheel_index
+        self.info_mode = info_mode
 
     def render(
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
@@ -1167,12 +1360,27 @@ class PlanetLayer:
         style = renderer.style["planets"].copy()
         style.update(self.style)
 
-        base_radius = renderer.radii[self.radius_key]
+        # Determine radius based on wheel_index or explicit radius_key
+        chart_num = self.wheel_index + 1
+        planet_ring_key = f"chart{chart_num}_planet_ring"
+
+        # Use multiwheel radius if available, otherwise fall back to legacy
+        if planet_ring_key in renderer.radii:
+            base_radius = renderer.radii[planet_ring_key]
+        else:
+            base_radius = renderer.radii.get(
+                self.radius_key, renderer.radii.get("planet_ring")
+            )
 
         # Calculate adjusted positions with collision detection
         adjusted_positions = self._calculate_adjusted_positions(
             self.planets, base_radius
         )
+
+        # Determine effective info mode (handle legacy show_info_stack)
+        effective_info_mode = self.info_mode
+        if not self.show_info_stack and self.info_mode == "full":
+            effective_info_mode = "none"  # Legacy compatibility
 
         # Draw all planets with their info columns
         for planet in self.planets:
@@ -1180,10 +1388,13 @@ class PlanetLayer:
             adjusted_long = adjusted_positions[planet]["longitude"]
             is_adjusted = adjusted_positions[planet]["adjusted"]
 
-            # Determine glyph color using planet glyph palette if available
-            # (moved up so we can use it for position ticks too)
-            if self.use_outer_wheel_color and "outer_wheel_planet_color" in style:
-                # Use outer wheel color for comparison charts
+            # Determine glyph color using wheel_index-based colors for multiwheel
+            chart_color_key = f"chart{chart_num}_color"
+            if chart_color_key in style:
+                # Use multiwheel chart-specific color
+                base_color = style[chart_color_key]
+            elif self.use_outer_wheel_color and "outer_wheel_planet_color" in style:
+                # Legacy: use outer wheel color for comparison charts
                 base_color = style["outer_wheel_planet_color"]
             elif renderer.planet_glyph_palette:
                 planet_palette = PlanetGlyphPalette(renderer.planet_glyph_palette)
@@ -1273,9 +1484,11 @@ class PlanetLayer:
                     )
                 )
 
-            # Draw Planet Info (Degrees, Sign, Minutes) - all at ADJUSTED longitude
-            # This creates a "column" of info that moves together with the glyph
-            if self.show_info_stack:
+            # Draw Planet Info based on info_mode
+            # - "full": Degree + Sign glyph + Minutes (3-row stack)
+            # - "compact": Degree only (single value, e.g., "15°")
+            # - "none": No info stack
+            if effective_info_mode != "none":
                 glyph_size_px = float(style["glyph_size"][:-2])
 
                 # Calculate radii for info rings based on direction
@@ -1290,7 +1503,7 @@ class PlanetLayer:
                     sign_radius = base_radius - (glyph_size_px * 1.2)
                     minutes_radius = base_radius - (glyph_size_px * 1.6)
 
-                # Degrees
+                # Degrees (shown in both "full" and "compact" modes)
                 deg_str = f"{int(planet.sign_degree)}°"
                 x_deg, y_deg = renderer.polar_to_cartesian(
                     adjusted_long, degrees_radius
@@ -1307,51 +1520,55 @@ class PlanetLayer:
                     )
                 )
 
-                # Sign glyph - with optional adaptive coloring
-                sign_glyph = ZODIAC_GLYPHS[int(planet.longitude // 30)]
-                sign_index = int(planet.longitude // 30)
-                x_sign, y_sign = renderer.polar_to_cartesian(adjusted_long, sign_radius)
-
-                # Use adaptive sign color if enabled
-                if renderer.color_sign_info and renderer.zodiac_palette:
-                    zodiac_pal = ZodiacPalette(renderer.zodiac_palette)
-                    sign_color = get_sign_info_color(
-                        sign_index,
-                        zodiac_pal,
-                        renderer.style["background_color"],
-                        min_contrast=4.5,
+                # Sign glyph and Minutes only in "full" mode
+                if effective_info_mode == "full":
+                    # Sign glyph - with optional adaptive coloring
+                    sign_glyph = ZODIAC_GLYPHS[int(planet.longitude // 30)]
+                    sign_index = int(planet.longitude // 30)
+                    x_sign, y_sign = renderer.polar_to_cartesian(
+                        adjusted_long, sign_radius
                     )
-                else:
-                    sign_color = style["info_color"]
 
-                dwg.add(
-                    dwg.text(
-                        sign_glyph,
-                        insert=(x_sign, y_sign),
-                        text_anchor="middle",
-                        dominant_baseline="central",
-                        font_size=style["info_size"],
-                        fill=sign_color,
-                        font_family=renderer.style["font_family_glyphs"],
-                    )
-                )
+                    # Use adaptive sign color if enabled
+                    if renderer.color_sign_info and renderer.zodiac_palette:
+                        zodiac_pal = ZodiacPalette(renderer.zodiac_palette)
+                        sign_color = get_sign_info_color(
+                            sign_index,
+                            zodiac_pal,
+                            renderer.style["background_color"],
+                            min_contrast=4.5,
+                        )
+                    else:
+                        sign_color = style["info_color"]
 
-                # Minutes
-                min_str = f"{int((planet.sign_degree % 1) * 60):02d}'"
-                x_min, y_min = renderer.polar_to_cartesian(
-                    adjusted_long, minutes_radius
-                )
-                dwg.add(
-                    dwg.text(
-                        min_str,
-                        insert=(x_min, y_min),
-                        text_anchor="middle",
-                        dominant_baseline="central",
-                        font_size=style["info_size"],
-                        fill=style["info_color"],
-                        font_family=renderer.style["font_family_text"],
+                    dwg.add(
+                        dwg.text(
+                            sign_glyph,
+                            insert=(x_sign, y_sign),
+                            text_anchor="middle",
+                            dominant_baseline="central",
+                            font_size=style["info_size"],
+                            fill=sign_color,
+                            font_family=renderer.style["font_family_glyphs"],
+                        )
                     )
-                )
+
+                    # Minutes
+                    min_str = f"{int((planet.sign_degree % 1) * 60):02d}'"
+                    x_min, y_min = renderer.polar_to_cartesian(
+                        adjusted_long, minutes_radius
+                    )
+                    dwg.add(
+                        dwg.text(
+                            min_str,
+                            insert=(x_min, y_min),
+                            text_anchor="middle",
+                            dominant_baseline="central",
+                            font_size=style["info_size"],
+                            fill=style["info_color"],
+                            font_family=renderer.style["font_family_text"],
+                        )
+                    )
 
     def _calculate_adjusted_positions(
         self, planets: list[CelestialPosition], base_radius: float

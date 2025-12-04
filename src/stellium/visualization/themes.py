@@ -200,6 +200,14 @@ def _get_classic_theme() -> dict[str, Any]:
             "fill_color_1": "#F5F5F5",
             "fill_color_2": "#FFFFFF",
             "secondary_color": "#3498DB",  # Blue for secondary house system overlay
+            "chart1_fill_1": "#F5F5F5",
+            "chart1_fill_2": "#FFFFFF",
+            "chart2_fill_1": "#E8F4FC",
+            "chart2_fill_2": "#F5FAFD",
+            "chart3_fill_1": "#E8F8EE",
+            "chart3_fill_2": "#F5FBF7",
+            "chart4_fill_1": "#F3EBF8",
+            "chart4_fill_2": "#FAF6FC",
         },
         "angles": {
             "line_color": "#555555",
@@ -220,6 +228,10 @@ def _get_classic_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#E74C3C",
             "outer_wheel_planet_color": "#4A90E2",  # Softer blue for outer wheel
+            "chart1_color": "#222222",
+            "chart2_color": "#4A90E2",
+            "chart3_color": "#27AE60",
+            "chart4_color": "#9B59B6",
         },
         "aspects": {
             **{
@@ -261,6 +273,14 @@ def _get_dark_theme() -> dict[str, Any]:
             "fill_color_1": "#252525",
             "fill_color_2": "#1E1E1E",
             "secondary_color": "#4ECDC4",  # Teal for secondary house system overlay
+            "chart1_fill_1": "#252525",
+            "chart1_fill_2": "#1E1E1E",
+            "chart2_fill_1": "#1E2A2A",
+            "chart2_fill_2": "#1A2525",
+            "chart3_fill_1": "#1E2A1E",
+            "chart3_fill_2": "#1A251A",
+            "chart4_fill_1": "#2A1E2A",
+            "chart4_fill_2": "#251A25",
         },
         "angles": {
             "line_color": "#AAAAAA",
@@ -281,6 +301,10 @@ def _get_dark_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#FF6B6B",
             "outer_wheel_planet_color": "#95E1D3",  # Cyan for outer wheel
+            "chart1_color": "#EEEEEE",
+            "chart2_color": "#95E1D3",
+            "chart3_color": "#98D982",
+            "chart4_color": "#D98CE3",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.DARK),
@@ -314,6 +338,14 @@ def _get_midnight_theme() -> dict[str, Any]:
             "fill_color_1": "#0E223D",
             "fill_color_2": "#0A1628",
             "secondary_color": "#87CEEB",  # Sky blue for secondary house system overlay
+            "chart1_fill_1": "#0E223D",
+            "chart1_fill_2": "#0A1628",
+            "chart2_fill_1": "#0E2835",
+            "chart2_fill_2": "#0A1E2A",
+            "chart3_fill_1": "#0E2D28",
+            "chart3_fill_2": "#0A2420",
+            "chart4_fill_1": "#1A1E35",
+            "chart4_fill_2": "#14182A",
         },
         "angles": {
             "line_color": "#E8E8E8",
@@ -334,6 +366,10 @@ def _get_midnight_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#FFA07A",
             "outer_wheel_planet_color": "#87CEEB",  # Sky blue for outer wheel
+            "chart1_color": "#FFD700",
+            "chart2_color": "#87CEEB",
+            "chart3_color": "#98FB98",
+            "chart4_color": "#DDA0DD",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.MIDNIGHT),
@@ -367,6 +403,14 @@ def _get_neon_theme() -> dict[str, Any]:
             "fill_color_1": "#1A0A1A",
             "fill_color_2": "#0D0D0D",
             "secondary_color": "#FF00FF",  # Magenta for secondary house system overlay
+            "chart1_fill_1": "#1A0A1A",
+            "chart1_fill_2": "#0D0D0D",
+            "chart2_fill_1": "#0A1A1A",
+            "chart2_fill_2": "#0D1515",
+            "chart3_fill_1": "#0A1A0A",
+            "chart3_fill_2": "#0D150D",
+            "chart4_fill_1": "#1A0A1A",
+            "chart4_fill_2": "#150D15",
         },
         "angles": {
             "line_color": "#FF00FF",
@@ -387,6 +431,10 @@ def _get_neon_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#FF1493",
             "outer_wheel_planet_color": "#39FF14",  # Neon green for outer wheel
+            "chart1_color": "#00FFFF",
+            "chart2_color": "#FF00FF",
+            "chart3_color": "#39FF14",
+            "chart4_color": "#FFFF00",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.NEON),
@@ -420,6 +468,14 @@ def _get_sepia_theme() -> dict[str, Any]:
             "fill_color_1": "#EDE4D0",
             "fill_color_2": "#F4ECD8",
             "secondary_color": "#8B4513",  # Saddle brown for secondary house system overlay
+            "chart1_fill_1": "#EDE4D0",
+            "chart1_fill_2": "#F4ECD8",
+            "chart2_fill_1": "#E8DCC8",
+            "chart2_fill_2": "#EFE5D2",
+            "chart3_fill_1": "#E4D8C4",
+            "chart3_fill_2": "#EBE2CE",
+            "chart4_fill_1": "#E0D4C0",
+            "chart4_fill_2": "#E7DECA",
         },
         "angles": {
             "line_color": "#5D4E37",
@@ -440,6 +496,10 @@ def _get_sepia_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#A0522D",
             "outer_wheel_planet_color": "#8B7355",  # Lighter brown for outer wheel
+            "chart1_color": "#4A3728",
+            "chart2_color": "#6B5744",
+            "chart3_color": "#8B7355",
+            "chart4_color": "#A68B6B",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.SEPIA),
@@ -473,6 +533,14 @@ def _get_pastel_theme() -> dict[str, Any]:
             "fill_color_1": "#F5F5F5",
             "fill_color_2": "#FAFAFA",
             "secondary_color": "#B4A7D6",  # Soft lavender for secondary house system overlay
+            "chart1_fill_1": "#F5F5F5",
+            "chart1_fill_2": "#FAFAFA",
+            "chart2_fill_1": "#E8F0F8",
+            "chart2_fill_2": "#F0F5FA",
+            "chart3_fill_1": "#E8F8E8",
+            "chart3_fill_2": "#F0FAF0",
+            "chart4_fill_1": "#F0E8F8",
+            "chart4_fill_2": "#F5F0FA",
         },
         "angles": {
             "line_color": "#888888",
@@ -493,6 +561,10 @@ def _get_pastel_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#FF9999",
             "outer_wheel_planet_color": "#B4A7D6",  # Soft lavender for outer wheel
+            "chart1_color": "#555555",
+            "chart2_color": "#7A9EC2",
+            "chart3_color": "#7AC27A",
+            "chart4_color": "#B4A7D6",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.PASTEL),
@@ -526,6 +598,14 @@ def _get_celestial_theme() -> dict[str, Any]:
             "fill_color_1": "#241540",
             "fill_color_2": "#1A0F2E",
             "secondary_color": "#DA70D6",  # Orchid for secondary house system overlay
+            "chart1_fill_1": "#241540",
+            "chart1_fill_2": "#1A0F2E",
+            "chart2_fill_1": "#1E1840",
+            "chart2_fill_2": "#161230",
+            "chart3_fill_1": "#182040",
+            "chart3_fill_2": "#121830",
+            "chart4_fill_1": "#281540",
+            "chart4_fill_2": "#1E1030",
         },
         "angles": {
             "line_color": "#FFD700",
@@ -546,6 +626,10 @@ def _get_celestial_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#FF69B4",
             "outer_wheel_planet_color": "#DA70D6",  # Orchid for outer wheel
+            "chart1_color": "#FFD700",
+            "chart2_color": "#DA70D6",
+            "chart3_color": "#87CEEB",
+            "chart4_color": "#98FB98",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.CELESTIAL),
@@ -584,6 +668,14 @@ def _get_viridis_theme() -> dict[str, Any]:
             "fill_color_1": "#222222",
             "fill_color_2": "#1C1C1C",
             "secondary_color": "#7AD151",  # Yellow-green for secondary house system overlay
+            "chart1_fill_1": "#222222",
+            "chart1_fill_2": "#1C1C1C",
+            "chart2_fill_1": "#1C2228",
+            "chart2_fill_2": "#181E22",
+            "chart3_fill_1": "#1C2822",
+            "chart3_fill_2": "#18221E",
+            "chart4_fill_1": "#22281C",
+            "chart4_fill_2": "#1E2218",
         },
         "angles": {
             "line_color": "#7AD151",
@@ -604,6 +696,10 @@ def _get_viridis_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#BBDF27",
             "outer_wheel_planet_color": "#414487",  # Purple for outer wheel (viridis low end)
+            "chart1_color": "#22A884",
+            "chart2_color": "#414487",
+            "chart3_color": "#7AD151",
+            "chart4_color": "#FDE724",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.VIRIDIS),
@@ -637,6 +733,14 @@ def _get_plasma_theme() -> dict[str, Any]:
             "fill_color_1": "#150A5F",
             "fill_color_2": "#0D0887",
             "secondary_color": "#E16462",  # Orange-red for secondary house system overlay
+            "chart1_fill_1": "#150A5F",
+            "chart1_fill_2": "#0D0887",
+            "chart2_fill_1": "#200A55",
+            "chart2_fill_2": "#180878",
+            "chart3_fill_1": "#2A0A4A",
+            "chart3_fill_2": "#220868",
+            "chart4_fill_1": "#350A40",
+            "chart4_fill_2": "#2C0858",
         },
         "angles": {
             "line_color": "#FCCE25",
@@ -657,6 +761,10 @@ def _get_plasma_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#F1844B",
             "outer_wheel_planet_color": "#B12A90",  # Deep magenta for outer wheel
+            "chart1_color": "#E16462",
+            "chart2_color": "#B12A90",
+            "chart3_color": "#FCA636",
+            "chart4_color": "#F0F921",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.PLASMA),
@@ -690,6 +798,14 @@ def _get_inferno_theme() -> dict[str, Any]:
             "fill_color_1": "#1B0C41",
             "fill_color_2": "#000004",
             "secondary_color": "#ED6925",  # Orange for secondary house system overlay
+            "chart1_fill_1": "#1B0C41",
+            "chart1_fill_2": "#000004",
+            "chart2_fill_1": "#280C35",
+            "chart2_fill_2": "#100004",
+            "chart3_fill_1": "#350C28",
+            "chart3_fill_2": "#200004",
+            "chart4_fill_1": "#420C1C",
+            "chart4_fill_2": "#300004",
         },
         "angles": {
             "line_color": "#F7D03C",
@@ -710,6 +826,10 @@ def _get_inferno_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#F7D03C",
             "outer_wheel_planet_color": "#A52C60",  # Deep red for outer wheel
+            "chart1_color": "#ED6925",
+            "chart2_color": "#A52C60",
+            "chart3_color": "#FB9A06",
+            "chart4_color": "#FCFFA4",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.INFERNO),
@@ -743,6 +863,14 @@ def _get_magma_theme() -> dict[str, Any]:
             "fill_color_1": "#0B0924",
             "fill_color_2": "#000004",
             "secondary_color": "#D3436E",  # Pink for secondary house system overlay
+            "chart1_fill_1": "#0B0924",
+            "chart1_fill_2": "#000004",
+            "chart2_fill_1": "#150920",
+            "chart2_fill_2": "#080004",
+            "chart3_fill_1": "#1F091C",
+            "chart3_fill_2": "#100004",
+            "chart4_fill_1": "#290918",
+            "chart4_fill_2": "#180004",
         },
         "angles": {
             "line_color": "#F8765C",
@@ -763,6 +891,10 @@ def _get_magma_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#F8765C",
             "outer_wheel_planet_color": "#7B2382",  # Deep purple for outer wheel
+            "chart1_color": "#D3436E",
+            "chart2_color": "#7B2382",
+            "chart3_color": "#EB5760",
+            "chart4_color": "#FCFDBF",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.MAGMA),
@@ -796,6 +928,14 @@ def _get_cividis_theme() -> dict[str, Any]:
             "fill_color_1": "#00306E",
             "fill_color_2": "#00204C",
             "secondary_color": "#E5C482",  # Gold/tan for secondary house system overlay
+            "chart1_fill_1": "#00306E",
+            "chart1_fill_2": "#00204C",
+            "chart2_fill_1": "#0A3868",
+            "chart2_fill_2": "#052850",
+            "chart3_fill_1": "#144062",
+            "chart3_fill_2": "#0A3054",
+            "chart4_fill_1": "#1E485C",
+            "chart4_fill_2": "#0F3858",
         },
         "angles": {
             "line_color": "#E5C482",
@@ -816,6 +956,10 @@ def _get_cividis_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#E5C482",
             "outer_wheel_planet_color": "#4E6B7C",  # Blue-grey for outer wheel
+            "chart1_color": "#9B9680",
+            "chart2_color": "#4E6B7C",
+            "chart3_color": "#C5AC83",
+            "chart4_color": "#FFEA46",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.CIVIDIS),
@@ -849,6 +993,14 @@ def _get_turbo_theme() -> dict[str, Any]:
             "fill_color_1": "#242438",
             "fill_color_2": "#1A1A2E",
             "secondary_color": "#1AE4B6",  # Turquoise for secondary house system overlay
+            "chart1_fill_1": "#242438",
+            "chart1_fill_2": "#1A1A2E",
+            "chart2_fill_1": "#1E2838",
+            "chart2_fill_2": "#161C2E",
+            "chart3_fill_1": "#1E3830",
+            "chart3_fill_2": "#162E26",
+            "chart4_fill_1": "#283820",
+            "chart4_fill_2": "#1E2E18",
         },
         "angles": {
             "line_color": "#FABA39",
@@ -869,6 +1021,10 @@ def _get_turbo_theme() -> dict[str, Any]:
             "info_size": "10px",
             "retro_color": "#F66B19",
             "outer_wheel_planet_color": "#1AE4B6",  # Turquoise for outer wheel
+            "chart1_color": "#72FE5E",
+            "chart2_color": "#4662D7",
+            "chart3_color": "#1AE4B6",
+            "chart4_color": "#FABA39",
         },
         "aspects": {
             **build_aspect_styles_from_palette(AspectPalette.TURBO),

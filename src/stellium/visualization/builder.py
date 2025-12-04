@@ -9,6 +9,7 @@ from typing import Any
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.composer import ChartComposer
 from stellium.visualization.config import (
     ChartVisualizationConfig,
@@ -45,7 +46,7 @@ class ChartDrawBuilder:
         comparison.draw("synastry.svg").preset_synastry().save()
     """
 
-    def __init__(self, chart: CalculatedChart | Comparison):
+    def __init__(self, chart: CalculatedChart | Comparison | MultiWheel):
         """
         Initialize the builder.
 
@@ -53,10 +54,11 @@ class ChartDrawBuilder:
         This ensures that config classes are the single source of truth for defaults.
 
         Args:
-            chart: The chart or comparison to visualize
+            chart: The chart, comparison, or multiwheel to visualize
         """
         self._chart = chart
         self._is_comparison = isinstance(chart, Comparison)
+        self._is_multiwheel = isinstance(chart, MultiWheel)
 
         # Core settings - None = use config defaults
         self._filename: str | None = None
@@ -679,8 +681,12 @@ class ChartDrawBuilder:
             ValueError: If required configuration is missing
         """
         # Determine chart type
-        is_comparison = self._is_comparison
-        chart_type = "biwheel" if is_comparison else "single"
+        if self._is_multiwheel:
+            chart_type = "multiwheel"
+        elif self._is_comparison:
+            chart_type = "biwheel"
+        else:
+            chart_type = "single"
 
         # Build wheel config kwargs (only user-specified values)
         wheel_kwargs = {"chart_type": chart_type}

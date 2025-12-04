@@ -8,7 +8,7 @@ from stellium.visualization.themes import ChartTheme
 class ChartWheelConfig:
     """Configuration for the main chart wheel."""
 
-    chart_type: Literal["single", "biwheel"]
+    chart_type: Literal["single", "biwheel", "multiwheel"]
 
     # House systems (None = use chart's default, "all" = all available, or list of names)
     house_systems: list[str] | str | None = None
@@ -25,6 +25,7 @@ class ChartWheelConfig:
     )
 
     # Radii for biwheel/comparison chart (keys match renderer.radii keys directly)
+    # NOTE: Legacy biwheel renders outer chart OUTSIDE zodiac - deprecated by multiwheel_2
     biwheel_radii: dict[str, float] = field(
         default_factory=lambda: {
             "zodiac_ring_outer": 0.38,
@@ -43,6 +44,89 @@ class ChartWheelConfig:
         }
     )
 
+    # ═══════════════════════════════════════════════════════════════════════════
+    # MULTIWHEEL RADII - All charts rendered INSIDE the zodiac ring
+    # Ring order: Center → Chart1 → Chart2 → ... → ChartN → Zodiac (outermost)
+    # ═══════════════════════════════════════════════════════════════════════════
+
+    # Radii for 2-chart multiwheel (replaces biwheel for inside-zodiac rendering)
+    multiwheel_2_radii: dict[str, float] = field(
+        default_factory=lambda: {
+            # Zodiac ring (outermost, same as single)
+            "zodiac_ring_outer": 0.50,
+            "zodiac_ring_inner": 0.42,
+            # Chart 2 ring (outer chart, just inside zodiac)
+            "chart2_ring_outer": 0.42,
+            "chart2_ring_inner": 0.30,
+            "chart2_planet_ring": 0.38,
+            "chart2_house_number": 0.32,
+            # Chart 1 ring (inner chart, closest to center)
+            "chart1_ring_outer": 0.30,
+            "chart1_ring_inner": 0.14,
+            "chart1_planet_ring": 0.26,
+            "chart1_house_number": 0.15,
+            # Aspect center (minimal - no lines drawn, but defines center space)
+            "aspect_ring_inner": 0.14,
+        }
+    )
+
+    # Radii for 3-chart multiwheel (triwheel)
+    multiwheel_3_radii: dict[str, float] = field(
+        default_factory=lambda: {
+            # Zodiac ring (outermost)
+            "zodiac_ring_outer": 0.50,
+            "zodiac_ring_inner": 0.44,
+            # Chart 3 ring (outermost chart)
+            "chart3_ring_outer": 0.44,
+            "chart3_ring_inner": 0.31,
+            "chart3_planet_ring": 0.39,
+            "chart3_house_number": 0.32,
+            # Chart 2 ring (middle chart)
+            "chart2_ring_outer": 0.31,
+            "chart2_ring_inner": 0.21,
+            "chart2_planet_ring": 0.28,
+            "chart2_house_number": 0.22,
+            # Chart 1 ring (innermost chart)
+            "chart1_ring_outer": 0.21,
+            "chart1_ring_inner": 0.08,
+            "chart1_planet_ring": 0.17,
+            "chart1_house_number": 0.09,
+            # Aspect center (minimal)
+            "aspect_ring_inner": 0.08,
+        }
+    )
+
+    # Radii for 4-chart multiwheel (quadwheel)
+    multiwheel_4_radii: dict[str, float] = field(
+        default_factory=lambda: {
+            # Zodiac ring (outermost)
+            "zodiac_ring_outer": 0.50,
+            "zodiac_ring_inner": 0.45,
+            # Chart 4 ring (outermost chart)
+            "chart4_ring_outer": 0.45,
+            "chart4_ring_inner": 0.37,
+            "chart4_planet_ring": 0.41,
+            "chart4_house_number": 0.38,
+            # Chart 3 ring
+            "chart3_ring_outer": 0.37,
+            "chart3_ring_inner": 0.29,
+            "chart3_planet_ring": 0.33,
+            "chart3_house_number": 0.30,
+            # Chart 2 ring
+            "chart2_ring_outer": 0.29,
+            "chart2_ring_inner": 0.21,
+            "chart2_planet_ring": 0.25,
+            "chart2_house_number": 0.22,
+            # Chart 1 ring (innermost chart)
+            "chart1_ring_outer": 0.21,
+            "chart1_ring_inner": 0.07,
+            "chart1_planet_ring": 0.12,
+            "chart1_house_number": 0.08,
+            # Aspect center (minimal)
+            "aspect_ring_inner": 0.07,
+        }
+    )
+
     # Visual theme
     theme: ChartTheme | None = None
     zodiac_palette: str | None = None
@@ -53,6 +137,27 @@ class ChartWheelConfig:
     # Tick marks
     show_degree_ticks: bool = False  # Show 1° tick marks on zodiac ring
     show_planet_ticks: bool = True  # Show colored planet position ticks
+
+    def get_multiwheel_radii(self, chart_count: int) -> dict[str, float]:
+        """Get the appropriate radii config for a multiwheel with N charts.
+
+        Args:
+            chart_count: Number of charts (2, 3, or 4)
+
+        Returns:
+            Radii dictionary for the specified chart count
+
+        Raises:
+            ValueError: If chart_count is not 2, 3, or 4
+        """
+        radii_map = {
+            2: self.multiwheel_2_radii,
+            3: self.multiwheel_3_radii,
+            4: self.multiwheel_4_radii,
+        }
+        if chart_count not in radii_map:
+            raise ValueError(f"MultiWheel supports 2-4 charts, got {chart_count}")
+        return radii_map[chart_count]
 
 
 @dataclass(frozen=True)

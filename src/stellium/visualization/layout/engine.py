@@ -3,6 +3,7 @@ from typing import Protocol
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.config import ChartVisualizationConfig, Dimensions
 from stellium.visualization.layout.measurer import ContentMeasurer
 
@@ -106,7 +107,9 @@ class LayoutEngine:
         self.config = config
         self.measurer = ContentMeasurer()
 
-    def calculate_layout(self, chart: CalculatedChart | Comparison) -> LayoutResult:
+    def calculate_layout(
+        self, chart: CalculatedChart | Comparison | MultiWheel
+    ) -> LayoutResult:
         """
         Calculate complete layout for the chart.
 
@@ -167,7 +170,7 @@ class LayoutEngine:
         )
 
     def _measure_all_elements(
-        self, chart: CalculatedChart | Comparison
+        self, chart: CalculatedChart | Comparison | MultiWheel
     ) -> dict[str, Dimensions]:
         """Measure all enabled elements."""
         measurements = {}
@@ -378,23 +381,28 @@ class LayoutEngine:
         return self.config.base_size
 
     def _calculate_wheel_radii(
-        self, wheel_size: int, chart: CalculatedChart | Comparison
+        self, wheel_size: int, chart: CalculatedChart | Comparison | MultiWheel
     ) -> dict[str, float]:
         """
         Calculate all wheel radii based on wheel size and chart type.
 
         Config keys now match renderer keys directly - no mapping needed!
+
+        For MultiWheel, uses the multiwheel_N_radii config based on chart count.
         """
         # Determine which radii config to use
+        is_multiwheel = isinstance(chart, MultiWheel)
         is_biwheel = (
             isinstance(chart, Comparison) or self.config.wheel.chart_type == "biwheel"
         )
 
-        multipliers = (
-            self.config.wheel.biwheel_radii
-            if is_biwheel
-            else self.config.wheel.single_radii
-        )
+        if is_multiwheel:
+            # Use multiwheel-specific radii based on chart count
+            multipliers = self.config.wheel.get_multiwheel_radii(chart.chart_count)
+        elif is_biwheel:
+            multipliers = self.config.wheel.biwheel_radii
+        else:
+            multipliers = self.config.wheel.single_radii
 
         # Direct multiplication - config keys = renderer keys!
         radii = {key: wheel_size * mult for key, mult in multipliers.items()}
@@ -406,7 +414,7 @@ class LayoutEngine:
 
         # Auto-select outer containment border based on table configuration
         # (Will be overridden in layer_factory based on actual show_info_stack value)
-        if is_biwheel:
+        if is_biwheel and not is_multiwheel:
             # Default to compact if tables with positions enabled (info stacks hidden)
             # Will be refined in layer_factory which has access to show_info_stack
             if self.config.tables.enabled and self.config.tables.show_positions:

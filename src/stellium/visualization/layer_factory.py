@@ -9,6 +9,7 @@ from typing import Protocol
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, UnknownTimeChart
+from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.config import ChartVisualizationConfig
 from stellium.visualization.layers import (
     AngleLayer,
@@ -51,7 +52,7 @@ class LayerFactory:
         self.config = config
 
     def create_layers(
-        self, chart: CalculatedChart | Comparison, layout: LayoutResult
+        self, chart: CalculatedChart | Comparison | MultiWheel, layout: LayoutResult
     ) -> list[IRenderLayer]:
         """
         Create all configured layers for this chart.
@@ -59,15 +60,20 @@ class LayerFactory:
         Layers are returned in render order (bottom to top).
 
         Args:
-            chart: The chart to visualize
+            chart: The chart to visualize (single, comparison, or multiwheel)
             layout: The calculated layout (for positioning info)
 
         Returns:
             List of layers ready to render
         """
+        is_multiwheel = isinstance(chart, MultiWheel)
         is_comparison = isinstance(chart, Comparison)
         is_unknown_time = isinstance(chart, UnknownTimeChart)
         header_enabled = self.config.header.enabled
+
+        # Dispatch to specialized method for multiwheel
+        if is_multiwheel:
+            return self._create_multiwheel_layers(chart, layout)
 
         layers = []
 
@@ -344,3 +350,123 @@ class LayerFactory:
             "line_dash": "3,2",  # Dashed to distinguish from primary
             "fill_alternate": False,  # No fills for overlay systems (only primary gets fills)
         }
+
+    def _create_multiwheel_layers(
+        self, chart: MultiWheel, layout: LayoutResult
+    ) -> list[IRenderLayer]:
+        """
+        Create layers for a multiwheel chart (2-4 charts rendered concentrically).
+
+        Layer order (bottom to top):
+        1. Header (if enabled)
+        2. Zodiac ring (outermost visual element)
+        3. Chart rings from outer to inner (each has houses, angles, planets)
+        4. Info corners
+
+        No aspect lines are drawn in multiwheel (too cluttered).
+
+        Args:
+            chart: The MultiWheel containing 2-4 charts
+            layout: The calculated layout
+
+        Returns:
+            List of layers ready to render
+        """
+        header_enabled = self.config.header.enabled
+        layers = []
+
+        # Layer 0: Header (if enabled)
+        if header_enabled:
+            layers.append(
+                HeaderLayer(
+                    height=self.config.header.height,
+                    name_font_size=self.config.header.name_font_size,
+                    name_font_family=self.config.header.name_font_family,
+                    details_font_size=self.config.header.details_font_size,
+                    line_height=self.config.header.line_height,
+                    coord_precision=self.config.header.coord_precision,
+                )
+            )
+
+        # Layer 1: Zodiac ring (always present, outermost)
+        layers.append(
+            ZodiacLayer(
+                palette=self.config.wheel.zodiac_palette or "grey",
+                show_degree_ticks=self.config.wheel.show_degree_ticks,
+            )
+        )
+
+        # Layers 2-N: Chart rings from OUTER to INNER
+        # (outer charts rendered first so inner charts draw on top)
+        chart_count = chart.chart_count
+        for wheel_idx in range(chart_count - 1, -1, -1):  # Reverse: outer to inner
+            current_chart = chart.charts[wheel_idx]
+
+            # House cusps for this ring
+            layers.append(
+                HouseCuspLayer(
+                    house_system_name=current_chart.default_house_system,
+                    wheel_index=wheel_idx,
+                    chart=current_chart,
+                )
+            )
+
+            # Angles only for innermost chart (wheel_index=0)
+            # Other charts typically use natal houses, so angles would be confusing
+            if wheel_idx == 0:
+                layers.append(
+                    AngleLayer(
+                        wheel_index=wheel_idx,
+                        chart=current_chart,
+                    )
+                )
+
+            # Planets for this ring
+            planets = [
+                p for p in current_chart.positions if self._is_planetary_object(p)
+            ]
+
+            # Use compact info mode for multiwheel (less clutter)
+            # Innermost chart gets slightly more room, outermost gets compact
+            info_mode = "compact" if chart_count > 2 else "full"
+            if wheel_idx > 0:
+                info_mode = "compact"  # Always compact for non-innermost
+
+            layers.append(
+                PlanetLayer(
+                    planet_set=planets,
+                    wheel_index=wheel_idx,
+                    info_mode=info_mode,
+                    show_position_ticks=self.config.wheel.show_planet_ticks,
+                )
+            )
+
+        # No AspectLayer for multiwheel - too cluttered
+        # Users should use an aspectarian table instead
+
+        # Layer N: Info corners (using innermost chart for data)
+        if self.config.corners.chart_info:
+            layers.append(
+                ChartInfoLayer(
+                    position=self.config.corners.chart_info_position,
+                    header_enabled=header_enabled,
+                )
+            )
+
+        # Moon phase for innermost chart (if enabled)
+        if self.config.corners.moon_phase:
+            moon_style = {}
+            if self.config.corners.moon_phase_size is not None:
+                moon_style["size"] = self.config.corners.moon_phase_size
+            if self.config.corners.moon_phase_label_size is not None:
+                moon_style["label_size"] = self.config.corners.moon_phase_label_size
+
+            layers.append(
+                MoonPhaseLayer(
+                    position=self.config.corners.moon_phase_position,
+                    show_label=self.config.corners.moon_phase_show_label,
+                    style_override=moon_style if moon_style else None,
+                )
+            )
+
+        return layers
