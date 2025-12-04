@@ -1,0 +1,211 @@
+# MultiWheel colors to inject into each theme
+# Format: theme_name -> section -> key -> value
+# Run with: python scripts/inject_theme_colors.py
+
+classic:
+  houses:
+    chart1_fill_1: "#F5F5F5"
+    chart1_fill_2: "#FFFFFF"
+    chart2_fill_1: "#E8F4FC"  # Light blue tint
+    chart2_fill_2: "#F5FAFD"
+    chart3_fill_1: "#E8F8EE"  # Light green tint
+    chart3_fill_2: "#F5FBF7"
+    chart4_fill_1: "#F3EBF8"  # Light purple tint
+    chart4_fill_2: "#FAF6FC"
+  planets:
+    chart1_color: "#222222"  # Same as glyph_color
+    chart2_color: "#4A90E2"  # Blue
+    chart3_color: "#27AE60"  # Green
+    chart4_color: "#9B59B6"  # Purple
+
+dark:
+  houses:
+    chart1_fill_1: "#252525"
+    chart1_fill_2: "#1E1E1E"
+    chart2_fill_1: "#1E2A2A"  # Teal tint
+    chart2_fill_2: "#1A2525"
+    chart3_fill_1: "#1E2A1E"  # Green tint
+    chart3_fill_2: "#1A251A"
+    chart4_fill_1: "#2A1E2A"  # Purple tint
+    chart4_fill_2: "#251A25"
+  planets:
+    chart1_color: "#EEEEEE"
+    chart2_color: "#95E1D3"  # Cyan
+    chart3_color: "#98D982"  # Light green
+    chart4_color: "#D98CE3"  # Light purple
+
+midnight:
+  houses:
+    chart1_fill_1: "#0E223D"
+    chart1_fill_2: "#0A1628"
+    chart2_fill_1: "#0E2835"  # Sky blue tint
+    chart2_fill_2: "#0A1E2A"
+    chart3_fill_1: "#0E2D28"  # Teal tint
+    chart3_fill_2: "#0A2420"
+    chart4_fill_1: "#1A1E35"  # Lavender tint
+    chart4_fill_2: "#14182A"
+  planets:
+    chart1_color: "#FFD700"  # Gold
+    chart2_color: "#87CEEB"  # Sky blue
+    chart3_color: "#98FB98"  # Pale green
+    chart4_color: "#DDA0DD"  # Plum
+
+neon:
+  houses:
+    chart1_fill_1: "#1A0A1A"
+    chart1_fill_2: "#0D0D0D"
+    chart2_fill_1: "#0A1A1A"  # Cyan tint
+    chart2_fill_2: "#0D1515"
+    chart3_fill_1: "#0A1A0A"  # Green tint
+    chart3_fill_2: "#0D150D"
+    chart4_fill_1: "#1A0A1A"  # Magenta tint
+    chart4_fill_2: "#150D15"
+  planets:
+    chart1_color: "#00FFFF"  # Cyan
+    chart2_color: "#FF00FF"  # Magenta
+    chart3_color: "#39FF14"  # Neon green
+    chart4_color: "#FFFF00"  # Yellow
+
+sepia:
+  houses:
+    chart1_fill_1: "#EDE4D0"
+    chart1_fill_2: "#F4ECD8"
+    chart2_fill_1: "#E8DCC8"  # Slightly darker
+    chart2_fill_2: "#EFE5D2"
+    chart3_fill_1: "#E4D8C4"  # Even warmer
+    chart3_fill_2: "#EBE2CE"
+    chart4_fill_1: "#E0D4C0"  # Warmest
+    chart4_fill_2: "#E7DECA"
+  planets:
+    chart1_color: "#4A3728"
+    chart2_color: "#6B5744"  # Lighter brown
+    chart3_color: "#8B7355"  # Even lighter
+    chart4_color: "#A68B6B"  # Lightest
+
+pastel:
+  houses:
+    chart1_fill_1: "#F5F5F5"
+    chart1_fill_2: "#FAFAFA"
+    chart2_fill_1: "#E8F0F8"  # Light blue
+    chart2_fill_2: "#F0F5FA"
+    chart3_fill_1: "#E8F8E8"  # Light green
+    chart3_fill_2: "#F0FAF0"
+    chart4_fill_1: "#F0E8F8"  # Light lavender
+    chart4_fill_2: "#F5F0FA"
+  planets:
+    chart1_color: "#555555"
+    chart2_color: "#7A9EC2"  # Soft blue
+    chart3_color: "#7AC27A"  # Soft green
+    chart4_color: "#B4A7D6"  # Soft lavender
+
+celestial:
+  houses:
+    chart1_fill_1: "#241540"
+    chart1_fill_2: "#1A0F2E"
+    chart2_fill_1: "#1E1840"  # Blue-purple tint
+    chart2_fill_2: "#161230"
+    chart3_fill_1: "#182040"  # Deep blue tint
+    chart3_fill_2: "#121830"
+    chart4_fill_1: "#281540"  # Pink-purple tint
+    chart4_fill_2: "#1E1030"
+  planets:
+    chart1_color: "#FFD700"  # Gold
+    chart2_color: "#DA70D6"  # Orchid
+    chart3_color: "#87CEEB"  # Sky blue
+    chart4_color: "#98FB98"  # Pale green
+
+viridis:
+  houses:
+    chart1_fill_1: "#222222"
+    chart1_fill_2: "#1C1C1C"
+    chart2_fill_1: "#1C2228"  # Blue-green tint
+    chart2_fill_2: "#181E22"
+    chart3_fill_1: "#1C2822"  # Green tint
+    chart3_fill_2: "#18221E"
+    chart4_fill_1: "#22281C"  # Yellow-green tint
+    chart4_fill_2: "#1E2218"
+  planets:
+    chart1_color: "#22A884"  # Teal
+    chart2_color: "#414487"  # Purple
+    chart3_color: "#7AD151"  # Yellow-green
+    chart4_color: "#FDE724"  # Yellow
+
+plasma:
+  houses:
+    chart1_fill_1: "#150A5F"
+    chart1_fill_2: "#0D0887"
+    chart2_fill_1: "#200A55"  # More purple
+    chart2_fill_2: "#180878"
+    chart3_fill_1: "#2A0A4A"  # Magenta tint
+    chart3_fill_2: "#220868"
+    chart4_fill_1: "#350A40"  # Orange-red tint
+    chart4_fill_2: "#2C0858"
+  planets:
+    chart1_color: "#E16462"  # Salmon
+    chart2_color: "#B12A90"  # Magenta
+    chart3_color: "#FCA636"  # Orange
+    chart4_color: "#F0F921"  # Yellow
+
+inferno:
+  houses:
+    chart1_fill_1: "#1B0C41"
+    chart1_fill_2: "#000004"
+    chart2_fill_1: "#280C35"  # Purple-red tint
+    chart2_fill_2: "#100004"
+    chart3_fill_1: "#350C28"  # Red tint
+    chart3_fill_2: "#200004"
+    chart4_fill_1: "#420C1C"  # Orange-red tint
+    chart4_fill_2: "#300004"
+  planets:
+    chart1_color: "#ED6925"  # Orange
+    chart2_color: "#A52C60"  # Deep red
+    chart3_color: "#FB9A06"  # Bright orange
+    chart4_color: "#FCFFA4"  # Yellow-white
+
+magma:
+  houses:
+    chart1_fill_1: "#0B0924"
+    chart1_fill_2: "#000004"
+    chart2_fill_1: "#150920"  # Purple tint
+    chart2_fill_2: "#080004"
+    chart3_fill_1: "#1F091C"  # Pink tint
+    chart3_fill_2: "#100004"
+    chart4_fill_1: "#290918"  # Salmon tint
+    chart4_fill_2: "#180004"
+  planets:
+    chart1_color: "#D3436E"  # Pink
+    chart2_color: "#7B2382"  # Purple
+    chart3_color: "#EB5760"  # Salmon
+    chart4_color: "#FCFDBF"  # Cream
+
+cividis:
+  houses:
+    chart1_fill_1: "#00306E"
+    chart1_fill_2: "#00204C"
+    chart2_fill_1: "#0A3868"  # Slightly lighter
+    chart2_fill_2: "#052850"
+    chart3_fill_1: "#144062"  # Even lighter
+    chart3_fill_2: "#0A3054"
+    chart4_fill_1: "#1E485C"  # Grey-blue tint
+    chart4_fill_2: "#0F3858"
+  planets:
+    chart1_color: "#9B9680"  # Grey-tan
+    chart2_color: "#4E6B7C"  # Blue-grey
+    chart3_color: "#C5AC83"  # Tan
+    chart4_color: "#FFEA46"  # Yellow
+
+turbo:
+  houses:
+    chart1_fill_1: "#242438"
+    chart1_fill_2: "#1A1A2E"
+    chart2_fill_1: "#1E2838"  # Blue tint
+    chart2_fill_2: "#161C2E"
+    chart3_fill_1: "#1E3830"  # Teal tint
+    chart3_fill_2: "#162E26"
+    chart4_fill_1: "#283820"  # Green tint
+    chart4_fill_2: "#1E2E18"
+  planets:
+    chart1_color: "#72FE5E"  # Bright green
+    chart2_color: "#4662D7"  # Blue
+    chart3_color: "#1AE4B6"  # Turquoise
+    chart4_color: "#FABA39"  # Orange-yellow
