@@ -57,13 +57,13 @@ class ChartWheelConfig:
             "zodiac_ring_inner": 0.42,
             # Chart 2 ring (outer chart, just inside zodiac)
             "chart2_ring_outer": 0.42,
-            "chart2_ring_inner": 0.30,
+            "chart2_ring_inner": 0.28,
             "chart2_planet_ring": 0.38,
-            "chart2_house_number": 0.32,
+            "chart2_house_number": 0.29,
             # Chart 1 ring (inner chart, closest to center)
-            "chart1_ring_outer": 0.30,
+            "chart1_ring_outer": 0.28,
             "chart1_ring_inner": 0.14,
-            "chart1_planet_ring": 0.26,
+            "chart1_planet_ring": 0.24,
             "chart1_house_number": 0.15,
             # Aspect center (minimal - no lines drawn, but defines center space)
             "aspect_ring_inner": 0.14,
@@ -78,50 +78,51 @@ class ChartWheelConfig:
             "zodiac_ring_inner": 0.44,
             # Chart 3 ring (outermost chart)
             "chart3_ring_outer": 0.44,
-            "chart3_ring_inner": 0.31,
-            "chart3_planet_ring": 0.39,
-            "chart3_house_number": 0.32,
+            "chart3_ring_inner": 0.34,
+            "chart3_planet_ring": 0.41,
+            "chart3_house_number": 0.35,
             # Chart 2 ring (middle chart)
-            "chart2_ring_outer": 0.31,
-            "chart2_ring_inner": 0.21,
-            "chart2_planet_ring": 0.28,
-            "chart2_house_number": 0.22,
+            "chart2_ring_outer": 0.34,
+            "chart2_ring_inner": 0.23,
+            "chart2_planet_ring": 0.30,
+            "chart2_house_number": 0.24,
             # Chart 1 ring (innermost chart)
-            "chart1_ring_outer": 0.21,
+            "chart1_ring_outer": 0.23,
             "chart1_ring_inner": 0.08,
-            "chart1_planet_ring": 0.17,
-            "chart1_house_number": 0.09,
+            "chart1_planet_ring": 0.19,
+            "chart1_house_number": 0.11,
             # Aspect center (minimal)
             "aspect_ring_inner": 0.08,
         }
     )
 
     # Radii for 4-chart multiwheel (quadwheel)
+    # Equal bands for charts 2/3/4 (0.09 each), slightly larger for chart1 (0.11)
     multiwheel_4_radii: dict[str, float] = field(
         default_factory=lambda: {
             # Zodiac ring (outermost)
             "zodiac_ring_outer": 0.50,
             "zodiac_ring_inner": 0.45,
-            # Chart 4 ring (outermost chart)
+            # Chart 4 ring (outermost chart) - width 0.09
             "chart4_ring_outer": 0.45,
-            "chart4_ring_inner": 0.37,
-            "chart4_planet_ring": 0.41,
-            "chart4_house_number": 0.38,
-            # Chart 3 ring
-            "chart3_ring_outer": 0.37,
-            "chart3_ring_inner": 0.29,
-            "chart3_planet_ring": 0.33,
-            "chart3_house_number": 0.30,
-            # Chart 2 ring
-            "chart2_ring_outer": 0.29,
-            "chart2_ring_inner": 0.21,
+            "chart4_ring_inner": 0.36,
+            "chart4_planet_ring": 0.43,
+            "chart4_house_number": 0.37,
+            # Chart 3 ring - width 0.09
+            "chart3_ring_outer": 0.36,
+            "chart3_ring_inner": 0.27,
+            "chart3_planet_ring": 0.34,
+            "chart3_house_number": 0.28,
+            # Chart 2 ring - width 0.09
+            "chart2_ring_outer": 0.27,
+            "chart2_ring_inner": 0.18,
             "chart2_planet_ring": 0.25,
-            "chart2_house_number": 0.22,
-            # Chart 1 ring (innermost chart)
-            "chart1_ring_outer": 0.21,
+            "chart2_house_number": 0.19,
+            # Chart 1 ring (innermost chart) - width 0.11 (slightly larger)
+            "chart1_ring_outer": 0.18,
             "chart1_ring_inner": 0.07,
-            "chart1_planet_ring": 0.12,
-            "chart1_house_number": 0.08,
+            "chart1_planet_ring": 0.16,
+            "chart1_house_number": 0.09,
             # Aspect center (minimal)
             "aspect_ring_inner": 0.07,
         }
@@ -148,8 +149,8 @@ class ChartWheelConfig:
     multiwheel_glyph_sizes: dict[int, str | None] = field(
         default_factory=lambda: {
             2: None,  # Biwheel: use default 32px
-            3: "20px",  # Triwheel: 75%
-            4: "16px",  # Quadwheel: ~62%
+            3: "22px",  # Triwheel: 75%
+            4: "20px",  # Quadwheel: ~62%
         }
     )
 

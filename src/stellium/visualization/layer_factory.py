@@ -21,6 +21,7 @@ from stellium.visualization.layers import (
     HeaderLayer,
     HouseCuspLayer,
     MoonRangeLayer,
+    MultiWheelAspectLayer,
     OuterAngleLayer,
     OuterBorderLayer,
     OuterHouseCuspLayer,
@@ -425,26 +426,24 @@ class LayerFactory:
         for wheel_idx in range(chart_count - 1, -1, -1):  # Reverse: outer to inner
             current_chart = chart.charts[wheel_idx]
 
-            # Angles only for innermost chart (wheel_index=0)
-            # Other charts typically use natal houses, so angles would be confusing
-            if wheel_idx == 0:
-                layers.append(
-                    AngleLayer(
-                        wheel_index=wheel_idx,
-                        chart=current_chart,
-                    )
+            # Draw angles for all charts in multiwheel
+            # Each chart shows its own ASC/MC/DSC/IC in its ring
+            layers.append(
+                AngleLayer(
+                    wheel_index=wheel_idx,
+                    chart=current_chart,
                 )
+            )
 
             # Planets for this ring
             planets = [
                 p for p in current_chart.positions if self._is_planetary_object(p)
             ]
 
-            # Use compact info mode for multiwheel (less clutter)
-            # Innermost chart gets slightly more room, outermost gets compact
-            info_mode = "compact" if chart_count > 2 else "full"
-            if wheel_idx > 0:
-                info_mode = "compact"  # Always compact for non-innermost
+            # Use no_sign info mode for all multiwheel charts
+            # Sign is already visible from zodiac position, so glyph is redundant
+            # This gives us degree + minutes in a tighter 2-row stack
+            info_mode = "no_sign"
 
             layers.append(
                 PlanetLayer(
@@ -457,8 +456,10 @@ class LayerFactory:
                 )
             )
 
-        # No AspectLayer for multiwheel - too cluttered
-        # Users should use an aspectarian table instead
+        # Cross-chart aspects for 2-chart multiwheels only
+        # For 3-4 charts, it's too cluttered - use aspectarian table instead
+        if chart_count == 2 and chart.cross_aspects:
+            layers.append(MultiWheelAspectLayer())
 
         # Layer N: Info corners (using innermost chart for data)
         if self.config.corners.chart_info:

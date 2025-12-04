@@ -14,22 +14,24 @@ from pathlib import Path
 from stellium import ChartBuilder, MultiWheelBuilder
 
 # Output directory
-OUTPUT_DIR = Path(__file__).parent
+SCRIPT_DIR = Path(__file__).resolve().parent
+OUTPUT_DIR = SCRIPT_DIR / "multiwheel"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 
 def example_01_biwheel_basic():
-    """Basic 2-chart multiwheel: Natal + Transit."""
-    print("Example 01: Basic biwheel (natal + transit)")
+    """Basic 2-chart multiwheel: Natal + Transit with cross-chart aspects."""
+    print("Example 01: Basic biwheel (natal + transit) with cross-chart aspects")
 
     # Create charts
     natal = ChartBuilder.from_notable("Albert Einstein").calculate()
     transit = ChartBuilder.from_notable("Nikola Tesla").calculate()
 
-    # Build multiwheel
+    # Build multiwheel with cross-chart aspects
     mw = (
         MultiWheelBuilder.from_charts([natal, transit])
         .with_labels(["Einstein (Natal)", "Tesla (Transit)"])
+        .with_cross_aspects()  # Enable cross-chart aspect calculation and display
         .calculate()
     )
 
@@ -40,8 +42,8 @@ def example_01_biwheel_basic():
 
 
 def example_02_biwheel_themed():
-    """Biwheel with midnight theme."""
-    print("Example 02: Biwheel with midnight theme")
+    """Biwheel with midnight theme and cross-chart aspects."""
+    print("Example 02: Biwheel with midnight theme and cross-chart aspects")
 
     natal = ChartBuilder.from_notable("Marie Curie").calculate()
     transit = ChartBuilder.from_notable("Ada Lovelace").calculate()
@@ -49,6 +51,7 @@ def example_02_biwheel_themed():
     mw = (
         MultiWheelBuilder.from_charts([natal, transit])
         .with_labels(["Curie", "Lovelace"])
+        .with_cross_aspects()
         .calculate()
     )
 

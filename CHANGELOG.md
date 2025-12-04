@@ -50,6 +50,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Triwheel (3 charts): 85% glyph size (27px), tighter info distance (0.6)
   - Quadwheel (4 charts): 75% glyph size (24px), even tighter info distance (0.5)
 
+- **Cross-chart aspects for biwheels**: 2-chart multiwheels now display cross-chart aspects in the center
+  - Uses existing `CrossChartAspectEngine` for aspect calculation
+  - Enable via `MultiWheelBuilder.from_charts([...]).with_cross_aspects().calculate()`
+  - Tri/quad wheels omit aspect lines (too cluttered) - use aspectarian table instead
+  - New `MultiWheelAspectLayer` handles rendering
+
+- **New `info_mode="no_sign"`** for PlanetLayer: Shows degree + minutes without sign glyph (e.g., "15°32'")
+  - Useful for multiwheels where sign is already visible from zodiac position
+  - Tighter 2-row stack (degree + minutes) vs 3-row (degree + sign + minutes)
+  - All multiwheel charts now use `no_sign` mode by default
+
+- **AngleLayer degree display**: ASC/MC/DSC/IC now show their degree position (e.g., "15°32'")
+  - Degree text appears on opposite side of angle label for visual balance
+  - ASC label nudged up, degree nudged down (and vice versa for each angle)
+
+- **Angles on all multiwheel charts**: All charts in a multiwheel now display their angles
+  - Previously only innermost chart showed ASC/MC/DSC/IC
+  - Now each ring shows its own angles, useful for seeing transit/progressed angles vs natal houses
+
+- **Improved multiwheel headers**: Headers now show detailed info for each chart
+  - Biwheels: Side-by-side layout with name, location, date/time for each chart
+  - Tri/quad wheels: Compact horizontal columns with label, location, date/time
+  - Times now included in tri/quad wheel headers
+
+- **Equalized quadwheel radii**: Chart rings 2/3/4 now have equal width (0.09), with chart 1 slightly larger (0.11)
+
 ### Changed
 
 ### Fixed

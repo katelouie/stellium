@@ -466,58 +466,165 @@ class HeaderLayer:
     ) -> None:
         """Render header for multiwheel chart.
 
-        Shows labels for all charts in the multiwheel, similar to comparison header.
+        For 2 charts: Side-by-side layout like comparison charts
+        For 3-4 charts: Horizontal compact layout with all chart info
+        """
+        chart_count = chart.chart_count
+
+        if chart_count == 2:
+            # Use side-by-side layout like comparison charts
+            col_width = width / 2
+            right_col_left = left + col_width
+
+            # Left column: chart1 (inner wheel)
+            self._render_chart_column(
+                dwg,
+                chart.charts[0],
+                left,
+                left + col_width - 10,
+                top,
+                "start",
+                name_color,
+                info_color,
+                renderer,
+            )
+
+            # Right column: chart2 (outer wheel) - right aligned
+            self._render_chart_column(
+                dwg,
+                chart.charts[1],
+                right_col_left,
+                right,
+                top,
+                "end",
+                name_color,
+                info_color,
+                renderer,
+            )
+        else:
+            # For 3-4 charts: compact horizontal layout
+            self._render_multiwheel_compact_header(
+                dwg,
+                chart,
+                left,
+                right,
+                top,
+                width,
+                name_color,
+                info_color,
+                renderer,
+            )
+
+    def _render_multiwheel_compact_header(
+        self,
+        dwg,
+        chart,  # MultiWheel
+        left: float,
+        right: float,
+        top: float,
+        width: float,
+        name_color: str,
+        info_color: str,
+        renderer,
+    ) -> None:
+        """Render compact header for 3-4 chart multiwheels.
+
+        Shows each chart's label and date in a horizontal row.
         """
         current_y = top
         chart_count = chart.chart_count
 
-        # Build title from labels
-        if chart.labels:
-            labels_str = " • ".join(chart.labels)
-            title = f"MultiWheel: {labels_str}"
-        else:
-            title = f"MultiWheel ({chart_count} charts)"
+        # Calculate column width for each chart
+        col_width = width / chart_count
+        small_font_size = "11px"
 
-        dwg.add(
-            dwg.text(
-                title,
-                insert=(left, current_y),
-                text_anchor="start",
-                dominant_baseline="hanging",
-                font_size=self.name_font_size,
-                fill=name_color,
-                font_family=self.name_font_family,
-                font_weight=self.name_font_weight,
-                font_style=self.name_font_style,
-            )
-        )
-        current_y += int(float(self.name_font_size[:-2]) * 1.3)
+        for i, inner_chart in enumerate(chart.charts):
+            col_left = left + (i * col_width)
+            col_center = col_left + (col_width / 2)
 
-        # Show innermost chart's location and datetime as reference
-        inner_chart = chart.charts[0]
-        if inner_chart.location:
-            short_name, country = self._parse_location_name(inner_chart.location.name)
-            lat = inner_chart.location.latitude
-            lon = inner_chart.location.longitude
-            lat_dir = "N" if lat >= 0 else "S"
-            lon_dir = "E" if lon >= 0 else "W"
-            coord_str = f"{abs(lat):.{self.coord_precision}f}°{lat_dir}, {abs(lon):.{self.coord_precision}f}°{lon_dir}"
+            # Get label (from multiwheel labels or chart metadata)
+            if chart.labels and i < len(chart.labels):
+                label = chart.labels[i]
+            else:
+                name = (
+                    inner_chart.metadata.get("name")
+                    if hasattr(inner_chart, "metadata")
+                    else None
+                )
+                label = name or f"Chart {i + 1}"
 
-            location_line = f"{short_name} ({coord_str})"
-            if country:
-                location_line += f", {country}"
-
+            # Chart label (bold, centered in column)
             dwg.add(
                 dwg.text(
-                    f"Base: {location_line}",
-                    insert=(left, current_y),
-                    text_anchor="start",
+                    label,
+                    insert=(col_center, current_y),
+                    text_anchor="middle",
                     dominant_baseline="hanging",
-                    font_size=self.details_font_size,
-                    fill=info_color,
-                    font_family=renderer.style["font_family_text"],
+                    font_size="14px",
+                    fill=name_color,
+                    font_family=self.name_font_family,
+                    font_weight="600",
+                    font_style=self.name_font_style,
                 )
             )
+
+        # Second row: locations
+        current_y += 18
+        for i, inner_chart in enumerate(chart.charts):
+            col_left = left + (i * col_width)
+            col_center = col_left + (col_width / 2)
+
+            if inner_chart.location:
+                short_name, _ = self._parse_location_name(inner_chart.location.name)
+                if short_name:
+                    dwg.add(
+                        dwg.text(
+                            short_name,
+                            insert=(col_center, current_y),
+                            text_anchor="middle",
+                            dominant_baseline="hanging",
+                            font_size=small_font_size,
+                            fill=info_color,
+                            font_family=renderer.style["font_family_text"],
+                        )
+                    )
+
+        # Third row: dates with times
+        current_y += 14
+        for i, inner_chart in enumerate(chart.charts):
+            col_left = left + (i * col_width)
+            col_center = col_left + (col_width / 2)
+
+            if inner_chart.datetime:
+                is_unknown_time = isinstance(inner_chart, UnknownTimeChart)
+                if is_unknown_time:
+                    if inner_chart.datetime.local_datetime:
+                        dt_str = inner_chart.datetime.local_datetime.strftime(
+                            "%b %d, %Y"
+                        )
+                    else:
+                        dt_str = inner_chart.datetime.utc_datetime.strftime("%b %d, %Y")
+                    dt_str += " (Unknown)"
+                elif inner_chart.datetime.local_datetime:
+                    dt_str = inner_chart.datetime.local_datetime.strftime(
+                        "%b %d, %Y %I:%M %p"
+                    )
+                else:
+                    dt_str = inner_chart.datetime.utc_datetime.strftime(
+                        "%b %d, %Y %H:%M UTC"
+                    )
+
+                dwg.add(
+                    dwg.text(
+                        dt_str,
+                        insert=(col_center, current_y),
+                        text_anchor="middle",
+                        dominant_baseline="hanging",
+                        font_size=small_font_size,
+                        fill=info_color,
+                        font_family=renderer.style["font_family_text"],
+                    )
+                )
 
     def _render_synthesis_header(
         self,
@@ -1241,16 +1348,26 @@ class AngleLayer:
             )
 
             # Apply directional offset based on angle name
+            # Glyph goes one direction, degree text goes the opposite
             offset = 8  # pixels to nudge
-            if angle.name == "ASC":  # 9 o'clock - nudge up
-                y_glyph -= offset
-            elif angle.name == "MC":  # 12 o'clock - nudge right
-                x_glyph += offset
-            elif angle.name == "DSC":  # 3 o'clock - nudge down
-                y_glyph += offset
-            elif angle.name == "IC":  # 6 o'clock - nudge left
-                x_glyph -= offset
+            degree_offset = 10  # pixels to nudge degree text (opposite direction)
 
+            x_degree, y_degree = x_glyph, y_glyph  # Start at same position
+
+            if angle.name == "ASC":  # 9 o'clock - glyph up, degree down
+                y_glyph -= offset
+                y_degree += degree_offset
+            elif angle.name == "MC":  # 12 o'clock - glyph right, degree left
+                x_glyph += offset
+                x_degree -= degree_offset
+            elif angle.name == "DSC":  # 3 o'clock - glyph down, degree up
+                y_glyph += offset
+                y_degree -= degree_offset
+            elif angle.name == "IC":  # 6 o'clock - glyph left, degree right
+                x_glyph -= offset
+                x_degree += degree_offset
+
+            # Draw the angle label (ASC, MC, etc.)
             dwg.add(
                 dwg.text(
                     ANGLE_GLYPHS[angle.name],
@@ -1261,6 +1378,27 @@ class AngleLayer:
                     fill=style["glyph_color"],
                     font_family=renderer.style["font_family_text"],
                     font_weight="bold",
+                )
+            )
+
+            # Draw the degree text (e.g., "15°32'")
+            degree_in_sign = angle.longitude % 30
+            deg_int = int(degree_in_sign)
+            min_int = int((degree_in_sign % 1) * 60)
+            degree_str = f"{deg_int}°{min_int:02d}'"
+
+            # Use smaller font for degree text
+            degree_font_size = style.get("degree_size", "10px")
+
+            dwg.add(
+                dwg.text(
+                    degree_str,
+                    insert=(x_degree, y_degree),
+                    text_anchor="middle",
+                    dominant_baseline="central",
+                    font_size=degree_font_size,
+                    fill=style["glyph_color"],
+                    font_family=renderer.style["font_family_text"],
                 )
             )
 
@@ -1381,6 +1519,7 @@ class PlanetLayer:
     The info_mode parameter controls how much detail to show:
     - "full": Degree + sign glyph + minutes (default for single charts)
     - "compact": Degree only, e.g. "15°" (good for multiwheel)
+    - "no_sign": Degree + minutes, no sign glyph, e.g. "15°32'"
     - "none": No info stack, glyph only
     """
 
@@ -1410,7 +1549,8 @@ class PlanetLayer:
             show_position_ticks: If True, draw colored tick marks at true planet positions
                                  on the zodiac ring inner edge.
             wheel_index: Which chart ring to render (0=innermost, used for multiwheel).
-            info_mode: "full" (degree+sign+minutes), "compact" (degree only), "none" (glyph only).
+            info_mode: "full" (degree+sign+minutes), "compact" (degree only),
+                        "no_sign" (degree+minutes), "none" (glyph only).
             info_stack_distance: Multiplier for distance between glyph and info stack (default 0.8).
                                 Smaller values move the info stack closer to the glyph.
             glyph_size_override: If set, overrides the theme's glyph_size (e.g., "24px" for smaller).
@@ -1563,6 +1703,7 @@ class PlanetLayer:
             # Draw Planet Info based on info_mode
             # - "full": Degree + Sign glyph + Minutes (3-row stack)
             # - "compact": Degree only (single value, e.g., "15°")
+            # - "no_sign": Degree + Minutes (2-row stack, no sign glyph)
             # - "none": No info stack
             if effective_info_mode != "none":
                 # Calculate radii for info rings based on direction
@@ -1572,12 +1713,20 @@ class PlanetLayer:
                     # Stack extends AWAY from center (for outer wheel)
                     degrees_radius = base_radius + (glyph_size_px * dist)
                     sign_radius = base_radius + (glyph_size_px * (dist + 0.4))
-                    minutes_radius = base_radius + (glyph_size_px * (dist + 0.8))
+                    # For no_sign mode, use 0.55 spacing for better readability with small glyphs
+                    if effective_info_mode == "no_sign":
+                        minutes_radius = base_radius + (glyph_size_px * (dist + 0.55))
+                    else:
+                        minutes_radius = base_radius + (glyph_size_px * (dist + 0.8))
                 else:
                     # Stack extends TOWARD center (default, for inner wheel)
                     degrees_radius = base_radius - (glyph_size_px * dist)
                     sign_radius = base_radius - (glyph_size_px * (dist + 0.4))
-                    minutes_radius = base_radius - (glyph_size_px * (dist + 0.8))
+                    # For no_sign mode, use 0.55 spacing for better readability with small glyphs
+                    if effective_info_mode == "no_sign":
+                        minutes_radius = base_radius - (glyph_size_px * (dist + 0.55))
+                    else:
+                        minutes_radius = base_radius - (glyph_size_px * (dist + 0.8))
 
                 # Degrees (shown in both "full" and "compact" modes)
                 deg_str = f"{int(planet.sign_degree)}°"
@@ -1596,7 +1745,7 @@ class PlanetLayer:
                     )
                 )
 
-                # Sign glyph and Minutes only in "full" mode
+                # Sign glyph only in "full" mode
                 if effective_info_mode == "full":
                     # Sign glyph - with optional adaptive coloring
                     sign_glyph = ZODIAC_GLYPHS[int(planet.longitude // 30)]
@@ -1629,7 +1778,8 @@ class PlanetLayer:
                         )
                     )
 
-                    # Minutes
+                # Minutes in "full" and "no_sign" modes
+                if effective_info_mode in ("full", "no_sign"):
                     min_str = f"{int((planet.sign_degree % 1) * 60):02d}'"
                     x_min, y_min = renderer.polar_to_cartesian(
                         adjusted_long, minutes_radius
@@ -2787,6 +2937,91 @@ class AspectLayer:
                     stroke_width=aspect_style["width"],
                     stroke_dasharray=aspect_style["dash"],
                     opacity=0.6,  # Make aspect lines semi-transparent to reduce visual clutter
+                )
+            )
+
+
+class MultiWheelAspectLayer:
+    """
+    Renders cross-chart aspect lines for MultiWheel charts.
+
+    Only used for 2-chart multiwheels (biwheels), where showing aspects between
+    the two charts is useful and not too cluttered. For 3-4 chart multiwheels,
+    aspect lines are omitted due to visual complexity.
+    """
+
+    def __init__(self, style_override: dict[str, Any] | None = None):
+        self.style = style_override or {}
+
+    def render(
+        self,
+        renderer: ChartRenderer,
+        dwg: svgwrite.Drawing,
+        chart: Any,  # MultiWheel
+    ) -> None:
+        from stellium.core.multiwheel import MultiWheel
+
+        if not isinstance(chart, MultiWheel):
+            return
+
+        # Only draw aspects for 2-chart multiwheels
+        if chart.chart_count != 2:
+            return
+
+        # Get cross-aspects between chart 0 and chart 1
+        cross_aspects = chart.cross_aspects.get((0, 1), ())
+        if not cross_aspects:
+            return
+
+        style = renderer.style["aspects"].copy()
+        style.update(self.style)
+
+        # Use renderer's aspect palette if available
+        if renderer.aspect_palette:
+            aspect_palette = AspectPalette(renderer.aspect_palette)
+            aspect_colors = get_aspect_palette_colors(aspect_palette)
+
+            for aspect_name, color in aspect_colors.items():
+                if aspect_name not in style:
+                    style[aspect_name] = {"color": color, "width": 1.5, "dash": "1,0"}
+                elif isinstance(style[aspect_name], dict):
+                    style[aspect_name]["color"] = color
+                else:
+                    style[aspect_name] = {"color": color, "width": 1.5, "dash": "1,0"}
+
+        radius = renderer.radii.get(
+            "aspect_ring_inner", renderer.radii.get("chart1_ring_inner", 0.14)
+        )
+
+        # Draw central aspect circle
+        dwg.add(
+            dwg.circle(
+                center=(
+                    renderer.center + renderer.x_offset,
+                    renderer.center + renderer.y_offset,
+                ),
+                r=radius,
+                fill=style["background_color"],
+                stroke=style["line_color"],
+            )
+        )
+
+        # Draw aspect lines
+        for aspect in cross_aspects:
+            aspect_style = style.get(aspect.aspect_name, style["default"])
+
+            # Get positions on the inner aspect ring
+            x1, y1 = renderer.polar_to_cartesian(aspect.object1.longitude, radius)
+            x2, y2 = renderer.polar_to_cartesian(aspect.object2.longitude, radius)
+
+            dwg.add(
+                dwg.line(
+                    start=(x1, y1),
+                    end=(x2, y2),
+                    stroke=aspect_style["color"],
+                    stroke_width=aspect_style["width"],
+                    stroke_dasharray=aspect_style["dash"],
+                    opacity=0.6,
                 )
             )
 
