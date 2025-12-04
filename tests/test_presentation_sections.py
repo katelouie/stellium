@@ -9,6 +9,7 @@ import datetime as dt
 import pytest
 import pytz
 
+from stellium.components.arabic_parts import ArabicPartsCalculator
 from stellium.components.midpoints import MidpointCalculator
 from stellium.core.builder import ChartBuilder
 from stellium.core.models import ChartLocation, ObjectType
@@ -18,6 +19,7 @@ from stellium.engines.ephemeris import MockEphemerisEngine, SwissEphemerisEngine
 from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 from stellium.engines.orbs import SimpleOrbEngine
 from stellium.presentation.sections import (
+    ArabicPartsSection,
     AspectSection,
     CacheInfoSection,
     ChartOverviewSection,
@@ -78,6 +80,38 @@ def chart_with_midpoints():
         ChartBuilder.from_native(native)
         .with_ephemeris(MockEphemerisEngine())
         .add_component(MidpointCalculator())
+        .calculate()
+    )
+
+
+@pytest.fixture
+def chart_with_arabic_parts():
+    """Create a chart with Arabic Parts calculated."""
+    datetime = dt.datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)
+    location = ChartLocation(latitude=37.7749, longitude=-122.4194, name="SF")
+    native = Native(datetime, location)
+
+    return (
+        ChartBuilder.from_native(native)
+        .with_ephemeris(SwissEphemerisEngine())
+        .with_house_systems([PlacidusHouses()])
+        .add_component(ArabicPartsCalculator())
+        .calculate()
+    )
+
+
+@pytest.fixture
+def chart_with_arabic_parts_multi_house():
+    """Create a chart with Arabic Parts and multiple house systems."""
+    datetime = dt.datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)
+    location = ChartLocation(latitude=37.7749, longitude=-122.4194, name="SF")
+    native = Native(datetime, location)
+
+    return (
+        ChartBuilder.from_native(native)
+        .with_ephemeris(SwissEphemerisEngine())
+        .with_house_systems([PlacidusHouses(), WholeSignHouses()])
+        .add_component(ArabicPartsCalculator())
         .calculate()
     )
 
@@ -555,6 +589,304 @@ def test_cache_info_section_with_cache(mock_chart):
     assert data["data"]["Cache Directory"] == "/tmp/cache"
     assert "Total Files" in data["data"]
     assert data["data"]["Total Files"] == 42
+
+
+# ============================================================================
+# ARABIC PARTS SECTION TESTS
+# ============================================================================
+
+
+def test_arabic_parts_section_name():
+    """Test ArabicPartsSection section name for different modes."""
+    assert ArabicPartsSection(mode="all").section_name == "Arabic Parts"
+    assert (
+        ArabicPartsSection(mode="core").section_name == "Arabic Parts (Hermetic Lots)"
+    )
+    assert (
+        ArabicPartsSection(mode="family").section_name
+        == "Arabic Parts (Family & Relationships)"
+    )
+    assert ArabicPartsSection(mode="life").section_name == "Arabic Parts (Life Topics)"
+    assert (
+        ArabicPartsSection(mode="planetary").section_name
+        == "Arabic Parts (Planetary Exaltation)"
+    )
+
+
+def test_arabic_parts_section_invalid_mode():
+    """Test that invalid mode raises ValueError."""
+    with pytest.raises(ValueError, match="mode must be one of"):
+        ArabicPartsSection(mode="invalid")
+
+
+def test_arabic_parts_section_default_options():
+    """Test ArabicPartsSection default options."""
+    section = ArabicPartsSection()
+    assert section.mode == "all"
+    assert section.show_formula is True
+    assert section.show_description is False
+
+
+def test_arabic_parts_section_custom_options():
+    """Test ArabicPartsSection custom options."""
+    section = ArabicPartsSection(mode="core", show_formula=False, show_description=True)
+    assert section.mode == "core"
+    assert section.show_formula is False
+    assert section.show_description is True
+
+
+def test_arabic_parts_section_generate_data(chart_with_arabic_parts):
+    """Test ArabicPartsSection data generation."""
+    section = ArabicPartsSection()
+    data = section.generate_data(chart_with_arabic_parts)
+
+    assert data["type"] == "table"
+    assert "headers" in data
+    assert "rows" in data
+    assert "Part" in data["headers"]
+    assert "Position" in data["headers"]
+    assert "House" in data["headers"]
+    assert "Formula" in data["headers"]  # Default show_formula=True
+
+
+def test_arabic_parts_section_no_parts(mock_chart):
+    """Test ArabicPartsSection when no Arabic Parts are calculated."""
+    section = ArabicPartsSection()
+    data = section.generate_data(mock_chart)
+
+    assert data["type"] == "text"
+    assert "No Arabic Parts calculated" in data["content"]
+    assert "ArabicPartsCalculator" in data["content"]
+
+
+def test_arabic_parts_section_all_mode(chart_with_arabic_parts):
+    """Test Arabic parts section with all parts."""
+    section = ArabicPartsSection(mode="all")
+    data = section.generate_data(chart_with_arabic_parts)
+
+    # Should have many parts (27+ in the full catalog)
+    assert len(data["rows"]) >= 20
+
+
+def test_arabic_parts_section_core_mode(chart_with_arabic_parts):
+    """Test Arabic parts section with core (Hermetic) parts only."""
+    section = ArabicPartsSection(mode="core")
+    data = section.generate_data(chart_with_arabic_parts)
+
+    # Core has 8 parts
+    assert len(data["rows"]) == 8
+
+    # Check for expected core parts (display names have "Part of " stripped)
+    part_names = [row[0] for row in data["rows"]]
+    assert any("Fortune" in name for name in part_names)
+    assert any("Spirit" in name for name in part_names)
+
+
+def test_arabic_parts_section_family_mode(chart_with_arabic_parts):
+    """Test Arabic parts section with family parts only."""
+    section = ArabicPartsSection(mode="family")
+    data = section.generate_data(chart_with_arabic_parts)
+
+    # Family has 5 parts
+    assert len(data["rows"]) == 5
+
+    part_names = [row[0] for row in data["rows"]]
+    assert any("Father" in name for name in part_names)
+    assert any("Mother" in name for name in part_names)
+    assert any("Marriage" in name for name in part_names)
+
+
+def test_arabic_parts_section_life_mode(chart_with_arabic_parts):
+    """Test Arabic parts section with life topic parts only."""
+    section = ArabicPartsSection(mode="life")
+    data = section.generate_data(chart_with_arabic_parts)
+
+    # Life has 8 parts
+    assert len(data["rows"]) == 8
+
+    part_names = [row[0] for row in data["rows"]]
+    assert any("Death" in name for name in part_names)
+    assert any("Travel" in name for name in part_names)
+
+
+def test_arabic_parts_section_planetary_mode(chart_with_arabic_parts):
+    """Test Arabic parts section with planetary exaltation parts only."""
+    section = ArabicPartsSection(mode="planetary")
+    data = section.generate_data(chart_with_arabic_parts)
+
+    # Planetary has 7 parts
+    assert len(data["rows"]) == 7
+
+    part_names = [row[0] for row in data["rows"]]
+    assert any("Sun" in name for name in part_names)
+    assert any("Moon" in name for name in part_names)
+    assert any("Jupiter" in name for name in part_names)
+
+
+def test_arabic_parts_section_with_formula(chart_with_arabic_parts):
+    """Test Arabic parts section with formula column."""
+    section = ArabicPartsSection(show_formula=True)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    assert "Formula" in data["headers"]
+
+    # Check formula format (e.g., "ASC + Moon - Sun *")
+    formula_idx = data["headers"].index("Formula")
+    formulas = [row[formula_idx] for row in data["rows"]]
+
+    # All formulas should contain ASC and + and -
+    for formula in formulas:
+        assert "ASC" in formula
+        assert "+" in formula
+        assert "-" in formula
+
+
+def test_arabic_parts_section_without_formula(chart_with_arabic_parts):
+    """Test Arabic parts section without formula column."""
+    section = ArabicPartsSection(show_formula=False)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    assert "Formula" not in data["headers"]
+
+
+def test_arabic_parts_section_with_description(chart_with_arabic_parts):
+    """Test Arabic parts section with description column."""
+    section = ArabicPartsSection(mode="core", show_description=True)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    assert "Description" in data["headers"]
+
+    # Descriptions should be present
+    desc_idx = data["headers"].index("Description")
+    descriptions = [row[desc_idx] for row in data["rows"]]
+
+    # All descriptions should be non-empty strings
+    for desc in descriptions:
+        assert isinstance(desc, str)
+        assert len(desc) > 0
+
+
+def test_arabic_parts_section_without_description(chart_with_arabic_parts):
+    """Test Arabic parts section without description column."""
+    section = ArabicPartsSection(show_description=False)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    assert "Description" not in data["headers"]
+
+
+def test_arabic_parts_section_single_house_system(chart_with_arabic_parts):
+    """Test Arabic parts with single house system shows 'House' header."""
+    section = ArabicPartsSection(mode="core")
+    data = section.generate_data(chart_with_arabic_parts)
+
+    # Single house system should show "House" header
+    assert "House" in data["headers"]
+    # Should NOT have abbreviated headers
+    assert "Plac" not in data["headers"]
+    assert "WS" not in data["headers"]
+
+
+def test_arabic_parts_section_multiple_house_systems(
+    chart_with_arabic_parts_multi_house,
+):
+    """Test Arabic parts with multiple house systems shows abbreviated headers."""
+    section = ArabicPartsSection(mode="core")
+    data = section.generate_data(chart_with_arabic_parts_multi_house)
+
+    # Multiple house systems should show abbreviated headers
+    assert "Plac" in data["headers"]
+    assert "WS" in data["headers"]
+    # Should NOT have generic "House" header
+    assert "House" not in data["headers"]
+
+
+def test_arabic_parts_section_house_placements(chart_with_arabic_parts):
+    """Test that house placements are correctly populated."""
+    section = ArabicPartsSection(mode="core", show_formula=False)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    house_idx = data["headers"].index("House")
+
+    # All house values should be integers (as strings) or "—"
+    for row in data["rows"]:
+        house_val = row[house_idx]
+        if house_val != "—":
+            assert house_val.isdigit()
+            assert 1 <= int(house_val) <= 12
+
+
+def test_arabic_parts_section_position_format(chart_with_arabic_parts):
+    """Test that positions are formatted correctly."""
+    section = ArabicPartsSection(mode="core", show_formula=False)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    position_idx = data["headers"].index("Position")
+
+    for row in data["rows"]:
+        position = row[position_idx]
+        # Position should contain degree symbol
+        assert "°" in position
+        # Position should contain minute indicator
+        assert "'" in position
+
+
+def test_arabic_parts_section_part_name_formatting():
+    """Test the _format_part_name helper method."""
+    section = ArabicPartsSection()
+
+    assert section._format_part_name("Part of Fortune") == "Fortune"
+    assert section._format_part_name("Part of Spirit") == "Spirit"
+    assert (
+        section._format_part_name("Part of the Sun (Exaltation)") == "Sun (Exaltation)"
+    )
+    assert (
+        section._format_part_name("Part of the Moon (Exaltation)")
+        == "Moon (Exaltation)"
+    )
+    assert section._format_part_name("Custom Name") == "Custom Name"
+
+
+def test_arabic_parts_section_house_system_abbreviations():
+    """Test the _abbreviate_house_system helper method."""
+    section = ArabicPartsSection()
+
+    assert section._abbreviate_house_system("Placidus") == "Plac"
+    assert section._abbreviate_house_system("Whole Sign") == "WS"
+    assert section._abbreviate_house_system("Equal") == "Eq"
+    assert section._abbreviate_house_system("Koch") == "Koch"
+    assert section._abbreviate_house_system("Regiomontanus") == "Regio"
+    assert section._abbreviate_house_system("Campanus") == "Camp"
+    # Unknown systems fall back to first 4 chars
+    assert section._abbreviate_house_system("Unknown System") == "Unkn"
+
+
+def test_arabic_parts_section_formula_sect_indicator(chart_with_arabic_parts):
+    """Test that sect-aware formulas have asterisk indicator."""
+    section = ArabicPartsSection(mode="core", show_formula=True)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    formula_idx = data["headers"].index("Formula")
+
+    # Find Part of Fortune (should have sect flip asterisk)
+    for row in data["rows"]:
+        if row[0] == "Fortune":
+            assert row[formula_idx].endswith("*")
+            break
+
+
+def test_arabic_parts_section_sorting(chart_with_arabic_parts):
+    """Test that parts are sorted by category then alphabetically."""
+    section = ArabicPartsSection(mode="all", show_formula=False)
+    data = section.generate_data(chart_with_arabic_parts)
+
+    part_names = [row[0] for row in data["rows"]]
+
+    # Core parts should come before family parts
+    # Find indices of a core part and a family part
+    fortune_idx = next(i for i, n in enumerate(part_names) if "Fortune" in n)
+    father_idx = next(i for i, n in enumerate(part_names) if "Father" in n)
+
+    assert fortune_idx < father_idx, "Core parts should come before family parts"
 
 
 # ============================================================================
