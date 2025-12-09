@@ -253,7 +253,7 @@ def test_calculate_house_data(house_system, standard_native):
 
     # Verify angles
     assert angles is not None
-    assert len(angles) == 5  # ASC, MC, DSC, IC, Vertex
+    assert len(angles) == 6  # ASC, MC, DSC, IC, Vertex, RAMC
 
     # Check angle names
     angle_names = [a.name for a in angles]
@@ -262,6 +262,7 @@ def test_calculate_house_data(house_system, standard_native):
     assert "DSC" in angle_names
     assert "IC" in angle_names
     assert "Vertex" in angle_names
+    assert "RAMC" in angle_names
 
 
 def test_placidus_houses_calculation(standard_native):
@@ -475,7 +476,7 @@ def test_southern_hemisphere(house_system):
 
     # Basic validation
     assert len(cusps.cusps) == 12
-    assert len(angles) == 5
+    assert len(angles) == 6
 
     # All cusps should be valid
     for cusp in cusps.cusps:
@@ -502,7 +503,7 @@ def test_high_latitude(house_system):
 
         # If calculation succeeds, validate results
         assert len(cusps.cusps) == 12
-        assert len(angles) == 5
+        assert len(angles) == 6
 
         for cusp in cusps.cusps:
             assert 0 <= cusp < 360
@@ -524,7 +525,7 @@ def test_equatorial_location():
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 
     assert len(cusps.cusps) == 12
-    assert len(angles) == 5
+    assert len(angles) == 6
 
 
 # ============================================================================
@@ -700,7 +701,7 @@ def test_midnight_calculation():
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 
     assert len(cusps.cusps) == 12
-    assert len(angles) == 5
+    assert len(angles) == 6
 
 
 def test_noon_calculation():
@@ -719,7 +720,7 @@ def test_noon_calculation():
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 
     assert len(cusps.cusps) == 12
-    assert len(angles) == 5
+    assert len(angles) == 6
 
 
 def test_historical_date():
@@ -735,7 +736,7 @@ def test_historical_date():
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 
     assert len(cusps.cusps) == 12
-    assert len(angles) == 5
+    assert len(angles) == 6
 
 
 def test_future_date():
@@ -754,4 +755,4 @@ def test_future_date():
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 
     assert len(cusps.cusps) == 12
-    assert len(angles) == 5
+    assert len(angles) == 6
