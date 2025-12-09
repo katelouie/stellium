@@ -91,7 +91,11 @@ periods = DistributionsCalculator(chart).calculate(years=80)
 
 ### Changed
 
+- **House system engines now return RAMC as the 6th angle**: The `calculate_house_data()` method returns 6 angles (ASC, MC, DSC, IC, Vertex, RAMC) instead of 5, enabling primary directions calculations
+
 ### Fixed
+
+- **Timezone handling in progression calculations**: Fixed `calculate_progressed_datetime()` and `calculate_years_elapsed()` in `utils/progressions.py` to handle mixed timezone-aware and timezone-naive datetime comparisons gracefully
 
 ## [0.7.0] - 2025-12-03
 
