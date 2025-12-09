@@ -45,8 +45,18 @@ def calculate_progressed_datetime(
         >>> progressed = calculate_progressed_datetime(birth, target)
         >>> # progressed will be ~30 days after birth
     """
+    # Normalize timezones - if one is aware and one is naive, make both naive
+    natal_dt = natal_datetime
+    target_dt = target_date
+    if natal_dt.tzinfo is not None and target_dt.tzinfo is None:
+        # Remove timezone from natal for comparison
+        natal_dt = natal_dt.replace(tzinfo=None)
+    elif natal_dt.tzinfo is None and target_dt.tzinfo is not None:
+        # Remove timezone from target for comparison
+        target_dt = target_dt.replace(tzinfo=None)
+
     # Calculate how many days have elapsed (= years of life)
-    days_elapsed = (target_date - natal_datetime).days
+    days_elapsed = (target_dt - natal_dt).days
     years_of_life = days_elapsed / 365.25
 
     # Progressed chart is cast for natal + years_of_life DAYS
@@ -69,7 +79,15 @@ def calculate_years_elapsed(
     Returns:
         Years elapsed as a float (e.g., 30.5 for 30 years 6 months)
     """
-    days_elapsed = (target_date - natal_datetime).days
+    # Normalize timezones - if one is aware and one is naive, make both naive
+    natal_dt = natal_datetime
+    target_dt = target_date
+    if natal_dt.tzinfo is not None and target_dt.tzinfo is None:
+        natal_dt = natal_dt.replace(tzinfo=None)
+    elif natal_dt.tzinfo is None and target_dt.tzinfo is not None:
+        target_dt = target_dt.replace(tzinfo=None)
+
+    days_elapsed = (target_dt - natal_dt).days
     return days_elapsed / 365.25
 
 
