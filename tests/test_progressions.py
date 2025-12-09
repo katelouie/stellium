@@ -7,12 +7,15 @@ These tests verify that ComparisonBuilder.progression() correctly:
 - Maintains backwards compatibility with explicit progressed charts
 """
 
+import datetime as dt
 from datetime import timedelta
 
 import pytest
+import pytz
 
 from stellium import ChartBuilder, ComparisonBuilder
-from stellium.core.models import ComparisonType
+from stellium.core.models import ChartLocation, ComparisonType
+from stellium.core.native import Native
 
 
 @pytest.fixture(scope="module")
@@ -24,17 +27,28 @@ def einstein_natal():
     return ChartBuilder.from_notable("Albert Einstein").calculate()
 
 
+# Palo Alto, CA coordinates (avoids geolookup)
+PALO_ALTO = ChartLocation(
+    latitude=37.4419,
+    longitude=-122.143,
+    name="Palo Alto, CA",
+    timezone="America/Los_Angeles",
+)
+
+
 @pytest.fixture(scope="module")
 def kate_natal():
     """Kate's natal chart for testing.
 
     Using scope="module" so chart is only built once per test file.
+    Uses ChartLocation directly to avoid geolookup in tests.
     """
-    return ChartBuilder.from_details(
-        "1994-01-06 11:47",
-        "Palo Alto, CA",
+    native = Native(
+        dt.datetime(1994, 1, 6, 11, 47, tzinfo=pytz.timezone("America/Los_Angeles")),
+        PALO_ALTO,
         name="Kate",
-    ).calculate()
+    )
+    return ChartBuilder.from_native(native).calculate()
 
 
 class TestProgressionByAge:
@@ -228,8 +242,8 @@ class TestBackwardsCompatibility:
     def test_tuple_format_both_charts(self):
         """Legacy: using (datetime, location) tuples for both charts."""
         prog = ComparisonBuilder.progression(
-            ("1994-01-06 11:47", "Palo Alto, CA"),
-            ("1994-02-05 11:47", "Palo Alto, CA"),  # 30 days later
+            ("1994-01-06 11:47", PALO_ALTO),
+            ("1994-02-05 11:47", PALO_ALTO),  # 30 days later
         ).calculate()
 
         assert prog.comparison_type == ComparisonType.PROGRESSION
