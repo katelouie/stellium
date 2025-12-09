@@ -9,6 +9,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Primary Directions Engine (December 9, 2025)
+
+- **DirectionsEngine**: Complete primary directions calculation engine
+  - **Two direction methods** (swappable):
+    - `"zodiacal"` (default): 2D ecliptic projection using oblique ascension
+    - `"mundane"`: 3D Placidus semi-arc proportions
+  - **Two time keys** (swappable):
+    - `"naibod"` (default): Mean solar motion rate (~1.0146 years/degree)
+    - `"ptolemy"`: Classic 1 degree = 1 year
+  - **API methods**:
+    - `engine.direct("Sun", "ASC")` - Direct promissor to significator
+    - `engine.direct_to_angles("Sun")` - Direct to all 4 angles
+    - `engine.direct_all_to("ASC")` - Direct all planets to one point
+
+- **DistributionsCalculator**: Separate class for term/bound distributions
+  - Tracks "life chapters" based on planetary terms (Egyptian bounds)
+  - Directed Ascendant through zodiacal bounds
+  - Configurable time key and year limit
+  - `calc.calculate(years=80)` - Returns list of TimeLordPeriod
+
+- **Data models** (all frozen dataclasses):
+  - `EquatorialPoint`: RA/Dec coordinate point
+  - `MundanePosition`: Point with house-space context (semi-arcs, meridian distance)
+  - `DirectionArc`: Result of direction calculation
+  - `DirectionResult`: Complete result with date and age
+  - `TimeLordPeriod`: Term ruler period with sign
+  - `TermBoundary`: Term boundary position
+
+- **Spherical math functions** (pure, module-level):
+  - `ascensional_difference()` - Calculate AD from declination and pole
+  - `semi_arcs()` - Calculate diurnal and nocturnal semi-arcs
+  - `meridian_distance()` - Distance from MC with wraparound
+  - `oblique_ascension()` - RA adjusted for pole
+  - `ecliptic_to_equatorial()` - Coordinate conversion
+  - `get_obliquity()` - True obliquity from Swiss Ephemeris
+
+- **Protocols** (no @runtime_checkable, Stellium pattern):
+  - `DirectionMethod` - Interface for direction calculation methods
+  - `TimeKey` - Interface for arc-to-time conversion
+
+- **67 tests** in `tests/test_directions.py`:
+  - Spherical math functions (23 tests)
+  - Time keys with Churchill example validation (8 tests)
+  - Data models (10 tests)
+  - Direction methods (6 tests)
+  - DirectionsEngine API (12 tests)
+  - DistributionsCalculator (8 tests)
+  - Integration and edge cases (varies)
+
+- **Cookbook** (`examples/directions_cookbook.py`): 19 examples covering:
+  - Basic directions, multiple planets, all angles
+  - Zodiacal vs Mundane method comparison
+  - Ptolemy vs Naibod time key comparison
+  - Term distributions (life chapters)
+  - Real-world examples (life events, future directions)
+  - Full analysis export
+
+- **Exports** in `engines/__init__.py`:
+  - `DirectionsEngine`, `DirectionResult`, `DirectionArc`
+  - `DistributionsCalculator`, `TimeLordPeriod`
+  - `ZodiacalDirections`, `MundaneDirections`
+  - `PtolemyKey`, `NaibodKey`
+
+Example usage:
+```python
+from stellium.engines.directions import DirectionsEngine, DistributionsCalculator
+
+# Basic direction
+engine = DirectionsEngine(chart)
+result = engine.direct("Sun", "ASC")
+print(f"Sun to ASC: age {result.age:.1f}")
+
+# Compare methods
+z = DirectionsEngine(chart, method="zodiacal").direct("Sun", "ASC")
+m = DirectionsEngine(chart, method="mundane").direct("Sun", "ASC")
+
+# Life chapters
+periods = DistributionsCalculator(chart).calculate(years=80)
+```
+
 ### Changed
 
 ### Fixed

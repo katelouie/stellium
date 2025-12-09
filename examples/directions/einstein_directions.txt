@@ -1,0 +1,27 @@
+ALBERT EINSTEIN - PRIMARY DIRECTIONS ANALYSIS
+==================================================
+
+DIRECTIONS TO ASCENDANT (Zodiacal, Naibod)
+--------------------------------------------------
+Sun          286.02°    290.2 years
+Moon         210.02°    213.1 years
+Mercury      290.54°    294.8 years
+Venus        297.14°    301.5 years
+Mars         253.34°    257.0 years
+Jupiter      273.03°    277.0 years
+Saturn       291.04°    295.3 years
+
+
+LIFE CHAPTERS (Term Distributions)
+--------------------------------------------------
+Age   0.0: Cancer       Venus     
+Age   5.0: Cancer       Mercury   
+Age  12.6: Cancer       Jupiter   
+Age  21.8: Cancer       Saturn    
+Age  27.2: Leo          Jupiter   
+Age  35.4: Leo          Venus     
+Age  42.4: Leo          Saturn    
+Age  52.1: Leo          Mercury   
+Age  60.5: Leo          Mars      
+Age  68.9: Virgo        Mercury   
+Age  78.7: Virgo        Venus     

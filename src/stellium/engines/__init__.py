@@ -22,6 +22,19 @@ from stellium.engines.dignities import (
     TraditionalDignityCalculator,
 )
 
+# Primary Directions
+from stellium.engines.directions import (
+    DirectionArc,
+    DirectionResult,
+    DirectionsEngine,
+    DistributionsCalculator,
+    MundaneDirections,
+    NaibodKey,
+    PtolemyKey,
+    TimeLordPeriod,
+    ZodiacalDirections,
+)
+
 # Dispositors
 from stellium.engines.dispositors import (
     DispositorEngine,
@@ -101,4 +114,14 @@ __all__ = [
     "find_longitude_crossing",
     "find_all_longitude_crossings",
     "LongitudeCrossing",
+    # Primary Directions
+    "DirectionsEngine",
+    "DirectionResult",
+    "DirectionArc",
+    "DistributionsCalculator",
+    "TimeLordPeriod",
+    "ZodiacalDirections",
+    "MundaneDirections",
+    "PtolemyKey",
+    "NaibodKey",
 ]

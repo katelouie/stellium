@@ -166,6 +166,7 @@ class SwissHouseSystemBase:
         # Chart angles
         asc = angles_list[0]
         mc = angles_list[1]
+        ramc = angles_list[2]
         vertex = angles_list[3]
 
         angles = [
@@ -181,6 +182,9 @@ class SwissHouseSystemBase:
             # Include Vertex
             CelestialPosition(
                 name="Vertex", object_type=ObjectType.POINT, longitude=vertex
+            ),
+            CelestialPosition(
+                name="RAMC", object_type=ObjectType.POINT, longitude=ramc
             ),
         ]
 
