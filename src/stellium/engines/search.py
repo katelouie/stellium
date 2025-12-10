@@ -21,6 +21,24 @@ import swisseph as swe
 
 from stellium.engines.ephemeris import SWISS_EPHEMERIS_IDS, _set_ephemeris_path
 
+# Sign boundaries in longitude (0° of each sign)
+SIGN_BOUNDARIES = {
+    "Aries": 0.0,
+    "Taurus": 30.0,
+    "Gemini": 60.0,
+    "Cancer": 90.0,
+    "Leo": 120.0,
+    "Virgo": 150.0,
+    "Libra": 180.0,
+    "Scorpio": 210.0,
+    "Sagittarius": 240.0,
+    "Capricorn": 270.0,
+    "Aquarius": 300.0,
+    "Pisces": 330.0,
+}
+
+SIGN_ORDER = list(SIGN_BOUNDARIES.keys())
+
 
 @dataclass(frozen=True)
 class LongitudeCrossing:
@@ -46,6 +64,43 @@ class LongitudeCrossing:
     def is_direct(self) -> bool:
         """True if object was moving direct (not retrograde) at crossing."""
         return not self.is_retrograde
+
+
+@dataclass(frozen=True)
+class SignIngress:
+    """Result of a sign ingress search.
+
+    Attributes:
+        julian_day: Julian day of the ingress
+        datetime_utc: UTC datetime of the ingress
+        object_name: Name of the celestial object
+        sign: Sign being entered
+        from_sign: Sign being left
+        longitude: Exact longitude at ingress (should be very close to 0° of sign)
+        speed: Longitude speed at ingress (degrees/day, negative = retrograde)
+        is_retrograde: True if object was moving retrograde at ingress
+    """
+
+    julian_day: float
+    datetime_utc: datetime
+    object_name: str
+    sign: str
+    from_sign: str
+    longitude: float
+    speed: float
+    is_retrograde: bool
+
+    @property
+    def is_direct(self) -> bool:
+        """True if object was moving direct (not retrograde) at ingress."""
+        return not self.is_retrograde
+
+    def __str__(self) -> str:
+        direction = "Rx" if self.is_retrograde else ""
+        return (
+            f"{self.object_name} {direction}enters {self.sign} "
+            f"on {self.datetime_utc.strftime('%Y-%m-%d %H:%M')}"
+        )
 
 
 def _normalize_angle_error(angle: float) -> float:
@@ -349,5 +404,257 @@ def find_all_longitude_crossings(
 
         # Move past this crossing (small step to avoid finding same one)
         current_jd = result.julian_day + 0.1
+
+    return results
+
+
+# =============================================================================
+# Sign Ingress Search Functions
+# =============================================================================
+
+
+def _get_sign_from_longitude(longitude: float) -> str:
+    """Get the zodiac sign for a given longitude."""
+    sign_index = int(longitude // 30) % 12
+    return SIGN_ORDER[sign_index]
+
+
+def _get_previous_sign(sign: str) -> str:
+    """Get the sign before the given sign."""
+    index = SIGN_ORDER.index(sign)
+    return SIGN_ORDER[(index - 1) % 12]
+
+
+def find_ingress(
+    object_name: str,
+    sign: str,
+    start: datetime | float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 730.0,
+) -> SignIngress | None:
+    """Find when a celestial object next enters a specific zodiac sign.
+
+    Args:
+        object_name: Name of celestial object (e.g., "Sun", "Mars", "Moon")
+        sign: Target zodiac sign (e.g., "Aries", "Taurus")
+        start: Starting datetime (UTC) or Julian day
+        direction: "forward" to search future, "backward" to search past
+        max_days: Maximum days to search (default 730 = ~2 years)
+
+    Returns:
+        SignIngress with exact time of ingress, or None if not found
+
+    Example:
+        >>> # When does Mars next enter Aries?
+        >>> result = find_ingress("Mars", "Aries", datetime(2024, 1, 1))
+        >>> print(result)  # Mars enters Aries on 2024-04-30 12:34
+    """
+    if sign not in SIGN_BOUNDARIES:
+        raise ValueError(
+            f"Unknown sign: {sign}. Must be one of {list(SIGN_BOUNDARIES.keys())}"
+        )
+
+    target_longitude = SIGN_BOUNDARIES[sign]
+
+    crossing = find_longitude_crossing(
+        object_name,
+        target_longitude,
+        start,
+        direction=direction,
+        max_days=max_days,
+    )
+
+    if crossing is None:
+        return None
+
+    from_sign = _get_previous_sign(sign)
+
+    return SignIngress(
+        julian_day=crossing.julian_day,
+        datetime_utc=crossing.datetime_utc,
+        object_name=object_name,
+        sign=sign,
+        from_sign=from_sign,
+        longitude=crossing.longitude,
+        speed=crossing.speed,
+        is_retrograde=crossing.is_retrograde,
+    )
+
+
+def find_all_ingresses(
+    object_name: str,
+    sign: str,
+    start: datetime | float,
+    end: datetime | float,
+    max_results: int = 50,
+) -> list[SignIngress]:
+    """Find all times a celestial object enters a specific sign in a date range.
+
+    Args:
+        object_name: Name of celestial object (e.g., "Sun", "Mars", "Moon")
+        sign: Target zodiac sign (e.g., "Aries", "Taurus")
+        start: Start datetime (UTC) or Julian day
+        end: End datetime (UTC) or Julian day
+        max_results: Safety limit on number of results (default 50)
+
+    Returns:
+        List of SignIngress objects, chronologically ordered
+
+    Example:
+        >>> # Find all Mars ingresses to Aries in the next 10 years
+        >>> results = find_all_ingresses(
+        ...     "Mars", "Aries",
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2034, 1, 1)
+        ... )
+        >>> print(f"Mars enters Aries {len(results)} times")
+    """
+    if sign not in SIGN_BOUNDARIES:
+        raise ValueError(
+            f"Unknown sign: {sign}. Must be one of {list(SIGN_BOUNDARIES.keys())}"
+        )
+
+    target_longitude = SIGN_BOUNDARIES[sign]
+    from_sign = _get_previous_sign(sign)
+
+    crossings = find_all_longitude_crossings(
+        object_name,
+        target_longitude,
+        start,
+        end,
+        max_results=max_results,
+    )
+
+    return [
+        SignIngress(
+            julian_day=c.julian_day,
+            datetime_utc=c.datetime_utc,
+            object_name=object_name,
+            sign=sign,
+            from_sign=from_sign,
+            longitude=c.longitude,
+            speed=c.speed,
+            is_retrograde=c.is_retrograde,
+        )
+        for c in crossings
+    ]
+
+
+def find_next_sign_change(
+    object_name: str,
+    start: datetime | float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 60.0,
+) -> SignIngress | None:
+    """Find when a celestial object next changes signs (enters any sign).
+
+    This is useful for questions like "when does this transit end?" where
+    you don't care which sign is entered, just when the object leaves
+    its current sign.
+
+    Args:
+        object_name: Name of celestial object (e.g., "Sun", "Mars", "Moon")
+        start: Starting datetime (UTC) or Julian day
+        direction: "forward" to search future, "backward" to search past
+        max_days: Maximum days to search (default 60)
+
+    Returns:
+        SignIngress with exact time of sign change, or None if not found
+
+    Example:
+        >>> # When does Mars leave its current sign?
+        >>> result = find_next_sign_change("Mars", datetime(2024, 1, 15))
+        >>> print(f"Mars enters {result.sign} on {result.datetime_utc}")
+    """
+    _set_ephemeris_path()
+
+    if object_name not in SWISS_EPHEMERIS_IDS:
+        raise ValueError(f"Unknown object: {object_name}")
+
+    # Get current position to find current sign
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    object_id = SWISS_EPHEMERIS_IDS[object_name]
+    current_lon, _ = _get_position_and_speed(object_id, start_jd)
+    current_sign = _get_sign_from_longitude(current_lon)
+
+    # Determine which sign boundary to search for
+    if direction == "forward":
+        # Next sign
+        next_sign_index = (SIGN_ORDER.index(current_sign) + 1) % 12
+        target_sign = SIGN_ORDER[next_sign_index]
+    else:
+        # Previous sign boundary (entering current sign from before)
+        target_sign = current_sign
+
+    return find_ingress(
+        object_name,
+        target_sign,
+        start,
+        direction=direction,
+        max_days=max_days,
+    )
+
+
+def find_all_sign_changes(
+    object_name: str,
+    start: datetime | float,
+    end: datetime | float,
+    max_results: int = 100,
+) -> list[SignIngress]:
+    """Find all sign changes for a celestial object in a date range.
+
+    Args:
+        object_name: Name of celestial object (e.g., "Sun", "Mars", "Moon")
+        start: Start datetime (UTC) or Julian day
+        end: End datetime (UTC) or Julian day
+        max_results: Safety limit on number of results (default 100)
+
+    Returns:
+        List of SignIngress objects, chronologically ordered
+
+    Example:
+        >>> # Find all Mercury sign changes in 2024
+        >>> results = find_all_sign_changes(
+        ...     "Mercury",
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2024, 12, 31)
+        ... )
+        >>> for r in results:
+        ...     print(f"{r.datetime_utc.date()}: Mercury enters {r.sign}")
+    """
+    # Convert to Julian days if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    if isinstance(end, datetime):
+        end_jd = _datetime_to_julian_day(end)
+    else:
+        end_jd = end
+
+    results = []
+    current_jd = start_jd
+
+    while current_jd < end_jd and len(results) < max_results:
+        # Find next sign change
+        ingress = find_next_sign_change(
+            object_name,
+            current_jd,
+            direction="forward",
+            max_days=end_jd - current_jd + 1,
+        )
+
+        if ingress is None or ingress.julian_day > end_jd:
+            break
+
+        results.append(ingress)
+
+        # Move past this ingress
+        current_jd = ingress.julian_day + 0.1
 
     return results

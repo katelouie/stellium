@@ -160,6 +160,42 @@ print(len(chart.house_systems))  # 0
 print(chart.chart_tags)  # ('heliocentric',)
 ```
 
+#### Sign Ingress Search (December 9, 2025)
+
+- **`find_ingress(planet, sign, start)`**: Find next ingress to a specific sign
+  - Returns `SignIngress` with datetime, sign, from_sign, speed, retrograde status
+  - Supports forward and backward search
+
+- **`find_all_ingresses(planet, sign, start, end)`**: Find all ingresses to a sign in range
+  - Useful for finding all vernal equinoxes, Mars returns, etc.
+
+- **`find_next_sign_change(planet, start)`**: Find when planet next changes signs
+  - Answers "when does this transit end?" without caring which sign is entered
+
+- **`find_all_sign_changes(planet, start, end)`**: Find all sign changes in range
+  - Great for transit calendars and ephemeris generation
+
+- **`SignIngress` dataclass**: Rich result object with:
+  - `sign`: Sign being entered
+  - `from_sign`: Sign being left
+  - `is_retrograde`: Whether planet was retrograde at ingress
+  - Nice `__str__` for display
+
+Example usage:
+
+```python
+from stellium.engines import find_ingress, find_all_sign_changes
+
+# When does Mars next enter Aries?
+ingress = find_ingress("Mars", "Aries", datetime(2024, 1, 1))
+print(ingress)  # Mars enters Aries on 2024-04-30 15:32
+
+# All Mercury sign changes in 2024
+changes = find_all_sign_changes("Mercury", datetime(2024, 1, 1), datetime(2025, 1, 1))
+for c in changes:
+    print(f"{c.datetime_utc.date()}: {c.from_sign} -> {c.sign}")
+```
+
 #### Void of Course Moon (December 9, 2025)
 
 - **`chart.voc_moon()`**: Check if the Moon is void of course

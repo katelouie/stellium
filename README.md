@@ -51,6 +51,7 @@ If you want to support development [you can leave a tip if you like](https://ko-
 - **Uranian astrology** including Trans-Neptunian Planets and 45/90/360-degree dials with pointers.
 - **Primary and Zodiacal directions** with 3D modeling and and distribution across bounds
 - **Draconic Charts and Void of Course Moon**
+- **Heliocentric positions**
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)

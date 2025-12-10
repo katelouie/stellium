@@ -74,8 +74,13 @@ from stellium.engines.profections import (
 # Longitude Search
 from stellium.engines.search import (
     LongitudeCrossing,
+    SignIngress,
+    find_all_ingresses,
     find_all_longitude_crossings,
+    find_all_sign_changes,
+    find_ingress,
     find_longitude_crossing,
+    find_next_sign_change,
 )
 
 # Void of Course Moon
@@ -116,10 +121,15 @@ __all__ = [
     "MutualReception",
     "render_dispositor_graph",
     "render_both_dispositors",
-    # Longitude Search
+    # Longitude Search & Ingresses
     "find_longitude_crossing",
     "find_all_longitude_crossings",
     "LongitudeCrossing",
+    "find_ingress",
+    "find_all_ingresses",
+    "find_next_sign_change",
+    "find_all_sign_changes",
+    "SignIngress",
     # Primary Directions
     "DirectionsEngine",
     "DirectionResult",
