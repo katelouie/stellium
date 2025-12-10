@@ -63,6 +63,9 @@ class CalculationConfig:
     zodiac_type: ZodiacType = ZodiacType.TROPICAL
     ayanamsa: str | None = None  # Only used if zodiac_type is SIDEREAL
 
+    # Coordinate system
+    heliocentric: bool = False  # Sun-centered instead of Earth-centered
+
     def __post_init__(self) -> None:
         """Validate configuration after initialization."""
         # Set default ayanamsa if sidereal but none specified

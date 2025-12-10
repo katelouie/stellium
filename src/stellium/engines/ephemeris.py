@@ -260,6 +260,10 @@ class SwissEphemerisEngine:
         if config.zodiac_type == ZodiacType.SIDEREAL:
             flags |= swe.FLG_SIDEREAL
 
+        # Add heliocentric flag if using Sun-centered coordinates
+        if config.heliocentric:
+            flags |= swe.FLG_HELCTR
+
         return flags
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)

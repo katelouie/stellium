@@ -127,6 +127,39 @@ print(draconic.get_object("True Node").longitude)  # 0.0
 draconic.draw("draconic_chart.svg").save()
 ```
 
+#### Heliocentric Charts (December 9, 2025)
+
+- **`.with_heliocentric()` on ChartBuilder**: Calculate Sun-centered charts
+  - Positions calculated as seen from the Sun, not Earth
+  - **Earth** appears as a planet (replaces Sun)
+  - **Sun** is removed (it's the center point)
+  - **Lunar nodes and apogees** are removed (Earth-relative concepts)
+  - **Moon** is kept (still has heliocentric position)
+  - **Houses and angles** are skipped (Earth-horizon concepts)
+  - Adds `"heliocentric"` to `chart_tags`
+
+- **Use cases**:
+  - Financial astrology (market timing)
+  - Scientific/astronomical contexts
+  - Some modern experimental techniques
+
+Example usage:
+
+```python
+# Create heliocentric chart
+chart = ChartBuilder.from_native(native).with_heliocentric().calculate()
+
+# Earth is now a planet
+earth = chart.get_object("Earth")
+print(earth.sign_position)  # Earth's position as seen from Sun
+
+# No houses in heliocentric
+print(len(chart.house_systems))  # 0
+
+# Chart knows it's heliocentric
+print(chart.chart_tags)  # ('heliocentric',)
+```
+
 #### Void of Course Moon (December 9, 2025)
 
 - **`chart.voc_moon()`**: Check if the Moon is void of course

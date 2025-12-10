@@ -407,6 +407,37 @@ class ChartBuilder:
         self._config.ayanamsa = None
         return self
 
+    def with_heliocentric(self) -> "ChartBuilder":
+        """
+        Use heliocentric (Sun-centered) coordinates.
+
+        In a heliocentric chart, positions are calculated as seen from the Sun
+        rather than Earth. This changes the chart significantly:
+
+        - **Earth** appears as a planet (replacing the Sun)
+        - **Sun** is removed (it's the center point)
+        - **Lunar nodes and apogees** are removed (Earth-relative concepts)
+        - **Moon** is kept (still orbits Earth, has heliocentric position)
+        - **Houses and angles** are not calculated (Earth-horizon concepts)
+
+        Heliocentric charts are used in:
+        - Financial astrology (market timing)
+        - Some modern experimental techniques
+        - Scientific/astronomical contexts
+
+        Returns:
+            Self for method chaining
+
+        Example:
+            >>> chart = (ChartBuilder.from_native(native)
+            ...     .with_heliocentric()
+            ...     .calculate())
+            >>> earth = chart.get_object("Earth")
+            >>> print(earth.sign_position)  # Where Earth is from the Sun's view
+        """
+        self._config.heliocentric = True
+        return self
+
     def add_component(self, component: ChartComponent) -> "ChartBuilder":
         """Add an additional calculation component (e.g. ArabicParts)."""
         self._components.append(component)
@@ -503,6 +534,17 @@ class ChartBuilder:
         objects.extend(self._config.include_points)
         objects.extend(self._config.include_asteroids)
 
+        # Handle heliocentric mode: add Earth, remove Sun and Earth-relative points
+        if self._config.heliocentric:
+            # Remove Sun (it's the center in heliocentric)
+            objects = [o for o in objects if o != "Sun"]
+            # Remove lunar nodes (Earth-relative concepts)
+            objects = [o for o in objects if o not in ("True Node", "Mean Node")]
+            # Remove lunar apogees (Earth-relative concepts)
+            objects = [o for o in objects if "Apogee" not in o]
+            # Add Earth (it's now a planet in the chart)
+            objects.append("Earth")
+
         # Ensure all names are unique
         return list(set(objects))
 
@@ -525,37 +567,39 @@ class ChartBuilder:
         )
 
         # Step 2: Calculate all house systems AND angles
+        # (Skip for heliocentric charts - houses are Earth-horizon concepts)
         house_systems_map: dict[str, HouseCusps] = {}
         calculated_angles: list[CelestialPosition] = []
-
-        for engine in self._house_engines:
-            system_name = engine.system_name
-            if system_name in house_systems_map:
-                continue  # Avoid duplicate calculations
-
-            # Call the efficient protocol method
-            cusps, angles = engine.calculate_house_data(
-                self._datetime, self._location, self._config
-            )
-
-            house_systems_map[system_name] = cusps
-
-            # Angles are universal, only save them once
-            if not calculated_angles:
-                calculated_angles = angles
-
-        # Step 3: Add angles to the main position list
-        positions.extend(calculated_angles)
-
-        # Step 4: Assign house placements for all systems
         house_placements_map: dict[str, dict[str, int]] = {}
-        for engine in self._house_engines:
-            system_name = engine.system_name
-            cusps = house_systems_map[system_name]
 
-            # Get the {object_name: house_num} dict
-            placements = engine.assign_houses(positions, cusps)
-            house_placements_map[system_name] = placements
+        if not self._config.heliocentric:
+            for engine in self._house_engines:
+                system_name = engine.system_name
+                if system_name in house_systems_map:
+                    continue  # Avoid duplicate calculations
+
+                # Call the efficient protocol method
+                cusps, angles = engine.calculate_house_data(
+                    self._datetime, self._location, self._config
+                )
+
+                house_systems_map[system_name] = cusps
+
+                # Angles are universal, only save them once
+                if not calculated_angles:
+                    calculated_angles = angles
+
+            # Step 3: Add angles to the main position list
+            positions.extend(calculated_angles)
+
+            # Step 4: Assign house placements for all systems
+            for engine in self._house_engines:
+                system_name = engine.system_name
+                cusps = house_systems_map[system_name]
+
+                # Get the {object_name: house_num} dict
+                placements = engine.assign_houses(positions, cusps)
+                house_placements_map[system_name] = placements
 
         # Step 5: Run additional components (Arabic parts, etc)
         # (Components can now see angles in the position list)
@@ -639,6 +683,11 @@ class ChartBuilder:
                 self._config.ayanamsa,  # type: ignore  # Already validated in config.__post_init__
             )
 
+        # Build chart tags based on configuration
+        chart_tags: tuple[str, ...] = ()
+        if self._config.heliocentric:
+            chart_tags = ("heliocentric",)
+
         # Step 7: Build final chart
         return CalculatedChart(
             datetime=self._datetime,
@@ -652,6 +701,7 @@ class ChartBuilder:
             zodiac_type=self._config.zodiac_type,
             ayanamsa=self._config.ayanamsa,
             ayanamsa_value=ayanamsa_value,
+            chart_tags=chart_tags,
         )
 
     def _calculate_unknown_time_chart(self) -> UnknownTimeChart:
