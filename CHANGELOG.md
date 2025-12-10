@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.8.0] - 2025-12-09
+
+### Added
+
 #### Primary Directions Engine (December 9, 2025)
 
 - **DirectionsEngine**: Complete primary directions calculation engine
@@ -73,6 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `PtolemyKey`, `NaibodKey`
 
 Example usage:
+
 ```python
 from stellium.engines.directions import DirectionsEngine, DistributionsCalculator
 
@@ -104,6 +113,7 @@ periods = DistributionsCalculator(chart).calculate(years=80)
   - Serialized in `to_dict()` output
 
 Example usage:
+
 ```python
 # Create draconic chart
 draconic = chart.draconic()
@@ -140,6 +150,7 @@ draconic.draw("draconic_chart.svg").save()
   - Exported from `stellium.engines`
 
 Example usage:
+
 ```python
 voc = chart.voc_moon()
 if voc.is_void:
