@@ -89,6 +89,70 @@ m = DirectionsEngine(chart, method="mundane").direct("Sun", "ASC")
 periods = DistributionsCalculator(chart).calculate(years=80)
 ```
 
+#### Draconic Charts (December 9, 2025)
+
+- **`chart.draconic()`**: Transform any chart to its draconic equivalent
+  - Rotates all positions so North Node is at 0° Aries
+  - Returns a new `CalculatedChart` with all longitudes transformed
+  - House cusps are also rotated
+  - Handles both "True Node" and "North Node" naming
+
+- **`chart_tags` field**: New field on `CalculatedChart` for tracking transformations
+  - Empty tuple `()` by default for natal charts
+  - Transformations append tags: `("draconic",)`, `("progressed",)`, etc.
+  - Tags accumulate when chaining: `chart.draconic().progressed()` → `("draconic", "progressed")`
+  - Serialized in `to_dict()` output
+
+Example usage:
+```python
+# Create draconic chart
+draconic = chart.draconic()
+print(draconic.get_object("Sun").sign_position)  # Sun in draconic position
+print(draconic.chart_tags)  # ('draconic',)
+
+# North Node is now at 0° Aries
+print(draconic.get_object("True Node").longitude)  # 0.0
+
+# Draw and save
+draconic.draw("draconic_chart.svg").save()
+```
+
+#### Void of Course Moon (December 9, 2025)
+
+- **`chart.voc_moon()`**: Check if the Moon is void of course
+  - Returns `VOCMoonResult` with detailed timing information
+  - Uses longitude search engine for exact datetime calculations
+  - **Aspect modes**:
+    - `"traditional"` (default): Sun through Saturn (visible planets)
+    - `"modern"`: Includes Uranus, Neptune, Pluto
+  - Checks all Ptolemaic aspects (conjunction, sextile, square, trine, opposition)
+
+- **`VOCMoonResult` dataclass**: Rich result object with:
+  - `is_void`: Whether Moon is currently void of course
+  - `void_until`: Exact datetime when void period ends
+  - `ends_by`: How void ends - `"aspect"` or `"ingress"`
+  - `next_aspect`: Description of next aspect (e.g., "trine Jupiter")
+  - `next_sign`: Sign Moon will enter next
+  - `ingress_time`: Exact datetime of sign ingress
+
+- **Engine module** (`engines/voc.py`): Standalone calculation function
+  - `calculate_voc_moon(chart, aspects="traditional")` for direct use
+  - Exported from `stellium.engines`
+
+Example usage:
+```python
+voc = chart.voc_moon()
+if voc.is_void:
+    print(f"Moon is VOC until {voc.void_until}")
+    print(f"Will enter {voc.next_sign}")
+else:
+    print(f"Moon will {voc.next_aspect}")
+    print(f"Aspect perfects at {voc.void_until}")
+
+# Use modern planets
+voc_modern = chart.voc_moon(aspects="modern")
+```
+
 ### Changed
 
 - **House system engines now return RAMC as the 6th angle**: The `calculate_house_data()` method returns 6 angles (ASC, MC, DSC, IC, Vertex, RAMC) instead of 5, enabling primary directions calculations

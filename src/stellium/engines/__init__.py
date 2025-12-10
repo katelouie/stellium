@@ -78,6 +78,12 @@ from stellium.engines.search import (
     find_longitude_crossing,
 )
 
+# Void of Course Moon
+from stellium.engines.voc import (
+    VOCMoonResult,
+    calculate_voc_moon,
+)
+
 __all__ = [
     # Ephemeris
     "SwissEphemerisEngine",
@@ -124,4 +130,7 @@ __all__ = [
     "MundaneDirections",
     "PtolemyKey",
     "NaibodKey",
+    # Void of Course Moon
+    "VOCMoonResult",
+    "calculate_voc_moon",
 ]

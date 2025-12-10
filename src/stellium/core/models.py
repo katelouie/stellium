@@ -13,6 +13,7 @@ from enum import Enum
 from typing import TYPE_CHECKING, Any, Literal
 
 if TYPE_CHECKING:
+    from stellium.engines.voc import VOCMoonResult
     from stellium.visualization import ChartDrawBuilder
     from stellium.visualization.dial import DialDrawBuilder
 
@@ -639,6 +640,9 @@ class CalculatedChart:
         default_factory=lambda: dt.datetime.now(dt.UTC)
     )
 
+    # Chart tags - tracks transformations applied (e.g., "draconic", "progressed")
+    chart_tags: tuple[str, ...] = ()
+
     def _get_default_house_system(self) -> str:
         """
         Get the default house system to use.
@@ -924,6 +928,114 @@ class CalculatedChart:
         return dignity_data.get("sect")
 
     # =========================================================================
+    # Chart Transformations
+    # =========================================================================
+
+    def draconic(self) -> "CalculatedChart":
+        """
+        Return a draconic version of this chart.
+
+        The draconic chart rotates all positions so that the North Node
+        is at 0° Aries. This is sometimes called the "soul chart" and
+        represents the soul's orientation before incarnation.
+
+        The transformation subtracts the North Node's longitude from all
+        positions and normalizes to 0-360°.
+
+        Returns:
+            A new CalculatedChart with all longitudes rotated and
+            "draconic" added to chart_tags.
+
+        Example::
+
+            draconic = chart.draconic()
+            print(draconic.get_object("Sun").sign_position)
+            draconic.draw("draconic.svg").save()
+        """
+        from dataclasses import replace
+
+        # Find the North Node (can be called "True Node" or "North Node")
+        north_node = self.get_object("True Node") or self.get_object("North Node")
+        if north_node is None:
+            raise ValueError(
+                "Chart must have North Node (True Node) to create draconic chart"
+            )
+
+        node_longitude = north_node.longitude
+
+        # Rotate all positions
+        rotated_positions = []
+        for pos in self.positions:
+            new_longitude = (pos.longitude - node_longitude) % 360.0
+            # Create new position with rotated longitude
+            rotated_pos = CelestialPosition(
+                name=pos.name,
+                object_type=pos.object_type,
+                longitude=new_longitude,
+                latitude=pos.latitude,
+                distance=pos.distance,
+                speed_longitude=pos.speed_longitude,
+                speed_latitude=pos.speed_latitude,
+                speed_distance=pos.speed_distance,
+                declination=pos.declination,
+                right_ascension=pos.right_ascension,
+                phase=pos.phase,
+            )
+            rotated_positions.append(rotated_pos)
+
+        # Rotate house cusps
+        rotated_house_systems = {}
+        for system_name, house_cusps in self.house_systems.items():
+            rotated_cusps = tuple(
+                (cusp - node_longitude) % 360.0 for cusp in house_cusps.cusps
+            )
+            rotated_house_systems[system_name] = HouseCusps(
+                system=house_cusps.system,
+                cusps=rotated_cusps,
+            )
+
+        # Create the new chart with updated tags
+        return replace(
+            self,
+            positions=tuple(rotated_positions),
+            house_systems=rotated_house_systems,
+            chart_tags=self.chart_tags + ("draconic",),
+        )
+
+    def voc_moon(
+        self, aspects: Literal["traditional", "modern"] = "traditional"
+    ) -> "VOCMoonResult":
+        """
+        Check if the Moon is void of course.
+
+        The Moon is void of course (VOC) when it will not complete any major
+        Ptolemaic aspect (conjunction, sextile, square, trine, opposition)
+        before leaving its current sign. This is traditionally considered
+        an inauspicious time for beginning new ventures.
+
+        Args:
+            aspects: Planet set to consider:
+                - "traditional": Sun through Saturn (visible planets)
+                - "modern": Includes Uranus, Neptune, Pluto
+
+        Returns:
+            VOCMoonResult with void status and timing details
+
+        Example::
+
+            voc = chart.voc_moon()
+            if voc.is_void:
+                print(f"Moon is VOC until {voc.void_until}")
+                print(f"Will enter {voc.next_sign}")
+            else:
+                print(f"Moon will {voc.next_aspect}")
+                print(f"Aspect perfects at {voc.void_until}")
+        """
+        from stellium.engines.voc import calculate_voc_moon
+
+        return calculate_voc_moon(self, aspects)
+
+    # =========================================================================
     # Profections
     # =========================================================================
 
@@ -1193,6 +1305,7 @@ class CalculatedChart:
         This enables web API integration, storage, etc.
         """
         base_dict = {
+            "chart_tags": list(self.chart_tags),
             "datetime": {
                 "utc": self.datetime.utc_datetime.isoformat(),
                 "julian_date": self.datetime.julian_day,
