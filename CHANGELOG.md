@@ -49,6 +49,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **ReportBuilder.with_eclipses()**: Builder method for eclipse section
   - Full API: `with_eclipses(end, start=None, eclipse_types="both")`
 
+- **ReportBuilder.preset_transit_calendar()**: Convenience preset bundling all sky events
+  - Combines stations, ingresses, and eclipses in one call
+  - Full API: `preset_transit_calendar(end, start=None, include_minor_planets=False)`
+  - First parameterized preset (date range is user-specified, not defaulted)
+
 ### Changed
 
 ### Fixed

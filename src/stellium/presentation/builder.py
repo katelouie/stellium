@@ -1261,6 +1261,64 @@ class ReportBuilder:
             .with_house_cusps()
         )
 
+    def preset_transit_calendar(
+        self,
+        end: dt.datetime,
+        start: dt.datetime | None = None,
+        include_minor_planets: bool = False,
+    ) -> "ReportBuilder":
+        """
+        Transit calendar preset: Sky events over a date range.
+
+        Bundles all three transit calendar sections showing what's
+        happening in the sky between two dates. Useful for planning
+        around retrogrades, sign changes, and eclipses.
+
+        Includes:
+        - Planetary stations (retrograde/direct)
+        - Sign ingresses (planets changing signs)
+        - Eclipses (solar and lunar)
+
+        Args:
+            end: End date for the calendar (required)
+            start: Start date (optional, defaults to chart date)
+            include_minor_planets: Include Chiron in stations/ingresses (default: False)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Transit calendar for the next year from chart date
+            >>> from datetime import timedelta
+            >>> chart_date = chart.datetime.utc_datetime
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .preset_transit_calendar(end=chart_date + timedelta(days=365))
+            ...     .render())
+            >>>
+            >>> # Specific date range
+            >>> from datetime import datetime
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .preset_transit_calendar(
+            ...         start=datetime(2025, 1, 1),
+            ...         end=datetime(2025, 12, 31)
+            ...     )
+            ...     .render())
+
+        Note:
+            This preset does NOT include natal chart information - it's purely
+            about sky events. For transits TO your natal chart, use
+            ComparisonBuilder.transit() with preset_transit() instead.
+        """
+        return (
+            self.with_stations(
+                end=end, start=start, include_minor=include_minor_planets
+            )
+            .with_ingresses(end=end, start=start, include_minor=include_minor_planets)
+            .with_eclipses(end=end, start=start)
+        )
+
     # -------------------------------------------------------------------------
     # Rendering Methods
     # -------------------------------------------------------------------------
