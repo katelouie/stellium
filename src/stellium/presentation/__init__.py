@@ -22,6 +22,8 @@ from stellium.core.protocols import ReportRenderer, ReportSection
 
 from .builder import ReportBuilder
 from .renderers import HTMLRenderer, PlainTextRenderer, RichTableRenderer
+
+# Import from the new sections package
 from .sections import (
     AspectSection,
     ChartOverviewSection,
