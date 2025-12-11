@@ -30,19 +30,27 @@ from stellium.engines.voc import (
 
 @pytest.fixture(scope="module")
 def sample_chart():
-    """A chart for VOC testing."""
+    """A chart for VOC testing.
+
+    Uses tuple coordinates to avoid geocoding in CI/CD.
+    Palo Alto, CA coordinates.
+    """
     return ChartBuilder.from_details(
         "2024-06-15 12:00",
-        "Palo Alto, CA",
+        (37.4419, -122.1430),  # Palo Alto, CA
     ).calculate()
 
 
 @pytest.fixture(scope="module")
 def another_chart():
-    """Another chart with different Moon position."""
+    """Another chart with different Moon position.
+
+    Uses tuple coordinates to avoid geocoding in CI/CD.
+    New York, NY coordinates.
+    """
     return ChartBuilder.from_details(
         "2024-01-15 18:00",
-        "New York, NY",
+        (40.7128, -74.0060),  # New York, NY
     ).calculate()
 
 
@@ -448,7 +456,7 @@ class TestCalculateVOCMoonEdgeCases:
         # Create a chart where Moon is early in a sign
         chart = ChartBuilder.from_details(
             "2024-03-10 06:00",  # Pick a time, Moon position varies
-            "Los Angeles, CA",
+            (34.0522, -118.2437),  # Los Angeles, CA
         ).calculate()
 
         result = calculate_voc_moon(chart)
@@ -463,7 +471,7 @@ class TestCalculateVOCMoonEdgeCases:
         # Just verify the function handles it
         chart = ChartBuilder.from_details(
             "2024-07-20 23:00",
-            "London, UK",
+            (51.5074, -0.1278),  # London, UK
         ).calculate()
 
         result = calculate_voc_moon(chart)
@@ -501,10 +509,12 @@ class TestVOCIntegration:
     def test_multiple_charts_same_day(self):
         """VOC can change throughout a day."""
         morning = ChartBuilder.from_details(
-            "2024-06-15 06:00", "Palo Alto, CA"
+            "2024-06-15 06:00",
+            (37.4419, -122.1430),  # Palo Alto, CA
         ).calculate()
         evening = ChartBuilder.from_details(
-            "2024-06-15 22:00", "Palo Alto, CA"
+            "2024-06-15 22:00",
+            (37.4419, -122.1430),  # Palo Alto, CA
         ).calculate()
 
         result_morning = calculate_voc_moon(morning)
