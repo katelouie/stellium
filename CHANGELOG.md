@@ -160,6 +160,37 @@ print(len(chart.house_systems))  # 0
 print(chart.chart_tags)  # ('heliocentric',)
 ```
 
+#### Planetary Station Search (December 11, 2025)
+
+- **`find_station(planet, start)`**: Find next planetary station (retrograde or direct)
+  - Returns `Station` with datetime, station_type, longitude, sign
+  - Uses bisection algorithm to find precise moment when speed = 0
+  - Rejects Sun/Moon (they don't go retrograde)
+
+- **`find_all_stations(planet, start, end)`**: Find all stations in date range
+  - Great for retrograde calendars and transit planning
+
+- **`Station` dataclass**: Rich result object with:
+  - `station_type`: "retrograde" (turning Rx) or "direct" (turning D)
+  - `longitude` and `sign`: Where the planet stations
+  - `is_turning_retrograde` / `is_turning_direct`: Convenience properties
+  - Nice `__str__`: "Mercury stations retrograde at 27°13' Aries on 2024-04-01"
+
+Example usage:
+
+```python
+from stellium.engines import find_station, find_all_stations
+
+# When does Mercury next station?
+station = find_station("Mercury", datetime(2024, 1, 1))
+print(station)  # Mercury stations direct at 22°10' Sagittarius on 2024-01-02
+
+# All Mercury stations in 2024
+stations = find_all_stations("Mercury", datetime(2024, 1, 1), datetime(2024, 12, 31))
+for s in stations:
+    print(f"{s.datetime_utc.date()}: {s.station_type} at {s.sign}")
+```
+
 #### Sign Ingress Search (December 9, 2025)
 
 - **`find_ingress(planet, sign, start)`**: Find next ingress to a specific sign

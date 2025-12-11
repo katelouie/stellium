@@ -103,6 +103,54 @@ class SignIngress:
         )
 
 
+@dataclass(frozen=True)
+class Station:
+    """Result of a planetary station search.
+
+    A station occurs when a planet's apparent motion changes direction -
+    either from direct to retrograde, or retrograde to direct.
+
+    Attributes:
+        julian_day: Julian day of the station
+        datetime_utc: UTC datetime of the station
+        object_name: Name of the celestial object
+        station_type: "retrograde" (turning Rx) or "direct" (turning D)
+        longitude: Longitude at the station (planet "hovers" here)
+        sign: Zodiac sign of the station
+    """
+
+    julian_day: float
+    datetime_utc: datetime
+    object_name: str
+    station_type: Literal["retrograde", "direct"]
+    longitude: float
+    sign: str
+
+    @property
+    def is_turning_retrograde(self) -> bool:
+        """True if planet is turning retrograde (was direct, now Rx)."""
+        return self.station_type == "retrograde"
+
+    @property
+    def is_turning_direct(self) -> bool:
+        """True if planet is turning direct (was Rx, now direct)."""
+        return self.station_type == "direct"
+
+    @property
+    def degree_in_sign(self) -> float:
+        """Degree within the sign (0-30)."""
+        return self.longitude % 30
+
+    def __str__(self) -> str:
+        degree = int(self.degree_in_sign)
+        minute = int((self.degree_in_sign - degree) * 60)
+        return (
+            f"{self.object_name} stations {self.station_type} "
+            f"at {degree}°{minute:02d}' {self.sign} "
+            f"on {self.datetime_utc.strftime('%Y-%m-%d %H:%M')}"
+        )
+
+
 def _normalize_angle_error(angle: float) -> float:
     """Normalize angle difference to range [-180, +180].
 
@@ -656,5 +704,235 @@ def find_all_sign_changes(
 
         # Move past this ingress
         current_jd = ingress.julian_day + 0.1
+
+    return results
+
+
+# =============================================================================
+# Planetary Station Search Functions
+# =============================================================================
+
+
+def _bracket_station(
+    object_id: int,
+    start_jd: float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 400.0,
+    step_days: float = 1.0,
+) -> tuple[float, float, str] | None:
+    """Find an interval containing a planetary station.
+
+    Sweeps through time looking for when the planet's speed changes sign.
+
+    Args:
+        object_id: Swiss Ephemeris object ID
+        start_jd: Julian day to start search from
+        direction: "forward" (future) or "backward" (past)
+        max_days: Maximum days to search
+        step_days: Step size for initial sweep
+
+    Returns:
+        Tuple (jd1, jd2, station_type) bracketing the station, or None if not found.
+        station_type is "retrograde" if speed goes + to -, "direct" if - to +
+    """
+    step = step_days if direction == "forward" else -step_days
+    end_jd = start_jd + (max_days if direction == "forward" else -max_days)
+
+    current_jd = start_jd
+    _, current_speed = _get_position_and_speed(object_id, current_jd)
+
+    while (direction == "forward" and current_jd < end_jd) or (
+        direction == "backward" and current_jd > end_jd
+    ):
+        next_jd = current_jd + step
+        _, next_speed = _get_position_and_speed(object_id, next_jd)
+
+        # Check for sign change in speed
+        if current_speed * next_speed < 0:
+            # Determine station type based on direction of speed change
+            if current_speed > 0 and next_speed < 0:
+                station_type = "retrograde"  # Turning Rx
+            else:
+                station_type = "direct"  # Turning D
+
+            # Return interval in chronological order
+            if direction == "forward":
+                return (current_jd, next_jd, station_type)
+            else:
+                return (next_jd, current_jd, station_type)
+
+        current_jd = next_jd
+        current_speed = next_speed
+
+    return None
+
+
+def _refine_station(
+    object_id: int,
+    jd1: float,
+    jd2: float,
+    tolerance: float = 0.0001,
+    max_iterations: int = 50,
+) -> tuple[float, float]:
+    """Refine a station time using bisection.
+
+    Args:
+        object_id: Swiss Ephemeris object ID
+        jd1: Lower bound of bracket
+        jd2: Upper bound of bracket
+        tolerance: Convergence tolerance in degrees/day
+        max_iterations: Maximum iterations
+
+    Returns:
+        Tuple of (julian_day, longitude) at the station
+    """
+    for _ in range(max_iterations):
+        mid_jd = (jd1 + jd2) / 2
+        lon, speed = _get_position_and_speed(object_id, mid_jd)
+
+        # Check convergence (speed very close to zero)
+        if abs(speed) < tolerance:
+            return mid_jd, lon
+
+        # Get speeds at boundaries to determine which half contains the zero
+        _, speed1 = _get_position_and_speed(object_id, jd1)
+
+        # If speed1 and mid_speed have same sign, zero is in upper half
+        if speed1 * speed > 0:
+            jd1 = mid_jd
+        else:
+            jd2 = mid_jd
+
+    # Return best estimate
+    mid_jd = (jd1 + jd2) / 2
+    lon, _ = _get_position_and_speed(object_id, mid_jd)
+    return mid_jd, lon
+
+
+def find_station(
+    object_name: str,
+    start: datetime | float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 400.0,
+) -> Station | None:
+    """Find the next planetary station (retrograde or direct).
+
+    A station occurs when a planet appears to stop moving and reverse
+    direction. This is an important timing point in astrology.
+
+    Note: Sun and Moon do not have stations (they don't go retrograde).
+
+    Args:
+        object_name: Name of celestial object (e.g., "Mercury", "Mars")
+        start: Starting datetime (UTC) or Julian day
+        direction: "forward" to search future, "backward" to search past
+        max_days: Maximum days to search (default 400, > 1 year for outer planets)
+
+    Returns:
+        Station with exact time and details, or None if not found
+
+    Example:
+        >>> # When does Mercury next station?
+        >>> result = find_station("Mercury", datetime(2024, 1, 1))
+        >>> print(result)  # Mercury stations retrograde at 4°51' Capricorn on 2024-04-01
+    """
+    _set_ephemeris_path()
+
+    if object_name not in SWISS_EPHEMERIS_IDS:
+        raise ValueError(f"Unknown object: {object_name}")
+
+    # Sun and Moon don't station
+    if object_name in ("Sun", "Moon"):
+        raise ValueError(
+            f"{object_name} does not have stations (never goes retrograde)"
+        )
+
+    object_id = SWISS_EPHEMERIS_IDS[object_name]
+
+    # Convert start to Julian day if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    # Phase 1: Bracket the station
+    bracket = _bracket_station(object_id, start_jd, direction, max_days)
+
+    if bracket is None:
+        return None
+
+    jd1, jd2, station_type = bracket
+
+    # Phase 2: Refine with bisection
+    station_jd, longitude = _refine_station(object_id, jd1, jd2)
+
+    sign = _get_sign_from_longitude(longitude)
+
+    return Station(
+        julian_day=station_jd,
+        datetime_utc=_julian_day_to_datetime(station_jd),
+        object_name=object_name,
+        station_type=station_type,
+        longitude=longitude,
+        sign=sign,
+    )
+
+
+def find_all_stations(
+    object_name: str,
+    start: datetime | float,
+    end: datetime | float,
+    max_results: int = 50,
+) -> list[Station]:
+    """Find all planetary stations in a date range.
+
+    Args:
+        object_name: Name of celestial object (e.g., "Mercury", "Mars")
+        start: Start datetime (UTC) or Julian day
+        end: End datetime (UTC) or Julian day
+        max_results: Safety limit on number of results (default 50)
+
+    Returns:
+        List of Station objects, chronologically ordered
+
+    Example:
+        >>> # Find all Mercury stations in 2024
+        >>> results = find_all_stations(
+        ...     "Mercury",
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2024, 12, 31)
+        ... )
+        >>> for r in results:
+        ...     print(r)
+    """
+    # Convert to Julian days if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    if isinstance(end, datetime):
+        end_jd = _datetime_to_julian_day(end)
+    else:
+        end_jd = end
+
+    results = []
+    current_jd = start_jd
+
+    while current_jd < end_jd and len(results) < max_results:
+        station = find_station(
+            object_name,
+            current_jd,
+            direction="forward",
+            max_days=end_jd - current_jd + 1,
+        )
+
+        if station is None or station.julian_day > end_jd:
+            break
+
+        results.append(station)
+
+        # Move past this station (use larger step since stations are months apart)
+        current_jd = station.julian_day + 5.0
 
     return results
