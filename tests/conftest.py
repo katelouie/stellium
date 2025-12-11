@@ -86,6 +86,25 @@ from stellium.engines.houses import (
 from stellium.engines.orbs import LuminariesOrbEngine, SimpleOrbEngine
 
 # ============================================================================
+# SESSION SETUP - Warm up expensive initializations
+# ============================================================================
+
+
+@pytest.fixture(scope="session", autouse=True)
+def warm_up_timezone_finder():
+    """
+    Eagerly initialize TimezoneFinder at session start.
+
+    TimezoneFinder initialization takes ~0.4s, which would otherwise be charged
+    to the first test that uses tuple coordinates in ChartBuilder.from_details().
+    By warming it up here, we amortize this cost across all tests.
+    """
+    from stellium.core.native import _get_timezone_finder
+
+    _get_timezone_finder()
+
+
+# ============================================================================
 # DATETIME FIXTURES
 # ============================================================================
 

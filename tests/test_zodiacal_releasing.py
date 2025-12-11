@@ -23,20 +23,24 @@ from stellium.engines.releasing import (
 )
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def einstein_natal():
     """Albert Einstein's natal chart (well-documented birth data).
 
     Born March 14, 1879, Ulm, Germany
+
+    Note: Module-scoped for performance - chart is immutable so safe to share.
     """
     return ChartBuilder.from_notable("Albert Einstein").calculate()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def kate_natal():
     """Kate's natal chart for testing.
 
     Born January 6, 1994, Palo Alto, CA
+
+    Note: Module-scoped for performance - chart is immutable so safe to share.
     """
     return ChartBuilder.from_details(
         "1994-01-06 11:47",
@@ -45,9 +49,12 @@ def kate_natal():
     ).calculate()
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def kate_with_zr():
-    """Kate's chart with zodiacal releasing pre-calculated."""
+    """Kate's chart with zodiacal releasing pre-calculated.
+
+    Note: Module-scoped for performance - chart is immutable so safe to share.
+    """
     return (
         ChartBuilder.from_details(
             "1994-01-06 11:47",
