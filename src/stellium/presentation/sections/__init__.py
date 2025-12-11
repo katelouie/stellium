@@ -67,6 +67,8 @@ from .timing import (
 
 # Transit calendar sections
 from .transits import (
+    EclipseSection,
+    IngressSection,
     StationSection,
 )
 
@@ -103,5 +105,7 @@ __all__ = [
     "FixedStarsSection",
     "ArabicPartsSection",
     # Transit calendar sections
+    "EclipseSection",
+    "IngressSection",
     "StationSection",
 ]

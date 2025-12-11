@@ -9,6 +9,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### IngressSection Report (December 11, 2025)
+
+- **IngressSection**: Report section showing when planets enter new zodiac signs
+  - Same pattern as `StationSection` - date-range based, not chart-analysis
+  - Default planets: Sun through Pluto
+  - Optional `include_moon=True` for Moon ingresses (frequent, ~2.5 days/sign)
+  - Optional `include_minor=True` for Chiron
+  - Shows retrograde ingresses with "Rx" indicator
+  - Table columns: Date, Time, Planet, From, To (with sign glyphs)
+  - Built on existing `find_all_sign_changes()` from search engine
+
+- **ReportBuilder.with_ingresses()**: Builder method for ingress section
+  - `end` parameter required
+  - `start` defaults to chart date if not provided
+  - Full API: `with_ingresses(end, start=None, planets=None, include_moon=False, include_minor=False)`
+
+#### Eclipse Search and Section (December 11, 2025)
+
+- **Eclipse dataclass**: Result object for eclipse searches
+  - `eclipse_type`: "solar" or "lunar"
+  - `classification`: "total", "partial", "penumbral", or "annular"
+  - `nearest_node`: Which node the eclipse is near ("north" or "south")
+  - `orb_to_node`: Distance from lunation to node
+  - Nice `__str__`: "Total solar eclipse at 19°24' Aries (NN) on 2024-04-08"
+
+- **`find_eclipse(start, eclipse_types="both")`**: Find next eclipse from a date
+  - Searches for New/Full Moons, checks node proximity
+  - Solar eclipses within 18.5° of node, lunar within 12.5°
+
+- **`find_all_eclipses(start, end, eclipse_types="both")`**: All eclipses in a range
+  - Returns chronologically sorted list
+  - Properly finds both eclipses in eclipse seasons (solar + lunar ~2 weeks apart)
+
+- **EclipseSection**: Report section showing eclipses in a date range
+  - Same pattern as StationSection and IngressSection
+  - Table columns: Date, Time, Type, Position, Sign, Node
+
+- **ReportBuilder.with_eclipses()**: Builder method for eclipse section
+  - Full API: `with_eclipses(end, start=None, eclipse_types="both")`
+
 ### Changed
 
 ### Fixed

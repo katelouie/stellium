@@ -936,3 +936,412 @@ def find_all_stations(
         current_jd = station.julian_day + 5.0
 
     return results
+
+
+# =============================================================================
+# Eclipse Search Functions
+# =============================================================================
+
+# Maximum orb from node for an eclipse to occur
+# Solar eclipses can occur up to ~18° from node, lunar up to ~12°
+SOLAR_ECLIPSE_MAX_ORB = 18.5
+LUNAR_ECLIPSE_MAX_ORB = 12.5
+
+# Approximate orb thresholds for eclipse types (rough guidelines)
+# These vary based on lunar distance, parallax, etc. - simplified here
+TOTAL_SOLAR_ORB = 10.0  # Likely total/annular if within this
+PARTIAL_SOLAR_ORB = 18.5  # Partial possible up to this
+TOTAL_LUNAR_ORB = 6.0  # Likely total lunar if within this
+PARTIAL_LUNAR_ORB = 12.5  # Partial lunar up to this
+
+
+@dataclass(frozen=True)
+class Eclipse:
+    """Result of an eclipse search.
+
+    Attributes:
+        julian_day: Julian day of the eclipse (exact Sun-Moon conjunction/opposition)
+        datetime_utc: UTC datetime of the eclipse
+        eclipse_type: "solar" or "lunar"
+        sun_longitude: Sun's longitude at eclipse
+        moon_longitude: Moon's longitude at eclipse
+        node_longitude: True Node longitude at eclipse
+        orb_to_node: Distance from Sun/Moon to nearest node (degrees)
+        nearest_node: Which node is involved ("north" or "south")
+        sign: Zodiac sign of the eclipse
+        classification: "total", "annular", "partial", or "penumbral"
+    """
+
+    julian_day: float
+    datetime_utc: datetime
+    eclipse_type: Literal["solar", "lunar"]
+    sun_longitude: float
+    moon_longitude: float
+    node_longitude: float
+    orb_to_node: float
+    nearest_node: Literal["north", "south"]
+    sign: str
+    classification: str
+
+    @property
+    def is_solar(self) -> bool:
+        """True if this is a solar eclipse."""
+        return self.eclipse_type == "solar"
+
+    @property
+    def is_lunar(self) -> bool:
+        """True if this is a lunar eclipse."""
+        return self.eclipse_type == "lunar"
+
+    @property
+    def degree_in_sign(self) -> float:
+        """Degree within the sign (0-30)."""
+        return self.sun_longitude % 30
+
+    def __str__(self) -> str:
+        degree = int(self.degree_in_sign)
+        minute = int((self.degree_in_sign - degree) * 60)
+        node_abbrev = "NN" if self.nearest_node == "north" else "SN"
+        return (
+            f"{self.classification.capitalize()} {self.eclipse_type} eclipse "
+            f"at {degree}°{minute:02d}' {self.sign} ({node_abbrev}) "
+            f"on {self.datetime_utc.strftime('%Y-%m-%d %H:%M')}"
+        )
+
+
+def _get_sun_moon_separation(julian_day: float) -> tuple[float, float, float, float]:
+    """Get Sun-Moon separation and positions at a given time.
+
+    Args:
+        julian_day: Julian day number
+
+    Returns:
+        Tuple of (separation, sun_longitude, moon_longitude, moon_speed)
+        Separation is normalized to [-180, +180]
+    """
+    sun_lon, _ = _get_position_and_speed(swe.SUN, julian_day)
+    moon_lon, moon_speed = _get_position_and_speed(swe.MOON, julian_day)
+    separation = _normalize_angle_error(moon_lon - sun_lon)
+    return separation, sun_lon, moon_lon, moon_speed
+
+
+def _find_lunation(
+    start_jd: float,
+    lunation_type: Literal["new", "full"],
+    max_days: float = 32.0,
+) -> tuple[float, float, float] | None:
+    """Find the next New Moon or Full Moon.
+
+    Uses Newton-Raphson on Sun-Moon separation.
+
+    Args:
+        start_jd: Julian day to start search from
+        lunation_type: "new" (conjunction) or "full" (opposition)
+        max_days: Maximum days to search
+
+    Returns:
+        Tuple of (julian_day, sun_longitude, moon_longitude) or None
+    """
+    # Start with a sweep to bracket the lunation
+    current_jd = start_jd
+    end_jd = start_jd + max_days
+    step = 1.0  # Day step for initial sweep
+
+    sep, _, _, _ = _get_sun_moon_separation(current_jd)
+    # Adjust for target
+    if lunation_type == "full":
+        current_error = _normalize_angle_error(sep - 180.0)
+    else:
+        current_error = sep  # Already normalized around 0
+
+    # Find bracket
+    bracket_start = None
+    bracket_end = None
+
+    while current_jd < end_jd:
+        next_jd = current_jd + step
+        sep, _, _, _ = _get_sun_moon_separation(next_jd)
+
+        if lunation_type == "full":
+            next_error = _normalize_angle_error(sep - 180.0)
+        else:
+            next_error = sep
+
+        # Check for sign change AND that both errors are reasonably small
+        # This avoids false positives from wraparound (e.g., +174° to -171°)
+        # A real zero crossing will have |error| < 90° on both sides
+        if current_error * next_error < 0:
+            if abs(current_error) < 90 and abs(next_error) < 90:
+                bracket_start = current_jd
+                bracket_end = next_jd
+                break
+
+        current_jd = next_jd
+        current_error = next_error
+
+    if bracket_start is None:
+        return None
+
+    # Refine with Newton-Raphson / bisection
+    t = (bracket_start + bracket_end) / 2
+    for _ in range(50):
+        sep, sun_lon, moon_lon, moon_speed = _get_sun_moon_separation(t)
+
+        if lunation_type == "full":
+            error = _normalize_angle_error(sep - 180.0)
+        else:
+            error = sep
+
+        if abs(error) < 0.0001:  # ~0.36 arcseconds
+            return t, sun_lon, moon_lon
+
+        # Moon moves ~13°/day relative to Sun (~12°/day faster than Sun)
+        # Use this as derivative estimate
+        relative_speed = moon_speed - 1.0  # Sun moves ~1°/day
+        if abs(relative_speed) > 0.1:
+            newton_step = -error / relative_speed
+            newton_step = max(-2, min(2, newton_step))  # Clamp
+            t_new = t + newton_step
+            t_new = max(bracket_start, min(bracket_end, t_new))
+        else:
+            t_new = (bracket_start + bracket_end) / 2
+
+        # Update bracket
+        if error > 0:
+            bracket_end = t
+        else:
+            bracket_start = t
+
+        t = t_new
+
+    # Return best estimate
+    sep, sun_lon, moon_lon, _ = _get_sun_moon_separation(t)
+    return t, sun_lon, moon_lon
+
+
+def _classify_eclipse(
+    eclipse_type: Literal["solar", "lunar"],
+    orb_to_node: float,
+) -> str:
+    """Classify an eclipse based on type and orb to node.
+
+    Args:
+        eclipse_type: "solar" or "lunar"
+        orb_to_node: Distance from eclipse to nearest node
+
+    Returns:
+        Classification: "total", "annular", "partial", or "penumbral"
+    """
+    if eclipse_type == "solar":
+        if orb_to_node <= TOTAL_SOLAR_ORB:
+            # Could be total or annular depending on Moon's distance
+            # Simplified: just call it "total" for tight orbs
+            return "total"
+        else:
+            return "partial"
+    else:  # lunar
+        if orb_to_node <= TOTAL_LUNAR_ORB:
+            return "total"
+        elif orb_to_node <= PARTIAL_LUNAR_ORB * 0.7:
+            return "partial"
+        else:
+            return "penumbral"
+
+
+def find_eclipse(
+    start: datetime | float,
+    direction: Literal["forward", "backward"] = "forward",
+    eclipse_types: Literal["both", "solar", "lunar"] = "both",
+    max_days: float = 200.0,
+) -> Eclipse | None:
+    """Find the next eclipse from a starting date.
+
+    Args:
+        start: Starting datetime (UTC) or Julian day
+        direction: "forward" to search future, "backward" to search past
+        eclipse_types: Which types to find ("both", "solar", "lunar")
+        max_days: Maximum days to search (default 200 = ~6 months)
+
+    Returns:
+        Eclipse with details, or None if not found
+
+    Example:
+        >>> # Find next eclipse from now
+        >>> eclipse = find_eclipse(datetime(2024, 1, 1))
+        >>> print(eclipse)
+        Partial lunar eclipse at 5°07' Leo (NN) on 2024-03-25 07:00
+    """
+    _set_ephemeris_path()
+
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    if direction == "backward":
+        # For backward search, we'd need to modify the logic
+        # For now, only support forward
+        raise NotImplementedError("Backward eclipse search not yet implemented")
+
+    current_jd = start_jd
+    end_jd = start_jd + max_days
+
+    while current_jd < end_jd:
+        # Find BOTH next New Moon and next Full Moon
+        # Then check which (if any) is an eclipse, returning the earlier one
+        solar_eclipse = None
+        lunar_eclipse = None
+        new_moon_jd = None
+        full_moon_jd = None
+
+        # Find next New Moon (potential solar eclipse)
+        if eclipse_types in ("both", "solar"):
+            new_moon = _find_lunation(current_jd, "new", max_days=35)
+            if new_moon and new_moon[0] <= end_jd:
+                jd, sun_lon, moon_lon = new_moon
+                new_moon_jd = jd
+
+                # Get node position
+                node_lon, _ = _get_position_and_speed(
+                    SWISS_EPHEMERIS_IDS["True Node"], jd
+                )
+                south_node_lon = (node_lon + 180) % 360
+
+                # Check distance to nodes
+                dist_to_nn = abs(_normalize_angle_error(sun_lon - node_lon))
+                dist_to_sn = abs(_normalize_angle_error(sun_lon - south_node_lon))
+
+                orb = min(dist_to_nn, dist_to_sn)
+                nearest = "north" if dist_to_nn < dist_to_sn else "south"
+
+                if orb <= SOLAR_ECLIPSE_MAX_ORB:
+                    solar_eclipse = Eclipse(
+                        julian_day=jd,
+                        datetime_utc=_julian_day_to_datetime(jd),
+                        eclipse_type="solar",
+                        sun_longitude=sun_lon,
+                        moon_longitude=moon_lon,
+                        node_longitude=node_lon,
+                        orb_to_node=orb,
+                        nearest_node=nearest,
+                        sign=_get_sign_from_longitude(sun_lon),
+                        classification=_classify_eclipse("solar", orb),
+                    )
+
+        # Find next Full Moon (potential lunar eclipse)
+        if eclipse_types in ("both", "lunar"):
+            full_moon = _find_lunation(current_jd, "full", max_days=35)
+            if full_moon and full_moon[0] <= end_jd:
+                jd, sun_lon, moon_lon = full_moon
+                full_moon_jd = jd
+
+                # Get node position
+                node_lon, _ = _get_position_and_speed(
+                    SWISS_EPHEMERIS_IDS["True Node"], jd
+                )
+                south_node_lon = (node_lon + 180) % 360
+
+                # For lunar eclipse, check Moon's distance to nodes
+                dist_to_nn = abs(_normalize_angle_error(moon_lon - node_lon))
+                dist_to_sn = abs(_normalize_angle_error(moon_lon - south_node_lon))
+
+                orb = min(dist_to_nn, dist_to_sn)
+                nearest = "north" if dist_to_nn < dist_to_sn else "south"
+
+                if orb <= LUNAR_ECLIPSE_MAX_ORB:
+                    lunar_eclipse = Eclipse(
+                        julian_day=jd,
+                        datetime_utc=_julian_day_to_datetime(jd),
+                        eclipse_type="lunar",
+                        sun_longitude=sun_lon,
+                        moon_longitude=moon_lon,
+                        node_longitude=node_lon,
+                        orb_to_node=orb,
+                        nearest_node=nearest,
+                        sign=_get_sign_from_longitude(moon_lon),
+                        classification=_classify_eclipse("lunar", orb),
+                    )
+
+        # Return the earlier eclipse if we found any
+        if solar_eclipse and lunar_eclipse:
+            # Return whichever comes first
+            if solar_eclipse.julian_day <= lunar_eclipse.julian_day:
+                return solar_eclipse
+            else:
+                return lunar_eclipse
+        elif solar_eclipse:
+            return solar_eclipse
+        elif lunar_eclipse:
+            return lunar_eclipse
+
+        # No eclipse found, move past whichever lunation we found
+        if new_moon_jd and full_moon_jd:
+            current_jd = min(new_moon_jd, full_moon_jd) + 1.0
+        elif new_moon_jd:
+            current_jd = new_moon_jd + 1.0
+        elif full_moon_jd:
+            current_jd = full_moon_jd + 1.0
+        else:
+            current_jd += 15.0  # Half a lunar cycle
+
+    return None
+
+
+def find_all_eclipses(
+    start: datetime | float,
+    end: datetime | float,
+    eclipse_types: Literal["both", "solar", "lunar"] = "both",
+    max_results: int = 20,
+) -> list[Eclipse]:
+    """Find all eclipses in a date range.
+
+    Args:
+        start: Start datetime (UTC) or Julian day
+        end: End datetime (UTC) or Julian day
+        eclipse_types: Which types to find ("both", "solar", "lunar")
+        max_results: Safety limit on number of results (default 20)
+
+    Returns:
+        List of Eclipse objects, chronologically ordered
+
+    Example:
+        >>> # Find all eclipses in 2024
+        >>> eclipses = find_all_eclipses(
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2024, 12, 31)
+        ... )
+        >>> for e in eclipses:
+        ...     print(e)
+    """
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    if isinstance(end, datetime):
+        end_jd = _datetime_to_julian_day(end)
+    else:
+        end_jd = end
+
+    results = []
+    current_jd = start_jd
+
+    while current_jd < end_jd and len(results) < max_results:
+        eclipse = find_eclipse(
+            current_jd,
+            direction="forward",
+            eclipse_types=eclipse_types,
+            max_days=end_jd - current_jd + 1,
+        )
+
+        if eclipse is None or eclipse.julian_day > end_jd:
+            break
+
+        results.append(eclipse)
+
+        # Move past this eclipse - but not too far!
+        # Eclipse seasons have ~2 eclipses ~2 weeks apart
+        # Step only 12 days to catch both solar and lunar in same season
+        current_jd = eclipse.julian_day + 12.0
+
+    return results

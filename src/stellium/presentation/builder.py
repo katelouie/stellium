@@ -23,8 +23,10 @@ from .sections import (
     DeclinationSection,
     DignitySection,
     DispositorSection,
+    EclipseSection,
     FixedStarsSection,
     HouseCuspsSection,
+    IngressSection,
     MidpointAspectsSection,
     MidpointSection,
     MoonPhaseSection,
@@ -902,6 +904,130 @@ class ReportBuilder:
                 end=end,
                 planets=planets,
                 include_minor=include_minor,
+            )
+        )
+        return self
+
+    def with_ingresses(
+        self,
+        end: dt.datetime,
+        start: dt.datetime | None = None,
+        planets: list[str] | None = None,
+        include_moon: bool = False,
+        include_minor: bool = False,
+    ) -> "ReportBuilder":
+        """
+        Add sign ingresses table.
+
+        Shows when planets enter new zodiac signs within a date range.
+        Useful for tracking sign changes and transit planning.
+
+        Args:
+            end: End date for ingress search (required)
+            start: Start date for ingress search (optional, defaults to chart date)
+            planets: Which planets to include (default: Sun through Pluto)
+            include_moon: Include Moon ingresses (default: False, very frequent)
+            include_minor: Include Chiron (default: False)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Ingresses for the next year from chart date
+            >>> from datetime import datetime, timedelta
+            >>> chart_date = chart.datetime.utc_datetime
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_ingresses(end=chart_date + timedelta(days=365))
+            ...     .render())
+            >>>
+            >>> # Specific date range with Moon included
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_ingresses(
+            ...         start=datetime(2025, 1, 1),
+            ...         end=datetime(2025, 12, 31),
+            ...         include_moon=True
+            ...     )
+            ...     .render())
+        """
+        # Use chart date as start if not provided
+        if start is None:
+            if self._chart is None:
+                raise ValueError(
+                    "Must call from_chart() before with_ingresses() when start is not provided"
+                )
+            if isinstance(self._chart, Comparison):
+                start = self._chart.chart1.datetime.utc_datetime
+            else:
+                start = self._chart.datetime.utc_datetime
+
+        self._sections.append(
+            IngressSection(
+                start=start,
+                end=end,
+                planets=planets,
+                include_moon=include_moon,
+                include_minor=include_minor,
+            )
+        )
+        return self
+
+    def with_eclipses(
+        self,
+        end: dt.datetime,
+        start: dt.datetime | None = None,
+        eclipse_types: str = "both",
+    ) -> "ReportBuilder":
+        """
+        Add eclipses table.
+
+        Shows solar and lunar eclipses within a date range.
+        Useful for eclipse calendars and transit planning.
+
+        Args:
+            end: End date for eclipse search (required)
+            start: Start date for eclipse search (optional, defaults to chart date)
+            eclipse_types: Which types to include ("both", "solar", "lunar")
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Eclipses for the next 2 years from chart date
+            >>> from datetime import datetime, timedelta
+            >>> chart_date = chart.datetime.utc_datetime
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_eclipses(end=chart_date + timedelta(days=730))
+            ...     .render())
+            >>>
+            >>> # Only solar eclipses in a specific range
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_eclipses(
+            ...         start=datetime(2025, 1, 1),
+            ...         end=datetime(2025, 12, 31),
+            ...         eclipse_types="solar"
+            ...     )
+            ...     .render())
+        """
+        # Use chart date as start if not provided
+        if start is None:
+            if self._chart is None:
+                raise ValueError(
+                    "Must call from_chart() before with_eclipses() when start is not provided"
+                )
+            if isinstance(self._chart, Comparison):
+                start = self._chart.chart1.datetime.utc_datetime
+            else:
+                start = self._chart.datetime.utc_datetime
+
+        self._sections.append(
+            EclipseSection(
+                start=start,
+                end=end,
+                eclipse_types=eclipse_types,
             )
         )
         return self
