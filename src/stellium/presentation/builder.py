@@ -5,6 +5,7 @@ The builder pattern allows users to progressively construct reports
 by adding sections one at a time, then rendering in their chosen format.
 """
 
+import datetime as dt
 from typing import Any
 
 from stellium.core.comparison import Comparison
@@ -29,6 +30,7 @@ from .sections import (
     MoonPhaseSection,
     PlanetPositionSection,
     ProfectionSection,
+    StationSection,
     ZodiacalReleasingSection,
 )
 
@@ -839,6 +841,67 @@ class ReportBuilder:
                 tier=tier,
                 include_keywords=include_keywords,
                 sort_by=sort_by,
+            )
+        )
+        return self
+
+    def with_stations(
+        self,
+        end: dt.datetime,
+        start: dt.datetime | None = None,
+        planets: list[str] | None = None,
+        include_minor: bool = False,
+    ) -> "ReportBuilder":
+        """
+        Add planetary stations (retrograde/direct) table.
+
+        Shows when planets station retrograde or direct within a date range.
+        Useful for retrograde calendars and transit planning.
+
+        Args:
+            end: End date for station search (required)
+            start: Start date for station search (optional, defaults to chart date)
+            planets: Which planets to include (default: Mercury through Pluto)
+            include_minor: Include Chiron (default: False)
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Stations for the next year from chart date
+            >>> from datetime import datetime, timedelta
+            >>> chart_date = chart.datetime.utc_datetime
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_stations(end=chart_date + timedelta(days=365))
+            ...     .render())
+            >>>
+            >>> # Specific date range
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_stations(
+            ...         start=datetime(2025, 1, 1),
+            ...         end=datetime(2025, 12, 31)
+            ...     )
+            ...     .render())
+        """
+        # Use chart date as start if not provided
+        if start is None:
+            if self._chart is None:
+                raise ValueError(
+                    "Must call from_chart() before with_stations() when start is not provided"
+                )
+            if isinstance(self._chart, Comparison):
+                start = self._chart.chart1.datetime.utc_datetime
+            else:
+                start = self._chart.datetime.utc_datetime
+
+        self._sections.append(
+            StationSection(
+                start=start,
+                end=end,
+                planets=planets,
+                include_minor=include_minor,
             )
         )
         return self

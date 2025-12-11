@@ -65,6 +65,11 @@ from .timing import (
     ZodiacalReleasingSection,
 )
 
+# Transit calendar sections
+from .transits import (
+    StationSection,
+)
+
 __all__ = [
     # Utility functions
     "get_object_display",
@@ -97,4 +102,6 @@ __all__ = [
     "DeclinationAspectSection",
     "FixedStarsSection",
     "ArabicPartsSection",
+    # Transit calendar sections
+    "StationSection",
 ]

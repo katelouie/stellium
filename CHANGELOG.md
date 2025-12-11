@@ -160,6 +160,33 @@ print(len(chart.house_systems))  # 0
 print(chart.chart_tags)  # ('heliocentric',)
 ```
 
+#### Transit Report Sections (December 11, 2025)
+
+- **`StationSection`**: New report section for planetary stations
+  - Shows retrograde/direct stations in a date range
+  - Beautiful Rich table output with date, time, planet, station type, position, sign
+  - Located in new `presentation/sections/transits.py` module
+
+- **`ReportBuilder.with_stations()`**: Builder method for station reports
+  - `end` required, `start` defaults to chart date
+  - `planets` list customizable (default: Mercury through Pluto)
+  - `include_minor` option for Chiron
+
+Example usage:
+
+```python
+from datetime import datetime
+from stellium import ReportBuilder
+
+report = (ReportBuilder()
+    .from_chart(chart)
+    .with_stations(
+        start=datetime(2024, 1, 1),
+        end=datetime(2024, 12, 31)
+    )
+    .render(format='rich_table'))
+```
+
 #### Planetary Station Search (December 11, 2025)
 
 - **`find_station(planet, start)`**: Find next planetary station (retrograde or direct)
