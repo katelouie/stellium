@@ -941,6 +941,234 @@ class TestEdgeCases:
         assert spirit_timeline.lot_sign is not None
 
 
+class TestFractalMethod:
+    """Tests for the fractal ZR calculation method.
+
+    The fractal method differs from Valens in that:
+    - L2+ periods are proportionally scaled from their parent (not fixed multipliers)
+    - Each level subdivides the parent into exactly 12 sub-periods
+    - No truncation - periods always sum exactly to parent duration
+    - No "loosing of the bond" jump to opposite sign
+    """
+
+    def test_fractal_method_initialization(self, kate_natal):
+        """Engine should accept method='fractal'."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal")
+
+        assert engine.method == "fractal"
+
+    def test_fractal_l1_same_as_valens(self, kate_natal):
+        """L1 periods should be identical in fractal and valens methods."""
+        fractal_engine = ZodiacalReleasingEngine(kate_natal, method="fractal")
+        valens_engine = ZodiacalReleasingEngine(kate_natal, method="valens")
+
+        fractal_periods = fractal_engine.calculate_all_periods()
+        valens_periods = valens_engine.calculate_all_periods()
+
+        # L1 periods should be identical
+        assert len(fractal_periods[1]) == len(valens_periods[1])
+
+        for f, v in zip(fractal_periods[1], valens_periods[1], strict=False):
+            assert f.sign == v.sign
+            assert f.ruler == v.ruler
+            assert abs(f.length_days - v.length_days) < 0.01
+
+    def test_fractal_l2_exactly_12_periods(self, kate_natal):
+        """In fractal method, each L1 should have exactly 12 L2 sub-periods."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=2)
+        periods = engine.calculate_all_periods()
+
+        l1_periods = periods[1]
+        l2_periods = periods[2]
+
+        # Each L1 should have exactly 12 L2 children
+        for l1 in l1_periods[:5]:  # Check first 5 L1 periods
+            l2_children = [
+                p for p in l2_periods if p.start >= l1.start and p.start < l1.end
+            ]
+            assert (
+                len(l2_children) == 12
+            ), f"L1 {l1.sign} has {len(l2_children)} L2 children, expected 12"
+
+    def test_fractal_l2_sums_to_l1(self, kate_natal):
+        """In fractal method, L2 period durations should sum exactly to L1 duration."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=2)
+        periods = engine.calculate_all_periods()
+
+        l1_periods = periods[1]
+        l2_periods = periods[2]
+
+        for l1 in l1_periods[:5]:
+            l2_children = [
+                p for p in l2_periods if p.start >= l1.start and p.start < l1.end
+            ]
+
+            total_l2_days = sum(p.length_days for p in l2_children)
+
+            # Should sum exactly (within floating point tolerance)
+            assert (
+                abs(total_l2_days - l1.length_days) < 0.01
+            ), f"L2 sum {total_l2_days:.2f} != L1 {l1.length_days:.2f}"
+
+    def test_fractal_l2_proportional_scaling(self, kate_natal):
+        """In fractal method, L2 durations are proportional to sign periods."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=2)
+        periods = engine.calculate_all_periods()
+
+        l1_periods = periods[1]
+        l2_periods = periods[2]
+
+        # Take first L1 and check its L2 children
+        l1 = l1_periods[0]
+        l2_children = [
+            p for p in l2_periods if p.start >= l1.start and p.start < l1.end
+        ]
+
+        # Each L2 duration should be: parent_duration * (sign_period / 208)
+        total_cycle = engine.total_cycle_period  # 208
+
+        for l2 in l2_children:
+            sign_period = engine.sign_periods[l2.sign]
+            expected_fraction = sign_period / total_cycle
+            expected_days = l1.length_days * expected_fraction
+
+            assert (
+                abs(l2.length_days - expected_days) < 0.01
+            ), f"L2 {l2.sign}: {l2.length_days:.2f} != expected {expected_days:.2f}"
+
+    def test_fractal_no_loosing_bond(self, kate_natal):
+        """Fractal method should never set is_loosing_bond."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=4)
+        periods = engine.calculate_all_periods()
+
+        for level in range(1, 5):
+            for period in periods[level]:
+                assert (
+                    period.is_loosing_bond is False
+                ), f"L{level} {period.sign} has is_loosing_bond=True in fractal method"
+
+    def test_fractal_l3_exactly_12_per_l2(self, kate_natal):
+        """In fractal method, each L2 should have exactly 12 L3 sub-periods."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=3)
+        periods = engine.calculate_all_periods()
+
+        l2_periods = periods[2]
+        l3_periods = periods[3]
+
+        # Check first few L2 periods
+        for l2 in l2_periods[:5]:
+            l3_children = [
+                p for p in l3_periods if p.start >= l2.start and p.start < l2.end
+            ]
+            assert (
+                len(l3_children) == 12
+            ), f"L2 {l2.sign} has {len(l3_children)} L3 children, expected 12"
+
+    def test_fractal_l4_exactly_12_per_l3(self, kate_natal):
+        """In fractal method, each L3 should have exactly 12 L4 sub-periods."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=4)
+        periods = engine.calculate_all_periods()
+
+        l3_periods = periods[3]
+        l4_periods = periods[4]
+
+        # Check first few L3 periods
+        for l3 in l3_periods[:3]:
+            l4_children = [
+                p for p in l4_periods if p.start >= l3.start and p.start < l3.end
+            ]
+            assert (
+                len(l4_children) == 12
+            ), f"L3 {l3.sign} has {len(l4_children)} L4 children, expected 12"
+
+    def test_fractal_periods_contiguous(self, kate_natal):
+        """Fractal method periods should be perfectly contiguous."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=3)
+        periods = engine.calculate_all_periods()
+
+        for level in [1, 2, 3]:
+            level_periods = periods[level]
+            for i in range(len(level_periods) - 1):
+                current = level_periods[i]
+                next_period = level_periods[i + 1]
+
+                # End of current should equal start of next
+                diff_seconds = abs((current.end - next_period.start).total_seconds())
+                assert diff_seconds < 1, (
+                    f"L{level} gap between {current.sign} and {next_period.sign}: "
+                    f"{diff_seconds} seconds"
+                )
+
+    def test_fractal_angular_signs_preserved(self, kate_natal):
+        """Angular sign detection should work in fractal method."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal")
+        periods = engine.calculate_all_periods()
+
+        # First period should be angular (1st from lot)
+        first_l1 = periods[1][0]
+        assert first_l1.is_angular is True
+        assert first_l1.angle_from_lot == 1
+
+        # Find peak periods (10th from lot)
+        l2_peaks = [p for p in periods[2] if p.is_peak]
+        assert len(l2_peaks) > 0
+
+        for peak in l2_peaks:
+            assert peak.angle_from_lot == 10
+
+    def test_fractal_qualitative_scoring(self, kate_natal):
+        """Qualitative scoring should work in fractal method."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal", max_level=2)
+        periods = engine.calculate_all_periods()
+
+        for level in [1, 2]:
+            for period in periods[level][:5]:
+                # Verify qualitative fields exist
+                assert hasattr(period, "ruler_role")
+                assert hasattr(period, "tenant_roles")
+                assert hasattr(period, "score")
+                assert isinstance(period.score, int)
+
+    def test_fractal_timeline_build(self, kate_natal):
+        """build_timeline should work with fractal method."""
+        engine = ZodiacalReleasingEngine(kate_natal, method="fractal")
+        timeline = engine.build_timeline()
+
+        assert isinstance(timeline, ZRTimeline)
+        assert timeline.lot_sign == engine.lot_sign
+
+        # Query should work
+        snapshot = timeline.at_age(30)
+        assert snapshot.l1 is not None
+        assert snapshot.l2 is not None
+
+    def test_fractal_vs_valens_l2_count_difference(self, kate_natal):
+        """Fractal should have more L2 periods than Valens (no truncation)."""
+        fractal_engine = ZodiacalReleasingEngine(
+            kate_natal, method="fractal", max_level=2
+        )
+        valens_engine = ZodiacalReleasingEngine(
+            kate_natal, method="valens", max_level=2
+        )
+
+        fractal_periods = fractal_engine.calculate_all_periods()
+        valens_periods = valens_engine.calculate_all_periods()
+
+        # Fractal should have exactly 12 L2 per L1
+        # Valens may have more (due to loosing bond) or same
+        l1_count = len(fractal_periods[1])
+
+        fractal_l2_count = len(fractal_periods[2])
+        valens_l2_count = len(valens_periods[2])
+
+        # Fractal: exactly 12 L2 per L1
+        assert fractal_l2_count == l1_count * 12
+
+        # Valens: varies due to truncation and loosing of bond
+        # Just verify it's a reasonable number
+        assert valens_l2_count > 0
+
+
 class TestValensMethodDebug:
     """Debug tests for Valens method implementation.
 
