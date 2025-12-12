@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.10.0] - 2025-12-11
+
+### Added
+
 #### Data Analysis Module (December 11, 2025)
 
 New `stellium.analysis` package for large-scale astrological data analysis. Requires optional dependency: `pip install stellium[analysis]`
