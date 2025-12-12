@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.9.0] - 2025-12-11
+
+### Added
+
 #### Unified MultiChart Architecture (December 11, 2025)
 
 - **MultiChart**: New unified class that replaces both `Comparison` and `MultiWheel`
