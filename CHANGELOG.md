@@ -9,6 +9,53 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Graphic Ephemeris Visualization (December 11, 2025)
+
+New `GraphicEphemeris` class for visualizing planetary positions over time.
+
+- **Three harmonic modes**: 360° (full zodiac), 90° (hard aspects), 45° (8th harmonic)
+- **Station markers**: Retrograde and direct station points with legend
+- **Aspect markers**: Shows conjunction (☌), square (□), opposition (☍) at line crossings
+- **Natal chart overlay**: Pass a `CalculatedChart` to show transit-to-natal aspects
+  - Horizontal dashed lines for natal positions
+  - Transit planets on left, natal planets on right
+  - Natal chart info (name, datetime, location) in header
+- **Planet selection**: Default planets, `EXTENDED_PLANETS` (with Chiron/Node), or custom list
+- **Customizable**: Width, height, title, show/hide features
+
+```python
+from stellium.visualization import GraphicEphemeris, EXTENDED_PLANETS
+from stellium import ChartBuilder
+
+# Basic ephemeris
+eph = GraphicEphemeris(
+    start_date="2025-01-01",
+    end_date="2025-12-31",
+    harmonic=90,
+)
+eph.draw("ephemeris_2025.svg")
+
+# With natal chart overlay
+natal = ChartBuilder.from_notable("Albert Einstein").calculate()
+eph = GraphicEphemeris(
+    start_date="2025-01-01",
+    end_date="2025-12-31",
+    harmonic=90,
+    natal_chart=natal,
+)
+eph.draw("transits_2025.svg")
+
+# Extended planets (includes Chiron and North Node)
+eph = GraphicEphemeris(
+    start_date="2025-01-01",
+    end_date="2025-12-31",
+    planets=EXTENDED_PLANETS,
+)
+eph.draw("extended_2025.svg")
+```
+
+See `examples/ephemeris_cookbook.py` for comprehensive usage examples.
+
 #### File I/O Module (December 11, 2025)
 
 New `stellium.io` module for importing data from external astrology software.

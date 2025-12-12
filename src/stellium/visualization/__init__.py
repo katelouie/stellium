@@ -2,6 +2,7 @@
 
 from .builder import ChartDrawBuilder
 from .core import ChartRenderer
+from .ephemeris import EXTENDED_PLANETS, GraphicEphemeris
 from .extended_canvas import (
     AspectarianLayer,
     HouseCuspTableLayer,
@@ -101,4 +102,7 @@ __all__ = [
     "draw_chart_grid",
     "draw_theme_comparison",
     "draw_palette_comparison",
+    # Graphic ephemeris
+    "GraphicEphemeris",
+    "EXTENDED_PLANETS",
 ]
