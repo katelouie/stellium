@@ -36,6 +36,10 @@ from stellium.analysis import BatchCalculator
 charts = BatchCalculator.from_natives(natives).calculate_all()
 ```
 
+#### Notables Database
+
+- Added more births and events (~40 births, ~5 events)
+
 ### Changed
 
 ### Fixed
