@@ -37,6 +37,7 @@ If you want to support development [you can leave a tip if you like](https://ko-
 
 ### **For Astrologers**
 
+- **Large-scale data analysis** with pandas DataFrames, batch calculation, and statistical tools
 - **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
 - **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md))
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
@@ -97,6 +98,13 @@ pip install stellium
 
 - Python 3.11 or higher
 - All dependencies installed automatically (pyswisseph, pytz, geopy, rich, svgwrite)
+
+### Optional Dependencies
+
+```bash
+# For data analysis with pandas DataFrames
+pip install stellium[analysis]
+```
 
 ---
 
@@ -502,6 +510,30 @@ data = chart.to_dict()
 # - Chart metadata (date, location, timezone)
 ```
 
+### Data Analysis (pandas Integration)
+
+Batch calculate charts and analyze with pandas DataFrames:
+
+```python
+from stellium.analysis import BatchCalculator, ChartStats, charts_to_dataframe
+
+# Calculate 100s of charts from the notables database
+charts = BatchCalculator.from_registry(category="scientist").calculate_all()
+
+# Convert to pandas DataFrame
+df = charts_to_dataframe(charts)
+print(df['sun_sign'].value_counts())
+
+# Statistical analysis
+stats = ChartStats(charts)
+print(stats.element_distribution())
+print(stats.sign_distribution("Sun"))
+```
+
+Requires: `pip install stellium[analysis]`
+
+See the [analysis cookbook](examples/analysis_cookbook.ipynb) for comprehensive examples.
+
 ### Performance
 
 ```python
@@ -538,6 +570,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
 | **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
 | **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
+| **[analysis_cookbook.ipynb](examples/analysis_cookbook.ipynb)** | Jupyter notebook: batch calculation, pandas DataFrames, queries, statistics, export |
 
 ```bash
 # Run any cookbook
@@ -681,6 +714,7 @@ See [TODO.md](TODO.md) for the full development roadmap.
 
 ### Recently Added
 
+- ✅ **Data Analysis Module** - Batch calculation, pandas DataFrames, queries, statistics
 - ✅ **Sidereal Zodiac Support** - 9 ayanamsa systems (Lahiri, Fagan-Bradley, Raman, etc.)
 - ✅ **Declination Calculations** - Out-of-bounds detection, equatorial coordinates
 - ✅ **Bi-Wheel Charts** - Synastry, transits, progressions, composite charts

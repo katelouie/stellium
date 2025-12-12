@@ -9,6 +9,74 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Data Analysis Module (December 11, 2025)
+
+New `stellium.analysis` package for large-scale astrological data analysis. Requires optional dependency: `pip install stellium[analysis]`
+
+- **BatchCalculator**: Efficiently calculate 100s-1000s of charts at once
+  - Factory methods: `from_registry()` (with filters), `from_natives()`, `from_iterable()`
+  - Fluent configuration: `.with_house_systems()`, `.with_aspects()`, `.add_analyzer()`
+  - Generator-based `.calculate()` for memory efficiency or `.calculate_all()` for convenience
+  - Progress tracking via `.with_progress(callback)`
+
+- **DataFrame Builders**: Convert charts to pandas DataFrames in three schemas
+  - `charts_to_dataframe()`: One row per chart (sun/moon signs, element counts, patterns, etc.)
+  - `positions_to_dataframe()`: One row per celestial position (for position distribution analysis)
+  - `aspects_to_dataframe()`: One row per aspect (for aspect frequency analysis)
+
+- **ChartQuery**: Fluent interface for filtering chart collections by astrological criteria
+  - Position filters: `where_sun()`, `where_moon()`, `where_planet()`, `where_angle()`
+  - Aspect filters: `where_aspect(obj1, obj2, aspect=, orb_max=)`
+  - Pattern filters: `where_pattern("Grand Trine")`
+  - Element/modality: `where_element_dominant()`, `where_modality_dominant()`
+  - Custom predicates: `where_custom(lambda chart: ...)`
+  - Results: `.results()`, `.count()`, `.first()`, `.to_dataframe()`
+
+- **ChartStats**: Statistical aggregation across chart collections
+  - Distributions: `element_distribution()`, `modality_distribution()`, `sign_distribution()`
+  - Frequencies: `aspect_frequency()`, `pattern_frequency()`, `retrograde_frequency()`
+  - Cross-tabulation: `cross_tab("sun_sign", "moon_sign")` returns pandas contingency table
+  - Summary: `summary()` returns comprehensive statistics dict
+
+- **Export Utilities**: Save chart data to files
+  - `export_csv(charts, path, schema="charts"|"positions"|"aspects")`
+  - `export_json(charts, path, lines=False)` - standard JSON or JSON Lines
+  - `export_parquet(charts, path, schema=...)` - columnar format for big data
+
+- **36 comprehensive tests** in `tests/test_analysis.py`
+
+- **Interactive Jupyter Notebook Cookbook**: `examples/analysis_cookbook.ipynb`
+  - BatchCalculator usage patterns
+  - DataFrame conversion examples with pandas
+  - ChartQuery filtering examples
+  - ChartStats statistical analysis
+  - Export utilities
+  - Full workflow examples (element distribution in scientists vs artists, etc.)
+
+Example usage:
+
+```python
+from stellium.analysis import BatchCalculator, ChartQuery, ChartStats, charts_to_dataframe
+
+# Calculate charts for all scientists in the registry
+charts = (BatchCalculator
+    .from_registry(category="scientist", verified=True)
+    .with_aspects()
+    .calculate_all())
+
+# Convert to DataFrame
+df = charts_to_dataframe(charts)
+print(df['sun_sign'].value_counts())
+
+# Query for specific criteria
+grand_trines = ChartQuery(charts).where_pattern("Grand Trine").results()
+
+# Statistical analysis
+stats = ChartStats(charts)
+print(stats.element_distribution())
+print(stats.sign_distribution("Sun"))
+```
+
 ### Changed
 
 ### Fixed

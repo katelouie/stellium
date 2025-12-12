@@ -54,6 +54,7 @@ dev = [
 ]
 docs = ["mkdocs>=1.5.0", "mkdocs-material>=9.5.0"]
 web = ["nicegui>=1.4.0"]
+analysis = ["pandas>=2.0.0"]
 
 [project.urls]
 Homepage = "https://github.com/katelouie/stellium"
