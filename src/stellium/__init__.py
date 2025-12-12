@@ -65,6 +65,9 @@ from stellium.engines.profections import (
     ProfectionTimeline,
 )
 
+# === File I/O (Import/Export) ===
+from stellium.io import parse_aaf
+
 # === Presentation (Reports) ===
 from stellium.presentation import ReportBuilder
 
@@ -131,4 +134,6 @@ __all__ = [
     "ProfectionResult",
     "MultiProfectionResult",
     "ProfectionTimeline",
+    # File I/O
+    "parse_aaf",
 ]

@@ -9,6 +9,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### File I/O Module (December 11, 2025)
+
+New `stellium.io` module for importing data from external astrology software.
+
+- **`parse_aaf(path)`**: Parse AAF (Astrodienst Astrological Format) files
+  - AAF is the export format from astro.com
+  - Returns `list[Native]` for easy integration with ChartBuilder
+  - Parses date/time from #A93 lines (human-readable format)
+  - Uses pre-computed coordinates from #B93 lines (trusted values)
+  - Handles timezone lookup via coordinates
+
+Example usage:
+
+```python
+from stellium import parse_aaf, ChartBuilder
+
+# Import charts from astro.com export
+natives = parse_aaf("my_charts.aaf")
+
+# Calculate a chart
+chart = ChartBuilder.from_native(natives[0]).calculate()
+
+# Or batch calculate all of them
+from stellium.analysis import BatchCalculator
+charts = BatchCalculator.from_natives(natives).calculate_all()
+```
+
 ### Changed
 
 ### Fixed
