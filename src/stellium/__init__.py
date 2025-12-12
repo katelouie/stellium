@@ -13,7 +13,7 @@ For more control:
     >>> chart = ChartBuilder.from_native(native).calculate()
 """
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 # === Core Building Blocks (Most Common) ===
 # === Convenience Re-exports ===
@@ -37,6 +37,7 @@ from stellium.core.models import (
     HouseCusps,
     PhaseData,
 )
+from stellium.core.multichart import MultiChart, MultiChartBuilder
 from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 from stellium.core.native import Native, Notable
 
@@ -114,7 +115,10 @@ __all__ = [
     "ComparisonType",
     "ComparisonAspect",
     "HouseOverlay",
-    # MultiWheel
+    # MultiChart (unified replacement for Comparison + MultiWheel)
+    "MultiChart",
+    "MultiChartBuilder",
+    # MultiWheel (deprecated, use MultiChart)
     "MultiWheel",
     "MultiWheelBuilder",
     # Synthesis Charts

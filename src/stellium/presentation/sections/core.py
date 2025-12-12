@@ -12,6 +12,7 @@ from typing import Any
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
+from stellium.core.multichart import MultiChart
 from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 from ._utils import (
@@ -40,17 +41,23 @@ class ChartOverviewSection:
     def section_name(self) -> str:
         return "Chart Overview"
 
-    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate chart overview data.
 
-        For Comparison objects, shows both charts' information.
+        For Comparison/MultiChart objects, shows all charts' information.
 
         Why key-value format?
         - Simple label: value pairs
         - Easy to render as a list or small table
         - Human-readable structure
         """
+        # Handle MultiChart objects
+        if isinstance(chart, MultiChart):
+            return self._generate_multichart_data(chart)
+
         # Handle Comparison objects
         if isinstance(chart, Comparison):
             return self._generate_comparison_data(chart)
@@ -167,6 +174,50 @@ class ChartOverviewSection:
 
         # Cross-chart aspect count
         data["Cross-Chart Aspects"] = len(comparison.cross_aspects)
+
+        return {
+            "type": "key_value",
+            "data": data,
+        }
+
+    def _generate_multichart_data(self, multichart: MultiChart) -> dict[str, Any]:
+        """Generate overview data for a MultiChart object."""
+        data = {}
+
+        # Chart count and type
+        chart_count = multichart.chart_count
+        chart_types = {2: "Biwheel", 3: "Triwheel", 4: "Quadwheel"}
+        data["Chart Type"] = chart_types.get(chart_count, f"{chart_count}-Wheel")
+
+        # Relationship types (if any)
+        if multichart.relationships:
+            rel_types = {r.value.title() for r in multichart.relationships.values()}
+            data["Relationship"] = ", ".join(rel_types)
+
+        # Info for each chart
+        for i, chart in enumerate(multichart.charts):
+            label = (
+                multichart.labels[i] if i < len(multichart.labels) else f"Chart {i + 1}"
+            )
+
+            if "name" in chart.metadata:
+                data[label] = chart.metadata["name"]
+            else:
+                data[label] = "(unnamed)"
+
+            birth: dt.datetime = chart.datetime.local_datetime
+            data[f"{label} Date"] = birth.strftime("%B %d, %Y")
+            data[f"{label} Time"] = birth.strftime("%I:%M %p")
+            data[f"{label} Location"] = (
+                chart.location.name if chart.location.name else "Unknown"
+            )
+
+        # Cross-chart aspect count
+        total_aspects = sum(
+            len(aspects) for aspects in multichart.cross_aspects.values()
+        )
+        if total_aspects > 0:
+            data["Cross-Chart Aspects"] = total_aspects
 
         return {
             "type": "key_value",

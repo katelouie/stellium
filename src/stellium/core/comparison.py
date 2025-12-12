@@ -40,6 +40,7 @@ Builder Methods:
 """
 
 import datetime as dt
+import warnings
 from dataclasses import dataclass, field, replace
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING, Any, Literal
@@ -94,6 +95,15 @@ class Comparison:
     calculation_timestamp: datetime = field(
         default_factory=lambda: datetime.now(dt.UTC)
     )
+
+    def __post_init__(self) -> None:
+        """Issue deprecation warning."""
+        warnings.warn(
+            "Comparison is deprecated, use MultiChart instead. "
+            "See stellium.core.multichart.MultiChart for the unified API.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
 
     # ===== Chart1 (Native/Inner) Convenience Properties =====
     @property
@@ -392,6 +402,12 @@ class ComparisonBuilder:
             comparison_type: Type of comparison
             chart1_label: Label for chart1 in reports
         """
+        warnings.warn(
+            "ComparisonBuilder is deprecated, use MultiChartBuilder instead. "
+            "See stellium.core.multichart.MultiChartBuilder for the unified API.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self._chart1 = chart1
         self._comparison_type = comparison_type
         self._chart1_label = chart1_label

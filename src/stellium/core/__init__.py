@@ -22,6 +22,7 @@ from stellium.core.models import (
     ObjectType,
     PhaseData,
 )
+from stellium.core.multichart import MultiChart, MultiChartBuilder
 from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 from stellium.core.native import Native, Notable
 from stellium.core.registry import (
@@ -36,11 +37,13 @@ from stellium.core.registry import (
 __all__ = [
     # Builders
     "ChartBuilder",
+    "MultiChartBuilder",
     "MultiWheelBuilder",
     "Native",
     "Notable",
     # Models
     "CalculatedChart",
+    "MultiChart",
     "MultiWheel",
     "CelestialPosition",
     "MidpointPosition",

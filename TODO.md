@@ -13,10 +13,10 @@
 
 ## Core Functions
 
-- [ ] Primary Directions
+- [x] Primary Directions
 - [ ] Orb moieties (sum orb of two planets and get average)
-- [ ] Heliocentric calculations
-- [ ] Draconic charts (nodal)
+- [x] Heliocentric calculations
+- [x] Draconic charts (nodal)
 - [ ] Topocentric parallax corrections for planet coordinates
 - [x] Uranian degree dial chart
 - [ ] Add chart info overview (header) to Uranian dial viz

@@ -9,6 +9,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Unified MultiChart Architecture (December 11, 2025)
+
+- **MultiChart**: New unified class that replaces both `Comparison` and `MultiWheel`
+  - Supports 2-4 charts (biwheels, triwheels, quadwheels)
+  - **Dual access pattern**: Indexed (`mc[0]`, `mc[1]`) AND named properties (`mc.chart1`, `mc.natal`)
+  - **Semantic aliases**: `.inner`, `.outer`, `.natal` for intuitive access
+  - **Per-pair relationship types**: Store relationship (synastry, transit, progression) for each chart pair
+  - **Cross-aspects as dict**: `{(0,1): aspects, (0,2): aspects}` for flexible multi-chart aspect storage
+  - **House overlays**: Support for cross-chart house placements
+  - **Compatibility scoring**: `calculate_compatibility_score(pair=(0,1))` for synastry analysis
+  - Full serialization via `.to_dict()` and visualization via `.draw()`
+
+- **MultiChartBuilder**: Fluent builder with all Comparison/MultiWheel features unified
+  - **Convenience constructors**: `.synastry()`, `.transit()`, `.progression()`, `.arc_direction()`
+  - **Generic constructors**: `.from_charts()`, `.from_chart()`
+  - **Add methods for 3-4 charts**: `.add_chart()`, `.add_transit()`, `.add_progression()`, `.add_arc_direction()`
+  - **Cross-aspect config**: `.with_cross_aspects("to_primary")` (default), `"all"`, `"adjacent"`, or explicit pairs
+  - **House overlay config**: `.with_house_overlays()`, `.without_house_overlays()`
+  - Auto-calculates progressions and arc directions like ComparisonBuilder did
+
+- **Visualization support**: All visualization layers updated to handle MultiChart
+  - `ChartDrawBuilder`, `ChartComposer`, `LayerFactory` accept MultiChart
+  - `LayoutEngine` and `ContentMeasurer` handle MultiChart ring layouts
+  - New `_create_multichart_layers()` method in LayerFactory
+
+- **Presentation support**: Report builder and sections updated for MultiChart
+  - `ReportBuilder.from_chart()` accepts MultiChart
+  - `CrossChartAspectSection` handles MultiChart's dict-based cross_aspects
+  - `ChartOverviewSection` displays multi-chart info (type, relationships, all chart details)
+
+- **51 comprehensive tests** in `tests/test_multichart.py`
+
+Example usage:
+
+```python
+from stellium import MultiChartBuilder
+
+# Synastry (replaces ComparisonBuilder.synastry)
+mc = MultiChartBuilder.synastry(chart1, chart2, label1="Kate", label2="Partner").calculate()
+
+# Triwheel: Natal + Progressed + Transit
+mc = (MultiChartBuilder.from_chart(natal, "Natal")
+    .add_progression(age=30, label="Progressed")
+    .add_transit("2025-06-15", label="Transit")
+    .calculate())
+
+# Access charts
+print(mc.chart1.get_object("Sun"))  # Named access
+print(mc[1].get_object("Moon"))     # Indexed access
+print(mc.natal.get_object("Venus")) # Semantic alias
+
+# Cross-aspects
+aspects = mc.get_cross_aspects(0, 1)  # Aspects between charts 0 and 1
+
+# Visualization and reports
+mc.draw("triwheel.svg").save()
+report = ReportBuilder().from_chart(mc).with_chart_overview().with_cross_aspects().render()
+```
+
+### Deprecated
+
+- **Comparison** and **ComparisonBuilder**: Now emit `DeprecationWarning`, use `MultiChart` and `MultiChartBuilder` instead
+- **MultiWheel** and **MultiWheelBuilder**: Now emit `DeprecationWarning`, use `MultiChart` and `MultiChartBuilder` instead
+
 #### IngressSection Report (December 11, 2025)
 
 - **IngressSection**: Report section showing when planets enter new zodiac signs

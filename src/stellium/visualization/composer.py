@@ -2,6 +2,7 @@ import svgwrite
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multichart import MultiChart
 from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.config import ChartVisualizationConfig
 from stellium.visualization.core import ChartRenderer
@@ -28,7 +29,9 @@ class ChartComposer:
         self.layer_factory = LayerFactory(config)
 
     def compose(
-        self, chart: CalculatedChart | Comparison | MultiWheel, to_string: bool = False
+        self,
+        chart: CalculatedChart | Comparison | MultiWheel | MultiChart,
+        to_string: bool = False,
     ) -> str:
         """
         Compose and render a complete chart visualization.
@@ -91,7 +94,9 @@ class ChartComposer:
         return dwg
 
     def _create_renderer(
-        self, layout: LayoutResult, chart: CalculatedChart | Comparison | MultiWheel
+        self,
+        layout: LayoutResult,
+        chart: CalculatedChart | Comparison | MultiWheel | MultiChart,
     ) -> ChartRenderer:
         """Create renderer with pre-calculated radii."""
         renderer = ChartRenderer(
@@ -123,16 +128,18 @@ class ChartComposer:
         return "#FFFFFF"
 
     def _get_rotation_angle(
-        self, chart: CalculatedChart | Comparison | MultiWheel
+        self, chart: CalculatedChart | Comparison | MultiWheel | MultiChart
     ) -> float:
         """
         Calculate chart rotation based on ASC.
 
         For single charts, rotates to put ASC on the left.
         For comparisons, uses chart1's ASC.
-        For multiwheels, uses the innermost chart's (chart[0]) ASC.
+        For multiwheels/multicharts, uses the innermost chart's (chart[0]) ASC.
         """
-        if isinstance(chart, MultiWheel):
+        if isinstance(chart, MultiChart):
+            chart = chart.charts[0]  # Use innermost chart
+        elif isinstance(chart, MultiWheel):
             chart = chart.charts[0]  # Use innermost chart
         elif isinstance(chart, Comparison):
             chart = chart.chart1

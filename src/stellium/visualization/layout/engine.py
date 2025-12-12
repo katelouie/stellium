@@ -3,6 +3,7 @@ from typing import Protocol
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multichart import MultiChart
 from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.config import ChartVisualizationConfig, Dimensions
 from stellium.visualization.layout.measurer import ContentMeasurer
@@ -108,7 +109,7 @@ class LayoutEngine:
         self.measurer = ContentMeasurer()
 
     def calculate_layout(
-        self, chart: CalculatedChart | Comparison | MultiWheel
+        self, chart: CalculatedChart | Comparison | MultiWheel | MultiChart
     ) -> LayoutResult:
         """
         Calculate complete layout for the chart.
@@ -173,7 +174,7 @@ class LayoutEngine:
         )
 
     def _measure_all_elements(
-        self, chart: CalculatedChart | Comparison | MultiWheel
+        self, chart: CalculatedChart | Comparison | MultiWheel | MultiChart
     ) -> dict[str, Dimensions]:
         """Measure all enabled elements."""
         measurements = {}
@@ -366,7 +367,7 @@ class LayoutEngine:
         )
 
     def _get_effective_base_size(
-        self, chart: CalculatedChart | Comparison | MultiWheel
+        self, chart: CalculatedChart | Comparison | MultiWheel | MultiChart
     ) -> int:
         """
         Get the effective base size, scaled for multiwheel charts.
@@ -374,7 +375,10 @@ class LayoutEngine:
         MultiWheel charts with more rings get larger canvases by default
         to keep the information readable.
         """
-        if isinstance(chart, MultiWheel):
+        if isinstance(chart, MultiChart):
+            scale = self.config.wheel.get_multiwheel_canvas_scale(chart.chart_count)
+            return int(self.config.base_size * scale)
+        elif isinstance(chart, MultiWheel):
             scale = self.config.wheel.get_multiwheel_canvas_scale(chart.chart_count)
             return int(self.config.base_size * scale)
         return self.config.base_size
@@ -404,7 +408,9 @@ class LayoutEngine:
         return effective_base_size
 
     def _calculate_wheel_radii(
-        self, wheel_size: int, chart: CalculatedChart | Comparison | MultiWheel
+        self,
+        wheel_size: int,
+        chart: CalculatedChart | Comparison | MultiWheel | MultiChart,
     ) -> dict[str, float]:
         """
         Calculate all wheel radii based on wheel size and chart type.
@@ -414,12 +420,16 @@ class LayoutEngine:
         For MultiWheel, uses the multiwheel_N_radii config based on chart count.
         """
         # Determine which radii config to use
+        is_multichart = isinstance(chart, MultiChart)
         is_multiwheel = isinstance(chart, MultiWheel)
         is_biwheel = (
             isinstance(chart, Comparison) or self.config.wheel.chart_type == "biwheel"
         )
 
-        if is_multiwheel:
+        if is_multichart:
+            # Use multiwheel-specific radii based on chart count
+            multipliers = self.config.wheel.get_multiwheel_radii(chart.chart_count)
+        elif is_multiwheel:
             # Use multiwheel-specific radii based on chart count
             multipliers = self.config.wheel.get_multiwheel_radii(chart.chart_count)
         elif is_biwheel:

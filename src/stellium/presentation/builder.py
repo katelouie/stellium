@@ -10,6 +10,7 @@ from typing import Any
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multichart import MultiChart
 from stellium.core.protocols import ReportRenderer, ReportSection
 
 from .renderers import PlainTextRenderer, RichTableRenderer
@@ -54,18 +55,20 @@ class ReportBuilder:
 
     def __init__(self) -> None:
         """Initialize an empty report builder."""
-        self._chart: CalculatedChart | Comparison | None = None
+        self._chart: CalculatedChart | Comparison | MultiChart | None = None
         self._sections: list[ReportSection] = []
         self._chart_image_path: str | None = None
         self._auto_generate_chart_image: bool = False
         self._title: str | None = None
 
-    def from_chart(self, chart: CalculatedChart | Comparison) -> "ReportBuilder":
+    def from_chart(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> "ReportBuilder":
         """
         Set the chart to generate reports from.
 
         Args:
-            chart: A CalculatedChart from ChartBuilder or Comparison from ComparisonBuilder
+            chart: A CalculatedChart, Comparison, or MultiChart
 
         Returns:
             Self for chaining
@@ -76,6 +79,10 @@ class ReportBuilder:
     def _is_comparison(self) -> bool:
         """Check if the current chart is a Comparison object."""
         return isinstance(self._chart, Comparison)
+
+    def _is_multichart(self) -> bool:
+        """Check if the current chart is a MultiChart object."""
+        return isinstance(self._chart, MultiChart)
 
     def with_chart_image(self, path: str | None = None) -> "ReportBuilder":
         """

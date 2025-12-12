@@ -23,6 +23,7 @@ Each chart ring includes:
 """
 
 import datetime as dt
+import warnings
 from dataclasses import dataclass, field
 from datetime import datetime
 from typing import TYPE_CHECKING
@@ -67,6 +68,12 @@ class MultiWheel:
 
     def __post_init__(self) -> None:
         """Validate chart count and auto-generate labels if needed."""
+        warnings.warn(
+            "MultiWheel is deprecated, use MultiChart instead. "
+            "See stellium.core.multichart.MultiChart for the unified API.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if len(self.charts) < 2:
             raise ValueError("MultiWheel requires at least 2 charts")
         if len(self.charts) > 4:
@@ -141,6 +148,12 @@ class MultiWheelBuilder:
         Raises:
             ValueError: If chart count is not 2-4
         """
+        warnings.warn(
+            "MultiWheelBuilder is deprecated, use MultiChartBuilder instead. "
+            "See stellium.core.multichart.MultiChartBuilder for the unified API.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         if len(charts) < 2:
             raise ValueError("MultiWheel requires at least 2 charts")
         if len(charts) > 4:

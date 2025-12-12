@@ -2,6 +2,7 @@
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multichart import MultiChart
 from stellium.visualization.config import ChartVisualizationConfig, Dimensions
 from stellium.visualization.extended_canvas import _filter_objects_for_tables
 
@@ -14,14 +15,21 @@ class ContentMeasurer:
     """
 
     def _get_house_systems_to_display(
-        self, chart: CalculatedChart | Comparison, config: ChartVisualizationConfig
+        self,
+        chart: CalculatedChart | Comparison | MultiChart,
+        config: ChartVisualizationConfig,
     ) -> list[str]:
         """Determine which house systems to display in tables.
 
         Returns list of house system names based on config settings.
         """
-        # Get the actual chart object (for Comparison, use chart1)
-        actual_chart = chart.chart1 if isinstance(chart, Comparison) else chart
+        # Get the actual chart object (for Comparison/MultiChart, use first chart)
+        if isinstance(chart, MultiChart):
+            actual_chart = chart.charts[0]
+        elif isinstance(chart, Comparison):
+            actual_chart = chart.chart1
+        else:
+            actual_chart = chart
 
         if not actual_chart.house_systems:
             return []
@@ -41,15 +49,34 @@ class ContentMeasurer:
         return list(actual_chart.house_systems.keys())[:1]  # First available
 
     def measure_position_table(
-        self, chart: CalculatedChart | Comparison, config: ChartVisualizationConfig
+        self,
+        chart: CalculatedChart | Comparison | MultiChart,
+        config: ChartVisualizationConfig,
     ) -> Dimensions:
         """
         Measure position table dimensions.
 
-        For comparison charts, this measures TWO side-by-side tables.
+        For comparison/multichart with 2 charts, this measures TWO side-by-side tables.
         """
         # Get filtered objects
-        if isinstance(chart, Comparison):
+        if isinstance(chart, MultiChart):
+            # For MultiChart, measure based on number of charts
+            if chart.chart_count >= 2:
+                chart1_objects = _filter_objects_for_tables(
+                    chart.charts[0].positions, config.tables.object_types
+                )
+                chart2_objects = _filter_objects_for_tables(
+                    chart.charts[1].positions, config.tables.object_types
+                )
+                num_rows = max(len(chart1_objects), len(chart2_objects))
+                num_tables = min(chart.chart_count, 2)  # Max 2 tables side by side
+            else:
+                objects = _filter_objects_for_tables(
+                    chart.charts[0].positions, config.tables.object_types
+                )
+                num_rows = len(objects)
+                num_tables = 1
+        elif isinstance(chart, Comparison):
             chart1_objects = _filter_objects_for_tables(
                 chart.chart1.positions, config.tables.object_types
             )
@@ -112,13 +139,15 @@ class ContentMeasurer:
         return Dimensions(total_width, total_height)
 
     def measure_house_table(
-        self, chart: CalculatedChart | Comparison, config: ChartVisualizationConfig
+        self,
+        chart: CalculatedChart | Comparison | MultiChart,
+        config: ChartVisualizationConfig,
     ) -> Dimensions:
         """
         Measure house cusp table dimensions.
 
         Always 12 rows (houses). For multiple house systems, adds columns (sign + degree)
-        for each system. For comparison charts, shows separate tables for each chart.
+        for each system. For comparison/multichart, shows separate tables for each chart.
         """
         # Get config values
         col_widths = config.tables.house_col_widths
@@ -143,8 +172,13 @@ class ContentMeasurer:
             if i < len(col_names) - 1:  # Add gap between columns
                 single_table_width += gap_between_cols
 
-        # For comparisons, we have 2 chart tables
-        num_chart_tables = 2 if isinstance(chart, Comparison) else 1
+        # For comparisons/multicharts with 2+ charts, we have 2 chart tables
+        if isinstance(chart, MultiChart):
+            num_chart_tables = min(chart.chart_count, 2)
+        elif isinstance(chart, Comparison):
+            num_chart_tables = 2
+        else:
+            num_chart_tables = 1
         total_width = (single_table_width * num_chart_tables) + (
             gap_between_tables * (num_chart_tables - 1)
         )
@@ -158,16 +192,29 @@ class ContentMeasurer:
         return Dimensions(total_width, total_height)
 
     def measure_aspectarian(
-        self, chart: CalculatedChart | Comparison, config: ChartVisualizationConfig
+        self,
+        chart: CalculatedChart | Comparison | MultiChart,
+        config: ChartVisualizationConfig,
     ) -> Dimensions:
         """
         Measure aspectarian grid dimensions.
 
-        Triangle for single charts, square for comparisons.
+        Triangle for single charts, square for comparisons/multicharts.
         """
         cell_size = config.tables.aspectarian_cell_size
 
-        if isinstance(chart, Comparison):
+        if isinstance(chart, MultiChart) and chart.chart_count >= 2:
+            # Square grid: chart1 objects × chart2 objects
+            chart1_objects = _filter_objects_for_tables(
+                chart.charts[0].positions, config.tables.object_types
+            )
+            chart2_objects = _filter_objects_for_tables(
+                chart.charts[1].positions, config.tables.object_types
+            )
+            # Add 1 for header row/column
+            width = (len(chart2_objects) + 1) * cell_size
+            height = (len(chart1_objects) + 1) * cell_size
+        elif isinstance(chart, Comparison):
             # Square grid: chart1 objects × chart2 objects
             chart1_objects = _filter_objects_for_tables(
                 chart.chart1.positions, config.tables.object_types
@@ -195,7 +242,7 @@ class ContentMeasurer:
     def measure_corner_element(
         self,
         element_name: str,
-        chart: CalculatedChart | Comparison,
+        chart: CalculatedChart | Comparison | MultiChart,
         config: ChartVisualizationConfig,
     ) -> Dimensions:
         """

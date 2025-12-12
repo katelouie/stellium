@@ -9,6 +9,7 @@ from typing import Protocol
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, UnknownTimeChart
+from stellium.core.multichart import MultiChart
 from stellium.core.multiwheel import MultiWheel
 from stellium.visualization.config import ChartVisualizationConfig
 from stellium.visualization.layers import (
@@ -54,7 +55,9 @@ class LayerFactory:
         self.config = config
 
     def create_layers(
-        self, chart: CalculatedChart | Comparison | MultiWheel, layout: LayoutResult
+        self,
+        chart: CalculatedChart | Comparison | MultiWheel | MultiChart,
+        layout: LayoutResult,
     ) -> list[IRenderLayer]:
         """
         Create all configured layers for this chart.
@@ -62,18 +65,21 @@ class LayerFactory:
         Layers are returned in render order (bottom to top).
 
         Args:
-            chart: The chart to visualize (single, comparison, or multiwheel)
+            chart: The chart to visualize (single, comparison, multiwheel, or multichart)
             layout: The calculated layout (for positioning info)
 
         Returns:
             List of layers ready to render
         """
+        is_multichart = isinstance(chart, MultiChart)
         is_multiwheel = isinstance(chart, MultiWheel)
         is_comparison = isinstance(chart, Comparison)
         is_unknown_time = isinstance(chart, UnknownTimeChart)
         header_enabled = self.config.header.enabled
 
-        # Dispatch to specialized method for multiwheel
+        # Dispatch to specialized method for multichart and multiwheel
+        if is_multichart:
+            return self._create_multichart_layers(chart, layout)
         if is_multiwheel:
             return self._create_multiwheel_layers(chart, layout)
 
@@ -471,6 +477,127 @@ class LayerFactory:
             )
 
         # Moon phase for innermost chart (if enabled)
+        if self.config.corners.moon_phase:
+            moon_style = {}
+            if self.config.corners.moon_phase_size is not None:
+                moon_style["size"] = self.config.corners.moon_phase_size
+            if self.config.corners.moon_phase_label_size is not None:
+                moon_style["label_size"] = self.config.corners.moon_phase_label_size
+
+            layers.append(
+                MoonPhaseLayer(
+                    position=self.config.corners.moon_phase_position,
+                    show_label=self.config.corners.moon_phase_show_label,
+                    style_override=moon_style if moon_style else None,
+                )
+            )
+
+        return layers
+
+    def _create_multichart_layers(
+        self, chart: MultiChart, layout: LayoutResult
+    ) -> list[IRenderLayer]:
+        """
+        Create layers for a MultiChart (2-4 charts rendered concentrically).
+
+        This is similar to _create_multiwheel_layers but uses the MultiChart API.
+        MultiChart is the unified replacement for Comparison and MultiWheel.
+
+        Args:
+            chart: The MultiChart containing 2-4 charts
+            layout: The calculated layout
+
+        Returns:
+            List of layers ready to render
+        """
+        header_enabled = self.config.header.enabled
+        layers = []
+
+        # Layer 0: Header (if enabled)
+        if header_enabled:
+            layers.append(
+                HeaderLayer(
+                    height=self.config.header.height,
+                    name_font_size=self.config.header.name_font_size,
+                    name_font_family=self.config.header.name_font_family,
+                    details_font_size=self.config.header.details_font_size,
+                    line_height=self.config.header.line_height,
+                    coord_precision=self.config.header.coord_precision,
+                )
+            )
+
+        # Layer 1: Zodiac ring (always present, outermost)
+        layers.append(
+            ZodiacLayer(
+                palette=self.config.wheel.zodiac_palette or "grey",
+                show_degree_ticks=self.config.wheel.show_degree_ticks,
+            )
+        )
+
+        chart_count = chart.chart_count
+
+        # Get glyph size and info stack distance from config
+        glyph_size_override = self.config.wheel.multiwheel_glyph_sizes.get(chart_count)
+        info_stack_dist = self.config.wheel.multiwheel_info_distances.get(
+            chart_count, 0.8
+        )
+
+        # Layers 2-N: House cusps for all chart rings (OUTER to INNER)
+        for wheel_idx in range(chart_count - 1, -1, -1):
+            current_chart = chart.charts[wheel_idx]
+            layers.append(
+                HouseCuspLayer(
+                    house_system_name=current_chart.default_house_system,
+                    wheel_index=wheel_idx,
+                    chart=current_chart,
+                )
+            )
+
+        # Ring boundary lines
+        layers.append(RingBoundaryLayer(chart_count=chart_count))
+
+        # Angles and planets for each chart ring
+        for wheel_idx in range(chart_count - 1, -1, -1):
+            current_chart = chart.charts[wheel_idx]
+
+            layers.append(
+                AngleLayer(
+                    wheel_index=wheel_idx,
+                    chart=current_chart,
+                )
+            )
+
+            planets = [
+                p for p in current_chart.positions if self._is_planetary_object(p)
+            ]
+
+            info_mode = "no_sign"
+
+            layers.append(
+                PlanetLayer(
+                    planet_set=planets,
+                    wheel_index=wheel_idx,
+                    info_mode=info_mode,
+                    show_position_ticks=self.config.wheel.show_planet_ticks,
+                    glyph_size_override=glyph_size_override,
+                    info_stack_distance=info_stack_dist,
+                )
+            )
+
+        # Cross-chart aspects for 2-chart multicharts only
+        if chart_count == 2 and chart.cross_aspects:
+            layers.append(MultiWheelAspectLayer())
+
+        # Info corners
+        if self.config.corners.chart_info:
+            layers.append(
+                ChartInfoLayer(
+                    position=self.config.corners.chart_info_position,
+                    header_enabled=header_enabled,
+                )
+            )
+
+        # Moon phase
         if self.config.corners.moon_phase:
             moon_style = {}
             if self.config.corners.moon_phase_size is not None:

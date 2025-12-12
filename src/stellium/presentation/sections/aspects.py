@@ -11,6 +11,7 @@ from typing import Any
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
+from stellium.core.multichart import MultiChart
 from stellium.core.registry import get_aspects_by_category
 
 from ._utils import (
@@ -354,23 +355,74 @@ class CrossChartAspectSection:
             return "Cross-Chart Aspects (Harmonic)"
         return "Cross-Chart Aspects"
 
-    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """Generate cross-chart aspects table."""
-        # This section only works with Comparison objects
-        if not isinstance(chart, Comparison):
+        # This section works with Comparison or MultiChart objects
+        if isinstance(chart, MultiChart):
+            return self._generate_multichart_data(chart)
+        elif isinstance(chart, Comparison):
+            return self._generate_comparison_data(chart)
+        else:
             return {
                 "type": "text",
                 "content": (
-                    "Cross-chart aspects require a Comparison object.\n\n"
+                    "Cross-chart aspects require a Comparison or MultiChart object.\n\n"
                     "Example:\n"
-                    "  comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()\n"
-                    "  report = ReportBuilder().from_chart(comparison).with_cross_aspects().render()"
+                    "  mc = MultiChartBuilder.synastry(chart1, chart2).calculate()\n"
+                    "  report = ReportBuilder().from_chart(mc).with_cross_aspects().render()"
                 ),
             }
 
-        # Get cross-chart aspects
+    def _generate_comparison_data(self, chart: Comparison) -> dict[str, Any]:
+        """Generate cross-chart aspects for Comparison."""
+        # Get cross-chart aspects (tuple format)
         aspects = list(chart.cross_aspects)
+        return self._build_aspect_table(
+            aspects,
+            chart1_label=chart.chart1_label or "Chart 1",
+            chart2_label=chart.chart2_label or "Chart 2",
+        )
 
+    def _generate_multichart_data(self, chart: MultiChart) -> dict[str, Any]:
+        """Generate cross-chart aspects for MultiChart.
+
+        MultiChart stores aspects in a dict: {(0,1): aspects, (0,2): aspects, ...}
+        By default, shows aspects to primary (chart 0).
+        """
+        # Collect all aspects to primary (chart 0)
+        all_aspects = []
+        for (i, j), aspects in chart.cross_aspects.items():
+            # Only include aspects involving chart 0 (to_primary default)
+            if i == 0 or j == 0:
+                all_aspects.extend(aspects)
+
+        if not all_aspects:
+            # Fall back to showing all aspects if none to primary
+            all_aspects = chart.get_all_cross_aspects()
+
+        # Use labels from MultiChart
+        chart1_label = chart.labels[0] if chart.labels else "Chart 1"
+        chart2_label = (
+            "Other Charts"
+            if chart.chart_count > 2
+            else (chart.labels[1] if len(chart.labels) > 1 else "Chart 2")
+        )
+
+        return self._build_aspect_table(
+            all_aspects,
+            chart1_label=chart1_label,
+            chart2_label=chart2_label,
+        )
+
+    def _build_aspect_table(
+        self,
+        aspects: list,
+        chart1_label: str,
+        chart2_label: str,
+    ) -> dict[str, Any]:
+        """Build the aspect table from a list of aspects."""
         # Filter aspects based on mode
         if self.mode != "all":
             aspect_category = self.mode.title()
@@ -396,10 +448,6 @@ class CrossChartAspectSection:
                     get_object_sort_key(a.object2),
                 ),
             )
-
-        # Build headers with chart labels
-        chart1_label = chart.chart1_label or "Chart 1"
-        chart2_label = chart.chart2_label or "Chart 2"
 
         headers = [f"{chart1_label}", "Aspect", f"{chart2_label}"]
         if self.orb_display:
