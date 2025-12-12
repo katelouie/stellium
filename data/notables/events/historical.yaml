@@ -356,3 +356,83 @@
   sources:
   - 'Al Jazeera: https://www.aljazeera.com/news/2021/1/14/arab-spring-ten-years-on'
   verified: false
+- name: Sputnik Launch
+  event_type: event
+  year: 1957
+  month: 10
+  day: 4
+  hour: 19
+  minute: 28
+  latitude: 45.965
+  longitude: 63.305
+  location_name: Baikonur, Kazakhstan
+  timezone: Asia/Qyzylorda
+  notable_for: Launch of the first artificial Earth satellite by the Soviet Union, marking the beginning of the Space Race.
+  data_quality: AA
+  sources:
+  - Wikipedia
+  verified: true
+- name: COVID-19 WHO Declaration
+  event_type: event
+  year: 2020
+  month: 3
+  day: 11
+  hour: 12
+  minute: 0
+  latitude: 46.2044
+  longitude: 6.1432
+  location_name: Geneva, Switzerland
+  timezone: Europe/Zurich
+  notable_for: WHO declares COVID-19 a global pandemic.
+  data_quality: X
+  sources:
+  - https://www.who.int/emergencies/diseases/novel-coronavirus-2019
+  verified: false
+- name: 1929 Stock Market Crash
+  event_type: event
+  year: 1929
+  month: 10
+  day: 29
+  hour: 12
+  minute: 0
+  latitude: 40.7069
+  longitude: -74.0113
+  location_name: New York, New York
+  timezone: America/New_York
+  notable_for: The Wall Street Crash of 1929, the most devastating stock market crash in the history of the United States.
+  data_quality: X
+  sources:
+  - Wikipedia
+  verified: false
+- name: End of World War II
+  event_type: event
+  year: 1945
+  month: 9
+  day: 2
+  hour: 9
+  minute: 2
+  latitude: 35.3547
+  longitude: 139.7600
+  location_name: Tokyo Bay, Japan
+  timezone: Asia/Tokyo
+  notable_for: Formal surrender of Japan aboard USS Missouri marking the end of World War II.
+  data_quality: AA
+  sources:
+  - Wikipedia
+  verified: true
+- name: Challenger Disaster
+  event_type: event
+  year: 1986
+  month: 1
+  day: 28
+  hour: 11
+  minute: 38
+  latitude: 28.608
+  longitude: -80.604
+  location_name: Cape Canaveral, Florida
+  timezone: America/New_York
+  notable_for: The Space Shuttle Challenger disintegrates after liftoff, killing all crew members on board.
+  data_quality: AA
+  sources:
+  - Wikipedia
+  verified: true

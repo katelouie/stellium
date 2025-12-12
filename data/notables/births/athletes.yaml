@@ -166,3 +166,65 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/DiMaggio,_Joe'
   verified: false
+- name: Simone Biles
+  event_type: birth
+  year: 1997
+  month: 3
+  day: 14
+  hour: 0
+  minute: 30
+  latitude: 39.9612
+  longitude: -82.9988
+  location_name: Columbus, Ohio
+  timezone: America/New_York
+  category: athlete
+  subcategories:
+  - gymnast
+  notable_for: American artistic gymnast. With a combined total of 30 Olympic and World Championship medals, Biles is the most decorated American gymnast.
+  astrological_notes: Sun 23 Pisces
+  data_quality: C
+  sources:
+  - https://www.astro.com/astro-databank/Biles,_Simone
+  verified: false
+- name: Jackie Robinson
+  event_type: birth
+  year: 1919
+  month: 1
+  day: 31
+  hour: 18
+  minute: 30
+  latitude: 31.1333
+  longitude: -84.2000
+  location_name: Cairo, Georgia
+  timezone: America/New_York
+  category: athlete
+  subcategories:
+  - baseball
+  - broke color barrier
+  notable_for: American professional baseball player who became the first African American to play in Major League Baseball in the modern era.
+  astrological_notes: Sun 10 Aquarius
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Robinson,_Jackie_(1919)
+  verified: false
+- name: Billie Jean King
+  event_type: birth
+  year: 1943
+  month: 11
+  day: 22
+  hour: 11
+  minute: 45
+  latitude: 33.7701
+  longitude: -118.1910
+  location_name: Long Beach, California
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+  - tennis
+  - equality advocate
+  notable_for: American former World No. 1 professional tennis player.
+  astrological_notes: Sun 29 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/King,_Billie_Jean
+  verified: true

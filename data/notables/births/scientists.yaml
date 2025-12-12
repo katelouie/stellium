@@ -329,3 +329,121 @@
   sources:
   - 'https://www.astro.com/astro-databank/Turing,_Alan'
   verified: false
+- name: Rosalind Franklin
+  event_type: birth
+  year: 1920
+  month: 7
+  day: 25
+  latitude: 51.5094
+  longitude: -0.2061
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - crystallographer
+  - DNA structure
+  notable_for: English chemist and X-ray crystallographer who made contributions to the understanding of the molecular structures of DNA, RNA, viruses, coal, and graphite.
+  astrological_notes: Sun 2 Leo
+  data_quality: X
+  sources:
+  - https://www.wikidata.org/wiki/Q7474
+  verified: false
+- name: Grace Hopper
+  event_type: birth
+  year: 1906
+  month: 12
+  day: 9
+  latitude: 40.7128
+  longitude: -74.0060
+  location_name: New York, New York
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - computer scientist
+  - COBOL creator
+  notable_for: American computer scientist and United States Navy rear admiral. A pioneer in the field, she was one of the first programmers of the Harvard Mark I computer, and invented the first compiler for a computer programming language.
+  astrological_notes: Sun 17 Sagittarius
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Hooper,_Grace
+  verified: false
+- name: Richard Feynman
+  event_type: birth
+  year: 1918
+  month: 5
+  day: 11
+  hour: 14
+  minute: 49
+  latitude: 40.7128
+  longitude: -74.0060
+  location_name: New York, New York
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - physicist
+  - Nobel laureate
+  notable_for: American theoretical physicist known for his work in the path integral formulation of quantum mechanics, the theory of quantum electrodynamics, and the physics of the superfluidity of supercooled liquid helium.
+  astrological_notes: Sun 19 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Feynman,_Richard
+  verified: true
+- name: Rachel Carson
+  event_type: birth
+  year: 1907
+  month: 5
+  day: 27
+  hour: 2
+  minute: 0
+  latitude: 40.5409
+  longitude: -79.7839
+  location_name: Springdale, Pennsylvania
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - marine biologist
+  - Silent Spring
+  notable_for: American marine biologist and conservationist whose book Silent Spring and other writings are credited with advancing the global environmental movement.
+  astrological_notes: Sun 4 Gemini
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Carson,_Rachel
+  verified: true
+- name: Alexander Fleming
+  event_type: birth
+  year: 1881
+  month: 8
+  day: 6
+  hour: 2
+  minute: 0
+  latitude: 55.4667
+  longitude: -4.8667
+  location_name: Darvel, Scotland
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - penicillin discoverer
+  notable_for: Scottish bacteriologist and Nobel laureate. His best-known discoveries are the enzyme lysozyme in 1923 and the antibiotic substance benzylpenicillin (Penicillin G) from the mould Penicillium notatum in 1928.
+  astrological_notes: Sun 13 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Fleming,_Alexander
+  verified: true
+- name: Tim Berners-Lee
+  event_type: birth
+  year: 1955
+  month: 6
+  day: 8
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - invented the World Wide Web
+  notable_for: English computer scientist, best known as the inventor of the World Wide Web.
+  astrological_notes: Sun 17 Gemini
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Berners-Lee,_Tim
+  verified: false

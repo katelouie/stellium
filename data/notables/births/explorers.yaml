@@ -1,0 +1,102 @@
+- name: Amelia Earhart
+  event_type: birth
+  year: 1897
+  month: 7
+  day: 24
+  hour: 23
+  minute: 30
+  latitude: 39.5636
+  longitude: -95.1208
+  location_name: Atchison, Kansas
+  timezone: America/Chicago
+  category: explorer
+  subcategories:
+  - aviator
+  notable_for: American aviation pioneer and author. First female aviator to fly solo across the Atlantic Ocean.
+  astrological_notes: Sun 3 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Earhart,_Amelia
+  verified: true
+- name: Neil Armstrong
+  event_type: birth
+  year: 1930
+  month: 8
+  day: 5
+  hour: 0
+  minute: 31
+  latitude: 40.2833
+  longitude: -84.1833
+  location_name: Wapakoneta, Ohio
+  timezone: America/New_York
+  category: explorer
+  subcategories:
+  - astronaut
+  - first on Moon
+  notable_for: American astronaut and aeronautical engineer, and the first person to walk on the Moon.
+  astrological_notes: Sun 12 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Armstrong,_Neil
+  verified: true
+- name: Yuri Gagarin
+  event_type: birth
+  year: 1934
+  month: 3
+  day: 9
+  hour: 0
+  minute: 0
+  latitude: 55.7167
+  longitude: 35.15
+  location_name: Klushino, Russia
+  timezone: Europe/Moscow
+  category: explorer
+  subcategories:
+  - first human in space
+  notable_for: Soviet pilot and cosmonaut. He was the first human to journey into outer space.
+  astrological_notes: Sun 17 Pisces
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Gagarin,_Yuri
+  verified: false
+- name: Edmund Hillary
+  event_type: birth
+  year: 1919
+  month: 7
+  day: 20
+  hour: 16
+  minute: 0
+  latitude: -36.8485
+  longitude: 174.7633
+  location_name: Auckland, New Zealand
+  timezone: Pacific/Auckland
+  category: explorer
+  subcategories:
+  - Everest climber
+  notable_for: New Zealand mountaineer, explorer, and philanthropist. On 29 May 1953, Hillary and Nepalese Sherpa mountaineer Tenzing Norgay became the first climbers confirmed as having reached the summit of Mount Everest.
+  astrological_notes: Sun 26 Cancer
+  data_quality: C
+  sources:
+  - https://www.astro.com/astro-databank/Hillary,_Edmund
+  verified: false
+- name: Jacques Cousteau
+  event_type: birth
+  year: 1910
+  month: 6
+  day: 11
+  hour: 13
+  minute: 6
+  latitude: 44.9333
+  longitude: -0.25
+  location_name: Saint-André-de-Cubzac, France
+  timezone: Europe/Paris
+  category: explorer
+  subcategories:
+  - oceanographer
+  - explorer
+  notable_for: French naval officer, explorer, conservationist, filmmaker, innovator, scientist, photographer, author and researcher who studied the sea and all forms of life in water.
+  astrological_notes: Sun 20 Gemini
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Cousteau,_Jacques
+  verified: true

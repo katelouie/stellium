@@ -1,0 +1,81 @@
+- name: Simone de Beauvoir
+  event_type: birth
+  year: 1908
+  month: 1
+  day: 9
+  hour: 4
+  minute: 30
+  latitude: 48.8566
+  longitude: 2.3522
+  location_name: Paris, France
+  timezone: Europe/Paris
+  category: philosopher
+  subcategories:
+  - existentialist
+  - feminist
+  notable_for: French writer, intellectual, existentialist philosopher, political activist, feminist and social theorist.
+  astrological_notes: Sun 17 Capricorn
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Beauvoir,_Simone_de
+  verified: true
+- name: Friedrich Nietzsche
+  event_type: birth
+  year: 1844
+  month: 10
+  day: 15
+  hour: 10
+  minute: 0
+  latitude: 50.8667
+  longitude: 12.3833
+  location_name: Röcken, Germany
+  timezone: Europe/Berlin
+  category: philosopher
+  subcategories:
+  - philosopher
+  notable_for: German philosopher, cultural critic, poet, philologist, and Latin and Greek scholar whose work has exerted a profound influence on Western philosophy and modern intellectual history.
+  astrological_notes: Sun 22 Libra
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Nietzsche,_Friedrich
+  verified: true
+- name: Jean-Paul Sartre
+  event_type: birth
+  year: 1905
+  month: 6
+  day: 21
+  hour: 18
+  minute: 45
+  latitude: 48.8566
+  longitude: 2.3522
+  location_name: Paris, France
+  timezone: Europe/Paris
+  category: philosopher
+  subcategories:
+  - existentialist
+  notable_for: French philosopher, playwright, novelist, political activist, biographer, and literary critic.
+  astrological_notes: Sun 29 Gemini
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Sartre,_Jean-Paul
+  verified: true
+- name: Hannah Arendt
+  event_type: birth
+  year: 1906
+  month: 10
+  day: 14
+  hour: 21
+  minute: 15
+  latitude: 52.3667
+  longitude: 9.7333
+  location_name: Hannover, Germany
+  timezone: Europe/Berlin
+  category: philosopher
+  subcategories:
+  - political theorist
+  notable_for: German-American political theorist whose works deal with the nature of power, and the subjects of politics, direct democracy, authority, and totalitarianism.
+  astrological_notes: Sun 20 Libra
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Arendt,_Hannah
+  verified: true

@@ -573,3 +573,122 @@
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Gandhi,_Indira'
   verified: false
+- name: Margaret Thatcher
+  event_type: birth
+  year: 1925
+  month: 10
+  day: 13
+  hour: 9
+  minute: 0
+  latitude: 52.9167
+  longitude: -0.6333
+  location_name: Grantham, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - UK Prime Minister
+  notable_for: British stateswoman who was Prime Minister of the United Kingdom from 1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
+  astrological_notes: Sun 19 Libra
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Thatcher,_Margaret
+  verified: true
+- name: Angela Merkel
+  event_type: birth
+  year: 1954
+  month: 7
+  day: 17
+  hour: 18
+  minute: 0
+  latitude: 53.5507
+  longitude: 9.9930
+  location_name: Hamburg, Germany
+  timezone: Europe/Berlin
+  category: leader
+  subcategories:
+  - German Chancellor
+  notable_for: German politician who has been Chancellor of Germany since 2005 and leader of the Christian Democratic Union since 2000.
+  astrological_notes: Sun 24 Cancer
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Merkel,_Angela
+  verified: false
+- name: Eva Perón
+  event_type: birth
+  year: 1919
+  month: 5
+  day: 7
+  hour: 5
+  minute: 14
+  latitude: -34.6131
+  longitude: -58.3772
+  location_name: Buenos Aires, Argentina
+  timezone: America/Argentina/Buenos_Aires
+  category: leader
+  subcategories:
+  - Argentine first lady
+  - icon
+  notable_for: Argentine political leader and actress. Second wife of President Juan Perón and served as First Lady of Argentina from 1946 until her death in 1952.
+  astrological_notes: Sun 16 Taurus
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Per%C3%B3n,_Eva
+  verified: false
+- name: Aung San Suu Kyi
+  event_type: birth
+  year: 1945
+  month: 6
+  day: 19
+  latitude: 28.6139
+  longitude: 77.2090
+  location_name: Delhi, India
+  timezone: Asia/Kolkata
+  category: leader
+  subcategories:
+  - Myanmar
+  - Nobel laureate
+  notable_for: Burmese politician, diplomat, and author who is the leader of the National League for Democracy and the first State Counsellor of Myanmar.
+  astrological_notes: Sun 27 Gemini
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Aung_San_Suu_Kyi
+  verified: false
+- name: Golda Meir
+  event_type: birth
+  year: 1898
+  month: 5
+  day: 3
+  latitude: 50.4547
+  longitude: 30.5238
+  location_name: Kiev, Ukraine
+  timezone: Europe/Kyiv
+  category: leader
+  subcategories:
+  - Israeli Prime Minister
+  notable_for: Israeli teacher, kibbutznik, stateswoman, politician and the fourth Prime Minister of Israel.
+  astrological_notes: Sun 13 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Meir,_Golda
+  verified: true
+- name: Catherine the Great
+  event_type: birth
+  year: 1729
+  month: 5
+  day: 2
+  hour: 2
+  minute: 30
+  latitude: 53.3833
+  longitude: 14.5333
+  location_name: Szczecin, Poland
+  timezone: Europe/Warsaw
+  category: leader
+  subcategories:
+  - Russian Empress
+  notable_for: Empress of Russia who came to power following a coup d'état that she organised against her husband, Peter III.
+  astrological_notes: Sun 11 Taurus
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Catherine_the_Great,_Empress
+  verified: false
+  calendar: gregorian

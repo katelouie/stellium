@@ -672,3 +672,167 @@
   sources:
   - 'Astro-Charts: https://astro-charts.com/persons/chart/ryuichi-sakamoto/'
   verified: false
+- name: Alfred Hitchcock
+  event_type: birth
+  year: 1899
+  month: 8
+  day: 13
+  hour: 3
+  minute: 15
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - film director
+  notable_for: English film director and producer often nicknamed "The Master of Suspense".
+  astrological_notes: Sun 20 Leo
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Hitchcock,_Alfred
+  verified: false
+- name: Akira Kurosawa
+  event_type: birth
+  year: 1910
+  month: 3
+  day: 23
+  hour: 12
+  minute: 0
+  latitude: 35.6895
+  longitude: 139.6917
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: media
+  subcategories:
+  - film director
+  notable_for: Japanese film director and screenwriter who directed 30 films in a career spanning 57 years.
+  astrological_notes: Sun 1 Aries
+  data_quality: C
+  sources:
+  - https://www.astro.com/astro-databank/Kurosawa,_Akira
+  verified: false
+- name: Steven Spielberg
+  event_type: birth
+  year: 1946
+  month: 12
+  day: 18
+  hour: 18
+  minute: 16
+  latitude: 39.1031
+  longitude: -84.5120
+  location_name: Cincinnati, Ohio
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - film director
+  notable_for: American filmmaker considered one of the founding pioneers of the New Hollywood era and one of the most popular directors and producers in film history.
+  astrological_notes: Sun 26 Sagittarius
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Spielberg,_Steven
+  verified: true
+- name: Charlie Chaplin
+  event_type: birth
+  year: 1889
+  month: 4
+  day: 16
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - actor
+  - filmmaker
+  - comedian
+  notable_for: English comic actor, filmmaker, and composer who rose to fame in the silent era.
+  astrological_notes: Sun 26 Aries
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Chaplin,_Charles
+  verified: false
+- name: Robin Williams
+  event_type: birth
+  year: 1951
+  month: 7
+  day: 21
+  hour: 13
+  minute: 34
+  latitude: 41.8781
+  longitude: -87.6298
+  location_name: Chicago, Illinois
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - actor
+  - comedian
+  notable_for: American stand-up comedian, actor, director, producer, writer, singer and voice artist.
+  astrological_notes: Sun 28 Cancer
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Williams,_Robin
+  verified: true
+- name: Lucille Ball
+  event_type: birth
+  year: 1911
+  month: 8
+  day: 6
+  hour: 17
+  minute: 0
+  latitude: 42.0970
+  longitude: -79.2353
+  location_name: Jamestown, New York
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - comedian
+  - TV pioneer
+  notable_for: American comedian, model, film and television actress and studio executive.
+  astrological_notes: Sun 13 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Ball,_Lucille
+  verified: true
+- name: Audrey Hepburn
+  event_type: birth
+  year: 1929
+  month: 5
+  day: 4
+  hour: 3
+  minute: 0
+  latitude: 50.8333
+  longitude: 4.35
+  location_name: Ixelles, Belgium
+  timezone: Europe/Brussels
+  category: media
+  subcategories:
+  - actress
+  - humanitarian
+  notable_for: British actress and humanitarian. Recognised as a film and fashion icon.
+  astrological_notes: Sun 13 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Hepburn,_Audrey
+  verified: true
+- name: David Bowie
+  event_type: birth
+  year: 1947
+  month: 1
+  day: 8
+  hour: 9
+  minute: 0
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - musician
+  - actor
+  notable_for: English singer, songwriter, and actor. He was a figure in popular music for over five decades.
+  astrological_notes: Sun 17 Capricorn
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Bowie,_David
+  verified: true
