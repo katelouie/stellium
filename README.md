@@ -531,7 +531,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 |----------|-------------|
 | **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
 | **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
-| **[comparison_cookbook.py](examples/comparison_cookbook.py)** | 13 examples: synastry, transits, bi-wheels, compatibility |
+| **[multichart_cookbook.py](examples/multichart_cookbook.py)** | Synastry, transits, bi-, tri- and quad-wheels, compatibility |
 | **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
 | **[progressions_cookbook.py](examples/progressions_cookbook.py)** | 15 examples: set by date, current date or age; various angle progression methods |
 | **[arc_directions_cookbook.py](examples/arc_directions_cookbook.py)** | 14 examples: solar arc, naibod, lunar, chart ruler, sect, planetary arcs |
@@ -543,7 +543,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 # Run any cookbook
 python examples/chart_cookbook.py
 python examples/report_cookbook.py
-python examples/comparison_cookbook.py
+python examples/multichart_cookbook.py
 python examples/returns_cookbook.py
 python examples/progressions_cookbook.py
 python examples/arc_directions_cookbook.py
