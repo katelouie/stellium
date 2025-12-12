@@ -18,7 +18,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 from stellium.core.config import AspectConfig
 from stellium.engines.aspects import CrossChartAspectEngine
 from stellium.engines.orbs import SimpleOrbEngine
@@ -53,10 +53,12 @@ def example_1_simple_synastry():
     person1 = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
     person2 = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
 
-    # Create synastry comparison
+    # Create synastry comparison using MultiChartBuilder
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Albert Einstein")
-        .with_partner(person2, partner_label="Marie Curie")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Albert Einstein", label2="Marie Curie"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -87,8 +89,10 @@ def example_2_synastry_with_styling():
     person2 = ChartBuilder.from_notable("Yoko Ono").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="John Lennon")
-        .with_partner(person2, partner_label="Yoko Ono")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="John Lennon", label2="Yoko Ono"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -116,8 +120,10 @@ def example_3_synastry_with_tables():
     person2 = ChartBuilder.from_notable("Kate Middleton").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Prince William")
-        .with_partner(person2, partner_label="Kate Middleton")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Prince William", label2="Kate Middleton"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -145,21 +151,24 @@ def example_4_house_overlays():
     person2 = ChartBuilder.from_notable("Michelle Obama").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Barack")
-        .with_partner(person2, partner_label="Michelle")
+        MultiChartBuilder.synastry(person1, person2, label1="Barack", label2="Michelle")
+        .with_cross_aspects()
+        .with_house_overlays()
         .calculate()
     )
 
-    print(f"House overlays calculated: {len(synastry.house_overlays)}")
+    # Get house overlays for the pair (0, 1)
+    house_overlays = synastry.house_overlays.get((0, 1), [])
+    print(f"House overlays calculated: {len(house_overlays)}")
 
     print("\nBarack's planets in Michelle's houses:")
-    for overlay in synastry.house_overlays:
-        if overlay.planet_owner == "chart1" and overlay.house_owner == "chart2":
+    for overlay in house_overlays:
+        if overlay.planet_owner == 0 and overlay.house_owner == 1:
             print(f"  {overlay.planet_name} in house {overlay.falls_in_house}")
 
     print("\nMichelle's planets in Barack's houses:")
-    for overlay in synastry.house_overlays:
-        if overlay.planet_owner == "chart2" and overlay.house_owner == "chart1":
+    for overlay in house_overlays:
+        if overlay.planet_owner == 1 and overlay.house_owner == 0:
             print(f"  {overlay.planet_name} in house {overlay.falls_in_house}")
 
     output = OUTPUT_DIR / "04_house_overlays.svg"
@@ -179,12 +188,14 @@ def example_5_compatibility_score():
     person2 = ChartBuilder.from_notable("Angelina Jolie").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Brad Pitt")
-        .with_partner(person2, partner_label="Angelina Jolie")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Brad Pitt", label2="Angelina Jolie"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
-    # Default scoring
+    # Calculate compatibility score
     score = synastry.calculate_compatibility_score()
     print(f"Compatibility score: {score:.1f}/100")
 
@@ -210,20 +221,22 @@ def example_6_query_aspects():
     person2 = ChartBuilder.from_notable("Richard Burton").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Elizabeth")
-        .with_partner(person2, partner_label="Richard")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Elizabeth", label2="Richard"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
     # Get Venus aspects (relationship planet)
     print("Elizabeth's Venus aspects to Richard's chart:")
-    venus_aspects = synastry.get_object_aspects("Venus", chart=1)
+    venus_aspects = synastry.get_object_aspects("Venus", chart=0)
     for asp in venus_aspects:
         print(f"  Venus {asp.aspect_name} {asp.object2.name}")
 
     # Get Moon aspects (emotional connection)
     print("\nRichard's Moon aspects to Elizabeth's chart:")
-    moon_aspects = synastry.get_object_aspects("Moon", chart=2)
+    moon_aspects = synastry.get_object_aspects("Moon", chart=1)
     for asp in moon_aspects:
         print(f"  Moon {asp.aspect_name} {asp.object1.name}")
 
@@ -259,10 +272,12 @@ def example_7_current_transits():
         .calculate()
     )
 
-    # Compare
+    # Compare using MultiChartBuilder.transit()
     transits = (
-        ComparisonBuilder.from_native(natal, native_label="Natal")
-        .with_partner(transit_chart, partner_label="Transits")
+        MultiChartBuilder.transit(
+            natal, transit_chart, natal_label="Natal", transit_label="Transits"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -316,8 +331,10 @@ def example_8_transit_with_tight_orbs():
     )
 
     transits = (
-        ComparisonBuilder.from_native(natal, native_label="Natal")
-        .with_partner(transit_chart, partner_label="Transits")
+        MultiChartBuilder.transit(
+            natal, transit_chart, natal_label="Natal", transit_label="Transits"
+        )
+        .with_cross_aspects()
         .with_orb_engine(tight_orbs)
         .calculate()
     )
@@ -356,8 +373,8 @@ def example_9_custom_aspect_types():
     hard_engine = CrossChartAspectEngine(config=hard_aspects_config)
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Tesla")
-        .with_partner(person2, partner_label="Edison")
+        MultiChartBuilder.synastry(person1, person2, label1="Tesla", label2="Edison")
+        .with_cross_aspects()
         .with_aspect_engine(hard_engine)
         .calculate()
     )
@@ -384,14 +401,17 @@ def example_10_no_house_overlays():
     person2 = ChartBuilder.from_notable("Michelangelo").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Leonardo")
-        .with_partner(person2, partner_label="Michelangelo")
-        .without_house_overlays()  # Skip house overlay calculation
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Leonardo", label2="Michelangelo"
+        )
+        .with_cross_aspects()
+        # No .with_house_overlays() - skip house overlay calculation
         .calculate()
     )
 
     print(f"Aspects calculated: {len(synastry.cross_aspects)}")
-    print(f"House overlays: {len(synastry.house_overlays)} (skipped)")
+    overlays = synastry.house_overlays.get((0, 1), [])
+    print(f"House overlays: {len(overlays)} (skipped)")
 
 
 # =============================================================================
@@ -411,8 +431,10 @@ def example_11_synastry_pdf_report():
     person2 = ChartBuilder.from_notable("John Lennon").with_aspects().calculate()
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Paul McCartney")
-        .with_partner(person2, partner_label="John Lennon")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Paul McCartney", label2="John Lennon"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -457,8 +479,10 @@ def example_12_transit_pdf_report():
     )
 
     transits = (
-        ComparisonBuilder.from_native(natal, native_label="Natal")
-        .with_partner(transit_chart, partner_label="Transits 2025")
+        MultiChartBuilder.transit(
+            natal, transit_chart, natal_label="Natal", transit_label="Transits 2025"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -496,8 +520,10 @@ def example_13_batch_synastry():
         chart2 = ChartBuilder.from_notable(name2).with_aspects().calculate()
 
         synastry = (
-            ComparisonBuilder.from_native(chart1, native_label=name1.split()[0])
-            .with_partner(chart2, partner_label=name2.split()[0])
+            MultiChartBuilder.synastry(
+                chart1, chart2, label1=name1.split()[0], label2=name2.split()[0]
+            )
+            .with_cross_aspects()
             .calculate()
         )
 

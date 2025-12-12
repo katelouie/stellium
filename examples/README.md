@@ -65,6 +65,55 @@ Learn how to create synastry, transit, and bi-wheel charts:
 python examples/comparison_cookbook.py
 ```
 
+### Progressions (`progressions_cookbook.py`)
+
+Learn secondary progressions for internal development timing:
+
+- Simple progressions by age
+- Progressions to target dates
+- Progressed Sun/Moon motion
+- Angle progression methods (quotidian, solar arc, naibod)
+- Progressed-to-natal aspects
+
+**Output directory:** `examples/progressions/`
+
+```bash
+python examples/progressions_cookbook.py
+```
+
+### Arc Directions (`arc_directions_cookbook.py`)
+
+Explore arc direction techniques:
+
+- Solar arc directions
+- Naibod arc directions
+- Lunar arc directions
+- Sect-based arc (day/night)
+- Chart ruler arc
+- Planetary arcs (Mars, Venus, Jupiter, Saturn)
+
+**Output directory:** `examples/arc_directions/`
+
+```bash
+python examples/arc_directions_cookbook.py
+```
+
+### Data Analysis (`analysis_cookbook.ipynb`)
+
+Research tools for large-scale astrological data analysis (Jupyter notebook):
+
+- Batch chart calculation
+- DataFrame export and manipulation
+- Research queries (filter by sign, house, aspect, pattern)
+- Statistical aggregation
+- CSV/JSON/Parquet export
+
+**Requirements:** `pip install stellium[analysis]`
+
+```bash
+jupyter notebook examples/analysis_cookbook.ipynb
+```
+
 ## Running Examples
 
 1. Activate the Python environment:
@@ -77,12 +126,16 @@ python examples/comparison_cookbook.py
    python examples/chart_cookbook.py
    python examples/report_cookbook.py
    python examples/comparison_cookbook.py
+   python examples/progressions_cookbook.py
+   python examples/arc_directions_cookbook.py
    ```
 
 3. Check the output directories for generated files:
    - `examples/charts/` - SVG chart images
    - `examples/reports/` - PDF/TXT reports
    - `examples/comparisons/` - Comparison charts and reports
+   - `examples/progressions/` - Progression bi-wheels
+   - `examples/arc_directions/` - Arc direction charts
 
 ## Customizing Examples
 
@@ -161,13 +214,13 @@ ReportBuilder().from_chart(chart).preset_detailed().render(
 ### Create a Synastry Chart
 
 ```python
-from stellium import ComparisonBuilder
+from stellium import MultiChartBuilder
 
 chart1 = ChartBuilder.from_notable("John Lennon").with_aspects().calculate()
 chart2 = ChartBuilder.from_notable("Yoko Ono").with_aspects().calculate()
 
-synastry = ComparisonBuilder.from_native(chart1, native_label="John") \
-    .with_partner(chart2, partner_label="Yoko") \
+synastry = MultiChartBuilder.synastry(chart1, chart2, label1="John", label2="Yoko") \
+    .with_cross_aspects() \
     .calculate()
 
 synastry.draw("synastry.svg").save()

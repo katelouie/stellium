@@ -30,7 +30,7 @@ For full documentation, see docs/CHART_TYPES.md
 import os
 from pathlib import Path
 
-from stellium import ChartBuilder, ComparisonBuilder
+from stellium import ChartBuilder, MultiChartBuilder
 
 # Output directory for generated files
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -74,7 +74,7 @@ def example_1_solar_arc_by_age():
     )
 
     # Calculate solar arc directions for age 26 (1905 - Einstein's "Miracle Year")
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=26, arc_type="solar_arc"
     ).calculate()
 
@@ -123,7 +123,7 @@ def example_2_solar_arc_by_date():
     )
 
     # Calculate directions to a specific date
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, target_date="2025-06-15", arc_type="solar_arc"
     ).calculate()
 
@@ -166,10 +166,10 @@ def example_3_naibod_arc():
     # Compare solar arc vs naibod at the same age
     age = 30
 
-    solar = ComparisonBuilder.arc_direction(
+    solar = MultiChartBuilder.arc_direction(
         natal, age=age, arc_type="solar_arc"
     ).calculate()
-    naibod = ComparisonBuilder.arc_direction(
+    naibod = MultiChartBuilder.arc_direction(
         natal, age=age, arc_type="naibod"
     ).calculate()
 
@@ -210,7 +210,7 @@ def example_4_lunar_arc():
     natal = ChartBuilder.from_notable("Steve Jobs").with_aspects().calculate()
 
     # Lunar arc at age 5 (comparable distance to solar arc at age ~60!)
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=5, arc_type="lunar"
     ).calculate()
 
@@ -220,7 +220,7 @@ def example_4_lunar_arc():
     print("(The Moon moves ~12-13° per year in progressions)")
 
     # Compare to solar arc at same age
-    solar = ComparisonBuilder.arc_direction(
+    solar = MultiChartBuilder.arc_direction(
         natal, age=5, arc_type="solar_arc"
     ).calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
@@ -269,7 +269,7 @@ def example_5_sect_arc():
     print(f"  ASC: {asc.longitude:.2f}° {asc.sign}")
 
     # Calculate sect-based arc
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         einstein, age=26, arc_type="sect"
     ).calculate()
 
@@ -320,7 +320,7 @@ def example_6_chart_ruler_arc_traditional():
     print(f"Ascendant: {asc.longitude:.2f}° {asc.sign}")
 
     # Calculate chart ruler arc with traditional rulerships
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="chart_ruler", rulership_system="traditional"
     ).calculate()
 
@@ -332,7 +332,7 @@ def example_6_chart_ruler_arc_traditional():
     print(f"  Arc: {arc:.2f}°")
 
     # Compare to solar arc
-    solar = ComparisonBuilder.arc_direction(
+    solar = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="solar_arc"
     ).calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
@@ -364,11 +364,11 @@ def example_7_chart_ruler_arc_modern():
     print(f"Einstein's Ascendant: {asc.longitude:.2f}° {asc.sign}")
 
     # Compare traditional vs modern chart ruler
-    trad = ComparisonBuilder.arc_direction(
+    trad = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="chart_ruler", rulership_system="traditional"
     ).calculate()
 
-    modern = ComparisonBuilder.arc_direction(
+    modern = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="chart_ruler", rulership_system="modern"
     ).calculate()
 
@@ -407,7 +407,7 @@ def example_8_mars_arc():
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
     # Calculate Mars arc
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="Mars"
     ).calculate()
 
@@ -419,7 +419,7 @@ def example_8_mars_arc():
     print("\nAll Planetary Arcs at Age 30:")
     for planet in ["Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"]:
         try:
-            d = ComparisonBuilder.arc_direction(
+            d = MultiChartBuilder.arc_direction(
                 natal, age=30, arc_type=planet
             ).calculate()
             p_arc = d.chart2.metadata.get("arc_degrees", 0)
@@ -444,7 +444,7 @@ def example_9_venus_arc():
     natal = ChartBuilder.from_notable("Steve Jobs").with_aspects().calculate()
 
     # Calculate Venus arc
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=25, arc_type="Venus"
     ).calculate()
 
@@ -483,10 +483,10 @@ def example_10_jupiter_saturn_arcs():
     age = 30
 
     # Calculate both arcs
-    jupiter = ComparisonBuilder.arc_direction(
+    jupiter = MultiChartBuilder.arc_direction(
         natal, age=age, arc_type="Jupiter"
     ).calculate()
-    saturn = ComparisonBuilder.arc_direction(
+    saturn = MultiChartBuilder.arc_direction(
         natal, age=age, arc_type="Saturn"
     ).calculate()
 
@@ -494,7 +494,7 @@ def example_10_jupiter_saturn_arcs():
     sat_arc = saturn.chart2.metadata.get("arc_degrees", 0)
 
     # Compare to solar arc
-    solar = ComparisonBuilder.arc_direction(
+    solar = MultiChartBuilder.arc_direction(
         natal, age=age, arc_type="solar_arc"
     ).calculate()
     solar_arc = solar.chart2.metadata.get("arc_degrees", 0)
@@ -533,7 +533,7 @@ def example_11_finding_exact_aspects():
 
     # Scan ages 20-40
     for age in range(20, 41):
-        directed = ComparisonBuilder.arc_direction(
+        directed = MultiChartBuilder.arc_direction(
             natal, age=age, arc_type="solar_arc"
         ).calculate()
 
@@ -567,7 +567,7 @@ def example_12_comparing_arc_types():
 
     for arc_type in arc_types:
         try:
-            directed = ComparisonBuilder.arc_direction(
+            directed = MultiChartBuilder.arc_direction(
                 natal, age=age, arc_type=arc_type
             ).calculate()
 
@@ -594,7 +594,7 @@ def example_13_styled_arc_chart():
 
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="solar_arc"
     ).calculate()
 
@@ -621,7 +621,7 @@ def example_14_arc_with_tables():
 
     natal = ChartBuilder.from_notable("Steve Jobs").with_aspects().calculate()
 
-    directed = ComparisonBuilder.arc_direction(
+    directed = MultiChartBuilder.arc_direction(
         natal, age=30, arc_type="solar_arc"
     ).calculate()
 

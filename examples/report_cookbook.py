@@ -17,7 +17,7 @@ For full documentation, see docs/REPORTS.md
 import os
 from pathlib import Path
 
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 from stellium.components import (
     DignityComponent,
     FixedStarsComponent,
@@ -450,8 +450,10 @@ def example_10_synastry_report():
 
     # Create synastry comparison
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="John Lennon")
-        .with_partner(person2, partner_label="Yoko Ono")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="John Lennon", label2="Yoko Ono"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -487,20 +489,15 @@ def example_11_transit_report():
     # Transit time (use a specific date for reproducibility)
     transit_time = datetime(2025, 1, 1, 12, 0)
 
-    # Create transit chart at natal location
-    transit_chart = (
-        ChartBuilder.from_details(
-            transit_time,
-            natal.location.name,
-        )
-        .with_aspects()
-        .calculate()
-    )
-
-    # Create comparison
+    # Create transit comparison (MultiChartBuilder.transit creates the transit chart internally)
     transits = (
-        ComparisonBuilder.from_native(natal, native_label="Natal")
-        .with_partner(transit_chart, partner_label="Transits 2025-01-01")
+        MultiChartBuilder.transit(
+            natal,
+            transit_time,
+            natal_label="Natal",
+            transit_label="Transits 2025-01-01",
+        )
+        .with_cross_aspects()
         .calculate()
     )
 
@@ -541,8 +538,10 @@ def example_12_custom_synastry():
     )
 
     synastry = (
-        ComparisonBuilder.from_native(person1, native_label="Prince William")
-        .with_partner(person2, partner_label="Kate Middleton")
+        MultiChartBuilder.synastry(
+            person1, person2, label1="Prince William", label2="Kate Middleton"
+        )
+        .with_cross_aspects()
         .calculate()
     )
 

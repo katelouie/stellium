@@ -29,7 +29,7 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from stellium import ChartBuilder, ComparisonBuilder
+from stellium import ChartBuilder, MultiChartBuilder
 
 # Output directory for generated files
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -71,7 +71,7 @@ def example_1_simple_progression_by_age():
     )
 
     # Calculate progressions for age 26 (when Einstein published special relativity!)
-    prog = ComparisonBuilder.progression(natal, age=26).calculate()
+    prog = MultiChartBuilder.progression(natal, age=26).calculate()
 
     print("\nProgressions at Age 26 (1905 - 'Miracle Year'):")
     print(
@@ -126,7 +126,7 @@ def example_2_progressed_sun_motion():
             sun = natal.get_object("Sun")
             motion = 0
         else:
-            prog = ComparisonBuilder.progression(natal, age=age).calculate()
+            prog = MultiChartBuilder.progression(natal, age=age).calculate()
             sun = prog.chart2.get_object("Sun")
             motion = sun.longitude - prev_sun
             if motion < 0:
@@ -167,7 +167,7 @@ def example_3_progressed_moon_cycle():
         if age == 0:
             moon = natal.get_object("Moon")
         else:
-            prog = ComparisonBuilder.progression(natal, age=age).calculate()
+            prog = MultiChartBuilder.progression(natal, age=age).calculate()
             moon = prog.chart2.get_object("Moon")
 
         sign_change = "← SIGN CHANGE" if moon.sign != current_sign else ""
@@ -192,7 +192,7 @@ def example_4_progression_by_target_date():
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
     # Progressions for when Einstein received the Nobel Prize (1921)
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         natal,
         target_date="1921-11-09",  # Nobel Prize announcement
     ).calculate()
@@ -224,7 +224,7 @@ def example_5_current_progressions():
     )
 
     # Progressions for NOW
-    prog = ComparisonBuilder.progression(natal).calculate()
+    prog = MultiChartBuilder.progression(natal).calculate()
 
     # Calculate current age
     birth_dt = natal.datetime.local_datetime
@@ -265,7 +265,7 @@ def example_6_quotidian_angles():
     )
 
     # Quotidian is the default (most accurate method)
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         natal,
         age=30,
         angle_method="quotidian",  # This is the default
@@ -303,7 +303,7 @@ def example_7_solar_arc_angles():
         .calculate()
     )
 
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         natal, age=30, angle_method="solar_arc"
     ).calculate()
 
@@ -348,7 +348,7 @@ def example_8_naibod_angles():
         .calculate()
     )
 
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         natal, age=30, angle_method="naibod"
     ).calculate()
 
@@ -389,7 +389,7 @@ def example_9_compare_angle_methods():
     print("-" * 42)
 
     for method in ["quotidian", "solar_arc", "naibod"]:
-        prog = ComparisonBuilder.progression(
+        prog = MultiChartBuilder.progression(
             natal, age=30, angle_method=method
         ).calculate()
 
@@ -417,7 +417,7 @@ def example_10_progressed_aspects_to_natal():
 
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    prog = ComparisonBuilder.progression(natal, age=26).calculate()
+    prog = MultiChartBuilder.progression(natal, age=26).calculate()
 
     print("Progressed-to-Natal Aspects at Age 26:")
     print("-" * 50)
@@ -447,7 +447,7 @@ def example_11_house_overlays():
         .calculate()
     )
 
-    prog = ComparisonBuilder.progression(natal, age=30).calculate()
+    prog = MultiChartBuilder.progression(natal, age=30).calculate()
 
     print("Progressed Planets in Natal Houses:")
     print("-" * 50)
@@ -492,7 +492,7 @@ def example_12_legacy_explicit_chart():
     ).calculate()
 
     # Legacy API: pass both charts explicitly
-    prog = ComparisonBuilder.progression(natal, progressed).calculate()
+    prog = MultiChartBuilder.progression(natal, progressed).calculate()
 
     print("Legacy API works!")
     print(f"  Comparison type: {prog.comparison_type}")
@@ -508,7 +508,7 @@ def example_13_tuple_format():
     section_header("Example 13: Tuple Format")
 
     # Both charts as tuples
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         ("1994-01-06 11:47", "Palo Alto, CA"),
         ("1994-02-05 11:47", "Palo Alto, CA"),  # 30 days later = age 30
     ).calculate()
@@ -539,7 +539,7 @@ def example_14_draw_progression_biwheel():
         .calculate()
     )
 
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         natal, age=30, natal_label="Natal", progressed_label="Progressed Age 30"
     ).calculate()
 
@@ -562,7 +562,7 @@ def example_15_progression_with_solar_arc_biwheel():
 
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    prog = ComparisonBuilder.progression(
+    prog = MultiChartBuilder.progression(
         natal,
         age=26,
         angle_method="solar_arc",
