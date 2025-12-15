@@ -87,6 +87,7 @@ class HeaderLayer:
     ) -> None:
         """Render the header band."""
         from stellium.core.comparison import Comparison
+        from stellium.core.multichart import MultiChart
         from stellium.core.multiwheel import MultiWheel
         from stellium.core.synthesis import SynthesisChart
 
@@ -112,6 +113,19 @@ class HeaderLayer:
         # Dispatch to appropriate renderer based on chart type
         if isinstance(chart, SynthesisChart):
             self._render_synthesis_header(
+                dwg,
+                chart,
+                header_left,
+                header_right,
+                header_top,
+                header_width,
+                name_color,
+                info_color,
+                renderer,
+            )
+        elif isinstance(chart, MultiChart):
+            # MultiChart uses the same header rendering as MultiWheel
+            self._render_multiwheel_header(
                 dwg,
                 chart,
                 header_left,

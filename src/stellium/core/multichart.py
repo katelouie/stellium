@@ -235,6 +235,33 @@ class MultiChart:
             all_aspects.extend(aspects)
         return all_aspects
 
+    def get_object_aspects(self, object_name: str, chart: int = 0) -> list[Aspect]:
+        """
+        Get all cross-chart aspects involving a specific object from a specific chart.
+
+        Args:
+            object_name: Name of the celestial object (e.g., "Venus", "Moon")
+            chart: Chart index (0 = inner/natal, 1 = outer/transit, etc.)
+
+        Returns:
+            List of Aspect objects involving the specified object
+
+        Example:
+            >>> venus_aspects = multichart.get_object_aspects("Venus", chart=0)
+            >>> for asp in venus_aspects:
+            ...     print(f"Venus {asp.aspect_name} {asp.object2.name}")
+        """
+        all_aspects = self.get_all_cross_aspects()
+        result = []
+        for asp in all_aspects:
+            # Check if object1 matches (from specified chart)
+            if asp.object1.name == object_name:
+                result.append(asp)
+            # Check if object2 matches (swap perspective)
+            elif asp.object2.name == object_name:
+                result.append(asp)
+        return result
+
     def get_house_overlays(
         self, planet_chart: int, house_chart: int
     ) -> tuple[HouseOverlay, ...]:

@@ -24,6 +24,15 @@ def _is_comparison(obj):
     )
 
 
+def _is_multichart(obj):
+    """Check if object is a MultiChart (avoid circular import)."""
+    return (
+        hasattr(obj, "charts")
+        and hasattr(obj, "chart_count")
+        and hasattr(obj, "get_cross_aspects")
+    )
+
+
 def _filter_objects_for_tables(positions, object_types=None):
     """
     Filter positions to include in position tables and aspectarian.
@@ -171,15 +180,16 @@ class PositionTableLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render position table.
 
-        Handles both CalculatedChart and Comparison objects.
-        For Comparison, displays two separate side-by-side tables.
+        Handles CalculatedChart, Comparison, and MultiChart objects.
+        For Comparison/MultiChart, displays two separate side-by-side tables.
         """
-        # Check if this is a Comparison object
-        is_comparison = _is_comparison(chart)
-
-        if is_comparison:
+        # Check if this is a Comparison or MultiChart object
+        if _is_comparison(chart):
             # Render two separate tables side by side
             self._render_comparison_tables(renderer, dwg, chart)
+        elif _is_multichart(chart):
+            # MultiChart uses same rendering as comparison (side-by-side)
+            self._render_multichart_tables(renderer, dwg, chart)
         else:
             # Render standard single table
             self._render_single_table(renderer, dwg, chart)
@@ -549,6 +559,138 @@ class PositionTableLayer:
             renderer, dwg, comparison.chart2, chart2_positions, x_chart2, y_start + 20
         )
 
+    def _render_multichart_tables(
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, multichart
+    ) -> None:
+        """Render side-by-side tables for MultiChart (2+ charts)."""
+        # Get positions from first two charts (for biwheel display)
+        chart1_positions = _filter_objects_for_tables(
+            multichart.charts[0].positions, self.object_types
+        )
+        chart2_positions = _filter_objects_for_tables(
+            multichart.charts[1].positions, self.object_types
+        )
+
+        # Get defined names from registry
+        name_priority = {name: i for i, name in enumerate(CELESTIAL_REGISTRY.keys())}
+
+        # Sort both lists
+        type_priority = {
+            ObjectType.PLANET: 0,
+            ObjectType.ASTEROID: 1,
+            ObjectType.NODE: 2,
+            ObjectType.POINT: 3,
+            ObjectType.ANGLE: 4,
+            ObjectType.MIDPOINT: 5,
+            ObjectType.ARABIC_PART: 6,
+            ObjectType.FIXED_STAR: 7,
+        }
+        chart1_positions.sort(
+            key=lambda p: (
+                type_priority.get(p.object_type, 99),
+                name_priority.get(p.name, 999),
+            )
+        )
+        chart2_positions.sort(
+            key=lambda p: (
+                type_priority.get(p.object_type, 99),
+                name_priority.get(p.name, 999),
+            )
+        )
+
+        # Get column widths from config if available
+        if self.config and hasattr(self.config.tables, "position_col_widths"):
+            col_widths = self.config.tables.position_col_widths
+            padding = self.config.tables.padding
+            gap = self.config.tables.gap_between_columns
+            gap_between_tables = self.config.tables.gap_between_tables
+        else:
+            # Fallback
+            col_widths = {
+                "planet": 100,
+                "sign": 50,
+                "degree": 60,
+                "house": 25,
+                "speed": 25,
+            }
+            padding = 10
+            gap = 5
+            gap_between_tables = 20
+
+        # Calculate single table width from column widths
+        col_names = ["planet", "sign", "degree"]
+        if self.style["show_house"]:
+            col_names.append("house")
+        if self.style["show_speed"]:
+            col_names.append("speed")
+
+        single_table_width = 2 * padding  # left and right padding
+        for i, col_name in enumerate(col_names):
+            single_table_width += col_widths.get(col_name, 50)
+            if i < len(col_names) - 1:
+                single_table_width += gap
+
+        # Get labels from multichart
+        label1 = multichart.labels[0] if multichart.labels else "Chart 1"
+        label2 = multichart.labels[1] if len(multichart.labels) > 1 else "Chart 2"
+
+        # Render Chart 1 table (left)
+        x_chart1 = self.x_offset
+        y_start = self.y_offset
+
+        # Chart 1 title
+        title_text = f"{label1} (Inner Wheel)"
+        dwg.add(
+            dwg.text(
+                title_text,
+                insert=(x_chart1, y_start),
+                text_anchor="start",
+                dominant_baseline="hanging",
+                font_size="12px",
+                fill=self.style["header_color"],
+                font_family=renderer.style["font_family_text"],
+                font_weight="bold",
+            )
+        )
+
+        # Render chart 1 table (offset by title height)
+        self._render_table_for_chart(
+            renderer,
+            dwg,
+            multichart.charts[0],
+            chart1_positions,
+            x_chart1,
+            y_start + 20,
+        )
+
+        # Render Chart 2 table (right, with spacing)
+        x_chart2 = x_chart1 + single_table_width + gap_between_tables
+
+        # Chart 2 title
+        title_text = f"{label2} (Outer Wheel)"
+        dwg.add(
+            dwg.text(
+                title_text,
+                insert=(x_chart2, y_start),
+                text_anchor="start",
+                dominant_baseline="hanging",
+                font_size="12px",
+                fill=self.style["header_color"],
+                font_family=renderer.style["font_family_text"],
+                font_weight="bold",
+            )
+        )
+
+        # Render chart 2 table (offset by title height)
+        self._render_table_for_chart(
+            renderer,
+            dwg,
+            multichart.charts[1],
+            chart2_positions,
+            x_chart2,
+            y_start + 20,
+        )
+
     def _render_table_for_chart(
         self,
         renderer: ChartRenderer,
@@ -766,15 +908,19 @@ class HouseCuspTableLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render house cusp table.
 
-        Handles both CalculatedChart and Comparison objects.
-        For Comparison, displays two separate side-by-side tables.
+        Handles CalculatedChart, Comparison, and MultiChart objects.
+        For Comparison/MultiChart, displays two separate side-by-side tables.
         """
-        # Check if this is a Comparison object
+        # Check if this is a Comparison or MultiChart object
         is_comparison = _is_comparison(chart)
+        is_multichart = _is_multichart(chart)
 
         if is_comparison:
             # Render two separate house cusp tables side by side
             self._render_comparison_house_tables(renderer, dwg, chart)
+        elif is_multichart:
+            # MultiChart uses similar rendering to comparison
+            self._render_multichart_house_tables(renderer, dwg, chart)
         else:
             # Render standard single table
             self._render_single_house_table(renderer, dwg, chart)
@@ -1067,6 +1213,119 @@ class HouseCuspTableLayer:
             header_color,
         )
 
+    def _render_multichart_house_tables(
+        self, renderer: ChartRenderer, dwg: svgwrite.Drawing, multichart
+    ) -> None:
+        """Render two separate side-by-side house cusp tables for MultiChart."""
+        chart1 = multichart.charts[0]
+        chart2 = multichart.charts[1]
+
+        # Get house cusps from both charts
+        if not chart1.default_house_system:
+            return
+        if not chart2.default_house_system:
+            return
+
+        houses1 = chart1.get_houses(chart1.default_house_system)
+        houses2 = chart2.get_houses(chart2.default_house_system)
+
+        if not houses1 or not houses2:
+            return
+
+        # Get config values
+        if self.config and hasattr(self.config.tables, "house_col_widths"):
+            col_widths = self.config.tables.house_col_widths
+            padding = self.config.tables.padding
+            gap_between_cols = self.config.tables.gap_between_columns
+            gap_between_tables = self.config.tables.gap_between_tables
+        else:
+            # Fallback
+            col_widths = {"house": 30, "sign": 50, "degree": 60}
+            padding = 10
+            gap_between_cols = 5
+            gap_between_tables = 20
+
+        # Calculate single table width: padding + columns + gaps + padding
+        col_names = ["house", "sign", "degree"]
+        single_table_width = 2 * padding
+        for i, col_name in enumerate(col_names):
+            single_table_width += col_widths.get(col_name, 50)
+            if i < len(col_names) - 1:
+                single_table_width += gap_between_cols
+
+        # Get labels from multichart
+        label1 = multichart.labels[0] if multichart.labels else "Chart 1"
+        label2 = multichart.labels[1] if len(multichart.labels) > 1 else "Chart 2"
+
+        # Render Chart 1 house table (left)
+        x_chart1 = self.x_offset
+        y_start = self.y_offset
+
+        # Get theme-aware colors
+        text_color = renderer.style.get("text_color", self.style["text_color"])
+        header_color = renderer.style.get("text_color", self.style["header_color"])
+
+        # Chart 1 title
+        title_text = f"{label1} Houses"
+        dwg.add(
+            dwg.text(
+                title_text,
+                insert=(x_chart1, y_start),
+                text_anchor="start",
+                dominant_baseline="hanging",
+                font_size="12px",
+                fill=header_color,
+                font_family=renderer.style["font_family_text"],
+                font_weight="bold",
+            )
+        )
+
+        # Render chart 1 house table (offset by title height)
+        self._render_house_table_for_chart(
+            renderer,
+            dwg,
+            houses1,
+            x_chart1,
+            y_start + 20,
+            col_widths,
+            padding,
+            gap_between_cols,
+            text_color,
+            header_color,
+        )
+
+        # Render Chart 2 house table (right, with spacing)
+        x_chart2 = x_chart1 + single_table_width + gap_between_tables
+
+        # Chart 2 title
+        title_text = f"{label2} Houses"
+        dwg.add(
+            dwg.text(
+                title_text,
+                insert=(x_chart2, y_start),
+                text_anchor="start",
+                dominant_baseline="hanging",
+                font_size="12px",
+                fill=header_color,
+                font_family=renderer.style["font_family_text"],
+                font_weight="bold",
+            )
+        )
+
+        # Render chart 2 house table (offset by title height)
+        self._render_house_table_for_chart(
+            renderer,
+            dwg,
+            houses2,
+            x_chart2,
+            y_start + 20,
+            col_widths,
+            padding,
+            gap_between_cols,
+            text_color,
+            header_color,
+        )
+
     def _render_house_table_for_chart(
         self,
         renderer: ChartRenderer,
@@ -1244,24 +1503,35 @@ class AspectarianLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render aspectarian grid.
 
-        Handles both CalculatedChart and Comparison objects.
-        For Comparison, displays cross-chart aspects including Asc and MC from both charts.
+        Handles CalculatedChart, Comparison, and MultiChart objects.
+        For Comparison/MultiChart, displays cross-chart aspects including Asc and MC from both charts.
         """
-        # Check if this is a Comparison object
+        # Check if this is a Comparison or MultiChart object
         is_comparison = _is_comparison(chart)
+        is_multichart = _is_multichart(chart)
         cell_size = self.style["cell_size"]
         padding = self.style.get("label_padding", 4)
 
-        if is_comparison:
+        if is_comparison or is_multichart:
+            # Get chart1 and chart2 positions (different access for Comparison vs MultiChart)
+            if is_multichart:
+                chart1_positions = chart.charts[0].positions
+                chart2_positions = chart.charts[1].positions
+                cross_aspects = chart.get_all_cross_aspects()
+            else:
+                chart1_positions = chart.chart1.positions
+                chart2_positions = chart.chart2.positions
+                cross_aspects = chart.cross_aspects
+
             # For comparisons: get all celestial objects using filter function
             # Chart1 objects (rows - inner wheel)
             chart1_objects = _filter_objects_for_tables(
-                chart.chart1.positions, self.object_types
+                chart1_positions, self.object_types
             )
 
             # Chart2 objects (columns - outer wheel)
             chart2_objects = _filter_objects_for_tables(
-                chart.chart2.positions, self.object_types
+                chart2_positions, self.object_types
             )
 
             # Sort by traditional order (planets first, nodes, points, then angles)
@@ -1299,7 +1569,7 @@ class AspectarianLayer:
 
             # Build aspect lookup from cross_aspects
             aspect_lookup = {}
-            for aspect in chart.cross_aspects:
+            for aspect in cross_aspects:
                 # Key format: (chart1_obj_name, chart2_obj_name)
                 key = (aspect.object1.name, aspect.object2.name)
                 aspect_lookup[key] = aspect

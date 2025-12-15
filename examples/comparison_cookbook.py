@@ -63,9 +63,10 @@ def example_1_simple_synastry():
     )
 
     # Display cross-chart aspects
-    print(f"Cross-chart aspects found: {len(synastry.cross_aspects)}")
+    all_aspects = synastry.get_all_cross_aspects()
+    print(f"Cross-chart aspects found: {len(all_aspects)}")
     print("\nTop 5 aspects (by orb):")
-    for asp in sorted(synastry.cross_aspects, key=lambda a: a.orb)[:5]:
+    for asp in sorted(all_aspects, key=lambda a: a.orb)[:5]:
         print(
             f"  {asp.object1.name} {asp.aspect_name} {asp.object2.name} "
             f"(orb: {asp.orb:.2f}°)"
@@ -201,7 +202,7 @@ def example_5_compatibility_score():
 
     # Aspect breakdown
     aspect_counts = {}
-    for asp in synastry.cross_aspects:
+    for asp in synastry.get_all_cross_aspects():
         aspect_counts[asp.aspect_name] = aspect_counts.get(asp.aspect_name, 0) + 1
 
     print("\nAspect breakdown:")
@@ -264,9 +265,7 @@ def example_7_current_transits():
     transit_chart = (
         ChartBuilder.from_details(
             transit_time,
-            natal.location.latitude,
-            natal.location.longitude,
-            natal.location.name,
+            (natal.location.latitude, natal.location.longitude),
         )
         .with_aspects()
         .calculate()
@@ -281,9 +280,10 @@ def example_7_current_transits():
         .calculate()
     )
 
-    print(f"Transit aspects found: {len(transits.cross_aspects)}")
+    all_transits = transits.get_all_cross_aspects()
+    print(f"Transit aspects found: {len(all_transits)}")
     print("\nTransits to natal Sun:")
-    sun_transits = [asp for asp in transits.cross_aspects if asp.object1.name == "Sun"]
+    sun_transits = [asp for asp in all_transits if asp.object1.name == "Sun"]
     for asp in sun_transits[:5]:
         applying = "applying" if asp.is_applying else "separating"
         print(
@@ -311,9 +311,7 @@ def example_8_transit_with_tight_orbs():
     transit_chart = (
         ChartBuilder.from_details(
             transit_time,
-            natal.location.latitude,
-            natal.location.longitude,
-            natal.location.name,
+            (natal.location.latitude, natal.location.longitude),
         )
         .with_aspects()
         .calculate()
@@ -339,8 +337,9 @@ def example_8_transit_with_tight_orbs():
         .calculate()
     )
 
-    print(f"Exact transits (2° orb): {len(transits.cross_aspects)}")
-    for asp in transits.cross_aspects[:5]:
+    all_transits = transits.get_all_cross_aspects()
+    print(f"Exact transits (2° orb): {len(all_transits)}")
+    for asp in all_transits[:5]:
         print(
             f"  {asp.object2.name} {asp.aspect_name} {asp.object1.name} "
             f"(orb: {asp.orb:.2f}°)"
@@ -379,10 +378,11 @@ def example_9_custom_aspect_types():
         .calculate()
     )
 
-    print(f"Hard aspects only: {len(synastry.cross_aspects)}")
+    all_aspects = synastry.get_all_cross_aspects()
+    print(f"Hard aspects only: {len(all_aspects)}")
 
     aspect_counts = {}
-    for asp in synastry.cross_aspects:
+    for asp in all_aspects:
         aspect_counts[asp.aspect_name] = aspect_counts.get(asp.aspect_name, 0) + 1
 
     for name, count in sorted(aspect_counts.items()):
@@ -409,8 +409,9 @@ def example_10_no_house_overlays():
         .calculate()
     )
 
-    print(f"Aspects calculated: {len(synastry.cross_aspects)}")
-    overlays = synastry.house_overlays.get((0, 1), [])
+    all_aspects = synastry.get_all_cross_aspects()
+    print(f"Aspects calculated: {len(all_aspects)}")
+    overlays = synastry.get_house_overlays(0, 1)
     print(f"House overlays: {len(overlays)} (skipped)")
 
 
@@ -445,12 +446,13 @@ def example_11_synastry_pdf_report():
 
     # Generate PDF report
     pdf_path = OUTPUT_DIR / "11_beatles_synastry.pdf"
-    ReportBuilder().from_chart(synastry).preset_synastry().render(
-        format="pdf",
-        file=str(pdf_path),
-        chart_svg_path=str(svg_path),
-        title="Paul McCartney & John Lennon - Synastry",
-        show=False,
+    (
+        ReportBuilder()
+        .from_chart(synastry)
+        .preset_synastry()
+        .with_title("Paul McCartney & John Lennon - Synastry")
+        .with_chart_image(str(svg_path))
+        .render(format="pdf", file=str(pdf_path), show=False)
     )
     print(f"Created PDF: {pdf_path}")
 
@@ -470,9 +472,7 @@ def example_12_transit_pdf_report():
     transit_chart = (
         ChartBuilder.from_details(
             transit_time,
-            natal.location.latitude,
-            natal.location.longitude,
-            natal.location.name,
+            (natal.location.latitude, natal.location.longitude),
         )
         .with_aspects()
         .calculate()
@@ -487,11 +487,12 @@ def example_12_transit_pdf_report():
     )
 
     pdf_path = OUTPUT_DIR / "12_oprah_transits.pdf"
-    ReportBuilder().from_chart(transits).preset_transit().render(
-        format="pdf",
-        file=str(pdf_path),
-        title="Oprah Winfrey - Transits for 2025",
-        show=False,
+    (
+        ReportBuilder()
+        .from_chart(transits)
+        .preset_transit()
+        .with_title("Oprah Winfrey - Transits for 2025")
+        .render(format="pdf", file=str(pdf_path), show=False)
     )
     print(f"Created: {pdf_path}")
 
@@ -532,7 +533,7 @@ def example_13_batch_synastry():
 
         synastry.draw(str(output)).with_theme("midnight").save()
 
-        print(f"Created: {output} ({len(synastry.cross_aspects)} aspects)")
+        print(f"Created: {output} ({len(synastry.get_all_cross_aspects())} aspects)")
 
 
 # =============================================================================
@@ -566,8 +567,11 @@ def main():
     example_10_no_house_overlays()
 
     # --- Part 5: Reports ---
-    example_11_synastry_pdf_report()
-    example_12_transit_pdf_report()
+    # Note: PDF reports for MultiChart are not yet supported.
+    # These examples will be enabled once the presentation layer
+    # is updated to handle MultiChart objects.
+    # example_11_synastry_pdf_report()
+    # example_12_transit_pdf_report()
 
     # --- Part 6: Batch ---
     example_13_batch_synastry()
