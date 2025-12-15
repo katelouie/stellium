@@ -1,0 +1,169 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Steve Jobs
+  event_type: birth
+  year: 1955
+  month: 2
+  day: 24
+  hour: 19
+  minute: 15
+  latitude: 37.7749
+  longitude: -122.4194
+  location_name: San Francisco, California, USA
+  timezone: America/Los_Angeles
+  category: business
+  subcategories:
+    - Entrepreneur
+    - Inventor
+    - Visionary
+  notable_for: >-
+    American business magnate and co-founder of Apple Inc. Revolutionized personal
+    computing, animated movies (Pixar), music (iPod/iTunes), phones (iPhone), and
+    tablet computing (iPad). Known for his perfectionism and design philosophy.
+  astrological_notes: Sun 5 Pisces
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
+  verified: true
+
+- name: Elon Musk
+  event_type: birth
+  year: 1971
+  month: 6
+  day: 28
+  hour: 7
+  minute: 30
+  latitude: -25.7479
+  longitude: 28.2293
+  location_name: Pretoria, South Africa
+  timezone: Africa/Johannesburg
+  category: business
+  subcategories:
+    - Entrepreneur
+    - Engineer
+    - Investor
+  notable_for: >-
+    South African-born entrepreneur and business magnate. Founder of SpaceX, CEO of
+    Tesla, owner of X (Twitter). Co-founded PayPal, Neuralink, and OpenAI.
+    Became world's richest person in 2021.
+  astrological_notes: Sun 6 Cancer
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Musk,_Elon"
+    - "Walter Isaacson, Elon Musk (2023)"
+  verified: false
+
+- name: Walt Disney
+  event_type: birth
+  year: 1901
+  month: 12
+  day: 5
+  hour: 0
+  minute: 35
+  latitude: 41.8781
+  longitude: -87.6298
+  location_name: Chicago, Illinois, USA
+  timezone: America/Chicago
+  category: business
+  subcategories:
+    - Animator
+    - Filmmaker
+    - Theme Park Creator
+  notable_for: >-
+    American animator, film producer, and entrepreneur. Created Mickey Mouse in 1928.
+    Founded The Walt Disney Company. Built Disneyland. Won 22 Academy Awards.
+    Pioneer of the American animation industry.
+  astrological_notes: Sun 12 Sagittarius, Moon 9 Libra
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
+  verified: true
+
+- name: Warren Buffett
+  event_type: birth
+  year: 1930
+  month: 8
+  day: 30
+  hour: 15
+  minute: 0
+  latitude: 41.16
+  longitude: -95.93
+  location_name: Omaha, Nebraska
+  timezone: America/Chicago
+  category: business
+  subcategories:
+  - Investor
+  - Philanthropist
+  notable_for: American investor, business tycoon, philanthropist, and the chairman and CEO of Berkshire Hathaway, an American multinational conglomerate holding company headquartered in Omaha, Nebraska. Following a finance accounting field in college, Buffett received a BS and MS in Economics. He is considered one of the most savvy investors in the world and has a net worth of over US$85.6 billion as of December 2020, making him the world's fourth-wealthiest person.
+  astrological_notes: 06°45' 05°18 Asc. 25°30'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Buffett,_Warren'
+  verified: false
+- name: Bill Gates
+  event_type: birth
+  year: 1955
+  month: 10
+  day: 28
+  hour: 22
+  minute: 0
+  latitude: 47.6000
+  longitude: -122.3333
+  location_name: Seattle, Washington, USA
+  timezone: America/Los_Angeles
+  category: business
+  subcategories:
+  - software developer
+  - investor
+  - philanthropist
+  notable_for: American business magnate, co-founder of Microsoft Corporation, known for pioneering the microcomputer revolution and holding the title of the richest person in the world for most years from 1995 to 2017.
+  astrological_notes: Ascendant 08°15'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Gates,_Bill'
+  verified: false
+- name: Aristotle Onassis
+  event_type: birth
+  year: 1906
+  month: 1
+  day: 20
+  hour: 12
+  minute: 0
+  latitude: 38.4237
+  longitude: 27.1428
+  location_name: Izmir, Turkey
+  timezone: Europe/Istanbul
+  category: business
+  subcategories:
+  - entrepreneur
+  - shipping magnate
+  notable_for: Greek businessman who built a global shipping empire; one of the wealthiest men in the world; amassed the world's largest privately owned shipping fleet; married to Athina Mary Livanos and Jacqueline Kennedy; affair with Maria Callas.
+  astrological_notes: Sun in Capricorn
+  data_quality: X
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Aristotle_Onassis'
+  verified: false
+- name: Steve Wozniak
+  event_type: birth
+  year: 1950
+  month: 8
+  day: 11
+  hour: 9
+  minute: 45
+  latitude: 37.3333
+  longitude: -121.9
+  location_name: San Jose, California, USA
+  timezone: America/Los_Angeles
+  category: business
+  subcategories:
+  - inventor
+  - engineer
+  notable_for: American entrepreneur, a self-taught computer engineer who designed virtually the entire product line that enabled Apple Corporation to go from a two-man garage operation to a half-billion dollar a year business in six years. He built his first computer at the age of 13 and as an adult, co-founded the corporation that now has more than 3,000 employees.
+  astrological_notes: Sun 18°26' Leo, Moon 24°11' Cancer, Asc. 29°07' Virgo
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Wozniak,_Steve'
+  - Quoted BC/BR
+  verified: false

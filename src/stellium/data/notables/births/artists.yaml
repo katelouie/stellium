@@ -1,0 +1,338 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Frida Kahlo
+  event_type: birth
+  year: 1907
+  month: 7
+  day: 6
+  hour: 8
+  minute: 30
+  latitude: 19.3467
+  longitude: -99.1618
+  location_name: Coyoacán, Mexico
+  timezone: America/Mexico_City
+  category: artist
+  subcategories:
+  - painter
+  - surrealist
+  notable_for: Iconic self-portraits and Mexican folk art
+  astrological_notes: Cancer Sun with Leo Rising - tests artistic creativity and emotional
+    intensity
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Pablo Picasso
+  event_type: birth
+  year: 1881
+  month: 10
+  day: 25
+  hour: 23
+  minute: 15
+  latitude: 36.7213
+  longitude: -4.4213
+  location_name: Málaga, Spain
+  timezone: Europe/Madrid
+  category: artist
+  subcategories:
+  - painter
+  - sculptor
+  - cubist
+  notable_for: Co-founder of Cubism, revolutionary modern artist
+  astrological_notes: Scorpio Sun - tests artistic revolution and creative transformation
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Georgia O'Keeffe
+  event_type: birth
+  year: 1887
+  month: 11
+  day: 15
+  hour: 6
+  minute: 30
+  latitude: 43.1833
+  longitude: -89.2167
+  location_name: Sun Prairie, Wisconsin, USA
+  timezone: America/Chicago
+  category: artist
+  subcategories:
+  - Painter
+  - Modernist
+  notable_for: American artist known as the "Mother of American modernism". Famous
+    for paintings of enlarged flowers, New York skyscrapers, and New Mexico landscapes.
+    Received Presidential Medal of Freedom (1977) and National Medal of Arts (1985).
+  astrological_notes: Sun 22 Scorpio, Moon in Virgo (approx)
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/O%27Keeffe,_Georgia'
+  - Taeger quotes Astrolog Nr. 61 via Schenk
+  verified: false
+- name: Claude Monet
+  event_type: birth
+  year: 1840
+  month: 11
+  day: 14
+  hour: 12
+  minute: 0
+  latitude: 48.8667
+  longitude: 2.3333
+  location_name: Paris, France
+  timezone: Europe/Paris
+  category: artist
+  subcategories:
+  - Painter
+  - Impressionist
+  notable_for: French painter, initiator and leader of the Impressionist movement.
+    Known for series paintings of haystacks, Rouen Cathedral, and water lilies at
+    his Giverny garden. His work achieved record-breaking popularity in museum exhibitions.
+  astrological_notes: Sun 22 Scorpio (no birth time - Moon/Asc unknown)
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Monet,_Claude'
+  - Baptismal record from Notre-Dame-de-Lorette parish, dated 20 May 1841
+  verified: false
+- name: Vincent van Gogh
+  event_type: birth
+  year: 1853
+  month: 3
+  day: 30
+  hour: 11
+  minute: 0
+  latitude: 51.4667
+  longitude: 4.8667
+  location_name: Groot-Zundert, Netherlands
+  timezone: Europe/Amsterdam
+  category: artist
+  subcategories:
+  - Painter
+  - Post-Impressionist
+  notable_for: Dutch Post-Impressionist painter, one of the most famous and influential
+    figures in Western art history. Created over 2,100 artworks including "The Starry
+    Night" and "Sunflowers."
+  astrological_notes: Sun 9 Aries
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Van_Gogh,_Vincent'
+  verified: true
+- name: Leonardo da Vinci
+  event_type: birth
+  year: 1452
+  month: 4
+  day: 23
+  hour: 21
+  minute: 40
+  latitude: 43.7833
+  longitude: 10.9167
+  location_name: Vinci, Italy
+  timezone: Europe/Rome
+  category: artist
+  subcategories:
+  - Painter
+  - Sculptor
+  - Engineer
+  - Inventor
+  - Scientist
+  - Mathematician
+  notable_for: Italian Renaissance polymath - painter, sculptor, architect, musician,
+    mathematician, engineer, inventor, anatomist, and writer. Created masterpieces
+    including the Mona Lisa and The Last Supper. His notebooks contain designs for
+    flying machines, tanks, and submarines centuries ahead of their time.
+  astrological_notes: Sun 3 Taurus, Moon 3 Pisces, Asc 6 Sagittarius
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Da_Vinci,_Leonardo'
+  - 'Family diary: ''A grandson of mine was born April 15, Saturday, three hours into
+    the night'''
+  - Leonardo da Vinci, Reynal & Co.
+  verified: true
+  calendar: julian_original
+  time_system: florentine
+- name: Wassily Kandinsky
+  event_type: birth
+  year: 1866
+  month: 12
+  day: 16
+  hour: 6
+  minute: 0
+  latitude: 55.75
+  longitude: 37.5833
+  location_name: Moscow, Russia
+  timezone: Europe/Moscow
+  category: artist
+  subcategories:
+  - Painter
+  - Expressionist
+  - Abstract Art Pioneer
+  notable_for: Russian artist and expressionist painter who helped lay the foundations
+    for abstract art in Munich before World War I. One of the pioneers of abstraction
+    in western art. Founded the influential Blue Rider group.
+  astrological_notes: Sun 24 Sagittarius, Moon 5 Aries
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Kandinsky,_Wassily'
+  verified: false
+- name: Michelangelo
+  event_type: birth
+  year: 1475
+  month: 3
+  day: 6
+  hour: 1
+  minute: 45
+  latitude: 43.6389
+  longitude: 11.9875
+  location_name: Caprese Michelangelo, Italy
+  timezone: Europe/Rome
+  category: artist
+  subcategories:
+  - Sculptor
+  - Painter
+  - Architect
+  - Poet
+  notable_for: Italian sculptor, painter, architect and poet of the High Renaissance.
+    Created the ceiling of the Sistine Chapel, the statue of David, and the Pietà.
+    Considered one of the greatest artists of all time.
+  astrological_notes: Sun 25 Pisces (Julian)
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Michelangelo'
+  - A. Gotti, Vita di Michelangelo
+  verified: false
+
+- name: Salvador Dali
+  event_type: birth
+  year: 1904
+  month: 5
+  day: 11
+  hour: 8
+  minute: 45
+  latitude: 42.2667
+  longitude: 2.9617
+  location_name: Figueres, Spain
+  timezone: Europe/Madrid
+  category: artist
+  subcategories:
+    - Painter
+    - Surrealist
+    - Sculptor
+  notable_for: >-
+    Spanish surrealist artist renowned for his technical skill and striking imagery.
+    Known for "The Persistence of Memory" and his eccentric public persona. One of
+    the most influential artists of the 20th century.
+  astrological_notes: Sun 20 Taurus
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Dali,_Salvador"
+  verified: true
+- name: Andy Warhol
+  event_type: birth
+  year: 1928
+  month: 8
+  day: 6
+  hour: 6
+  minute: 30
+  latitude: 40.43
+  longitude: -80.0
+  location_name: Pittsburgh, Pennsylvania
+  timezone: America/New_York
+  category: artist
+  subcategories:
+  - painter
+  - filmmaker
+  - pop artist
+  notable_for: American underground artist and filmmaker who had a genius for creating attention. An androgyne and voyeur himself, his salon became the New York center of the freak scene in the '60s.
+  astrological_notes: Asc. 13°49'
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Warhol,_Andy'
+  - Ultra Violet, "Famous For 15 Minutes"
+  verified: false
+- name: Henri Matisse
+  event_type: birth
+  year: 1869
+  month: 12
+  day: 31
+  hour: 20
+  minute: 0
+  latitude: 50.06
+  longitude: 3.33
+  location_name: Le Cateau, France
+  timezone: Europe/Paris
+  category: artist
+  subcategories:
+  - Painter
+  - Sculptor
+  - Lithographer
+  notable_for: French painter, sculptor and lithographer, noted for being one of the foremost decorative French painters of his time and one of the most influential of the 1900s. While his superbly simple line drawings rank among the greatest works of graphic art he is best known for his abstract, intellectual use of color.
+  astrological_notes: 10°15' 25°19 Asc. 24°29'
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Matisse,_Henri'
+  - Birth certificate in Didier Geslain archive, 'sculpteurs' pdf file, p. 78
+  verified: false
+- name: Diego Rivera
+  event_type: birth
+  year: 1886
+  month: 12
+  day: 8
+  hour: 19
+  minute: 30
+  latitude: 21.0167
+  longitude: -101.2500
+  location_name: Guanajuato, Mexico
+  timezone: America/Mexico_City
+  category: artist
+  subcategories:
+  - painter
+  - muralist
+  notable_for: Mexican artist, controversial painter expressing political views through art; communist with themes of revolution and labor; noted for paintings of children; led campaign for Mexican artists to decorate government buildings with murals; tumultuous marriage to Frida Kahlo.
+  astrological_notes: Ascendant 16°59' 18°33'
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Rivera,_Diego'
+  verified: false
+- name: Alfred Stieglitz
+  event_type: birth
+  year: 1864
+  month: 1
+  day: 1
+  hour: 12
+  minute: 0
+  latitude: 40.7439
+  longitude: -74.0322
+  location_name: Hoboken, New Jersey, USA
+  timezone: America/New_York
+  category: artist
+  subcategories:
+  - photographer
+  - modern art promoter
+  notable_for: American photographer and modern art promoter who was instrumental over his 50-year career in making photography an accepted art form. In addition to his photography, Stieglitz was known for the New York art galleries that he ran in the early part of the 20th century, where he introduced many avant-garde European artists to the U.S. He was married to painter Georgia O’Keeffe.
+  astrological_notes: Sun sign Capricorn, Ascendant Aries, Moon sign Libra
+  data_quality: X
+  sources:
+  - 'Astrologify: https://astrologify.com/people/alfred-stieglitz/'
+  verified: false
+- name: Pamela Colman Smith
+  event_type: birth
+  year: 1878
+  month: 2
+  day: 16
+  hour: 12
+  minute: 0
+  latitude: 51.4833
+  longitude: -0.3667
+  location_name: Heston Middlesex, England
+  timezone: Europe/London
+  category: artist
+  subcategories:
+  - illustrator
+  - commercial artist
+  notable_for: British artist known for illustrating the Rider-Waite tarot deck, published in December 1909, the first deck where the pip cards (ace through ten) were fully illustrated. A member of the Order of the Golden Dawn, she worked on the deck in partnership with Arthur E. Waite, publisher of The Pictorial Key to the Tarot in 1911. The deck is now called the Waite-Smith deck and is the biggest-selling tarot deck of the 20th century.
+  astrological_notes: Sun 27°44' Aquarius
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Smith,_Pamela_Colman'
+  - LMR quotes Elizabeth Hazel who speculates 3:30 PM
+  verified: false

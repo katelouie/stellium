@@ -1,0 +1,438 @@
+# Notable historical events from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Trinity Nuclear Test
+  event_type: event
+  year: 1945
+  month: 7
+  day: 16
+  hour: 5
+  minute: 29
+  latitude: 33.6773
+  longitude: -106.4754
+  location_name: Alamogordo, New Mexico, USA
+  timezone: America/Denver
+  category: event
+  subcategories:
+    - Nuclear
+    - Military
+    - Scientific
+  notable_for: >-
+    First detonation of a nuclear weapon. Code-named "Trinity" by J. Robert Oppenheimer.
+    Part of the Manhattan Project. The 18.6 kiloton explosion vaporized the test tower
+    and turned sand into green glass ("trinitite"). Ushered in the Atomic Age.
+  astrological_notes: Sun 23 Cancer
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Nuclear:_First_Atomic_Test"
+  verified: true
+
+- name: Moon Landing
+  event_type: event
+  year: 1969
+  month: 7
+  day: 20
+  hour: 20
+  minute: 17
+  latitude: 29.7604
+  longitude: -95.3698
+  location_name: Houston, Texas, USA (Mission Control)
+  timezone: America/Chicago
+  category: event
+  subcategories:
+    - Space
+    - Scientific
+    - Historical
+  notable_for: >-
+    Apollo 11 lunar landing. Neil Armstrong and Buzz Aldrin became the first humans
+    to walk on the Moon. "That's one small step for man, one giant leap for mankind."
+    Considered one of humanity's greatest achievements.
+  astrological_notes: Sun 27 Cancer
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Space:_Moon_Landing"
+  verified: true
+
+- name: Titanic Sinking
+  event_type: event
+  year: 1912
+  month: 4
+  day: 15
+  hour: 2
+  minute: 20
+  latitude: 41.7325
+  longitude: -49.9469
+  location_name: North Atlantic Ocean
+  timezone: UTC
+  category: event
+  subcategories:
+    - Maritime
+    - Disaster
+    - Historical
+  notable_for: >-
+    Sinking of the RMS Titanic after striking an iceberg. Over 1,500 people died,
+    making it one of the deadliest peacetime maritime disasters. The "unsinkable"
+    ship sank on her maiden voyage. Led to major improvements in maritime safety.
+  astrological_notes: Sun 25 Aries
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Historic:_Titanic_Sinking"
+  verified: true
+
+- name: September 11 Attacks
+  event_type: event
+  year: 2001
+  month: 9
+  day: 11
+  hour: 8
+  minute: 46
+  latitude: 40.7128
+  longitude: -74.0060
+  location_name: New York City, USA
+  timezone: America/New_York
+  category: event
+  subcategories:
+    - Terrorist
+    - Historical
+    - Political
+  notable_for: >-
+    Terrorist attacks on the World Trade Center. First plane struck at 8:46 AM,
+    second at 9:03 AM. Towers collapsed at 9:59 AM and 10:28 AM. Nearly 3,000 people
+    died. Changed global politics and security forever.
+  astrological_notes: Sun 18 Virgo
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Terrorist:_WTC_(2001)"
+    - "Columbia University Lamont-Doherty Earth Observatory seismograph data"
+  verified: true
+- name: John F. Kennedy Assassination
+  event_type: event
+  year: 1963
+  month: 11
+  day: 22
+  hour: 12
+  minute: 30
+  latitude: 32.7833
+  longitude: -96.8
+  location_name: Dallas, Texas, USA
+  timezone: America/Chicago
+  category: historic
+  subcategories:
+  - assassination
+  - political
+  notable_for: American historical event, the shooting of John F. Kennedy, the 35th President of the United States, on Friday, 22 November 1963 at 12:30 p.m. CST in Dallas, Texas while he was riding in a presidential motorcade in Dealey Plaza. Kennedy was riding with his wife Jacqueline, Texas Governor John Connally, and Connally's wife, Nellie, and was fatally shot by former U.S. Marine Lee Harvey Oswald. A ten-month investigation by the Warren Commission from November 1963 to September 1964 concluded that Oswald acted alone in shooting Kennedy, and that Jack Ruby also acted alone when he killed Oswald before he could stand trial. Kennedy's death marked the fourth (following those of Lincoln, Garfield, and McKinley) and most recent assassination of an American President. Vice President Lyndon B. Johnson automatically became President upon Kennedy's death.
+  astrological_notes: 29°44' 11°14 Asc. 19°21'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Mortality:_Assassination_of_John_F._Kennedy'
+  - Sy Scholfield quotes from The Washington Post, Times Herald, 23 Nov 1963, p. A1.
+  verified: false
+- name: Atomic Bombing of Hiroshima
+  event_type: event
+  year: 1945
+  month: 8
+  day: 6
+  hour: 8
+  minute: 15
+  latitude: 34.4
+  longitude: 132.45
+  location_name: Hiroshima, Japan
+  timezone: Asia/Tokyo
+  category: military
+  subcategories:
+  - nuclear
+  - war
+  notable_for: American atomic bomb dropped on Hiroshima, Japan at an inestimable loss of life and property, to stop World War II. The aircraft carrying the lethal cargo, the Enola Gay, had taken off from Tinian, near Guam, on 6 August 1945 allegedly at 2:15 AM.
+  astrological_notes: 13°08' 18°00 Asc. 17°41'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Nuclear:_Atomic_bombing_of_Hiroshima'
+  - Dana Holliday quotes news at the time.
+  verified: false
+- name: Fall of the Berlin Wall
+  event_type: event
+  year: 1989
+  month: 11
+  day: 9
+  hour: 18
+  minute: 57
+  latitude: 52.4833
+  longitude: 13.35
+  location_name: Berlin, Germany
+  timezone: Europe/Berlin
+  category: historic
+  subcategories:
+  - political
+  notable_for: German historic event, the fall of the Berlin Wall after 28 years dividing East and West Berlin.
+  astrological_notes: 17°19' 28°04 Asc. 05°13'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Historic:_Fall_of_Berlin_Wall'
+  verified: false
+- name: Chernobyl Explosion
+  event_type: event
+  year: 1986
+  month: 4
+  day: 26
+  hour: 1
+  minute: 23
+  latitude: 51.3833
+  longitude: 30.1
+  location_name: Chernobyl, Ukraine
+  timezone: Europe/Kiev
+  category: accident
+  subcategories:
+  - nuclear
+  - disaster
+  notable_for: Russian nuclear power planet explosion. Reactor No.4 exploded and caught fire, contaminating vast areas of Ukraine, Russia and Belarus and spewing a radioactive cloud over Europe. The Kremlin tried to conceal the accident and delayed evacuation of people from nearby towns for days. Firefighters and other workers who were the first at the destroyed reactor had little or no protection from radiation. More than 4,000 cleanup workers died and 70,000 were disabled by radiation in Ukraine alone. About 3.4 million of Ukraine's 50 million population are considered affected. The Ukraine will suffer effects of the accident for years to come. Millions of its citizens are affected by radiation-related ailments. Since the accident, the planet experienced many malfunctions, and it was an immense relief to not only the Ukraine but the people of the world when the plant was closed 14 years later.
+  astrological_notes: 05°22' 24°26 Asc. 22°35'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Accident:_Chernobyl_Explosion'
+  - LMR quotes sites on Internet. In April '86 there was daylight saving time in Moscow and the Ukraine (1 hour ahead): so correction of time is GMT+4. Sally Davis gives 1:35 AM local time in Astrology Quarterly Autumn/1998 as the time in the process when Chernobyl's operators had to admit that they were in big trouble.
+  verified: false
+- name: Wright Brothers First Flight
+  event_type: event
+  year: 1903
+  month: 12
+  day: 17
+  hour: 10
+  minute: 35
+  latitude: 36.1
+  longitude: -75.7
+  location_name: Kitty Hawk, North Carolina, USA
+  timezone: America/New_York
+  category: aviation
+  subcategories:
+  - achievement
+  - scientific
+  notable_for: American airplane flight as first attempted by the Wright Brothers on Kill Devil Hill, a flight that lasted a matter of seconds. Orville and Wilbur Wright had built an aircraft and they tossed a coin as to which of them would take the test flight. Orville won the toss and he piloted the first flight of 120 feet for 12 seconds on 17 December 1902.
+  astrological_notes: 24°32' 10°13 Asc. 19°27'
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Aviation:_First_flight'
+  - Rick Ostrander quotes historic records.
+  verified: false
+- name: Pearl Harbor Attack
+  event_type: event
+  year: 1941
+  month: 12
+  day: 7
+  hour: 7
+  minute: 30
+  latitude: 21.3
+  longitude: -157.8667
+  location_name: Honolulu, Hawaii, USA
+  timezone: Pacific/Honolulu
+  category: military
+  subcategories:
+  - war
+  - attack
+  notable_for: Japanese attack on the U.S. military base at Pearl Harbor, Hawaii that led the U.S. into war
+  astrological_notes: 15°15' 28°06 Asc. 28°38'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Military:_Pearl_Harbor'
+  - Nick Campion, p.486, between 7:30 and 7:55 AM with a note that Parnell’s "History of the Second World War" gives 7:55 and adds that the Japanese planes took off at 6:00 AM.
+  verified: false
+- name: Indian Independence
+  event_type: event
+  year: 1947
+  month: 8
+  day: 15
+  hour: 0
+  minute: 0
+  latitude: 28.6139
+  longitude: 77.2090
+  location_name: Delhi, India
+  timezone: Asia/Kolkata
+  category: historic
+  subcategories:
+  - independence
+  notable_for: India gains independence from British rule
+  astrological_notes: Leo Sun
+  data_quality: AA
+  sources:
+  - 'Hindustan Times: https://www.hindustantimes.com/astrology/horoscope/independence-day-2022-some-lesser-known-astrological-trivia-about-india-101660452002383.html'
+  verified: false
+- name: People’s Republic of China founding
+  event_type: event
+  year: 1949
+  month: 10
+  day: 1
+  hour: 15
+  minute: 1
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: historic
+  subcategories:
+  - founding
+  notable_for: Establishment of the People's Republic of China
+  astrological_notes: Libra Sun
+  data_quality: AA
+  sources:
+  - 'Astrologicalmusings: https://astrologicalmusings.com/foundation-chart-of-china-and-chances-of-its-involvement-in-wars-in-2016/'
+  verified: false
+- name: Tiananmen Square protests climax
+  event_type: event
+  year: 1989
+  month: 6
+  day: 4
+  hour: 4
+  minute: 30
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: historic
+  subcategories:
+  - protest
+  notable_for: Climax of the Tiananmen Square protests
+  astrological_notes: Gemini Sun
+  data_quality: A
+  sources:
+  - 'Rappler: https://www.rappler.com/world/asia-pacific/china-tiananmen-square-massacre-timeline/'
+  verified: false
+- name: Death of Mao Zedong
+  event_type: event
+  year: 1976
+  month: 9
+  day: 9
+  hour: 0
+  minute: 10
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: historic
+  subcategories:
+  - death
+  notable_for: Death of Chinese leader Mao Zedong
+  astrological_notes: Virgo Sun
+  data_quality: AA
+  sources:
+  - 'Wikipedia: https://en.wikipedia.org/wiki/Death_and_state_funeral_of_Mao_Zedong'
+  verified: false
+- name: Fukushima Daiichi meltdown
+  event_type: event
+  year: 2011
+  month: 3
+  day: 11
+  hour: 14
+  minute: 46
+  latitude: 37.4214
+  longitude: 141.0325
+  location_name: Okuma, Japan
+  timezone: Asia/Tokyo
+  category: accident
+  subcategories:
+  - nuclear disaster
+  notable_for: Fukushima Daiichi nuclear disaster
+  astrological_notes: Pisces Sun
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Accident:_Fukushima_nuclear_disaster'
+  verified: false
+- name: Arab Spring begins Tunisia
+  event_type: event
+  year: 2010
+  month: 12
+  day: 17
+  hour: 16
+  minute: 0
+  latitude: 33.8869
+  longitude: 9.5375
+  location_name: Sidi Bouzid, Tunisia
+  timezone: Africa/Tunis
+  category: historic
+  subcategories:
+  - protest
+  notable_for: Beginning of the Arab Spring in Tunisia
+  astrological_notes: Sagittarius Sun
+  data_quality: A
+  sources:
+  - 'Al Jazeera: https://www.aljazeera.com/news/2021/1/14/arab-spring-ten-years-on'
+  verified: false
+- name: Sputnik Launch
+  event_type: event
+  year: 1957
+  month: 10
+  day: 4
+  hour: 19
+  minute: 28
+  latitude: 45.965
+  longitude: 63.305
+  location_name: Baikonur, Kazakhstan
+  timezone: Asia/Qyzylorda
+  notable_for: Launch of the first artificial Earth satellite by the Soviet Union, marking the beginning of the Space Race.
+  data_quality: AA
+  sources:
+  - Wikipedia
+  verified: true
+- name: COVID-19 WHO Declaration
+  event_type: event
+  year: 2020
+  month: 3
+  day: 11
+  hour: 12
+  minute: 0
+  latitude: 46.2044
+  longitude: 6.1432
+  location_name: Geneva, Switzerland
+  timezone: Europe/Zurich
+  notable_for: WHO declares COVID-19 a global pandemic.
+  data_quality: X
+  sources:
+  - https://www.who.int/emergencies/diseases/novel-coronavirus-2019
+  verified: false
+- name: 1929 Stock Market Crash
+  event_type: event
+  year: 1929
+  month: 10
+  day: 29
+  hour: 12
+  minute: 0
+  latitude: 40.7069
+  longitude: -74.0113
+  location_name: New York, New York
+  timezone: America/New_York
+  notable_for: The Wall Street Crash of 1929, the most devastating stock market crash in the history of the United States.
+  data_quality: X
+  sources:
+  - Wikipedia
+  verified: false
+- name: End of World War II
+  event_type: event
+  year: 1945
+  month: 9
+  day: 2
+  hour: 9
+  minute: 2
+  latitude: 35.3547
+  longitude: 139.7600
+  location_name: Tokyo Bay, Japan
+  timezone: Asia/Tokyo
+  notable_for: Formal surrender of Japan aboard USS Missouri marking the end of World War II.
+  data_quality: AA
+  sources:
+  - Wikipedia
+  verified: true
+- name: Challenger Disaster
+  event_type: event
+  year: 1986
+  month: 1
+  day: 28
+  hour: 11
+  minute: 38
+  latitude: 28.608
+  longitude: -80.604
+  location_name: Cape Canaveral, Florida
+  timezone: America/New_York
+  notable_for: The Space Shuttle Challenger disintegrates after liftoff, killing all crew members on board.
+  data_quality: AA
+  sources:
+  - Wikipedia
+  verified: true

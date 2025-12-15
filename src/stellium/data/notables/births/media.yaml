@@ -1,0 +1,838 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Oprah Winfrey
+  event_type: birth
+  year: 1954
+  month: 1
+  day: 29
+  hour: 4
+  minute: 30
+  latitude: 33.0579
+  longitude: -89.5873
+  location_name: Kosciusko, Mississippi, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - television
+  - entrepreneur
+  - philanthropist
+  notable_for: Media mogul and cultural icon
+  astrological_notes: Aquarius Sun with Sagittarius Rising - tests media influence
+    and humanitarian aspects
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: John Lennon
+  event_type: birth
+  year: 1940
+  month: 10
+  day: 9
+  hour: 18
+  minute: 30
+  latitude: 53.4167
+  longitude: -2.9167
+  location_name: Liverpool, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - Singer
+  - Songwriter
+  - Peace Activist
+  notable_for: British singer, songwriter and peace activist, founding member of The
+    Beatles. Wrote iconic songs including "Imagine," "Give Peace a Chance," and numerous
+    Beatles classics. Assassinated in New York City in 1980.
+  astrological_notes: Sun 16 Libra, Moon 3 Aquarius
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Lennon,_John'
+  verified: false
+- name: Yoko Ono
+  event_type: birth
+  year: 1933
+  month: 2
+  day: 18
+  hour: 20
+  minute: 30
+  latitude: 35.7
+  longitude: 139.7667
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: media
+  subcategories:
+  - Conceptual Artist
+  - Musician
+  - Peace Activist
+  notable_for: Japanese conceptual artist, musician, designer, composer, poet and
+    performer. Became widely known through her marriage to John Lennon of The Beatles.
+    Pioneer of conceptual and performance art.
+  astrological_notes: Sun 29 Aquarius, Moon in Sagittarius
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Ono,_Yoko'
+  verified: false
+- name: Paul McCartney
+  event_type: birth
+  year: 1942
+  month: 6
+  day: 18
+  hour: 14
+  minute: 0
+  latitude: 53.4167
+  longitude: -2.9167
+  location_name: Liverpool, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - Singer
+  - Songwriter
+  - Multi-instrumentalist
+  notable_for: British singer, songwriter and multi-instrumentalist, founding member
+    of The Beatles. One of the most successful composers in pop music history. Knighted
+    in 1997 for services to music.
+  astrological_notes: Sun 27 Gemini, Moon in Leo
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/McCartney,_Paul'
+  verified: false
+- name: Wolfgang Mozart
+  event_type: birth
+  year: 1756
+  month: 1
+  day: 27
+  hour: 20
+  minute: 0
+  latitude: 47.8
+  longitude: 13.0333
+  location_name: Salzburg, Austria
+  timezone: Europe/Vienna
+  category: media
+  subcategories:
+  - Composer
+  - Pianist
+  - Child Prodigy
+  notable_for: Austrian composer widely regarded as among the greatest in Western
+    music history. Child prodigy who composed over 600 works including symphonies,
+    operas, and chamber music.
+  astrological_notes: Sun 7 Aquarius
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus'
+  verified: false
+
+- name: Mozart
+  event_type: birth
+  year: 1756
+  month: 1
+  day: 27
+  hour: 20
+  minute: 0
+  latitude: 47.8
+  longitude: 13.0333
+  location_name: Salzburg, Austria
+  timezone: Europe/Vienna
+  category: media
+  subcategories:
+    - Composer
+    - Pianist
+    - Child Prodigy
+  notable_for: >-
+    Wolfgang Amadeus Mozart - Austrian composer widely regarded as among the greatest
+    in Western music history. Child prodigy who composed over 600 works including
+    symphonies, operas, and chamber music.
+  astrological_notes: Sun 7 Aquarius
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus"
+  verified: false
+- name: Brad Pitt
+  event_type: birth
+  year: 1963
+  month: 12
+  day: 18
+  hour: 6
+  minute: 31
+  latitude: 35.3333
+  longitude: -96.9333
+  location_name: Shawnee, Oklahoma, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - Actor
+  - Producer
+  - Film Star
+  notable_for: American actor and film producer. Won Academy Award for Best Supporting
+    Actor for "Once Upon a Time in Hollywood" (2019). Known for films like "Fight
+    Club," "Troy," and "Ocean's Eleven."
+  astrological_notes: Sun 26 Sagittarius, Moon in Capricorn
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Pitt,_Brad'
+  verified: false
+- name: Angelina Jolie
+  event_type: birth
+  year: 1975
+  month: 6
+  day: 4
+  hour: 9
+  minute: 9
+  latitude: 34.0922
+  longitude: -118.2944
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - Actor
+  - Filmmaker
+  - Humanitarian
+  notable_for: American actress, filmmaker and humanitarian. Won Academy Award for
+    Best Supporting Actress for "Girl, Interrupted" (1999). UNHCR Special Envoy and
+    noted humanitarian.
+  astrological_notes: Sun 13 Gemini, Moon 13 Aries, Asc 28 Cancer
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Jolie,_Angelina'
+  verified: true
+- name: Richard Burton
+  event_type: birth
+  year: 1925
+  month: 11
+  day: 10
+  hour: 15
+  minute: 0
+  latitude: 51.6333
+  longitude: -3.7333
+  location_name: Pontrhydyfen, Wales
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - Actor
+  - Stage Actor
+  - Film Star
+  notable_for: Welsh actor renowned for his Shakespearean performances and film roles.
+    Seven-time Academy Award nominee. Famous for his tumultuous relationship with
+    Elizabeth Taylor, whom he married twice.
+  astrological_notes: Sun 17 Scorpio
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Burton,_Richard_(1925)'
+  verified: false
+
+- name: Marilyn Monroe
+  event_type: birth
+  year: 1926
+  month: 6
+  day: 1
+  hour: 9
+  minute: 30
+  latitude: 34.0522
+  longitude: -118.2437
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+    - Actress
+    - Model
+    - Singer
+  notable_for: >-
+    American actress, model and singer who became a major sex symbol. Starred in
+    commercially successful films including "Some Like It Hot" and "Gentlemen Prefer
+    Blondes." One of the most iconic figures of the 20th century.
+  astrological_notes: Sun 10 Gemini, Moon 19 Aquarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Monroe,_Marilyn"
+  verified: true
+
+- name: Elizabeth Taylor
+  event_type: birth
+  year: 1932
+  month: 2
+  day: 27
+  hour: 2
+  minute: 30
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+    - Actress
+    - Humanitarian
+    - Film Star
+  notable_for: >-
+    British-American actress who became one of the great screen actresses of
+    Hollywood's Golden Age. Won two Academy Awards. Known for her violet eyes,
+    her marriages, and her AIDS activism.
+  astrological_notes: Sun 7 Pisces
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
+  verified: true
+- name: Beyoncé
+  event_type: birth
+  year: 1981
+  month: 9
+  day: 4
+  hour: 21
+  minute: 47
+  latitude: 29.76
+  longitude: -95.37
+  location_name: Houston, Texas
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - Singer
+  - Songwriter
+  - Dancer
+  notable_for: American singer, songwriter, and dancer noted for her boundary-pushing artistry and her vocal prowess. Her success has made her a cultural icon and earned her the nickname "Queen Bey".
+  astrological_notes: Virgo Sun sign with a Scorpio moon and Libra rising.
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Beyoncé'
+  verified: false
+- name: Tom Hanks
+  event_type: birth
+  year: 1956
+  month: 7
+  day: 9
+  hour: 11
+  minute: 17
+  latitude: 37.99
+  longitude: -122.02
+  location_name: Concord, California
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - Actor
+  - Film Producer
+  notable_for: American actor and film producer, the winner of an Oscar for Best Actor in 1994 for Philadelphia and a second Oscar in 1995 for Forest Gump. Hanks and Spencer Tracy are the only two actors to win the Academy Award for Best Actor in consecutive years.
+  astrological_notes: Ascendant 17°29', Sun 09°52', Moon 21°45'.
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Hanks,_Tom'
+  verified: false
+- name: Jay-Z
+  event_type: birth
+  year: 1969
+  month: 12
+  day: 4
+  hour: 0
+  minute: 10
+  latitude: 40.6333
+  longitude: -73.9333
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - rapper
+  - record producer
+  - entrepreneur
+  notable_for: American rapper, record producer, and entrepreneur; one of the most financially successful hip-hop artists; net worth nearly $500 million in 2012.
+  astrological_notes: Ascendant 05°12'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Jay_Z'
+  verified: false
+- name: Eminem
+  event_type: birth
+  year: 1972
+  month: 10
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 39.7667
+  longitude: -94.85
+  location_name: Saint Joseph, Missouri, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - rapper
+  - songwriter
+  notable_for: American rapper, songwriter, and record producer, credited with popularizing hip-hop in Middle America; regarded as one of the greatest rappers of all time; best-selling music artist with over 220 million records sold.
+  astrological_notes: Sun 24°25' Libra
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Eminem'
+  - Missouri birth certificate
+  verified: false
+- name: Mariah Carey
+  event_type: birth
+  year: 1969
+  month: 3
+  day: 27
+  hour: 7
+  minute: 27
+  latitude: 40.8667
+  longitude: -73.4333
+  location_name: Huntington, New York, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - singer
+  - songwriter
+  notable_for: American singer, songwriter, record producer, and actress; superstar with a voice spanning more than five octaves; one of the top pop divas of the 90s, selling over 80 million albums worldwide.
+  astrological_notes: Sun 06°40' Aries; Moon 22°54'; Ascendant 15°20'
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Carey,_Mariah'
+  - Rolling Stone magazine
+  verified: false
+- name: Dr. Dre
+  event_type: birth
+  year: 1965
+  month: 2
+  day: 18
+  hour: 10
+  minute: 56
+  latitude: 34.05
+  longitude: -118.25
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - rapper
+  - producer
+  notable_for: American rap musician, producer, and businessman; founder of Aftermath Entertainment and Death Row Records; influential in hip-hop; creator of Beats by Dr. Dre, sold to Apple for $3 billion.
+  astrological_notes: Sun 29°55' Aquarius; Moon 07°06'; Ascendant 00°56'
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Dr._Dre'
+  - Birth certificate
+  verified: false
+- name: Kurt Cobain
+  event_type: birth
+  year: 1967
+  month: 2
+  day: 20
+  hour: 19
+  minute: 38
+  latitude: 46.9833
+  longitude: -123.8167
+  location_name: Aberdeen, Washington, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - musician
+  - singer
+  notable_for: American musician, lead singer whose anguished lyrics helped sell millions of records featuring the gritty sound of grunge rock 'n roll of "Nirvana," a head banging punk metal band formed in 1991.
+  astrological_notes: Sun 01°49' Pisces, Moon 13°24' Cancer, Asc. 23°21' Virgo
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Cobain,_Kurt'
+  - BC/BR in hand
+  verified: false
+- name: Prince
+  event_type: birth
+  year: 1958
+  month: 6
+  day: 7
+  hour: 18
+  minute: 17
+  latitude: 44.9833
+  longitude: -93.2667
+  location_name: Minneapolis, Minnesota, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - musician
+  - singer
+  notable_for: American singer, composer and all-around rock actor; he signed with Warner Bros Records in 1977 on the basis of a one-man demo tape. His first film was "Purple Rain," 1982. A workaholic obsessed with his music, he is admittedly "not normal, exactly."
+  astrological_notes: Sun 16°41' Gemini, Moon 01°59' Pisces, Asc. 16°42' Scorpio
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Prince_(musician)'
+  - BC/BR in hand from Frank C. Clifford
+  verified: false
+- name: Leslie Cheung
+  event_type: birth
+  year: 1956
+  month: 9
+  day: 12
+  hour: 18
+  minute: 15
+  latitude: 22.2856
+  longitude: 114.1577
+  location_name: Hong Kong
+  timezone: Asia/Hong_Kong
+  category: media
+  subcategories:
+  - singer
+  - actor
+  notable_for: Hong Kong singer-songwriter, actor, and film director; icon of Cantopop and queer culture
+  astrological_notes: Virgo Sun, Pisces Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/leslie-cheung-horoscope'
+  verified: false
+- name: Anita Mui
+  event_type: birth
+  year: 1963
+  month: 10
+  day: 10
+  hour: 8
+  minute: 35
+  latitude: 22.2856
+  longitude: 114.1577
+  location_name: Hong Kong
+  timezone: Asia/Hong_Kong
+  category: media
+  subcategories:
+  - singer
+  - actress
+  notable_for: Hong Kong singer and actress, known as the Madonna of the East
+  astrological_notes: Libra Sun, Aries Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/anita-mui-horoscope'
+  verified: false
+- name: Selena Quintanilla
+  event_type: birth
+  year: 1971
+  month: 4
+  day: 16
+  hour: 7
+  minute: 30
+  latitude: 29.0297
+  longitude: -95.4008
+  location_name: Lake Jackson, Texas, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - singer
+  - Tejano musician
+  notable_for: American Tejano singer-songwriter and fashion designer
+  astrological_notes: Aries Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Selena'
+  verified: false
+- name: Teresa Teng
+  event_type: birth
+  year: 1953
+  month: 1
+  day: 29
+  hour: 5
+  minute: 0
+  latitude: 25.0478
+  longitude: 121.5319
+  location_name: Taipei, Taiwan
+  timezone: Asia/Taipei
+  category: media
+  subcategories:
+  - singer
+  notable_for: Taiwanese singer known as the Voice of Asia
+  astrological_notes: Aquarius Sun, Leo Moon
+  data_quality: A
+  sources:
+  - 'Facebook: https://www.facebook.com/61562750093865/posts/teresa-teng-was-born-on-january-29-1953-at-5-am-her-sun-was-in-aquarius-her-moon/122159929790425003/'
+  verified: false
+- name: Wong Kar-wai
+  event_type: birth
+  year: 1958
+  month: 7
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 31.2222
+  longitude: 121.4581
+  location_name: Shanghai, China
+  timezone: Asia/Shanghai
+  category: media
+  subcategories:
+  - filmmaker
+  notable_for: Hong Kong filmmaker known for In the Mood for Love
+  astrological_notes: Cancer Sun
+  data_quality: X
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/kar-wai-wong-horoscope'
+  verified: false
+- name: Faye Wong
+  event_type: birth
+  year: 1969
+  month: 8
+  day: 8
+  hour: 11
+  minute: 30
+  latitude: 39.9075
+  longitude: 116.3972
+  location_name: Beijing, China
+  timezone: Asia/Shanghai
+  category: media
+  subcategories:
+  - singer
+  - actress
+  notable_for: Chinese singer-songwriter and actress
+  astrological_notes: Leo Sun, Gemini Moon
+  data_quality: A
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/faye-wong-horoscope'
+  verified: false
+- name: Chow Yun-fat
+  event_type: birth
+  year: 1955
+  month: 5
+  day: 18
+  hour: 12
+  minute: 0
+  latitude: 22.2856
+  longitude: 114.1577
+  location_name: Hong Kong
+  timezone: Asia/Hong_Kong
+  category: media
+  subcategories:
+  - actor
+  notable_for: Hong Kong actor known for Crouching Tiger, Hidden Dragon
+  astrological_notes: Taurus Sun
+  data_quality: X
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/yun-fat-chow-horoscope'
+  verified: false
+- name: Miriam Makeba
+  event_type: birth
+  year: 1932
+  month: 3
+  day: 4
+  hour: 12
+  minute: 0
+  latitude: -26.2023
+  longitude: 28.0436
+  location_name: Johannesburg, South Africa
+  timezone: Africa/Johannesburg
+  category: media
+  subcategories:
+  - singer
+  - activist
+  notable_for: South African singer and civil rights activist
+  astrological_notes: Pisces Sun
+  data_quality: X
+  sources:
+  - 'Astro-Charts: https://astro-charts.com/persons/chart/miriam-makeba/'
+  verified: false
+- name: Shah Rukh Khan
+  event_type: birth
+  year: 1965
+  month: 11
+  day: 2
+  hour: 6
+  minute: 25
+  latitude: 28.6139
+  longitude: 77.2090
+  location_name: Delhi, India
+  timezone: Asia/Kolkata
+  category: media
+  subcategories:
+  - actor
+  notable_for: Indian actor known as the King of Bollywood
+  astrological_notes: Scorpio Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Khan,_Shah_Rukh'
+  verified: false
+- name: Aishwarya Rai
+  event_type: birth
+  year: 1973
+  month: 11
+  day: 1
+  hour: 4
+  minute: 5
+  latitude: 12.8833
+  longitude: 74.85
+  location_name: Mangalore, India
+  timezone: Asia/Kolkata
+  category: media
+  subcategories:
+  - actress
+  notable_for: Indian actress and former Miss World
+  astrological_notes: Scorpio Sun, Capricorn Moon
+  data_quality: AA
+  sources:
+  - 'AstroSage: https://astrosage.com/celebrity-horoscope/aishwarya-rai-bachchan-birth-chart.asp'
+  verified: false
+- name: Ryuichi Sakamoto
+  event_type: birth
+  year: 1952
+  month: 1
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 35.6895
+  longitude: 139.6917
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: media
+  subcategories:
+  - composer
+  - musician
+  notable_for: Japanese composer and musician
+  astrological_notes: Capricorn Sun
+  data_quality: X
+  sources:
+  - 'Astro-Charts: https://astro-charts.com/persons/chart/ryuichi-sakamoto/'
+  verified: false
+- name: Alfred Hitchcock
+  event_type: birth
+  year: 1899
+  month: 8
+  day: 13
+  hour: 3
+  minute: 15
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - film director
+  notable_for: English film director and producer often nicknamed "The Master of Suspense".
+  astrological_notes: Sun 20 Leo
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Hitchcock,_Alfred
+  verified: false
+- name: Akira Kurosawa
+  event_type: birth
+  year: 1910
+  month: 3
+  day: 23
+  hour: 12
+  minute: 0
+  latitude: 35.6895
+  longitude: 139.6917
+  location_name: Tokyo, Japan
+  timezone: Asia/Tokyo
+  category: media
+  subcategories:
+  - film director
+  notable_for: Japanese film director and screenwriter who directed 30 films in a career spanning 57 years.
+  astrological_notes: Sun 1 Aries
+  data_quality: C
+  sources:
+  - https://www.astro.com/astro-databank/Kurosawa,_Akira
+  verified: false
+- name: Steven Spielberg
+  event_type: birth
+  year: 1946
+  month: 12
+  day: 18
+  hour: 18
+  minute: 16
+  latitude: 39.1031
+  longitude: -84.5120
+  location_name: Cincinnati, Ohio
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - film director
+  notable_for: American filmmaker considered one of the founding pioneers of the New Hollywood era and one of the most popular directors and producers in film history.
+  astrological_notes: Sun 26 Sagittarius
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Spielberg,_Steven
+  verified: true
+- name: Charlie Chaplin
+  event_type: birth
+  year: 1889
+  month: 4
+  day: 16
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - actor
+  - filmmaker
+  - comedian
+  notable_for: English comic actor, filmmaker, and composer who rose to fame in the silent era.
+  astrological_notes: Sun 26 Aries
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Chaplin,_Charles
+  verified: false
+- name: Robin Williams
+  event_type: birth
+  year: 1951
+  month: 7
+  day: 21
+  hour: 13
+  minute: 34
+  latitude: 41.8781
+  longitude: -87.6298
+  location_name: Chicago, Illinois
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - actor
+  - comedian
+  notable_for: American stand-up comedian, actor, director, producer, writer, singer and voice artist.
+  astrological_notes: Sun 28 Cancer
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Williams,_Robin
+  verified: true
+- name: Lucille Ball
+  event_type: birth
+  year: 1911
+  month: 8
+  day: 6
+  hour: 17
+  minute: 0
+  latitude: 42.0970
+  longitude: -79.2353
+  location_name: Jamestown, New York
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - comedian
+  - TV pioneer
+  notable_for: American comedian, model, film and television actress and studio executive.
+  astrological_notes: Sun 13 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Ball,_Lucille
+  verified: true
+- name: Audrey Hepburn
+  event_type: birth
+  year: 1929
+  month: 5
+  day: 4
+  hour: 3
+  minute: 0
+  latitude: 50.8333
+  longitude: 4.35
+  location_name: Ixelles, Belgium
+  timezone: Europe/Brussels
+  category: media
+  subcategories:
+  - actress
+  - humanitarian
+  notable_for: British actress and humanitarian. Recognised as a film and fashion icon.
+  astrological_notes: Sun 13 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Hepburn,_Audrey
+  verified: true
+- name: David Bowie
+  event_type: birth
+  year: 1947
+  month: 1
+  day: 8
+  hour: 9
+  minute: 0
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: media
+  subcategories:
+  - musician
+  - actor
+  notable_for: English singer, songwriter, and actor. He was a figure in popular music for over five decades.
+  astrological_notes: Sun 17 Capricorn
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Bowie,_David
+  verified: true

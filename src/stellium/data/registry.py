@@ -5,6 +5,7 @@ Provides access to a compendium of famous births and historical events
 that can be used for examples, testing, and research.
 """
 
+import importlib.resources
 from pathlib import Path
 
 import yaml
@@ -31,14 +32,43 @@ class NotableRegistry:
         self._notables: list[Notable] = []
         self._load_all()
 
-    def _load_all(self):
-        """Load all YAML files and create Notable objects."""
-        # Navigate from src/stellium/data/registry.py -> root/data/notables
-        package_root = Path(__file__).parent.parent.parent.parent
-        data_dir = package_root / "data" / "notables"
+    def _get_notables_path(self) -> Path | None:
+        """
+        Get the path to the notables data directory.
 
-        if not data_dir.exists():
-            # No notable data yet - this is OK
+        Uses importlib.resources to find package data, which works both
+        in development (editable install) and when installed as a package.
+
+        Returns:
+            Path to notables directory, or None if not found
+        """
+        try:
+            # Use importlib.resources to find package data
+            files = importlib.resources.files("stellium.data")
+            notables_path = files / "notables"
+
+            # For editable installs, this returns the actual filesystem path
+            # For installed packages, we may need to use as_file()
+            if hasattr(notables_path, "_path"):
+                real_path = Path(notables_path._path)
+                if real_path.exists():
+                    return real_path
+
+            # Try traversable interface
+            with importlib.resources.as_file(notables_path) as path:
+                if path.exists():
+                    return path
+
+            return None
+        except (TypeError, FileNotFoundError, AttributeError):
+            return None
+
+    def _load_all(self) -> None:
+        """Load all YAML files and create Notable objects."""
+        data_dir = self._get_notables_path()
+
+        if data_dir is None:
+            # No notable data found - this is OK for minimal installs
             return
 
         # Load all YAML files from births/ and events/ subdirectories

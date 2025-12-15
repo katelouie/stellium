@@ -105,24 +105,17 @@ YEAR_RANGES = [
 
 
 def get_data_directory() -> Path:
-    """Get the ephemeris data directory.
+    """Get the user ephemeris data directory.
 
-    The ephemeris data is stored at the project root level:
-    /project_root/data/swisseph/ephe/
+    Ephemeris files are stored in the user's home directory:
+    ~/.stellium/ephe/
 
-    This matches where SwissEphemerisEngine looks for files.
+    This allows users to add their own asteroid files and persists
+    across package upgrades.
     """
-    # Path: .../src/stellium/cli/ephemeris_download.py
-    # Go up 4 levels to get to the project root:
-    # .parent -> cli
-    # .parent -> stellium
-    # .parent -> src
-    # .parent -> project_root
-    script_dir = Path(__file__).parent
-    project_root = script_dir.parent.parent.parent
-    data_dir = project_root / "data" / "swisseph" / "ephe"
-    data_dir.mkdir(parents=True, exist_ok=True)
-    return data_dir
+    from stellium.data.paths import get_user_ephe_dir
+
+    return get_user_ephe_dir()
 
 
 def get_required_files(

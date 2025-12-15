@@ -75,8 +75,13 @@ where = ["src"]
 "" = "src"
 
 [tool.setuptools.package-data]
-"*" = ["*.yaml", "*.yml"]
-# Swiss Ephemeris data files will be included via MANIFEST.in
+"stellium.data" = [
+    "notables/**/*.yaml",
+    "notables/**/*.yml",
+    "notables/INDEX.md",
+    "swisseph/ephe/*.se1",
+    "swisseph/ephe/*.txt",
+]
 
 # Tool configurations
 [tool.black]

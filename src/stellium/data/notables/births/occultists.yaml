@@ -1,0 +1,330 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Aleister Crowley
+  event_type: birth
+  year: 1875
+  month: 10
+  day: 12
+  hour: 23
+  minute: 0
+  latitude: 52.2852
+  longitude: -1.5201
+  location_name: Leamington Spa, England
+  timezone: Europe/London
+  category: occultist
+  subcategories:
+    - Magician
+    - Author
+    - Poet
+  notable_for: >-
+    British occultist, ceremonial magician, poet, and painter. Founded the religion
+    of Thelema ("Do what thou wilt"). Leader of the British O.T.O. Member of the
+    Golden Dawn. Author of "The Book of the Law" and many other occult texts.
+  astrological_notes: Sun 19 Libra, Moon 22 Pisces
+  data_quality: B
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Crowley,_Aleister"
+    - "Confessions of Aleister Crowley"
+  verified: false
+
+- name: Nostradamus
+  event_type: birth
+  year: 1503
+  month: 12
+  day: 14  # Julian calendar
+  hour: 12
+  minute: 0
+  latitude: 43.7894
+  longitude: 4.8319
+  location_name: Saint-Remy-de-Provence, France
+  timezone: Europe/Paris
+  category: occultist
+  subcategories:
+    - Astrologer
+    - Physician
+    - Seer
+  notable_for: >-
+    French astrologer, physician, and reputed seer. Author of "Les Propheties"
+    (1555), a collection of 942 quatrains predicting future events. His prophecies
+    have been interpreted as predicting major world events for centuries.
+  astrological_notes: Sun 2 Capricorn (Julian)
+  data_quality: C
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Nostradamus"
+    - "Chavigny, La Premiere face du Janus francois (1594)"
+  verified: false
+- name: Helena Blavatsky
+  event_type: birth
+  year: 1831
+  month: 8
+  day: 12
+  hour: 2
+  minute: 17
+  latitude: 48.45
+  longitude: 34.9833
+  location_name: Ekaterinoslav, Ukraine
+  timezone: Europe/Kyiv
+  category: occultist
+  subcategories:
+  - Spiritualist
+  - Mystic
+  notable_for: Russian spiritualist and mystic, the founder of the Theosophical Society. The daughter of minor Russo-German aristocrats, she married Nikifor Blavatsky, vice-Governor of Yerevan in the Caucasus on 7 July 1848 when she was 17 and he, over 40, and fled from him a few weeks later.
+  astrological_notes: Ascendant 18°29', Sun sign Leo
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Blavatsky,_Helena'
+  verified: false
+- name: Edgar Cayce
+  event_type: birth
+  year: 1877
+  month: 3
+  day: 18
+  hour: 15
+  minute: 20
+  latitude: 36.85
+  longitude: -87.48
+  location_name: Hopkinsville, Kentucky
+  timezone: America/Chicago
+  category: occultist
+  subcategories:
+  - Mystic
+  - Psychic
+  notable_for: American mystic known as "The Sleeping Prophet." While in a sleep state he could discuss history, geology, metaphysics, philosophy and medicine. He gave approximately 30,000 life-readings and medical diagnosis to people during his lifetime.
+  astrological_notes: Ascendant 28°24', Sun 12°23', Moon 24°29'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Cayce,_Edgar'
+  verified: false
+- name: Arthur Edward Waite
+  event_type: birth
+  year: 1857
+  month: 10
+  day: 2
+  hour: 13
+  minute: 0
+  latitude: 40.65
+  longitude: -73.95
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: occultist
+  subcategories:
+  - mystic
+  - author
+  notable_for: American-born British poet and scholarly mystic who wrote extensively on occult and esoteric matters, and was the co-creator of the Rider-Waite tarot deck. He authored its companion volume, the Pictorial Key to the Tarot (1911), a guide to tarot reading. Waite joined the Hermetic Order of the Golden Dawn, was a Freemason, and founded several esoteric orders. He was a prolific author on divination, esotericism, Freemasonry, ceremonial magic, Kabbalah, and alchemy.
+  astrological_notes: Sun 9°28' Libra, Ascendant 4°12' Capricorn
+  data_quality: B
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Arthur_Edward_Waite'
+  - Wikipedia: https://en.wikipedia.org/wiki/A._E._Waite
+  verified: false
+- name: Sri Ramakrishna
+  event_type: birth
+  year: 1836
+  month: 2
+  day: 18
+  hour: 5
+  minute: 0
+  latitude: 22.9258
+  longitude: 88.4067
+  location_name: Kamarpukur, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - mystic
+  - spiritual teacher
+  notable_for: Indian mystic and spiritual leader
+  astrological_notes: Aquarius Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ramakrishna-horoscope'
+  verified: false
+- name: Ramana Maharshi
+  event_type: birth
+  year: 1879
+  month: 12
+  day: 30
+  hour: 1
+  minute: 0
+  latitude: 9.9167
+  longitude: 78.1167
+  location_name: Madurai, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - mystic
+  - philosopher
+  notable_for: Indian sage and jivanmukta
+  astrological_notes: Capricorn Sun, Cancer Moon
+  data_quality: B
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ramana-maharishi-horoscope'
+  verified: false
+- name: Swami Vivekananda
+  event_type: birth
+  year: 1863
+  month: 1
+  day: 12
+  hour: 6
+  minute: 33
+  latitude: 22.5726
+  longitude: 88.3639
+  location_name: Kolkata, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - philosopher
+  - monk
+  notable_for: Indian Hindu monk and philosopher
+  astrological_notes: Capricorn Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/swami-vivekananda-horoscope'
+  verified: false
+- name: Paramahansa Yogananda
+  event_type: birth
+  year: 1893
+  month: 1
+  day: 5
+  hour: 20
+  minute: 38
+  latitude: 26.7667
+  longitude: 83.3667
+  location_name: Gorakhpur, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - yogi
+  - guru
+  notable_for: Indian monk and yogi who introduced Kriya Yoga to the West
+  astrological_notes: Capricorn Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Yogananda,_Paramahansa'
+  verified: false
+- name: Jiddu Krishnamurti
+  event_type: birth
+  year: 1895
+  month: 5
+  day: 12
+  hour: 0
+  minute: 30
+  latitude: 13.7333
+  longitude: 79.5167
+  location_name: Madanapalle, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - philosopher
+  - speaker
+  notable_for: Indian philosopher and speaker
+  astrological_notes: Taurus Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Krishnamurti,_Jiddu'
+  verified: false
+- name: Sri Aurobindo
+  event_type: birth
+  year: 1872
+  month: 8
+  day: 15
+  hour: 5
+  minute: 0
+  latitude: 22.5726
+  longitude: 88.3639
+  location_name: Kolkata, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - philosopher
+  - yogi
+  notable_for: Indian philosopher, yogi, and nationalist
+  astrological_notes: Leo Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/sri-aurobindo-horoscope'
+  verified: false
+- name: Thich Nhat Hanh
+  event_type: birth
+  year: 1926
+  month: 10
+  day: 11
+  hour: 12
+  minute: 0
+  latitude: 15.9167
+  longitude: 107.8333
+  location_name: Tha Tien, Vietnam
+  timezone: Asia/Ho_Chi_Minh
+  category: occultist
+  subcategories:
+  - Zen master
+  - peace activist
+  notable_for: Vietnamese Zen Buddhist monk and peace activist
+  astrological_notes: Libra Sun, Sagittarius Moon
+  data_quality: X
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Nhat_Hanh'
+  verified: false
+- name: Sadhguru
+  event_type: birth
+  year: 1957
+  month: 9
+  day: 3
+  hour: 23
+  minute: 54
+  latitude: 12.3167
+  longitude: 76.65
+  location_name: Mysore, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - yogi
+  - mystic
+  notable_for: Indian yogi and author
+  astrological_notes: Virgo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Vasudev,_Jaggi'
+  verified: false
+- name: Osho Rajneesh
+  event_type: birth
+  year: 1931
+  month: 12
+  day: 11
+  hour: 17
+  minute: 13
+  latitude: 23.0833
+  longitude: 77.5833
+  location_name: Kuchwada, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - guru
+  - mystic
+  notable_for: Indian spiritual leader
+  astrological_notes: Sagittarius Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Rajneesh,_Bhagwan_Shree'
+  verified: false
+- name: Chinmayananda Saraswati
+  event_type: birth
+  year: 1916
+  month: 5
+  day: 8
+  hour: 19
+  minute: 10
+  latitude: 9.9667
+  longitude: 76.2833
+  location_name: Ernakulam, India
+  timezone: Asia/Kolkata
+  category: occultist
+  subcategories:
+  - spiritual teacher
+  notable_for: Indian spiritual leader and teacher
+  astrological_notes: Taurus Sun
+  data_quality: A
+  sources:
+  - 'AstroSage: https://celebrity.astrosage.com/chinmayananda-birth-chart.asp'
+  verified: false

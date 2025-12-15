@@ -1,0 +1,230 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Bruce Lee
+  event_type: birth
+  year: 1940
+  month: 11
+  day: 27
+  hour: 7
+  minute: 12
+  latitude: 37.7749
+  longitude: -122.4194
+  location_name: San Francisco, California, USA
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+    - Martial Artist
+    - Actor
+    - Philosopher
+  notable_for: >-
+    Chinese-American martial artist, actor, and filmmaker. Founded Jeet Kune Do.
+    Considered the most influential martial artist of all time and a cultural icon.
+    Starred in "Enter the Dragon" and other martial arts classics.
+  astrological_notes: Sun 4 Sagittarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Lee,_Bruce"
+    - "Robert Paige quoting B.C. in Constellations '77"
+  verified: true
+
+- name: Muhammad Ali
+  event_type: birth
+  year: 1942
+  month: 1
+  day: 17
+  hour: 18
+  minute: 35
+  latitude: 38.2527
+  longitude: -85.7585
+  location_name: Louisville, Kentucky, USA
+  timezone: America/Kentucky/Louisville
+  category: athlete
+  subcategories:
+    - Boxer
+    - Activist
+    - Humanitarian
+  notable_for: >-
+    American professional boxer and activist. Nicknamed "The Greatest," he is widely
+    regarded as one of the most significant sports figures of the 20th century.
+    Three-time world heavyweight champion. Known for his activism and wit.
+  astrological_notes: Sun 27 Capricorn
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Ali,_Muhammad"
+  verified: true
+
+- name: Michael Jordan
+  event_type: birth
+  year: 1963
+  month: 2
+  day: 17
+  hour: 13
+  minute: 40
+  latitude: 40.6782
+  longitude: -73.9442
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: athlete
+  subcategories:
+    - Basketball Player
+    - Businessman
+    - Cultural Icon
+  notable_for: >-
+    American basketball player widely considered the greatest of all time. Won six
+    NBA championships with the Chicago Bulls. Five-time MVP. His Air Jordan brand
+    revolutionized sports marketing.
+  astrological_notes: Sun 28 Aquarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Jordan,_Michael"
+  verified: true
+
+- name: Serena Williams
+  event_type: birth
+  year: 1981
+  month: 9
+  day: 26
+  hour: 20
+  minute: 28
+  latitude: 43.4195
+  longitude: -83.9508
+  location_name: Saginaw, Michigan, USA
+  timezone: America/Detroit
+  category: athlete
+  subcategories:
+    - Tennis Player
+    - Entrepreneur
+    - Activist
+  notable_for: >-
+    American professional tennis player. Won 23 Grand Slam singles titles, the most
+    in the Open Era. Considered one of the greatest tennis players of all time.
+    Business owner and advocate for women's rights.
+  astrological_notes: Sun 3 Libra, Moon in Virgo
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Williams,_Serena"
+  verified: true
+- name: Pelé
+  event_type: birth
+  year: 1940
+  month: 10
+  day: 21
+  hour: 3
+  minute: 0
+  latitude: -21.7149
+  longitude: -45.2533
+  location_name: Três Corações (Minas Gerais), Brazil
+  timezone: America/Sao_Paulo
+  category: athlete
+  subcategories:
+  - Soccer Player
+  notable_for: Brazilian soccer player who competed as a forward and was named Athlete of the Century by the International Olympic Committee in 1999, and labelled "the greatest" by FIFA. Pelé became a national Brazilian hero and probably the best player in soccer history, with 1,279 goals in 1,363 games recognized as a Guinness World Record.
+  astrological_notes: Ascendant 27°41' 22°00', Sun sign Scorpio
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Pelé'
+  verified: false
+- name: Usain Bolt
+  event_type: birth
+  year: 1986
+  month: 8
+  day: 21
+  hour: 12
+  minute: 0
+  latitude: 18.3
+  longitude: -77.65
+  location_name: Falmouth, Jamaica
+  timezone: America/Jamaica
+  category: athlete
+  subcategories:
+  - Track and Field
+  notable_for: Jamaican athlete, the best sprinter since Carl Lewis, and the world record holder in the 100 m, 200 m, and 4×100 m relay. Nicknamed "Lightning Bolt," he won eight gold medals at the 2008, 2012 and 2016 Olympics (100m, 200m, and 4×100 m relay).
+  astrological_notes: 28°20'
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Bolt,_Usain'
+  verified: false
+- name: Joe DiMaggio
+  event_type: birth
+  year: 1914
+  month: 11
+  day: 25
+  hour: 7
+  minute: 0
+  latitude: 38.0167
+  longitude: -122.1333
+  location_name: Martinez, California, USA
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+  - baseball player
+  notable_for: American baseball center fielder, nicknamed "Joltin' Joe" and "The Yankee Clipper," considered one of the greatest outfielders in baseball history; played entire 13-year career with New York Yankees, 56-game hitting streak, 10 World Series, 11 All-star games.
+  astrological_notes: Asc. 14°31'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/DiMaggio,_Joe'
+  verified: false
+- name: Simone Biles
+  event_type: birth
+  year: 1997
+  month: 3
+  day: 14
+  hour: 0
+  minute: 30
+  latitude: 39.9612
+  longitude: -82.9988
+  location_name: Columbus, Ohio
+  timezone: America/New_York
+  category: athlete
+  subcategories:
+  - gymnast
+  notable_for: American artistic gymnast. With a combined total of 30 Olympic and World Championship medals, Biles is the most decorated American gymnast.
+  astrological_notes: Sun 23 Pisces
+  data_quality: C
+  sources:
+  - https://www.astro.com/astro-databank/Biles,_Simone
+  verified: false
+- name: Jackie Robinson
+  event_type: birth
+  year: 1919
+  month: 1
+  day: 31
+  hour: 18
+  minute: 30
+  latitude: 31.1333
+  longitude: -84.2000
+  location_name: Cairo, Georgia
+  timezone: America/New_York
+  category: athlete
+  subcategories:
+  - baseball
+  - broke color barrier
+  notable_for: American professional baseball player who became the first African American to play in Major League Baseball in the modern era.
+  astrological_notes: Sun 10 Aquarius
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Robinson,_Jackie_(1919)
+  verified: false
+- name: Billie Jean King
+  event_type: birth
+  year: 1943
+  month: 11
+  day: 22
+  hour: 11
+  minute: 45
+  latitude: 33.7701
+  longitude: -118.1910
+  location_name: Long Beach, California
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+  - tennis
+  - equality advocate
+  notable_for: American former World No. 1 professional tennis player.
+  astrological_notes: Sun 29 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/King,_Billie_Jean
+  verified: true

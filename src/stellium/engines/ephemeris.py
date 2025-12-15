@@ -1,8 +1,5 @@
 """Ephemeris calculation engines."""
 
-import os
-from pathlib import Path
-
 import swisseph as swe
 
 from stellium.core.ayanamsa import ZodiacType, get_ayanamsa
@@ -15,28 +12,25 @@ from stellium.core.models import (
     PhaseData,
 )
 from stellium.core.registry import get_object_info
+from stellium.data.paths import initialize_ephemeris
 from stellium.utils.cache import cached
 
 
 def _set_ephemeris_path() -> None:
-    """Set the path to Swiss Ephemeris data files."""
-    # Path to this file: .../src/stellium/engines/ephemeris.py
-    current_file = Path(__file__)
+    """
+    Set the path to Swiss Ephemeris data files.
 
-    # Go up 3 levels to get to the 'src' directory
-    # .parent -> engines
-    # .parent -> stellium
-    # .parent -> src
-    src_dir = current_file.parent.parent.parent
+    This function initializes the ephemeris system by:
+    1. Ensuring the user ephe directory exists (~/.stellium/ephe/)
+    2. Copying bundled ephemeris files from the package if needed
+    3. Setting the Swiss Ephemeris path
 
-    # Go up one *more* level to get the project root
-    project_root = src_dir.parent
-
-    # Now, build the path from the project root
-    path_data = project_root / "data" / "swisseph" / "ephe"
-
-    # swe.set_ephe_path needs a string, and we still need the trailing slash
-    swe.set_ephe_path(str(path_data) + os.sep)
+    The ephemeris files are stored in the user's home directory so that:
+    - Users can add their own asteroid ephemeris files
+    - The package size stays small (only essential files bundled)
+    - Updates don't overwrite user-downloaded files
+    """
+    initialize_ephemeris()
 
 
 # Swiss Ephemeris object IDs

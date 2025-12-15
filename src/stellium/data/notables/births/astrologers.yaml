@@ -1,0 +1,141 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Dane Rudhyar
+  event_type: birth
+  year: 1895
+  month: 3
+  day: 23
+  hour: 0
+  minute: 42
+  latitude: 48.8566
+  longitude: 2.3522
+  location_name: Paris, France
+  timezone: Europe/Paris
+  category: astrologer
+  subcategories:
+    - Humanistic Astrologer
+    - Composer
+    - Philosopher
+  notable_for: >-
+    French-American astrologer, one of the most influential of the 20th century.
+    Pioneered humanistic and transpersonal astrology. Author of "The Astrology of
+    Personality" (1936). Also a composer, painter, and poet.
+  astrological_notes: Sun 2 Aries
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Rudhyar,_Dane"
+  verified: true
+
+- name: William Lilly
+  event_type: birth
+  year: 1602
+  month: 5
+  day: 1
+  hour: 2
+  minute: 0
+  latitude: 52.8333
+  longitude: -1.2667
+  location_name: Diseworth, Leicestershire, England
+  timezone: Europe/London
+  category: astrologer
+  subcategories:
+    - Traditional Astrologer
+    - Author
+    - Horary Master
+  notable_for: >-
+    British astrologer and author, the most famous astrologer of the 17th century.
+    Author of "Christian Astrology" (1647), the first major astrological textbook
+    in English. Predicted the Great Fire of London 14 years before it happened.
+  astrological_notes: Sun 19 Taurus, Moon 14 Capricorn, Asc Pisces
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William"
+    - "Gadbury's Collection of Nativities (1661)"
+  verified: true
+- name: Evangeline Adams
+  event_type: birth
+  year: 1868
+  month: 2
+  day: 8
+  hour: 8
+  minute: 30
+  latitude: 40.7333
+  longitude: -74.0833
+  location_name: Jersey City, New Jersey
+  timezone: America/New_York
+  category: astrologer
+  subcategories:
+  - Astrologer
+  notable_for: American astrologer with a clientele of nearly 100,000 people including the Prince of Wales, Mary Garden, J.P. Morgan and Enrico Caruso. She warned the hotel owner of danger and the following day on 17 March the hotel had a bad fire in which there were several deaths; a grim success.
+  astrological_notes: 19°07' 21°23 Asc. 22°05'
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Adams,_Evangeline'
+  verified: false
+
+- name: Alan Leo
+  event_type: birth
+  year: 1860
+  month: 8
+  day: 7
+  hour: 5
+  minute: 49
+  latitude: 51.5000
+  longitude: -0.1500
+  location_name: Westminster, England
+  timezone: Europe/London
+  category: astrologer
+  subcategories:
+  - theosophist
+  - author
+  - publisher
+  notable_for: British astrologer, businessman and author, considered the father of modern astrology; founded Modern Astrology magazine and an organization that remains active; shifted focus from prediction to personal analysis; wrote popular astrological textbooks.
+  astrological_notes: Ascendant 15°19 (end of Leo)
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Leo,_Alan'
+  verified: false
+- name: B.V. Raman
+  event_type: birth
+  year: 1912
+  month: 8
+  day: 8
+  hour: 19
+  minute: 43
+  latitude: 12.9716
+  longitude: 77.5946
+  location_name: Bangalore, India
+  timezone: Asia/Kolkata
+  category: astrologer
+  subcategories:
+  - Vedic astrologer
+  - author
+  notable_for: Indian Vedic astrologer and author
+  astrological_notes: Leo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Raman,_Bangalore_Venkata'
+  verified: false
+- name: K.N. Rao
+  event_type: birth
+  year: 1931
+  month: 10
+  day: 12
+  hour: 7
+  minute: 54
+  latitude: 16.1833
+  longitude: 81.1333
+  location_name: Machilipatnam, India
+  timezone: Asia/Kolkata
+  category: astrologer
+  subcategories:
+  - Vedic astrologer
+  - author
+  notable_for: Indian Vedic astrologer and teacher
+  astrological_notes: Libra Sun, Scorpio Ascendant
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Rao,_K.N.'
+  verified: false

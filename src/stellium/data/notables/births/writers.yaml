@@ -1,0 +1,387 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Maya Angelou
+  event_type: birth
+  year: 1928
+  month: 4
+  day: 4
+  hour: 14
+  minute: 10
+  latitude: 38.627
+  longitude: -90.1994
+  location_name: St. Louis, Missouri, USA
+  timezone: America/Chicago
+  category: writer
+  subcategories:
+  - poet
+  - author
+  - activist
+  notable_for: I Know Why the Caged Bird Sings and civil rights activism
+  astrological_notes: Aries Sun - tests literary genius and resilience themes
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Carl Jung
+  event_type: birth
+  year: 1875
+  month: 7
+  day: 26
+  hour: 19
+  minute: 24
+  latitude: 47.6
+  longitude: 9.3333
+  location_name: Kesswil, Switzerland
+  timezone: Europe/Zurich
+  category: writer
+  subcategories:
+  - Psychiatrist
+  - Author
+  - Astrologer
+  notable_for: Swiss psychiatrist and founder of analytical psychology; developed
+    theories of the collective unconscious, archetypes, introvert-extrovert types,
+    individuation, and synchronicity. Advocate for astrology in psychological practice.
+  astrological_notes: Sun 3 Leo, Moon 15 Taurus, Asc 1 Aquarius
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Jung,_Carl'
+  - 'Gerhard Wehr, Carl Gustav Jung: Leben, Werk, Wirkung (1985)'
+  verified: false
+- name: Fyodor Dostoevsky
+  event_type: birth
+  year: 1821
+  month: 11
+  day: 11
+  hour: 9
+  minute: 47
+  latitude: 55.75
+  longitude: 37.5833
+  location_name: Moscow, Russia
+  timezone: Europe/Moscow
+  category: writer
+  subcategories:
+  - Novelist
+  - Philosopher
+  - Essayist
+  notable_for: Russian writer, one of Russia's greatest novelists. His works include
+    "Crime and Punishment" (1866), "The Idiot" (1869), and "The Brothers Karamazov"
+    (1880). Major influence on 20th century literature and philosophy.
+  astrological_notes: Sun 18 Scorpio, Moon 10 Gemini, Asc Sagittarius
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Dostoevsky,_Fyodor'
+  verified: false
+- name: William Shakespeare
+  event_type: birth
+  year: 1564
+  month: 4
+  day: 23
+  hour: 8
+  minute: 30
+  latitude: 52.2
+  longitude: -1.6833
+  location_name: Stratford-Upon-Avon, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - Playwright
+  - Poet
+  - Actor
+  notable_for: English playwright, poet, and actor, generally considered the greatest dramatist the world has known, as well as the finest poet of the English language. He is historically known as a true literary giant and is often called England's national poet and the "Bard of Avon".
+  astrological_notes: Ascendant 12°43', Sun 07°59', Moon 18°48'
+  data_quality: XX
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Shakespeare,_William'
+  verified: false
+- name: Jane Austen
+  event_type: birth
+  year: 1775
+  month: 12
+  day: 16
+  hour: 23
+  minute: 45
+  latitude: 51.38
+  longitude: -1.2
+  location_name: Steventon, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - Novelist
+  notable_for: Jane Austen was a British writer and the first renowned female novelist of England, known for her six major novels that interpret, critique, and comment upon the British landed gentry at the end of the 18th century, exploring themes of women's dependence on marriage for social standing and economic security through biting irony, realism, humour, and social commentary.
+  astrological_notes: Ascendant 24°08'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Austen,_Jane'
+  verified: false
+- name: Arthur Miller
+  event_type: birth
+  year: 1915
+  month: 10
+  day: 17
+  hour: 5
+  minute: 12
+  latitude: 40.7167
+  longitude: -74.0000
+  location_name: New York, New York, USA
+  timezone: America/New_York
+  category: writer
+  subcategories:
+  - playwright
+  - writer
+  notable_for: American writer who won awards for "All My Sons" and the Pulitzer Prize for "Death Of A Salesman," 1949; noted dramatist and contemporary playwright.
+  astrological_notes: Asc. 16°25'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Miller,_Arthur'
+  verified: false
+- name: Terry Pratchett
+  event_type: birth
+  year: 1948
+  month: 4
+  day: 28
+  hour: 12
+  minute: 0
+  latitude: 51.6
+  longitude: -0.65
+  location_name: Beaconsfield, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - novelist
+  - humorist
+  notable_for: British fantasy author, creator of the hugely popular 41-volume Discworld series; knighted in 2009; wrote over 70 books; diagnosed with posterior cortical atrophy (rare early-onset Alzheimer’s) in 2007 and became a prominent campaigner for assisted dying; died 12 March 2015.
+  astrological_notes: Sun 08° Taurus, Moon 08° Capricorn
+  data_quality: X
+  sources:
+  - 'https://www.astrotheme.com/astrology/Terry_Pratchett'
+  - 'https://en.wikipedia.org/wiki/Terry_Pratchett'
+  verified: false
+- name: Amrita Pritam
+  event_type: birth
+  year: 1919
+  month: 8
+  day: 31
+  hour: 13
+  minute: 49
+  latitude: 32.15
+  longitude: 74.1833
+  location_name: Gujranwala, Pakistan
+  timezone: Asia/Karachi
+  category: writer
+  subcategories:
+  - poet
+  - novelist
+  notable_for: Indian writer and poet
+  astrological_notes: Virgo Sun
+  data_quality: A
+  sources:
+  - 'AstroSage: https://celebrity.astrosage.com/amrita-pritam-1-birth-chart.asp'
+  verified: false
+- name: Virginia Woolf
+  event_type: birth
+  year: 1882
+  month: 1
+  day: 25
+  hour: 12
+  minute: 15
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - novelist
+  - modernist
+  notable_for: English writer and one of the foremost modernists of the twentieth century.
+  astrological_notes: Sun 5 Aquarius
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Woolf,_Virginia
+  verified: true
+- name: Ernest Hemingway
+  event_type: birth
+  year: 1899
+  month: 7
+  day: 21
+  hour: 8
+  minute: 0
+  latitude: 41.8795
+  longitude: -87.6241
+  location_name: Oak Park, Illinois
+  timezone: America/Chicago
+  category: writer
+  subcategories:
+  - novelist
+  - journalist
+  notable_for: American novelist, short story writer, and journalist.
+  astrological_notes: Sun 29 Cancer
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Hemingway,_Ernest
+  verified: true
+- name: Gabriel García Márquez
+  event_type: birth
+  year: 1927
+  month: 3
+  day: 6
+  hour: 9
+  minute: 0
+  latitude: 9.9833
+  longitude: -74.8
+  location_name: Aracataca, Colombia
+  timezone: America/Bogota
+  category: writer
+  subcategories:
+  - magical realism
+  - Nobel
+  notable_for: Colombian novelist, short-story writer, screenwriter and journalist, known affectionately as Gabo throughout Latin America.
+  astrological_notes: Sun 15 Pisces
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Garc%C3%ADa_M%C3%A1rquez,_Gabriel
+  verified: false
+- name: Toni Morrison
+  event_type: birth
+  year: 1931
+  month: 2
+  day: 18
+  hour: 11
+  minute: 0
+  latitude: 41.4528
+  longitude: -82.1824
+  location_name: Lorain, Ohio
+  timezone: America/New_York
+  category: writer
+  subcategories:
+  - novelist
+  - Nobel laureate
+  notable_for: American novelist, editor, and professor. Her novels are known for their epic themes, vivid dialogue, and richly detailed characters.
+  astrological_notes: Sun 29 Aquarius
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Morrison,_Toni
+  verified: false
+- name: Sylvia Plath
+  event_type: birth
+  year: 1932
+  month: 10
+  day: 27
+  hour: 14
+  minute: 10
+  latitude: 42.3181
+  longitude: -71.1064
+  location_name: Jamaica Plain, Massachusetts
+  timezone: America/New_York
+  category: writer
+  subcategories:
+  - poet
+  - novelist
+  notable_for: American poet, novelist, and short-story writer.
+  astrological_notes: Sun 4 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Plath,_Sylvia
+  verified: true
+- name: Rumi
+  event_type: birth
+  year: 1207
+  month: 9
+  day: 30
+  latitude: 37.8747
+  longitude: 67.7786
+  location_name: Balkh, Afghanistan
+  timezone: Asia/Kabul
+  category: writer
+  subcategories:
+  - Sufi poet
+  notable_for: 13th-century Persian poet, jurist, theologian, and Sufi mystic.
+  astrological_notes: Sun 15 Libra
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Rumi
+  verified: false
+  calendar: gregorian
+- name: Franz Kafka
+  event_type: birth
+  year: 1883
+  month: 7
+  day: 3
+  hour: 7
+  minute: 0
+  latitude: 50.0755
+  longitude: 14.4378
+  location_name: Prague, Czech Republic
+  timezone: Europe/Prague
+  category: writer
+  subcategories:
+  - novelist
+  notable_for: German-language novelist and short story writer, widely regarded as one of the major figures of 20th-century literature.
+  astrological_notes: Sun 11 Cancer
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Kafka,_Franz
+  verified: true
+- name: Oscar Wilde
+  event_type: birth
+  year: 1854
+  month: 10
+  day: 16
+  hour: 3
+  minute: 0
+  latitude: 53.3498
+  longitude: -6.2603
+  location_name: Dublin, Ireland
+  timezone: Europe/Dublin
+  category: writer
+  subcategories:
+  - playwright
+  - wit
+  notable_for: Irish playwright, novelist, essayist, and poet.
+  astrological_notes: Sun 22 Libra
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Wilde,_Oscar
+  verified: false
+- name: Agatha Christie
+  event_type: birth
+  year: 1890
+  month: 9
+  day: 15
+  hour: 14
+  minute: 14
+  latitude: 50.4625
+  longitude: -3.5250
+  location_name: Torquay, England
+  timezone: Europe/London
+  category: writer
+  subcategories:
+  - mystery novelist
+  notable_for: English crime novelist, short story writer, and playwright.
+  astrological_notes: Sun 22 Virgo
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Christie,_Agatha
+  verified: true
+- name: Jorge Luis Borges
+  event_type: birth
+  year: 1899
+  month: 8
+  day: 24
+  hour: 3
+  minute: 30
+  latitude: -34.6037
+  longitude: -58.3816
+  location_name: Buenos Aires, Argentina
+  timezone: America/Argentina/Buenos_Aires
+  category: writer
+  subcategories:
+  - writer
+  - poet
+  notable_for: Argentine short-story writer, essayist, poet and translator, and a key figure in Spanish-language literature.
+  astrological_notes: Sun 1 Virgo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Borges,_Jorge_Luis
+  verified: true

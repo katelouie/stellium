@@ -1,0 +1,67 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+# Note: Included for astrological research purposes only
+
+- name: Ted Bundy
+  event_type: birth
+  year: 1946
+  month: 11
+  day: 24
+  hour: 22
+  minute: 35
+  latitude: 44.4759
+  longitude: -73.2121
+  location_name: Burlington, Vermont, USA
+  timezone: America/New_York
+  category: criminal
+  subcategories:
+    - Serial Killer
+  notable_for: >-
+    American serial killer who confessed to 30 homicides committed between 1974 and
+    1978. Studied for criminological and psychological research. Executed in 1989.
+  astrological_notes: Sun 2 Sagittarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Bundy,_Ted"
+  verified: true
+- name: Al Capone
+  event_type: birth
+  year: 1899
+  month: 1
+  day: 17
+  hour: 9
+  minute: 30
+  latitude: 40.638
+  longitude: -73.933
+  location_name: Brooklyn (Kings County), New York, USA
+  timezone: America/New_York
+  category: criminal
+  subcategories:
+  - Gangster
+  notable_for: Italian-American gangster who, as the czar of organized crime, was known as Chicago's public enemy number one. A tough gang-kid raised in the Brooklyn streets, he moved into organized crime through corruption, pay-offs, graft, bribery, drugs, prostitution and murder.
+  astrological_notes: Ascendant 27°19', Sun 14°03', Ascendant 13°26'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Capone,_Al'
+  verified: false
+- name: Bonnie Parker
+  event_type: birth
+  year: 1910
+  month: 10
+  day: 1
+  hour: 12
+  minute: 0
+  latitude: 31.6472
+  longitude: -100.0431
+  location_name: Rowena, Texas, USA
+  timezone: America/Chicago
+  category: criminal
+  subcategories:
+  - murderer
+  notable_for: American murderer, known as part of the criminal duo Bonnie and Clyde.
+  astrological_notes: Sun in Libra 7°40’, Moon in Virgo 13°04’
+  data_quality: XX
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/bonnie-parker-horoscope'
+  verified: false

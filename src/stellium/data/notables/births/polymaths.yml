@@ -1,0 +1,23 @@
+- name: Leonardo da Vinci
+  event_type: birth
+  year: 1452
+  month: 4
+  day: 15
+  hour: 21
+  minute: 40
+  latitude: 43.7811
+  longitude: 10.9237
+  location_name: Vinci, Italy
+  timezone: Europe/Rome
+  category: polymath
+  subcategories:
+  - artist
+  - scientist
+  - inventor
+  notable_for: Renaissance genius - Mona Lisa, The Last Supper, scientific diagrams
+  astrological_notes: Aries Sun with strong Taurus - tests Renaissance genius and
+    artistic/scientific blend
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false

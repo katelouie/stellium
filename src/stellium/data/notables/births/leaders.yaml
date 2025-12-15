@@ -1,0 +1,694 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Martin Luther King Jr.
+  event_type: birth
+  year: 1929
+  month: 1
+  day: 15
+  hour: 12
+  minute: 0
+  latitude: 33.749
+  longitude: -84.388
+  location_name: Atlanta, Georgia, USA
+  timezone: America/New_York
+  category: leader
+  subcategories:
+  - civil_rights
+  - minister
+  - activist
+  notable_for: Leader of American civil rights movement
+  astrological_notes: Capricorn Sun - tests leadership and social justice themes
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Winston Churchill
+  event_type: birth
+  year: 1874
+  month: 11
+  day: 30
+  hour: 1
+  minute: 30
+  latitude: 51.8412
+  longitude: -1.3617
+  location_name: Blenheim Palace, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - statesman
+  - author
+  notable_for: British Prime Minister during World War II
+  astrological_notes: Sagittarius Sun with Leo Rising - tests wartime leadership and
+    oratory skills
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Abraham Lincoln
+  event_type: birth
+  year: 1809
+  month: 2
+  day: 12
+  hour: 6
+  minute: 54
+  latitude: 37.5667
+  longitude: -85.7333
+  location_name: Hodgenville, Kentucky, USA
+  timezone: America/Kentucky/Louisville
+  category: leader
+  subcategories:
+  - U.S. President
+  - Lawyer
+  - Public Speaker
+  notable_for: 16th President of the United States (1861-1865). Issued the Emancipation
+    Proclamation in 1863, preserved the Union during the Civil War, and is considered
+    one of the greatest American presidents. Assassinated in 1865.
+  astrological_notes: Sun 23 Aquarius, Moon 27 Capricorn, Asc 22 Aquarius
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Lincoln,_Abraham'
+  - William E. Barton, Women Lincoln Loved (1927)
+  - 'Carl Sandburg, Abraham Lincoln: The Prairie Years and the War Years'
+  verified: false
+- name: Barack Obama
+  event_type: birth
+  year: 1961
+  month: 8
+  day: 4
+  hour: 19
+  minute: 24
+  latitude: 21.3
+  longitude: -157.8667
+  location_name: Honolulu, Hawaii, USA
+  timezone: Pacific/Honolulu
+  category: leader
+  subcategories:
+  - U.S. President
+  - Lawyer
+  - Author
+  notable_for: 44th President of the United States (2009-2017), first African American
+    to hold the office. Won Nobel Peace Prize in 2009. Previously served as U.S. Senator
+    from Illinois.
+  astrological_notes: Sun 12 Leo, Moon 3 Gemini
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Obama,_Barack'
+  verified: true
+- name: Michelle Obama
+  event_type: birth
+  year: 1964
+  month: 1
+  day: 17
+  hour: 12
+  minute: 0
+  latitude: 41.85
+  longitude: -87.65
+  location_name: Chicago, Illinois, USA
+  timezone: America/Chicago
+  category: leader
+  subcategories:
+  - First Lady
+  - Lawyer
+  - Author
+  notable_for: American attorney, author and former First Lady of the United States
+    (2009-2017). Founded the Let's Move! initiative. Her memoir "Becoming" became
+    a bestseller.
+  astrological_notes: Sun 26 Capricorn
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Obama,_Michelle'
+  verified: false
+- name: Prince William
+  event_type: birth
+  year: 1982
+  month: 6
+  day: 21
+  hour: 21
+  minute: 3
+  latitude: 51.5167
+  longitude: -0.175
+  location_name: Paddington, London, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - Prince of Wales
+  - Royal
+  - Philanthropist
+  notable_for: Prince of Wales and heir apparent to the British throne. Elder son
+    of King Charles III and Diana, Princess of Wales. Founder of charitable initiatives
+    including The Royal Foundation.
+  astrological_notes: Sun 0 Cancer, Moon in Cancer
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/William,_Prince_of_Wales'
+  - The London Gazette, 21 June 1982, p. 8215
+  verified: true
+- name: Kate Middleton
+  event_type: birth
+  year: 1982
+  month: 1
+  day: 9
+  hour: 19
+  minute: 0
+  latitude: 51.4542
+  longitude: -0.9731
+  location_name: Reading, Berkshire, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - Princess of Wales
+  - Royal
+  - Philanthropist
+  notable_for: Catherine, Princess of Wales. Wife of William, Prince of Wales. Patron
+    of numerous charitable organizations focusing on children's welfare, mental health
+    and the arts.
+  astrological_notes: Sun 19 Capricorn
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Catherine,_Duchess_of_Cambridge'
+  verified: false
+- name: Queen Elizabeth II
+  event_type: birth
+  year: 1926
+  month: 4
+  day: 21
+  hour: 2
+  minute: 40
+  latitude: 51.5086
+  longitude: -0.1439
+  location_name: Mayfair, London, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - Queen
+  - Head of State
+  - Monarch
+  notable_for: Queen of the United Kingdom from 1952 to 2022. Longest-reigning British
+    monarch (70 years). Oversaw significant changes in British society and the transformation
+    of the British Empire into the Commonwealth.
+  astrological_notes: Sun 0 Taurus, Moon 12 Leo, Asc 21 Capricorn
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom'
+  - The Times [London], 22 April 1926, p. 14
+  verified: true
+
+- name: Queen of the United Kingdom Victoria
+  event_type: birth
+  year: 1819
+  month: 5
+  day: 24
+  hour: 4
+  minute: 15
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: Kensington Palace, London, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+    - Queen
+    - Empress
+    - Monarch
+  notable_for: >-
+    Queen of the United Kingdom from 1837 until her death in 1901. Empress of India
+    from 1876. Her reign of nearly 64 years was known as the Victorian era, a period
+    of industrial, cultural, and scientific change.
+  astrological_notes: Sun 2 Gemini, Moon 3 Gemini
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Victoria,_Queen_of_the_United_Kingdom"
+    - "The London Gazette, 26 May 1819"
+  verified: true
+
+- name: Princess of Wales Diana
+  event_type: birth
+  year: 1961
+  month: 7
+  day: 1
+  hour: 19
+  minute: 45
+  latitude: 52.8264
+  longitude: 0.5139
+  location_name: Sandringham, Norfolk, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+    - Princess
+    - Royal
+    - Humanitarian
+  notable_for: >-
+    Princess of Wales as the first wife of Charles, Prince of Wales. Known for her
+    charity work, particularly with AIDS patients and landmine victims. Her death
+    in 1997 prompted unprecedented public mourning.
+  astrological_notes: Sun 9 Cancer, Moon 25 Aquarius
+  data_quality: A
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Diana,_Princess_of_Wales"
+  verified: true
+- name: Nelson Mandela
+  event_type: birth
+  year: 1918
+  month: 7
+  day: 18
+  hour: 14
+  minute: 54
+  latitude: -31.95
+  longitude: 28.52
+  location_name: Mvezo, South Africa
+  timezone: Africa/Johannesburg
+  category: leader
+  subcategories:
+  - Politician
+  - Activist
+  notable_for: South African President, a civil rights hero and martyr who claimed victory in his lifetime crusade to establish a non-racial democracy for South Africa. He was arrested as a political prisoner on August 5, 1962 and spent 27 years in prison, released on February 11, 1990.
+  astrological_notes: Ascendant 20°15', Sun sign Cancer
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Mandela,_Nelson'
+  verified: false
+- name: Mohandas Gandhi
+  event_type: birth
+  year: 1869
+  month: 10
+  day: 2
+  hour: 7
+  minute: 8
+  latitude: 21.17
+  longitude: 69.6
+  location_name: Porbandar, India
+  timezone: Asia/Kolkata
+  category: leader
+  subcategories:
+  - Political Activist
+  - Lawyer
+  notable_for: Indian lawyer and civil rights champion, the spiritual and political leader of India through her tempestuous birth of independence. Known as Mahatma, (great soul), he began the freedom movement in 1919 with nonviolent disobedience. India broke from England in August 1947 and Gandhi's rank as a saint and holy man was assured in history.
+  astrological_notes: Asc. 08°56' 19°56' 25°47'
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Gandhi,_Mohandas'
+  verified: false
+- name: John F. Kennedy
+  event_type: birth
+  year: 1917
+  month: 5
+  day: 29
+  hour: 15
+  minute: 0
+  latitude: 42.3333
+  longitude: -71.1167
+  location_name: Brookline, Massachusetts, USA
+  timezone: America/New_York
+  category: leader
+  subcategories:
+  - U.S. President
+  - author
+  notable_for: American author, politician and the 35th U.S. President from 1961-63, the first Catholic and the youngest man to win the nation's highest office.
+  astrological_notes: Asc. 17°13'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Kennedy,_John_F.'
+  verified: false
+- name: Prince Philip
+  event_type: birth
+  year: 1921
+  month: 6
+  day: 10
+  hour: 10
+  minute: 0
+  latitude: 39.6000
+  longitude: 19.9333
+  location_name: Mon Repos, Greece
+  timezone: Europe/Athens
+  category: leader
+  subcategories:
+  - royal family
+  notable_for: Greek-Danish-British husband of Queen Elizabeth II from 1947 until his death in 2021, longest-serving consort of a reigning British monarch, oldest ever male member of the British royal family at death; served in British Navy during WWII, pilot-Captain General of the Royal Marines, yachtsman, polo player, wildlife conservationist.
+  astrological_notes: Sun 18°53', Asc. 15°08'
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh'
+  verified: false
+- name: Jacqueline Kennedy Onassis
+  event_type: birth
+  year: 1929
+  month: 7
+  day: 28
+  hour: 14
+  minute: 30
+  latitude: 40.8833
+  longitude: -72.3833
+  location_name: Southampton, New York, USA
+  timezone: America/New_York
+  category: leader
+  subcategories:
+  - first lady
+  - editor
+  notable_for: American First Lady, wife of US President John F. Kennedy; socialite, public figure, publisher; married and widowed twice to powerful men; journalist; mother of Caroline and John Jr.
+  astrological_notes: Sun in Leo; Ascendant 05°10'
+  data_quality: A
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Onassis,_Jacqueline_Kennedy'
+  - Southampton Hospital records
+  verified: false
+- name: Dalai Lama XIV
+  event_type: birth
+  year: 1935
+  month: 7
+  day: 6
+  hour: 4
+  minute: 38
+  latitude: 36.3833
+  longitude: 101.8667
+  location_name: Taktser, China
+  timezone: Asia/Urumqi
+  category: leader
+  subcategories:
+  - spiritual leader
+  notable_for: Tibetan spiritual leader and Nobel Peace Prize laureate
+  astrological_notes: Cancer Sun, Leo Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://astro.com/samples/sp_dlama_e.htm'
+  verified: false
+- name: Fidel Castro
+  event_type: birth
+  year: 1926
+  month: 8
+  day: 13
+  hour: 2
+  minute: 0
+  latitude: 20.55
+  longitude: -75.8833
+  location_name: Birán, Cuba
+  timezone: America/Havana
+  category: leader
+  subcategories:
+  - revolutionary
+  notable_for: Cuban revolutionary and politician
+  astrological_notes: Leo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/fidel-castro-horoscope'
+  verified: false
+- name: Che Guevara
+  event_type: birth
+  year: 1928
+  month: 5
+  day: 14
+  hour: 3
+  minute: 5
+  latitude: -32.9468
+  longitude: -60.6393
+  location_name: Rosario, Argentina
+  timezone: America/Argentina/Cordoba
+  category: leader
+  subcategories:
+  - revolutionary
+  notable_for: Argentine Marxist revolutionary
+  astrological_notes: Taurus Sun, Taurus Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ernesto-che-guevara-horoscope'
+  verified: false
+- name: Hugo Chávez
+  event_type: birth
+  year: 1954
+  month: 7
+  day: 28
+  hour: 4
+  minute: 0
+  latitude: 8.7667
+  longitude: -69.9333
+  location_name: Sabaneta, Venezuela
+  timezone: America/Caracas
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Venezuelan politician and president
+  astrological_notes: Leo Sun, Aquarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/hugo-chavez-horoscope'
+  verified: false
+- name: Patrice Lumumba
+  event_type: birth
+  year: 1925
+  month: 7
+  day: 2
+  hour: 12
+  minute: 0
+  latitude: 0.0667
+  longitude: 22.3667
+  location_name: Onalua, Congo
+  timezone: Africa/Kinshasa
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Congolese independence leader and prime minister
+  astrological_notes: Cancer Sun
+  data_quality: X
+  sources:
+  - 'Astrotheme: https://www.astrotheme.com/astrology/Patrice_Lumumba'
+  verified: false
+- name: Thomas Sankara
+  event_type: birth
+  year: 1949
+  month: 12
+  day: 21
+  hour: 11
+  minute: 50
+  latitude: 12.75
+  longitude: -1.7833
+  location_name: Yako, Burkina Faso
+  timezone: Africa/Ouagadougou
+  category: leader
+  subcategories:
+  - revolutionary
+  notable_for: Burkinabé military officer and president
+  astrological_notes: Capricorn Sun
+  data_quality: A
+  sources:
+  - 'Infospacetalk: https://www.infospacetalk.com/astrovolta-horoscope-databank/categories/world-leader/capt-thomas-sankara'
+  verified: false
+- name: Gamal Abdel Nasser
+  event_type: birth
+  year: 1918
+  month: 1
+  day: 15
+  hour: 4
+  minute: 28
+  latitude: 31.2
+  longitude: 29.9
+  location_name: Alexandria, Egypt
+  timezone: Africa/Cairo
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Egyptian politician and president
+  astrological_notes: Capricorn Sun
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Nasser,_Gamal_Abdel'
+  verified: false
+- name: Wangari Maathai
+  event_type: birth
+  year: 1940
+  month: 4
+  day: 1
+  hour: 12
+  minute: 0
+  latitude: -0.55
+  longitude: 36.8333
+  location_name: Ihithe, Kenya
+  timezone: Africa/Nairobi
+  category: leader
+  subcategories:
+  - activist
+  - environmentalist
+  notable_for: Kenyan environmental and political activist, Nobel Peace Prize laureate
+  astrological_notes: Aries Sun
+  data_quality: X
+  sources:
+  - 'Astro-Charts: https://astro-charts.com/persons/chart/wangari-maathai/'
+  verified: false
+- name: Rigoberta Menchú
+  event_type: birth
+  year: 1959
+  month: 1
+  day: 9
+  hour: 8
+  minute: 0
+  latitude: 15.3333
+  longitude: -90.8333
+  location_name: Chimel, Guatemala
+  timezone: America/Guatemala
+  category: leader
+  subcategories:
+  - activist
+  notable_for: Guatemalan human rights activist, Nobel Peace Prize laureate
+  astrological_notes: Capricorn Sun, Capricorn Moon
+  data_quality: A
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/rigoberta-menchu-horoscope'
+  verified: false
+- name: Benazir Bhutto
+  event_type: birth
+  year: 1953
+  month: 6
+  day: 21
+  hour: 19
+  minute: 21
+  latitude: 24.8667
+  longitude: 67.05
+  location_name: Karachi, Pakistan
+  timezone: Asia/Karachi
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Pakistani politician and prime minister
+  astrological_notes: Cancer Sun, Capricorn Moon
+  data_quality: AA
+  sources:
+  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/benazir-bhutto-horoscope'
+  verified: false
+- name: Indira Gandhi
+  event_type: birth
+  year: 1917
+  month: 11
+  day: 19
+  hour: 23
+  minute: 11
+  latitude: 25.45
+  longitude: 81.85
+  location_name: Allahabad, India
+  timezone: Asia/Kolkata
+  category: leader
+  subcategories:
+  - politician
+  notable_for: Indian politician and prime minister
+  astrological_notes: Scorpio Sun, Sagittarius Moon
+  data_quality: AA
+  sources:
+  - 'Astro.com: https://www.astro.com/astro-databank/Gandhi,_Indira'
+  verified: false
+- name: Margaret Thatcher
+  event_type: birth
+  year: 1925
+  month: 10
+  day: 13
+  hour: 9
+  minute: 0
+  latitude: 52.9167
+  longitude: -0.6333
+  location_name: Grantham, England
+  timezone: Europe/London
+  category: leader
+  subcategories:
+  - UK Prime Minister
+  notable_for: British stateswoman who was Prime Minister of the United Kingdom from 1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
+  astrological_notes: Sun 19 Libra
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Thatcher,_Margaret
+  verified: true
+- name: Angela Merkel
+  event_type: birth
+  year: 1954
+  month: 7
+  day: 17
+  hour: 18
+  minute: 0
+  latitude: 53.5507
+  longitude: 9.9930
+  location_name: Hamburg, Germany
+  timezone: Europe/Berlin
+  category: leader
+  subcategories:
+  - German Chancellor
+  notable_for: German politician who has been Chancellor of Germany since 2005 and leader of the Christian Democratic Union since 2000.
+  astrological_notes: Sun 24 Cancer
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Merkel,_Angela
+  verified: false
+- name: Eva Perón
+  event_type: birth
+  year: 1919
+  month: 5
+  day: 7
+  hour: 5
+  minute: 14
+  latitude: -34.6131
+  longitude: -58.3772
+  location_name: Buenos Aires, Argentina
+  timezone: America/Argentina/Buenos_Aires
+  category: leader
+  subcategories:
+  - Argentine first lady
+  - icon
+  notable_for: Argentine political leader and actress. Second wife of President Juan Perón and served as First Lady of Argentina from 1946 until her death in 1952.
+  astrological_notes: Sun 16 Taurus
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Per%C3%B3n,_Eva
+  verified: false
+- name: Aung San Suu Kyi
+  event_type: birth
+  year: 1945
+  month: 6
+  day: 19
+  latitude: 28.6139
+  longitude: 77.2090
+  location_name: Delhi, India
+  timezone: Asia/Kolkata
+  category: leader
+  subcategories:
+  - Myanmar
+  - Nobel laureate
+  notable_for: Burmese politician, diplomat, and author who is the leader of the National League for Democracy and the first State Counsellor of Myanmar.
+  astrological_notes: Sun 27 Gemini
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Aung_San_Suu_Kyi
+  verified: false
+- name: Golda Meir
+  event_type: birth
+  year: 1898
+  month: 5
+  day: 3
+  latitude: 50.4547
+  longitude: 30.5238
+  location_name: Kiev, Ukraine
+  timezone: Europe/Kyiv
+  category: leader
+  subcategories:
+  - Israeli Prime Minister
+  notable_for: Israeli teacher, kibbutznik, stateswoman, politician and the fourth Prime Minister of Israel.
+  astrological_notes: Sun 13 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Meir,_Golda
+  verified: true
+- name: Catherine the Great
+  event_type: birth
+  year: 1729
+  month: 5
+  day: 2
+  hour: 2
+  minute: 30
+  latitude: 53.3833
+  longitude: 14.5333
+  location_name: Szczecin, Poland
+  timezone: Europe/Warsaw
+  category: leader
+  subcategories:
+  - Russian Empress
+  notable_for: Empress of Russia who came to power following a coup d'état that she organised against her husband, Peter III.
+  astrological_notes: Sun 11 Taurus
+  data_quality: B
+  sources:
+  - https://www.astro.com/astro-databank/Catherine_the_Great,_Empress
+  verified: false
+  calendar: gregorian

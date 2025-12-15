@@ -12,35 +12,18 @@ Usage:
     >>> royal_stars = engine.calculate_stars(julian_day, stars=["Regulus", "Aldebaran"])
 """
 
-import os
-from pathlib import Path
 from typing import Protocol
 
 import swisseph as swe
 
 from stellium.core.models import FixedStarPosition, ObjectType
 from stellium.core.registry import FIXED_STARS_REGISTRY, FixedStarInfo
+from stellium.data.paths import initialize_ephemeris
 
 
 def _set_ephemeris_path() -> None:
     """Set the path to Swiss Ephemeris data files (including sefstars.txt)."""
-    # Path to this file: .../src/stellium/engines/fixed_stars.py
-    current_file = Path(__file__)
-
-    # Go up 3 levels to get to the 'src' directory
-    # .parent -> engines
-    # .parent -> stellium
-    # .parent -> src
-    src_dir = current_file.parent.parent.parent
-
-    # Go up one *more* level to get the project root
-    project_root = src_dir.parent
-
-    # Now, build the path from the project root
-    path_data = project_root / "data" / "swisseph" / "ephe"
-
-    # swe.set_ephe_path needs a string, and we still need the trailing slash
-    swe.set_ephe_path(str(path_data) + os.sep)
+    initialize_ephemeris()
 
 
 class FixedStarsEngine(Protocol):

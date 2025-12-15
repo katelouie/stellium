@@ -1,0 +1,58 @@
+- name: Frank Lloyd Wright
+  event_type: birth
+  year: 1867
+  month: 6
+  day: 8
+  hour: 17
+  minute: 0
+  latitude: 43.1667
+  longitude: -90.0667
+  location_name: Richland Center, Wisconsin
+  timezone: America/Chicago
+  category: architect
+  subcategories:
+  - architect
+  notable_for: American architect, interior designer, writer, and educator.
+  astrological_notes: Sun 17 Gemini
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Wright,_Frank_Lloyd
+  verified: true
+- name: Zaha Hadid
+  event_type: birth
+  year: 1950
+  month: 10
+  day: 31
+  latitude: 33.3152
+  longitude: 44.3661
+  location_name: Baghdad, Iraq
+  timezone: Asia/Baghdad
+  category: architect
+  subcategories:
+  - architect
+  - first woman Pritzker Prize
+  notable_for: Iraqi-British architect.
+  astrological_notes: Sun 7 Scorpio
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Hadid,_Zaha
+  verified: false
+- name: I.M. Pei
+  event_type: birth
+  year: 1917
+  month: 4
+  day: 26
+  latitude: 23.1291
+  longitude: 113.2644
+  location_name: Guangzhou, China
+  timezone: Asia/Shanghai
+  category: architect
+  subcategories:
+  - architect
+  - Louvre Pyramid
+  notable_for: Chinese-American architect often called a master of modern architecture.
+  astrological_notes: Sun 5 Taurus
+  data_quality: X
+  sources:
+  - Wikidata
+  verified: false

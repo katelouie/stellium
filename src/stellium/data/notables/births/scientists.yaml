@@ -1,0 +1,449 @@
+# Notable births from AstroDatabank
+# Generated for Stellium astrology package
+# Source: https://www.astro.com/astro-databank/
+
+- name: Albert Einstein
+  event_type: birth
+  year: 1879
+  month: 3
+  day: 14
+  hour: 11
+  minute: 30
+  latitude: 48.3984
+  longitude: 9.9916
+  location_name: Ulm, Germany
+  timezone: Europe/Berlin
+  category: scientist
+  subcategories:
+  - physicist
+  - theorist
+  notable_for: Theory of Relativity and contributions to quantum mechanics
+  astrological_notes: Pisces Sun with strong Sagittarius - tests fire/water balance
+    and scientific genius aspects
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Marie Curie
+  event_type: birth
+  year: 1867
+  month: 11
+  day: 7
+  hour: 12
+  minute: 0
+  latitude: 52.2297
+  longitude: 21.0122
+  location_name: Warsaw, Poland
+  timezone: Europe/Warsaw
+  category: scientist
+  subcategories:
+  - physicist
+  - chemist
+  notable_for: Pioneer in radioactivity research, first woman to win Nobel Prize
+  astrological_notes: Scorpio Sun - tests scientific breakthrough and transformational
+    themes
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Nikola Tesla
+  event_type: birth
+  year: 1856
+  month: 7
+  day: 10
+  hour: 0
+  minute: 0
+  latitude: 44.3514
+  longitude: 15.3109
+  location_name: Smiljan, Croatia
+  timezone: Europe/Zagreb
+  category: scientist
+  subcategories:
+  - inventor
+  - electrical_engineer
+  notable_for: Pioneer of alternating current and wireless technology
+  astrological_notes: Cancer Sun with midnight birth - tests electrical genius and
+    innovative aspects
+  data_quality: C
+  sources:
+  - Stellium Test Suite
+  verified: false
+- name: Isaac Newton
+  event_type: birth
+  year: 1643
+  month: 1
+  day: 4
+  hour: 1
+  minute: 38
+  latitude: 52.8055
+  longitude: -0.6378
+  location_name: Woolsthorpe Manor, Lincolnshire, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Mathematician
+  - Physicist
+  - Astronomer
+  - Astrologer
+  notable_for: British astronomer, physicist, mathematician and astrologer who showed
+    how the universe is held together through laws of motion and gravity. Often described
+    as one of the greatest names in the history of human thought. Author of "Principia
+    Mathematica" (1687).
+  astrological_notes: Sun 13 Capricorn, Moon 2 Cancer, Asc Libra
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Newton,_Isaac'
+  - 'Michael White, Isaac Newton: The Last Sorcerer (1997)'
+  verified: false
+- name: Galileo Galilei
+  event_type: birth
+  year: 1564
+  month: 2
+  day: 15
+  hour: 16
+  minute: 0
+  latitude: 43.7167
+  longitude: 10.4
+  location_name: Pisa, Italy
+  timezone: Europe/Rome
+  category: scientist
+  subcategories:
+  - Astronomer
+  - Physicist
+  - Mathematician
+  notable_for: Italian astronomer, physicist and mathematician. Known as the "father
+    of modern observational astronomy." Improved the telescope and made key astronomical
+    observations supporting heliocentrism.
+  astrological_notes: Sun 6 Pisces (Julian)
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Galileo,_Galilei'
+  - N.M. Swerdlow, Journal for the History of Astronomy
+  verified: false
+- name: Nicolaus Copernicus
+  event_type: birth
+  year: 1473
+  month: 2
+  day: 19
+  hour: 17
+  minute: 0
+  latitude: 53.0333
+  longitude: 18.5833
+  location_name: Torun, Poland
+  timezone: Europe/Warsaw
+  category: scientist
+  subcategories:
+  - Astronomer
+  - Mathematician
+  - Author
+  notable_for: Polish astronomer and author, considered the founder of modern astronomy.
+    He established the theory that the earth rotates daily on its axis and that planets
+    revolve in orbits around the sun. Author of "De revolutionibus orbium coelestium."
+  astrological_notes: Sun 10 Pisces, Moon 5 Sagittarius, Asc Virgo
+  data_quality: AA
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Copernicus,_Nicolaus'
+  verified: true
+- name: Johannes Kepler
+  event_type: birth
+  year: 1571
+  month: 12
+  day: 27
+  hour: 14
+  minute: 30
+  latitude: 48.75
+  longitude: 8.8667
+  location_name: Weil der Stadt, Germany
+  timezone: Europe/Berlin
+  category: scientist
+  subcategories:
+  - Mathematician
+  - Astronomer
+  - Astrologer
+  notable_for: German author, mathematician, scientist, astronomer, court astrologer
+    and teacher. Known as "the father of modern astronomy," he discovered the three
+    laws of planetary motion which paved the way for Newton's theory of gravity.
+  astrological_notes: Sun 15 Capricorn, Moon 4 Gemini, Asc Gemini
+  data_quality: B
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Kepler,_Johannes'
+  verified: false
+- name: Thomas Edison
+  event_type: birth
+  year: 1847
+  month: 2
+  day: 11
+  hour: 3
+  minute: 0
+  latitude: 41.2978
+  longitude: -82.6208
+  location_name: Milan, Ohio, USA
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - Inventor
+  - Businessman
+  - Engineer
+  notable_for: American inventor and businessman who developed many devices including
+    the phonograph, motion picture camera, and practical electric light bulb. Held
+    over 1,000 patents.
+  astrological_notes: Sun 22 Aquarius
+  data_quality: C
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Edison,_Thomas'
+  - Alfred Powell Morgan, The Pageant of Electricity (1939)
+  verified: false
+- name: Carl Sagan
+  event_type: birth
+  year: 1934
+  month: 11
+  day: 9
+  hour: 17
+  minute: 5
+  latitude: 40.6501
+  longitude: -73.9496
+  location_name: Brooklyn, New York, USA
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+    - Astronomer
+    - Astrophysicist
+    - Author
+  notable_for: >-
+    American astronomer, astrophysicist, exobiologist, educator and popular celebrity.
+    Host of the TV series "Cosmos" which inspired a generation. Author of numerous
+    books on science and space exploration.
+  astrological_notes: Sun 16 Scorpio, Moon 21 Sagittarius
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Sagan,_Carl"
+  verified: true
+
+- name: Sigmund Freud
+  event_type: birth
+  year: 1856
+  month: 5
+  day: 6
+  hour: 18
+  minute: 30
+  latitude: 49.65
+  longitude: 18.1667
+  location_name: Freiberg, Moravia (now Czech Republic)
+  timezone: Europe/Prague
+  category: scientist
+  subcategories:
+    - Psychologist
+    - Neurologist
+    - Author
+  notable_for: >-
+    Austrian neurologist and founder of psychoanalysis. Developed theories of the
+    unconscious mind, dream interpretation, and the structure of personality (id, ego,
+    superego). His work profoundly influenced 20th century thought.
+  astrological_notes: Sun 15 Taurus, Moon in Gemini
+  data_quality: AA
+  sources:
+    - "AstroDatabank: https://www.astro.com/astro-databank/Freud,_Sigmund"
+    - "Ernest Jones, The Life and Works of Sigmund Freud (1953)"
+  verified: true
+- name: Charles Darwin
+  event_type: birth
+  year: 1809
+  month: 2
+  day: 12
+  hour: 3
+  minute: 0
+  latitude: 52.72
+  longitude: -2.75
+  location_name: Shrewsbury, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Naturalist
+  - Biologist
+  notable_for: English naturalist and author of "Origin of the Species" 1859, causing a storm of debate. His theories of evolution through natural selection instigated a revolution in biological science.
+  astrological_notes: 23°04' 21°28 Asc. 07°19'
+  data_quality: DD
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Darwin,_Charles'
+  verified: false
+- name: Stephen Hawking
+  event_type: birth
+  year: 1942
+  month: 1
+  day: 8
+  hour: 12
+  minute: 0
+  latitude: 51.75
+  longitude: -1.0833
+  location_name: Oxford, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - Physicist
+  notable_for: British theoretical physicist who was a Professor at the University of Oxford. He studied at Oxford, then spent his career in Cambridge, holding a chair there from 1977. His work was concerned with cosmology in a variety of aspects, dealing with black holes, singularities, and the "big bang" theory of the origin of the universe.
+  astrological_notes: 17°33'
+  data_quality: X
+  sources:
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Hawking,_Stephen'
+  verified: false
+- name: Ada Lovelace
+  event_type: birth
+  year: 1815
+  month: 12
+  day: 10
+  hour: 13
+  minute: 0
+  latitude: 51.5
+  longitude: -0.1667
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - mathematician
+  - computer pioneer
+  notable_for: British noted family, the Countess of Lovelace. Daughter and only legitimate child of the sixth Lord Byron, whose marriage to her mom lasted a year. Mom was obsessive and dominating, giving her a good education but with massive social repression. Showed early gift in math from age five, formed ambition to work as a mathematician. Byron was an accomplished harpist. With few friends, married an older man at 19 and had three kids before 24. Met Cambridge professor Charles Babbage on 5 June 1833 at a party. Became friends, lost interest in household and social life, offered to work as his assistant in 1842. Did brilliant technical annotations to his calculator. Recognized as having genius, often called "the first programmer." In 1841, greatly upset by expose of family scandal alleging her dad had incestuous relationship with her half-sister. Byron had health problems and mood swings from elation to fatalism, treated with opium and brandy. Had an impulsive love affair. Found to have uterine cancer, Byron died just before her 37th birthday on 28 November 1852.
+  astrological_notes: Sun 18° Sagittarius, Moon in Aries, Ascendant 28° Pisces approx
+  data_quality: B
+  sources:
+  - 'https://www.astro.com/astro-databank/Lovelace,_Ada'
+  verified: false
+- name: Alan Turing
+  event_type: birth
+  year: 1912
+  month: 6
+  day: 23
+  hour: 2
+  minute: 15
+  latitude: 51.5
+  longitude: -0.1667
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - mathematician
+  - computer scientist
+  - cryptanalyst
+  notable_for: British mathematician, logician, scientist and the technical genius behind Britain’s successful efforts to break German codes in World War II; made inestimable contributions to cybernetics; his "Computable Numbers," 1937, is considered one of the outstanding scientific papers of the 20th century, a blueprint for what would become the electronic digital computer; his "Universal Turing Machine" was an ancestor for the entire information age; second-born of two sons to a member of the British civil service in India; raised in foster households in England, separated from parents; enrolled at Sherbourne School at 13, showed gift for mathematics; fell in love with another boy who died of tuberculosis, driving him into atheism and materialistic explanations; failed twice to win fellowship at Trinity College, Cambridge, but received one from King’s College; served in Government Code and Cypher School during WWII, invented primitive machine to decipher Nazi Enigma codes; post-war, created Turing machine at British National Physical Laboratory but left due to bureaucracy, joined University of Manchester; convicted of gross indecency in 1952 for homosexual relations, given probation and estrogen injections; committed suicide by eating apple laced with cyanide on 7 June 1954; pardoned by Queen Elizabeth II on 24 December 2013.
+  astrological_notes: Sun 01° Cancer, Moon 24° Scorpio, Ascendant 18° Gemini
+  data_quality: A
+  sources:
+  - 'https://www.astro.com/astro-databank/Turing,_Alan'
+  verified: false
+- name: Rosalind Franklin
+  event_type: birth
+  year: 1920
+  month: 7
+  day: 25
+  latitude: 51.5094
+  longitude: -0.2061
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - crystallographer
+  - DNA structure
+  notable_for: English chemist and X-ray crystallographer who made contributions to the understanding of the molecular structures of DNA, RNA, viruses, coal, and graphite.
+  astrological_notes: Sun 2 Leo
+  data_quality: X
+  sources:
+  - https://www.wikidata.org/wiki/Q7474
+  verified: false
+- name: Grace Hopper
+  event_type: birth
+  year: 1906
+  month: 12
+  day: 9
+  latitude: 40.7128
+  longitude: -74.0060
+  location_name: New York, New York
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - computer scientist
+  - COBOL creator
+  notable_for: American computer scientist and United States Navy rear admiral. A pioneer in the field, she was one of the first programmers of the Harvard Mark I computer, and invented the first compiler for a computer programming language.
+  astrological_notes: Sun 17 Sagittarius
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Hooper,_Grace
+  verified: false
+- name: Richard Feynman
+  event_type: birth
+  year: 1918
+  month: 5
+  day: 11
+  hour: 14
+  minute: 49
+  latitude: 40.7128
+  longitude: -74.0060
+  location_name: New York, New York
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - physicist
+  - Nobel laureate
+  notable_for: American theoretical physicist known for his work in the path integral formulation of quantum mechanics, the theory of quantum electrodynamics, and the physics of the superfluidity of supercooled liquid helium.
+  astrological_notes: Sun 19 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Feynman,_Richard
+  verified: true
+- name: Rachel Carson
+  event_type: birth
+  year: 1907
+  month: 5
+  day: 27
+  hour: 2
+  minute: 0
+  latitude: 40.5409
+  longitude: -79.7839
+  location_name: Springdale, Pennsylvania
+  timezone: America/New_York
+  category: scientist
+  subcategories:
+  - marine biologist
+  - Silent Spring
+  notable_for: American marine biologist and conservationist whose book Silent Spring and other writings are credited with advancing the global environmental movement.
+  astrological_notes: Sun 4 Gemini
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Carson,_Rachel
+  verified: true
+- name: Alexander Fleming
+  event_type: birth
+  year: 1881
+  month: 8
+  day: 6
+  hour: 2
+  minute: 0
+  latitude: 55.4667
+  longitude: -4.8667
+  location_name: Darvel, Scotland
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - penicillin discoverer
+  notable_for: Scottish bacteriologist and Nobel laureate. His best-known discoveries are the enzyme lysozyme in 1923 and the antibiotic substance benzylpenicillin (Penicillin G) from the mould Penicillium notatum in 1928.
+  astrological_notes: Sun 13 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Fleming,_Alexander
+  verified: true
+- name: Tim Berners-Lee
+  event_type: birth
+  year: 1955
+  month: 6
+  day: 8
+  latitude: 51.5074
+  longitude: -0.1278
+  location_name: London, England
+  timezone: Europe/London
+  category: scientist
+  subcategories:
+  - invented the World Wide Web
+  notable_for: English computer scientist, best known as the inventor of the World Wide Web.
+  astrological_notes: Sun 17 Gemini
+  data_quality: X
+  sources:
+  - https://www.astro.com/astro-databank/Berners-Lee,_Tim
+  verified: false
