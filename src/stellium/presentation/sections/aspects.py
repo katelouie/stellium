@@ -54,10 +54,33 @@ class AspectPatternSection:
     def section_name(self) -> str:
         return "Aspect Patterns"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate aspect pattern table.
+
+        For MultiChart/Comparison, shows patterns for each chart grouped by label.
         """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        # Handle MultiChart/Comparison - show each chart's patterns
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+
+            for c, label in zip(charts, labels, strict=False):
+                single_data = self._generate_single_chart_data(c)
+                sections.append((f"{label} Patterns", single_data))
+
+            return {"type": "compound", "sections": sections}
+
+        # Single chart: standard processing
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate aspect pattern table for a single chart."""
         # Check if aspect pattern data exists
         if "aspect_patterns" not in chart.metadata:
             # Graceful handling: return helpful message
@@ -218,8 +241,52 @@ class AspectSection:
             return "Harmonic Aspects"
         return "Aspects"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
-        """Generate aspects table with optional aspectarian SVG."""
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
+        """Generate aspects table with optional aspectarian SVG.
+
+        For MultiChart/Comparison, shows each chart's internal aspects
+        grouped by chart label.
+        """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        # Handle MultiChart/Comparison - show each chart's aspects
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+
+            for c, label in zip(charts, labels, strict=False):
+                # Generate single chart data for each
+                single_data = self._generate_single_chart_data(c)
+
+                # Add the aspectarian with chart label
+                if self.include_aspectarian:
+                    from stellium.visualization.extended_canvas import (
+                        generate_aspectarian_svg,
+                    )
+
+                    svg_string = generate_aspectarian_svg(
+                        c,
+                        output_path=None,
+                        cell_size=self.aspectarian_cell_size,
+                        detailed=self.aspectarian_detailed,
+                        theme=self.aspectarian_theme,
+                    )
+                    sections.append(
+                        (f"{label} Aspectarian", {"type": "svg", "content": svg_string})
+                    )
+
+                sections.append((f"{label} Aspects", single_data))
+
+            return {"type": "compound", "sections": sections}
+
+        # Single chart: standard processing with optional aspectarian
+        return self._generate_single_chart_with_aspectarian(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate aspects table for a single chart."""
         # Filter aspects based on mode
         aspects = chart.aspects
 
@@ -283,7 +350,17 @@ class AspectSection:
 
             rows.append(row)
 
-        table_data = {"type": "table", "headers": headers, "rows": rows}
+        return {"type": "table", "headers": headers, "rows": rows}
+
+    def _generate_single_chart_with_aspectarian(
+        self, chart: CalculatedChart
+    ) -> dict[str, Any]:
+        """Generate aspects table with aspectarian for a single chart.
+
+        This is used when processing a single CalculatedChart directly.
+        For multi-charts, the aspectarian is handled at the generate_data level.
+        """
+        table_data = self._generate_single_chart_data(chart)
 
         # Include aspectarian SVG if requested
         if self.include_aspectarian:

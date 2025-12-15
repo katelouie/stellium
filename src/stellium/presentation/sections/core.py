@@ -274,12 +274,18 @@ class PlanetPositionSection:
     def section_name(self) -> str:
         return "Planet Positions"
 
-    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate planet positions table.
 
-        For Comparison objects, generates side-by-side tables for each chart.
+        For Comparison/MultiChart objects, generates side-by-side tables for each chart.
         """
+        # Handle MultiChart objects with side-by-side tables
+        if isinstance(chart, MultiChart):
+            return self._generate_multichart_data(chart)
+
         # Handle Comparison objects with side-by-side tables
         if isinstance(chart, Comparison):
             return self._generate_comparison_data(chart)
@@ -397,6 +403,30 @@ class PlanetPositionSection:
             ],
         }
 
+    def _generate_multichart_data(self, multichart: MultiChart) -> dict[str, Any]:
+        """Generate side-by-side position tables for a MultiChart."""
+        from stellium.core.chart_utils import get_chart_labels
+
+        labels = get_chart_labels(multichart)
+        tables = []
+
+        for i, (chart, label) in enumerate(
+            zip(multichart.charts, labels, strict=False)
+        ):
+            chart_data = self._generate_single_chart_data(chart, title=label)
+            tables.append(
+                {
+                    "title": chart_data.get("title", f"Chart {i + 1}"),
+                    "headers": chart_data["headers"],
+                    "rows": chart_data["rows"],
+                }
+            )
+
+        return {
+            "type": "side_by_side_tables",
+            "tables": tables,
+        }
+
 
 class HouseCuspsSection:
     """
@@ -432,12 +462,18 @@ class HouseCuspsSection:
     def section_name(self) -> str:
         return "House Cusps"
 
-    def generate_data(self, chart: CalculatedChart | Comparison) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate house cusps table.
 
-        For Comparison objects, generates side-by-side tables for each chart.
+        For Comparison/MultiChart objects, generates side-by-side tables for each chart.
         """
+        # Handle MultiChart objects with side-by-side tables
+        if isinstance(chart, MultiChart):
+            return self._generate_multichart_data(chart)
+
         # Handle Comparison objects with side-by-side tables
         if isinstance(chart, Comparison):
             return self._generate_comparison_data(chart)
@@ -514,4 +550,28 @@ class HouseCuspsSection:
                     "rows": chart2_data["rows"],
                 },
             ],
+        }
+
+    def _generate_multichart_data(self, multichart: MultiChart) -> dict[str, Any]:
+        """Generate side-by-side house cusps tables for a MultiChart."""
+        from stellium.core.chart_utils import get_chart_labels
+
+        labels = get_chart_labels(multichart)
+        tables = []
+
+        for i, (chart, label) in enumerate(
+            zip(multichart.charts, labels, strict=False)
+        ):
+            chart_data = self._generate_single_chart_data(chart, title=label)
+            tables.append(
+                {
+                    "title": chart_data.get("title", f"Chart {i + 1}"),
+                    "headers": chart_data["headers"],
+                    "rows": chart_data["rows"],
+                }
+            )
+
+        return {
+            "type": "side_by_side_tables",
+            "tables": tables,
         }

@@ -12,7 +12,9 @@ Includes:
 
 from typing import Any
 
+from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
+from stellium.core.multichart import MultiChart
 
 from ._utils import (
     get_aspect_display,
@@ -20,6 +22,27 @@ from ._utils import (
     get_object_sort_key,
     get_sign_glyph,
 )
+
+
+def _wrap_for_multichart(generate_single_func, section_label: str):
+    """Helper to wrap single-chart generator for multi-chart support."""
+
+    def wrapper(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+            for c, label in zip(charts, labels, strict=False):
+                single_data = generate_single_func(self, c)
+                sections.append((f"{label} {section_label}", single_data))
+            return {"type": "compound", "sections": sections}
+        return generate_single_func(self, chart)
+
+    return wrapper
 
 
 class CacheInfoSection:
@@ -100,13 +123,31 @@ class DeclinationSection:
     def section_name(self) -> str:
         return "Declinations"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate declination table data.
 
+        For MultiChart/Comparison, shows declinations for each chart grouped by label.
         Shows declination values for all planets with equatorial coordinates.
         Highlights out-of-bounds planets (beyond Sun's max declination).
         """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+            for c, label in zip(charts, labels, strict=False):
+                single_data = self._generate_single_chart_data(c)
+                sections.append((f"{label} Declinations", single_data))
+            return {"type": "compound", "sections": sections}
+
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate declination table for a single chart."""
         headers = ["Planet", "Declination", "Direction", "Status"]
         rows = []
 

@@ -8,7 +8,9 @@ Includes:
 
 from typing import Any
 
+from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, MidpointPosition, ObjectType
+from stellium.core.multichart import MultiChart
 
 from ._utils import get_aspect_display, get_object_display, get_object_sort_key
 
@@ -45,8 +47,32 @@ class MidpointSection:
             return "Core Midpoints (Sun/Moon/ASC/MC)"
         return "Midpoints"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
-        """Generate midpoints table."""
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
+        """Generate midpoints table.
+
+        For MultiChart/Comparison, shows midpoints for each chart grouped by label.
+        """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        # Handle MultiChart/Comparison - show each chart's midpoints
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+
+            for c, label in zip(charts, labels, strict=False):
+                single_data = self._generate_single_chart_data(c)
+                sections.append((f"{label} Midpoints", single_data))
+
+            return {"type": "compound", "sections": sections}
+
+        # Single chart: standard processing
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate midpoints table for a single chart."""
         # Get midpoints
         midpoints = [p for p in chart.positions if p.object_type == ObjectType.MIDPOINT]
         # Filter to core midpoints if requested
@@ -213,8 +239,32 @@ class MidpointAspectsSection:
             return "Hard Aspects to Midpoints"
         return "Aspects to Midpoints"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
-        """Generate midpoint aspects table."""
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
+        """Generate midpoint aspects table.
+
+        For MultiChart/Comparison, shows midpoint aspects for each chart grouped by label.
+        """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        # Handle MultiChart/Comparison - show each chart's midpoint aspects
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+
+            for c, label in zip(charts, labels, strict=False):
+                single_data = self._generate_single_chart_data(c)
+                sections.append((f"{label} Midpoint Aspects", single_data))
+
+            return {"type": "compound", "sections": sections}
+
+        # Single chart: standard processing
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate midpoint aspects table for a single chart."""
         # Get midpoints
         midpoints = [p for p in chart.positions if p.object_type == ObjectType.MIDPOINT]
 

@@ -8,7 +8,9 @@ Includes:
 
 from typing import Any
 
+from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
+from stellium.core.multichart import MultiChart
 
 from ._utils import get_object_display, get_object_sort_key
 
@@ -48,10 +50,33 @@ class DignitySection:
     def section_name(self) -> str:
         return "Essential Dignities"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate dignity table.
+
+        For MultiChart/Comparison, shows dignities for each chart grouped by label.
         """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        # Handle MultiChart/Comparison - show each chart's dignities
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            sections = []
+
+            for c, label in zip(charts, labels, strict=False):
+                single_data = self._generate_single_chart_data(c)
+                sections.append((f"{label} Dignities", single_data))
+
+            return {"type": "compound", "sections": sections}
+
+        # Single chart: standard processing
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate dignity table for a single chart."""
         # Check if dignity data exists
         if "dignities" not in chart.metadata:
             # Graceful handling: return helpful message
@@ -204,13 +229,40 @@ class DispositorSection:
             return "House Dispositors"
         return "Dispositors"
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
         """
         Generate dispositor analysis.
 
+        For MultiChart/Comparison, shows dispositors for each chart grouped by label.
         Returns a compound section with subsections for planetary and/or house
         dispositors, each showing final dispositor and mutual receptions.
         """
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        # Handle MultiChart/Comparison - show each chart's dispositors
+        charts = get_all_charts(chart)
+        if len(charts) > 1:
+            labels = get_chart_labels(chart)
+            all_sections = []
+
+            for c, label in zip(charts, labels, strict=False):
+                single_data = self._generate_single_chart_data(c)
+                # Unwrap compound sections and prefix with chart label
+                if single_data.get("type") == "compound":
+                    for title, data in single_data["sections"]:
+                        all_sections.append((f"{label} - {title}", data))
+                else:
+                    all_sections.append((f"{label} Dispositors", single_data))
+
+            return {"type": "compound", "sections": all_sections}
+
+        # Single chart: standard processing
+        return self._generate_single_chart_data(chart)
+
+    def _generate_single_chart_data(self, chart: CalculatedChart) -> dict[str, Any]:
+        """Generate dispositor analysis for a single chart."""
         from stellium.engines.dispositors import DispositorEngine
 
         engine = DispositorEngine(

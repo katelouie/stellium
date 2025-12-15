@@ -21,6 +21,11 @@ from stellium.core.models import (
 
 if TYPE_CHECKING:
     from stellium.core.config import CalculationConfig
+    from stellium.visualization.builder import ChartDrawBuilder
+
+
+# Type alias for any chart-like object
+ChartType = "CalculatedChart | Comparison | MultiChart"
 
 
 class EphemerisEngine(Protocol):
@@ -238,12 +243,89 @@ class ChartComponent(Protocol):
         ...
 
 
+class ChartLike(Protocol):
+    """
+    Protocol for chart-like objects (single or multi-chart).
+
+    This protocol defines the common interface that all chart types should support,
+    enabling code to work with CalculatedChart, MultiChart, or Comparison objects
+    interchangeably where appropriate.
+
+    Note: The `chart` parameter in methods like `get_object()` defaults to 0,
+    which works for single charts (ignored) and multi-charts (returns from first chart).
+    """
+
+    @property
+    def datetime(self) -> ChartDateTime:
+        """The primary datetime of the chart (or first chart for multi-charts)."""
+        ...
+
+    @property
+    def location(self) -> ChartLocation:
+        """The primary location of the chart (or first chart for multi-charts)."""
+        ...
+
+    @property
+    def metadata(self) -> dict[str, Any]:
+        """Chart metadata dictionary."""
+        ...
+
+    def get_object(self, name: str, chart: int = 0) -> CelestialPosition | None:
+        """
+        Get a celestial object by name.
+
+        Args:
+            name: Name of the object (e.g., "Sun", "Moon")
+            chart: For multi-charts, which chart to query (0-indexed). Ignored for single charts.
+
+        Returns:
+            The CelestialPosition if found, None otherwise
+        """
+        ...
+
+    def get_planets(self, chart: int = 0) -> list[CelestialPosition]:
+        """
+        Get all planetary positions.
+
+        Args:
+            chart: For multi-charts, which chart to query (0-indexed). Ignored for single charts.
+
+        Returns:
+            List of planet CelestialPosition objects
+        """
+        ...
+
+    def draw(self, filename: str = "chart.svg") -> "ChartDrawBuilder":
+        """
+        Create a visualization builder for this chart.
+
+        Args:
+            filename: Default filename for saving
+
+        Returns:
+            ChartDrawBuilder configured for this chart
+        """
+        ...
+
+
 class ReportSection(Protocol):
     """
     Protocol for report sections.
 
-    Each section knows how to extract data from a CalculatedChart
+    Each section knows how to extract data from a chart (single or multi-chart)
     and format it into a standardized structure that renderers can consume.
+
+    **Multi-Chart Support:**
+    Sections may receive any of:
+    - CalculatedChart: Single natal/event chart
+    - Comparison: Two-chart comparison (deprecated, use MultiChart)
+    - MultiChart: 2-4 charts for synastry, transits, progressions, etc.
+
+    Implementations should use `stellium.core.chart_utils` helpers to handle
+    different chart types consistently:
+    - `get_all_charts(chart)` - Get list of all charts
+    - `get_chart_labels(chart)` - Get labels for each chart
+    - `chart_count(chart)` - Get number of charts
 
     Why a protocol?
     - Extensibility: Users can create custom sections
@@ -260,22 +342,23 @@ class ReportSection(Protocol):
         """
         ...
 
-    def generate_data(self, chart: CalculatedChart) -> dict[str, Any]:
+    def generate_data(self, chart: ChartType) -> dict[str, Any]:
         """
         Extract and structure data from the chart.
 
         Returns a standardized dictionary format that renderers understand::
 
             {
-                "type": "table" | "text" | "key_value",
+                "type": "table" | "text" | "key_value" | "side_by_side_tables" | "grouped_tables",
                 "headers": [...],      # For tables
                 "rows": [...],         # For tables
                 "text": "...",         # For text blocks
                 "data": {...},         # For key-value pairs
+                "tables": [...],       # For side_by_side_tables or grouped_tables
             }
 
         Args:
-            chart: The calculated chart to extract data from
+            chart: The chart to extract data from (may be single or multi-chart)
 
         Returns:
             Structured data dictionary

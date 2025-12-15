@@ -954,11 +954,11 @@ class HouseCuspLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render house cusps and house numbers.
 
-        Handles CalculatedChart, Comparison, and MultiWheel objects.
+        Handles CalculatedChart, Comparison, MultiWheel, and MultiChart objects.
         Uses wheel_index to determine which chart ring to render and which radii to use.
         """
+        from stellium.core.chart_utils import is_comparison, is_multichart
         from stellium.core.multiwheel import MultiWheel
-        from stellium.visualization.extended_canvas import _is_comparison
 
         style = renderer.style["houses"].copy()
         style.update(self.style)
@@ -967,13 +967,13 @@ class HouseCuspLayer:
         if self._chart is not None:
             # Explicit chart provided (multiwheel mode)
             actual_chart = self._chart
-        elif isinstance(chart, MultiWheel):
-            # MultiWheel: use chart at wheel_index
+        elif isinstance(chart, MultiWheel) or is_multichart(chart):
+            # MultiWheel/MultiChart: use chart at wheel_index
             if self.wheel_index < len(chart.charts):
                 actual_chart = chart.charts[self.wheel_index]
             else:
                 return  # wheel_index out of range
-        elif _is_comparison(chart):
+        elif is_comparison(chart):
             # Legacy Comparison: wheel_index 0 = chart1 (inner), 1 = chart2 (outer)
             actual_chart = chart.chart1 if self.wheel_index == 0 else chart.chart2
         else:
@@ -1123,18 +1123,20 @@ class OuterHouseCuspLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render outer house cusps for chart2 (biwheel only).
 
-        Handles both CalculatedChart and Comparison objects.
-        For Comparison, uses chart2 (outer wheel).
+        Handles both CalculatedChart and Comparison/MultiChart objects.
+        For Comparison/MultiChart, uses chart2 (outer wheel).
         For single charts, this layer doesn't apply.
         """
-        from stellium.visualization.extended_canvas import _is_comparison
+        from stellium.core.chart_utils import is_comparison, is_multichart
 
         style = renderer.style["houses"].copy()
         style.update(self.style)
 
-        # This layer is ONLY for comparisons (outer wheel = chart2)
-        if _is_comparison(chart):
+        # This layer is ONLY for comparisons/multicharts (outer wheel = chart2)
+        if is_comparison(chart):
             actual_chart = chart.chart2
+        elif is_multichart(chart) and chart.chart_count >= 2:
+            actual_chart = chart.charts[1]  # outer wheel
         else:
             # For single charts, this layer doesn't make sense - skip it
             return
@@ -1292,11 +1294,11 @@ class AngleLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render chart angles.
 
-        Handles CalculatedChart, Comparison, and MultiWheel objects.
+        Handles CalculatedChart, Comparison, MultiWheel, and MultiChart objects.
         Uses wheel_index to determine which chart's angles to render.
         """
+        from stellium.core.chart_utils import is_comparison, is_multichart
         from stellium.core.multiwheel import MultiWheel
-        from stellium.visualization.extended_canvas import _is_comparison
 
         style = renderer.style["angles"].copy()
         style.update(self.style)
@@ -1304,12 +1306,12 @@ class AngleLayer:
         # Determine the actual chart to render
         if self._chart is not None:
             actual_chart = self._chart
-        elif isinstance(chart, MultiWheel):
+        elif isinstance(chart, MultiWheel) or is_multichart(chart):
             if self.wheel_index < len(chart.charts):
                 actual_chart = chart.charts[self.wheel_index]
             else:
                 return
-        elif _is_comparison(chart):
+        elif is_comparison(chart):
             actual_chart = chart.chart1 if self.wheel_index == 0 else chart.chart2
         else:
             actual_chart = chart
@@ -1432,19 +1434,21 @@ class OuterAngleLayer:
     def render(self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart) -> None:
         """Render outer wheel angles.
 
-        For Comparison, uses chart2 (outer wheel) angles.
+        For Comparison/MultiChart, uses chart2 (outer wheel) angles.
         Uses outer_wheel_angles styling from theme for visual distinction.
         """
-        from stellium.visualization.extended_canvas import _is_comparison
+        from stellium.core.chart_utils import is_comparison, is_multichart
 
         # Get outer wheel angle styling (lighter/thinner than inner)
         base_style = renderer.style.get("outer_wheel_angles", renderer.style["angles"])
         style = base_style.copy()
         style.update(self.style)
 
-        # Handle Comparison - use chart2 angles (outer wheel)
-        if _is_comparison(chart):
+        # Handle Comparison/MultiChart - use chart2 angles (outer wheel)
+        if is_comparison(chart):
             actual_chart = chart.chart2
+        elif is_multichart(chart) and chart.chart_count >= 2:
+            actual_chart = chart.charts[1]  # outer wheel
         else:
             # Shouldn't be called for single charts, but handle gracefully
             return

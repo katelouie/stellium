@@ -9,28 +9,16 @@ from typing import Any
 
 import svgwrite
 
+from stellium.core.chart_utils import is_comparison, is_multichart
 from stellium.core.models import Aspect, CalculatedChart, ObjectType
 from stellium.core.registry import CELESTIAL_REGISTRY, get_aspect_info
 
 from .core import ChartRenderer, get_glyph
 
-
-def _is_comparison(obj):
-    """Check if object is a Comparison (avoid circular import)."""
-    return (
-        hasattr(obj, "comparison_type")
-        and hasattr(obj, "chart1")
-        and hasattr(obj, "chart2")
-    )
-
-
-def _is_multichart(obj):
-    """Check if object is a MultiChart (avoid circular import)."""
-    return (
-        hasattr(obj, "charts")
-        and hasattr(obj, "chart_count")
-        and hasattr(obj, "get_cross_aspects")
-    )
+# Legacy aliases for backward compatibility within this module
+# These are used by layers.py which imports them from here
+_is_comparison = is_comparison
+_is_multichart = is_multichart
 
 
 def _filter_objects_for_tables(positions, object_types=None):
