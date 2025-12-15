@@ -218,7 +218,7 @@ def generate_relationships_code(
 
     # Add appropriate imports based on chart type
     if state.chart_type == "synastry":
-        lines.append("from stellium.core.comparison import ComparisonBuilder")
+        lines.append("from stellium.core.multichart import MultiChartBuilder")
     else:
         lines.append("from stellium.core.synthesis import SynthesisBuilder")
 
@@ -261,14 +261,14 @@ def generate_relationships_code(
 
     # Build relationship chart based on type
     if state.chart_type == "synastry":
-        lines.append("# Create synastry comparison (bi-wheel)")
-        lines.append("comparison = (ComparisonBuilder.synastry(chart1, chart2,")
-        lines.append(f'    chart1_label="{name1}",')
-        lines.append(f'    chart2_label="{name2}")')
+        lines.append("# Create synastry bi-wheel")
+        lines.append("multichart = (MultiChartBuilder.synastry(chart1, chart2,")
+        lines.append(f'    label1="{name1}",')
+        lines.append(f'    label2="{name2}")')
         lines.append("    .calculate())")
         lines.append("")
         lines.append("# Generate bi-wheel chart")
-        lines.append('comparison.draw("synastry_chart.svg")')
+        lines.append('multichart.draw("synastry_chart.svg")')
     elif state.chart_type == "composite":
         lines.append("# Create composite chart (midpoint method)")
         lines.append(
@@ -302,7 +302,7 @@ def generate_relationships_code(
 
     # Generate report
     chart_var = {
-        "synastry": "comparison",
+        "synastry": "multichart",
         "composite": "composite",
         "davison": "davison",
     }[state.chart_type]
@@ -349,7 +349,7 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
 
     # Add imports based on chart type
     if state.chart_type in ("transits", "progressions"):
-        lines.append("from stellium.core.comparison import ComparisonBuilder")
+        lines.append("from stellium.core.multichart import MultiChartBuilder")
     if state.chart_type == "progressions":
         lines.append(
             "from stellium.utils.progressions import calculate_progressed_datetime"
@@ -393,11 +393,11 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
         lines.append("    .calculate())")
         lines.append("")
         lines.append("# Create bi-wheel with natal inside, transits outside")
-        lines.append("comparison = (ComparisonBuilder.synastry(natal, transits,")
-        lines.append(f'    chart1_label="{natal_name}",')
-        lines.append('    chart2_label="Transits")')
+        lines.append("multichart = (MultiChartBuilder.transit(natal, transits,")
+        lines.append(f'    natal_label="{natal_name}",')
+        lines.append('    transit_label="Transits")')
         lines.append("    .calculate())")
-        chart_var = "comparison"
+        chart_var = "multichart"
 
     elif state.chart_type == "progressions":
         lines.append(f"# Calculate progressed positions for {state.timing_date}")
@@ -417,11 +417,11 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
         lines.append("    .calculate())")
         lines.append("")
         lines.append("# Create bi-wheel with natal inside, progressed outside")
-        lines.append("comparison = (ComparisonBuilder.synastry(natal, progressed,")
-        lines.append(f'    chart1_label="{natal_name}",')
-        lines.append('    chart2_label="Progressed")')
+        lines.append("multichart = (MultiChartBuilder.progression(natal, progressed,")
+        lines.append(f'    natal_label="{natal_name}",')
+        lines.append('    progressed_label="Progressed")')
         lines.append("    .calculate())")
-        chart_var = "comparison"
+        chart_var = "multichart"
 
     elif state.chart_type == "solar_return":
         lines.append(f"# Calculate Solar Return for {state.timing_date}")

@@ -24,7 +24,7 @@ from state import ChartState, PDFReportState, RelationshipsState
 
 # Stellium imports
 from stellium import ChartBuilder
-from stellium.core.comparison import ComparisonBuilder
+from stellium.core.multichart import MultiChartBuilder
 from stellium.core.synthesis import SynthesisBuilder
 from stellium.engines.houses import (
     AlcabitiusHouses,
@@ -323,14 +323,14 @@ def create_relationships_page():
 
             # Build comparison/synthesis based on chart type
             if state.chart_type == "synastry":
-                comparison = ComparisonBuilder.synastry(
+                multichart = MultiChartBuilder.synastry(
                     chart1,
                     chart2,
-                    chart1_label=p1.name or "Person 1",
-                    chart2_label=p2.name or "Person 2",
+                    label1=p1.name or "Person 1",
+                    label2=p2.name or "Person 2",
                 ).calculate()
-                calculated_chart["ref"] = comparison
-                drawer = comparison.draw()
+                calculated_chart["ref"] = multichart
+                drawer = multichart.draw()
 
             elif state.chart_type == "composite":
                 synthesis = SynthesisBuilder.composite(chart1, chart2).calculate()

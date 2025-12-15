@@ -26,7 +26,7 @@ from state import ChartState, PDFReportState, TimingState
 
 # Stellium imports
 from stellium import ChartBuilder
-from stellium.core.comparison import ComparisonBuilder
+from stellium.core.multichart import MultiChartBuilder
 from stellium.engines.houses import (
     AlcabitiusHouses,
     APCHouses,
@@ -434,16 +434,16 @@ def create_timing_page():
 
                 transit_chart = transit_builder.calculate()
 
-                # Create bi-wheel comparison
-                comparison = ComparisonBuilder.synastry(
+                # Create bi-wheel with MultiChartBuilder
+                multichart = MultiChartBuilder.transit(
                     natal_chart,
                     transit_chart,
-                    chart1_label=natal.name or "Natal",
-                    chart2_label="Transits",
+                    natal_label=natal.name or "Natal",
+                    transit_label="Transits",
                 ).calculate()
 
-                calculated_chart["ref"] = comparison
-                drawer = comparison.draw()
+                calculated_chart["ref"] = multichart
+                drawer = multichart.draw()
 
             elif state.chart_type == "progressions":
                 # Calculate progressed datetime
@@ -473,16 +473,16 @@ def create_timing_page():
 
                 progressed_chart = progressed_builder.calculate()
 
-                # Show as bi-wheel with natal
-                comparison = ComparisonBuilder.synastry(
+                # Show as bi-wheel with MultiChartBuilder
+                multichart = MultiChartBuilder.progression(
                     natal_chart,
                     progressed_chart,
-                    chart1_label=natal.name or "Natal",
-                    chart2_label="Progressed",
+                    natal_label=natal.name or "Natal",
+                    progressed_label="Progressed",
                 ).calculate()
 
-                calculated_chart["ref"] = comparison
-                drawer = comparison.draw()
+                calculated_chart["ref"] = multichart
+                drawer = multichart.draw()
 
             elif state.chart_type == "solar_return":
                 # Solar Return for specified year
