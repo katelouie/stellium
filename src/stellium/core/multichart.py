@@ -156,6 +156,18 @@ class MultiChart:
         """Semantic alias for the natal/base chart (chart1)."""
         return self.charts[0]
 
+    # ===== Delegate Properties (for visualization compatibility) =====
+
+    @property
+    def location(self):
+        """Delegate to chart1's location for visualization compatibility."""
+        return self.charts[0].location
+
+    @property
+    def datetime(self):
+        """Delegate to chart1's datetime for visualization compatibility."""
+        return self.charts[0].datetime
+
     # ===== Query Methods =====
 
     def get_object(self, name: str, chart: int = 0) -> CelestialPosition | None:
