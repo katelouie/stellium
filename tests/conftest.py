@@ -706,30 +706,20 @@ GEOCODED_LOCATIONS = {
 }
 
 
-@pytest.fixture(autouse=True)
-def mock_geocoding(monkeypatch, request):
+@pytest.fixture(scope="session", autouse=True)
+def mock_geocoding_session():
     """
-    Mock geocoding by default to avoid rate limiting from Nominatim.
+    Mock geocoding at SESSION scope to ensure it's applied before module-scoped fixtures.
+
+    This is critical because test files like test_multiwheel.py use module-scoped
+    fixtures that create charts with geocoding. If we use function-scoped mocking,
+    those module fixtures run BEFORE the mock is applied, causing geocoding failures.
 
     Most tests don't actually need real geocoding - they just need valid
     coordinates to proceed with chart calculations. This fixture provides
     pre-geocoded locations for common test locations.
-
-    To test REAL geocoding functionality, mark your test with:
-        @pytest.mark.uses_real_geocoding
-
-    Example:
-        @pytest.mark.uses_real_geocoding
-        def test_geocoding_unknown_city():
-            # This test will hit the real Nominatim service
-            native = Native(datetime.now(), "Some Random City, Country")
-            ...
-
-    This fixture is autouse=True, so it applies to ALL tests automatically.
     """
-    # Skip mocking if test explicitly needs real geocoding
-    if request.node.get_closest_marker("uses_real_geocoding"):
-        return  # Use real geocoding for this test
+    import unittest.mock
 
     def mock_cached_geocode(location_name: str) -> dict:
         """Mock implementation of _cached_geocode for CI testing."""
@@ -753,7 +743,30 @@ def mock_geocoding(monkeypatch, request):
             "timezone": "UTC",
         }
 
-    monkeypatch.setattr("stellium.core.native._cached_geocode", mock_cached_geocode)
+    # Use unittest.mock.patch since monkeypatch doesn't work with session scope
+    with unittest.mock.patch(
+        "stellium.core.native._cached_geocode", mock_cached_geocode
+    ):
+        yield
+
+
+@pytest.fixture(autouse=True)
+def skip_mock_for_real_geocoding_tests(request, mock_geocoding_session):
+    """
+    Handle tests that need real geocoding.
+
+    To test REAL geocoding functionality, mark your test with:
+        @pytest.mark.uses_real_geocoding
+
+    Example:
+        @pytest.mark.uses_real_geocoding
+        def test_geocoding_unknown_city():
+            # This test will hit the real Nominatim service
+            native = Native(datetime.now(), "Some Random City, Country")
+            ...
+    """
+    if request.node.get_closest_marker("uses_real_geocoding"):
+        pytest.skip("Test requires real geocoding - skipping in mocked environment")
 
 
 @pytest.fixture

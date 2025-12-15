@@ -5,6 +5,22 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+### Changed
+
+### Fixed
+
+#### RAMC No Longer Displayed on Chart Wheels
+
+RAMC (Right Ascension of MC) was incorrectly appearing as a planet/point on chart wheel visualizations. This technical calculation value is now properly categorized as `ObjectType.TECHNICAL` and excluded from chart rendering.
+
+#### CI Test Failures with Geocoding
+
+Fixed test failures in GitHub Actions CI where module-scoped test fixtures (in `test_multiwheel.py` and `test_zodiacal_releasing.py`) were attempting geocoding before the mock was applied. The geocoding mock is now session-scoped to ensure it's active before any fixtures run.
+
 ## [0.11.1] - 2025-12-15
 
 ### Fixed

@@ -184,7 +184,7 @@ class SwissHouseSystemBase:
                 name="Vertex", object_type=ObjectType.POINT, longitude=vertex
             ),
             CelestialPosition(
-                name="RAMC", object_type=ObjectType.POINT, longitude=ramc
+                name="RAMC", object_type=ObjectType.TECHNICAL, longitude=ramc
             ),
         ]
 

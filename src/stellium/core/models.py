@@ -59,6 +59,7 @@ class ObjectType(Enum):
     ARABIC_PART = "arabic_part"
     MIDPOINT = "midpoint"
     FIXED_STAR = "fixed_star"
+    TECHNICAL = "technical"  # Internal calculation points (e.g., RAMC)
 
 
 class ComparisonType(Enum):
