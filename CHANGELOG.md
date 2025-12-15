@@ -40,8 +40,9 @@ report.render(format='prose', file='my_chart.txt')
 ```
 
 Example output:
-```
-Kate Louie was born on January 06, 1994 at 11:47 AM in Mountain View, CA.
+
+```txt
+Jane Doe was born on January 10, 1995 at 12:00 PM in San Francisco, CA.
 This is a day chart with Aries rising. The chart ruler is Mars.
 
 Planet Positions:
