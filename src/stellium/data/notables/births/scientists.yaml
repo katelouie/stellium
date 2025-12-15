@@ -334,6 +334,8 @@
   year: 1920
   month: 7
   day: 25
+  hour: 12
+  minute: 0
   latitude: 51.5094
   longitude: -0.2061
   location_name: London, England
@@ -353,6 +355,8 @@
   year: 1906
   month: 12
   day: 9
+  hour: 12
+  minute: 0
   latitude: 40.7128
   longitude: -74.0060
   location_name: New York, New York
@@ -434,6 +438,8 @@
   year: 1955
   month: 6
   day: 8
+  hour: 12
+  minute: 0
   latitude: 51.5074
   longitude: -0.1278
   location_name: London, England

@@ -639,6 +639,8 @@
   year: 1945
   month: 6
   day: 19
+  hour: 12
+  minute: 0
   latitude: 28.6139
   longitude: 77.2090
   location_name: Delhi, India
@@ -658,6 +660,8 @@
   year: 1898
   month: 5
   day: 3
+  hour: 12
+  minute: 0
   latitude: 50.4547
   longitude: 30.5238
   location_name: Kiev, Ukraine

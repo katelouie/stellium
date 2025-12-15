@@ -367,6 +367,10 @@
   longitude: 63.305
   location_name: Baikonur, Kazakhstan
   timezone: Asia/Qyzylorda
+  category: space
+  subcategories:
+  - scientific
+  - historical
   notable_for: Launch of the first artificial Earth satellite by the Soviet Union, marking the beginning of the Space Race.
   data_quality: AA
   sources:
@@ -383,6 +387,10 @@
   longitude: 6.1432
   location_name: Geneva, Switzerland
   timezone: Europe/Zurich
+  category: health
+  subcategories:
+  - pandemic
+  - historical
   notable_for: WHO declares COVID-19 a global pandemic.
   data_quality: X
   sources:
@@ -399,6 +407,10 @@
   longitude: -74.0113
   location_name: New York, New York
   timezone: America/New_York
+  category: economic
+  subcategories:
+  - financial
+  - historical
   notable_for: The Wall Street Crash of 1929, the most devastating stock market crash in the history of the United States.
   data_quality: X
   sources:
@@ -415,6 +427,10 @@
   longitude: 139.7600
   location_name: Tokyo Bay, Japan
   timezone: Asia/Tokyo
+  category: military
+  subcategories:
+  - war
+  - historical
   notable_for: Formal surrender of Japan aboard USS Missouri marking the end of World War II.
   data_quality: AA
   sources:
@@ -431,6 +447,10 @@
   longitude: -80.604
   location_name: Cape Canaveral, Florida
   timezone: America/New_York
+  category: space
+  subcategories:
+  - disaster
+  - historical
   notable_for: The Space Shuttle Challenger disintegrates after liftoff, killing all crew members on board.
   data_quality: AA
   sources:

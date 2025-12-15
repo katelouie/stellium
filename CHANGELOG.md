@@ -5,6 +5,21 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.11.1] - 2025-12-15
+
+### Fixed
+
+#### Notables Data Quality
+
+Fixed missing required fields in several notable entries that caused them to be skipped during registry loading:
+
+- Added missing `hour`/`minute` fields to 9 birth entries (using 12:00 noon for unknown birth times)
+- Added missing `category` fields to 5 historical events
+
+The registry now loads all 196 entries (175 births, 21 events) without warnings.
+
+---
+
 ## [0.11.0] - 2025-12-15
 
 ### Fixed

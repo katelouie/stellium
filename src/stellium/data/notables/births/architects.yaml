@@ -23,6 +23,8 @@
   year: 1950
   month: 10
   day: 31
+  hour: 12
+  minute: 0
   latitude: 33.3152
   longitude: 44.3661
   location_name: Baghdad, Iraq
@@ -42,6 +44,8 @@
   year: 1917
   month: 4
   day: 26
+  hour: 12
+  minute: 0
   latitude: 23.1291
   longitude: 113.2644
   location_name: Guangzhou, China

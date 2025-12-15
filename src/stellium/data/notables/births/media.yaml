@@ -737,6 +737,8 @@
   year: 1889
   month: 4
   day: 16
+  hour: 20
+  minute: 0
   latitude: 51.5074
   longitude: -0.1278
   location_name: London, England
