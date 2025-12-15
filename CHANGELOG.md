@@ -5,7 +5,40 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.11.0] - 2025-12-15
+
+### Fixed
+
+#### Package Data Now Works When Installed from PyPI
+
+Fixed a critical issue where the notables registry returned 0 entries when stellium was installed from PyPI. The root cause was that data files (notables YAML, ephemeris files) were stored outside the package directory and weren't included in the distribution.
+
+**What changed:**
+
+- Notables data moved into `src/stellium/data/notables/` (now bundled with package)
+- Essential ephemeris files (~4MB) moved into `src/stellium/data/swisseph/ephe/`
+- New user data directory at `~/.stellium/ephe/` for ephemeris files
+- On first use, bundled ephemeris files are automatically copied to user directory
+- Users can still download additional asteroid/date-range files via CLI
+
+**New behavior:**
+
+```python
+# First time running stellium after install:
+# "Stellium: Initialized 7 ephemeris files in /Users/you/.stellium/ephe"
+
+from stellium.data import get_notable_registry
+registry = get_notable_registry()
+print(len(registry))  # Now correctly shows ~170 entries
+```
+
+**For users who download additional ephemeris files:**
+
+```bash
+# Files now download to ~/.stellium/ephe/ instead of project root
+stellium ephemeris download-asteroid eris
+stellium ephemeris download --years "1000-1800"
+```
 
 ### Added
 
