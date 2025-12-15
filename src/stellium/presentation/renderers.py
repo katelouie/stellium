@@ -1282,3 +1282,601 @@ class TypstRenderer:
 ]
 #v(0.5em)
 """
+
+
+class ProseRenderer:
+    """
+    Renderer that converts structured section data to natural language prose.
+
+    Designed for pasting chart info into conversations with AI friends or
+    anywhere you want clean, readable text without tables or formatting codes.
+
+    Output format:
+    - Chart overview as flowing sentences
+    - Lists of positions/aspects as bullet points
+    - No tables, no headers, no special formatting
+
+    Example output:
+        Kate Louie was born on January 6, 1994 at 11:47 AM in Mountain View, CA.
+        This is a day chart with Aries rising. The chart ruler is Mars.
+
+        Planet Positions:
+        • The Sun is at 15°52' Capricorn in the 9th house
+        • The Moon is at 22°14' Scorpio in the 6th house
+        ...
+    """
+
+    def __init__(self, bullet: str = "•") -> None:
+        """
+        Initialize prose renderer.
+
+        Args:
+            bullet: Character to use for list items (default: •)
+        """
+        self.bullet = bullet
+
+    def render_report(self, sections: list[tuple[str, dict[str, Any]]]) -> str:
+        """
+        Render complete report as natural language prose.
+
+        Args:
+            sections: List of (section_name, section_data) tuples
+
+        Returns:
+            Prose text suitable for pasting into conversations
+        """
+        paragraphs = []
+
+        for section_name, section_data in sections:
+            prose = self._render_section(section_name, section_data)
+            if prose:
+                paragraphs.append(prose)
+
+        return "\n\n".join(paragraphs)
+
+    def _render_section(self, section_name: str, data: dict[str, Any]) -> str:
+        """
+        Render a single section to prose.
+
+        Dispatches to section-specific formatters based on section_name,
+        with fallback to generic formatting.
+        """
+        # Map section names to specialized prose formatters
+        formatters: dict[str, Any] = {
+            "Chart Overview": self._prose_chart_overview,
+            "Planet Positions": self._prose_planet_positions,
+            "House Cusps": self._prose_house_cusps,
+            "Aspects": self._prose_aspects,
+            "Major Aspects": self._prose_aspects,
+            "Minor Aspects": self._prose_aspects,
+            "Harmonic Aspects": self._prose_aspects,
+            "Aspect Patterns": self._prose_aspect_patterns,
+            "Moon Phase": self._prose_moon_phase,
+            "Essential Dignities": self._prose_dignities,
+            "Arabic Parts": self._prose_arabic_parts,
+            "Midpoints": self._prose_midpoints,
+            "Planetary Stations": self._prose_stations,
+            "Stations": self._prose_stations,
+            "Sign Ingresses": self._prose_ingresses,
+            "Ingresses": self._prose_ingresses,
+            "Eclipses": self._prose_eclipses,
+        }
+
+        formatter = formatters.get(section_name)
+        if formatter:
+            return formatter(section_name, data)
+        else:
+            # Fallback: generic prose conversion
+            return self._prose_generic(section_name, data)
+
+    # =========================================================================
+    # CORE SECTION FORMATTERS
+    # =========================================================================
+
+    def _prose_chart_overview(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert chart overview key-value data to flowing prose."""
+        if data.get("type") != "key_value":
+            return self._prose_generic(section_name, data)
+
+        kv = data.get("data", {})
+        parts = []
+
+        # Build opening sentence with name, date, time, location
+        name = kv.get("Name", "")
+        date = kv.get("Date", "")
+        time = kv.get("Time", "")
+        location = kv.get("Location", "")
+
+        if name and date and time and location:
+            parts.append(f"{name} was born on {date} at {time} in {location}.")
+        elif date and time and location:
+            parts.append(f"Chart for {date} at {time} in {location}.")
+        elif date and time:
+            parts.append(f"Chart for {date} at {time}.")
+
+        # Add chart sect and ruler
+        sect = kv.get("Chart Sect", "")
+        ruler = kv.get("Chart Ruler", "")
+        if sect and ruler:
+            # Extract rising sign from ruler string like "Mars (Aries Rising)"
+            if "(" in ruler and "Rising" in ruler:
+                rising = ruler.split("(")[1].replace(" Rising)", "").strip()
+                chart_ruler = ruler.split()[0]
+                parts.append(
+                    f"This is a {sect.lower()} with {rising} rising. The chart ruler is {chart_ruler}."
+                )
+            else:
+                parts.append(f"This is a {sect.lower()}. The chart ruler is {ruler}.")
+        elif sect:
+            parts.append(f"This is a {sect.lower()}.")
+        elif ruler:
+            parts.append(f"The chart ruler is {ruler}.")
+
+        # Add house system and zodiac
+        house_system = kv.get("House System", "")
+        zodiac = kv.get("Zodiac", "")
+        if house_system and zodiac:
+            parts.append(f"Using {house_system} houses with {zodiac} zodiac.")
+        elif house_system:
+            parts.append(f"Using {house_system} houses.")
+
+        return " ".join(parts)
+
+    def _prose_planet_positions(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert planet positions table to bulleted list."""
+        if data.get("type") == "side_by_side_tables":
+            # Comparison chart - handle both charts
+            return self._prose_side_by_side_positions(section_name, data)
+
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+
+        if not rows:
+            return ""
+
+        lines = ["Planet Positions:"]
+
+        # Figure out column indices
+        pos_idx = headers.index("Position") if "Position" in headers else 1
+
+        # Find house column (might be "House (P)" or "House (WS)" etc.)
+        house_idx = None
+        for i, h in enumerate(headers):
+            if h.startswith("House"):
+                house_idx = i
+                break
+
+        # Check for speed/motion columns
+        motion_idx = headers.index("Motion") if "Motion" in headers else None
+
+        for row in rows:
+            planet = row[0]  # Already has glyph
+            position = row[pos_idx] if pos_idx < len(row) else ""
+
+            # Build the sentence
+            sentence = f"{self.bullet} {planet} is at {position}"
+
+            # Add house if available
+            if house_idx is not None and house_idx < len(row):
+                house = row[house_idx]
+                if house and house != "—":
+                    try:
+                        sentence += f" in the {self._ordinal(int(house))} house"
+                    except ValueError:
+                        sentence += f" in house {house}"
+
+            # Add retrograde status if available
+            if motion_idx is not None and motion_idx < len(row):
+                motion = row[motion_idx]
+                if motion == "Retrograde":
+                    sentence += ", retrograde"
+
+            lines.append(sentence)
+
+        return "\n".join(lines)
+
+    def _prose_side_by_side_positions(
+        self, section_name: str, data: dict[str, Any]
+    ) -> str:
+        """Handle side-by-side planet positions for comparisons."""
+        tables = data.get("tables", [])
+        if not tables:
+            return ""
+
+        all_lines = []
+        for table in tables:
+            title = table.get("title", "Chart")
+            headers = table.get("headers", [])
+            rows = table.get("rows", [])
+
+            lines = [f"{title} - Planet Positions:"]
+
+            pos_idx = headers.index("Position") if "Position" in headers else 1
+            house_idx = None
+            for i, h in enumerate(headers):
+                if h.startswith("House"):
+                    house_idx = i
+                    break
+
+            for row in rows:
+                planet = row[0]
+                position = row[pos_idx] if pos_idx < len(row) else ""
+                sentence = f"{self.bullet} {planet} is at {position}"
+
+                if house_idx is not None and house_idx < len(row):
+                    house = row[house_idx]
+                    if house and house != "—":
+                        try:
+                            sentence += f" in the {self._ordinal(int(house))} house"
+                        except ValueError:
+                            sentence += f" in house {house}"
+
+                lines.append(sentence)
+
+            all_lines.append("\n".join(lines))
+
+        return "\n\n".join(all_lines)
+
+    def _prose_house_cusps(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert house cusps table to bulleted list."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+
+        if not rows:
+            return ""
+
+        # Get the first cusp column (skip "House" column)
+        cusp_col = 1 if len(headers) > 1 else 0
+
+        lines = ["House Cusps:"]
+        for row in rows:
+            house_num = row[0]
+            cusp_pos = row[cusp_col] if cusp_col < len(row) else ""
+            lines.append(f"{self.bullet} House {house_num} cusp at {cusp_pos}")
+
+        return "\n".join(lines)
+
+    def _prose_aspects(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert aspects table to bulleted list."""
+        # Handle compound sections (with aspectarian SVG)
+        if data.get("type") == "compound":
+            # Find the table sub-section
+            for _sub_name, sub_data in data.get("sections", []):
+                if sub_data.get("type") == "table":
+                    data = sub_data
+                    break
+            else:
+                return self._prose_generic(section_name, data)
+
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+
+        if not rows:
+            return f"No {section_name.lower()} found."
+
+        lines = [f"{section_name}:"]
+
+        # Get column indices
+        orb_idx = headers.index("Orb") if "Orb" in headers else None
+        applying_idx = headers.index("Applying") if "Applying" in headers else None
+
+        for row in rows:
+            planet1 = row[0]
+            aspect = row[1]
+            planet2 = row[2]
+
+            sentence = f"{self.bullet} {planet1} {aspect} {planet2}"
+
+            # Add orb
+            if orb_idx is not None and orb_idx < len(row):
+                orb = row[orb_idx]
+                sentence += f" (orb {orb}"
+
+                # Add applying/separating
+                if applying_idx is not None and applying_idx < len(row):
+                    app = row[applying_idx]
+                    if app == "A→":
+                        sentence += ", applying"
+                    elif app == "←S":
+                        sentence += ", separating"
+
+                sentence += ")"
+
+            lines.append(sentence)
+
+        return "\n".join(lines)
+
+    def _prose_aspect_patterns(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert aspect patterns to prose."""
+        if data.get("type") == "text":
+            return data.get("content", "")
+
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        rows = data.get("rows", [])
+        if not rows:
+            return "No aspect patterns detected."
+
+        lines = ["Aspect Patterns:"]
+        for row in rows:
+            pattern_name = row[0]
+            planets = row[1]
+            element = row[2] if len(row) > 2 else ""
+
+            sentence = f"{self.bullet} {pattern_name} involving {planets}"
+            if element and element != "—":
+                sentence += f" ({element})"
+
+            lines.append(sentence)
+
+        return "\n".join(lines)
+
+    def _prose_moon_phase(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert moon phase to prose."""
+        if data.get("type") == "key_value":
+            kv = data.get("data", {})
+            # Handle both "Phase" and "Phase Name" keys
+            phase = kv.get("Phase Name", kv.get("Phase", ""))
+            illumination = kv.get("Illumination", "")
+            direction = kv.get("Direction", "")
+
+            parts = []
+            if phase:
+                parts.append(f"Moon Phase: The Moon is in its {phase} phase")
+            if illumination:
+                parts.append(f" ({illumination} illuminated)")
+            if direction:
+                parts.append(f", {direction.lower()}")
+
+            if parts:
+                return "".join(parts) + "."
+
+            return ""
+
+        return self._prose_generic(section_name, data)
+
+    def _prose_dignities(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert dignities table to prose."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        rows = data.get("rows", [])
+        if not rows:
+            return ""
+
+        lines = ["Essential Dignities:"]
+        for row in rows:
+            planet = row[0]
+            dignity = row[1] if len(row) > 1 else ""
+
+            if dignity and dignity != "—" and dignity != "Peregrine":
+                lines.append(f"{self.bullet} {planet}: {dignity}")
+            elif dignity == "Peregrine":
+                lines.append(
+                    f"{self.bullet} {planet}: Peregrine (no essential dignity)"
+                )
+
+        return "\n".join(lines) if len(lines) > 1 else ""
+
+    def _prose_arabic_parts(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert Arabic parts to prose."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        rows = data.get("rows", [])
+        if not rows:
+            return ""
+
+        lines = ["Arabic Parts (Lots):"]
+        for row in rows:
+            part_name = row[0]
+            position = row[1] if len(row) > 1 else ""
+            house = row[2] if len(row) > 2 else ""
+
+            sentence = f"{self.bullet} {part_name} at {position}"
+            if house and house != "—":
+                try:
+                    sentence += f" in the {self._ordinal(int(house))} house"
+                except ValueError:
+                    sentence += f" in house {house}"
+            lines.append(sentence)
+
+        return "\n".join(lines)
+
+    def _prose_midpoints(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert midpoints to prose."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        rows = data.get("rows", [])
+        if not rows:
+            return ""
+
+        lines = ["Midpoints:"]
+        for row in rows:
+            midpoint = row[0]
+            position = row[1] if len(row) > 1 else ""
+            lines.append(f"{self.bullet} {midpoint} at {position}")
+
+        return "\n".join(lines)
+
+    # =========================================================================
+    # TRANSIT CALENDAR FORMATTERS
+    # =========================================================================
+
+    def _prose_stations(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert stations table to prose."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+        if not rows:
+            return "No planetary stations in this period."
+
+        # Get column indices - format is: Date, Time, Planet, Station, Position, Sign
+        date_idx = 0
+        time_idx = headers.index("Time") if "Time" in headers else 1
+        planet_idx = headers.index("Planet") if "Planet" in headers else 2
+        station_idx = headers.index("Station") if "Station" in headers else 3
+        pos_idx = headers.index("Position") if "Position" in headers else 4
+        sign_idx = headers.index("Sign") if "Sign" in headers else 5
+
+        lines = ["Planetary Stations:"]
+        for row in rows:
+            date = row[date_idx] if date_idx < len(row) else ""
+            time = row[time_idx] if time_idx < len(row) else ""
+            planet = row[planet_idx] if planet_idx < len(row) else ""
+            station = row[station_idx] if station_idx < len(row) else ""
+            position = row[pos_idx] if pos_idx < len(row) else ""
+            sign = row[sign_idx] if sign_idx < len(row) else ""
+
+            sentence = f"{self.bullet} {date} at {time}: {planet} stations {station} at {position} {sign}"
+            lines.append(sentence)
+
+        return "\n".join(lines)
+
+    def _prose_ingresses(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert ingresses table to prose."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+        if not rows:
+            return "No sign ingresses in this period."
+
+        # Get column indices - format is: Date, Time, Planet, From, To
+        date_idx = 0
+        time_idx = headers.index("Time") if "Time" in headers else 1
+        planet_idx = headers.index("Planet") if "Planet" in headers else 2
+        to_idx = headers.index("To") if "To" in headers else 4
+
+        lines = ["Sign Ingresses:"]
+        for row in rows:
+            date = row[date_idx] if date_idx < len(row) else ""
+            time = row[time_idx] if time_idx < len(row) else ""
+            planet = row[planet_idx] if planet_idx < len(row) else ""
+            to_sign = row[to_idx] if to_idx < len(row) else ""
+
+            lines.append(f"{self.bullet} {date} at {time}: {planet} enters {to_sign}")
+
+        return "\n".join(lines)
+
+    def _prose_eclipses(self, section_name: str, data: dict[str, Any]) -> str:
+        """Convert eclipses table to prose."""
+        if data.get("type") != "table":
+            return self._prose_generic(section_name, data)
+
+        headers = data.get("headers", [])
+        rows = data.get("rows", [])
+        if not rows:
+            return "No eclipses in this period."
+
+        # Get column indices - format is: Date, Time, Type, Position, Sign, Node
+        date_idx = 0
+        time_idx = headers.index("Time") if "Time" in headers else 1
+        type_idx = headers.index("Type") if "Type" in headers else 2
+        pos_idx = headers.index("Position") if "Position" in headers else 3
+        sign_idx = headers.index("Sign") if "Sign" in headers else 4
+        node_idx = headers.index("Node") if "Node" in headers else 5
+
+        lines = ["Eclipses:"]
+        for row in rows:
+            date = row[date_idx] if date_idx < len(row) else ""
+            time = row[time_idx] if time_idx < len(row) else ""
+            eclipse_type = row[type_idx] if type_idx < len(row) else ""
+            position = row[pos_idx] if pos_idx < len(row) else ""
+            sign = row[sign_idx] if sign_idx < len(row) else ""
+            node = row[node_idx] if node_idx < len(row) else ""
+
+            sentence = f"{self.bullet} {date} at {time}: {eclipse_type} eclipse at {position} {sign}"
+            if node:
+                sentence += f" (near {node})"
+            lines.append(sentence)
+
+        return "\n".join(lines)
+
+    # =========================================================================
+    # GENERIC FALLBACK
+    # =========================================================================
+
+    def _prose_generic(self, section_name: str, data: dict[str, Any]) -> str:
+        """
+        Generic fallback for sections without specific formatters.
+
+        Converts tables to bulleted lists and key-value to sentences.
+        """
+        data_type = data.get("type")
+
+        if data_type == "text":
+            return f"{section_name}:\n{data.get('text', data.get('content', ''))}"
+
+        if data_type == "key_value":
+            kv = data.get("data", {})
+            lines = [f"{section_name}:"]
+            for key, value in kv.items():
+                lines.append(f"{self.bullet} {key}: {value}")
+            return "\n".join(lines)
+
+        if data_type == "table":
+            _headers = data.get("headers", [])
+            rows = data.get("rows", [])
+
+            if not rows:
+                return ""
+
+            lines = [f"{section_name}:"]
+            for row in rows:
+                # Join row values intelligently
+                parts = [str(cell) for cell in row if cell and cell != "—"]
+                lines.append(f"{self.bullet} {' | '.join(parts)}")
+
+            return "\n".join(lines)
+
+        if data_type == "compound":
+            parts = [f"{section_name}:"]
+            for sub_name, sub_data in data.get("sections", []):
+                if sub_data.get("type") == "svg":
+                    continue  # Skip SVG in prose output
+                sub_prose = self._render_section(sub_name, sub_data)
+                if sub_prose:
+                    parts.append(sub_prose)
+            return "\n\n".join(parts)
+
+        if data_type == "side_by_side_tables":
+            tables = data.get("tables", [])
+            parts = []
+            for table in tables:
+                title = table.get("title", "")
+                rows = table.get("rows", [])
+                lines = [f"{title}:" if title else f"{section_name}:"]
+                for row in rows:
+                    cell_parts = [str(c) for c in row if c and c != "—"]
+                    lines.append(f"{self.bullet} {' | '.join(cell_parts)}")
+                parts.append("\n".join(lines))
+            return "\n\n".join(parts)
+
+        return f"{section_name}: (unsupported format)"
+
+    # =========================================================================
+    # UTILITY METHODS
+    # =========================================================================
+
+    def _ordinal(self, n: int) -> str:
+        """Convert number to ordinal string (1st, 2nd, 3rd, etc.)."""
+        if 11 <= (n % 100) <= 13:
+            suffix = "th"
+        else:
+            suffix = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+        return f"{n}{suffix}"

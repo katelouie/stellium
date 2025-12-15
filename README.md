@@ -62,13 +62,11 @@ If you want to support development [you can leave a tip if you like](https://ko-
 ![Example Round Chart](docs/images/examples/readme_first.svg)
 ![Example Extended Chart](docs/images/examples/readme_extended_detailed.svg)
 
-#### Report Example Pages
+### Report Sample Pages
 
-![Einstein Report Page 1](examples/reports/einstein_complete_report_images/einstein_complete_report_page_1.png)
+![Einstein Report Sample Pages](images/report_sample_pages_1_2.png)
 
-![Einstein Report Page 2](examples/reports/einstein_complete_report_images/einstein_complete_report_page_2.png)
-
-#### Graphic Ephemeris Example
+### Graphic Ephemeris Example
 
 ![Example Graphic Ephemeris](examples/ephemeris/outer_transits_einstein_2025_2027.svg)
 

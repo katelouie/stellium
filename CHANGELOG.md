@@ -9,6 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### ProseRenderer for Natural Language Output (December 12, 2025)
+
+New `ProseRenderer` that converts chart data to clean, readable prose - perfect for pasting into conversations with AI friends or anywhere you want text without tables.
+
+- **Natural language format**: Chart info as flowing sentences and bullet points
+- **All section types supported**: Overview, positions, aspects, dignities, Arabic parts, transit calendar, and more
+- **Clean output**: No tables, no formatting codes, just readable text
+- **File output**: Save to `.txt` files with `render(format='prose', file='chart.txt')`
+
+```python
+from stellium import ChartBuilder, Native, ReportBuilder
+from stellium.engines.aspects import ModernAspectEngine
+
+chart = (ChartBuilder.from_native(native)
+    .with_aspects(ModernAspectEngine())
+    .calculate())
+
+report = (ReportBuilder()
+    .from_chart(chart)
+    .with_chart_overview()
+    .with_planet_positions()
+    .with_aspects(mode='major', include_aspectarian=False))
+
+# Print to terminal
+report.render(format='prose')
+
+# Save to file
+report.render(format='prose', file='my_chart.txt')
+```
+
+Example output:
+```
+Kate Louie was born on January 06, 1994 at 11:47 AM in Mountain View, CA.
+This is a day chart with Aries rising. The chart ruler is Mars.
+
+Planet Positions:
+• ☉ Sun is at ♑︎ Capricorn 16°16' in the 10th house
+• ☽ Moon is at ♏︎ Scorpio 10°10' in the 7th house
+...
+
+Major Aspects:
+• ♀ Venus ☌ Conjunction ♂ Mars (orb 0.30°, separating)
+• ♃ Jupiter ☌ Conjunction ☽ Moon (orb 0.45°, applying)
+...
+```
+
 #### Graphic Ephemeris Visualization (December 11, 2025)
 
 New `GraphicEphemeris` class for visualizing planetary positions over time.

@@ -1339,10 +1339,10 @@ class ReportBuilder:
         Render the report with flexible output options.
 
         Args:
-            format: Output format ("rich_table", "plain_table", "text", "pdf", "html")
+            format: Output format ("rich_table", "plain_table", "text", "prose", "pdf", "html")
             file: Optional filename to save to
             show: Whether to display in terminal. Defaults to True for terminal
-                  formats (rich_table, plain_table, text) and False for file
+                  formats (rich_table, plain_table, text, prose) and False for file
                   formats (pdf, html).
 
         Returns:
@@ -1371,7 +1371,7 @@ class ReportBuilder:
             raise ValueError("No chart set. Call .from_chart(chart) before rendering.")
 
         # Terminal-friendly formats
-        terminal_formats = {"rich_table", "plain_table", "text"}
+        terminal_formats = {"rich_table", "plain_table", "text", "prose"}
 
         # Default show behavior: True for terminal formats, False for file formats
         if show is None:
@@ -1478,6 +1478,12 @@ class ReportBuilder:
                 # Use plain text renderer
                 renderer = PlainTextRenderer()
                 return renderer.render_report(section_data)
+        elif format == "prose":
+            # Natural language prose (for pasting into conversations)
+            from stellium.presentation.renderers import ProseRenderer
+
+            renderer = ProseRenderer()
+            return renderer.render_report(section_data)
         elif format == "html":
             # HTML renderer
             from stellium.presentation.renderers import HTMLRenderer
@@ -1495,7 +1501,7 @@ class ReportBuilder:
 
             return renderer.render_report(section_data, svg_content)
         else:
-            available = "rich_table, plain_table, text, pdf, html, typst"
+            available = "rich_table, plain_table, text, prose, pdf, html, typst"
             raise ValueError(f"Unknown format '{format}'. Available: {available}")
 
     def _to_typst_pdf(
@@ -1554,10 +1560,17 @@ class ReportBuilder:
             renderer = PlainTextRenderer()
             output = renderer.render_report(section_data)
             print(output)
+        elif format == "prose":
+            # Natural language prose output
+            from stellium.presentation.renderers import ProseRenderer
+
+            renderer = ProseRenderer()
+            output = renderer.render_report(section_data)
+            print(output)
         else:
             raise ValueError(
                 f"Format '{format}' is not terminal-friendly. "
-                f"Use 'rich_table', 'plain_table', or 'text'."
+                f"Use 'rich_table', 'plain_table', 'text', or 'prose'."
             )
 
     def _get_renderer(self, format: str) -> ReportRenderer:
