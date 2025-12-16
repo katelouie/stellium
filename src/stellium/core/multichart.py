@@ -548,6 +548,8 @@ class MultiChartBuilder:
         | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict],
         transit_data: CalculatedChart
         | Native
+        | dt.datetime
+        | str
         | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict | None],
         natal_label: str = "Natal",
         transit_label: str = "Transit",
@@ -556,13 +558,24 @@ class MultiChartBuilder:
         Create a transit comparison (natal chart vs current sky).
 
         Args:
-            natal_data: Natal chart data
-            transit_data: Transit time data
+            natal_data: Natal chart data (CalculatedChart, Native, or tuple)
+            transit_data: Transit time - can be:
+                - CalculatedChart: use as-is
+                - Native: build chart from Native
+                - datetime or str: use natal chart's location
+                - tuple[datetime, location]: build chart from tuple
             natal_label: Label for natal chart
             transit_label: Label for transit chart
 
         Returns:
             MultiChartBuilder configured for transits
+
+        Example:
+            # Using a raw datetime (uses natal location)
+            mc = MultiChartBuilder.transit(natal, datetime(2025, 1, 1, 12, 0))
+
+            # Using a tuple with explicit location
+            mc = MultiChartBuilder.transit(natal, (datetime(2025, 1, 1), "New York"))
         """
         natal_chart = cls._to_chart(natal_data)
         transit_chart = cls._to_chart(
@@ -1172,14 +1185,37 @@ class MultiChartBuilder:
     def _to_chart(
         data: CalculatedChart
         | Native
+        | dt.datetime
+        | str
         | tuple[str | dt.datetime | dict, str | tuple[float, float] | dict | None],
         location_fallback: Any = None,
     ) -> CalculatedChart:
-        """Convert various input types to CalculatedChart."""
+        """Convert various input types to CalculatedChart.
+
+        Args:
+            data: Input data - can be:
+                - CalculatedChart: returned as-is
+                - Native: builds chart from Native
+                - datetime or str: builds chart using location_fallback
+                - tuple[datetime, location]: builds chart from tuple
+            location_fallback: Location to use when only datetime is provided
+
+        Returns:
+            CalculatedChart instance
+        """
         if isinstance(data, CalculatedChart):
             return data
         elif isinstance(data, Native):
             return ChartBuilder.from_native(data).calculate()
+        elif isinstance(data, dt.datetime | str) and not isinstance(data, tuple):
+            # Handle raw datetime or date string - use location fallback
+            if location_fallback is None:
+                raise ValueError(
+                    "Location fallback required when passing datetime without location. "
+                    "Either pass a tuple (datetime, location) or ensure a fallback is available."
+                )
+            native = Native(data, location_fallback)
+            return ChartBuilder.from_native(native).calculate()
         elif isinstance(data, tuple) and len(data) == 2:
             datetime_input, location_input = data
             if location_input is None:
