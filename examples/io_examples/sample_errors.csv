@@ -1,0 +1,5 @@
+name,date,time,latitude,longitude
+Valid Person,1994-01-06,11:47,37.3861,-122.0839
+Bad Date,not-a-date,11:47,37.3861,-122.0839
+Missing Coords,1994-01-06,11:47,,
+Another Valid,1879-03-14,11:30,48.4011,9.9876

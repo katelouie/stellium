@@ -98,6 +98,31 @@ Explore arc direction techniques:
 python examples/arc_directions_cookbook.py
 ```
 
+### File I/O (`io_cookbook.py`)
+
+Learn how to import birth data from various file formats:
+
+- CSV parsing with auto-detection
+- Custom column name mapping
+- Split first/last name columns
+- Date format hints (US, European, ISO)
+- 12-hour time (AM/PM) support
+- Combined datetime columns
+- Separate date/time components
+- Location names with coordinates
+- Error handling options
+- pandas DataFrame parsing
+- Excel file import
+- AAF (astro.com) file import
+- Batch chart generation
+- Round-trip export
+
+**Output directory:** `examples/io_examples/`
+
+```bash
+python examples/io_cookbook.py
+```
+
 ### Data Analysis (`analysis_cookbook.ipynb`)
 
 Research tools for large-scale astrological data analysis (Jupyter notebook):
@@ -128,6 +153,7 @@ jupyter notebook examples/analysis_cookbook.ipynb
    python examples/comparison_cookbook.py
    python examples/progressions_cookbook.py
    python examples/arc_directions_cookbook.py
+   python examples/io_cookbook.py
    ```
 
 3. Check the output directories for generated files:
@@ -136,6 +162,7 @@ jupyter notebook examples/analysis_cookbook.ipynb
    - `examples/comparisons/` - Comparison charts and reports
    - `examples/progressions/` - Progression bi-wheels
    - `examples/arc_directions/` - Arc direction charts
+   - `examples/io_examples/` - Sample CSV/AAF files and batch charts
 
 ## Customizing Examples
 

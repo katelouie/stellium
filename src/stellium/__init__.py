@@ -66,7 +66,15 @@ from stellium.engines.profections import (
 )
 
 # === File I/O (Import/Export) ===
-from stellium.io import parse_aaf
+from stellium.io import (
+    CSVColumnMapping,
+    dataframe_from_natives,
+    parse_aaf,
+    parse_csv,
+    parse_dataframe,
+    read_csv,
+    read_dataframe,
+)
 
 # === Presentation (Reports) ===
 from stellium.presentation import ReportBuilder
@@ -136,4 +144,10 @@ __all__ = [
     "ProfectionTimeline",
     # File I/O
     "parse_aaf",
+    "parse_csv",
+    "read_csv",
+    "parse_dataframe",
+    "read_dataframe",
+    "dataframe_from_natives",
+    "CSVColumnMapping",
 ]
