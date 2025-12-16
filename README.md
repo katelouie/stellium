@@ -22,8 +22,6 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 
 *Star the repo if you find it useful!* ⭐
 
-If you want to support development [you can leave a tip if you like](https://ko-fi.com/katelouie).
-
 ---
 
 ## ✨ Why Stellium?
