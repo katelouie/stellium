@@ -489,7 +489,8 @@ class SynthesisBuilder:
         )
 
         # 4. Calculate chart normally using ChartBuilder
-        base_chart = ChartBuilder.from_native(native).calculate()
+        # Include aspects so they appear in the davison chart visualization
+        base_chart = ChartBuilder.from_native(native).with_aspects().calculate()
 
         # 5. Wrap in SynthesisChart with full metadata
         return SynthesisChart(

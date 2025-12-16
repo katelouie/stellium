@@ -2975,11 +2975,13 @@ class MultiWheelAspectLayer:
         self,
         renderer: ChartRenderer,
         dwg: svgwrite.Drawing,
-        chart: Any,  # MultiWheel
+        chart: Any,  # MultiWheel or MultiChart
     ) -> None:
+        from stellium.core.chart_utils import is_multichart
         from stellium.core.multiwheel import MultiWheel
 
-        if not isinstance(chart, MultiWheel):
+        # Handle both MultiWheel and MultiChart
+        if not isinstance(chart, MultiWheel) and not is_multichart(chart):
             return
 
         # Only draw aspects for 2-chart multiwheels
