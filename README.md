@@ -14,7 +14,9 @@
 
 Built on Swiss Ephemeris for NASA-grade astronomical accuracy, Stellium brings professional astrological calculations to Python with a clean, composable architecture that works for everyone, from quick scripts to production applications.
 
-Read the extensive documentation and API autodocs at [Read The Docs](https://stellium.readthedocs.io/en/latest/)
+Read the extensive documentation and API autodocs at [Read The Docs](https://stellium.readthedocs.io/en/latest/).
+
+**Try out some quick examples immediately, no installation needed:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/katelouie/stellium/blob/main/examples/stellium_sampler_colab.ipynb)
 
 **✨ Stellium The Webapp is live! [Visit it here!](https://www.stelliumastro.app/) ✨**
 
