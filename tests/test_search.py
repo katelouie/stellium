@@ -5,8 +5,11 @@ from datetime import datetime
 import pytest
 
 from stellium.engines.search import (
+    ASPECT_ANGLES,
     SIGN_BOUNDARIES,
     SIGN_ORDER,
+    AngleCrossing,
+    AspectExact,
     LongitudeCrossing,
     SignIngress,
     Station,
@@ -15,10 +18,14 @@ from stellium.engines.search import (
     _get_sign_from_longitude,
     _julian_day_to_datetime,
     _normalize_angle_error,
+    find_all_angle_crossings,
+    find_all_aspect_exacts,
     find_all_ingresses,
     find_all_longitude_crossings,
     find_all_sign_changes,
     find_all_stations,
+    find_angle_crossing,
+    find_aspect_exact,
     find_ingress,
     find_longitude_crossing,
     find_next_sign_change,
@@ -1402,3 +1409,372 @@ class TestIngressStationIntegration:
         assert len(results) <= 5
         for r in results:
             assert r.object_name == "Uranus"
+
+
+# =============================================================================
+# ASPECT EXACTITUDE TESTS
+# =============================================================================
+
+
+class TestAspectAngles:
+    """Tests for ASPECT_ANGLES constant."""
+
+    def test_all_major_aspects_defined(self):
+        """All five major aspects should be defined."""
+        assert 0.0 in ASPECT_ANGLES  # conjunction
+        assert 60.0 in ASPECT_ANGLES  # sextile
+        assert 90.0 in ASPECT_ANGLES  # square
+        assert 120.0 in ASPECT_ANGLES  # trine
+        assert 180.0 in ASPECT_ANGLES  # opposition
+
+    def test_aspect_names(self):
+        """Aspect names should be correct."""
+        assert ASPECT_ANGLES[0.0] == "conjunction"
+        assert ASPECT_ANGLES[60.0] == "sextile"
+        assert ASPECT_ANGLES[90.0] == "square"
+        assert ASPECT_ANGLES[120.0] == "trine"
+        assert ASPECT_ANGLES[180.0] == "opposition"
+
+
+class TestAspectExactDataclass:
+    """Tests for AspectExact dataclass."""
+
+    def test_basic_creation(self):
+        """Can create AspectExact with all required fields."""
+        exact = AspectExact(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            object1_name="Moon",
+            object2_name="Jupiter",
+            aspect_angle=120.0,
+            aspect_name="trine",
+            object1_longitude=100.0,
+            object2_longitude=220.0,
+            is_applying_before=True,
+        )
+        assert exact.object1_name == "Moon"
+        assert exact.object2_name == "Jupiter"
+        assert exact.aspect_angle == 120.0
+        assert exact.aspect_name == "trine"
+
+    def test_separation_property(self):
+        """Separation should be close to aspect angle at exact."""
+        exact = AspectExact(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            object1_name="Moon",
+            object2_name="Jupiter",
+            aspect_angle=120.0,
+            aspect_name="trine",
+            object1_longitude=100.0,
+            object2_longitude=220.0,  # 220 - 100 = 120°
+            is_applying_before=True,
+        )
+        assert exact.separation == pytest.approx(120.0, abs=0.1)
+
+    def test_separation_handles_wraparound(self):
+        """Separation handles 360° wraparound correctly."""
+        exact = AspectExact(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            object1_name="Moon",
+            object2_name="Mars",
+            aspect_angle=60.0,
+            aspect_name="sextile",
+            object1_longitude=350.0,
+            object2_longitude=50.0,  # diff = 300, but actual = 60
+            is_applying_before=True,
+        )
+        assert exact.separation == pytest.approx(60.0, abs=0.1)
+
+    def test_frozen_dataclass(self):
+        """AspectExact is immutable."""
+        exact = AspectExact(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            object1_name="Moon",
+            object2_name="Jupiter",
+            aspect_angle=120.0,
+            aspect_name="trine",
+            object1_longitude=100.0,
+            object2_longitude=220.0,
+            is_applying_before=True,
+        )
+        with pytest.raises(AttributeError):
+            exact.object1_name = "Sun"
+
+    def test_str_representation(self):
+        """String representation is readable."""
+        exact = AspectExact(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            object1_name="Moon",
+            object2_name="Jupiter",
+            aspect_angle=120.0,
+            aspect_name="trine",
+            object1_longitude=100.0,
+            object2_longitude=220.0,
+            is_applying_before=True,
+        )
+        s = str(exact)
+        assert "Moon" in s
+        assert "Jupiter" in s
+        assert "trine" in s
+
+
+class TestFindAspectExact:
+    """Tests for find_aspect_exact function."""
+
+    def test_find_moon_jupiter_trine(self):
+        """Can find exact Moon trine Jupiter."""
+        result = find_aspect_exact(
+            "Moon", "Jupiter", 120.0, datetime(2025, 1, 1), max_days=30
+        )
+        assert result is not None
+        assert result.object1_name == "Moon"
+        assert result.object2_name == "Jupiter"
+        assert result.aspect_angle == 120.0
+        # Should be very close to exact (within tolerance)
+        assert abs(result.separation - 120.0) < 0.01
+
+    def test_find_sun_moon_conjunction(self):
+        """Can find exact Sun-Moon conjunction (New Moon)."""
+        result = find_aspect_exact(
+            "Sun", "Moon", 0.0, datetime(2025, 1, 1), max_days=35
+        )
+        assert result is not None
+        assert result.aspect_angle == 0.0
+        # Conjunction: separation should be ~0
+        assert result.separation < 1.0
+
+    def test_find_backward(self):
+        """Can search backward for past aspects."""
+        # Start from Feb 1 and search backward
+        result = find_aspect_exact(
+            "Moon",
+            "Venus",
+            60.0,
+            datetime(2025, 2, 1),
+            direction="backward",
+            max_days=30,
+        )
+        assert result is not None
+        # Result should be before start date
+        assert result.datetime_utc < datetime(2025, 2, 1)
+
+    def test_invalid_object_raises(self):
+        """Invalid object name raises ValueError."""
+        with pytest.raises(ValueError, match="Unknown object"):
+            find_aspect_exact("Moon", "InvalidPlanet", 120.0, datetime(2025, 1, 1))
+
+    def test_returns_none_when_not_found(self):
+        """Returns None when no aspect found in range."""
+        # Search a very short range for a rare aspect
+        result = find_aspect_exact(
+            "Saturn", "Jupiter", 0.0, datetime(2025, 1, 1), max_days=1
+        )
+        # Saturn-Jupiter conjunction is rare, unlikely in 1 day
+        # Could be None or found depending on dates
+        # Just verify it doesn't crash and returns the right type
+        assert result is None or isinstance(result, AspectExact)
+
+
+class TestFindAllAspectExacts:
+    """Tests for find_all_aspect_exacts function."""
+
+    def test_find_all_moon_jupiter_trines(self):
+        """Find all Moon-Jupiter trines in a month."""
+        results = find_all_aspect_exacts(
+            "Moon", "Jupiter", 120.0, datetime(2025, 1, 1), datetime(2025, 2, 1)
+        )
+        # Moon makes ~13 synodic cycles per year, so 1-2 trines per month
+        assert len(results) >= 1
+        for r in results:
+            assert r.object1_name == "Moon"
+            assert r.object2_name == "Jupiter"
+            assert r.aspect_angle == 120.0
+
+    def test_results_are_chronological(self):
+        """Results should be in chronological order."""
+        results = find_all_aspect_exacts(
+            "Moon", "Mars", 90.0, datetime(2025, 1, 1), datetime(2025, 3, 1)
+        )
+        if len(results) > 1:
+            for i in range(len(results) - 1):
+                assert results[i].julian_day < results[i + 1].julian_day
+
+    def test_respects_max_results(self):
+        """Should not exceed max_results."""
+        results = find_all_aspect_exacts(
+            "Moon",
+            "Venus",
+            60.0,
+            datetime(2025, 1, 1),
+            datetime(2025, 12, 31),
+            max_results=5,
+        )
+        assert len(results) <= 5
+
+
+# =============================================================================
+# ANGLE CROSSING TESTS
+# =============================================================================
+
+
+class TestAngleCrossingDataclass:
+    """Tests for AngleCrossing dataclass."""
+
+    def test_basic_creation(self):
+        """Can create AngleCrossing with all fields."""
+        crossing = AngleCrossing(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            angle_name="MC",
+            target_longitude=150.0,
+            actual_longitude=150.001,
+            latitude=37.7749,
+            longitude=-122.4194,
+        )
+        assert crossing.angle_name == "MC"
+        assert crossing.target_longitude == 150.0
+        assert crossing.latitude == 37.7749
+
+    def test_frozen_dataclass(self):
+        """AngleCrossing is immutable."""
+        crossing = AngleCrossing(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            angle_name="ASC",
+            target_longitude=0.0,
+            actual_longitude=0.001,
+            latitude=40.7128,
+            longitude=-74.006,
+        )
+        with pytest.raises(AttributeError):
+            crossing.angle_name = "MC"
+
+    def test_str_representation(self):
+        """String representation includes sign."""
+        crossing = AngleCrossing(
+            julian_day=2460676.5,
+            datetime_utc=datetime(2025, 1, 1, 12, 0),
+            angle_name="MC",
+            target_longitude=150.0,  # 0° Virgo
+            actual_longitude=150.0,
+            latitude=37.7749,
+            longitude=-122.4194,
+        )
+        s = str(crossing)
+        assert "MC" in s
+        assert "Virgo" in s
+
+
+class TestFindAngleCrossing:
+    """Tests for find_angle_crossing function."""
+
+    def test_find_asc_crossing(self):
+        """Can find when ASC reaches a specific longitude."""
+        result = find_angle_crossing(
+            target_longitude=0.0,  # 0° Aries
+            latitude=37.7749,
+            longitude=-122.4194,
+            angle="ASC",
+            start=datetime(2025, 1, 1),
+        )
+        assert result is not None
+        assert result.angle_name == "ASC"
+        assert abs(result.actual_longitude - 0.0) < 0.01
+
+    def test_find_mc_crossing(self):
+        """Can find when MC reaches a specific longitude."""
+        result = find_angle_crossing(
+            target_longitude=150.0,  # Regulus longitude
+            latitude=40.7128,
+            longitude=-74.006,
+            angle="MC",
+            start=datetime(2025, 1, 1),
+        )
+        assert result is not None
+        assert result.angle_name == "MC"
+
+    def test_dsc_is_opposite_of_asc(self):
+        """DSC crossing is ASC + 180°."""
+        # Find ASC at 0°
+        asc_result = find_angle_crossing(
+            0.0, 37.7749, -122.4194, "ASC", datetime(2025, 1, 1)
+        )
+        # Find DSC at 0° (which means ASC at 180°)
+        dsc_result = find_angle_crossing(
+            0.0, 37.7749, -122.4194, "DSC", datetime(2025, 1, 1)
+        )
+
+        assert asc_result is not None
+        assert dsc_result is not None
+        # DSC at 0° is different time than ASC at 0°
+        assert abs(asc_result.julian_day - dsc_result.julian_day) > 0.01
+
+    def test_crossing_happens_daily(self):
+        """Each angle crosses a given longitude roughly once per day."""
+        result1 = find_angle_crossing(
+            120.0, 37.7749, -122.4194, "MC", datetime(2025, 1, 1)
+        )
+        result2 = find_angle_crossing(
+            120.0, 37.7749, -122.4194, "MC", datetime(2025, 1, 2)
+        )
+
+        assert result1 is not None
+        assert result2 is not None
+        # About 1 day apart (sidereal day ~23h 56m)
+        diff_days = result2.julian_day - result1.julian_day
+        assert 0.9 < diff_days < 1.1
+
+    def test_invalid_angle_raises(self):
+        """Invalid angle name raises ValueError."""
+        with pytest.raises(ValueError, match="Unknown angle"):
+            find_angle_crossing(
+                0.0, 37.7749, -122.4194, "INVALID", datetime(2025, 1, 1)
+            )
+
+
+class TestFindAllAngleCrossings:
+    """Tests for find_all_angle_crossings function."""
+
+    def test_find_all_in_week(self):
+        """Find all MC crossings in a week (should be ~7)."""
+        results = find_all_angle_crossings(
+            target_longitude=0.0,
+            latitude=37.7749,
+            longitude=-122.4194,
+            angle="MC",
+            start=datetime(2025, 1, 1),
+            end=datetime(2025, 1, 8),
+        )
+        # Should find roughly 7 crossings (one per day)
+        assert 6 <= len(results) <= 8
+
+    def test_results_are_chronological(self):
+        """Results should be in chronological order."""
+        results = find_all_angle_crossings(
+            target_longitude=90.0,
+            latitude=40.7128,
+            longitude=-74.006,
+            angle="ASC",
+            start=datetime(2025, 1, 1),
+            end=datetime(2025, 1, 10),
+        )
+        if len(results) > 1:
+            for i in range(len(results) - 1):
+                assert results[i].julian_day < results[i + 1].julian_day
+
+    def test_respects_max_results(self):
+        """Should not exceed max_results."""
+        results = find_all_angle_crossings(
+            target_longitude=0.0,
+            latitude=37.7749,
+            longitude=-122.4194,
+            angle="MC",
+            start=datetime(2025, 1, 1),
+            end=datetime(2025, 12, 31),
+            max_results=5,
+        )
+        assert len(results) == 5

@@ -98,6 +98,27 @@ Explore arc direction techniques:
 python examples/arc_directions_cookbook.py
 ```
 
+### Electional Astrology (`electional_cookbook.py`)
+
+Find auspicious times matching astrological criteria:
+
+- Basic searches with lambda conditions
+- Helper predicates (is_waxing, not_voc, on_angle, etc.)
+- Moon conditions (phase, VOC, sign, aspects)
+- Planetary conditions (retrograde, dignity, combust)
+- Aspect requirements and avoidance
+- House and angle placements
+- Boolean composition (AND, OR, NOT)
+- Complex nested queries
+- Practical elections (business, relationships, Mercury/Mars/Jupiter matters)
+- Advanced usage (generators, counting, export)
+
+**Output directory:** `examples/elections/`
+
+```bash
+python examples/electional_cookbook.py
+```
+
 ### File I/O (`io_cookbook.py`)
 
 Learn how to import birth data from various file formats:
@@ -153,6 +174,7 @@ jupyter notebook examples/analysis_cookbook.ipynb
    python examples/comparison_cookbook.py
    python examples/progressions_cookbook.py
    python examples/arc_directions_cookbook.py
+   python examples/electional_cookbook.py
    python examples/io_cookbook.py
    ```
 
@@ -162,6 +184,7 @@ jupyter notebook examples/analysis_cookbook.ipynb
    - `examples/comparisons/` - Comparison charts and reports
    - `examples/progressions/` - Progression bi-wheels
    - `examples/arc_directions/` - Arc direction charts
+   - `examples/elections/` - Election search results
    - `examples/io_examples/` - Sample CSV/AAF files and batch charts
 
 ## Customizing Examples

@@ -57,6 +57,9 @@ from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
 # === Data (Notable Births) ===
 from stellium.data import get_notable_registry
 
+# === Electional Astrology (Time Search) ===
+from stellium.electional import ElectionalSearch
+
 # === Profections (Hellenistic Timing) ===
 from stellium.engines.profections import (
     MultiProfectionResult,
@@ -150,4 +153,6 @@ __all__ = [
     "read_dataframe",
     "dataframe_from_natives",
     "CSVColumnMapping",
+    # Electional Astrology
+    "ElectionalSearch",
 ]

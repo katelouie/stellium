@@ -52,6 +52,7 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 - **Uranian astrology** including Trans-Neptunian Planets and 45/90/360-degree dials with pointers.
 - **Primary and Zodiacal directions** with 3D modeling and and distribution across bounds
 - **Draconic Charts and Void of Course Moon**
+- **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
@@ -579,6 +580,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
 | **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
 | **[ephemeris_cookbook.py](examples/ephemeris_cookbook.py)** | Examples of graphic ephemeris charts with optional natal overlays |
+| **[electional_cookbook.py](examples/electional_cookbook.py)** | 43 examples: finding auspicious times, predicates, planetary hours, aspect exactitude |
 | **[analysis_cookbook.ipynb](examples/analysis_cookbook.ipynb)** | Jupyter notebook: batch calculation, pandas DataFrames, queries, statistics, export |
 
 ```bash
@@ -592,6 +594,7 @@ python examples/arc_directions_cookbook.py
 python examples/profections_cookbook.py
 python examples/zodiacal_releasing_cookbook.py
 python examples/dial_cookbook.py
+python examples/electional_cookbook.py
 ```
 
 ### User Guides

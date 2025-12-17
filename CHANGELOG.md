@@ -9,9 +9,209 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Electional Astrology Search Engine
+
+New `ElectionalSearch` class for finding auspicious times matching astrological conditions. This is a complete electional astrology toolkit with interval-based optimization for fast searches over long date ranges.
+
+**Core Features:**
+
+- **Fluent search API**: Chain conditions with `.where()` method
+- **Multiple output formats**: `find_moments()`, `find_windows()`, `find_first()`, `iter_moments()`, `count()`
+- **Condition composition**: `all_of()`, `any_of()`, `not_()` for combining conditions
+- **Lambda support**: Use inline lambdas or helper predicates interchangeably
+- **Hierarchical optimization**: Day-level filtering skips entire days that can't match
+- **Interval algebra**: Pre-computes windows for fast set intersection (100x+ speedup for supported conditions)
+
+```python
+from stellium.electional import (
+    ElectionalSearch, is_waxing, not_voc, sign_not_in,
+    on_angle, no_hard_aspect, not_retrograde
+)
+
+# Find auspicious election windows
+results = (ElectionalSearch("2025-01-01", "2025-06-30", "San Francisco, CA")
+    .where(is_waxing())
+    .where(not_voc())
+    .where(sign_not_in("Moon", ["Scorpio", "Capricorn"]))
+    .where(on_angle("Jupiter"))
+    .where(no_hard_aspect("Moon"))
+    .where(not_retrograde("Mercury"))
+    .find_windows())
+
+for window in results:
+    print(f"{window.start} - {window.end} ({window.duration})")
+```
+
+**30+ Helper Predicates:**
+
+- Moon phase: `is_waxing()`, `is_waning()`, `moon_phase()`
+- VOC Moon: `is_voc()`, `not_voc()` (traditional or modern)
+- Signs: `sign_in()`, `sign_not_in()`
+- Houses: `in_house()`, `on_angle()`, `succedent()`, `cadent()`, `not_in_house()`
+- Retrograde: `is_retrograde()`, `not_retrograde()`
+- Dignity: `is_dignified()`, `is_debilitated()`, `not_debilitated()`
+- Aspects: `has_aspect()`, `no_aspect()`, `aspect_applying()`, `aspect_separating()`, `no_hard_aspect()`, `no_malefic_aspect()`
+- Combust: `is_combust()`, `not_combust()`
+- Out of bounds: `is_out_of_bounds()`, `not_out_of_bounds()`
+- Aspect exactitude: `aspect_exact_within()`
+- Angles: `angle_at_degree()`, `star_on_angle()`
+- Planetary hours: `in_planetary_hour()`
+
+**Interval Generators** (`stellium.electional.intervals`):
+
+Pre-compute time windows for fast set intersection:
+
+- `waxing_windows()`, `waning_windows()` - Lunar phase windows
+- `moon_sign_windows()`, `moon_sign_not_in_windows()` - Moon sign ingresses
+- `retrograde_windows()`, `direct_windows()` - Planetary station periods
+- `voc_windows()`, `not_voc_windows()` - Void of course periods
+- `aspect_exact_windows()` - Windows around aspect exactitude
+- `angle_at_longitude_windows()` - When angles reach specific degrees
+
+**Set Operations:**
+
+- `intersect_windows()` - AND of window sets
+- `union_windows()` - OR of window sets
+- `invert_windows()` - NOT (complement) of windows
+
+#### Planetary Hours
+
+Complete planetary hours calculation system for traditional timing.
+
+```python
+from stellium.electional import (
+    get_planetary_hour, get_planetary_hours_for_day,
+    get_day_ruler, get_sunrise_sunset, in_planetary_hour,
+    CHALDEAN_ORDER, DAY_RULERS, PlanetaryHour
+)
+
+# Get current planetary hour
+hour = get_planetary_hour(datetime.now(), latitude=37.7, longitude=-122.4)
+print(f"Current hour: {hour.ruler} ({'day' if hour.is_day_hour else 'night'} hour #{hour.hour_number})")
+
+# Get all 24 planetary hours for a day
+hours = get_planetary_hours_for_day(datetime(2025, 1, 15), latitude=37.7, longitude=-122.4)
+for h in hours:
+    print(f"{h.ruler}: {h.start_utc.strftime('%H:%M')} - {h.end_utc.strftime('%H:%M')}")
+
+# Use in electional search
+search = ElectionalSearch("2025-01-01", "2025-01-31", "San Francisco, CA")
+results = search.where(in_planetary_hour("Jupiter")).find_moments()
+```
+
+Features:
+
+- Variable-length hours based on actual sunrise/sunset times
+- Chaldean order planet sequence (Saturn → Jupiter → Mars → Sun → Venus → Mercury → Moon)
+- Day rulers for each weekday
+- Support for any geographic location
+
+#### Aspect Exactitude Search Functions
+
+New functions in `stellium.engines.search` for finding exact aspect times:
+
+```python
+from stellium.engines.search import (
+    find_aspect_exact, find_all_aspect_exacts, AspectExact
+)
+
+# Find next exact Moon trine Jupiter
+result = find_aspect_exact("Moon", "Jupiter", 120.0, datetime(2025, 1, 1))
+print(f"Exact trine: {result.datetime_utc}, orb at exact: {result.separation - 120:.6f}°")
+
+# Find all Sun-Moon conjunctions (New Moons) in a year
+new_moons = find_all_aspect_exacts("Sun", "Moon", 0.0,
+    datetime(2025, 1, 1), datetime(2025, 12, 31))
+for nm in new_moons:
+    print(f"New Moon: {nm.datetime_utc}")
+```
+
+- `AspectExact` dataclass with timing, positions, and applying/separating info
+- `find_aspect_exact()` - Find next/previous exact aspect
+- `find_all_aspect_exacts()` - Find all exact aspects in date range
+- Uses Newton-Raphson refinement for sub-arcsecond precision
+- Supports all aspect angles (0°, 60°, 90°, 120°, 180°, or custom)
+
+#### Angle Crossing Search Functions
+
+New functions for finding when chart angles (ASC, MC, DSC, IC) reach specific longitudes:
+
+```python
+from stellium.engines.search import (
+    find_angle_crossing, find_all_angle_crossings, AngleCrossing
+)
+
+# Find when 0° Aries rises (Aries Ascendant)
+crossing = find_angle_crossing(0.0, latitude=40.7, longitude=-74.0,
+    angle="ASC", start=datetime(2025, 1, 1))
+print(f"Aries rising: {crossing.datetime_utc}")
+
+# Find all MC crossings of a fixed star longitude
+regulus_lon = 150.0  # Approximate
+crossings = find_all_angle_crossings(regulus_lon, 37.7, -122.4, "MC",
+    datetime(2025, 1, 1), datetime(2025, 1, 7))
+# ~7 crossings (once per sidereal day)
+```
+
+- `AngleCrossing` dataclass with exact timing and angle value
+- `find_angle_crossing()` - Find next/previous angle crossing
+- `find_all_angle_crossings()` - Find all crossings in date range
+- Supports ASC, MC, DSC, IC angles
+- ~Once per sidereal day for each angle/longitude combination
+
+#### Electional Cookbook Examples
+
+New `examples/electional_cookbook.py` with 43 comprehensive examples covering:
+
+1. Basic searches (waxing moon, not VOC, sign filtering)
+2. House placements and angular planets
+3. Retrograde avoidance
+4. Dignity considerations
+5. Aspect conditions (applying, separating, exact)
+6. Combust and out-of-bounds
+7. Complex multi-condition elections
+8. Lambda vs predicate syntax
+9. Aspect exactitude searches
+10. Fixed stars and angle crossings
+11. Planetary hours
+12. Performance optimization techniques
+
 ### Changed
 
 ### Fixed
+
+#### Conjunction Detection in Aspect Search
+
+Fixed a bug where `find_aspect_exact()` couldn't find 0° aspects (conjunctions). The bracketing algorithm relied on sign changes in the error function, but for conjunctions the angular separation is always positive (range [0, 180°]), so the error never changes sign.
+
+**The fix:**
+
+- Added local minimum detection for conjunctions using a 3-point test
+- Implemented golden section search for refinement (instead of sign-based bisection)
+- Now correctly finds Sun-Moon conjunctions (New Moons) and other conjunctions
+
+#### Timezone Handling in Electional Search
+
+Fixed timezone conversion for interval-based window calculations in `ElectionalSearch`. The search now properly converts local datetimes to Julian Day using the location's timezone, ensuring window generators receive correct UTC-based times.
+
+**What was fixed:**
+
+- `_get_valid_windows()` now uses `_local_datetime_to_jd()` for proper timezone conversion
+- `_is_in_valid_windows()` converts query times correctly before comparison
+- `_count_steps_in_windows()` uses consistent timezone handling
+
+#### Planetary Hours Date Calculation
+
+Fixed `get_sunrise_sunset()` to interpret the date parameter as local date rather than UTC date. Previously, searching for planetary hours on "January 15" in San Francisco would return sunrise/sunset for the wrong day due to UTC offset.
+
+**The fix:**
+
+- Adjusted start time using longitude-based timezone approximation
+- Added fallback checks for edge cases (times before today's sunrise or after today's night)
+
+#### Moon Phase No Longer Always Waxing
+
+Moon phase attribute `is_waxing` was being calculated incorrectly so that it was always true. I've added in the sun's longitude so we can get the angular distance from the Moon and properly determine its phase.
 
 #### RAMC No Longer Displayed on Chart Wheels
 

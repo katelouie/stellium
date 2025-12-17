@@ -151,6 +151,60 @@ class Station:
         )
 
 
+# Aspect angle to name mapping
+ASPECT_ANGLES = {
+    0.0: "conjunction",
+    60.0: "sextile",
+    90.0: "square",
+    120.0: "trine",
+    180.0: "opposition",
+}
+
+
+@dataclass(frozen=True)
+class AspectExact:
+    """Result of an aspect exactitude search.
+
+    Represents the exact moment when two celestial objects form a precise
+    aspect (conjunction, sextile, square, trine, or opposition).
+
+    Attributes:
+        julian_day: Julian day when aspect is exact
+        datetime_utc: UTC datetime when aspect is exact
+        object1_name: First object name
+        object2_name: Second object name
+        aspect_angle: The aspect angle (0=conjunction, 60=sextile, etc.)
+        aspect_name: Human name ("conjunction", "trine", etc.)
+        object1_longitude: First object's longitude at exact
+        object2_longitude: Second object's longitude at exact
+        is_applying_before: True if aspect was applying before exact
+    """
+
+    julian_day: float
+    datetime_utc: datetime
+    object1_name: str
+    object2_name: str
+    aspect_angle: float
+    aspect_name: str
+    object1_longitude: float
+    object2_longitude: float
+    is_applying_before: bool
+
+    @property
+    def separation(self) -> float:
+        """Angular separation between the two objects (should be ~aspect_angle)."""
+        diff = abs(self.object2_longitude - self.object1_longitude)
+        if diff > 180:
+            diff = 360 - diff
+        return diff
+
+    def __str__(self) -> str:
+        return (
+            f"{self.object1_name} {self.aspect_name} {self.object2_name} exact "
+            f"on {self.datetime_utc.strftime('%Y-%m-%d %H:%M')}"
+        )
+
+
 def _normalize_angle_error(angle: float) -> float:
     """Normalize angle difference to range [-180, +180].
 
@@ -934,6 +988,670 @@ def find_all_stations(
 
         # Move past this station (use larger step since stations are months apart)
         current_jd = station.julian_day + 5.0
+
+    return results
+
+
+# =============================================================================
+# Aspect Exactitude Search Functions
+# =============================================================================
+
+
+def _get_aspect_separation(
+    obj1_id: int, obj2_id: int, julian_day: float
+) -> tuple[float, float, float, float, float]:
+    """Get angular separation and speeds for two objects.
+
+    Args:
+        obj1_id: Swiss Ephemeris ID for first object
+        obj2_id: Swiss Ephemeris ID for second object
+        julian_day: Julian day number
+
+    Returns:
+        Tuple of (separation, obj1_lon, obj2_lon, obj1_speed, obj2_speed)
+        Separation is in range [0, 180]
+    """
+    lon1, speed1 = _get_position_and_speed(obj1_id, julian_day)
+    lon2, speed2 = _get_position_and_speed(obj2_id, julian_day)
+
+    # Calculate separation (always positive, 0-180)
+    diff = (lon2 - lon1) % 360
+    if diff > 180:
+        diff = 360 - diff
+
+    return diff, lon1, lon2, speed1, speed2
+
+
+def _bracket_aspect(
+    obj1_id: int,
+    obj2_id: int,
+    aspect_angle: float,
+    start_jd: float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 366.0,
+    step_days: float = 0.5,
+) -> tuple[float, float] | None:
+    """Find an interval containing an aspect exactitude.
+
+    Sweeps through time looking for when the angular separation equals the aspect angle.
+
+    Args:
+        obj1_id: Swiss Ephemeris ID for first object
+        obj2_id: Swiss Ephemeris ID for second object
+        aspect_angle: Target aspect angle (0, 60, 90, 120, 180)
+        start_jd: Julian day to start search from
+        direction: "forward" (future) or "backward" (past)
+        max_days: Maximum days to search
+        step_days: Step size for initial sweep
+
+    Returns:
+        Tuple (jd1, jd2) bracketing the aspect exactitude, or None if not found
+    """
+    step = step_days if direction == "forward" else -step_days
+    end_jd = start_jd + (max_days if direction == "forward" else -max_days)
+
+    current_jd = start_jd
+    sep, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, current_jd)
+
+    # For aspects, we need to handle both directions of approach
+    # e.g., for a trine (120°), separation could approach from below or above
+    # Use signed error relative to target
+    current_error = _normalize_angle_error(sep - aspect_angle)
+
+    # Track previous values for local minimum detection (needed for conjunctions)
+    prev_jd = None
+    prev_error = None
+
+    while (direction == "forward" and current_jd < end_jd) or (
+        direction == "backward" and current_jd > end_jd
+    ):
+        next_jd = current_jd + step
+        sep, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, next_jd)
+        next_error = _normalize_angle_error(sep - aspect_angle)
+
+        # Check for sign change (potential crossing)
+        if current_error * next_error < 0:
+            # Verify this is a real crossing, not a 180° wraparound artifact
+            if abs(current_error) < 90 and abs(next_error) < 90:
+                # Real crossing - return interval in chronological order
+                if direction == "forward":
+                    return (current_jd, next_jd)
+                else:
+                    return (next_jd, current_jd)
+
+        # For conjunctions (aspect_angle ≈ 0), separation is always positive [0, 180]
+        # so we need to detect local minima instead of sign changes
+        # A local minimum occurs when: prev_error > current_error and current_error < next_error
+        if aspect_angle < 1.0 and prev_error is not None:
+            # Using abs() since for 0° aspect, error = separation which is non-negative
+            if abs(prev_error) > abs(current_error) < abs(next_error):
+                # Found local minimum at current_jd, bracket it
+                if direction == "forward":
+                    return (prev_jd, next_jd)
+                else:
+                    return (next_jd, prev_jd)
+
+        # Also check if we're very close (within tolerance)
+        if abs(next_error) < 0.01:
+            return (next_jd - 0.1, next_jd + 0.1)
+
+        prev_jd = current_jd
+        prev_error = current_error
+        current_jd = next_jd
+        current_error = next_error
+
+    return None
+
+
+def find_aspect_exact(
+    object1_name: str,
+    object2_name: str,
+    aspect_angle: float,
+    start: datetime | float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 366.0,
+    tolerance: float = 0.0001,
+    max_iterations: int = 50,
+) -> AspectExact | None:
+    """Find when two objects form an exact aspect.
+
+    Uses a hybrid Newton-Raphson / bisection algorithm to find the precise
+    moment when two celestial objects reach a specific angular separation.
+
+    Args:
+        object1_name: First object (e.g., "Moon", "Sun", "Mars")
+        object2_name: Second object (e.g., "Jupiter", "Venus")
+        aspect_angle: Target angle in degrees (0=conjunction, 60=sextile,
+            90=square, 120=trine, 180=opposition)
+        start: Starting datetime (UTC) or Julian day
+        direction: "forward" to search future, "backward" to search past
+        max_days: Maximum days to search (default 366 = just over a year)
+        tolerance: Convergence tolerance in degrees (default 0.0001 ≈ 0.36 arcsec)
+        max_iterations: Maximum refinement iterations
+
+    Returns:
+        AspectExact with exact timing, or None if not found
+
+    Example:
+        >>> # Find next exact Moon trine Jupiter
+        >>> result = find_aspect_exact("Moon", "Jupiter", 120.0, datetime(2024, 1, 1))
+        >>> print(f"Exact trine at {result.datetime_utc}")
+
+        >>> # Find next Mercury-Venus conjunction
+        >>> result = find_aspect_exact("Mercury", "Venus", 0.0, datetime(2024, 1, 1))
+        >>> print(result)
+    """
+    _set_ephemeris_path()
+
+    # Get object IDs
+    if object1_name not in SWISS_EPHEMERIS_IDS:
+        raise ValueError(f"Unknown object: {object1_name}")
+    if object2_name not in SWISS_EPHEMERIS_IDS:
+        raise ValueError(f"Unknown object: {object2_name}")
+
+    obj1_id = SWISS_EPHEMERIS_IDS[object1_name]
+    obj2_id = SWISS_EPHEMERIS_IDS[object2_name]
+
+    # Convert start to Julian day if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    # Normalize aspect angle
+    aspect_angle = aspect_angle % 180  # Aspects are symmetric
+
+    # Get aspect name
+    aspect_name = ASPECT_ANGLES.get(aspect_angle, f"{aspect_angle}°")
+
+    # Phase 1: Bracket the aspect exactitude
+    bracket = _bracket_aspect(
+        obj1_id, obj2_id, aspect_angle, start_jd, direction, max_days
+    )
+
+    if bracket is None:
+        return None
+
+    t1, t2 = bracket
+
+    # Check if aspect was applying before exact (for the result)
+    sep_before, _, _, speed1_before, speed2_before = _get_aspect_separation(
+        obj1_id, obj2_id, t1
+    )
+    relative_speed_before = speed2_before - speed1_before
+    # If obj2 is moving faster, separation is increasing (separating) if positive
+    # For applying, we want separation decreasing toward exact
+    error_before = _normalize_angle_error(sep_before - aspect_angle)
+    is_applying_before = (error_before < 0 and relative_speed_before > 0) or (
+        error_before > 0 and relative_speed_before < 0
+    )
+
+    # Phase 2: Refine with Newton-Raphson + bisection/golden section fallback
+    # For conjunctions (aspect_angle ≈ 0), we search for minimum separation
+    # For other aspects, we search for zero crossing
+    use_minimum_search = aspect_angle < 1.0
+
+    t = (t1 + t2) / 2
+
+    for _ in range(max_iterations):
+        sep, lon1, lon2, speed1, speed2 = _get_aspect_separation(obj1_id, obj2_id, t)
+        error = _normalize_angle_error(sep - aspect_angle)
+
+        # Check convergence
+        if abs(error) < tolerance:
+            return AspectExact(
+                julian_day=t,
+                datetime_utc=_julian_day_to_datetime(t),
+                object1_name=object1_name,
+                object2_name=object2_name,
+                aspect_angle=aspect_angle,
+                aspect_name=aspect_name,
+                object1_longitude=lon1,
+                object2_longitude=lon2,
+                is_applying_before=is_applying_before,
+            )
+
+        # Calculate relative speed for Newton-Raphson
+        # The derivative of separation w.r.t. time is approximately (speed2 - speed1)
+        # but we need to account for the sign of the error
+        relative_speed = speed2 - speed1
+
+        # Adjust sign based on how separation relates to error
+        # When separation > aspect_angle, error > 0
+        # We want to move in direction that decreases error
+        if abs(relative_speed) > 0.01:
+            newton_step = -error / relative_speed
+            # Clamp step to avoid huge jumps
+            newton_step = max(-10, min(10, newton_step))
+            t_new = t + newton_step
+
+            # Keep within bracket
+            t_new = max(t1, min(t2, t_new))
+        else:
+            # Bisection/golden section fallback when relative speed is very small
+            t_new = (t1 + t2) / 2
+
+        # Update bracket
+        if use_minimum_search:
+            # For conjunctions, use golden section search for minimum
+            # Compare errors at bracket endpoints and midpoint to narrow
+            sep1, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, t1)
+            sep2, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, t2)
+            error1 = abs(sep1 - aspect_angle)
+            error2 = abs(sep2 - aspect_angle)
+
+            # Shrink bracket toward the side with smaller error
+            if error1 < error2:
+                t2 = t  # Keep t1, shrink from right
+            else:
+                t1 = t  # Keep t2, shrink from left
+        else:
+            # For other aspects, use bisection based on error sign
+            if error > 0:
+                t2 = t
+            else:
+                t1 = t
+
+        t = t_new
+
+    # Failed to converge - return best estimate
+    sep, lon1, lon2, _, _ = _get_aspect_separation(obj1_id, obj2_id, t)
+    return AspectExact(
+        julian_day=t,
+        datetime_utc=_julian_day_to_datetime(t),
+        object1_name=object1_name,
+        object2_name=object2_name,
+        aspect_angle=aspect_angle,
+        aspect_name=aspect_name,
+        object1_longitude=lon1,
+        object2_longitude=lon2,
+        is_applying_before=is_applying_before,
+    )
+
+
+def find_all_aspect_exacts(
+    object1_name: str,
+    object2_name: str,
+    aspect_angle: float,
+    start: datetime | float,
+    end: datetime | float,
+    max_results: int = 100,
+) -> list[AspectExact]:
+    """Find all exact aspects between two objects in a date range.
+
+    Useful for:
+    - Finding all Moon-Jupiter trines in a year
+    - Tracking Mercury-Venus aspects for relationship timing
+    - Building aspect timelines
+
+    Args:
+        object1_name: First object (e.g., "Moon", "Sun", "Mars")
+        object2_name: Second object (e.g., "Jupiter", "Venus")
+        aspect_angle: Target angle in degrees (0, 60, 90, 120, 180)
+        start: Start datetime (UTC) or Julian day
+        end: End datetime (UTC) or Julian day
+        max_results: Safety limit on number of results (default 100)
+
+    Returns:
+        List of AspectExact objects, chronologically ordered
+
+    Example:
+        >>> # Find all Moon trine Jupiter in 2024
+        >>> results = find_all_aspect_exacts(
+        ...     "Moon", "Jupiter", 120.0,
+        ...     datetime(2024, 1, 1),
+        ...     datetime(2024, 12, 31)
+        ... )
+        >>> print(f"Found {len(results)} exact trines")
+        >>> for r in results[:5]:
+        ...     print(r)
+    """
+    # Convert to Julian days if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    if isinstance(end, datetime):
+        end_jd = _datetime_to_julian_day(end)
+    else:
+        end_jd = end
+
+    results = []
+    current_jd = start_jd
+
+    while current_jd < end_jd and len(results) < max_results:
+        # Search forward from current position
+        result = find_aspect_exact(
+            object1_name,
+            object2_name,
+            aspect_angle,
+            current_jd,
+            direction="forward",
+            max_days=end_jd - current_jd + 1,
+        )
+
+        if result is None or result.julian_day > end_jd:
+            break
+
+        results.append(result)
+
+        # Move past this aspect (small step to avoid finding same one)
+        # For Moon aspects, they recur ~monthly, so 1 day is safe
+        current_jd = result.julian_day + 1.0
+
+    return results
+
+
+# =============================================================================
+# Angle Crossing Search Functions
+# =============================================================================
+
+# Angle name to index mapping for ascmc array from swe.houses_ex()
+ANGLE_INDICES = {
+    "ASC": 0,
+    "Ascendant": 0,
+    "MC": 1,
+    "Midheaven": 1,
+    "DSC": 0,  # DSC = ASC + 180°
+    "Descendant": 0,
+    "IC": 1,  # IC = MC + 180°
+    "Imum Coeli": 1,
+}
+
+# Angles that need 180° offset
+OPPOSITE_ANGLES = {"DSC", "Descendant", "IC", "Imum Coeli"}
+
+
+def _get_angle_longitude(
+    julian_day: float, latitude: float, longitude: float, angle: str
+) -> float:
+    """Get the longitude of a chart angle at a given time.
+
+    Args:
+        julian_day: Julian day number
+        latitude: Geographic latitude
+        longitude: Geographic longitude (negative = West)
+        angle: Angle name ("ASC", "MC", "DSC", "IC", or full names)
+
+    Returns:
+        Longitude of the angle in degrees (0-360)
+    """
+    from stellium.data.paths import initialize_ephemeris
+
+    initialize_ephemeris()
+
+    _, ascmc = swe.houses_ex(julian_day, latitude, longitude, hsys=b"P")
+
+    angle_upper = angle.upper() if angle in ("ASC", "MC", "DSC", "IC") else angle
+    if angle_upper not in ANGLE_INDICES and angle not in ANGLE_INDICES:
+        raise ValueError(
+            f"Unknown angle: {angle}. Must be one of ASC, MC, DSC, IC "
+            "(or Ascendant, Midheaven, Descendant, Imum Coeli)"
+        )
+
+    idx = ANGLE_INDICES.get(angle_upper, ANGLE_INDICES.get(angle))
+    angle_lon = ascmc[idx]
+
+    # Apply 180° offset for opposite angles
+    if angle_upper in OPPOSITE_ANGLES or angle in OPPOSITE_ANGLES:
+        angle_lon = (angle_lon + 180) % 360
+
+    return angle_lon
+
+
+@dataclass(frozen=True)
+class AngleCrossing:
+    """Result of an angle crossing search.
+
+    Represents the moment when a chart angle (ASC, MC, DSC, IC) reaches
+    a specific zodiac longitude.
+
+    Attributes:
+        julian_day: Julian day when angle reaches the longitude
+        datetime_utc: UTC datetime of the crossing
+        angle_name: Which angle ("ASC", "MC", "DSC", "IC")
+        target_longitude: The target longitude that was crossed
+        actual_longitude: The actual angle longitude at crossing
+        latitude: Geographic latitude used
+        longitude: Geographic longitude used
+    """
+
+    julian_day: float
+    datetime_utc: datetime
+    angle_name: str
+    target_longitude: float
+    actual_longitude: float
+    latitude: float
+    longitude: float
+
+    def __str__(self) -> str:
+        sign_idx = int(self.target_longitude // 30)
+        signs = [
+            "Aries",
+            "Taurus",
+            "Gemini",
+            "Cancer",
+            "Leo",
+            "Virgo",
+            "Libra",
+            "Scorpio",
+            "Sagittarius",
+            "Capricorn",
+            "Aquarius",
+            "Pisces",
+        ]
+        degree = self.target_longitude % 30
+        return (
+            f"{self.angle_name} at {degree:.1f}° {signs[sign_idx]} "
+            f"on {self.datetime_utc.strftime('%Y-%m-%d %H:%M')}"
+        )
+
+
+def find_angle_crossing(
+    target_longitude: float,
+    latitude: float,
+    longitude: float,
+    angle: str,
+    start: datetime | float,
+    direction: Literal["forward", "backward"] = "forward",
+    max_days: float = 2.0,
+    tolerance: float = 0.001,
+    max_iterations: int = 50,
+) -> AngleCrossing | None:
+    """Find when a chart angle crosses a specific longitude.
+
+    Since angles rotate with Earth's rotation (~1° every 4 minutes),
+    any given longitude will be crossed roughly once per sidereal day
+    (~23h 56m) by each angle.
+
+    Args:
+        target_longitude: Target longitude in degrees (0-360)
+        latitude: Geographic latitude
+        longitude: Geographic longitude (negative = West)
+        angle: Which angle to track ("ASC", "MC", "DSC", "IC")
+        start: Starting datetime (UTC) or Julian day
+        direction: "forward" to search future, "backward" to search past
+        max_days: Maximum days to search (default 2, since crossings are daily)
+        tolerance: Convergence tolerance in degrees
+        max_iterations: Maximum refinement iterations
+
+    Returns:
+        AngleCrossing with exact timing, or None if not found
+
+    Example:
+        >>> # Find when ASC reaches 0° Leo in NYC
+        >>> result = find_angle_crossing(120.0, 40.7, -74.0, "ASC", datetime.now())
+        >>> print(f"ASC at 0° Leo: {result.datetime_utc}")
+    """
+    from stellium.data.paths import initialize_ephemeris
+
+    initialize_ephemeris()
+
+    # Convert start to Julian day if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    # Normalize target longitude
+    target_longitude = target_longitude % 360
+
+    # Angles move ~360° per day, so we need small steps for bracketing
+    step_hours = 0.5  # 30 minutes
+    step_jd = step_hours / 24
+
+    step = step_jd if direction == "forward" else -step_jd
+    end_jd = start_jd + (max_days if direction == "forward" else -max_days)
+
+    current_jd = start_jd
+    current_angle = _get_angle_longitude(current_jd, latitude, longitude, angle)
+    current_error = _normalize_angle_error(current_angle - target_longitude)
+
+    # Bracket the crossing
+    bracket_start = None
+    bracket_end = None
+
+    while (direction == "forward" and current_jd < end_jd) or (
+        direction == "backward" and current_jd > end_jd
+    ):
+        next_jd = current_jd + step
+        next_angle = _get_angle_longitude(next_jd, latitude, longitude, angle)
+        next_error = _normalize_angle_error(next_angle - target_longitude)
+
+        # Check for sign change (crossing)
+        if current_error * next_error < 0:
+            # Verify it's a real crossing (not a 180° wraparound artifact)
+            if abs(current_error) < 90 and abs(next_error) < 90:
+                bracket_start = current_jd
+                bracket_end = next_jd
+                break
+
+        # Also check if we're very close
+        if abs(next_error) < tolerance:
+            return AngleCrossing(
+                julian_day=next_jd,
+                datetime_utc=_julian_day_to_datetime(next_jd),
+                angle_name=angle.upper() if angle.upper() in ANGLE_INDICES else angle,
+                target_longitude=target_longitude,
+                actual_longitude=next_angle,
+                latitude=latitude,
+                longitude=longitude,
+            )
+
+        current_jd = next_jd
+        current_error = next_error
+
+    if bracket_start is None:
+        return None
+
+    # Refine with bisection (Newton-Raphson is tricky here due to discontinuities)
+    t1, t2 = bracket_start, bracket_end
+
+    for _ in range(max_iterations):
+        mid_jd = (t1 + t2) / 2
+        mid_angle = _get_angle_longitude(mid_jd, latitude, longitude, angle)
+        mid_error = _normalize_angle_error(mid_angle - target_longitude)
+
+        if abs(mid_error) < tolerance:
+            return AngleCrossing(
+                julian_day=mid_jd,
+                datetime_utc=_julian_day_to_datetime(mid_jd),
+                angle_name=angle.upper() if angle.upper() in ANGLE_INDICES else angle,
+                target_longitude=target_longitude,
+                actual_longitude=mid_angle,
+                latitude=latitude,
+                longitude=longitude,
+            )
+
+        # Determine which half contains the crossing
+        t1_angle = _get_angle_longitude(t1, latitude, longitude, angle)
+        t1_error = _normalize_angle_error(t1_angle - target_longitude)
+
+        if t1_error * mid_error < 0:
+            t2 = mid_jd
+        else:
+            t1 = mid_jd
+
+    # Return best estimate
+    final_jd = (t1 + t2) / 2
+    final_angle = _get_angle_longitude(final_jd, latitude, longitude, angle)
+    return AngleCrossing(
+        julian_day=final_jd,
+        datetime_utc=_julian_day_to_datetime(final_jd),
+        angle_name=angle.upper() if angle.upper() in ANGLE_INDICES else angle,
+        target_longitude=target_longitude,
+        actual_longitude=final_angle,
+        latitude=latitude,
+        longitude=longitude,
+    )
+
+
+def find_all_angle_crossings(
+    target_longitude: float,
+    latitude: float,
+    longitude: float,
+    angle: str,
+    start: datetime | float,
+    end: datetime | float,
+    max_results: int = 100,
+) -> list[AngleCrossing]:
+    """Find all times a chart angle crosses a specific longitude in a date range.
+
+    Args:
+        target_longitude: Target longitude in degrees (0-360)
+        latitude: Geographic latitude
+        longitude: Geographic longitude (negative = West)
+        angle: Which angle to track ("ASC", "MC", "DSC", "IC")
+        start: Start datetime (UTC) or Julian day
+        end: End datetime (UTC) or Julian day
+        max_results: Safety limit on number of results
+
+    Returns:
+        List of AngleCrossing objects, chronologically ordered
+
+    Example:
+        >>> # Find all times ASC crosses 0° Aries in January 2025
+        >>> results = find_all_angle_crossings(
+        ...     0.0, 40.7, -74.0, "ASC",
+        ...     datetime(2025, 1, 1), datetime(2025, 2, 1)
+        ... )
+        >>> print(f"Found {len(results)} crossings")  # ~31 (once per day)
+    """
+    # Convert to Julian days if needed
+    if isinstance(start, datetime):
+        start_jd = _datetime_to_julian_day(start)
+    else:
+        start_jd = start
+
+    if isinstance(end, datetime):
+        end_jd = _datetime_to_julian_day(end)
+    else:
+        end_jd = end
+
+    results = []
+    current_jd = start_jd
+
+    while current_jd < end_jd and len(results) < max_results:
+        result = find_angle_crossing(
+            target_longitude,
+            latitude,
+            longitude,
+            angle,
+            current_jd,
+            direction="forward",
+            max_days=end_jd - current_jd + 1,
+        )
+
+        if result is None or result.julian_day > end_jd:
+            break
+
+        results.append(result)
+
+        # Move past this crossing
+        # Angles cross a given longitude roughly once per sidereal day (~23h 56m)
+        # Use 20 hours to be safe
+        current_jd = result.julian_day + 20 / 24
 
     return results
 

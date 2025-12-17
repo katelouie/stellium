@@ -71,17 +71,23 @@ from stellium.engines.profections import (
     ProfectionTimeline,
 )
 
-# Longitude Search, Ingresses, Stations, and Eclipses
+# Longitude Search, Ingresses, Stations, Eclipses, Aspect Exactitude, and Angle Crossings
 from stellium.engines.search import (
+    AngleCrossing,
+    AspectExact,
     Eclipse,
     LongitudeCrossing,
     SignIngress,
     Station,
+    find_all_angle_crossings,
+    find_all_aspect_exacts,
     find_all_eclipses,
     find_all_ingresses,
     find_all_longitude_crossings,
     find_all_sign_changes,
     find_all_stations,
+    find_angle_crossing,
+    find_aspect_exact,
     find_eclipse,
     find_ingress,
     find_longitude_crossing,
@@ -127,7 +133,7 @@ __all__ = [
     "MutualReception",
     "render_dispositor_graph",
     "render_both_dispositors",
-    # Longitude Search, Ingresses, Stations, & Eclipses
+    # Longitude Search, Ingresses, Stations, Eclipses, & Aspect Exactitude
     "find_longitude_crossing",
     "find_all_longitude_crossings",
     "LongitudeCrossing",
@@ -142,6 +148,12 @@ __all__ = [
     "find_eclipse",
     "find_all_eclipses",
     "Eclipse",
+    "find_aspect_exact",
+    "find_all_aspect_exacts",
+    "AspectExact",
+    "find_angle_crossing",
+    "find_all_angle_crossings",
+    "AngleCrossing",
     # Primary Directions
     "DirectionsEngine",
     "DirectionResult",
