@@ -221,6 +221,31 @@ RAMC (Right Ascension of MC) was incorrectly appearing as a planet/point on char
 
 Fixed test failures in GitHub Actions CI where module-scoped test fixtures (in `test_multiwheel.py` and `test_zodiacal_releasing.py`) were attempting geocoding before the mock was applied. The geocoding mock is now session-scoped to ensure it's active before any fixtures run.
 
+#### VOC Window Calculation Accuracy
+
+Fixed a discrepancy where `ElectionalSearch` with `not_voc()` could return different results between optimized and unoptimized modes. The issue was in `voc_windows()` which uses binary search to find VOC transition times.
+
+**Root cause:**
+
+The binary search tolerance was 5 minutes, which could overshoot the actual VOC transition by up to 5 minutes. For example, on Jan 5, 2025:
+- Actual VOC start: 11:58:30 UTC
+- Computed VOC start: 12:00:09 UTC (with 5-min tolerance)
+
+This caused edge cases where a time like 12:00:00 UTC was incorrectly classified as "not VOC" by the optimized path (using pre-computed windows) but correctly as "VOC" by the unoptimized path (using live `chart.voc_moon()` checks).
+
+**The fix:**
+
+- Reduced binary search tolerance from 5 minutes to 1 minute in `_find_voc_transition_in_sign()`
+- This adds ~2-3 iterations to the binary search but ensures optimized and unoptimized results match
+
+#### Waxing Moon Window Calculation
+
+Fixed `waxing_windows()` not finding all waxing periods when the Full Moon occurred after the search end date. The function now searches for Full Moons up to 30 days beyond the end date to ensure complete coverage.
+
+#### Window Endpoint Inclusion
+
+Fixed off-by-one errors in `_is_in_valid_windows()` and `_count_steps_in_windows()` where window endpoints were being excluded. Changed boundary comparisons from `<` to `<=` for consistent endpoint inclusion across the codebase.
+
 ## [0.11.1] - 2025-12-15
 
 ### Fixed

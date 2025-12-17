@@ -624,9 +624,9 @@ def _find_voc_transition_in_sign(
         # Binary search for the transition point
         lo, hi = sign_start_jd, ingress_jd
 
-        # Tolerance: ~5 minutes in JD (good enough for most electional purposes)
-        # This reduces chart calculations from ~10 per sign to ~7
-        tolerance = 5.0 / (24 * 60)
+        # Tolerance: ~1 minute in JD for accuracy
+        # This requires ~10-11 iterations per sign period
+        tolerance = 1.0 / (24 * 60)
 
         while hi - lo > tolerance:
             mid = (lo + hi) / 2
