@@ -292,8 +292,10 @@ class SwissEphemerisEngine:
             equ_flags = flags | swe.FLG_EQUATORIAL
             equ_result = swe.calc_ut(julian_day, object_id, equ_flags)
 
-            # Calculate phase data if available
-            phase_data = self._calculate_phase(julian_day, object_id, object_name)
+            # Calculate phase data if available (pass longitude for Moon waxing fix)
+            phase_data = self._calculate_phase(
+                julian_day, object_id, object_name, object_longitude=result[0][0]
+            )
 
             return CelestialPosition(
                 name=object_name,
@@ -365,7 +367,11 @@ class SwissEphemerisEngine:
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_phase(
-        self, julian_day: float, object_id: int, object_name: str
+        self,
+        julian_day: float,
+        object_id: int,
+        object_name: str,
+        object_longitude: float | None = None,
     ) -> PhaseData | None:
         """
         Calculate phase data for an object.
@@ -380,6 +386,7 @@ class SwissEphemerisEngine:
             julian_day: Julian day number
             object_id: Swiss Ephemeris object ID
             object_name: Name of object (for logging)
+            object_longitude: Longitude of the object (for Moon waxing calculation)
 
         Returns:
             PhaseData if calculation succeeds, None otherwise
@@ -395,12 +402,23 @@ class SwissEphemerisEngine:
             pheno_result = swe.pheno_ut(julian_day, object_id)
 
             # pheno_result is a tuple:
-            # [0] phase_angle (elongation from Sun, 0-360°)
+            # [0] phase_angle (0-180° - can't distinguish waxing/waning!)
             # [1] illuminated_fraction (0.0-1.0)
             # [2] elongation (same as [0])
             # [3] apparent_diameter (arc seconds)
             # [4] apparent_magnitude (visual)
             # [5] geocentric_parallax (primarily for Moon)
+
+            # For Moon: calculate Sun longitude for accurate waxing determination
+            # (phase_angle from pheno_ut is 0-180°, can't tell waxing vs waning)
+            sun_longitude = None
+            moon_longitude = None
+            if object_name == "Moon" and object_longitude is not None:
+                # Use default flags (tropical, geocentric) for Sun calc
+                flags = swe.FLG_SWIEPH | swe.FLG_SPEED
+                sun_result = swe.calc_ut(julian_day, swe.SUN, flags)
+                sun_longitude = sun_result[0][0]
+                moon_longitude = object_longitude
 
             return PhaseData(
                 phase_angle=pheno_result[0],
@@ -409,6 +427,8 @@ class SwissEphemerisEngine:
                 apparent_diameter=pheno_result[3],
                 apparent_magnitude=pheno_result[4],
                 geocentric_parallax=pheno_result[5],
+                sun_longitude=sun_longitude,
+                moon_longitude=moon_longitude,
             )
 
         except (swe.Error, IndexError, TypeError) as _e:

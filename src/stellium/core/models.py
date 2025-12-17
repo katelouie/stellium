@@ -1395,20 +1395,30 @@ class PhaseData:
         geocentric_parallax: Parallax angle (radians) - primarily for Moon
     """
 
-    phase_angle: float  # 0-360 degrees
+    phase_angle: float  # 0-180 degrees (from swe.pheno_ut)
     illuminated_fraction: float  # 0.0 to 1.0
     elongation: float
     apparent_diameter: float  # arc seconds
     apparent_magnitude: float  # visual magnitude
     geocentric_parallax: float = 0.0  # radians (mainly for Moon)
+    # For accurate waxing/waning calculation (Moon only)
+    sun_longitude: float | None = None
+    moon_longitude: float | None = None
 
     @property
     def is_waxing(self) -> bool:
         """
         Whether object is waxing (growing in illumination).
 
-        For the Moon: 0-180° = waxing, 180-360° = waning
+        For the Moon: waxing when Moon is 0-180° ahead of Sun.
+        Uses Sun/Moon longitudes when available (accurate).
+        Falls back to phase_angle for backward compatibility.
         """
+        if self.moon_longitude is not None and self.sun_longitude is not None:
+            # Accurate calculation: Moon ahead of Sun by 0-180° = waxing
+            diff = (self.moon_longitude - self.sun_longitude) % 360
+            return diff <= 180
+        # Fallback (not reliable - phase_angle from pheno_ut is 0-180°)
         return self.phase_angle <= 180.0
 
     @property
