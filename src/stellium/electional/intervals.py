@@ -28,7 +28,6 @@ from stellium.engines.search import (
     _julian_day_to_datetime,
     find_all_sign_changes,
     find_all_stations,
-    find_longitude_crossing,
 )
 
 # =============================================================================
@@ -338,8 +337,10 @@ def waxing_windows(
     end_jd = end if isinstance(end, float) else _datetime_to_julian_day(end)
 
     # Find all new moons and full moons
+    # Need to search beyond end_jd for full moons to capture windows that start
+    # before end_jd but end after it
     new_moons = _find_all_lunations(start_jd - 30, end_jd, "new")
-    full_moons = _find_all_lunations(start_jd - 30, end_jd, "full")
+    full_moons = _find_all_lunations(start_jd - 30, end_jd + 30, "full")
 
     # Build windows from new moon to following full moon
     windows = []
@@ -571,63 +572,75 @@ def _get_planet_position(jd: float, planet_name: str) -> float:
     return result[0][0]
 
 
-def _find_last_aspect_before_ingress(
+def _find_voc_transition_in_sign(
     sign_start_jd: float,
     ingress_jd: float,
-    planets: list[str],
+    mode: Literal["traditional", "modern"],
 ) -> float | None:
-    """Find when the Moon makes its last Ptolemaic aspect before leaving the sign.
+    """Find when VOC period starts within a Moon sign period.
+
+    Uses the actual VOC calculation engine for accuracy. Performs a binary
+    search to find the transition from "not VOC" to "VOC".
 
     Args:
         sign_start_jd: JD when Moon entered the current sign
         ingress_jd: JD when Moon will leave the sign
-        planets: List of planets to consider for aspects
+        mode: "traditional" or "modern" aspect mode
 
     Returns:
-        Julian Day of the last aspect, or None if no aspects in the sign
+        Julian Day when VOC period starts, or None if entire period is VOC
     """
+    from stellium import ChartBuilder, Native
+
     _set_ephemeris_path()
 
-    last_aspect_jd: float | None = None
+    # Helper to check VOC status at a given JD
+    def is_voc_at(jd: float) -> bool:
+        dt = _julian_day_to_datetime(jd)
+        # Use a neutral location for VOC calculation (doesn't matter for Moon aspects)
+        native = Native(dt, (0.0, 0.0))  # (latitude, longitude) tuple
+        chart = ChartBuilder.from_native(native).calculate()
+        result = chart.voc_moon(aspects=mode)
+        return result.is_void
 
-    for planet_name in planets:
-        # Get planet position at start of sign period
-        # Note: We assume slow planets don't move much during ~2.5 day Moon sign transit
-        planet_lon = _get_planet_position(sign_start_jd, planet_name)
+    # Check endpoints
+    start_is_voc = is_voc_at(sign_start_jd + 0.001)  # Slightly after ingress
+    end_is_voc = is_voc_at(ingress_jd - 0.001)  # Slightly before next ingress
 
-        for aspect_angle in PTOLEMAIC_ASPECTS:
-            # Target longitudes for this aspect
-            targets = [
-                (planet_lon + aspect_angle) % 360,
-                (planet_lon - aspect_angle) % 360,
-            ]
+    # If entire period is VOC, return None (caller handles this)
+    if start_is_voc and end_is_voc:
+        return None
 
-            # For conjunction/opposition, only one target
-            if aspect_angle == 0 or aspect_angle == 180:
-                targets = [targets[0]]
+    # If entire period is NOT VOC, there's no VOC window in this sign
+    # This shouldn't happen since Moon always goes VOC before leaving sign
+    # But return ingress_jd to indicate VOC starts at the very end
+    if not start_is_voc and not end_is_voc:
+        # Check if there's a brief VOC period we missed
+        # The Moon goes VOC after its last aspect, so check near the end
+        return ingress_jd
 
-            for target in targets:
-                # Find when Moon crosses this target longitude
-                crossing = find_longitude_crossing(
-                    "Moon",
-                    target,
-                    sign_start_jd,
-                    direction="forward",
-                    max_days=3.0,  # Moon sign transit is ~2.5 days max
-                )
+    # If start is not VOC but end is VOC, find the transition
+    if not start_is_voc and end_is_voc:
+        # Binary search for the transition point
+        lo, hi = sign_start_jd, ingress_jd
 
-                if crossing is None:
-                    continue
+        # Tolerance: ~5 minutes in JD (good enough for most electional purposes)
+        # This reduces chart calculations from ~10 per sign to ~7
+        tolerance = 5.0 / (24 * 60)
 
-                aspect_jd = crossing.julian_day
+        while hi - lo > tolerance:
+            mid = (lo + hi) / 2
+            if is_voc_at(mid):
+                hi = mid  # VOC, look earlier
+            else:
+                lo = mid  # Not VOC, look later
 
-                # Check if this aspect is within the sign period (before ingress)
-                if sign_start_jd <= aspect_jd < ingress_jd:
-                    # Track the latest aspect
-                    if last_aspect_jd is None or aspect_jd > last_aspect_jd:
-                        last_aspect_jd = aspect_jd
+        return hi  # Return the point where VOC starts
 
-    return last_aspect_jd
+    # If start is VOC but end is not VOC, something weird is happening
+    # (Moon can't go from VOC back to not-VOC without changing signs)
+    # Return the start as the VOC transition
+    return sign_start_jd
 
 
 def voc_windows(
@@ -640,6 +653,9 @@ def voc_windows(
     A void of course Moon has made its last major Ptolemaic aspect
     (conjunction, sextile, square, trine, opposition) before leaving
     its current sign.
+
+    This implementation uses the actual VOC calculation engine for
+    accuracy, with binary search to find VOC transition times.
 
     Args:
         start: Start of search range
@@ -654,13 +670,12 @@ def voc_windows(
     start_dt = start if isinstance(start, datetime) else _julian_day_to_datetime(start)
     end_dt = end if isinstance(end, datetime) else _julian_day_to_datetime(end)
 
-    # Get planets to check based on mode
-    planets = TRADITIONAL_PLANETS if mode == "traditional" else MODERN_PLANETS
-
     # Get all Moon sign ingresses with buffer
     from datetime import timedelta
 
-    ingresses = find_all_sign_changes("Moon", start_dt - timedelta(days=3), end_dt)
+    ingresses = find_all_sign_changes(
+        "Moon", start_dt - timedelta(days=3), end_dt + timedelta(days=1)
+    )
 
     if not ingresses:
         return []
@@ -675,37 +690,41 @@ def voc_windows(
         if i + 1 < len(ingresses):
             next_ingress_jd = ingresses[i + 1].julian_day
         else:
-            # Last ingress - estimate next one (~2.5 days)
-            next_ingress_jd = ingress.julian_day + 2.5
+            # Last ingress - find the next one
+            next_ingress = find_all_sign_changes(
+                "Moon",
+                _julian_day_to_datetime(ingress.julian_day),
+                _julian_day_to_datetime(ingress.julian_day + 3),
+            )
+            if len(next_ingress) > 1:
+                next_ingress_jd = next_ingress[1].julian_day
+            else:
+                # Estimate ~2.5 days
+                next_ingress_jd = ingress.julian_day + 2.5
 
         # Skip if this sign period is entirely outside our range
         if next_ingress_jd <= start_jd or sign_start_jd >= end_jd:
             continue
 
-        # Find the last aspect before the Moon leaves this sign
-        last_aspect_jd = _find_last_aspect_before_ingress(
-            sign_start_jd, next_ingress_jd, planets
+        # Find when VOC starts in this sign period
+        voc_start_jd = _find_voc_transition_in_sign(
+            sign_start_jd, next_ingress_jd, mode
         )
 
-        if last_aspect_jd is not None:
-            # VOC period is from last aspect to ingress
-            voc_start = last_aspect_jd
-            voc_end = next_ingress_jd
-
-            # Clip to our search range
-            voc_start = max(voc_start, start_jd)
-            voc_end = min(voc_end, end_jd)
-
-            if voc_start < voc_end:
-                windows.append(TimeWindow(voc_start, voc_end))
+        if voc_start_jd is None:
+            # Entire sign period is VOC (rare, but possible)
+            voc_start = sign_start_jd
         else:
-            # No aspects in this sign = entire sign period is VOC
-            # This is rare but can happen
-            voc_start = max(sign_start_jd, start_jd)
-            voc_end = min(next_ingress_jd, end_jd)
+            voc_start = voc_start_jd
 
-            if voc_start < voc_end:
-                windows.append(TimeWindow(voc_start, voc_end))
+        voc_end = next_ingress_jd
+
+        # Clip to our search range
+        voc_start = max(voc_start, start_jd)
+        voc_end = min(voc_end, end_jd)
+
+        if voc_start < voc_end:
+            windows.append(TimeWindow(voc_start, voc_end))
 
     return windows
 

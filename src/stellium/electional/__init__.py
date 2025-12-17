@@ -500,16 +500,19 @@ class ElectionalSearch:
         jd = self._local_datetime_to_jd(when)
 
         # Binary search for the window that could contain this time
+        # We want the first window where end_jd >= jd (could contain jd)
         lo, hi = 0, len(windows)
         while lo < hi:
             mid = (lo + hi) // 2
-            if windows[mid].end_jd <= jd:
+            # Use < instead of <= to handle endpoint inclusion correctly
+            if windows[mid].end_jd < jd:
                 lo = mid + 1
             else:
                 hi = mid
 
         # Check if we're in the window at position lo
-        if lo < len(windows) and windows[lo].start_jd <= jd < windows[lo].end_jd:
+        # Use <= for end to include the endpoint (consistent with _time_steps)
+        if lo < len(windows) and windows[lo].start_jd <= jd <= windows[lo].end_jd:
             return True
 
         return False
@@ -884,16 +887,16 @@ class ElectionalSearch:
 
             first_step_jd = start_jd + first_step_index * step_jd
 
-            # Count steps from first_step_jd up to (but not including) win_end
-            if first_step_jd >= win_end:
+            # Count steps from first_step_jd up to and including win_end
+            if first_step_jd > win_end:
                 continue
 
-            # Last valid step is the largest index such that start_jd + index * step_jd < win_end
+            # Last valid step is the largest index such that start_jd + index * step_jd <= win_end
             last_step_index = int((win_end - start_jd) / step_jd)
             last_step_jd = start_jd + last_step_index * step_jd
 
-            # Adjust if last step equals or exceeds win_end
-            while last_step_jd >= win_end and last_step_index >= first_step_index:
+            # Adjust if last step exceeds win_end (shouldn't happen with int(), but be safe)
+            while last_step_jd > win_end and last_step_index >= first_step_index:
                 last_step_index -= 1
                 last_step_jd = start_jd + last_step_index * step_jd
 
