@@ -5,6 +5,67 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.13.0] - 2025-12-17
+
+### Added
+
+#### PDF Planner Generator
+
+New `PlannerBuilder` class for generating beautiful personalized astrological planners as PDF files.
+
+**Features:**
+
+- **Front matter pages**: Natal chart, progressed chart, solar return, annual profection info, graphic ephemeris
+- **Monthly calendar grids**: Full-page calendar view with all events displayed in each day cell
+- **Weekly detail pages**: 7-day spreads with compact event listings per day
+- **Rainbow zodiac palette**: All charts use colorful zodiac sign backgrounds
+- **Configurable week start**: Sunday (US) or Monday (European) calendar style
+- **Multiple page sizes**: A4, Letter, or half-letter with optional binding margins
+
+```python
+from stellium import Native, PlannerBuilder
+
+native = Native("1990-05-15 14:30", "San Francisco, CA")
+
+planner = (
+    PlannerBuilder.for_native(native)
+    .year(2025)
+    .timezone("America/Los_Angeles")
+    .with_natal_chart()
+    .with_progressed_chart()
+    .with_solar_return()
+    .with_profections()
+    .with_graphic_ephemeris(harmonic=90)
+    .include_natal_transits()  # All planets + Node + Chiron
+    .include_moon_phases()
+    .include_voc(mode="traditional")
+    .include_ingresses(["Sun", "Moon", "Mercury", "Venus", "Mars"])
+    .include_stations()
+    .week_starts_on("sunday")
+    .generate("my_planner.pdf")
+)
+```
+
+**Daily Events Tracked:**
+
+- Transit-to-natal aspects (all 10 planets + True Node + Chiron)
+- Moon phases (New Moon, Full Moon)
+- Void of Course Moon periods (traditional or modern calculation)
+- Planet ingresses (sign changes)
+- Planetary stations (retrograde/direct)
+- Eclipses (solar and lunar)
+
+**Event Collection** (`stellium.planner.events`):
+
+- `DailyEventCollector` class for gathering astrological events
+- Configurable transit planets and aspect orbs
+- Timezone-aware event times
+- Priority-based event sorting
+
+See `examples/planner_cookbook.py` for detailed recipes and usage patterns.
+
+---
+
 ## [0.12.0] - 2025-12-17
 
 ### Added

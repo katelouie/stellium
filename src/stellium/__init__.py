@@ -13,7 +13,7 @@ For more control:
     >>> chart = ChartBuilder.from_native(native).calculate()
 """
 
-__version__ = "0.12.0"
+__version__ = "0.13.0"
 
 # === Core Building Blocks (Most Common) ===
 # === Convenience Re-exports ===
@@ -78,6 +78,9 @@ from stellium.io import (
     read_csv,
     read_dataframe,
 )
+
+# === Planner (PDF Generation) ===
+from stellium.planner import PlannerBuilder
 
 # === Presentation (Reports) ===
 from stellium.presentation import ReportBuilder
@@ -155,4 +158,6 @@ __all__ = [
     "CSVColumnMapping",
     # Electional Astrology
     "ElectionalSearch",
+    # Planner
+    "PlannerBuilder",
 ]
