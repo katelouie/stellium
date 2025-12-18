@@ -519,6 +519,41 @@ data = chart.to_dict()
 # - Chart metadata (date, location, timezone)
 ```
 
+### PDF Planner Generation
+
+Generate beautiful personalized astrological planners as PDF files:
+
+```python
+from stellium import Native, PlannerBuilder
+
+native = Native("1990-05-15 14:30", "San Francisco, CA")
+
+planner = (
+    PlannerBuilder.for_native(native)
+    .year(2025)
+    .timezone("America/Los_Angeles")
+    .with_natal_chart()
+    .with_solar_return()
+    .with_graphic_ephemeris(harmonic=90)
+    .include_natal_transits()  # All planets + Node + Chiron
+    .include_moon_phases()
+    .include_voc(mode="traditional")
+    .generate("my_planner.pdf")
+)
+```
+
+**Planner Features:**
+
+- **Front matter pages**: Natal chart, progressed chart, solar return, annual profection, graphic ephemeris
+- **Monthly calendar grids**: Full-page calendar view with all events displayed
+- **Weekly detail pages**: 7-day spreads with compact event listings
+- **Daily events**: Transit-to-natal aspects, Moon phases, VOC periods, ingresses, stations, eclipses
+- **Configurable**: Week start (Sunday/Monday), page size (A4/Letter), binding margins
+
+Requires: `pip install typst`
+
+See the [planner cookbook](examples/planner_cookbook.py) for detailed recipes.
+
 ### Data Analysis (pandas Integration)
 
 Batch calculate charts and analyze with pandas DataFrames:
@@ -581,6 +616,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
 | **[ephemeris_cookbook.py](examples/ephemeris_cookbook.py)** | Examples of graphic ephemeris charts with optional natal overlays |
 | **[electional_cookbook.py](examples/electional_cookbook.py)** | 43 examples: finding auspicious times, predicates, planetary hours, aspect exactitude |
+| **[planner_cookbook.py](examples/planner_cookbook.py)** | 9 examples: PDF planners with charts, transits, Moon phases, VOC, calendar layouts |
 | **[analysis_cookbook.ipynb](examples/analysis_cookbook.ipynb)** | Jupyter notebook: batch calculation, pandas DataFrames, queries, statistics, export |
 
 ```bash
@@ -595,6 +631,7 @@ python examples/profections_cookbook.py
 python examples/zodiacal_releasing_cookbook.py
 python examples/dial_cookbook.py
 python examples/electional_cookbook.py
+python examples/planner_cookbook.py
 ```
 
 ### User Guides
@@ -726,6 +763,8 @@ See [TODO.md](TODO.md) for the full development roadmap.
 
 ### Recently Added
 
+- ✅ **PDF Planner Generator** - Create personalized astrological planners with charts, transits, Moon phases, and calendar layouts
+- ✅ **Electional Astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - ✅ **Data Analysis Module** - Batch calculation, pandas DataFrames, queries, statistics
 - ✅ **Sidereal Zodiac Support** - 9 ayanamsa systems (Lahiri, Fagan-Bradley, Raman, etc.)
 - ✅ **Declination Calculations** - Out-of-bounds detection, equatorial coordinates
