@@ -45,3 +45,4 @@ docs/planning/
 
 # Claude planning files
 .claude/
+claude_info/
