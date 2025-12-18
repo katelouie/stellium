@@ -5,6 +5,25 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+#### Improved Planet Glyph Collision Detection
+
+Rewrote the collision detection algorithm for planet glyphs on chart wheels. The previous algorithm used a fixed 6° minimum separation regardless of ring radius, causing glyphs to overlap badly on inner rings of bi-wheel and tri-wheel charts.
+
+**Key improvements:**
+
+- **Radius-aware spacing**: Minimum separation now calculated from glyph size and ring circumference. Inner rings (smaller radius) automatically get more angular separation than outer rings.
+- **Iterative force-based spreading**: Uses a physics-inspired algorithm that pushes overlapping glyphs apart over multiple iterations until stable.
+- **Proper wrap-around handling**: Correctly detects and resolves collisions at the 0°/360° boundary (e.g., planets at 358° and 2° are properly recognized as only 4° apart).
+- **Maximum displacement limit**: Glyphs won't move more than 20° from their true position, balancing visual clarity with positional accuracy.
+
+This fix significantly improves the readability of multiwheel charts, especially when planets are tightly clustered.
+
+---
+
 ## [0.13.0] - 2025-12-17
 
 ### Added

@@ -1609,7 +1609,7 @@ class PlanetLayer:
 
         # Calculate adjusted positions with collision detection
         adjusted_positions = self._calculate_adjusted_positions(
-            self.planets, base_radius
+            self.planets, base_radius, glyph_size_px
         )
 
         # Determine effective info mode (handle legacy show_info_stack)
@@ -1815,17 +1815,24 @@ class PlanetLayer:
                     )
 
     def _calculate_adjusted_positions(
-        self, planets: list[CelestialPosition], base_radius: float
+        self,
+        planets: list[CelestialPosition],
+        base_radius: float,
+        glyph_size_px: float = 32.0,
     ) -> dict[CelestialPosition, dict[str, Any]]:
         """
-        Calculate adjusted positions for planets with collision detection.
+        Calculate adjusted positions for planets with radius-aware collision detection.
 
-        Groups colliding planets and spreads them evenly while maintaining
-        their original order.
+        Uses an iterative force-based algorithm that:
+        1. Calculates minimum angular separation based on glyph size and ring radius
+        2. Iteratively pushes colliding glyphs apart until stable
+        3. Properly handles wrap-around at the 0°/360° boundary
+        4. Limits maximum displacement to keep glyphs near their true positions
 
         Args:
             planets: List of planets to position
-            base_radius: The radius at which to place planet glyphs
+            base_radius: The radius at which to place planet glyphs (in pixels)
+            glyph_size_px: The glyph font size in pixels (default 32.0)
 
         Returns:
             Dictionary mapping each planet to its position info:
@@ -1836,123 +1843,163 @@ class PlanetLayer:
                 }
             }
         """
-        # Minimum angular separation in degrees
-        min_separation = 6.0
+        import math
 
-        # Sort planets by longitude to maintain order
-        sorted_planets = sorted(planets, key=lambda p: p.longitude)
+        if not planets:
+            return {}
 
-        # Find collision groups
-        collision_groups = self._find_collision_groups(sorted_planets, min_separation)
+        # Calculate radius-aware minimum separation
+        # Glyph width is approximately the font size
+        # We need enough angular space for the glyph plus a small buffer
+        glyph_width_px = glyph_size_px
+        buffer_factor = 1.3  # 30% extra space for visual clarity
 
-        # Adjust positions for each group
+        # Arc length formula: arc = (angle/360) * 2*pi*r
+        # Solving for angle: angle = (arc * 360) / (2*pi*r)
+        circumference = 2 * math.pi * base_radius
+        min_separation = (glyph_width_px * buffer_factor * 360) / circumference
+
+        # Ensure a reasonable minimum (at least 4°) and maximum (at most 15°)
+        min_separation = max(4.0, min(15.0, min_separation))
+
+        # Initialize display positions to true positions
+        display_positions = {p: p.longitude for p in planets}
+
+        # Iterative force-based spreading
+        max_iterations = 50
+        convergence_threshold = 0.1  # Stop when max movement < this
+
+        for _iteration in range(max_iterations):
+            max_movement = 0.0
+
+            # Sort planets by current display position for efficient neighbor checks
+            sorted_planets = sorted(planets, key=lambda p: display_positions[p])
+            n = len(sorted_planets)
+
+            # Calculate forces on each planet
+            forces = dict.fromkeys(planets, 0.0)
+
+            # Check each adjacent pair (including wrap-around from last to first)
+            for i in range(n):
+                curr_planet = sorted_planets[i]
+                next_planet = sorted_planets[(i + 1) % n]  # Wrap around
+
+                curr_pos = display_positions[curr_planet]
+                next_pos = display_positions[next_planet]
+
+                # Calculate the forward (clockwise) distance from curr to next
+                forward_dist = (next_pos - curr_pos) % 360
+
+                # If forward distance > 180, the "short" path is backward
+                # We want the short path distance for collision detection
+                if forward_dist > 180:
+                    # The short path is backward (counter-clockwise)
+                    short_dist = 360 - forward_dist
+                else:
+                    # The short path is forward (clockwise)
+                    short_dist = forward_dist
+
+                if short_dist < min_separation:
+                    # Collision detected - push them apart
+                    overlap = min_separation - short_dist
+                    push = overlap * 0.5
+
+                    # Determine which direction to push
+                    # Push curr backward and next forward along the SHORT path
+                    if forward_dist <= 180:
+                        # Short path is forward: curr should go backward, next forward
+                        forces[curr_planet] -= push
+                        forces[next_planet] += push
+                    else:
+                        # Short path is backward: curr should go forward, next backward
+                        forces[curr_planet] += push
+                        forces[next_planet] -= push
+
+            # Apply forces with damping and limits
+            for planet in planets:
+                force = forces[planet]
+                if abs(force) > 0.01:  # Only apply meaningful forces
+                    # Limit max movement per iteration for stability
+                    movement = max(-2.0, min(2.0, force))
+
+                    # Calculate new position
+                    new_pos = (display_positions[planet] + movement) % 360
+
+                    # Limit max displacement from true position (max 20°)
+                    true_pos = planet.longitude
+                    displacement = self._signed_circular_distance(true_pos, new_pos)
+                    max_displacement = 20.0
+                    if abs(displacement) > max_displacement:
+                        # Clamp to max displacement
+                        if displacement > 0:
+                            new_pos = (true_pos + max_displacement) % 360
+                        else:
+                            new_pos = (true_pos - max_displacement) % 360
+
+                    max_movement = max(max_movement, abs(force))
+                    display_positions[planet] = new_pos
+
+            # Check for convergence
+            if max_movement < convergence_threshold:
+                break
+
+        # Build result dictionary
         adjusted_positions = {}
-
-        for group in collision_groups:
-            if len(group) == 1:
-                # No collision - use original position
-                planet = group[0]
-                adjusted_positions[planet] = {
-                    "longitude": planet.longitude,
-                    "adjusted": False,
-                }
-            else:
-                # Collision detected - spread the group evenly
-                self._spread_group(group, min_separation, adjusted_positions)
-
-        return adjusted_positions
-
-    def _find_collision_groups(
-        self, sorted_planets: list[CelestialPosition], min_separation: float
-    ) -> list[list[CelestialPosition]]:
-        """
-        Find groups of planets that are too close together.
-
-        Args:
-            sorted_planets: Planets sorted by longitude
-            min_separation: Minimum angular separation required
-
-        Returns:
-            List of groups, where each group is a list of colliding planets
-        """
-        if not sorted_planets:
-            return []
-
-        groups = []
-        current_group = [sorted_planets[0]]
-
-        for i in range(1, len(sorted_planets)):
-            prev_planet = sorted_planets[i - 1]
-            curr_planet = sorted_planets[i]
-
-            # Calculate angular distance
-            distance = curr_planet.longitude - prev_planet.longitude
-            # Handle wrap-around at 0°/360°
-            if distance < 0:
-                distance += 360
-
-            if distance < min_separation:
-                # Add to current group
-                current_group.append(curr_planet)
-            else:
-                # Start new group
-                groups.append(current_group)
-                current_group = [curr_planet]
-
-        # Don't forget the last group
-        groups.append(current_group)
-
-        return groups
-
-    def _spread_group(
-        self,
-        group: list[CelestialPosition],
-        min_separation: float,
-        adjusted_positions: dict[CelestialPosition, dict[str, Any]],
-    ) -> None:
-        """
-        Spread a group of colliding planets evenly while maintaining order.
-
-        Args:
-            group: List of planets in collision (already sorted by longitude)
-            min_separation: Minimum angular separation required
-            adjusted_positions: Dictionary to populate with adjusted positions
-        """
-        # Calculate the center point of the group
-        group_start = group[0].longitude
-        group_end = group[-1].longitude
-
-        # Handle wrap-around
-        if group_end < group_start:
-            group_end += 360
-
-        group_center = (group_start + group_end) / 2
-
-        # Calculate total span needed for the group
-        num_planets = len(group)
-        total_span = (num_planets - 1) * min_separation
-
-        # Calculate start position (centered around group center)
-        spread_start = group_center - (total_span / 2)
-
-        # Assign positions evenly across the span
-        for i, planet in enumerate(group):
-            adjusted_long = (spread_start + (i * min_separation)) % 360
-
-            # Check if position was actually changed
+        for planet in planets:
             original_long = planet.longitude
-            angle_diff = abs(adjusted_long - original_long)
-            if angle_diff > 180:
-                angle_diff = 360 - angle_diff
+            adjusted_long = display_positions[planet]
 
-            is_adjusted = (
-                angle_diff > 0.5
-            )  # More than 0.5° difference counts as adjusted
+            # Check if position was actually changed (more than 0.5° difference)
+            angle_diff = abs(
+                self._signed_circular_distance(original_long, adjusted_long)
+            )
+            is_adjusted = angle_diff > 0.5
 
             adjusted_positions[planet] = {
                 "longitude": adjusted_long,
                 "adjusted": is_adjusted,
             }
+
+        return adjusted_positions
+
+    def _circular_distance(self, pos1: float, pos2: float) -> float:
+        """
+        Calculate the shortest angular distance between two positions on a circle.
+
+        Always returns a positive value representing the absolute distance.
+
+        Args:
+            pos1: First position in degrees (0-360)
+            pos2: Second position in degrees (0-360)
+
+        Returns:
+            Shortest angular distance in degrees (0-180)
+        """
+        diff = abs(pos2 - pos1)
+        if diff > 180:
+            diff = 360 - diff
+        return diff
+
+    def _signed_circular_distance(self, from_pos: float, to_pos: float) -> float:
+        """
+        Calculate the signed angular distance from one position to another.
+
+        Positive = clockwise (increasing degrees), Negative = counter-clockwise.
+
+        Args:
+            from_pos: Starting position in degrees (0-360)
+            to_pos: Target position in degrees (0-360)
+
+        Returns:
+            Signed angular distance in degrees (-180 to +180)
+        """
+        diff = to_pos - from_pos
+        # Normalize to -180 to +180
+        while diff > 180:
+            diff -= 360
+        while diff < -180:
+            diff += 360
+        return diff
 
 
 class ChartInfoLayer:
