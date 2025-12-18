@@ -60,6 +60,8 @@ class ObjectType(Enum):
     MIDPOINT = "midpoint"
     FIXED_STAR = "fixed_star"
     TECHNICAL = "technical"  # Internal calculation points (e.g., RAMC)
+    ANTISCION = "antiscion"  # Antiscia reflection points (solstice axis)
+    CONTRA_ANTISCION = "contra_antiscion"  # Contra-antiscia points (equinox axis)
 
 
 class ComparisonType(Enum):

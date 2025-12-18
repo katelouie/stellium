@@ -10,6 +10,7 @@ They return CelestialPosition (or metadata) objects that integrate seamlessly
 with the rest of the chart.
 """
 
+from stellium.components.antiscia import AntisciaCalculator, AntisciaConjunction
 from stellium.components.arabic_parts import ArabicPartsCalculator
 from stellium.components.dignity import (
     AccidentalDignityComponent,
@@ -23,6 +24,8 @@ __all__ = [
     # Protocol
     "ChartComponent",
     # Components
+    "AntisciaCalculator",
+    "AntisciaConjunction",
     "ArabicPartsCalculator",
     "MidpointCalculator",
     "DignityComponent",

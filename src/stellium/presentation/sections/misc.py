@@ -748,3 +748,157 @@ class ArabicPartsSection:
             "Topocentric": "Topo",
         }
         return abbreviations.get(system_name, system_name[:4])
+
+
+class AntisciaSection:
+    """
+    Table of Antiscia and Contra-Antiscia conjunctions.
+
+    Antiscia are "hidden conjunctions" - when one planet's reflection point
+    (across the solstice axis) is conjunct another planet. Contra-antiscia
+    are reflections across the equinox axis.
+
+    Shows:
+    - The two planets involved
+    - Whether it's antiscia or contra-antiscia
+    - The orb of the conjunction
+    - Whether the aspect is applying or separating
+    """
+
+    def __init__(
+        self,
+        include_contra: bool = True,
+        show_points: bool = False,
+    ) -> None:
+        """
+        Initialize Antiscia section.
+
+        Args:
+            include_contra: Include contra-antiscia conjunctions (default True)
+            show_points: Also show the antiscia point positions (default False)
+        """
+        self.include_contra = include_contra
+        self.show_points = show_points
+
+    @property
+    def section_name(self) -> str:
+        if self.include_contra:
+            return "Antiscia & Contra-Antiscia"
+        return "Antiscia"
+
+    def generate_data(
+        self, chart: CalculatedChart | Comparison | MultiChart
+    ) -> dict[str, Any]:
+        """Generate antiscia table."""
+        from stellium.core.chart_utils import get_all_charts
+
+        # For multi-charts, only use the first chart
+        charts = get_all_charts(chart)
+        target_chart = charts[0]
+
+        # Get antiscia data from metadata
+        antiscia_data = target_chart.metadata.get("antiscia", {})
+
+        if not antiscia_data:
+            return {
+                "type": "text",
+                "text": (
+                    "No antiscia calculated. Add AntisciaCalculator to include them:\n\n"
+                    "    from stellium.components import AntisciaCalculator\n\n"
+                    "    chart = (\n"
+                    "        ChartBuilder.from_native(native)\n"
+                    "        .add_component(AntisciaCalculator())\n"
+                    "        .calculate()\n"
+                    "    )"
+                ),
+            }
+
+        conjunctions = antiscia_data.get("conjunctions", [])
+        contra_conjunctions = antiscia_data.get("contra_conjunctions", [])
+        orb = antiscia_data.get("orb", 1.5)
+
+        # Combine or separate based on settings
+        all_conjs = []
+        for conj in conjunctions:
+            all_conjs.append(("Antiscia", conj))
+        if self.include_contra:
+            for conj in contra_conjunctions:
+                all_conjs.append(("Contra-Antiscia", conj))
+
+        if not all_conjs:
+            return {
+                "type": "text",
+                "text": f"No antiscia conjunctions found within {orb}° orb.",
+            }
+
+        # Build table
+        headers = ["Planet 1", "Planet 2", "Type", "Orb", "State"]
+        rows = []
+
+        for conj_type, conj in all_conjs:
+            # Get planet display (returns tuple of name, glyph)
+            name1, glyph1 = get_object_display(conj.planet1)
+            name2, glyph2 = get_object_display(conj.planet2)
+            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            planet2 = f"{glyph2} {name2}" if glyph2 else name2
+
+            # Orb formatting
+            orb_str = f"{conj.orb:.1f}°"
+
+            # Applying/separating
+            state = "Applying" if conj.is_applying else "Separating"
+
+            rows.append([planet1, planet2, conj_type, orb_str, state])
+
+        result: dict[str, Any] = {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+        }
+
+        # Optionally add antiscia point positions
+        if self.show_points:
+            antiscia_pts = [
+                p
+                for p in target_chart.positions
+                if p.object_type == ObjectType.ANTISCION
+            ]
+            contra_pts = [
+                p
+                for p in target_chart.positions
+                if p.object_type == ObjectType.CONTRA_ANTISCION
+            ]
+
+            point_rows = []
+            for pt in antiscia_pts:
+                degree = int(pt.sign_degree)
+                minute = int((pt.sign_degree % 1) * 60)
+                sign_glyph = get_sign_glyph(pt.sign)
+                position = f"{degree}°{sign_glyph}{pt.sign} {minute:02d}'"
+                point_rows.append([pt.name, position, "Antiscion"])
+
+            if self.include_contra:
+                for pt in contra_pts:
+                    degree = int(pt.sign_degree)
+                    minute = int((pt.sign_degree % 1) * 60)
+                    sign_glyph = get_sign_glyph(pt.sign)
+                    position = f"{degree}°{sign_glyph}{pt.sign} {minute:02d}'"
+                    point_rows.append([pt.name, position, "Contra-Antiscion"])
+
+            if point_rows:
+                result = {
+                    "type": "compound",
+                    "sections": [
+                        ("Antiscia Conjunctions", result),
+                        (
+                            "Antiscia Points",
+                            {
+                                "type": "table",
+                                "headers": ["Point", "Position", "Type"],
+                                "rows": point_rows,
+                            },
+                        ),
+                    ],
+                }
+
+        return result

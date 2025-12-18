@@ -51,6 +51,7 @@ from .midpoints import (
 
 # Miscellaneous sections
 from .misc import (
+    AntisciaSection,
     ArabicPartsSection,
     CacheInfoSection,
     DeclinationAspectSection,
@@ -98,12 +99,13 @@ __all__ = [
     "ZodiacalReleasingSection",
     "ProfectionSection",
     # Miscellaneous sections
-    "CacheInfoSection",
-    "MoonPhaseSection",
-    "DeclinationSection",
-    "DeclinationAspectSection",
-    "FixedStarsSection",
+    "AntisciaSection",
     "ArabicPartsSection",
+    "CacheInfoSection",
+    "DeclinationAspectSection",
+    "DeclinationSection",
+    "FixedStarsSection",
+    "MoonPhaseSection",
     # Transit calendar sections
     "EclipseSection",
     "IngressSection",

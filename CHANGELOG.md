@@ -7,6 +7,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+#### Antiscia and Contra-Antiscia Calculator
+
+New `AntisciaCalculator` component for calculating antiscia (solstice axis reflections) and contra-antiscia (equinox axis reflections) points.
+
+**Features:**
+
+- Calculates antiscia and contra-antiscia points for all configured planets
+- Detects "hidden conjunctions" when one planet's antiscion is conjunct another planet
+- New `ObjectType.ANTISCION` and `ObjectType.CONTRA_ANTISCION` types (filtered from chart wheel display)
+- Configurable orb for conjunction detection (default 1.5°)
+- Configurable planet list (defaults to classical 7 + modern outers + True Node)
+- New `AntisciaSection` for presentation reports
+
+```python
+from stellium import ChartBuilder, Native
+from stellium.components import AntisciaCalculator
+from stellium.presentation.sections import AntisciaSection
+
+chart = (
+    ChartBuilder.from_native(native)
+    .add_component(AntisciaCalculator(orb=2.0))
+    .calculate()
+)
+
+# Access antiscia conjunction data
+antiscia_data = chart.metadata.get("antiscia", {})
+conjunctions = antiscia_data.get("conjunctions", [])
+for conj in conjunctions:
+    print(conj.description)  # "Sun in antiscia with Moon (applying, orb 1.2°)"
+
+# Or use in a report
+from stellium.presentation import ReportBuilder
+
+report = ReportBuilder().from_chart(chart).with_section(AntisciaSection())
+report.render(format="rich_table")
+```
+
 ### Fixed
 
 #### Improved Planet Glyph Collision Detection
