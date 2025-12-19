@@ -9,6 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Dial Chart Header Support
+
+Added header support to dial chart visualization, displaying native's name, birth location, and datetime at the top of the dial.
+
+**Usage:**
+
+```python
+# Generate a dial with header
+chart.draw_dial("dial.svg").with_header().save()
+
+# Header is disabled by default
+chart.draw_dial("dial.svg").save()  # No header
+```
+
+The header uses the same elegant styling as the main chart header (Baskerville italic-semibold for name, standard font for details).
+
 #### Antiscia and Contra-Antiscia Calculator
 
 New `AntisciaCalculator` component for calculating antiscia (solstice axis reflections) and contra-antiscia (equinox axis reflections) points.

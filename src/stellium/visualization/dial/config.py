@@ -124,6 +124,19 @@ class DialPointerConfig:
 
 
 @dataclass
+class DialHeaderConfig:
+    """Configuration for dial header (structural settings only)."""
+
+    height: int = 60
+    name_font_size: str = "16px"
+    name_font_family: str = "Baskerville, 'Libre Baskerville', Georgia, serif"
+    name_font_weight: str = "600"
+    name_font_style: str = "italic"
+    details_font_size: str = "11px"
+    line_height: int = 14
+
+
+@dataclass
 class DialConfig:
     """
     Complete configuration for dial visualization.
@@ -151,6 +164,7 @@ class DialConfig:
     modality: DialModalityConfig = field(default_factory=DialModalityConfig)
     planet: DialPlanetConfig = field(default_factory=DialPlanetConfig)
     pointer: DialPointerConfig = field(default_factory=DialPointerConfig)
+    header: DialHeaderConfig = field(default_factory=DialHeaderConfig)
 
     # Layer toggles
     show_graduation: bool = True
@@ -159,6 +173,7 @@ class DialConfig:
     show_planets: bool = True
     show_midpoints: bool = True
     show_pointer: bool = False  # Only for 360° dial
+    show_header: bool = False
 
     # Midpoint settings
     midpoint_ring: str = "outer_ring_1"

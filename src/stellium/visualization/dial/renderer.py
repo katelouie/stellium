@@ -40,8 +40,16 @@ class DialRenderer:
         self.config = config
         self.dial_degrees = config.dial_degrees
         self.size = config.size
-        self.center = config.size // 2
         self.rotation = config.rotation
+
+        # Header support: when header is enabled, canvas is taller
+        # and dial center is offset down
+        self.header_height = config.header.height if config.show_header else 0
+        self.canvas_height = config.size + self.header_height
+
+        # Center is in the middle of the dial area (below header)
+        self.center = config.size // 2
+        self.center_y = self.header_height + self.center
 
         # Get radii in absolute pixels
         self.radii = config.radii.to_absolute(config.size)
@@ -120,8 +128,9 @@ class DialRenderer:
         svg_angle_rad = math.radians(svg_angle)
 
         # SVG y-axis is inverted (positive = down)
+        # Use center for x, center_y for y (accounts for header offset)
         x = self.center + radius * math.cos(svg_angle_rad)
-        y = self.center + radius * math.sin(svg_angle_rad)
+        y = self.center_y + radius * math.sin(svg_angle_rad)
 
         return x, y
 
@@ -153,8 +162,8 @@ class DialRenderer:
         """
         dwg = svgwrite.Drawing(
             filename=self.config.filename,
-            size=(f"{self.size}px", f"{self.size}px"),
-            viewBox=f"0 0 {self.size} {self.size}",
+            size=(f"{self.size}px", f"{self.canvas_height}px"),
+            viewBox=f"0 0 {self.size} {self.canvas_height}",
             profile="full",
         )
 
@@ -162,7 +171,7 @@ class DialRenderer:
         dwg.add(
             dwg.rect(
                 insert=(0, 0),
-                size=(f"{self.size}px", f"{self.size}px"),
+                size=(f"{self.size}px", f"{self.canvas_height}px"),
                 fill=self.style.background_color,
             )
         )
@@ -249,7 +258,7 @@ class DialRenderer:
         Returns:
             SVG circle element
         """
-        circle = dwg.circle(center=(self.center, self.center), r=radius, **kwargs)
+        circle = dwg.circle(center=(self.center, self.center_y), r=radius, **kwargs)
         return circle
 
     def get_cardinal_points(self) -> list[float]:

@@ -12,6 +12,7 @@ from stellium.visualization.dial.layers import (
     DialBackgroundLayer,
     DialCardinalLayer,
     DialGraduationLayer,
+    DialHeaderLayer,
     DialMidpointLayer,
     DialModalityLayer,
     DialOuterRingLayer,
@@ -86,6 +87,7 @@ class DialDrawBuilder:
         self._show_planets: bool = True
         self._show_midpoints: bool = True
         self._show_pointer: bool = False
+        self._show_header: bool = False
 
         # TNO and Uranian settings (important for Uranian astrology)
         self._include_tnos: bool = True
@@ -303,6 +305,26 @@ class DialDrawBuilder:
         return self
 
     # =========================================================================
+    # Header Methods
+    # =========================================================================
+
+    def with_header(self) -> "DialDrawBuilder":
+        """
+        Add a header with chart name and birth details.
+
+        The header appears at the top of the dial, showing:
+        - Name (from chart metadata or "Natal Chart")
+        - Birth date/time, location, and coordinates
+        """
+        self._show_header = True
+        return self
+
+    def without_header(self) -> "DialDrawBuilder":
+        """Hide the header."""
+        self._show_header = False
+        return self
+
+    # =========================================================================
     # Build and Save
     # =========================================================================
 
@@ -329,6 +351,7 @@ class DialDrawBuilder:
             show_planets=self._show_planets,
             show_midpoints=self._show_midpoints,
             show_pointer=self._show_pointer,
+            show_header=self._show_header,
             midpoint_ring=self._midpoint_ring,
             midpoint_notation=self._midpoint_notation,
             pointer_target=self._pointer_target,
@@ -356,7 +379,11 @@ class DialDrawBuilder:
         """Create the layer stack based on configuration."""
         layers = []
 
-        # Background (always first)
+        # Header (if enabled) - rendered first, in the header area
+        if config.show_header:
+            layers.append(DialHeaderLayer(config=config))
+
+        # Background (always first for the dial itself)
         layers.append(DialBackgroundLayer())
 
         # Modality wheel (drawn under other elements)

@@ -12,7 +12,7 @@ import svgwrite
 
 from stellium.core.models import CalculatedChart, CelestialPosition
 from stellium.visualization.core import embed_svg_glyph, get_glyph
-from stellium.visualization.dial.config import DialStyle
+from stellium.visualization.dial.config import DialConfig, DialStyle
 from stellium.visualization.dial.renderer import DialRenderer
 
 
@@ -71,6 +71,155 @@ HAMBURG_NAMES = {
     "Poseidon",
     "Aries Point",
 }
+
+
+# =============================================================================
+# Background Layer
+# =============================================================================
+
+
+# =============================================================================
+# Header Layer
+# =============================================================================
+
+
+class DialHeaderLayer:
+    """
+    Renders the chart header at the top of the dial canvas.
+
+    Displays:
+    - Name (from chart metadata, or "Natal Chart" as fallback)
+    - Birth date/time, location, and coordinates
+    """
+
+    def __init__(self, config: DialConfig | None = None):
+        """
+        Initialize header layer.
+
+        Args:
+            config: Optional DialConfig to pull header settings from
+        """
+        self.config = config or DialConfig()
+        self.header_config = self.config.header
+
+    def render(
+        self,
+        renderer: DialRenderer,
+        dwg: svgwrite.Drawing,
+        chart: CalculatedChart,
+    ) -> None:
+        """Render the header at the top of the canvas."""
+        style = renderer.style
+        header_config = self.header_config
+
+        # Header renders in the top margin area
+        margin = 10
+
+        # Colors from theme
+        name_color = style.planet_glyph_color
+        info_color = style.graduation_label_color
+
+        # Get native info from chart metadata
+        name = chart.metadata.get("name") if hasattr(chart, "metadata") else None
+        if not name:
+            name = "Natal Chart"
+
+        current_y = margin
+
+        # Name (big, italic-semibold, Baskerville)
+        dwg.add(
+            dwg.text(
+                name,
+                insert=(margin, current_y),
+                text_anchor="start",
+                dominant_baseline="hanging",
+                font_size=header_config.name_font_size,
+                fill=name_color,
+                font_family=header_config.name_font_family,
+                font_weight=header_config.name_font_weight,
+                font_style=header_config.name_font_style,
+            )
+        )
+        current_y += int(float(header_config.name_font_size[:-2]) * 1.3)
+
+        # Line 2: Location + coordinates
+        if chart.location:
+            location_name = getattr(chart.location, "name", None)
+            short_name = self._parse_location_name(location_name)
+
+            # Build location line with coordinates
+            lat = chart.location.latitude
+            lon = chart.location.longitude
+            lat_dir = "N" if lat >= 0 else "S"
+            lon_dir = "E" if lon >= 0 else "W"
+            coord_str = f"({abs(lat):.4f}°{lat_dir}, {abs(lon):.4f}°{lon_dir})"
+
+            if short_name:
+                location_line = f"{short_name} · {coord_str}"
+            else:
+                location_line = coord_str
+
+            dwg.add(
+                dwg.text(
+                    location_line,
+                    insert=(margin, current_y),
+                    text_anchor="start",
+                    dominant_baseline="hanging",
+                    font_size=header_config.details_font_size,
+                    fill=info_color,
+                    font_family=style.font_family_text,
+                )
+            )
+            current_y += header_config.line_height
+
+        # Line 3: Datetime + timezone
+        if chart.datetime:
+            if chart.datetime.local_datetime:
+                dt_str = chart.datetime.local_datetime.strftime("%b %d, %Y %I:%M %p")
+            else:
+                dt_str = chart.datetime.utc_datetime.strftime("%b %d, %Y %H:%M UTC")
+
+            # Add timezone info
+            if chart.location:
+                timezone = getattr(chart.location, "timezone", None)
+                if timezone:
+                    dt_str = f"{dt_str} ({timezone})"
+
+            dwg.add(
+                dwg.text(
+                    dt_str,
+                    insert=(margin, current_y),
+                    text_anchor="start",
+                    dominant_baseline="hanging",
+                    font_size=header_config.details_font_size,
+                    fill=info_color,
+                    font_family=style.font_family_text,
+                )
+            )
+
+    def _parse_location_name(self, location_name: str | None) -> str:
+        """
+        Parse a geopy location string into a short name.
+
+        Args:
+            location_name: Full location string like
+                "Palo Alto, Santa Clara County, California, United States"
+
+        Returns:
+            Short name like "Palo Alto, California" or empty string
+        """
+        if not location_name:
+            return ""
+
+        parts = [p.strip() for p in location_name.split(",")]
+        if len(parts) >= 3:
+            # Return "City, State/Region"
+            return f"{parts[0]}, {parts[-2]}"
+        elif len(parts) == 2:
+            return f"{parts[0]}, {parts[1]}"
+        elif len(parts) == 1:
+            return parts[0]
+        return ""
 
 
 # =============================================================================
@@ -1080,7 +1229,7 @@ class DialPointerLayer:
         if pointer_config.show_center_circle:
             dwg.add(
                 dwg.circle(
-                    center=(renderer.center, renderer.center),
+                    center=(renderer.center, renderer.center_y),
                     r=pointer_config.center_circle_radius,
                     fill="none",
                     stroke=style.pointer_color,
