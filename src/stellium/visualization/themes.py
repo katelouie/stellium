@@ -28,6 +28,7 @@ class ChartTheme(str, Enum):
     SEPIA = "sepia"
     PASTEL = "pastel"
     CELESTIAL = "celestial"
+    ATLAS = "atlas"
 
     # Data science themes
     VIRIDIS = "viridis"
@@ -47,6 +48,7 @@ THEME_DEFAULT_PALETTES = {
     ChartTheme.SEPIA: ZodiacPalette.RAINBOW_SEPIA,
     ChartTheme.PASTEL: ZodiacPalette.RAINBOW,
     ChartTheme.CELESTIAL: ZodiacPalette.RAINBOW_CELESTIAL,
+    ChartTheme.ATLAS: ZodiacPalette.RAINBOW,
     # Data science themes
     ChartTheme.VIRIDIS: ZodiacPalette.VIRIDIS,
     ChartTheme.PLASMA: ZodiacPalette.PLASMA,
@@ -65,6 +67,7 @@ THEME_DEFAULT_ASPECT_PALETTES = {
     ChartTheme.SEPIA: AspectPalette.SEPIA,
     ChartTheme.PASTEL: AspectPalette.PASTEL,
     ChartTheme.CELESTIAL: AspectPalette.CELESTIAL,
+    ChartTheme.ATLAS: AspectPalette.CLASSIC,
     # Data science themes
     ChartTheme.VIRIDIS: AspectPalette.VIRIDIS,
     ChartTheme.PLASMA: AspectPalette.PLASMA,
@@ -83,6 +86,7 @@ THEME_DEFAULT_PLANET_PALETTES = {
     ChartTheme.SEPIA: PlanetGlyphPalette.DEFAULT,
     ChartTheme.PASTEL: PlanetGlyphPalette.DEFAULT,
     ChartTheme.CELESTIAL: PlanetGlyphPalette.DEFAULT,
+    ChartTheme.ATLAS: PlanetGlyphPalette.DEFAULT,
     # Data science themes
     ChartTheme.VIRIDIS: PlanetGlyphPalette.VIRIDIS,
     ChartTheme.PLASMA: PlanetGlyphPalette.PLASMA,
@@ -117,6 +121,8 @@ def get_theme_style(theme: ChartTheme) -> dict[str, Any]:
         return _get_pastel_theme()
     elif theme == ChartTheme.CELESTIAL:
         return _get_celestial_theme()
+    elif theme == ChartTheme.ATLAS:
+        return _get_atlas_theme()
     elif theme == ChartTheme.VIRIDIS:
         return _get_viridis_theme()
     elif theme == ChartTheme.PLASMA:
@@ -640,6 +646,71 @@ def _get_celestial_theme() -> dict[str, Any]:
     }
 
 
+def _get_atlas_theme() -> dict[str, Any]:
+    """Atlas theme - cream background with purple/gold accents, designed for PDF atlases."""
+    return {
+        "background_color": "#FAF8F5",  # Cream
+        "border_color": "#6B4D6E",  # Secondary purple
+        "border_width": 1,
+        "font_family_glyphs": '"Symbola", "Noto Sans Symbols", "Apple Symbols", "Segoe UI Symbol", serif',
+        "font_family_text": '"Arial", "Helvetica", sans-serif',
+        "zodiac": {
+            "ring_color": "#F0EBE6",  # Slightly darker cream
+            "line_color": "#8E6B8A",  # Accent purple
+            "glyph_color": "#4A3353",  # Primary purple
+            "glyph_size": "20px",
+        },
+        "houses": {
+            "line_color": "#C4B5A0",  # Warm grey-brown
+            "line_width": 0.8,
+            "number_color": "#8E6B8A",  # Accent purple
+            "number_size": "11px",
+            "fill_alternate": True,
+            "fill_color_1": "#F5F0EB",  # Slightly darker cream
+            "fill_color_2": "#FAF8F5",  # Cream
+            "secondary_color": "#B8953D",  # Gold for secondary house system overlay
+            "chart1_fill_1": "#F5F0EB",
+            "chart1_fill_2": "#FAF8F5",
+            "chart2_fill_1": "#F0EBE8",
+            "chart2_fill_2": "#F8F5F2",
+            "chart3_fill_1": "#EBF0EB",
+            "chart3_fill_2": "#F5F8F5",
+            "chart4_fill_1": "#F0EBF0",
+            "chart4_fill_2": "#F8F5F8",
+        },
+        "angles": {
+            "line_color": "#4A3353",  # Primary purple
+            "line_width": 2.5,
+            "glyph_color": "#2D2330",  # Text dark
+            "glyph_size": "12px",
+        },
+        "outer_wheel_angles": {
+            "line_color": "#6B4D6E",  # Secondary purple
+            "line_width": 1.8,
+            "glyph_color": "#4A3353",  # Primary purple
+            "glyph_size": "11px",
+        },
+        "planets": {
+            "glyph_color": "#2D2330",  # Text dark
+            "glyph_size": "32px",
+            "info_color": "#4A3353",  # Primary purple
+            "info_size": "10px",
+            "retro_color": "#B8953D",  # Gold for retrograde
+            "outer_wheel_planet_color": "#6B4D6E",  # Secondary purple for outer wheel
+            "chart1_color": "#2D2330",
+            "chart2_color": "#4A3353",
+            "chart3_color": "#6B4D6E",
+            "chart4_color": "#8E6B8A",
+        },
+        "aspects": {
+            **build_aspect_styles_from_palette(AspectPalette.CLASSIC),
+            "default": {"color": "#C4B5A0", "width": 0.5, "dash": "2,2"},
+            "line_color": "#8E6B8A",
+            "background_color": "#FAF8F5",
+        },
+    }
+
+
 # ============================================================================
 # Data Science Themes
 # ============================================================================
@@ -1053,6 +1124,7 @@ def get_theme_description(theme: ChartTheme) -> str:
         ChartTheme.SEPIA: "Sepia - Vintage aged paper with warm browns",
         ChartTheme.PASTEL: "Pastel - Soft gentle colors, light and airy",
         ChartTheme.CELESTIAL: "Celestial - Cosmic galaxy with deep purples and gold",
+        ChartTheme.ATLAS: "Atlas - Cream background with purple/gold accents for PDF atlases",
         # Data science themes
         ChartTheme.VIRIDIS: "Viridis - Perceptually uniform purple→green→yellow (colorblind-friendly)",
         ChartTheme.PLASMA: "Plasma - Vibrant blue→purple→orange→yellow gradient",

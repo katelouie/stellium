@@ -555,6 +555,46 @@ Requires: `pip install typst`
 
 See the [planner cookbook](examples/planner_cookbook.py) for detailed recipes.
 
+### Chart Atlas PDF Generation
+
+Generate multi-page PDF documents with one chart per page, like an old-school astrologer's chart atlas:
+
+```python
+from stellium.visualization.atlas import AtlasBuilder
+
+# Create an atlas from notables
+(AtlasBuilder()
+    .add_notable("Albert Einstein")
+    .add_notable("Marie Curie")
+    .add_notable("Isaac Newton")
+    .with_title_page("Famous Scientists")
+    .with_header()
+    .with_theme("midnight")
+    .save("scientists_atlas.pdf"))
+
+# Or with Uranian dials
+(AtlasBuilder()
+    .add_natives([native1, native2, native3])
+    .with_chart_type("dial", degrees=90)
+    .save("uranian_atlas.pdf"))
+
+# Generate atlas from entire notables database
+AtlasBuilder.from_all_notables().save("complete_atlas.pdf")
+
+# Filter by category and sort by birth date
+AtlasBuilder.from_all_notables(category="scientist", sort_by="date").save("scientists.pdf")
+```
+
+**Atlas Features:**
+
+- **Multiple input methods**: Add natives directly, look up notables by name, or use `from_all_notables()` for the entire database
+- **Category filtering**: Filter notables by category (scientist, artist, etc.) and sort by name or date
+- **Chart types**: Natal wheels or Uranian dials (90°, 45°, 360°)
+- **Configurable**: Headers, themes, page sizes (Letter, A4, half-letter)
+- **Title page**: Optional title page for the atlas
+
+Requires: `pip install typst`
+
 ### Data Analysis (pandas Integration)
 
 Batch calculate charts and analyze with pandas DataFrames:

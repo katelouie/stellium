@@ -1,5 +1,6 @@
 """Visualization system for Stellium charts."""
 
+from .atlas import AtlasBuilder
 from .builder import ChartDrawBuilder
 from .core import ChartRenderer
 from .ephemeris import EXTENDED_PLANETS, GraphicEphemeris
@@ -58,6 +59,8 @@ __all__ = [
     # Core rendering
     "ChartRenderer",
     "ChartDrawBuilder",
+    # Atlas
+    "AtlasBuilder",
     # Layers
     "ZodiacLayer",
     "HouseCuspLayer",

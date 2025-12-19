@@ -9,6 +9,89 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Chart Atlas PDF Generation
+
+New `AtlasBuilder` for generating multi-page PDF documents with one chart per page, like an old-school astrologer's chart atlas.
+
+**Features:**
+
+- Generate PDFs with multiple charts from Native objects or notable lookups
+- Support for both natal wheel charts and Uranian dial charts
+- Configurable headers, themes, and page sizes
+- Optional title page
+- Uses Typst for beautiful PDF rendering
+
+**Usage:**
+
+```python
+from stellium.visualization.atlas import AtlasBuilder
+
+# Basic atlas from notables
+(AtlasBuilder()
+    .add_notable("Albert Einstein")
+    .add_notable("Marie Curie")
+    .add_notable("Isaac Newton")
+    .with_title_page("Famous Scientists")
+    .with_header()
+    .with_theme("midnight")
+    .save("scientists_atlas.pdf"))
+
+# Dial atlas
+(AtlasBuilder()
+    .add_natives([native1, native2, native3])
+    .with_chart_type("dial", degrees=90)
+    .save("uranian_atlas.pdf"))
+
+# Complete atlas from all notables
+AtlasBuilder.from_all_notables().with_title_page("Complete Atlas").save("all_notables.pdf")
+
+# Filter by category
+AtlasBuilder.from_all_notables(category="scientist", sort_by="date").save("scientists.pdf")
+
+# Mixed chart types
+(AtlasBuilder()
+    .add_entry(native1, chart_type="wheel")
+    .add_entry(native2, chart_type="dial", degrees=90)
+    .save("mixed_atlas.pdf"))
+```
+
+Requires: `pip install typst`
+
+#### Atlas Theme
+
+New "atlas" chart theme designed to match the PDF atlas styling with a cream background and purple/gold accents.
+
+**Features:**
+
+- Cream background (`#FAF8F5`) that blends seamlessly with PDF pages
+- Purple primary/secondary/accent colors matching Typst document styling
+- Gold accents for retrograde markers and secondary overlays
+- Default theme for AtlasBuilder (uses rainbow zodiac palette)
+
+**Usage:**
+
+```python
+# Atlas theme is now the default for AtlasBuilder
+AtlasBuilder().add_notable("Albert Einstein").save("atlas.pdf")
+
+# Can also be used standalone for any chart
+chart.draw("chart.svg").with_theme("atlas").save()
+```
+
+### Fixed
+
+#### Extended Tables Symbol Rendering
+
+Fixed an issue where astrological symbols (Chiron ⚷, Black Moon Lilith ⚸, Vertex 🜊, and retrograde ℞) in extended tables were rendering as question mark boxes in PDF output.
+
+**The fix:**
+
+- Symbols and text are now rendered as separate SVG elements with appropriate fonts
+- Glyphs use the Symbola/Noto Sans Symbols font family
+- Text labels use Arial/Helvetica
+- Vertical alignment adjusted for proper baseline matching
+- ASC and MC entries skip redundant glyph rendering (their "symbols" are just the same text)
+
 #### Dial Chart Header Support
 
 Added header support to dial chart visualization, displaying native's name, birth location, and datetime at the top of the dial.

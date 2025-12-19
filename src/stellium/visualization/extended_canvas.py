@@ -317,19 +317,36 @@ class PositionTableLayer:
             obj_info = CELESTIAL_REGISTRY.get(pos.name)
             display_name = obj_info.display_name if obj_info else pos.name
 
-            if glyph_info["type"] == "unicode":
-                planet_text = f"{glyph_info['value']} {display_name}"
-            else:
-                planet_text = display_name
+            # Render glyph and text separately to use correct fonts
+            x_offset = col_x_positions[0]
+            glyph_width = 14  # Approximate width for a glyph at 10px
+            glyph_y_offset = -4  # Nudge glyphs up to align with text baseline
 
-            # Add retrograde symbol if applicable
-            if pos.is_retrograde:
-                planet_text += " ℞"
+            # Skip glyph for ASC/MC where glyph equals display name
+            skip_glyph = pos.name in ("ASC", "MC")
 
+            if glyph_info["type"] == "unicode" and not skip_glyph:
+                # Render glyph with symbol font
+                dwg.add(
+                    dwg.text(
+                        glyph_info["value"],
+                        insert=(x_offset, y + glyph_y_offset),
+                        text_anchor="start",
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=text_color,
+                        font_family=renderer.style["font_family_glyphs"],
+                        font_weight=self.style["font_weight"],
+                    )
+                )
+            # Always add glyph_width to x_offset so text aligns consistently
+            x_offset += glyph_width
+
+            # Render display name with text font
             dwg.add(
                 dwg.text(
-                    planet_text,
-                    insert=(col_x_positions[0], y),
+                    display_name,
+                    insert=(x_offset, y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
@@ -338,6 +355,23 @@ class PositionTableLayer:
                     font_weight=self.style["font_weight"],
                 )
             )
+
+            # Add retrograde symbol if applicable (using symbol font)
+            if pos.is_retrograde:
+                # Estimate text width to position retrograde symbol
+                name_width = len(display_name) * 6  # Approximate char width at 10px
+                dwg.add(
+                    dwg.text(
+                        " ℞",
+                        insert=(x_offset + name_width, y + glyph_y_offset),
+                        text_anchor="start",
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=text_color,
+                        font_family=renderer.style["font_family_glyphs"],
+                        font_weight=self.style["font_weight"],
+                    )
+                )
 
             # Column 1: Sign
             dwg.add(
@@ -757,19 +791,36 @@ class PositionTableLayer:
             obj_info = CELESTIAL_REGISTRY.get(pos.name)
             display_name = obj_info.display_name if obj_info else pos.name
 
-            if glyph_info["type"] == "unicode":
-                planet_text = f"{glyph_info['value']} {display_name}"
-            else:
-                planet_text = display_name
+            # Render glyph and text separately to use correct fonts
+            x_offset = col_x_positions[0]
+            glyph_width = 14  # Approximate width for a glyph at 10px
+            glyph_y_offset = -4  # Nudge glyphs up to align with text baseline
 
-            # Add retrograde symbol if applicable
-            if pos.is_retrograde:
-                planet_text += " ℞"
+            # Skip glyph for ASC/MC where glyph equals display name
+            skip_glyph = pos.name in ("ASC", "MC")
 
+            if glyph_info["type"] == "unicode" and not skip_glyph:
+                # Render glyph with symbol font
+                dwg.add(
+                    dwg.text(
+                        glyph_info["value"],
+                        insert=(x_offset, y + glyph_y_offset),
+                        text_anchor="start",
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=text_color,
+                        font_family=renderer.style["font_family_glyphs"],
+                        font_weight=self.style["font_weight"],
+                    )
+                )
+            # Always add glyph_width to x_offset so text aligns consistently
+            x_offset += glyph_width
+
+            # Render display name with text font
             dwg.add(
                 dwg.text(
-                    planet_text,
-                    insert=(col_x_positions[0], y),
+                    display_name,
+                    insert=(x_offset, y),
                     text_anchor="start",
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],
@@ -778,6 +829,23 @@ class PositionTableLayer:
                     font_weight=self.style["font_weight"],
                 )
             )
+
+            # Add retrograde symbol if applicable (using symbol font)
+            if pos.is_retrograde:
+                # Estimate text width to position retrograde symbol
+                name_width = len(display_name) * 6  # Approximate char width at 10px
+                dwg.add(
+                    dwg.text(
+                        " ℞",
+                        insert=(x_offset + name_width, y + glyph_y_offset),
+                        text_anchor="start",
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=text_color,
+                        font_family=renderer.style["font_family_glyphs"],
+                        font_weight=self.style["font_weight"],
+                    )
+                )
 
             # Column 1: Sign
             dwg.add(
