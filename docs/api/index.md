@@ -31,7 +31,22 @@ The main `stellium` package exports the most commonly used classes and functions
    :undoc-members:
    :show-inheritance:
 
+.. autoclass:: stellium.MultiChartBuilder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. autoclass:: stellium.ReportBuilder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.PlannerBuilder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.ElectionalSearch
    :members:
    :undoc-members:
    :show-inheritance:
@@ -59,7 +74,17 @@ The main `stellium` package exports the most commonly used classes and functions
    :undoc-members:
    :show-inheritance:
 
+.. autoclass:: stellium.core.models.UnknownTimeChart
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. autoclass:: stellium.CelestialPosition
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.core.models.MidpointPosition
    :members:
    :undoc-members:
    :show-inheritance:
@@ -70,6 +95,11 @@ The main `stellium` package exports the most commonly used classes and functions
    :show-inheritance:
 
 .. autoclass:: stellium.Aspect
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.core.models.AspectPattern
    :members:
    :undoc-members:
    :show-inheritance:
@@ -93,6 +123,25 @@ The main `stellium` package exports the most commonly used classes and functions
    :members:
    :undoc-members:
    :show-inheritance:
+
+.. autoclass:: stellium.MultiChart
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
+
+### Enums
+
+```{eval-rst}
+.. autoclass:: stellium.core.models.ObjectType
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.core.models.ComparisonType
+   :members:
+   :undoc-members:
+   :show-inheritance:
 ```
 
 ### Comparison Types
@@ -113,15 +162,45 @@ The main `stellium` package exports the most commonly used classes and functions
    :undoc-members:
    :show-inheritance:
 
-.. autoclass:: stellium.ComparisonType
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 .. autoclass:: stellium.SynthesisChart
    :members:
    :undoc-members:
    :show-inheritance:
+```
+
+### Profections & Time Lord Techniques
+
+```{eval-rst}
+.. autoclass:: stellium.ProfectionEngine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.ProfectionResult
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.MultiProfectionResult
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. autoclass:: stellium.ProfectionTimeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+```
+
+### I/O Functions
+
+```{eval-rst}
+.. autofunction:: stellium.parse_aaf
+.. autofunction:: stellium.parse_csv
+.. autofunction:: stellium.read_csv
+.. autofunction:: stellium.parse_dataframe
+.. autofunction:: stellium.read_dataframe
+.. autofunction:: stellium.dataframe_from_natives
 ```
 
 ### Registry Functions
@@ -133,6 +212,114 @@ The main `stellium` package exports the most commonly used classes and functions
 .. autofunction:: stellium.get_royal_stars
 .. autofunction:: stellium.get_stars_by_tier
 .. autofunction:: stellium.get_notable_registry
+```
+
+---
+
+## Core (`stellium.core`)
+
+Core abstractions, data models, protocols, and configuration.
+
+### Models (`stellium.core.models`)
+
+```{eval-rst}
+.. automodule:: stellium.core.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Native & Notable (`stellium.core.native`)
+
+```{eval-rst}
+.. automodule:: stellium.core.native
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Registry (`stellium.core.registry`)
+
+```{eval-rst}
+.. automodule:: stellium.core.registry
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Comparison (`stellium.core.comparison`)
+
+```{eval-rst}
+.. automodule:: stellium.core.comparison
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### MultiChart (`stellium.core.multichart`)
+
+```{eval-rst}
+.. automodule:: stellium.core.multichart
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Synthesis (`stellium.core.synthesis`)
+
+```{eval-rst}
+.. automodule:: stellium.core.synthesis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Configuration (`stellium.core.config`)
+
+```{eval-rst}
+.. automodule:: stellium.core.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Ayanamsa (`stellium.core.ayanamsa`)
+
+```{eval-rst}
+.. automodule:: stellium.core.ayanamsa
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Chart Utilities (`stellium.core.chart_utils`)
+
+```{eval-rst}
+.. automodule:: stellium.core.chart_utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Protocols (`stellium.core.protocols`)
+
+Interface definitions for extending Stellium.
+
+```{eval-rst}
+.. automodule:: stellium.core.protocols
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
 ```
 
 ---
@@ -183,6 +370,42 @@ Calculation engines for ephemeris, houses, aspects, orbs, dignities, and fixed s
    :undoc-members:
    :show-inheritance:
    :no-index:
+
+.. automodule:: stellium.engines.profections
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.engines.dispositors
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.engines.voc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.engines.search
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.engines.directions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.engines.releasing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
 ```
 
 ---
@@ -211,6 +434,12 @@ Optional calculation components that can be added to charts.
    :no-index:
 
 .. automodule:: stellium.components.fixed_stars
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.components.antiscia
    :members:
    :undoc-members:
    :show-inheritance:
@@ -244,6 +473,12 @@ Report building and rendering.
 Chart rendering and SVG generation.
 
 ```{eval-rst}
+.. automodule:: stellium.visualization.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
 .. autoclass:: stellium.ChartRenderer
    :members:
    :undoc-members:
@@ -293,6 +528,12 @@ Chart rendering and SVG generation.
    :no-index:
 
 .. automodule:: stellium.visualization.reference_sheet
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.ephemeris
    :members:
    :undoc-members:
    :show-inheritance:
@@ -387,6 +628,49 @@ Utility functions and helpers.
    :no-index:
 
 .. automodule:: stellium.utils.progressions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.utils.chart_ruler
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.utils.houses
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.utils.planetary_crossing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## Data (`stellium.data`)
+
+Data access and notable births registry.
+
+```{eval-rst}
+.. autofunction:: stellium.data.get_notable_registry
+.. autofunction:: stellium.data.get_ephe_dir
+.. autofunction:: stellium.data.get_user_data_dir
+.. autofunction:: stellium.data.get_user_ephe_dir
+.. autofunction:: stellium.data.has_ephe_file
+.. autofunction:: stellium.data.initialize_ephemeris
+```
+
+### Notable Registry (`stellium.data.registry`)
+
+```{eval-rst}
+.. automodule:: stellium.data.registry
    :members:
    :undoc-members:
    :show-inheritance:
@@ -503,20 +787,6 @@ Input/output formats for chart data.
    :no-index:
 
 .. automodule:: stellium.io.dataframe
-   :members:
-   :undoc-members:
-   :show-inheritance:
-   :no-index:
-```
-
----
-
-## Protocols (`stellium.core.protocols`)
-
-Interface definitions for extending Stellium.
-
-```{eval-rst}
-.. automodule:: stellium.core.protocols
    :members:
    :undoc-members:
    :show-inheritance:
