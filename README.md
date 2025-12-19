@@ -54,6 +54,7 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 - **Draconic Charts and Void of Course Moon**
 - **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
+- **Antiscia and contra-antiscia** with a dedicated report section
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
