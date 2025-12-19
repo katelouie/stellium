@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.14.0] - 2025-12-18
+
+### Added
+
 #### Chart Atlas PDF Generation
 
 New `AtlasBuilder` for generating multi-page PDF documents with one chart per page, like an old-school astrologer's chart atlas.
@@ -167,8 +175,6 @@ from stellium.presentation import ReportBuilder
 report = ReportBuilder().from_chart(chart).with_section(AntisciaSection())
 report.render(format="rich_table")
 ```
-
-### Fixed
 
 #### Improved Planet Glyph Collision Detection
 
@@ -469,6 +475,7 @@ Fixed a discrepancy where `ElectionalSearch` with `not_voc()` could return diffe
 **Root cause:**
 
 The binary search tolerance was 5 minutes, which could overshoot the actual VOC transition by up to 5 minutes. For example, on Jan 5, 2025:
+
 - Actual VOC start: 11:58:30 UTC
 - Computed VOC start: 12:00:09 UTC (with 5-min tolerance)
 

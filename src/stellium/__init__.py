@@ -13,7 +13,7 @@ For more control:
     >>> chart = ChartBuilder.from_native(native).calculate()
 """
 
-__version__ = "0.13.0"
+__version__ = "0.14.0"
 
 # === Core Building Blocks (Most Common) ===
 # === Convenience Re-exports ===
