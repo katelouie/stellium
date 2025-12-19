@@ -11,6 +11,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+#### Visualization Layers Refactored
+
+The large `stellium.visualization.layers` module (3,367 lines, 16 classes) has been refactored into a package with logical submodules for better maintainability:
+
+| Module | Classes |
+|--------|---------|
+| `layers/chart_frame.py` | HeaderLayer, RingBoundaryLayer, OuterBorderLayer |
+| `layers/zodiac.py` | ZodiacLayer |
+| `layers/houses.py` | HouseCuspLayer, OuterHouseCuspLayer |
+| `layers/angles.py` | AngleLayer, OuterAngleLayer |
+| `layers/planets.py` | PlanetLayer, MoonRangeLayer |
+| `layers/aspects.py` | AspectLayer, MultiWheelAspectLayer, ChartShapeLayer |
+| `layers/info_corners.py` | ChartInfoLayer, AspectCountsLayer, ElementModalityTableLayer |
+
+**Backward compatible:** All existing imports continue to work unchanged:
+
+```python
+from stellium.visualization.layers import PlanetLayer, ZodiacLayer  # Still works!
+```
+
 ### Fixed
 
 ## [0.14.0] - 2025-12-18
