@@ -78,6 +78,25 @@ AtlasBuilder().add_notable("Albert Einstein").save("atlas.pdf")
 chart.draw("chart.svg").with_theme("atlas").save()
 ```
 
+#### Atlas Info Corners
+
+Atlas charts now include info corners by default for maximum detail:
+
+- **Aspect counts** (top-right): Summary of aspect types and counts
+- **Element/modality table** (bottom-left): Cross-table showing planet distribution
+
+**Usage:**
+
+```python
+# Info corners are enabled by default
+AtlasBuilder().add_notable("Albert Einstein").save("atlas.pdf")
+
+# Disable one or both
+AtlasBuilder().add_notable("Albert Einstein").without_aspect_counts().save("atlas.pdf")
+AtlasBuilder().add_notable("Albert Einstein").without_element_modality().save("atlas.pdf")
+AtlasBuilder().add_notable("Albert Einstein").without_info_corners().save("atlas.pdf")
+```
+
 ### Fixed
 
 #### Extended Tables Symbol Rendering
@@ -91,6 +110,10 @@ Fixed an issue where astrological symbols (Chiron ⚷, Black Moon Lilith ⚸, Ve
 - Text labels use Arial/Helvetica
 - Vertical alignment adjusted for proper baseline matching
 - ASC and MC entries skip redundant glyph rendering (their "symbols" are just the same text)
+
+#### Info Corner Symbol Rendering
+
+Fixed the same font rendering issue in the AspectCountsLayer and ElementModalityTableLayer info corners. Aspect glyphs (☌, △, □, etc.) and element symbols (🜂, 🜃, 🜁, 🜄) now render correctly in PDF output.
 
 #### Dial Chart Header Support
 

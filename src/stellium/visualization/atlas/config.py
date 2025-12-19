@@ -40,6 +40,8 @@ class AtlasConfig:
         show_header: Whether to show native info header on each chart
         show_aspects: Whether to show aspect lines on charts
         show_extended_tables: Whether to show extended tables (enables landscape)
+        show_aspect_counts: Whether to show aspect counts corner
+        show_element_modality: Whether to show element/modality table corner
         title: Optional title for title page (None = no title page)
         filename: Output PDF filename
     """
@@ -51,5 +53,7 @@ class AtlasConfig:
     show_header: bool = True
     show_aspects: bool = True
     show_extended_tables: bool = False
+    show_aspect_counts: bool = True
+    show_element_modality: bool = True
     title: str | None = None
     filename: str = "atlas.pdf"

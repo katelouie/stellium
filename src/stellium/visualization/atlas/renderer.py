@@ -149,6 +149,12 @@ class AtlasRenderer:
             builder.with_theme(self.config.theme)
             builder.with_zodiac_palette(self.config.zodiac_palette)
 
+            # Info corners
+            if self.config.show_aspect_counts:
+                builder.with_aspect_counts()
+            if self.config.show_element_modality:
+                builder.with_element_modality_table()
+
             # Extended tables
             if self.config.show_extended_tables:
                 builder.with_tables(position="right")

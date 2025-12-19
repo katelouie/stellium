@@ -2420,7 +2420,7 @@ class AspectCountsLayer:
             if aspect_info and aspect_info.glyph:
                 glyph = aspect_info.glyph
             else:
-                glyph = aspect_name[:3]
+                glyph = None  # No glyph, just use text
 
             # Get the color for this aspect (for legend)
             aspect_style = aspect_style_dict.get(
@@ -2431,7 +2431,8 @@ class AspectCountsLayer:
             else:
                 aspect_color = "#888888"
 
-            lines.append((f"{glyph} {aspect_name}: {count}", aspect_color))
+            # Store glyph separately for proper font rendering
+            lines.append((glyph, f"{aspect_name}: {count}", aspect_color))
 
         # Calculate position
         x, y = self._get_position_coordinates(renderer, len(lines))
@@ -2452,37 +2453,77 @@ class AspectCountsLayer:
         )
 
         # Render each line
-        for i, line_data in enumerate(lines):
-            # Unpack line text and optional color
-            if isinstance(line_data, tuple):
-                line_text, line_color = line_data
-            else:
-                # Single string (backwards compatibility)
-                line_text, line_color = line_data, None
+        glyph_width = 14  # Approximate width for a glyph
+        glyph_y_offset = -2  # Nudge glyphs up to align with text baseline
 
+        for i, line_data in enumerate(lines):
             line_y = y + (i * self.style["line_height"])
             font_weight = (
                 self.style["title_weight"] if i == 0 else self.style["font_weight"]
             )
 
-            # Header uses theme color, aspect lines use their palette colors
+            # Header line: (text, None) format
             if i == 0:
-                fill_color = header_color
+                line_text, _ = line_data
+                dwg.add(
+                    dwg.text(
+                        line_text,
+                        insert=(x, line_y),
+                        text_anchor=text_anchor,
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=header_color,
+                        font_family=renderer.style["font_family_text"],
+                        font_weight=font_weight,
+                    )
+                )
             else:
+                # Aspect lines: (glyph, text, color) format
+                glyph, line_text, line_color = line_data
                 fill_color = line_color if line_color else header_color
 
-            dwg.add(
-                dwg.text(
-                    line_text,
-                    insert=(x, line_y),
-                    text_anchor=text_anchor,
-                    dominant_baseline="hanging",
-                    font_size=self.style["text_size"],
-                    fill=fill_color,
-                    font_family=renderer.style["font_family_text"],
-                    font_weight=font_weight,
+                # Calculate x positions based on text anchor
+                if text_anchor == "end":
+                    # Right-aligned: text first (rightmost), then glyph to its left
+                    text_x = x
+                    glyph_x = (
+                        x - len(line_text) * 5.5
+                    )  # Estimate text width, minimal gap
+                else:
+                    # Left-aligned: glyph first, then text
+                    glyph_x = x
+                    text_x = x + glyph_width if glyph else x
+
+                # Render glyph with symbol font (if present)
+                if glyph:
+                    dwg.add(
+                        dwg.text(
+                            glyph,
+                            insert=(glyph_x, line_y + glyph_y_offset),
+                            text_anchor=text_anchor
+                            if text_anchor == "end"
+                            else "start",
+                            dominant_baseline="hanging",
+                            font_size=self.style["text_size"],
+                            fill=fill_color,
+                            font_family=renderer.style["font_family_glyphs"],
+                            font_weight=font_weight,
+                        )
+                    )
+
+                # Render text with text font
+                dwg.add(
+                    dwg.text(
+                        line_text,
+                        insert=(text_x, line_y),
+                        text_anchor=text_anchor,
+                        dominant_baseline="hanging",
+                        font_size=self.style["text_size"],
+                        fill=fill_color,
+                        font_family=renderer.style["font_family_text"],
+                        font_weight=font_weight,
+                    )
                 )
-            )
 
     def _get_position_coordinates(
         self, renderer: ChartRenderer, num_lines: int
@@ -2705,17 +2746,46 @@ class ElementModalityTableLayer:
 
         # Data rows
         elements = ["Fire", "Earth", "Air", "Water"]
+        glyph_width = 12  # Approximate width for element symbol
+        glyph_y_offset = -2  # Nudge glyphs up to align with text baseline
+
         for i, element in enumerate(elements):
             row_y = header_y + ((i + 1) * line_height)
 
-            # Element symbol + name (row header)
+            # Element symbol + name (row header) - render separately for proper fonts
             symbol = self.ELEMENT_SYMBOLS.get(element, element[0])
-            row_header_text = f"{symbol} {element[:2]}"
+            element_abbrev = element[:2]
 
+            if "right" in self.position:
+                # Right-aligned: text first (rightmost), then symbol to its left
+                text_x = row_header_x
+                symbol_x = row_header_x - len(element_abbrev) * 6 - 4
+                symbol_anchor = "end"
+            else:
+                # Left-aligned: symbol first, then text
+                symbol_x = row_header_x
+                text_x = row_header_x + glyph_width
+                symbol_anchor = "start"
+
+            # Render symbol with glyph font
             dwg.add(
                 dwg.text(
-                    row_header_text,
-                    insert=(row_header_x, row_y),
+                    symbol,
+                    insert=(symbol_x, row_y + glyph_y_offset),
+                    text_anchor=symbol_anchor,
+                    dominant_baseline="hanging",
+                    font_size=self.style["text_size"],
+                    fill=text_color,
+                    font_family=renderer.style["font_family_glyphs"],
+                    font_weight=self.style["font_weight"],
+                )
+            )
+
+            # Render text with text font
+            dwg.add(
+                dwg.text(
+                    element_abbrev,
+                    insert=(text_x, row_y),
                     text_anchor=row_header_anchor,
                     dominant_baseline="hanging",
                     font_size=self.style["text_size"],

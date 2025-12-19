@@ -110,6 +110,8 @@ class AtlasBuilder:
         self._show_header: bool = True
         self._show_aspects: bool = True
         self._show_extended_tables: bool = False
+        self._show_aspect_counts: bool = True
+        self._show_element_modality: bool = True
         self._page_size: str = "letter"
         self._title: str | None = None
         self._filename: str = "atlas.pdf"
@@ -318,6 +320,69 @@ class AtlasBuilder:
         self._show_extended_tables = enabled
         return self
 
+    def with_aspect_counts(self, enabled: bool = True) -> "AtlasBuilder":
+        """
+        Enable or disable aspect counts corner display.
+
+        Shows a summary of aspect counts (conjunctions, trines, etc.)
+        in the top-right corner of each chart.
+
+        Args:
+            enabled: True to show aspect counts (default), False to hide
+
+        Returns:
+            Self for chaining
+        """
+        self._show_aspect_counts = enabled
+        return self
+
+    def without_aspect_counts(self) -> "AtlasBuilder":
+        """
+        Disable aspect counts corner display.
+
+        Returns:
+            Self for chaining
+        """
+        self._show_aspect_counts = False
+        return self
+
+    def with_element_modality(self, enabled: bool = True) -> "AtlasBuilder":
+        """
+        Enable or disable element/modality table corner display.
+
+        Shows a cross-table of elements (Fire, Earth, Air, Water) and
+        modalities (Cardinal, Fixed, Mutable) in the bottom-left corner.
+
+        Args:
+            enabled: True to show table (default), False to hide
+
+        Returns:
+            Self for chaining
+        """
+        self._show_element_modality = enabled
+        return self
+
+    def without_element_modality(self) -> "AtlasBuilder":
+        """
+        Disable element/modality table corner display.
+
+        Returns:
+            Self for chaining
+        """
+        self._show_element_modality = False
+        return self
+
+    def without_info_corners(self) -> "AtlasBuilder":
+        """
+        Disable all info corner displays (aspect counts and element/modality).
+
+        Returns:
+            Self for chaining
+        """
+        self._show_aspect_counts = False
+        self._show_element_modality = False
+        return self
+
     def with_header(self, enabled: bool = True) -> "AtlasBuilder":
         """
         Enable or disable chart headers.
@@ -423,6 +488,8 @@ class AtlasBuilder:
             show_header=self._show_header,
             show_aspects=self._show_aspects,
             show_extended_tables=self._show_extended_tables,
+            show_aspect_counts=self._show_aspect_counts,
+            show_element_modality=self._show_element_modality,
             title=self._title,
             filename=filename or self._filename,
         )
@@ -467,6 +534,8 @@ class AtlasBuilder:
             show_header=self._show_header,
             show_aspects=self._show_aspects,
             show_extended_tables=self._show_extended_tables,
+            show_aspect_counts=self._show_aspect_counts,
+            show_element_modality=self._show_element_modality,
             title=self._title,
             filename=self._filename,
         )
