@@ -299,6 +299,54 @@ Chart rendering and SVG generation.
    :no-index:
 ```
 
+### Atlas PDF Generation (`stellium.visualization.atlas`)
+
+Generate multi-page PDF chart atlases.
+
+```{eval-rst}
+.. automodule:: stellium.visualization.atlas.builder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.atlas.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.atlas.renderer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Dial Charts (`stellium.visualization.dial`)
+
+Uranian dial chart visualization.
+
+```{eval-rst}
+.. automodule:: stellium.visualization.dial.builder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.dial.renderer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.dial.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
 ---
 
 ## Returns (`stellium.returns`)
@@ -339,6 +387,122 @@ Utility functions and helpers.
    :no-index:
 
 .. automodule:: stellium.utils.progressions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## Planner (`stellium.planner`)
+
+PDF planner generation with astrological data.
+
+```{eval-rst}
+.. automodule:: stellium.planner.builder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.planner.renderer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.planner.events
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## Electional (`stellium.electional`)
+
+Electional astrology tools for finding optimal times.
+
+```{eval-rst}
+.. automodule:: stellium.electional.intervals
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.electional.planetary_hours
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.electional.predicates
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## Analysis (`stellium.analysis`)
+
+Batch chart analysis and data processing.
+
+```{eval-rst}
+.. automodule:: stellium.analysis.batch
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.analysis.frames
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.analysis.queries
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.analysis.stats
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.analysis.export
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## I/O (`stellium.io`)
+
+Input/output formats for chart data.
+
+```{eval-rst}
+.. automodule:: stellium.io.aaf
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.io.csv
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.io.dataframe
    :members:
    :undoc-members:
    :show-inheritance:
