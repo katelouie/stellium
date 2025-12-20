@@ -257,7 +257,64 @@ class TimingState:
         return False
 
 
+@dataclass
+class PlannerState:
+    """State for astrological planner generation."""
+
+    # Birth data (whose planner to create)
+    native: ChartState = field(default_factory=ChartState)
+
+    # Date range
+    year: int = 2025
+    use_custom_range: bool = False
+    start_date: str = ""  # YYYY-MM-DD
+    end_date: str = ""  # YYYY-MM-DD
+
+    # Timezone (required)
+    timezone: str = "America/Los_Angeles"
+
+    # Location for angles/planetary hours (defaults to birth location)
+    use_custom_location: bool = False
+    custom_location: str = ""
+
+    # Front matter options
+    include_natal_chart: bool = True
+    include_progressed_chart: bool = True
+    include_solar_return: bool = True
+    include_profections: bool = True
+    include_zr_timeline: bool = True
+    zr_lot: str = "Part of Fortune"  # or "Part of Spirit"
+    include_graphic_ephemeris: bool = True
+    graphic_ephemeris_harmonic: int = 360  # 360, 90, 45
+
+    # Daily content options
+    include_natal_transits: bool = True
+    natal_transit_planets: str = "outer"  # outer, all, custom
+    include_mundane_transits: bool = True
+    include_moon_phases: bool = True
+    include_voc: bool = True
+    voc_mode: str = "traditional"  # traditional, modern
+    include_ingresses: bool = True
+    include_stations: bool = True
+
+    # Page layout
+    page_size: str = "a4"  # a4, letter, half-letter
+    binding_margin: float = 0.0
+    week_starts_on: str = "sunday"  # sunday, monday
+
+    def is_valid(self) -> bool:
+        """Check if we have enough data to generate a planner."""
+        if not self.native.is_valid():
+            return False
+        if not self.timezone:
+            return False
+        if self.use_custom_range:
+            return bool(self.start_date and self.end_date)
+        return bool(self.year)
+
+
 # Global state instances
 chart_state = ChartState()
 relationships_state = RelationshipsState()
 timing_state = TimingState()
+planner_state = PlannerState()

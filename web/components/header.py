@@ -41,6 +41,7 @@ def create_nav():
         ("BIRTH CHART", "/natal"),
         ("RELATIONSHIPS", "/relationships"),
         ("TIMING", "/timing"),
+        ("PLANNER", "/planner"),
         ("EXPLORE", "/explore"),
     ]
 

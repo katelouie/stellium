@@ -19,6 +19,7 @@ from nicegui import ui
 from pages.explore import create_explore_page
 from pages.home import create_home_page
 from pages.natal import create_natal_page
+from pages.planner import create_planner_page
 from pages.relationships import create_relationships_page
 from pages.timing import create_timing_page
 
@@ -241,6 +242,13 @@ async def timing():
     """Timing chart page (transits, progressions, returns)."""
     setup_styles()
     create_timing_page()
+
+
+@ui.page("/planner")
+async def planner():
+    """Astrological planner generation page."""
+    setup_styles()
+    create_planner_page()
 
 
 @ui.page("/explore")
