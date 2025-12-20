@@ -9,7 +9,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Planner Web Page
+
+New `/planner` page in the webapp for generating personalized astrological planners with a full GUI interface.
+
+**Features:**
+
+- Birth details form with geocoding
+- Date range options (full year or custom range)
+- Timezone selection with common presets
+- Front matter toggles: natal chart, progressed chart, solar return, profections, ZR timeline, graphic ephemeris
+- Daily content options: natal transits, mundane transits, moon phases, void of course, ingresses, stations
+- Page layout: paper size (A4, A5, Letter), binding margin, week start day
+- Async generation with loading spinner for better UX
+- Instant PDF download on completion
+
+**Usage:** Navigate to `/planner` in the webapp or click "PLANNER" in the navigation bar.
+
 ### Changed
+
+#### PlannerBuilder Page Sizes
+
+Added A5 page size option to `PlannerBuilder`. The `half-letter` option now maps to A5 for better Typst compatibility.
+
+```python
+# All supported page sizes
+planner = (PlannerBuilder.for_native(native)
+    .page_size("a4")        # A4 (default)
+    .page_size("a5")        # A5 (new)
+    .page_size("letter")    # US Letter
+    .page_size("half-letter")  # Maps to A5
+    .generate("planner.pdf"))
+```
+
+#### Planner Weekly Events Spacing
+
+Tighter vertical spacing for daily events in the weekly calendar view, making better use of available space.
 
 #### Visualization Layers Refactored
 
