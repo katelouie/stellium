@@ -916,7 +916,7 @@ class TypstRenderer:
 // TYPOGRAPHY - Crimson Pro body, Cinzel Decorative headings
 // ============================================================================
 #set text(
-  font: ("Crimson Pro", "Crimson Text", "Georgia", "New Computer Modern", "Noto Sans Symbols"),
+  font: ("Crimson Pro", "Crimson Text", "Georgia", "New Computer Modern", "Noto Sans Symbols2", "Noto Sans Symbols"),
   size: 10.5pt,
   fill: text-dark,
   hyphenate: true,

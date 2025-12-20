@@ -8,8 +8,11 @@ Generates SVG timeline visualizations similar to Honeycomb Collective style:
 
 from __future__ import annotations
 
+import base64
 import datetime as dt
+import os
 from dataclasses import dataclass, field
+from functools import lru_cache
 from typing import TYPE_CHECKING, Any
 
 import svgwrite
@@ -19,6 +22,71 @@ from stellium.core.registry import CELESTIAL_REGISTRY
 from stellium.engines.releasing import PLANET_PERIODS
 
 from ._utils import get_sign_glyph
+
+# =============================================================================
+# Font Embedding Utilities
+# =============================================================================
+
+
+@lru_cache(maxsize=1)
+def _get_embedded_font_style() -> str:
+    """
+    Get CSS style with embedded Noto Sans Symbols 2 font (base64 encoded).
+
+    This ensures zodiac and planet glyphs render correctly in PDFs
+    without requiring the font to be installed on the viewing system.
+
+    Returns:
+        CSS style string with @font-face declaration
+    """
+    # Find the font file
+    font_dir = os.path.join(
+        os.path.dirname(__file__),  # sections/
+        "..",  # presentation/
+        "..",  # stellium/
+        "..",  # src/
+        "..",  # project root
+        "assets",
+        "fonts",
+    )
+    font_path = os.path.join(font_dir, "NotoSansSymbols2-Regular.ttf")
+
+    # Also check NotoSansSymbols-Regular as fallback
+    if not os.path.exists(font_path):
+        font_path = os.path.join(font_dir, "NotoSansSymbols-Regular.ttf")
+
+    if not os.path.exists(font_path):
+        # Can't embed font, return empty style
+        return ""
+
+    # Read and encode font
+    with open(font_path, "rb") as f:
+        font_data = f.read()
+    font_base64 = base64.b64encode(font_data).decode("ascii")
+
+    return f"""
+        @font-face {{
+            font-family: 'Noto Sans Symbols2';
+            src: url('data:font/truetype;base64,{font_base64}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }}
+    """
+
+
+def _add_font_defs(dwg: svgwrite.Drawing) -> None:
+    """
+    Add embedded font definitions to an SVG drawing.
+
+    Args:
+        dwg: The svgwrite Drawing to add font defs to
+    """
+    font_style = _get_embedded_font_style()
+    if font_style:
+        # Add style element to defs
+        style = dwg.style(font_style)
+        dwg.defs.add(style)
+
 
 if TYPE_CHECKING:
     from datetime import date
@@ -31,11 +99,11 @@ if TYPE_CHECKING:
 # Honeycomb-inspired color palette
 COLORS = {
     "background": "#ffffff",
-    "current_period": "#f5e6c8",  # Warm cream/yellow highlight
-    "default_period": "#f0e8d8",  # Default period fill
+    "current_period": "#d8c8e8",  # Light purple highlight for current period
+    "default_period": "#f0e8d8",  # Default period fill (cream)
     "post_loosing": "#e8e0d0",  # Lighter shade for post-LB
-    "loosing_bond_stroke": "#333333",  # Dark outline for LB
-    "peak_stroke": "#4a3353",  # Purple stroke for peaks
+    "loosing_bond_stroke": "#2d2330",  # Dark outline for LB (thick)
+    "peak_stroke": "#4a3353",  # Purple stroke for angular peaks
     "text_dark": "#2d2330",
     "text_muted": "#6b4d6e",
     "grid_line": "#d0c8c0",
@@ -45,21 +113,32 @@ COLORS = {
 
 # Dimensions
 SVG_WIDTH = 800
-OVERVIEW_HEIGHT = 600
+OVERVIEW_HEIGHT = 520  # Bar graph + period table (explanation moved to Typst)
 TIMELINE_HEIGHT = 500
 
 # Timeline level heights and spacing
-LEVEL_HEIGHT = 120  # Height allocated per timeline level
+LEVEL_HEIGHT = 140  # Height allocated per timeline level (increased for taller bars)
 LEVEL_SPACING = 30  # Vertical spacing between levels
 TIMELINE_MARGIN_TOP = 80
 TIMELINE_MARGIN_BOTTOM = 40
 TIMELINE_MARGIN_X = 60
 
-# Peak heights based on angularity
-MAJOR_PEAK_HEIGHT = 50  # 10th from Lot
-MODERATE_PEAK_HEIGHT = 35  # 4th/7th from Lot
-MINOR_PEAK_HEIGHT = 20  # 1st from Lot
-BASELINE_HEIGHT = 5  # Non-angular
+# Bar heights based on position from lot (matching overview bar graph pattern)
+# Heights are proportional - angular signs are tallest, adjacent signs step down
+BAR_HEIGHTS = {
+    1: 70,  # 1st from lot (primary angular)
+    2: 52,  # Adjacent to 1
+    3: 38,  # Adjacent to 4
+    4: 50,  # 4th from lot (secondary angular)
+    5: 38,  # Adjacent to 4
+    6: 38,  # Adjacent to 7
+    7: 50,  # 7th from lot (secondary angular)
+    8: 38,  # Adjacent to 7
+    9: 52,  # Adjacent to 10
+    10: 70,  # 10th from lot (PEAK - primary angular)
+    11: 52,  # Adjacent to 10
+    12: 52,  # Adjacent to 1
+}
 
 # Sign order (zodiacal)
 SIGNS = [
@@ -213,7 +292,7 @@ class ZRVisualizationSection:
             show_timeline=self.output in ("timeline", "both"),
         )
 
-        # Generate SVG(s)
+        # Generate SVG(s) and text sections
         results = []
 
         if config.show_overview:
@@ -226,6 +305,16 @@ class ZRVisualizationSection:
                         "content": overview_svg,
                         "width": SVG_WIDTH,
                         "height": OVERVIEW_HEIGHT,
+                    },
+                )
+            )
+            # Add explanation text (rendered by Typst for nice typography)
+            results.append(
+                (
+                    "Understanding Zodiacal Releasing",
+                    {
+                        "type": "text",
+                        "text": self._get_explanation_text(self.lot),
                     },
                 )
             )
@@ -263,6 +352,9 @@ class ZRVisualizationSection:
     ) -> str:
         """Render the overview page with natal angles and period length table."""
         dwg = svgwrite.Drawing(size=(config.width, OVERVIEW_HEIGHT))
+
+        # Embed font for symbol rendering
+        _add_font_defs(dwg)
 
         # Add background
         dwg.add(
@@ -310,7 +402,7 @@ class ZRVisualizationSection:
         config: ZRVizConfig,
         y_start: float,
     ) -> float:
-        """Render the natal angles chart showing peak periods by sign."""
+        """Render the natal angles as a bar graph showing angular prominence."""
         # Section header
         self._add_section_header(dwg, "NATAL FORTUNE ANGLES", 40, y_start, config)
         y_offset = y_start + 30
@@ -318,23 +410,22 @@ class ZRVisualizationSection:
         # Description text
         dwg.add(
             dwg.text(
-                "Peak periods based on angular relationship to the Lot.",
+                "Bar height shows angular strength. Brighter bars = peak periods.",
                 insert=(40, y_offset),
                 font_family="Arial, sans-serif",
                 font_size="10px",
                 fill=config.colors["text_muted"],
             )
         )
-        y_offset += 25
+        y_offset += 20
 
-        # Calculate angular signs from lot
-        lot_sign_idx = SIGNS.index(timeline.lot_sign)
-        angular_positions = {
-            lot_sign_idx: 1,  # 1st from Lot
-            (lot_sign_idx + 3) % 12: 4,  # 4th from Lot
-            (lot_sign_idx + 6) % 12: 7,  # 7th from Lot
-            (lot_sign_idx + 9) % 12: 10,  # 10th from Lot (peak!)
-        }
+        # Bar graph dimensions
+        chart_width = config.width - 80
+        bar_width = (chart_width / 12) * 0.7  # 70% of cell width for bar
+        cell_width = chart_width / 12
+        chart_x = 40
+        max_bar_height = 100
+        baseline_y = y_offset + max_bar_height + 10
 
         # Get natal planets by sign
         planets_by_sign: dict[str, list[str]] = {}
@@ -344,56 +435,112 @@ class ZRVisualizationSection:
             glyph = CELESTIAL_REGISTRY.get(pos.name, None)
             planets_by_sign[pos.sign].append(glyph.glyph if glyph else pos.name[:2])
 
-        # Draw the angular chart
-        chart_width = config.width - 80
-        cell_width = chart_width / 12
-        chart_x = 40
+        lot_sign_idx = SIGNS.index(timeline.lot_sign)
 
-        # Draw peak indicators (triangular shapes above)
+        # Define bar heights and colors for each position from lot (1-12)
+        # Position 1 = 1st from lot, Position 10 = 10th from lot (peak), etc.
+        # Heights: 1,10 = highest; 4,7 = medium; adjacent signs step down
+        bar_config = {
+            1: {"height": 1.0, "bright": True},  # 1st from lot (angular)
+            2: {"height": 0.75, "bright": False},  # Adjacent to 1
+            3: {"height": 0.50, "bright": False},  # Adjacent to 4
+            4: {"height": 0.65, "bright": True},  # 4th from lot (angular)
+            5: {"height": 0.50, "bright": False},  # Adjacent to 4
+            6: {"height": 0.50, "bright": False},  # Adjacent to 7
+            7: {"height": 0.65, "bright": True},  # 7th from lot (angular)
+            8: {"height": 0.50, "bright": False},  # Adjacent to 7
+            9: {"height": 0.75, "bright": False},  # Adjacent to 10
+            10: {"height": 1.0, "bright": True},  # 10th from lot (PEAK!)
+            11: {"height": 0.75, "bright": False},  # Adjacent to 10
+            12: {"height": 0.75, "bright": False},  # Adjacent to 1
+        }
+
+        # Colors for bars
+        bright_color = config.colors["peak_stroke"]  # Purple for angular
+        muted_color = config.colors["default_period"]  # Cream for non-angular
+
+        # Draw bars
         for i in range(12):
-            sign_idx = (lot_sign_idx + i) % 12
-            x = chart_x + i * cell_width
-            angle = angular_positions.get(sign_idx)
-
-            if angle == 10:  # Major peak
-                self._draw_peak_indicator(
-                    dwg, x + cell_width / 2, y_offset, 25, config.colors["peak_stroke"]
-                )
-            elif angle in (4, 7):  # Moderate peak
-                self._draw_peak_indicator(
-                    dwg, x + cell_width / 2, y_offset, 15, config.colors["peak_stroke"]
-                )
-            elif angle == 1:  # Minor peak
-                self._draw_peak_indicator(
-                    dwg, x + cell_width / 2, y_offset, 8, config.colors["peak_stroke"]
-                )
-
-        y_offset += 35
-
-        # Sign row with house numbers
-        for i in range(12):
+            position = i + 1  # 1-indexed position from lot
             sign_idx = (lot_sign_idx + i) % 12
             sign = SIGNS[sign_idx]
-            x = chart_x + i * cell_width
 
-            # Sign glyph
-            glyph = get_sign_glyph(sign)
+            x = chart_x + i * cell_width + (cell_width - bar_width) / 2
+            cfg = bar_config[position]
+            bar_height = max_bar_height * cfg["height"]
+            bar_y = baseline_y - bar_height
+
+            # Bar fill color
+            fill_color = bright_color if cfg["bright"] else muted_color
+            stroke_color = (
+                config.colors["text_dark"]
+                if cfg["bright"]
+                else config.colors["grid_line"]
+            )
+
+            # Draw bar
             dwg.add(
-                dwg.text(
-                    glyph,
-                    insert=(x + cell_width / 2, y_offset),
-                    text_anchor="middle",
-                    font_family="Noto Sans Symbols 2, Arial",
-                    font_size="16px",
-                    fill=config.colors["text_dark"],
+                dwg.rect(
+                    (x, bar_y),
+                    (bar_width, bar_height),
+                    fill=fill_color,
+                    stroke=stroke_color,
+                    stroke_width=1,
+                    rx=3,
+                    ry=3,
                 )
             )
 
-            # House number below
+            # Add sign glyph inside bar (near top)
+            # Use white text on dark angular bars, dark text on light non-angular bars
+            glyph = get_sign_glyph(sign)
+            glyph_y = bar_y + 18 if bar_height > 30 else bar_y + bar_height / 2 + 5
+            text_color = "#ffffff" if cfg["bright"] else config.colors["text_muted"]
+            dwg.add(
+                dwg.text(
+                    glyph,
+                    insert=(x + bar_width / 2, glyph_y),
+                    text_anchor="middle",
+                    font_family="Noto Sans Symbols2, Arial",
+                    font_size="14px",
+                    fill=text_color,
+                )
+            )
+
+            # Add planets inside bar if present
+            if sign in planets_by_sign:
+                planet_glyphs = planets_by_sign[sign]
+                planet_start_y = glyph_y + 16
+                for j, planet_glyph in enumerate(planet_glyphs[:3]):  # Max 3
+                    if planet_start_y + j * 14 < baseline_y - 5:
+                        dwg.add(
+                            dwg.text(
+                                planet_glyph,
+                                insert=(x + bar_width / 2, planet_start_y + j * 14),
+                                text_anchor="middle",
+                                font_family="Noto Sans Symbols2, Arial",
+                                font_size="11px",
+                                fill=text_color,
+                            )
+                        )
+
+        # Draw baseline
+        dwg.add(
+            dwg.line(
+                (chart_x, baseline_y),
+                (chart_x + chart_width, baseline_y),
+                stroke=config.colors["grid_line"],
+                stroke_width=1,
+            )
+        )
+
+        # Add position numbers below baseline
+        for i in range(12):
+            x = chart_x + i * cell_width + cell_width / 2
             dwg.add(
                 dwg.text(
                     str(i + 1),
-                    insert=(x + cell_width / 2, y_offset + 18),
+                    insert=(x, baseline_y + 15),
                     text_anchor="middle",
                     font_family="Arial, sans-serif",
                     font_size="10px",
@@ -401,29 +548,21 @@ class ZRVisualizationSection:
                 )
             )
 
-        y_offset += 35
+        # Add axis label
+        lot_short = timeline.lot.replace("Part of ", "")
+        dwg.add(
+            dwg.text(
+                f"Houses from {lot_short}",
+                insert=(chart_x + chart_width / 2, baseline_y + 30),
+                text_anchor="middle",
+                font_family="Arial, sans-serif",
+                font_size="11px",
+                font_style="italic",
+                fill=config.colors["text_muted"],
+            )
+        )
 
-        # Planets row
-        for i in range(12):
-            sign_idx = (lot_sign_idx + i) % 12
-            sign = SIGNS[sign_idx]
-            x = chart_x + i * cell_width
-
-            if sign in planets_by_sign:
-                planet_glyphs = planets_by_sign[sign]
-                for j, glyph in enumerate(planet_glyphs[:4]):  # Max 4 per cell
-                    dwg.add(
-                        dwg.text(
-                            glyph,
-                            insert=(x + cell_width / 2, y_offset + j * 14),
-                            text_anchor="middle",
-                            font_family="Noto Sans Symbols 2, Arial",
-                            font_size="12px",
-                            fill=config.colors["text_dark"],
-                        )
-                    )
-
-        return y_offset + 60
+        return baseline_y + 45
 
     def _draw_peak_indicator(
         self, dwg: svgwrite.Drawing, x: float, y: float, height: float, color: str
@@ -438,7 +577,7 @@ class ZRVisualizationSection:
 
     def _render_period_length_table(
         self, dwg: svgwrite.Drawing, config: ZRVizConfig, y_start: float
-    ) -> None:
+    ) -> float:
         """Render the period length reference table."""
         self._add_section_header(dwg, "LENGTH OF GENERAL PERIODS", 40, y_start, config)
         y_offset = y_start + 30
@@ -482,17 +621,17 @@ class ZRVisualizationSection:
             )
             x += col_widths[i]
 
-        y_offset += 18
-
-        # Draw header line
+        # Draw header line (below headers, above data)
         dwg.add(
             dwg.line(
-                (x_start, y_offset - 5),
-                (x_start + sum(col_widths), y_offset - 5),
+                (x_start, y_offset + 5),
+                (x_start + sum(col_widths), y_offset + 5),
                 stroke=config.colors["grid_line"],
                 stroke_width=1,
             )
         )
+
+        y_offset += 18
 
         # Data rows
         ruler_signs = {
@@ -536,7 +675,7 @@ class ZRVisualizationSection:
                     dwg.text(
                         cell,
                         insert=(x, y_offset),
-                        font_family="Noto Sans Symbols 2, Arial, sans-serif",
+                        font_family="Noto Sans Symbols2, Arial, sans-serif",
                         font_size="11px",
                         fill=config.colors["text_dark"],
                     )
@@ -544,6 +683,92 @@ class ZRVisualizationSection:
                 x += col_widths[i]
 
             y_offset += 20
+
+        return y_offset
+
+    def _get_explanation_text(self, lot_name: str) -> str:
+        """Get explanatory text about Zodiacal Releasing for Typst rendering."""
+        # Lot-specific descriptions for ZR context
+        lot_descriptions = {
+            "Part of Fortune": (
+                "You are releasing from the Part of Fortune, the primary lot of embodiment "
+                "and material experience. Fortune reveals the timing of your physical vitality, "
+                "health fluctuations, material circumstances, and how life 'happens to you.' "
+                "Peak periods often bring increased visibility, opportunities, or significant "
+                "life events related to your body, resources, and worldly circumstances. This "
+                "is the most commonly used lot for general life timing."
+            ),
+            "Part of Spirit": (
+                "You are releasing from the Part of Spirit, the lot of will, intellect, and "
+                "purposeful action. Spirit reveals the timing of your vocational calling, "
+                "career developments, and how you consciously shape your life. Peak periods "
+                "often bring breakthroughs in work, recognition for your efforts, or pivotal "
+                "decisions about your life direction. Spirit shows what you do, while Fortune "
+                "shows what happens to you."
+            ),
+            "Part of Eros (Love)": (
+                "You are releasing from the Part of Eros, the lot of love, desire, and "
+                "romantic connection. Eros reveals the timing of relationships, attractions, "
+                "and matters of the heart. Peak periods often coincide with significant "
+                "romantic encounters, deepening of bonds, or important relationship transitions."
+            ),
+            "Part of Necessity (Ananke)": (
+                "You are releasing from the Part of Necessity, the lot of constraints, fate, "
+                "and unavoidable circumstances. Necessity reveals timing around struggles, "
+                "enemies, and the things we must endure. Peak periods may bring challenges "
+                "that ultimately strengthen character, or confrontations with limitations "
+                "that reshape your path."
+            ),
+            "Part of Courage (Tolma)": (
+                "You are releasing from the Part of Courage, the lot of boldness, action, "
+                "and assertive energy. Courage reveals timing for taking risks, confronting "
+                "fears, and decisive action. Peak periods often demand bravery and can bring "
+                "both triumphs and conflicts depending on how that martial energy is channeled."
+            ),
+            "Part of Victory (Nike)": (
+                "You are releasing from the Part of Victory, the lot of success, faith, and "
+                "honors. Victory reveals timing for achievements, recognition, and fortunate "
+                "alliances. Peak periods often bring rewards, public acknowledgment, or "
+                "beneficial connections that elevate your standing."
+            ),
+            "Part of Nemesis": (
+                "You are releasing from the Part of Nemesis, the lot of hidden matters, karma, "
+                "and that which comes due. Nemesis reveals timing around debts (literal or "
+                "metaphorical), endings, and subconscious patterns surfacing. Peak periods "
+                "may bring closure, reckoning, or the resolution of long-standing issues."
+            ),
+        }
+
+        # Get lot-specific description or fall back to catalog
+        if lot_name in lot_descriptions:
+            lot_paragraph = lot_descriptions[lot_name]
+        else:
+            # Try to get from ARABIC_PARTS_CATALOG
+            from stellium.components.arabic_parts import ARABIC_PARTS_CATALOG
+
+            if lot_name in ARABIC_PARTS_CATALOG:
+                catalog_desc = ARABIC_PARTS_CATALOG[lot_name].get("description", "")
+                lot_paragraph = (
+                    f"You are releasing from the {lot_name}. {catalog_desc} "
+                    "Peak periods in angular signs will intensify these themes, bringing "
+                    "increased activity and visibility in this life area."
+                )
+            else:
+                lot_paragraph = (
+                    f"You are releasing from the {lot_name}. Peak periods in angular signs "
+                    "will bring increased activity and visibility in the life areas "
+                    "associated with this lot."
+                )
+
+        return f"""{lot_paragraph}
+
+Zodiacal Releasing is a Hellenistic timing technique that divides life into major periods ruled by zodiac signs. Each sign's ruling planet colors the themes of that time. This technique was preserved by Vettius Valens in the 2nd century CE and has been revived by modern traditional astrologers.
+
+The bar graph above shows which signs are angular (most active) from your Lot. The tallest bars at positions 1 and 10 represent peak periods of heightened visibility and activity. Positions 4 and 7 are also angular but less intense. When your current period falls in one of these signs, expect increased momentum in that lot's life area.
+
+The table shows how long each planetary ruler's periods last. Saturn rules the longest periods (30 years at L1), while the Moon rules the shortest (25 years). Each level subdivides proportionally: L1 measures in years, L2 in months, L3 in days, and L4 in hours. This creates a fractal structure where the same planetary themes echo across different time scales.
+
+The timeline on the following page shows your actual periods with start and end dates. Trapezoidal shapes rise higher for angular signs. The current period is highlighted in warm cream. "Loosing of the Bond" periods (marked with darker outlines) indicate pivotal transitions when focus shifts. Use this to understand where you are in your life's unfolding story."""
 
     def _add_section_header(
         self,
@@ -597,6 +822,9 @@ class ZRVisualizationSection:
 
         dwg = svgwrite.Drawing(size=(config.width, total_height))
 
+        # Embed font for symbol rendering
+        _add_font_defs(dwg)
+
         # Add background
         dwg.add(
             dwg.rect(
@@ -635,24 +863,42 @@ class ZRVisualizationSection:
     ) -> None:
         """Render the legend showing what colors/patterns mean."""
         items = [
-            (config.colors["current_period"], "Current period"),
-            (config.colors["loosing_bond_stroke"], "Loosing of the bond"),
-            (config.colors["post_loosing"], "Post-loosing period"),
+            ("current", config.colors["current_period"], "Current period"),
+            ("loosing", config.colors["loosing_bond_stroke"], "Loosing of the bond"),
+            ("post_loosing", config.colors["post_loosing"], "Post-loosing phase"),
+            ("default", config.colors["default_period"], "Regular period"),
         ]
 
-        for i, (color, label) in enumerate(items):
+        for i, (item_type, color, label) in enumerate(items):
             iy = y + i * 16
 
             # Color swatch
-            if "stroke" in color or color == config.colors["loosing_bond_stroke"]:
-                # Draw outlined box
+            if item_type == "loosing":
+                # Draw box with thick dark outline (like loosing of bond bars)
                 dwg.add(
                     dwg.rect(
-                        (x, iy), (12, 12), fill="none", stroke=color, stroke_width=2
+                        (x, iy),
+                        (12, 12),
+                        fill=config.colors["default_period"],
+                        stroke=color,
+                        stroke_width=2.5,
+                        rx=2,
+                        ry=2,
                     )
                 )
             else:
-                dwg.add(dwg.rect((x, iy), (12, 12), fill=color))
+                # Regular filled box (current, post_loosing, default)
+                dwg.add(
+                    dwg.rect(
+                        (x, iy),
+                        (12, 12),
+                        fill=color,
+                        stroke=config.colors["grid_line"],
+                        stroke_width=0.5,
+                        rx=2,
+                        ry=2,
+                    )
+                )
 
             # Label
             dwg.add(
@@ -740,8 +986,18 @@ class ZRVisualizationSection:
             elapsed = (d - visible_start).total_seconds()
             return TIMELINE_MARGIN_X + (elapsed / total_span) * timeline_width
 
-        # Baseline y position
-        baseline_y = y_offset + LEVEL_HEIGHT - 30
+        # Baseline y positions
+        # Label baseline stays fixed, bar baseline is shifted up 5px
+        label_baseline_y = y_offset + LEVEL_HEIGHT - 30
+        baseline_y = label_baseline_y - 5  # Bars drawn 5px higher
+
+        # For Level 3, track post-loosing state within each L2 period
+        post_loosing_state = False
+        current_l2_start = None
+
+        if level == 3:
+            # Get L2 periods to track boundaries
+            l2_periods = timeline.periods.get(2, [])
 
         # Draw each period
         for period in visible_periods:
@@ -751,6 +1007,35 @@ class ZRVisualizationSection:
             if x2 <= x1:
                 continue
 
+            # For Level 3, check if we're in post-loosing phase
+            is_post_loosing = False
+            if level == 3:
+                # Find which L2 period contains this L3 period
+                period_start = period.start
+                if period_start.tzinfo is None:
+                    period_start = period_start.replace(tzinfo=dt.UTC)
+
+                for l2_p in l2_periods:
+                    l2_start = l2_p.start
+                    l2_end = l2_p.end
+                    if l2_start.tzinfo is None:
+                        l2_start = l2_start.replace(tzinfo=dt.UTC)
+                    if l2_end.tzinfo is None:
+                        l2_end = l2_end.replace(tzinfo=dt.UTC)
+
+                    if l2_start <= period_start < l2_end:
+                        # Reset post-loosing state when entering new L2 period
+                        if current_l2_start != l2_start:
+                            current_l2_start = l2_start
+                            post_loosing_state = False
+                        break
+
+                # If this period is loosing of bond, mark subsequent as post-loosing
+                if period.is_loosing_bond:
+                    post_loosing_state = True
+                elif post_loosing_state:
+                    is_post_loosing = True
+
             self._draw_period_shape(
                 dwg,
                 period,
@@ -759,11 +1044,46 @@ class ZRVisualizationSection:
                 baseline_y,
                 config,
                 is_current=self._is_current_period(period, config),
+                lot_sign=timeline.lot_sign,
+                is_post_loosing=is_post_loosing,
             )
 
-        # Draw date labels along bottom
+        # For Level 3, draw vertical lines where Level 2 periods begin
+        if level == 3:
+            l2_periods = timeline.periods.get(2, [])
+            for l2_period in l2_periods:
+                # Check if L2 period start falls within visible range
+                l2_start = l2_period.start
+                if l2_start.tzinfo is None:
+                    l2_start = l2_start.replace(tzinfo=dt.UTC)
+
+                if visible_start < l2_start < visible_end:
+                    x = date_to_x(l2_start)
+                    # Draw vertical line from top of chart area to baseline
+                    dwg.add(
+                        dwg.line(
+                            (x, y_offset - 15),
+                            (x, baseline_y),
+                            stroke=config.colors["peak_stroke"],
+                            stroke_width=1.5,
+                            stroke_dasharray="4,2",
+                        )
+                    )
+                    # Add L2 sign label at top
+                    l2_glyph = get_sign_glyph(l2_period.sign)
+                    dwg.add(
+                        dwg.text(
+                            f"L2: {l2_glyph}",
+                            insert=(x + 3, y_offset - 5),
+                            font_family="Noto Sans Symbols2, Arial",
+                            font_size="8px",
+                            fill=config.colors["peak_stroke"],
+                        )
+                    )
+
+        # Draw date labels along bottom (using label baseline, not bar baseline)
         self._render_date_labels(
-            dwg, visible_periods, date_to_x, baseline_y + 15, config
+            dwg, visible_periods, date_to_x, label_baseline_y + 20, config
         )
 
     def _draw_period_shape(
@@ -775,88 +1095,91 @@ class ZRVisualizationSection:
         baseline_y: float,
         config: ZRVizConfig,
         is_current: bool = False,
+        lot_sign: str = "Aries",
+        is_post_loosing: bool = False,
     ) -> None:
         """
-        Draw the characteristic ZR period shape:
+        Draw period as a bar graph rectangle.
 
-             ___________
-            /           \\
-           /   PLATEAU   \\
-          /               \\
-        START            END
+        Bar height based on position from lot:
+        - 1st & 10th: tallest (primary angular)
+        - 4th & 7th: medium-tall (secondary angular)
+        - Adjacent to angular: slightly shorter than their neighbor
         """
-        # Calculate peak height based on angularity
-        if period.is_peak:  # 10th from Lot
-            peak_height = MAJOR_PEAK_HEIGHT
-        elif period.angle_from_lot in (4, 7):
-            peak_height = MODERATE_PEAK_HEIGHT
-        elif period.angle_from_lot == 1:
-            peak_height = MINOR_PEAK_HEIGHT
-        else:
-            peak_height = BASELINE_HEIGHT
+        # Calculate position from lot (1-12) based on sign
+        lot_sign_idx = SIGNS.index(lot_sign) if lot_sign in SIGNS else 0
+        period_sign_idx = SIGNS.index(period.sign) if period.sign in SIGNS else 0
+        position = ((period_sign_idx - lot_sign_idx) % 12) + 1  # 1-indexed
 
-        # Calculate shape points
+        bar_height = BAR_HEIGHTS.get(position, 38)  # Default to medium if unknown
+
         width = x2 - x1
-        prep_width = width * 0.15  # Preparatory phase
-        follow_width = width * 0.15  # Follow-through phase
-
-        points = [
-            (x1, baseline_y),  # Start bottom
-            (x1 + prep_width, baseline_y - peak_height),  # Top of prep slope
-            (x2 - follow_width, baseline_y - peak_height),  # End of plateau
-            (x2, baseline_y),  # End bottom
-        ]
+        bar_y = baseline_y - bar_height
 
         # Determine fill color
         if is_current:
-            fill = config.colors["current_period"]
-        elif period.is_loosing_bond:
-            fill = config.colors["post_loosing"]
+            fill = config.colors["current_period"]  # Light purple
+        elif period.is_loosing_bond or is_post_loosing:
+            fill = config.colors["post_loosing"]  # Lighter shade for LB and post-LB
         else:
             fill = config.colors["default_period"]
 
-        # Draw shape
-        stroke = (
-            config.colors["peak_stroke"]
-            if period.is_peak
-            else config.colors["grid_line"]
-        )
-        stroke_width = 1.5 if period.is_peak else 0.5
+        # Draw bar with rounded corners
+        stroke = config.colors["grid_line"]
+        stroke_width = 0.5
 
         dwg.add(
-            dwg.polygon(
-                points,
+            dwg.rect(
+                (x1, bar_y),
+                (width, bar_height),
                 fill=fill,
                 stroke=stroke,
                 stroke_width=stroke_width,
+                rx=2,
+                ry=2,
             )
         )
 
-        # Add loosing of bond indicator (thick outline)
+        # Add loosing of bond indicator (thick dark border)
         if period.is_loosing_bond:
             dwg.add(
-                dwg.polygon(
-                    points,
+                dwg.rect(
+                    (x1, bar_y),
+                    (width, bar_height),
                     fill="none",
                     stroke=config.colors["loosing_bond_stroke"],
-                    stroke_width=2,
+                    stroke_width=2.5,
+                    rx=2,
+                    ry=2,
                 )
             )
 
-        # Add sign glyph at top center of plateau
-        if width > 30:  # Only if there's room
-            glyph = get_sign_glyph(period.sign)
-            center_x = (x1 + prep_width + x2 - follow_width) / 2
-            dwg.add(
-                dwg.text(
-                    glyph,
-                    insert=(center_x, baseline_y - peak_height - 5),
-                    text_anchor="middle",
-                    font_family="Noto Sans Symbols 2, Arial",
-                    font_size="14px",
-                    fill=config.colors["text_dark"],
-                )
+        # Add sign glyph inside bar (centered, scaled to fit)
+        glyph = get_sign_glyph(period.sign)
+        center_x = (x1 + x2) / 2
+
+        # Scale font size based on bar width
+        if width >= 30:
+            font_size = "12px"
+        elif width >= 18:
+            font_size = "10px"
+        elif width >= 10:
+            font_size = "8px"
+        else:
+            font_size = "6px"
+
+        # Position glyph in upper portion of bar
+        glyph_y = bar_y + min(18, bar_height * 0.5)
+        dwg.add(
+            dwg.text(
+                glyph,
+                insert=(center_x, glyph_y),
+                text_anchor="middle",
+                font_family="Noto Sans Symbols2, Arial",
+                font_size=font_size,
+                fill=config.colors["text_dark"],
             )
+        )
 
     def _render_date_labels(
         self,
@@ -868,6 +1191,9 @@ class ZRVisualizationSection:
     ) -> None:
         """Render date labels at period boundaries."""
         labeled_positions: set[int] = set()
+
+        # Add extra spacing below bars for labels
+        label_y = y + 8
 
         for period in periods:
             x = date_to_x(period.start)
@@ -887,12 +1213,12 @@ class ZRVisualizationSection:
                 dwg.add(
                     dwg.text(
                         date_str,
-                        insert=(x, y),
+                        insert=(x, label_y),
                         text_anchor="start",
                         font_family="Arial, sans-serif",
                         font_size="8px",
                         fill=config.colors["text_muted"],
-                        transform=f"rotate(-45, {x}, {y})",
+                        transform=f"rotate(-90, {x}, {label_y})",
                     )
                 )
 
