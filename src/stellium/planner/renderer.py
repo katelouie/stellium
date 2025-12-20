@@ -35,6 +35,8 @@ class ChartPaths:
     progressed: str | None = None
     solar_return: str | None = None
     graphic_ephemeris: str | None = None
+    zr_overview: str | None = None
+    zr_timeline: str | None = None
 
 
 class PlannerRenderer:
@@ -194,6 +196,57 @@ class PlannerRenderer:
                 self._chart_paths.graphic_ephemeris = eph_path
             except Exception:
                 pass
+
+        # Generate ZR visualization
+        if self.config.include_zr_timeline:
+            self._generate_zr_charts(natal_chart)
+
+    def _generate_zr_charts(self, natal_chart) -> None:
+        """Generate Zodiacal Releasing visualization SVGs."""
+        from stellium.core.builder import ChartBuilder
+        from stellium.engines.releasing import ZodiacalReleasingAnalyzer
+        from stellium.presentation.sections.zr_visualization import (
+            ZRVisualizationSection,
+        )
+
+        try:
+            # Re-calculate chart with ZR analyzer if not present
+            if "zodiacal_releasing" not in natal_chart.metadata:
+                natal_chart = (
+                    ChartBuilder.from_native(self.config.native)
+                    .add_analyzer(ZodiacalReleasingAnalyzer([self.config.zr_lot]))
+                    .calculate()
+                )
+
+            # Generate overview SVG
+            overview_section = ZRVisualizationSection(
+                lot=self.config.zr_lot,
+                year=self.config.year or self.config.start_date.year,
+                output="overview",
+            )
+            overview_data = overview_section.generate_data(natal_chart)
+            if overview_data.get("type") == "svg":
+                overview_path = os.path.join(self._temp_dir, "zr_overview.svg")
+                with open(overview_path, "w", encoding="utf-8") as f:
+                    f.write(overview_data["content"])
+                self._chart_paths.zr_overview = overview_path
+
+            # Generate timeline SVG
+            timeline_section = ZRVisualizationSection(
+                lot=self.config.zr_lot,
+                year=self.config.year or self.config.start_date.year,
+                levels=(1, 2, 3),
+                output="timeline",
+            )
+            timeline_data = timeline_section.generate_data(natal_chart)
+            if timeline_data.get("type") == "svg":
+                timeline_path = os.path.join(self._temp_dir, "zr_timeline.svg")
+                with open(timeline_path, "w", encoding="utf-8") as f:
+                    f.write(timeline_data["content"])
+                self._chart_paths.zr_timeline = timeline_path
+
+        except Exception:
+            pass  # Skip if ZR generation fails
 
     def _collect_events(self) -> dict[date, list]:
         """Collect all events for the planner period."""
@@ -489,6 +542,45 @@ class PlannerRenderer:
         # Profections
         if self.config.include_profections:
             parts.append(self._render_profections())
+
+        # Zodiacal Releasing
+        if self._chart_paths.zr_overview:
+            lot_name = self.config.zr_lot.replace("Part of ", "")
+            parts.append(f"""
+== Zodiacal Releasing Overview
+
+#align(center)[
+  #box(
+    stroke: 1pt + gold,
+    radius: 4pt,
+    clip: true,
+    inset: 8pt,
+    fill: white,
+    image("{self._chart_paths.zr_overview}", width: 95%)
+  )
+]
+
+#pagebreak()
+""")
+
+        if self._chart_paths.zr_timeline:
+            lot_name = self.config.zr_lot.replace("Part of ", "")
+            parts.append(f"""
+== Zodiacal Releasing from {lot_name}
+
+#align(center)[
+  #box(
+    stroke: 1pt + gold,
+    radius: 4pt,
+    clip: true,
+    inset: 8pt,
+    fill: white,
+    image("{self._chart_paths.zr_timeline}", width: 95%)
+  )
+]
+
+#pagebreak()
+""")
 
         # Graphic Ephemeris
         if self._chart_paths.graphic_ephemeris:

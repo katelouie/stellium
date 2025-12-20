@@ -73,6 +73,9 @@ from .transits import (
     StationSection,
 )
 
+# Visualization sections
+from .zr_visualization import ZRVisualizationSection
+
 __all__ = [
     # Utility functions
     "get_object_display",
@@ -110,4 +113,6 @@ __all__ = [
     "EclipseSection",
     "IngressSection",
     "StationSection",
+    # Visualization sections
+    "ZRVisualizationSection",
 ]

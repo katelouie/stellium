@@ -9,6 +9,39 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Zodiacal Releasing Visualization
+
+New `ZRVisualizationSection` in `presentation/sections/` that generates SVG timeline visualizations in Honeycomb Collective style:
+
+**Features:**
+
+- **Overview page**: Natal angles chart showing peak periods by sign angularity, plus period length reference table
+- **Timeline page**: Stacked L1/L2/L3 timelines with characteristic peak shapes (preparatory slope → plateau → follow-through)
+- Current period highlighted in warm cream/yellow
+- Loosing of the bond periods outlined
+- Sign glyphs and date labels
+
+**Usage in Reports:**
+
+```python
+report = (ReportBuilder()
+    .from_chart(chart)
+    .with_zr_visualization(lot="Part of Fortune", year=2025)
+    .render(format="pdf", file="report.pdf"))
+```
+
+**Usage in Planners:** Automatically included when `include_zr_timeline=True` (default). Generates two front matter pages.
+
+**Standalone:**
+
+```python
+from stellium.presentation.sections import ZRVisualizationSection
+
+section = ZRVisualizationSection(lot="Part of Fortune", year=2025, output="both")
+data = section.generate_data(chart)
+svg_content = data["content"]  # SVG string
+```
+
 #### Planner Web Page
 
 New `/planner` page in the webapp for generating personalized astrological planners with a full GUI interface.

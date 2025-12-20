@@ -35,6 +35,7 @@ from .sections import (
     ProfectionSection,
     StationSection,
     ZodiacalReleasingSection,
+    ZRVisualizationSection,
 )
 
 
@@ -627,6 +628,64 @@ class ReportBuilder:
                 query_date=query_date,
                 query_age=query_age,
                 context_periods=context_periods,
+            )
+        )
+        return self
+
+    def with_zr_visualization(
+        self,
+        lot: str = "Part of Fortune",
+        year: int | None = None,
+        levels: tuple[int, ...] = (1, 2, 3),
+        output: str = "both",
+    ) -> "ReportBuilder":
+        """
+        Add Zodiacal Releasing visualization (SVG timeline diagram).
+
+        Generates visual timeline diagrams in Honeycomb Collective style:
+        - Overview page: natal angles chart + period length reference
+        - Timeline page: stacked L1/L2/L3 timelines with peak shapes
+
+        Args:
+            lot: Which lot to visualize (default: "Part of Fortune")
+            year: Year to visualize (defaults to current year)
+            levels: Which levels to show in timeline (default: 1, 2, 3)
+            output: What to generate:
+                - "overview": Just the overview page
+                - "timeline": Just the timeline visualization
+                - "both": Both pages (DEFAULT)
+
+        Returns:
+            Self for chaining
+
+        Note:
+            Requires ZodiacalReleasingAnalyzer to be added during chart calculation:
+
+                from stellium.engines.releasing import ZodiacalReleasingAnalyzer
+
+                chart = (
+                    ChartBuilder.from_native(native)
+                    .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune"]))
+                    .calculate()
+                )
+
+        Example::
+
+            # Add ZR visualization to PDF report
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_chart_overview()
+                .with_zr_visualization(lot="Part of Fortune", year=2025)
+                .render(format="pdf", file="report.pdf")
+            )
+        """
+        self._sections.append(
+            ZRVisualizationSection(
+                lot=lot,
+                year=year,
+                levels=levels,
+                output=output,
             )
         )
         return self
