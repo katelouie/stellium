@@ -245,11 +245,13 @@ class PlannerRenderer:
 
     def _get_preamble(self) -> str:
         """Get Typst document preamble with styling."""
-        page_size = {
-            "a4": '"a4"',
-            "letter": '"us-letter"',
-            "half-letter": "(width: 5.5in, height: 8.5in)",
-        }.get(self.config.page_size, '"a4"')
+        paper_name = {
+            "a4": "a4",
+            "a5": "a5",
+            "letter": "us-letter",
+            "half-letter": "a5",  # Use A5 as closest standard size
+        }.get(self.config.page_size, "a4")
+        page_setup = f'paper: "{paper_name}"'
 
         binding = self.config.binding_margin
 
@@ -270,7 +272,7 @@ class PlannerRenderer:
 // PAGE SETUP
 // ============================================================================
 #set page(
-  paper: {page_size},
+  {page_setup},
   margin: (top: 0.6in, bottom: 0.6in, left: {0.7 + binding}in, right: 0.7in),
   fill: cream,
   header: context {{
@@ -771,8 +773,10 @@ class PlannerRenderer:
                 )
 
             if event_lines:
-                # Use tight line breaks with no extra spacing
-                events_str = " #linebreak() ".join(event_lines)
+                # Use tight spacing - set leading to minimal and join with linebreaks
+                events_str = "#set par(leading: 0.3em)\n    " + " #linebreak() ".join(
+                    event_lines
+                )
             else:
                 events_str = (
                     '#text(fill: accent, size: 6pt, style: "italic")[No events]'

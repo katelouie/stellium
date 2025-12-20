@@ -51,7 +51,7 @@ class PlannerConfig:
     station_planets: list[str] | None = None  # None = outer planets
 
     # Page layout
-    page_size: Literal["a4", "letter", "half-letter"] = "a4"
+    page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
     binding_margin: float = 0.0  # Extra margin for binding (inches)
     week_starts_on: Literal["sunday", "monday"] = "sunday"
 
@@ -320,12 +320,14 @@ class PlannerBuilder:
 
     # ===== Page Layout Configuration =====
 
-    def page_size(self, size: Literal["a4", "letter", "half-letter"]) -> PlannerBuilder:
+    def page_size(
+        self, size: Literal["a4", "a5", "letter", "half-letter"]
+    ) -> PlannerBuilder:
         """
         Set page size.
 
         Args:
-            size: "a4" (default), "letter", or "half-letter"
+            size: "a4" (default), "a5", "letter", or "half-letter" (alias for a5)
 
         Returns:
             Self for chaining
