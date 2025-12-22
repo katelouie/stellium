@@ -37,6 +37,8 @@ class ChartPaths:
     graphic_ephemeris: str | None = None
     zr_overview: str | None = None
     zr_timeline: str | None = None
+    profection_wheel: str | None = None
+    profection_table: str | None = None
 
 
 class PlannerRenderer:
@@ -201,6 +203,10 @@ class PlannerRenderer:
         if self.config.include_zr_timeline:
             self._generate_zr_charts(natal_chart)
 
+        # Generate profection wheel visualization
+        if self.config.include_profections:
+            self._generate_profection_charts(natal_chart)
+
     def _generate_zr_charts(self, natal_chart) -> None:
         """Generate Zodiacal Releasing visualization SVGs."""
         from stellium.core.builder import ChartBuilder
@@ -247,6 +253,78 @@ class PlannerRenderer:
 
         except Exception:
             pass  # Skip if ZR generation fails
+
+    def _generate_profection_charts(self, natal_chart) -> None:
+        """Generate profection wheel visualization SVGs."""
+        from stellium.presentation.sections.profection_visualization import (
+            ProfectionVisualizationSection,
+        )
+
+        try:
+            # Calculate age at planner start
+            birth_date = self.config.native.datetime.local_datetime.date()
+            planner_start = self.config.start_date
+            age = planner_start.year - birth_date.year
+            if (planner_start.month, planner_start.day) < (
+                birth_date.month,
+                birth_date.day,
+            ):
+                age -= 1
+
+            # Generate wheel SVG
+            wheel_section = ProfectionVisualizationSection(
+                age=age,
+                compare_ages=[age, age + 1],
+                show_wheel=True,
+                show_table=False,
+            )
+            wheel_data = wheel_section.generate_data(natal_chart)
+
+            # Handle compound or direct SVG response
+            if wheel_data.get("type") == "compound":
+                for name, subdata in wheel_data.get("sections", []):
+                    if "Wheel" in name and subdata.get("type") == "svg":
+                        wheel_path = os.path.join(
+                            self._temp_dir, "profection_wheel.svg"
+                        )
+                        with open(wheel_path, "w", encoding="utf-8") as f:
+                            f.write(subdata["content"])
+                        self._chart_paths.profection_wheel = wheel_path
+                        break
+            elif wheel_data.get("type") == "svg":
+                wheel_path = os.path.join(self._temp_dir, "profection_wheel.svg")
+                with open(wheel_path, "w", encoding="utf-8") as f:
+                    f.write(wheel_data["content"])
+                self._chart_paths.profection_wheel = wheel_path
+
+            # Generate table SVG
+            table_section = ProfectionVisualizationSection(
+                age=age,
+                compare_ages=[age, age + 1],
+                show_wheel=False,
+                show_table=True,
+            )
+            table_data = table_section.generate_data(natal_chart)
+
+            # Handle compound or direct SVG response
+            if table_data.get("type") == "compound":
+                for name, subdata in table_data.get("sections", []):
+                    if "Details" in name and subdata.get("type") == "svg":
+                        table_path = os.path.join(
+                            self._temp_dir, "profection_table.svg"
+                        )
+                        with open(table_path, "w", encoding="utf-8") as f:
+                            f.write(subdata["content"])
+                        self._chart_paths.profection_table = table_path
+                        break
+            elif table_data.get("type") == "svg":
+                table_path = os.path.join(self._temp_dir, "profection_table.svg")
+                with open(table_path, "w", encoding="utf-8") as f:
+                    f.write(table_data["content"])
+                self._chart_paths.profection_table = table_path
+
+        except Exception:
+            pass  # Skip if profection generation fails
 
     def _collect_events(self) -> dict[date, list]:
         """Collect all events for the planner period."""
@@ -604,7 +682,60 @@ class PlannerRenderer:
         return "\n".join(parts)
 
     def _render_profections(self) -> str:
-        """Render profection information."""
+        """Render profection information with wheel visualization."""
+        parts = []
+
+        # If we have the wheel visualization, use it
+        if self._chart_paths.profection_wheel:
+            parts.append(f"""
+== Annual Profections
+
+#align(center)[
+  #box(
+    stroke: 1pt + gold,
+    radius: 4pt,
+    clip: true,
+    inset: 8pt,
+    fill: white,
+    image("{self._chart_paths.profection_wheel}", width: 95%)
+  )
+]
+""")
+
+        # If we have the table visualization, add it
+        if self._chart_paths.profection_table:
+            parts.append(f"""
+#v(0.3in)
+
+#align(center)[
+  #box(
+    stroke: 1pt + gold,
+    radius: 4pt,
+    clip: true,
+    inset: 8pt,
+    fill: white,
+    image("{self._chart_paths.profection_table}", width: 95%)
+  )
+]
+""")
+
+        # If we have visualizations, add explanation and page break
+        if parts:
+            parts.append("""
+#v(0.3in)
+
+#text(size: 8pt, fill: accent)[
+  Annual profections advance the Ascendant one sign per year of life.
+  The planet ruling that sign becomes the Lord of the Year,
+  indicating themes and areas of focus for this annual period.
+  The wheel shows ages 0-95 spiraling through the 12 houses.
+]
+
+#pagebreak()
+""")
+            return "\n".join(parts)
+
+        # Fallback to text-only version if visualizations aren't available
         from stellium.core.builder import ChartBuilder
         from stellium.engines.profections import ProfectionEngine
 

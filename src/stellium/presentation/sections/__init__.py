@@ -60,6 +60,9 @@ from .misc import (
     MoonPhaseSection,
 )
 
+# Visualization sections
+from .profection_visualization import ProfectionVisualizationSection
+
 # Timing technique sections
 from .timing import (
     ProfectionSection,
@@ -72,8 +75,6 @@ from .transits import (
     IngressSection,
     StationSection,
 )
-
-# Visualization sections
 from .zr_visualization import ZRVisualizationSection
 
 __all__ = [
@@ -114,5 +115,6 @@ __all__ = [
     "IngressSection",
     "StationSection",
     # Visualization sections
+    "ProfectionVisualizationSection",
     "ZRVisualizationSection",
 ]

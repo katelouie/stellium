@@ -33,6 +33,7 @@ from .sections import (
     MoonPhaseSection,
     PlanetPositionSection,
     ProfectionSection,
+    ProfectionVisualizationSection,
     StationSection,
     ZodiacalReleasingSection,
     ZRVisualizationSection,
@@ -686,6 +687,72 @@ class ReportBuilder:
                 year=year,
                 levels=levels,
                 output=output,
+            )
+        )
+        return self
+
+    def with_profections_wheel(
+        self,
+        age: int | None = None,
+        date: str | None = None,
+        compare_ages: list[int] | None = None,
+        show_wheel: bool = True,
+        show_table: bool = True,
+        house_system: str | None = None,
+        rulership: str = "traditional",
+    ) -> "ReportBuilder":
+        """
+        Add profection wheel visualization section.
+
+        Generates a visual wheel diagram showing annual profections:
+        - Circular wheel with ages 0-95 spiraling through 12 houses
+        - Zodiac signs and house labels around the perimeter
+        - Natal planet positions marked on the wheel
+        - Current age highlighted
+        - Summary table with profection details
+
+        Args:
+            age: Current age to highlight (either age OR date required)
+            date: Target date as ISO string (e.g., "2025-06-15")
+            compare_ages: List of ages to compare in table (default: current and next)
+            show_wheel: Whether to show the wheel visualization (default: True)
+            show_table: Whether to show the summary table (default: True)
+            house_system: House system to use (default: prefers Whole Sign)
+            rulership: "traditional" or "modern"
+
+        Returns:
+            Self for chaining
+
+        Example::
+
+            # By age with both wheel and table
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_profections_wheel(age=30)
+                .render(format="pdf", file="profections.pdf")
+            )
+
+            # Compare specific ages
+            report = (
+                ReportBuilder()
+                .from_chart(chart)
+                .with_profections_wheel(
+                    age=30,
+                    compare_ages=[30, 31, 32]
+                )
+                .render()
+            )
+        """
+        self._sections.append(
+            ProfectionVisualizationSection(
+                age=age,
+                date=date,
+                compare_ages=compare_ages,
+                show_wheel=show_wheel,
+                show_table=show_table,
+                house_system=house_system,
+                rulership=rulership,
             )
         )
         return self
