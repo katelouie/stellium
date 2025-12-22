@@ -42,6 +42,55 @@ data = section.generate_data(chart)
 svg_content = data["content"]  # SVG string
 ```
 
+#### Profection Wheel Visualization
+
+New `ProfectionVisualizationSection` in `presentation/sections/` that generates SVG wheel visualizations for annual profections:
+
+**Features:**
+
+- **Wheel visualization**: Ages 0-95 spiraling through 12 houses in traditional chart orientation (1st house at 9 o'clock, counter-clockwise progression)
+- **Layered ring structure**:
+  - Center circle finisher
+  - House labels (1st, 2nd, etc.) in innermost ring
+  - 8 rings for ages 0-95
+  - Zodiac ring with sign glyphs and traditional ruling planet glyphs
+  - Natal placements ring (light purple) showing natal planet positions
+- **Legend** with current period and natal placements indicators
+- **Details table** showing:
+  - Solar return date/time
+  - Profected house and sign
+  - Annual timelord (Lord of the Year)
+  - Natal placements in profected house
+  - Timelord's natal position
+  - Other signs ruled by timelord
+
+**Usage in Reports:**
+
+```python
+report = (ReportBuilder()
+    .from_chart(chart)
+    .with_profections_wheel(age=30)
+    .render(format="pdf", file="profections.pdf"))
+
+# Compare multiple ages
+report = (ReportBuilder()
+    .from_chart(chart)
+    .with_profections_wheel(age=30, compare_ages=[30, 31, 32])
+    .render())
+```
+
+**Usage in Planners:** Automatically included when `with_profections(True)` is set. Generates wheel and table in front matter.
+
+**Standalone:**
+
+```python
+from stellium.presentation.sections import ProfectionVisualizationSection
+
+section = ProfectionVisualizationSection(age=30, show_wheel=True, show_table=True)
+data = section.generate_data(chart)
+# Returns compound section with wheel and table SVGs
+```
+
 #### Planner Web Page
 
 New `/planner` page in the webapp for generating personalized astrological planners with a full GUI interface.
