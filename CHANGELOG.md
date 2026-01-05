@@ -9,6 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Bazi (Four Pillars) Ten Gods Analysis and Renderers
+
+Complete Ten Gods (十神) analysis system and multiple output renderers for Chinese Bazi charts.
+
+**Ten Gods Analysis** (`stellium.chinese.bazi.analysis`):
+
+- `TenGod` enum with all 10 relationship types (Bi Jian, Jie Cai, Shi Shen, Shang Guan, etc.)
+- `calculate_ten_god(day_master, other_stem)` - Calculate relationship between Day Master and any stem
+- `analyze_ten_gods(chart, include_hidden=True)` - Full chart analysis including hidden stems
+- `count_ten_gods()` and `count_ten_god_categories()` - Summary statistics
+- Hidden stem position labels: 本气 (main qi), 中气 (middle qi), 余气 (residual qi)
+
+**Enhanced BaZiChart Model**:
+
+- `Pillar.hidden_stems` property - Access hidden stems within each branch
+- `BaZiChart.element_counts(include_hidden=True)` - Include hidden stems in element count
+- `BaZiChart.all_hidden_stems` - Get all hidden stems across all pillars
+- `BaZiChart.ten_gods()` - Convenience method for Ten Gods analysis
+- `BaZiChart.display_detailed()` - Table showing hidden stems and Ten Gods
+
+**Three Renderers** (`stellium.chinese.bazi.renderers`):
+
+- `BaziRichRenderer` - Beautiful terminal output with Rich library, color-coded elements
+- `BaziProseRenderer` - Natural language output for pasting into conversations
+- `BaziSVGRenderer` - Visual SVG chart with color-coded elements and Ten Gods labels
+
+**Usage:**
+
+```python
+from stellium.chinese.bazi import BaZiEngine, BaziRichRenderer
+
+engine = BaZiEngine(timezone_offset_hours=-8)
+chart = engine.calculate(datetime(1994, 1, 6, 11, 47))
+
+# Rich terminal output
+renderer = BaziRichRenderer()
+renderer.print_chart(chart)
+
+# Detailed text display
+print(chart.display_detailed())
+
+# Ten Gods analysis
+for relation in chart.ten_gods():
+    print(f"{relation.stem.hanzi}: {relation.ten_god.english}")
+```
+
 #### Zodiacal Releasing Visualization
 
 New `ZRVisualizationSection` in `presentation/sections/` that generates SVG timeline visualizations in Honeycomb Collective style:

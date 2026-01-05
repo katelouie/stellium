@@ -23,4 +23,29 @@
 - [ ] Uranian-style midpoint calculation (A + B - C = D)
 - [x] Add Aries Point to objects (uranian)
 
+## Chinese Astrology
+
+### Bazi (Four Pillars) - In Progress
+- [x] Core primitives (stems, branches, elements, polarity)
+- [x] Solar term calculations
+- [x] Five Tigers / Five Rats formulas
+- [x] Basic BaZiChart and Pillar models
+- [x] Hidden stems (藏干) with position labels (本气/中气/余气)
+- [x] Ten Gods (十神) analysis module
+- [x] Rich table renderer (BaziRichRenderer)
+- [x] Prose renderer for conversations (BaziProseRenderer)
+- [x] SVG visual chart renderer (BaziSVGRenderer)
+- [ ] Clashes, combinations, and penalties (刑冲合害)
+- [ ] Luck pillars (大运) calculation
+- [ ] Annual pillars (流年)
+- [ ] Day Master strength analysis
+
+### Zi Wei Dou Shu (Purple Star) - Planned
+- [ ] Define star enums and metadata (14 main stars + auxiliaries)
+- [ ] Implement 12 palace system
+- [ ] Calculate main star positions
+- [ ] Calculate auxiliary stars
+- [ ] Implement transformations (四化)
+- [ ] Support decade/annual charts
+
 ## Testing
