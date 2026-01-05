@@ -9,6 +9,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Chart Vector Embeddings for ML and Similarity
+
+New `ChartVectorizer` in `stellium.analysis.vector` that transforms charts into dense vector embeddings for machine learning and fast similarity comparisons.
+
+**Features:**
+
+- Cyclic encoding (sin/cos) for all positions - ensures 0° and 359° are close together
+- Normalized speed encoding using average daily motion as reference
+- Configurable inclusion of house cusps and planetary speeds
+- Cosine similarity function for comparing two chart vectors
+
+**Bodies included:** Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, True Node, plus AC and MC angles.
+
+**Usage:**
+
+```python
+from stellium.analysis.vector import ChartVectorizer
+
+vectorizer = ChartVectorizer(include_speed=True, include_houses=True)
+
+# Encode charts to vectors
+vec_a = vectorizer.encode(chart_a)
+vec_b = vectorizer.encode(chart_b)
+
+# Compare similarity (cosine similarity, -1 to 1)
+similarity = vectorizer.similarity(vec_a, vec_b)
+print(f"Chart similarity: {similarity:.3f}")
+```
+
+**Use cases:**
+- Finding similar charts in a database
+- Clustering charts by similarity
+- Input features for ML models predicting astrological patterns
+
 #### Bazi (Four Pillars) Ten Gods Analysis and Renderers
 
 Complete Ten Gods (十神) analysis system and multiple output renderers for Chinese Bazi charts.
