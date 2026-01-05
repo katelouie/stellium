@@ -37,8 +37,9 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 
 ### **For Astrologers**
 
+**Western:**
+
 - **Large-scale data analysis** with pandas DataFrames, batch calculation, and statistical tools
-- **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
 - **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md))
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
 - **Bi-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
@@ -59,10 +60,22 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
 
+**Vedic:**
+
+- **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
+
+**Chinese:**
+
+- **[WIP]** Ba Zi system with Ten Gods and Hidden Stems
+
 ### Visual Chart Example
 
 ![Example Round Chart](docs/images/examples/readme_first.svg)
 ![Example Extended Chart](docs/images/examples/readme_extended_detailed.svg)
+
+### Synastry
+
+![Example Synastry Chart](images/mariah_carey_eminem_synastry_chart.svg)
 
 ### Report Sample Pages
 
