@@ -9,6 +9,70 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Midpoint Tree Visualization
+
+New `MidpointTreeSection` in `stellium.presentation.sections` that generates tree diagrams showing which midpoints aspect focal points. A standard Uranian/Hamburg astrology technique for interpreting planetary pictures.
+
+**Features:**
+
+- Configurable tree bases (focal points) - defaults to Sun, Moon, MC, ASC
+- Configurable branch objects for midpoint pairs - defaults to 10 planets + angles + nodes
+- Support for Hamburg/Uranian hypothetical planets when chart includes them
+- Aspect modes: "conjunction" (0° only), "hard" (0°, 45°, 90°, 135°, 180°), or "all"
+- Tight orb control (default 1.5°) to prevent data explosion
+- 3-column SVG layout for compact visualization
+- Text output with ASCII tree structure
+- Smart glyph fallbacks (uses glyph when available, short name otherwise)
+
+**Usage:**
+
+```python
+from stellium import ChartBuilder, Native, ReportBuilder
+from stellium.components import MidpointCalculator
+
+chart = (ChartBuilder.from_native(native)
+    .with_uranian()  # Optional: include Hamburg planets
+    .add_component(MidpointCalculator())
+    .calculate())
+
+# Via ReportBuilder
+report = (ReportBuilder()
+    .from_chart(chart)
+    .with_midpoint_trees(aspect_mode="hard", orb=1.5)
+    .render())
+
+# Direct section use for SVG export
+from stellium.presentation.sections import MidpointTreeSection
+
+section = MidpointTreeSection(
+    tree_bases=["Sun", "Moon", "ASC", "MC"],
+    aspect_mode="hard",
+    output="svg"
+)
+data = section.generate_data(chart)
+# data["content"] contains SVG string
+```
+
+**Example output:**
+
+```text
+☉ Sun (16°16' ♑︎)
+    ├── ☿/♀ ☌ 0.3°  Mercury/Venus
+    └── ☿/♂ ☌ 0.5°  Mercury/Mars
+
+ASC (16°57' ♈︎)
+    ├── ☉/☿ □ 0.2°  Sun/Mercury
+    └── ☿/♀ □ 1.0°  Mercury/Venus
+```
+
+### Changed
+
+### Fixed
+
+## [0.15.0] - 2026-01-05
+
+### Added
+
 #### Chart Vector Embeddings for ML and Similarity
 
 New `ChartVectorizer` in `stellium.analysis.vector` that transforms charts into dense vector embeddings for machine learning and fast similarity comparisons.
@@ -39,6 +103,7 @@ print(f"Chart similarity: {similarity:.3f}")
 ```
 
 **Use cases:**
+
 - Finding similar charts in a database
 - Clustering charts by similarity
 - Input features for ML models predicting astrological patterns

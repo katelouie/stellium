@@ -42,6 +42,7 @@ from .dignities import (
     DignitySection,
     DispositorSection,
 )
+from .midpoint_tree import MidpointTreeSection
 
 # Midpoint sections
 from .midpoints import (
@@ -99,6 +100,7 @@ __all__ = [
     # Midpoint sections
     "MidpointSection",
     "MidpointAspectsSection",
+    "MidpointTreeSection",
     # Timing sections
     "ZodiacalReleasingSection",
     "ProfectionSection",

@@ -30,6 +30,7 @@ from .sections import (
     IngressSection,
     MidpointAspectsSection,
     MidpointSection,
+    MidpointTreeSection,
     MoonPhaseSection,
     PlanetPositionSection,
     ProfectionSection,
@@ -343,6 +344,72 @@ class ReportBuilder:
                 orb=orb,
                 midpoint_filter=midpoint_filter,
                 sort_by=sort_by,
+            )
+        )
+        return self
+
+    def with_midpoint_trees(
+        self,
+        tree_bases: list[str] | None = None,
+        branch_objects: list[str] | None = None,
+        orb: float = 1.5,
+        aspect_mode: str = "conjunction",
+        output: str = "both",
+    ) -> "ReportBuilder":
+        """
+        Add midpoint tree visualization section.
+
+        Generates tree diagrams showing which midpoints aspect focal points.
+        This is a standard Uranian/Hamburg astrology technique for
+        interpreting planetary pictures.
+
+        Args:
+            tree_bases: Focal points to build trees for (DEFAULT: Sun, Moon, MC, ASC)
+            branch_objects: Objects to include in midpoint pairs.
+                Default: 10 planets + ASC + MC + True Node
+            orb: Maximum orb in degrees (DEFAULT: 1.5°)
+            aspect_mode: Which aspects to check (DEFAULT: "conjunction")
+                - "conjunction": Only conjunctions (0°)
+                - "hard": Conjunction + 45° series (0°, 45°, 90°, 135°, 180°)
+                - "all": All major aspects
+            output: What to generate (DEFAULT: "both")
+                - "svg": Just SVG visualization
+                - "text": Just text output
+                - "both": Both SVG and text
+
+        Returns:
+            Self for chaining
+
+        Example:
+            >>> # Show midpoint trees with hard aspects
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_midpoint_trees(aspect_mode="hard")
+            ...     .render())
+            >>>
+            >>> # Custom focal points with conjunction only
+            >>> report = (ReportBuilder()
+            ...     .from_chart(chart)
+            ...     .with_midpoint_trees(
+            ...         tree_bases=["Sun", "Moon"],
+            ...         orb=2.0,
+            ...         aspect_mode="conjunction"
+            ...     )
+            ...     .render())
+
+        Note:
+            Requires MidpointCalculator to be added to chart builder:
+                chart = (ChartBuilder.from_native(native)
+                    .add_component(MidpointCalculator())
+                    .calculate())
+        """
+        self._sections.append(
+            MidpointTreeSection(
+                tree_bases=tree_bases,
+                branch_objects=branch_objects,
+                orb=orb,
+                aspect_mode=aspect_mode,
+                output=output,
             )
         )
         return self

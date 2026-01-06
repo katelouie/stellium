@@ -3,7 +3,7 @@
 ## Reports
 
 - [ ] Add "text" option to presentation reports that outputs sentences of information.
-- [ ] Midpoint trees
+- [x] Midpoint trees
 - [ ] Uranian: Modulus 90 sort
 
 ## Chart Visualization
