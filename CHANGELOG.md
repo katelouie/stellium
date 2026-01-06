@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+#### Delta T Calculation Bug Affecting Angles (ASC/MC)
+
+Fixed incorrect Delta T handling that caused Ascendant and MC to be off by ~15 arcminutes for modern charts.
+
+**The Bug:** The code was incorrectly subtracting Delta T from the Julian Day after computing it from UTC. Since `swe.julday()` with UTC input already produces JD(UT), and `swe.houses_ex()` expects JD(UT), the subtraction was wrong and shifted all angle calculations.
+
+**Impact:** For a 1994 birth, Delta T ≈ 60 seconds, causing ~15 arcminute error in the Ascendant. The error scales with Delta T (larger for dates further from 2000).
+
+**Files Fixed:**
+- `stellium/core/native.py` - Removed erroneous Delta T subtraction
+- `stellium/utils/time.py` - Removed erroneous Delta T subtraction
+
+**Technical Note:** Swiss Ephemeris `_ut` functions (`swe.calc_ut()`, `swe.houses_ex()`) expect Julian Day in Universal Time and handle Delta T conversion internally when needed for ephemeris calculations.
+
 ### Added
 
 #### Midpoint Tree Visualization

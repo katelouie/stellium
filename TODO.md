@@ -6,6 +6,16 @@
 - [x] Midpoint trees
 - [ ] Uranian: Modulus 90 sort
 
+## Time Handling
+
+- [ ] LMT (Local Mean Time) support for historical charts
+  - Add `use_lmt` parameter to Native (True/False/None for auto-detect)
+  - LMT offset formula: longitude / 15 hours from UTC
+  - Auto-detect based on country + date (requires standardization date lookup)
+  - Country standardization dates: US (1883-11-18), UK (1880), France (1891), Germany (1893), etc.
+  - For raw lat/lon input: default to modern timezone with warning if date < 1900
+  - Store country in ChartLocation from geocoding result
+
 ## Chart Visualization
 
 - [ ] Add vedic square-type charts

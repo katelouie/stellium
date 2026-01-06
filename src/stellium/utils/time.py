@@ -46,18 +46,16 @@ def datetime_to_julian_day(datetime_obj: dt.datetime) -> float:
         + (utc_dt.microsecond / 3600000000.0)
     )
 
-    # swe.julday returns Ephemeris Time (ET)
-    julian_day_et = swe.julday(
+    # swe.julday() converts calendar date/time to Julian Day number.
+    # Since we're giving it UTC, the result is JD(UT) - Universal Time.
+    # Both swe.calc_ut() and swe.houses_ex() expect JD(UT), so no
+    # Delta T adjustment is needed.
+    julian_day_ut = swe.julday(
         utc_dt.year,
         utc_dt.month,
         utc_dt.day,
         hour_decimal,
     )
-
-    # Convert to Universal Time (UT) by subtracting Delta T
-    # Delta T is the difference between ET and UT
-    delta_t = swe.deltat(julian_day_et)
-    julian_day_ut = julian_day_et - delta_t
 
     return julian_day_ut
 

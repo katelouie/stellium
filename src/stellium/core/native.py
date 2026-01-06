@@ -327,24 +327,22 @@ class Native:
 
         # --- Final Conversion ---
         if utc_dt:
-            # Calculate Julian day from the (now guaranteed) UTC datetime
-            # We must use the UTC time for swe.julday to get ET
+            # Calculate Julian Day from the UTC datetime
+            # swe.julday() converts calendar date to Julian Day number.
+            # Since we're giving it UTC, the result is JD(UT) - Universal Time.
+            # Both swe.calc_ut() and swe.houses_ex() expect JD(UT), so no
+            # Delta T adjustment is needed here.
             hour_decimal = (
                 (utc_dt.minute / 60.0)
                 + (utc_dt.second / 3600.0)
                 + (utc_dt.microsecond / 3600000000.0)
             )
-            julian_day_et = swe.julday(
+            julian_day_ut = swe.julday(
                 utc_dt.year,
                 utc_dt.month,
                 utc_dt.day,
                 utc_dt.hour + hour_decimal,
             )
-
-            # Get Delta T and convert to Julian Day UT (Universal Time)
-            # This is the correct Julian Day for calculations.
-            delta_t = swe.deltat(julian_day_et)
-            julian_day_ut = julian_day_et - delta_t
 
             return ChartDateTime(
                 utc_datetime=utc_dt, julian_day=julian_day_ut, local_datetime=local_dt
