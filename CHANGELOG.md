@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+## [0.15.1] - 2026-01-06
+
 ### Fixed
 
 #### Delta T Calculation Bug Affecting Angles (ASC/MC)
@@ -18,6 +26,7 @@ Fixed incorrect Delta T handling that caused Ascendant and MC to be off by ~15 a
 **Impact:** For a 1994 birth, Delta T ≈ 60 seconds, causing ~15 arcminute error in the Ascendant. The error scales with Delta T (larger for dates further from 2000).
 
 **Files Fixed:**
+
 - `stellium/core/native.py` - Removed erroneous Delta T subtraction
 - `stellium/utils/time.py` - Removed erroneous Delta T subtraction
 
