@@ -1,8 +1,11 @@
 """
-Stellium Web - Location Autocomplete Component
+Stellium Web - Location Input Component
 
-A location input with autocomplete suggestions using Nominatim (OpenStreetMap).
-Debounces input and shows dropdown with matching locations.
+A location input that supports:
+1. Place name search with autocomplete (using Nominatim/OpenStreetMap)
+2. Manual coordinate entry (latitude/longitude)
+
+Toggle between modes with a Place/Coords switch.
 """
 
 import asyncio
@@ -11,9 +14,47 @@ from collections.abc import Callable
 from config import COLORS
 from geopy.geocoders import Nominatim
 from nicegui import ui
+from timezonefinder import TimezoneFinder
 
 # Geocoder instance (reused for all queries)
 _geolocator = Nominatim(user_agent="stellium_web_autocomplete")
+
+# Timezone finder (lazy loaded)
+_timezone_finder = None
+
+
+def _get_timezone_finder():
+    """Get cached TimezoneFinder instance."""
+    global _timezone_finder
+    if _timezone_finder is None:
+        _timezone_finder = TimezoneFinder()
+    return _timezone_finder
+
+
+def validate_latitude(value: str) -> tuple[bool, str]:
+    """Validate latitude value (-90 to 90)."""
+    if not value:
+        return True, ""
+    try:
+        lat = float(value)
+        if lat < -90 or lat > 90:
+            return False, "Must be -90 to 90"
+        return True, ""
+    except ValueError:
+        return False, "Invalid number"
+
+
+def validate_longitude(value: str) -> tuple[bool, str]:
+    """Validate longitude value (-180 to 180)."""
+    if not value:
+        return True, ""
+    try:
+        lon = float(value)
+        if lon < -180 or lon > 180:
+            return False, "Must be -180 to 180"
+        return True, ""
+    except ValueError:
+        return False, "Invalid number"
 
 
 async def search_locations(query: str, limit: int = 5) -> list[dict]:
@@ -245,3 +286,238 @@ def create_location_input(
         refs["dropdown"].set_visibility(False)
 
     return refs["input"]
+
+
+def create_location_input_with_coords(
+    value: str = "",
+    latitude: float | None = None,
+    longitude: float | None = None,
+    placeholder: str = "City, Country",
+    on_change: Callable[[str], None] | None = None,
+    on_select: Callable[[dict], None] | None = None,
+    on_coords_change: Callable[[float | None, float | None], None] | None = None,
+    initial_mode: str = "place",
+):
+    """
+    Create a location input with Place/Coords toggle.
+
+    Args:
+        value: Initial place name value
+        latitude: Initial latitude (for coords mode)
+        longitude: Initial longitude (for coords mode)
+        placeholder: Placeholder for place name input
+        on_change: Callback when place name changes
+        on_select: Callback when a location is selected from autocomplete
+        on_coords_change: Callback when coordinates change (lat, lon)
+        initial_mode: Starting mode ("place" or "coords")
+
+    Returns:
+        Dict with methods to access/update the input
+    """
+
+    # State
+    state = {
+        "mode": initial_mode,
+        "place_value": value,
+        "latitude": str(latitude) if latitude is not None else "",
+        "longitude": str(longitude) if longitude is not None else "",
+        "selected_location": None,
+    }
+
+    # UI references
+    refs = {
+        "content_container": None,
+        "lat_input": None,
+        "lon_input": None,
+        "lat_error": None,
+        "lon_error": None,
+    }
+
+    def update_coord_validation(which: str, value: str):
+        """Update coordinate validation visuals."""
+        if which == "lat":
+            is_valid, error_msg = validate_latitude(value)
+            if refs["lat_input"]:
+                if not value:
+                    refs["lat_input"].style(
+                        remove="border-color: #ef4444; border-color: #22c55e;"
+                    )
+                elif is_valid:
+                    refs["lat_input"].style(
+                        remove="border-color: #ef4444;", add="border-color: #22c55e;"
+                    )
+                else:
+                    refs["lat_input"].style(
+                        remove="border-color: #22c55e;", add="border-color: #ef4444;"
+                    )
+            if refs["lat_error"]:
+                refs["lat_error"].set_text(error_msg)
+                refs["lat_error"].set_visibility(bool(error_msg))
+        else:
+            is_valid, error_msg = validate_longitude(value)
+            if refs["lon_input"]:
+                if not value:
+                    refs["lon_input"].style(
+                        remove="border-color: #ef4444; border-color: #22c55e;"
+                    )
+                elif is_valid:
+                    refs["lon_input"].style(
+                        remove="border-color: #ef4444;", add="border-color: #22c55e;"
+                    )
+                else:
+                    refs["lon_input"].style(
+                        remove="border-color: #22c55e;", add="border-color: #ef4444;"
+                    )
+            if refs["lon_error"]:
+                refs["lon_error"].set_text(error_msg)
+                refs["lon_error"].set_visibility(bool(error_msg))
+
+    def on_lat_change(e):
+        """Handle latitude input change."""
+        value = e.value or ""
+        state["latitude"] = value
+        update_coord_validation("lat", value)
+        notify_coords_change()
+
+    def on_lon_change(e):
+        """Handle longitude input change."""
+        value = e.value or ""
+        state["longitude"] = value
+        update_coord_validation("lon", value)
+        notify_coords_change()
+
+    def notify_coords_change():
+        """Notify callback of coordinate changes."""
+        if on_coords_change:
+            try:
+                lat = float(state["latitude"]) if state["latitude"] else None
+                lon = float(state["longitude"]) if state["longitude"] else None
+                on_coords_change(lat, lon)
+            except ValueError:
+                pass  # Invalid number, don't callback
+
+    def on_place_change(value: str):
+        """Handle place name change."""
+        state["place_value"] = value
+        if on_change:
+            on_change(value)
+
+    def on_place_select(loc: dict):
+        """Handle place selection from autocomplete."""
+        state["selected_location"] = loc
+        state["place_value"] = loc["short_name"]
+        # Also update coordinates in state (for potential mode switch)
+        state["latitude"] = str(loc["latitude"])
+        state["longitude"] = str(loc["longitude"])
+        if on_select:
+            on_select(loc)
+
+    def on_mode_change(e):
+        """Handle mode toggle."""
+        state["mode"] = e.value
+        refresh_content()
+
+        # If switching to coords and we have a selected location, show its coords
+        if state["mode"] == "coords" and state["selected_location"]:
+            loc = state["selected_location"]
+            state["latitude"] = str(loc["latitude"])
+            state["longitude"] = str(loc["longitude"])
+            refresh_content()
+
+    def refresh_content():
+        """Refresh the content area based on mode."""
+        if refs["content_container"]:
+            refs["content_container"].clear()
+            with refs["content_container"]:
+                create_content()
+
+    def create_content():
+        """Create content based on current mode."""
+        if state["mode"] == "place":
+            # Place name search
+            create_location_input(
+                value=state["place_value"],
+                placeholder=placeholder,
+                on_change=on_place_change,
+                on_select=on_place_select,
+            )
+        else:
+            # Coordinate entry
+            with ui.column().classes("gap-2 w-full"):
+                # Latitude
+                with ui.row().classes("items-center gap-2 w-full"):
+                    ui.label("Lat:").classes("text-sm w-8").style(
+                        f"color: {COLORS['text_muted']}"
+                    )
+                    refs["lat_input"] = (
+                        ui.input(
+                            value=state["latitude"],
+                            placeholder="-90 to 90",
+                            on_change=on_lat_change,
+                        )
+                        .classes("minimal-input flex-grow")
+                        .props("borderless dense")
+                        .style(
+                            f"color: {COLORS['text']}; "
+                            "border-bottom: 2px solid transparent; "
+                            "transition: border-color 0.2s;"
+                        )
+                    )
+                refs["lat_error"] = (
+                    ui.label("").classes("text-xs ml-10").style("color: #ef4444;")
+                )
+                refs["lat_error"].set_visibility(False)
+
+                # Longitude
+                with ui.row().classes("items-center gap-2 w-full"):
+                    ui.label("Lon:").classes("text-sm w-8").style(
+                        f"color: {COLORS['text_muted']}"
+                    )
+                    refs["lon_input"] = (
+                        ui.input(
+                            value=state["longitude"],
+                            placeholder="-180 to 180",
+                            on_change=on_lon_change,
+                        )
+                        .classes("minimal-input flex-grow")
+                        .props("borderless dense")
+                        .style(
+                            f"color: {COLORS['text']}; "
+                            "border-bottom: 2px solid transparent; "
+                            "transition: border-color 0.2s;"
+                        )
+                    )
+                refs["lon_error"] = (
+                    ui.label("").classes("text-xs ml-10").style("color: #ef4444;")
+                )
+                refs["lon_error"].set_visibility(False)
+
+                # Hint about timezone
+                ui.label("Timezone will be auto-detected from coordinates").classes(
+                    "text-xs mt-1"
+                ).style(f"color: {COLORS['text_muted']}")
+
+    # Build UI
+    with ui.column().classes("w-full gap-1"):
+        # Mode toggle
+        with ui.row().classes("items-center gap-2 mb-1"):
+            ui.toggle(
+                {"place": "Place", "coords": "Coords"},
+                value=state["mode"],
+                on_change=on_mode_change,
+            ).props("dense no-caps size=sm")
+
+        # Content container
+        refs["content_container"] = ui.element("div").classes("w-full")
+        with refs["content_container"]:
+            create_content()
+
+    return {
+        "get_mode": lambda: state["mode"],
+        "get_place": lambda: state["place_value"],
+        "get_coords": lambda: (
+            float(state["latitude"]) if state["latitude"] else None,
+            float(state["longitude"]) if state["longitude"] else None,
+        ),
+        "get_selected_location": lambda: state["selected_location"],
+    }

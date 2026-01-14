@@ -18,6 +18,10 @@ class ChartState:
     time_unknown: bool = False
     location: str = ""
 
+    # Optional explicit coordinates (if user enters coords instead of place name)
+    latitude: float | None = None
+    longitude: float | None = None
+
     # Zodiac
     zodiac_type: str = "tropical"  # or "sidereal"
     ayanamsa: str = "lahiri"
@@ -69,7 +73,10 @@ class ChartState:
         """Check if we have enough data to generate a chart."""
         has_date = bool(self.date)
         has_time = bool(self.time) or self.time_unknown
-        has_location = bool(self.location)
+        # Location can be a place name OR explicit coordinates
+        has_location = bool(self.location) or (
+            self.latitude is not None and self.longitude is not None
+        )
         return has_date and has_time and has_location
 
 

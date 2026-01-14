@@ -397,8 +397,15 @@ def create_timing_page():
             natal_dt = (
                 natal.date if natal.time_unknown else f"{natal.date} {natal.time}"
             )
+            # Determine location - use coordinates if available
+            natal_loc = (
+                (natal.latitude, natal.longitude)
+                if natal.latitude is not None and natal.longitude is not None
+                else natal.location
+            )
+
             natal_builder = ChartBuilder.from_details(
-                natal_dt, natal.location, name=natal.name
+                natal_dt, natal_loc, name=natal.name
             )
 
             if natal.time_unknown:
@@ -420,7 +427,7 @@ def create_timing_page():
                 # Build transit chart for the specified date
                 transit_builder = ChartBuilder.from_details(
                     state.timing_date,
-                    natal.location,  # Use natal location for transits
+                    natal_loc,  # Use natal location for transits
                     name=f"Transits - {state.timing_date}",
                 )
 
@@ -459,7 +466,7 @@ def create_timing_page():
                 # Build progressed chart
                 progressed_builder = ChartBuilder.from_details(
                     progressed_datetime,
-                    natal.location,
+                    natal_loc,
                     name=f"{natal.name or 'Chart'} - Progressed to {state.timing_date}",
                 )
 

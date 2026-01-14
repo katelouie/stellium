@@ -4,9 +4,15 @@ Stellium Web - Unified Birth Input Component
 A birth input that can toggle between:
 1. Manual entry (name, date, time, location)
 2. Notable selection (search famous charts)
+
+Features:
+- Date input with validation and calendar picker
+- Location input with Place/Coords toggle
+- Time input with AM/PM and validation
 """
 
-from components.location_input import create_location_input
+from components.date_input import create_date_input
+from components.location_input import create_location_input_with_coords
 from components.notable_selector import create_notable_autocomplete
 from components.time_input import (
     create_time_input,
@@ -60,6 +66,20 @@ def create_unified_birth_input(
     def on_location_change(value: str):
         """Update location in state."""
         update_field("location", value)
+
+    def on_coords_change(lat: float | None, lon: float | None):
+        """Update coordinates in state."""
+        if lat is not None and lon is not None:
+            # Store as coordinate string for the location field
+            state.location = f"{lat}, {lon}"
+            state.latitude = lat
+            state.longitude = lon
+            if on_change:
+                on_change()
+
+    def on_date_change(date_str: str):
+        """Update date in state."""
+        update_field("date", date_str)
 
     def on_notable_selected(notable):
         """Handle notable selection - fill in all fields from notable."""
@@ -150,28 +170,35 @@ def create_unified_birth_input(
                         on_change=lambda e: update_field("name", e.value),
                     ).classes("minimal-input flex-grow").props("borderless dense")
 
-                # Location field with autocomplete
-                with ui.row().classes("items-center gap-4 w-full"):
+                # Location field with Place/Coords toggle
+                with ui.row().classes("items-start gap-4 w-full"):
                     ui.label("Birth place:").classes(
-                        "w-28 flex-shrink-0 text-base"
+                        "w-28 flex-shrink-0 text-base mt-2"
                     ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
-                        create_location_input(
+                        # Check if state has coordinates already
+                        initial_lat = getattr(state, "latitude", None)
+                        initial_lon = getattr(state, "longitude", None)
+                        create_location_input_with_coords(
                             value=state.location,
+                            latitude=initial_lat,
+                            longitude=initial_lon,
                             placeholder="City, State, Country",
                             on_change=on_location_change,
+                            on_coords_change=on_coords_change,
                         )
 
-                # Date field
+                # Date field with validation and picker
                 with ui.row().classes("items-center gap-4 w-full"):
                     ui.label("Birth date:").classes(
                         "w-28 flex-shrink-0 text-base"
                     ).style(f"color: {COLORS['text']}")
-                    ui.input(
-                        value=state.date,
-                        placeholder="YYYY-MM-DD",
-                        on_change=lambda e: update_field("date", e.value),
-                    ).classes("minimal-input flex-grow").props("borderless dense")
+                    with ui.element("div").classes("flex-grow"):
+                        create_date_input(
+                            value=state.date,
+                            placeholder="YYYY-MM-DD",
+                            on_change=on_date_change,
+                        )
 
                 # Time field with hour/minute/AM-PM
                 with ui.row().classes("items-center gap-4 w-full"):

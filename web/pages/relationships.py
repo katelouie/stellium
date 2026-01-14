@@ -306,15 +306,27 @@ def create_relationships_page():
             dt1 = p1.date if p1.time_unknown else f"{p1.date} {p1.time}"
             dt2 = p2.date if p2.time_unknown else f"{p2.date} {p2.time}"
 
+            # Determine location inputs - use coordinates if available
+            loc1 = (
+                (p1.latitude, p1.longitude)
+                if p1.latitude is not None and p1.longitude is not None
+                else p1.location
+            )
+            loc2 = (
+                (p2.latitude, p2.longitude)
+                if p2.latitude is not None and p2.longitude is not None
+                else p2.location
+            )
+
             # Build individual charts
-            builder1 = ChartBuilder.from_details(dt1, p1.location, name=p1.name)
+            builder1 = ChartBuilder.from_details(dt1, loc1, name=p1.name)
             if p1.time_unknown:
                 builder1 = builder1.with_unknown_time()
             if state.include_aspects:
                 builder1 = builder1.with_aspects()
             chart1 = builder1.calculate()
 
-            builder2 = ChartBuilder.from_details(dt2, p2.location, name=p2.name)
+            builder2 = ChartBuilder.from_details(dt2, loc2, name=p2.name)
             if p2.time_unknown:
                 builder2 = builder2.with_unknown_time()
             if state.include_aspects:

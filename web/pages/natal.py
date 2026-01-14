@@ -99,9 +99,15 @@ def create_natal_page():
             else:
                 datetime_str = f"{state.date} {state.time}"
 
+            # Determine location input - use coordinates if available, otherwise place name
+            if state.latitude is not None and state.longitude is not None:
+                location_input = (state.latitude, state.longitude)
+            else:
+                location_input = state.location
+
             # Start building
             builder = ChartBuilder.from_details(
-                datetime_str, state.location, name=state.name
+                datetime_str, location_input, name=state.name
             )
 
             # House systems
