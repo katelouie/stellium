@@ -344,22 +344,17 @@ def create_natal_page():
                     chart_svg_path = f.name
 
             try:
-                # Generate PDF bytes
-                pdf_bytes = builder.render(
-                    format="pdf",
-                    show=False,
-                    chart_svg_path=chart_svg_path,
-                    title=f"{state.name} — Natal Chart"
+                # Configure builder with chart image and title
+                title = (
+                    f"{state.name} — Natal Chart"
                     if state.name
-                    else "Natal Chart Report",
+                    else "Natal Chart Report"
                 )
+                if chart_svg_path:
+                    builder = builder.with_chart_image(chart_svg_path)
+                builder = builder.with_title(title)
 
-                # If render returns a filename (when file= is used), read it
-                # Otherwise for PDF it returns None but writes to internal buffer
-                # Actually, looking at the code, render() with format="pdf" and no file=
-                # returns None. We need to use file= to get bytes back.
-
-                # Let's use a temp file for the PDF too
+                # Generate PDF to temp file
                 with tempfile.NamedTemporaryFile(
                     mode="wb", suffix=".pdf", delete=False
                 ) as pdf_file:
@@ -369,10 +364,6 @@ def create_natal_page():
                     format="pdf",
                     file=pdf_path,
                     show=False,
-                    chart_svg_path=chart_svg_path,
-                    title=f"{state.name} — Natal Chart"
-                    if state.name
-                    else "Natal Chart Report",
                 )
 
                 # Read PDF bytes and trigger download

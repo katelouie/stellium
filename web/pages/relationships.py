@@ -475,12 +475,15 @@ def create_relationships_page():
                 }
                 title = f"{state.person1.name or 'Person 1'} & {state.person2.name or 'Person 2'} — {type_names[state.chart_type]}"
 
+                # Configure builder with chart image and title
+                if chart_svg_path:
+                    builder = builder.with_chart_image(chart_svg_path)
+                builder = builder.with_title(title)
+
                 builder.render(
                     format="pdf",
                     file=pdf_path,
                     show=False,
-                    chart_svg_path=chart_svg_path,
-                    title=title,
                 )
 
                 with open(pdf_path, "rb") as f:

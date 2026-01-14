@@ -694,12 +694,15 @@ def create_timing_page():
                     f"{state.natal.name or 'Chart'} - {type_names[state.chart_type]}"
                 )
 
+                # Configure builder with chart image and title
+                if chart_svg_path:
+                    builder = builder.with_chart_image(chart_svg_path)
+                builder = builder.with_title(title)
+
                 builder.render(
                     format="pdf",
                     file=pdf_path,
                     show=False,
-                    chart_svg_path=chart_svg_path,
-                    title=title,
                 )
 
                 with open(pdf_path, "rb") as f:
