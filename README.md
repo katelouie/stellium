@@ -18,7 +18,7 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 
 **Try out some quick examples immediately, no installation needed:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/katelouie/stellium/blob/main/examples/stellium_sampler_colab.ipynb)
 
-**✨ Stellium The Webapp is live! [Visit it here!](https://www.stelliumastro.app/) ✨**
+**✨ Stellium The Webapp is live! [Visit it here!](https://www.stelliumastro.app/) ✨** It represents about 50-60% of the functionality of the full package, but is great for testing out the core capabilities and getting quick chart outputs.
 
 *Star the repo if you find it useful!* ⭐
 
