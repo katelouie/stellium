@@ -9,9 +9,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+#### Webapp: Date Input with Validation and Calendar Picker
+
+New `date_input.py` component for the web interface:
+- Real-time validation (format, valid date, year range 1-2200)
+- Visual feedback with green/red border styling
+- Calendar picker button for visual date selection
+- Input mask for YYYY-MM-DD format
+
+#### Webapp: Coordinate Input Toggle for Location
+
+Updated location input to support manual coordinate entry:
+- Place/Coords toggle switch next to location field
+- Coords mode: Latitude (-90 to 90) and Longitude (-180 to 180) input fields
+- Real-time coordinate validation with visual feedback
+- Timezone auto-detected from coordinates
+- Added `latitude` and `longitude` fields to `ChartState`
+
 ### Changed
 
 ### Fixed
+
+#### Webapp: PDF Download Error
+
+Fixed "ReportBuilder.render() got an unexpected keyword argument 'chart_svg_path'" error when downloading PDF reports. Updated all pages to use new builder method pattern:
+```python
+# Now uses builder methods instead of render() parameters
+builder.with_chart_image(path).with_title(title).render(format="pdf", file=path)
+```
+
+**Files:** `web/pages/natal.py`, `web/pages/relationships.py`, `web/pages/timing.py`
+
+#### Moon Band Off-Center in Unknown-Time Charts
+
+Fixed Moon position appearing near the edge of the moon band instead of centered.
+
+**Root Causes:**
+1. Day boundaries for moon range were calculated in UTC instead of local timezone
+2. `with_unknown_time()` only set a flag but didn't normalize datetime to noon
+
+**The Fix:** `with_unknown_time()` now normalizes the chart datetime to noon in local timezone, ensuring the Moon position is calculated for midday (the center of the day's range).
+
+**Result:** Moon deviation from band center reduced from 50% to <1%
+
+**File:** `stellium/core/builder.py`
 
 ## [0.15.1] - 2026-01-06
 

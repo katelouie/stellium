@@ -7,6 +7,7 @@ and components to build a complete chart.
 
 import datetime as dt
 
+import pytz
 import swisseph as swe
 
 from stellium.core.ayanamsa import ZodiacType
@@ -517,6 +518,37 @@ class ChartBuilder:
             13.5  # Moon travels ~13.5° that day
         """
         self._time_unknown = True
+
+        # Normalize datetime to noon in local timezone
+        # This ensures planet positions (especially Moon) are calculated for midday
+        local_dt = self._datetime.local_datetime
+        if local_dt is not None:
+            # Get the date and set time to noon
+            tz = pytz.timezone(self._location.timezone)
+            noon_local = local_dt.replace(hour=12, minute=0, second=0, microsecond=0)
+
+            # Localize if naive
+            if noon_local.tzinfo is None:
+                noon_local = tz.localize(noon_local)
+
+            # Convert to UTC
+            noon_utc = noon_local.astimezone(pytz.UTC)
+
+            # Calculate Julian Day for noon
+            hour_decimal = (
+                noon_utc.hour + noon_utc.minute / 60.0 + noon_utc.second / 3600.0
+            )
+            julian_day_noon = swe.julday(
+                noon_utc.year, noon_utc.month, noon_utc.day, hour_decimal
+            )
+
+            # Update the datetime with noon values
+            self._datetime = ChartDateTime(
+                utc_datetime=noon_utc,
+                julian_day=julian_day_noon,
+                local_datetime=noon_local.replace(tzinfo=None),  # Store naive local
+            )
+
         return self
 
     # --- Calculation ---
@@ -765,32 +797,48 @@ class ChartBuilder:
         Calculate the Moon's position range for the day.
 
         Calculates Moon position at:
-        - 00:00:00 (start of day)
+        - 00:00:00 (start of day in LOCAL timezone)
         - 12:00:00 (noon - displayed position)
-        - 23:59:59 (end of day)
+        - 23:59:59 (end of day in LOCAL timezone)
 
         Returns:
             MoonRange with start, noon, and end positions
         """
-        # Get the date from current datetime (already at noon)
-        utc_dt = self._datetime.utc_datetime
+        # Use LOCAL time for day boundaries, not UTC
+        # This ensures the moon range matches the user's actual day
+        local_dt = self._datetime.local_datetime
 
-        # Calculate Julian Day for start of day (00:00:00 UTC)
-        start_of_day = utc_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        # Get the timezone from the location
+        tz = pytz.timezone(self._location.timezone)
+
+        # Calculate start of day in LOCAL time, then convert to UTC for JD calculation
+        start_of_day_local = local_dt.replace(hour=0, minute=0, second=0, microsecond=0)
+        if start_of_day_local.tzinfo is None:
+            start_of_day_local = tz.localize(start_of_day_local)
+        start_of_day_utc = start_of_day_local.astimezone(pytz.UTC)
         jd_start = swe.julday(
-            start_of_day.year,
-            start_of_day.month,
-            start_of_day.day,
-            0.0,  # 00:00:00
+            start_of_day_utc.year,
+            start_of_day_utc.month,
+            start_of_day_utc.day,
+            start_of_day_utc.hour
+            + start_of_day_utc.minute / 60.0
+            + start_of_day_utc.second / 3600.0,
         )
 
-        # Calculate Julian Day for end of day (23:59:59 UTC)
-        end_of_day = utc_dt.replace(hour=23, minute=59, second=59, microsecond=0)
+        # Calculate end of day in LOCAL time (23:59:59), then convert to UTC
+        end_of_day_local = local_dt.replace(
+            hour=23, minute=59, second=59, microsecond=0
+        )
+        if end_of_day_local.tzinfo is None:
+            end_of_day_local = tz.localize(end_of_day_local)
+        end_of_day_utc = end_of_day_local.astimezone(pytz.UTC)
         jd_end = swe.julday(
-            end_of_day.year,
-            end_of_day.month,
-            end_of_day.day,
-            23.0 + 59.0 / 60.0 + 59.0 / 3600.0,  # 23:59:59
+            end_of_day_utc.year,
+            end_of_day_utc.month,
+            end_of_day_utc.day,
+            end_of_day_utc.hour
+            + end_of_day_utc.minute / 60.0
+            + end_of_day_utc.second / 3600.0,
         )
 
         # Get Moon position at start of day
