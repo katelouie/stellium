@@ -5,7 +5,7 @@ Defines complete visual themes for chart rendering, including colors,
 line styles, and default zodiac palettes.
 """
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any
 
 from stellium.core.registry import ASPECT_REGISTRY
@@ -18,7 +18,7 @@ from .palettes import (
 )
 
 
-class ChartTheme(str, Enum):
+class ChartTheme(StrEnum):
     """Available visual themes for chart rendering."""
 
     CLASSIC = "classic"

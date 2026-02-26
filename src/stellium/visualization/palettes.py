@@ -6,11 +6,11 @@ planet glyphs, and color utilities for adaptive theming.
 """
 
 import colorsys
-from enum import Enum
+from enum import StrEnum
 from functools import lru_cache
 
 
-class ZodiacPalette(str, Enum):
+class ZodiacPalette(StrEnum):
     """Available color palettes for the zodiac wheel."""
 
     # Base palettes
@@ -466,7 +466,7 @@ def get_palette_description(palette: ZodiacPalette) -> str:
 # ============================================================================
 
 
-class AspectPalette(str, Enum):
+class AspectPalette(StrEnum):
     """Available color palettes for aspect lines."""
 
     # Base/theme palettes
@@ -823,7 +823,7 @@ def get_aspect_palette_description(palette: AspectPalette) -> str:
 # ============================================================================
 
 
-class PlanetGlyphPalette(str, Enum):
+class PlanetGlyphPalette(StrEnum):
     """Available color palettes for planet glyphs."""
 
     # Monochromatic (theme-based)
