@@ -5,13 +5,14 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.15.2]
 
 ### Added
 
 #### Webapp: Date Input with Validation and Calendar Picker
 
 New `date_input.py` component for the web interface:
+
 - Real-time validation (format, valid date, year range 1-2200)
 - Visual feedback with green/red border styling
 - Calendar picker button for visual date selection
@@ -20,6 +21,7 @@ New `date_input.py` component for the web interface:
 #### Webapp: Coordinate Input Toggle for Location
 
 Updated location input to support manual coordinate entry:
+
 - Place/Coords toggle switch next to location field
 - Coords mode: Latitude (-90 to 90) and Longitude (-180 to 180) input fields
 - Real-time coordinate validation with visual feedback
@@ -28,11 +30,16 @@ Updated location input to support manual coordinate entry:
 
 ### Changed
 
+#### License -> AGPLv3.0
+
+- Changed README and `pyproject.toml` to refer to the new AGPLv3 license instead of MIT.
+
 ### Fixed
 
 #### Webapp: PDF Download Error
 
 Fixed "ReportBuilder.render() got an unexpected keyword argument 'chart_svg_path'" error when downloading PDF reports. Updated all pages to use new builder method pattern:
+
 ```python
 # Now uses builder methods instead of render() parameters
 builder.with_chart_image(path).with_title(title).render(format="pdf", file=path)
@@ -45,6 +52,7 @@ builder.with_chart_image(path).with_title(title).render(format="pdf", file=path)
 Fixed Moon position appearing near the edge of the moon band instead of centered.
 
 **Root Causes:**
+
 1. Day boundaries for moon range were calculated in UTC instead of local timezone
 2. `with_unknown_time()` only set a flag but didn't normalize datetime to noon
 
