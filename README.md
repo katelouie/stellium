@@ -854,7 +854,7 @@ pytest                   # Run tests
 
 ## License
 
-Stellium is released under the **MIT License**. See [LICENSE](LICENSE) for details.
+Stellium is released under the **AGPLv3.0 License**. See [LICENSE](LICENSE) for details. This is primarily because the core dependency `pyswisseph` uses AGPLv3 and the even-more-core-dependency Swiss Ephemeris has the dual licensing situation seen below.
 
 **Note on Swiss Ephemeris**: This library uses the Swiss Ephemeris, which has its own licensing terms for commercial use. See the [Swiss Ephemeris website](https://www.astro.com/swisseph/) for details.
 

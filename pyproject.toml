@@ -7,7 +7,7 @@ name = "stellium"
 dynamic = ["version"]
 description = "A modern Python library for astrological chart calculation and visualization, built on the Swiss Ephemeris for astronomical accuracy."
 authors = [{ name = "Kate Louie", email = "katehlouie@gmail.com" }]
-license = "MIT"
+license = { text = "AGPL-3.0-or-later" }
 readme = "README.md"
 requires-python = ">=3.11"
 keywords = [
