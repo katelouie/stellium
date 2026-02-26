@@ -30,4 +30,6 @@ jobs:
       run: pytest
 
     - name: Run linting
-      run: ruff check .  # If you use ruff
+      run: |
+        ruff check .
+        ruff format --check .

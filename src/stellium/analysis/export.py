@@ -145,8 +145,7 @@ def export_parquet(
         import pyarrow  # noqa: F401
     except ImportError as err:
         raise ImportError(
-            "pyarrow is required for Parquet export. "
-            "Install with: pip install pyarrow"
+            "pyarrow is required for Parquet export. Install with: pip install pyarrow"
         ) from err
 
     # Convert to DataFrame based on schema

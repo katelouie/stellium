@@ -368,7 +368,7 @@ def example_12_distributions_ptolemy():
     print("Einstein - Life Chapters (Ptolemy Key):\n")
 
     for period in periods:
-        print(f"Age {period.start_age:>5.1f}: " f"{period.sign} term of {period.ruler}")
+        print(f"Age {period.start_age:>5.1f}: {period.sign} term of {period.ruler}")
 
 
 def example_13_compare_distribution_keys():

@@ -183,7 +183,7 @@ class BaziRichRenderer:
 
             for i in range(max_hidden):
                 row_label = (
-                    hidden_labels[i] if i < len(hidden_labels) else f"藏干({i+1})"
+                    hidden_labels[i] if i < len(hidden_labels) else f"藏干({i + 1})"
                 )
                 hidden_row = [row_label]
 
@@ -440,7 +440,7 @@ class BaziSVGRenderer:
             title or f"Bazi Chart - {chart.birth_datetime.strftime('%Y-%m-%d %H:%M')}"
         )
         svg_parts.append(
-            f'<text x="{self.width/2}" y="30" text-anchor="middle" class="title">{title_text}</text>'
+            f'<text x="{self.width / 2}" y="30" text-anchor="middle" class="title">{title_text}</text>'
         )
 
         # Column headers
@@ -524,7 +524,7 @@ class BaziSVGRenderer:
         dm_color = self.ELEMENT_COLORS.get(dm.element, "#333")
         summary_y = current_y + 20
         svg_parts.append(
-            f'<text x="{self.width/2}" y="{summary_y}" text-anchor="middle" class="label">'
+            f'<text x="{self.width / 2}" y="{summary_y}" text-anchor="middle" class="label">'
             f'Day Master: <tspan fill="{dm_color}" font-weight="bold">{dm.hanzi}</tspan> '
             f"({dm.element.english} {dm.polarity.value}) | "
             f"八字: {chart.hanzi}</text>"

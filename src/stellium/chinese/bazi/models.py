@@ -280,7 +280,7 @@ class BaZiChart:
                 for i, hs in enumerate(pillar.hidden_stems):
                     hs_god = calculate_ten_god(dm, hs)
                     label = (
-                        hidden_labels[i] if i < len(hidden_labels) else f"hidden{i+1}"
+                        hidden_labels[i] if i < len(hidden_labels) else f"hidden{i + 1}"
                     )
                     hidden_parts.append(f"{hs.hanzi} {hs_god.hanzi} ({label})")
                 lines.append(f"    Hidden: {', '.join(hidden_parts)}")

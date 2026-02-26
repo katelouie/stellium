@@ -3,15 +3,6 @@ repos:
     rev: v0.8.0  # check for latest version
     hooks:
       - id: ruff
-        args: [--fix]  # auto-fix what it can
+        # No --fix so you see the same errors as CI
       - id: ruff-format  # if you also want formatting
 
-  - repo: local
-    hooks:
-      - id: pytest
-        name: pytest
-        entry: pytest
-        language: system
-        pass_filenames: false
-        always_run: true
-        stages: [pre-push]  # runs on push, not commit
