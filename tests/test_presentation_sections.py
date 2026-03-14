@@ -26,6 +26,10 @@ from stellium.presentation.sections import (
     MidpointSection,
     MoonPhaseSection,
     PlanetPositionSection,
+    TransitGanttSection,
+    TransitListSection,
+    TransitPeriod,
+    calculate_transit_periods,
     get_aspect_sort_key,
     get_object_sort_key,
 )
@@ -1003,6 +1007,351 @@ def test_sections_generate_valid_data_structure(mock_chart):
         elif data["type"] == "text":
             assert "text" in data
             assert isinstance(data["text"], str)
+
+
+# ============================================================================
+# TRANSIT PERIOD SECTION TESTS
+# ============================================================================
+
+# A short, specific date range to keep tests fast.
+# Using naive UTC to match what find_all_longitude_crossings returns.
+_TRANSIT_START = dt.datetime(2025, 11, 1)
+_TRANSIT_END = dt.datetime(2026, 3, 1)
+
+# Only slow outer planets + a limited aspect set to keep tests fast
+_FAST_ASPECTS = {"Conjunction": 2.0, "Trine": 2.0}
+_SLOW_PLANETS = ["Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"]
+
+
+class TestTransitPeriod:
+    """Unit tests for the TransitPeriod dataclass."""
+
+    def _make_period(self, n_exact=1, has_window=True):
+        now = dt.datetime(2025, 12, 15, tzinfo=pytz.UTC)
+        exact_dates = tuple(now + dt.timedelta(days=i * 14) for i in range(n_exact))
+        return TransitPeriod(
+            transit_planet="Jupiter",
+            natal_planet="Sun",
+            aspect_name="Trine",
+            aspect_angle=120.0,
+            orb=2.0,
+            exact_dates=exact_dates,
+            start=now - dt.timedelta(days=10) if has_window else None,
+            end=now + dt.timedelta(days=10) if has_window else None,
+        )
+
+    def test_single_pass_not_multi(self):
+        p = self._make_period(n_exact=1)
+        assert not p.is_multi_pass
+
+    def test_two_passes_is_multi(self):
+        p = self._make_period(n_exact=2)
+        assert p.is_multi_pass
+
+    def test_peak_date_single(self):
+        p = self._make_period(n_exact=1)
+        assert p.peak_date == p.exact_dates[0]
+
+    def test_peak_date_three_pass(self):
+        p = self._make_period(n_exact=3)
+        assert p.peak_date == p.exact_dates[1]  # middle index
+
+    def test_duration_days(self):
+        p = self._make_period(has_window=True)
+        assert p.duration_days is not None
+        assert p.duration_days == pytest.approx(20.0, abs=0.1)
+
+    def test_duration_days_no_window(self):
+        p = self._make_period(has_window=False)
+        assert p.duration_days is None
+
+
+class TestCalculateTransitPeriods:
+    """Integration tests for calculate_transit_periods()."""
+
+    def test_returns_list(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        assert isinstance(periods, list)
+        assert all(isinstance(p, TransitPeriod) for p in periods)
+
+    def test_results_sorted_by_start(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        starts = [p.start or p.exact_dates[0] for p in periods]
+        assert starts == sorted(starts)
+
+    def test_transit_planet_in_list(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=["Jupiter"],
+            aspects={"Trine": 2.0},
+        )
+        for p in periods:
+            assert p.transit_planet == "Jupiter"
+
+    def test_aspect_name_matches_config(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects={"Trine": 2.0},
+        )
+        for p in periods:
+            assert p.aspect_name == "Trine"
+            assert p.aspect_angle == 120.0
+
+    def test_exact_dates_within_search_range(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        for p in periods:
+            for d in p.exact_dates:
+                assert _TRANSIT_START <= d <= _TRANSIT_END
+
+    def test_orb_start_before_exact(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        for p in periods:
+            if p.start is not None:
+                assert p.start <= p.exact_dates[0]
+
+    def test_orb_end_after_last_exact(self, sample_chart):
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        for p in periods:
+            if p.end is not None:
+                assert p.end >= p.exact_dates[-1]
+
+    def test_include_natal_points_filter(self, sample_chart):
+        """Limiting natal points should reduce or equal the unfiltered result."""
+        all_periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=["Jupiter"],
+            aspects={"Trine": 2.0},
+        )
+        sun_only = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=["Jupiter"],
+            aspects={"Trine": 2.0},
+            include_natal_points=["Sun"],
+        )
+        for p in sun_only:
+            assert p.natal_planet == "Sun"
+        assert len(sun_only) <= len(all_periods)
+
+    def test_empty_date_range_returns_empty(self, sample_chart):
+        same_day = dt.datetime(2025, 12, 1, tzinfo=pytz.UTC)
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=same_day,
+            end=same_day,
+            transit_planets=["Jupiter"],
+            aspects={"Trine": 2.0},
+        )
+        assert periods == []
+
+    def test_unknown_aspect_skipped(self, sample_chart):
+        """An aspect name not in the registry should be silently skipped."""
+        periods = calculate_transit_periods(
+            natal_chart=sample_chart,
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=["Jupiter"],
+            aspects={"NotARealAspect": 2.0},
+        )
+        assert periods == []
+
+
+class TestTransitListSection:
+    """Tests for TransitListSection."""
+
+    def test_section_name(self):
+        section = TransitListSection(start=_TRANSIT_START, end=_TRANSIT_END)
+        assert section.section_name == "Natal Transits"
+
+    def test_generates_text_type(self, sample_chart):
+        section = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        assert data["type"] == "text"
+
+    def test_data_has_required_keys(self, sample_chart):
+        section = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        assert "text" in data
+        assert "total_transits" in data
+        assert "periods" in data
+        assert "date_range" in data
+
+    def test_text_is_string(self, sample_chart):
+        section = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        assert isinstance(data["text"], str)
+
+    def test_periods_count_matches_total(self, sample_chart):
+        section = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        assert len(data["periods"]) == data["total_transits"]
+
+    def test_period_dicts_have_required_keys(self, sample_chart):
+        section = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        for p in data["periods"]:
+            assert "transit_planet" in p
+            assert "natal_planet" in p
+            assert "aspect_name" in p
+            assert "exact_dates" in p
+            assert "label" in p
+            assert "is_multi_pass" in p
+
+    def test_exclude_fast_planets(self, sample_chart):
+        section_all = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            aspects=_FAST_ASPECTS,
+            exclude_fast_planets=False,
+        )
+        section_slow = TransitListSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            aspects=_FAST_ASPECTS,
+            exclude_fast_planets=True,
+        )
+        assert "Sun" not in section_slow.transit_planets
+        assert "Moon" not in section_slow.transit_planets
+        assert "Sun" in section_all.transit_planets
+
+
+class TestTransitGanttSection:
+    """Tests for TransitGanttSection."""
+
+    def test_section_name(self):
+        section = TransitGanttSection(start=_TRANSIT_START, end=_TRANSIT_END)
+        assert section.section_name == "Transit Timeline"
+
+    def test_generates_svg_type(self, sample_chart):
+        section = TransitGanttSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        assert data["type"] == "svg"
+
+    def test_svg_data_has_required_keys(self, sample_chart):
+        section = TransitGanttSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        assert "content" in data
+        assert "width" in data
+        assert "height" in data
+        assert "total_transits" in data
+
+    def test_svg_content_is_valid_xml(self, sample_chart):
+        """SVG output should be parseable XML."""
+        import xml.etree.ElementTree as ET
+
+        section = TransitGanttSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+        )
+        data = section.generate_data(sample_chart)
+        # Should not raise
+        ET.fromstring(data["content"])
+
+    def test_empty_range_returns_svg_with_message(self, sample_chart):
+        """An empty result should still return valid SVG (not crash)."""
+        import xml.etree.ElementTree as ET
+
+        same_day = dt.datetime(2025, 12, 1, tzinfo=pytz.UTC)
+        section = TransitGanttSection(
+            start=same_day,
+            end=same_day,
+            transit_planets=["Jupiter"],
+            aspects={"Trine": 2.0},
+        )
+        data = section.generate_data(sample_chart)
+        assert data["type"] == "svg"
+        ET.fromstring(data["content"])
+
+    def test_default_excludes_fast_planets(self):
+        section = TransitGanttSection(start=_TRANSIT_START, end=_TRANSIT_END)
+        for fast in ["Sun", "Moon", "Mercury", "Venus", "Mars"]:
+            assert fast not in section.transit_planets
+
+    def test_custom_width(self, sample_chart):
+        section = TransitGanttSection(
+            start=_TRANSIT_START,
+            end=_TRANSIT_END,
+            transit_planets=_SLOW_PLANETS,
+            aspects=_FAST_ASPECTS,
+            width=1200,
+        )
+        data = section.generate_data(sample_chart)
+        assert data["width"] == 1200
 
 
 if __name__ == "__main__":

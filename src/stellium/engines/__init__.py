@@ -50,9 +50,23 @@ from stellium.engines.fixed_stars import SwissEphemerisFixedStarsEngine
 
 # House Systems
 from stellium.engines.houses import (
+    AlcabitiusHouses,
+    APCHouses,
+    AxialRotationHouses,
+    CampanusHouses,
     EqualHouses,
+    EqualMCHouses,
+    EqualVertexHouses,
+    GauquelinHouses,
+    HorizontalHouses,
     KochHouses,
+    KrusinskiHouses,
+    MorinusHouses,
     PlacidusHouses,
+    PorphyryHouses,
+    RegiomontanusHouses,
+    TopocentricHouses,
+    VehlowEqualHouses,
     WholeSignHouses,
 )
 
@@ -63,12 +77,21 @@ from stellium.engines.orbs import (
     SimpleOrbEngine,
 )
 
+# Aspect Patterns
+from stellium.engines.patterns import AspectPatternAnalyzer
+
 # Profections
 from stellium.engines.profections import (
     MultiProfectionResult,
     ProfectionEngine,
     ProfectionResult,
     ProfectionTimeline,
+)
+
+# Zodiacal Releasing
+from stellium.engines.releasing import (
+    ZodiacalReleasingAnalyzer,
+    ZodiacalReleasingEngine,
 )
 
 # Longitude Search, Ingresses, Stations, Eclipses, Aspect Exactitude, and Angle Crossings
@@ -105,10 +128,24 @@ __all__ = [
     # Ephemeris
     "SwissEphemerisEngine",
     # Houses
-    "PlacidusHouses",
-    "WholeSignHouses",
-    "KochHouses",
+    "AlcabitiusHouses",
+    "APCHouses",
+    "AxialRotationHouses",
+    "CampanusHouses",
     "EqualHouses",
+    "EqualMCHouses",
+    "EqualVertexHouses",
+    "GauquelinHouses",
+    "HorizontalHouses",
+    "KochHouses",
+    "KrusinskiHouses",
+    "MorinusHouses",
+    "PlacidusHouses",
+    "PorphyryHouses",
+    "RegiomontanusHouses",
+    "TopocentricHouses",
+    "VehlowEqualHouses",
+    "WholeSignHouses",
     # Aspects
     "ModernAspectEngine",
     "HarmonicAspectEngine",
@@ -164,6 +201,11 @@ __all__ = [
     "MundaneDirections",
     "PtolemyKey",
     "NaibodKey",
+    # Aspect Patterns
+    "AspectPatternAnalyzer",
+    # Zodiacal Releasing
+    "ZodiacalReleasingEngine",
+    "ZodiacalReleasingAnalyzer",
     # Void of Course Moon
     "VOCMoonResult",
     "calculate_voc_moon",

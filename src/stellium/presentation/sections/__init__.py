@@ -71,6 +71,14 @@ from .timing import (
 )
 
 # Transit calendar sections
+from .transit_periods import (
+    DEFAULT_TRANSIT_ASPECTS,
+    DEFAULT_TRANSIT_PLANETS,
+    TransitGanttSection,
+    TransitListSection,
+    TransitPeriod,
+    calculate_transit_periods,
+)
 from .transits import (
     EclipseSection,
     IngressSection,
@@ -112,6 +120,13 @@ __all__ = [
     "DeclinationSection",
     "FixedStarsSection",
     "MoonPhaseSection",
+    # Transit period sections
+    "TransitPeriod",
+    "calculate_transit_periods",
+    "TransitListSection",
+    "TransitGanttSection",
+    "DEFAULT_TRANSIT_ASPECTS",
+    "DEFAULT_TRANSIT_PLANETS",
     # Transit calendar sections
     "EclipseSection",
     "IngressSection",

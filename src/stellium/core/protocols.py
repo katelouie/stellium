@@ -145,7 +145,35 @@ class CrossChartAspectEngine(Protocol):
 
     This is separate from AspectEngine to allow different
     orb configurations and aspect sets for cross-chart work.
+
+    Use cases:
+    - Synastry: Person A's planets aspecting Person B's planets
+    - Transits: Current sky aspecting natal chart
+    - Progressions: Progressed chart aspecting natal chart
     """
+
+    def calculate_cross_aspects(
+        self,
+        chart1_positions: list[CelestialPosition],
+        chart2_positions: list[CelestialPosition],
+        orb_engine: OrbEngine,
+    ) -> list[Aspect]:
+        """
+        Calculate aspects between two sets of positions.
+
+        Only calculates aspects where one object is from chart1 and the
+        other is from chart2. Internal aspects within each chart are not
+        calculated.
+
+        Args:
+            chart1_positions: Positions from first chart (e.g., natal/inner)
+            chart2_positions: Positions from second chart (e.g., transit/outer)
+            orb_engine: The OrbEngine that will provide orb allowances
+
+        Returns:
+            List of Aspect objects representing cross-chart aspects
+        """
+        ...
 
 
 class AspectEngine(Protocol):

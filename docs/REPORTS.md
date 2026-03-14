@@ -17,6 +17,7 @@ This guide covers everything you need to know about generating professional astr
   - [Essential Dignities](#essential-dignities)
   - [Aspect Patterns](#aspect-patterns)
   - [Midpoints](#midpoints)
+  - [Transit Timeline (Natal Transits)](#transit-timeline-natal-transits)
 - [Presets](#presets)
 - [Output Formats](#output-formats)
   - [Terminal Output (Rich)](#terminal-output-rich)
@@ -398,6 +399,147 @@ ReportBuilder().from_chart(chart).with_midpoints(threshold=20).render()
 |-----------|------|---------|-------------|
 | `mode` | `str` | `"all"` | Filter: `"all"` or `"core"` (Sun/Moon/ASC/MC) |
 | `threshold` | `int \| None` | `None` | Limit to top N midpoints |
+
+---
+
+### Transit Timeline (Natal Transits)
+
+Show when transiting planets form aspects to natal positions, with orb entry/exit
+dates and multi-pass handling for retrograde transits. Two output modes:
+
+- **`TransitListSection`** — plain-text rows, one per transit event
+- **`TransitGanttSection`** — SVG horizontal bar chart (Gantt style), grouped by planet
+
+Both sections are used via `.with_section()` since they require an explicit date range.
+
+#### Plain-Text List
+
+```python
+import datetime as dt
+from stellium import ChartBuilder, ReportBuilder
+from stellium.presentation.sections import TransitListSection
+
+natal_chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+
+section = TransitListSection(
+    start=dt.datetime(2025, 12, 1),
+    end=dt.datetime(2026, 6, 1),
+)
+
+ReportBuilder().from_chart(natal_chart).with_section(section).render()
+```
+
+**Example output:**
+
+```
+Dec 2 – Mar 2 '26 — Jupiter △ natal Chiron
+Dec 4 — Mercury □ natal Jupiter
+Jan 8 – Feb 6 '26 — Uranus △ natal Neptune (2x: Jan 15, Feb 1)
+Feb 10 – May 18 '26 — Saturn ☌ natal Moon
+```
+
+Multi-pass transits (retrograde creating 2–3 exact crossings) show all exact dates in
+parentheses.
+
+**Parameters:**
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `start` | `datetime` | required | Start of transit window (UTC) |
+| `end` | `datetime` | required | End of transit window (UTC) |
+| `transit_planets` | `list[str] \| None` | All 12 | Planets to use as transits |
+| `aspects` | `dict[str, float] \| None` | 5 major + orbs | `{aspect_name: orb_degrees}` |
+| `include_natal_points` | `list[str] \| None` | All planets | Limit which natal points to check |
+| `exclude_fast_planets` | `bool` | `False` | Skip Sun, Moon, Mercury, Venus, Mars |
+
+#### Gantt Chart (SVG)
+
+```python
+from stellium.presentation.sections import TransitGanttSection
+
+section = TransitGanttSection(
+    start=dt.datetime(2025, 12, 1),
+    end=dt.datetime(2026, 6, 1),
+    # By default, excludes fast planets (Sun/Moon/Mercury/Venus/Mars)
+    # for a readable chart. Set exclude_fast_planets=False to include them.
+)
+
+ReportBuilder().from_chart(natal_chart).with_section(section).render(
+    format="pdf", file="transits.pdf"
+)
+```
+
+The SVG Gantt chart shows:
+- Each row = one transit event (aspect glyph + natal planet name)
+- Colored bars = orb window (color varies by aspect type)
+- White tick marks = exact date(s) within the bar
+- Rows grouped by transiting planet
+- Month grid lines and a dashed "today" marker
+
+**Parameters:**
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `start` | `datetime` | required | Start of transit window (UTC) |
+| `end` | `datetime` | required | End of transit window (UTC) |
+| `transit_planets` | `list[str] \| None` | All 12 | Planets to use as transits |
+| `aspects` | `dict[str, float] \| None` | 5 major + orbs | `{aspect_name: orb_degrees}` |
+| `include_natal_points` | `list[str] \| None` | All planets | Limit which natal points to check |
+| `width` | `int` | `900` | SVG width in pixels |
+| `row_height` | `int` | `14` | Height of each row in pixels |
+| `exclude_fast_planets` | `bool` | `True` | Skip fast planets (default `True` — they produce too many rows for a readable chart) |
+
+#### Custom Aspects and Orbs
+
+```python
+# Only outer planet transits, conjunctions and squares, tighter orbs
+section = TransitListSection(
+    start=dt.datetime(2025, 12, 1),
+    end=dt.datetime(2026, 12, 31),
+    transit_planets=["Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"],
+    aspects={"Conjunction": 1.0, "Square": 1.5, "Opposition": 1.5},
+    exclude_fast_planets=True,
+)
+```
+
+#### Accessing Structured Data
+
+`generate_data()` returns both a formatted text string and a `"periods"` list of dicts
+for custom rendering:
+
+```python
+data = section.generate_data(natal_chart)
+
+print(data["text"])            # Plain-text output
+print(data["total_transits"])  # Count of transit events found
+
+for period in data["periods"]:
+    print(period["transit_planet"], period["aspect_name"], period["natal_planet"])
+    print("  Start:", period["start"])
+    print("  End:",   period["end"])
+    print("  Exact:", period["exact_dates"])
+    print("  Multi-pass:", period["is_multi_pass"])
+```
+
+#### Using `calculate_transit_periods()` Directly
+
+For full control, call the core function directly:
+
+```python
+from stellium.presentation.sections import calculate_transit_periods, TransitPeriod
+
+periods: list[TransitPeriod] = calculate_transit_periods(
+    natal_chart=chart,
+    start=dt.datetime(2025, 12, 1),
+    end=dt.datetime(2026, 6, 1),
+    transit_planets=["Jupiter", "Saturn"],
+    aspects={"Trine": 2.0, "Square": 2.0},
+)
+
+for p in periods:
+    print(f"{p.transit_planet} {p.aspect_name} natal {p.natal_planet}")
+    print(f"  In orb: {p.start} → {p.end}")
+    print(f"  Exact: {', '.join(str(d.date()) for d in p.exact_dates)}")
+    print(f"  Multi-pass: {p.is_multi_pass}")
+```
 
 ---
 

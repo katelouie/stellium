@@ -57,7 +57,7 @@ DIGNITIES = {
             "fall": "Uranus",
         },
         "decan_trip": ["Venus", "Mercury", "Saturn"],
-        "decan_chaldean": ["Mecury", "Moon", "Saturn"],
+        "decan_chaldean": ["Mercury", "Moon", "Saturn"],
         "bound_egypt": {  # key is start of the planet's domicile degrees.
             0: "Venus",
             8: "Mercury",

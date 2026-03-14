@@ -5,6 +5,26 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Exported all 18 house systems from `stellium.engines` (was: 4). New additions: `AlcabitiusHouses`, `APCHouses`, `AxialRotationHouses`, `CampanusHouses`, `EqualMCHouses`, `EqualVertexHouses`, `GauquelinHouses`, `HorizontalHouses`, `KrusinskiHouses`, `MorinusHouses`, `PorphyryHouses`, `RegiomontanusHouses`, `TopocentricHouses`, `VehlowEqualHouses`
+- Exported `ZodiacalReleasingEngine` and `ZodiacalReleasingAnalyzer` from `stellium.engines`
+- Exported `AspectPatternAnalyzer` from `stellium.engines`
+- Exported `detect_chart_shape`, `get_chart_shape_description`, and `ChartShape` from `stellium.utils`
+- `CrossChartAspectEngine` protocol now has a complete `calculate_cross_aspects()` method definition (`core/protocols.py`)
+- **Transit period sections** (`presentation/sections/transit_periods.py`):
+  - `calculate_transit_periods()` — calculates orb entry/exit windows and all exact dates for each transit-to-natal aspect, including retrograde multi-pass transits. Fully reuses `engines.search` functions.
+  - `TransitPeriod` dataclass — frozen, with `transit_planet`, `natal_planet`, `aspect_name`, `exact_dates`, `start`, `end`, `is_multi_pass`, `duration_days`
+  - `TransitListSection` — plain-text transit list for `ReportBuilder` (e.g. `"Dec 2 – Mar 2 '26 — Jupiter △ natal Chiron"`)
+  - `TransitGanttSection` — SVG Gantt timeline chart grouped by transiting planet; bars show orb windows, tick marks show exact dates
+
+### Fixed
+
+- Typo in `ChartLocation` validation message: `"Invalud latitude"` → `"Invalid latitude"` (`core/models.py`)
+- Typo in Taurus Chaldean decan data: `"Mecury"` → `"Mercury"` (`engines/dignities.py`)
+
 ## [0.15.2]
 
 ### Added

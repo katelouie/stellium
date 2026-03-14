@@ -17,6 +17,11 @@ from stellium.utils.chart_ruler import (
     get_chart_ruler_from_chart,
     get_sign_ruler,
 )
+from stellium.utils.chart_shape import (
+    ChartShape,
+    detect_chart_shape,
+    get_chart_shape_description,
+)
 
 __all__ = [
     # Cache
@@ -32,4 +37,8 @@ __all__ = [
     "get_sign_ruler",
     "get_chart_ruler",
     "get_chart_ruler_from_chart",
+    # Chart shape
+    "ChartShape",
+    "detect_chart_shape",
+    "get_chart_shape_description",
 ]

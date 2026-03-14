@@ -85,7 +85,7 @@ class ChartLocation:
     def __post_init__(self) -> None:
         """Validate coordinates"""
         if not -90 <= self.latitude <= 90:
-            raise ValueError(f"Invalud latitude: {self.latitude}")
+            raise ValueError(f"Invalid latitude: {self.latitude}")
         if not -180 <= self.longitude <= 180:
             raise ValueError(f"Invalid longitude: {self.longitude}")
 
