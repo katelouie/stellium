@@ -412,7 +412,7 @@ def example_12_direct_engine_usage():
         lifespan=100,  # Calculate to age 100
     )
 
-    print(f"Lot Position: {engine.lot_position:.2f}° {engine.lot_sign}")
+    print(f"Lot Position: {engine.lot_position.sign_degree:.2f}° {engine.lot_sign}")
     print(f"Angular Signs from Lot: {list(engine.angular_signs.keys())}")
     print()
 
