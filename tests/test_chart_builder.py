@@ -27,6 +27,70 @@ def test_basic_chart_building():
     assert len(chart.positions) > 0
 
 
+def test_sect_determination_day_jan():
+    """Test sect determination for day charts"""
+
+    chart = ChartBuilder.from_details("1994-01-06 11:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "day"
+
+
+def test_sect_determination_night_jan():
+    """Test sect determination for night charts"""
+
+    chart = ChartBuilder.from_details("1994-01-06 23:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "night"
+
+
+def test_sect_determination_day_april():
+    """Test sect determination for day charts"""
+
+    chart = ChartBuilder.from_details("1994-04-06 11:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "day"
+
+
+def test_sect_determination_night_april():
+    """Test sect determination for night charts"""
+
+    chart = ChartBuilder.from_details("1994-04-06 23:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "night"
+
+
+def test_sect_determination_day_june():
+    """Test sect determination for day charts"""
+
+    chart = ChartBuilder.from_details("1994-06-06 11:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "day"
+
+
+def test_sect_determination_night_june():
+    """Test sect determination for night charts"""
+
+    chart = ChartBuilder.from_details("1994-06-06 23:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "night"
+
+
+def test_sect_determination_day_oct():
+    """Test sect determination for day charts"""
+
+    chart = ChartBuilder.from_details("1994-10-06 11:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "day"
+
+
+def test_sect_determination_night_oct():
+    """Test sect determination for night charts"""
+
+    chart = ChartBuilder.from_details("1994-10-06 23:40", "Palo Alto, CA").calculate()
+
+    assert chart.sect() == "night"
+
+
 def test_house_system_swapping():
     """Test that we can easily swap house systems."""
     datetime = dt.datetime(2000, 1, 1, 12, 0, tzinfo=pytz.UTC)

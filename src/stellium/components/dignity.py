@@ -44,15 +44,17 @@ def determine_sect(positions: list[CelestialPosition]) -> str:
     # Calculate DSC (opposite of ASC)
     dsc_long = (asc.longitude + 180) % 360
 
-    # Check if sun is above the horizon
+    # Check if sun is below the horizon
+    # Numbering on the wheel increases counter-clockwise
+    # So this is looking for night
     if asc.longitude < dsc_long:
-        # Normal case: ASC at 0°, DSC at 180°
-        is_day = asc.longitude <= sun.longitude < dsc_long
+        # Normal case: No wrapping
+        is_night = asc.longitude <= sun.longitude < dsc_long
     else:
-        # Wrapped case: ASC at 270°, DSC at 90°
-        is_day = sun.longitude >= asc.longitude or sun.longitude < dsc_long
+        # Wrapped case
+        is_night = sun.longitude >= asc.longitude or sun.longitude < dsc_long
 
-    return "day" if is_day else "night"
+    return "night" if is_night else "day"
 
 
 class DignityComponent:
