@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.15.3] - 2026-03-15
+
+### Added
+
 - Exported all 18 house systems from `stellium.engines` (was: 4). New additions: `AlcabitiusHouses`, `APCHouses`, `AxialRotationHouses`, `CampanusHouses`, `EqualMCHouses`, `EqualVertexHouses`, `GauquelinHouses`, `HorizontalHouses`, `KrusinskiHouses`, `MorinusHouses`, `PorphyryHouses`, `RegiomontanusHouses`, `TopocentricHouses`, `VehlowEqualHouses`
 - Exported `ZodiacalReleasingEngine` and `ZodiacalReleasingAnalyzer` from `stellium.engines`
 - Exported `AspectPatternAnalyzer` from `stellium.engines`
@@ -24,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Typo in `ChartLocation` validation message: `"Invalud latitude"` → `"Invalid latitude"` (`core/models.py`)
 - Typo in Taurus Chaldean decan data: `"Mecury"` → `"Mercury"` (`engines/dignities.py`)
+- Sect calculation was flipped and gave inverse results (day vs. night). Thanks to @bkermott for this fix and the added tests!
+- Zodiacal releasing cookbook example was fixed.
 
 ## [0.15.2]
 
