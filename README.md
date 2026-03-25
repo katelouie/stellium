@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/stellium.svg)](https://badge.fury.io/py/stellium)
 [![Python Version](https://img.shields.io/pypi/pyversions/stellium.svg)](https://pypi.org/project/stellium/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: AGPLv3](https://img.shields.io/badge/License-AGPL_v3%2B-blue)](https://opensource.org/license/agpl-3-0)
 [![Status: Active Development](https://img.shields.io/badge/status-active%20development-brightgreen.svg)](https://github.com/katelouie/stellium)
 [![Tests](https://github.com/katelouie/stellium/actions/workflows/tests.yml/badge.svg)](https://github.com/katelouie/stellium/actions/workflows/tests.yml)
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/katelouie/stellium)
