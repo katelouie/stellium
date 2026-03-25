@@ -510,10 +510,35 @@ _RIGHT_PAD = 20
 _HEADER_HEIGHT = 30
 _ROW_HEIGHT = 14
 _ROW_PAD = 2
-_BG_COLOR = "#1a1a2e"
-_GRID_COLOR = "#333355"
-_TEXT_COLOR = "#cccccc"
-_MONTH_COLOR = "#8888aa"
+_LEGEND_HEIGHT = 35  # extra space at bottom for legend
+
+# Theme presets
+_THEMES: dict[str, dict[str, str]] = {
+    "dark": {
+        "bg": "#1a1a2e",
+        "grid": "#333355",
+        "text": "#cccccc",
+        "month": "#8888aa",
+        "today": "#ffffff",
+        "tick": "#ffffff",
+        "legend_text": "#999999",
+    },
+    "light": {
+        "bg": "#ffffff",
+        "grid": "#ddddee",
+        "text": "#333333",
+        "month": "#666688",
+        "today": "#333333",
+        "tick": "#333333",
+        "legend_text": "#666666",
+    },
+}
+
+# Legacy constants (default to dark theme for backward compat)
+_BG_COLOR = _THEMES["dark"]["bg"]
+_GRID_COLOR = _THEMES["dark"]["grid"]
+_TEXT_COLOR = _THEMES["dark"]["text"]
+_MONTH_COLOR = _THEMES["dark"]["month"]
 
 
 class TransitGanttSection:
@@ -547,6 +572,7 @@ class TransitGanttSection:
         width: int = 900,
         row_height: int = _ROW_HEIGHT,
         exclude_fast_planets: bool = True,
+        theme: str = "dark",
     ) -> None:
         """
         Initialize transit Gantt section.
@@ -561,6 +587,7 @@ class TransitGanttSection:
             row_height:           Height of each row in pixels (default: 14).
             exclude_fast_planets: If True, exclude Sun, Moon, Mercury, Venus, Mars
                                   (default: True — they overwhelm the chart).
+            theme:                Color theme — "dark" or "light" (default: "dark").
         """
         self.start = start
         self.end = end
@@ -572,6 +599,7 @@ class TransitGanttSection:
         self.include_natal_points = include_natal_points
         self.width = width
         self.row_height = row_height
+        self.theme = _THEMES.get(theme, _THEMES["dark"])
 
     @property
     def section_name(self) -> str:
@@ -618,9 +646,11 @@ class TransitGanttSection:
         for p in periods:
             by_planet[p.transit_planet].append(p)
 
-        # Count: one header row per planet + one data row per period
+        # Count: one header row per planet + one data row per period + legend
         n_rows = sum(1 + len(ps) for ps in by_planet.values())
-        return _HEADER_HEIGHT + n_rows * (self.row_height + _ROW_PAD) + 20
+        return (
+            _HEADER_HEIGHT + n_rows * (self.row_height + _ROW_PAD) + _LEGEND_HEIGHT + 10
+        )
 
     def _render_gantt(self, periods: list[TransitPeriod]) -> str:
         """Render periods as an SVG Gantt chart string."""
@@ -663,10 +693,11 @@ class TransitGanttSection:
                 rows.append((planet, p))
 
         height = self._calc_height(periods)
+        th = self.theme
         dwg = svgwrite.Drawing(size=(self.width, height))
 
         # Background
-        dwg.add(dwg.rect(insert=(0, 0), size=(self.width, height), fill=_BG_COLOR))
+        dwg.add(dwg.rect(insert=(0, 0), size=(self.width, height), fill=th["bg"]))
 
         # Month grid lines and labels
         current = self.start.replace(day=1)
@@ -676,8 +707,8 @@ class TransitGanttSection:
                 dwg.add(
                     dwg.line(
                         start=(x, _HEADER_HEIGHT - 8),
-                        end=(x, height - 10),
-                        stroke=_GRID_COLOR,
+                        end=(x, height - _LEGEND_HEIGHT),
+                        stroke=th["grid"],
                         stroke_width=0.5,
                     )
                 )
@@ -692,7 +723,7 @@ class TransitGanttSection:
                         insert=(x + 3, _HEADER_HEIGHT - 10),
                         font_family="sans-serif",
                         font_size=9,
-                        fill=_MONTH_COLOR,
+                        fill=th["month"],
                     )
                 )
             # Advance to next month
@@ -712,8 +743,8 @@ class TransitGanttSection:
             dwg.add(
                 dwg.line(
                     start=(tx, _HEADER_HEIGHT - 8),
-                    end=(tx, height - 10),
-                    stroke="#ffffff",
+                    end=(tx, height - _LEGEND_HEIGHT),
+                    stroke=th["today"],
                     stroke_width=0.8,
                     stroke_dasharray="3,3",
                     opacity=0.4,
@@ -745,7 +776,7 @@ class TransitGanttSection:
                     dwg.line(
                         start=(_LABEL_WIDTH, y_top),
                         end=(self.width - _RIGHT_PAD, y_top),
-                        stroke=_GRID_COLOR,
+                        stroke=th["grid"],
                         stroke_width=0.3,
                     )
                 )
@@ -764,17 +795,22 @@ class TransitGanttSection:
                         insert=(_LABEL_WIDTH - 5, y_mid + 3),
                         font_family="sans-serif",
                         font_size=8,
-                        fill=_TEXT_COLOR,
+                        fill=th["text"],
                         text_anchor="end",
                     )
                 )
 
-                # Orb window bar
-                bar_x = date_to_x(period.start) if period.start else _LABEL_WIDTH
-                bar_end = (
+                # Orb window bar — clamp to chart area
+                raw_bar_x = date_to_x(period.start) if period.start else _LABEL_WIDTH
+                raw_bar_end = (
                     date_to_x(period.end) if period.end else _LABEL_WIDTH + chart_width
                 )
+                bar_x = max(_LABEL_WIDTH, raw_bar_x)
+                bar_end = min(_LABEL_WIDTH + chart_width, raw_bar_end)
                 bar_w = max(2.0, bar_end - bar_x)
+                extends_left = raw_bar_x < _LABEL_WIDTH
+                extends_right = raw_bar_end > _LABEL_WIDTH + chart_width
+
                 dwg.add(
                     dwg.rect(
                         insert=(bar_x, y_top + 1),
@@ -786,7 +822,39 @@ class TransitGanttSection:
                     )
                 )
 
-                # Exact date tick marks (white vertical lines on bar)
+                # Left arrow indicator (bar extends before the chart window)
+                if extends_left:
+                    arrow_x = _LABEL_WIDTH + 3
+                    arrow_y = y_mid
+                    dwg.add(
+                        dwg.polygon(
+                            points=[
+                                (arrow_x, arrow_y),
+                                (arrow_x + 4, arrow_y - 3),
+                                (arrow_x + 4, arrow_y + 3),
+                            ],
+                            fill=th["tick"],
+                            opacity=0.5,
+                        )
+                    )
+
+                # Right arrow indicator (bar extends past the chart window)
+                if extends_right:
+                    arrow_x = _LABEL_WIDTH + chart_width - 3
+                    arrow_y = y_mid
+                    dwg.add(
+                        dwg.polygon(
+                            points=[
+                                (arrow_x, arrow_y),
+                                (arrow_x - 4, arrow_y - 3),
+                                (arrow_x - 4, arrow_y + 3),
+                            ],
+                            fill=th["tick"],
+                            opacity=0.5,
+                        )
+                    )
+
+                # Exact date tick marks (vertical lines on bar)
                 for exact_dt in period.exact_dates:
                     ex = date_to_x(exact_dt)
                     if _LABEL_WIDTH <= ex <= (_LABEL_WIDTH + chart_width):
@@ -794,10 +862,87 @@ class TransitGanttSection:
                             dwg.line(
                                 start=(ex, y_top + 1),
                                 end=(ex, y_top + rh - 1),
-                                stroke="#ffffff",
+                                stroke=th["tick"],
                                 stroke_width=1.0,
                                 opacity=0.85,
                             )
                         )
+
+        # Legend — aspect colors + tick mark explanation
+        legend_y = height - _LEGEND_HEIGHT + 12
+        legend_x = _LABEL_WIDTH
+
+        # Aspect color swatches
+        for aspect_name, color in _ASPECT_COLORS.items():
+            if aspect_name in self.aspects:
+                dwg.add(
+                    dwg.rect(
+                        insert=(legend_x, legend_y - 6),
+                        size=(12, 8),
+                        fill=color,
+                        opacity=0.8,
+                        rx=1,
+                        ry=1,
+                    )
+                )
+                glyph = (
+                    ASPECT_REGISTRY[aspect_name].glyph
+                    if aspect_name in ASPECT_REGISTRY
+                    else ""
+                )
+                dwg.add(
+                    dwg.text(
+                        f"{glyph} {aspect_name}",
+                        insert=(legend_x + 16, legend_y + 1),
+                        font_family="sans-serif",
+                        font_size=8,
+                        fill=th["legend_text"],
+                    )
+                )
+                legend_x += 90
+
+        # Tick mark legend
+        legend_x += 10
+        dwg.add(
+            dwg.line(
+                start=(legend_x, legend_y - 5),
+                end=(legend_x, legend_y + 3),
+                stroke=th["tick"],
+                stroke_width=1.0,
+                opacity=0.85,
+            )
+        )
+        dwg.add(
+            dwg.text(
+                "Exact date",
+                insert=(legend_x + 5, legend_y + 1),
+                font_family="sans-serif",
+                font_size=8,
+                fill=th["legend_text"],
+            )
+        )
+
+        # Arrow legend
+        legend_x += 75
+        dwg.add(
+            dwg.polygon(
+                points=[
+                    (legend_x, legend_y - 1),
+                    (legend_x + 4, legend_y - 4),
+                    (legend_x + 4, legend_y + 2),
+                ],
+                fill=th["tick"],
+                opacity=0.5,
+            )
+        )
+        dwg.add(
+            dwg.text(
+                "Extends beyond window",
+                insert=(legend_x + 8, legend_y + 1),
+                font_family="sans-serif",
+                font_size=8,
+                fill=th["legend_text"],
+            )
+        )
 
         return dwg.tostring()

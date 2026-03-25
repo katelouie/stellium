@@ -54,6 +54,7 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 - **Uranian astrology** including Trans-Neptunian Planets and 45/90/360-degree dials with pointers.
 - **Primary and Zodiacal directions** with 3D modeling and and distribution across bounds
 - **Draconic Charts and Void of Course Moon**
+- **Transit timeline analysis** - Calculate transit-to-natal aspect periods with orb entry/exit windows, retrograde multi-pass detection, plain-text list output, and SVG Gantt chart visualization
 - **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
 - **Antiscia and contra-antiscia** with a dedicated report section
@@ -81,6 +82,10 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 ### Report Sample Pages
 
 ![Einstein Report Sample Pages](images/report_sample_pages_1_2.png)
+
+### Transit Timeline (Gantt Chart)
+
+![Transit Gantt Example](images/transit_gantt_example_light.svg)
 
 ### Graphic Ephemeris Example
 

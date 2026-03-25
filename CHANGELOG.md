@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Chart shape tests** (`test_chart_shape.py`): 19 tests covering span calculation, 0°/360° seam regression, chart shape detection (Bundle, Bowl, Splash, Seesaw), and edge cases.
 - **Dignity default constructor tests**: regression tests ensuring `TraditionalDignityCalculator()` and `ModernDignityCalculator()` work without arguments.
 - **Fast/slow test split**: 30 test files marked with `@pytest.mark.slow`. Fast subset (`pytest -m "not slow"`) runs 719 tests in 2.4s for rapid TDD. Full suite runs ~1938 tests in 30s. Marker registered in `pyproject.toml`.
+- **Transit cookbook** (`examples/transit_cookbook.py`): 6 examples covering basic transit lists, Gantt timelines (outer planets, all planets), custom aspects/orbs, programmatic data access, and README image generation.
+- **Transit Gantt example images** (`images/transit_gantt_example.svg`, `images/transit_gantt_example_light.svg`): Einstein's transits for 2025-2026 in both themes, light theme used in README.
+- **Transit Gantt legend**: aspect color key shown at bottom of chart.
+- **Transit Gantt themes**: "dark" (default, dark blue background) and "light" (white background) via `theme` parameter.
+- **Transit Gantt legend**: aspect color swatches, tick mark explanation ("Exact date"), and arrow indicator ("Extends beyond window").
+- **Transit Gantt bar clamping**: bars that extend before/after the chart window are now clipped to the chart area with subtle arrow indicators instead of overflowing into labels.
+- **Transit timeline feature** listed in README feature list.
 
 ### Changed
 
