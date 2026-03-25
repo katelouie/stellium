@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - 4 label styles: abbreviation (Ari, Su), number (traditional North Indian sign numbers), glyph (Unicode symbols), full (spelled out).
   - Degree + minutes display, retrograde markers, full native info (name, date/time, location).
   - Both renderers share themes, abbreviations, and glyph font stack — no duplication.
+  - Integrated with main chart rendering engine via convenience method `.draw_vedic()`.
 - **Vedic cookbook** (`examples/vedic_cookbook.py`): 7 examples covering both styles, themes, label styles, custom charts, ayanamsa comparison, and README image generation.
 - **Vedic chart images** added to README.
 

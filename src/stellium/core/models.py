@@ -1262,6 +1262,58 @@ class CalculatedChart:
 
         return ChartDrawBuilder(self).with_filename(filename)
 
+    def draw_vedic(
+        self,
+        filename: str = "vedic_chart.svg",
+        style: str = "north_indian",
+        theme: str = "classic",
+        label_style: str = "abbreviation",
+        show_degrees: bool = True,
+        size: int = 500,
+    ) -> "CalculatedChart":
+        """
+        Draw a Vedic (Jyotish) chart in North Indian or South Indian style.
+
+        Args:
+            filename: Output filename for the SVG
+            style: "north_indian" (diamond) or "south_indian" (grid)
+            theme: "classic", "dark", or "traditional"
+            label_style: "abbreviation" (Ari, Su), "number" (1, 2),
+                "glyph" (unicode symbols), or "full" (Aries, Sun)
+            show_degrees: Show degree + minutes for each planet
+            size: SVG width/height in pixels
+
+        Returns:
+            self (for chaining)
+
+        Example::
+
+            chart.draw_vedic("north.svg", style="north_indian")
+            chart.draw_vedic("south.svg", style="south_indian", theme="traditional")
+        """
+        from stellium.visualization.vedic import (
+            NorthIndianRenderer,
+            SouthIndianRenderer,
+        )
+
+        if style == "south_indian":
+            renderer = SouthIndianRenderer(
+                size=size,
+                theme=theme,
+                show_degrees=show_degrees,
+                label_style=label_style,
+            )
+        else:
+            renderer = NorthIndianRenderer(
+                size=size,
+                theme=theme,
+                show_degrees=show_degrees,
+                label_style=label_style,
+            )
+
+        renderer.render_to_file(self, filename)
+        return self
+
     def draw_dial(
         self, filename: str = "dial.svg", degrees: int = 90
     ) -> "DialDrawBuilder":

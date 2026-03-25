@@ -230,7 +230,55 @@ def example_6_ayanamsas():
 
 
 # =============================================================================
-# Example 7: Generate README Images
+# Example 7: Convenience Method (draw_vedic)
+# =============================================================================
+
+
+def example_7_convenience_method():
+    """
+    The easiest way to generate Vedic charts — one line!
+
+    chart.draw_vedic() is a convenience method on CalculatedChart that
+    handles renderer creation internally. It returns self for chaining,
+    so you can generate multiple styles in one expression.
+    """
+    print("\n=== Example 7: Convenience Method ===\n")
+
+    chart = (
+        ChartBuilder.from_notable("Albert Einstein").with_sidereal("lahiri").calculate()
+    )
+
+    # One-liner: just specify filename and style
+    chart.draw_vedic(str(OUTPUT_DIR / "quick_north.svg"), style="north_indian")
+    chart.draw_vedic(str(OUTPUT_DIR / "quick_south.svg"), style="south_indian")
+    print("Saved: quick_north.svg, quick_south.svg")
+
+    # With customization
+    chart.draw_vedic(
+        str(OUTPUT_DIR / "quick_traditional.svg"),
+        style="north_indian",
+        theme="traditional",
+        label_style="number",
+        show_degrees=True,
+    )
+    print("Saved: quick_traditional.svg")
+
+    # Chaining — generate both styles in one expression
+    (
+        chart.draw_vedic(
+            str(OUTPUT_DIR / "chained_north.svg"), style="north_indian"
+        ).draw_vedic(str(OUTPUT_DIR / "chained_south.svg"), style="south_indian")
+    )
+    print("Saved: chained_north.svg, chained_south.svg (via chaining)")
+
+    # Mix with Western chart output
+    chart.draw("western.svg").preset_standard().save()
+    chart.draw_vedic(str(OUTPUT_DIR / "vedic.svg"), style="north_indian")
+    print("Saved: western.svg + vedic.svg — same chart, two traditions!")
+
+
+# =============================================================================
+# Example 8: Generate README Images
 # =============================================================================
 
 
@@ -268,5 +316,6 @@ if __name__ == "__main__":
     example_4_label_styles()
     example_5_custom_chart()
     example_6_ayanamsas()
+    example_7_convenience_method()
     generate_readme_images()
     print("\n✅ All Vedic chart examples complete!")
