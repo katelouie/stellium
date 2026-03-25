@@ -8,15 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **Comprehensive applying/separating tests** (`test_applying_separating.py`): 24 tests covering basic detection, stationary bodies, zodiac seam edge cases, retrograde motion, and angular distance helper.
 - **Chart shape tests** (`test_chart_shape.py`): 19 tests covering span calculation, 0°/360° seam regression, chart shape detection (Bundle, Bowl, Splash, Seesaw), and edge cases.
 - **Dignity default constructor tests**: regression tests ensuring `TraditionalDignityCalculator()` and `ModernDignityCalculator()` work without arguments.
+- **Fast/slow test split**: 30 test files marked with `@pytest.mark.slow`. Fast subset (`pytest -m "not slow"`) runs 719 tests in 2.4s for rapid TDD. Full suite runs ~1938 tests in 30s. Marker registered in `pyproject.toml`.
 
 ### Changed
+
 - **Applying/separating uses analytical approach** (`aspects.py:_is_applying`): replaced numerical 1-minute integration with relative velocity analysis. Correctly handles the 0°/360° zodiac seam without wrapping artifacts. Explicit stationary body detection via `_STATIONARY_THRESHOLD` (0.005 deg/day) — returns `None` instead of misclassifying stationary planets.
 - **Chart shape span uses largest-gap method** (`chart_shape.py:_calculate_span`): replaced naive `(last - first) % 360` with `360 - max_gap`. Correctly handles spans straddling the Aries point (e.g., planets at 350°, 355°, 5°, 10° now gives 20° span, not 340°).
 
 ### Fixed
+
 - **"chalean" typo** in `TraditionalDignityCalculator` and `ModernDignityCalculator` default argument. Was `"chalean"`, should be `"chaldean"`. Instantiating either class with no arguments previously raised `ValueError`. (GitHub issue #24)
 - **Stationary body misclassification** in `_is_applying`: `speed_longitude == 0` conflated "speed data absent" with "genuinely stationary planet." Now uses a threshold check. (GitHub issue #24)
 - **Zodiac seam failure** in `_is_applying`: `% 360` wrapping on future positions produced wrong results near 0°/360° boundary. Analytical approach eliminates the issue. (GitHub issue #24)

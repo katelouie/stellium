@@ -9,6 +9,8 @@ from stellium.core.native import Native
 from stellium.engines.ephemeris import MockEphemerisEngine
 from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
+pytestmark = pytest.mark.slow
+
 
 def test_basic_chart_building():
     """Test basic chart construction."""

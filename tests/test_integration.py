@@ -10,6 +10,8 @@ from stellium.core.native import Native
 from stellium.engines.aspects import ModernAspectEngine
 from stellium.engines.houses import PlacidusHouses, WholeSignHouses
 
+pytestmark = pytest.mark.slow
+
 
 def test_einstein_chart():
     """Test calculating Einstein's birth chart."""

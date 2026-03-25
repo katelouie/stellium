@@ -24,6 +24,8 @@ from stellium.core.native import Native
 from stellium.engines.aspects import CrossChartAspectEngine, ModernAspectEngine
 from stellium.engines.orbs import SimpleOrbEngine
 
+pytestmark = pytest.mark.slow
+
 
 class TestComparisonDataclass:
     """Tests for Comparison dataclass properties and methods."""

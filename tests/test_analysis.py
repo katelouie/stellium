@@ -27,6 +27,8 @@ from stellium.core.native import Native
 pytest.importorskip("pandas")
 import pandas as pd  # noqa
 
+pytestmark = pytest.mark.slow
+
 # ============================================================================
 # Fixtures
 # ============================================================================

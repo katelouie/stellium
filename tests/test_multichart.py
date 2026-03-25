@@ -14,6 +14,8 @@ from stellium.core.models import (
 )
 from stellium.core.multichart import MultiChart, MultiChartBuilder
 
+pytestmark = pytest.mark.slow
+
 # =============================================================================
 # Fixtures
 # =============================================================================

@@ -394,6 +394,35 @@ git push origin feature/your-feature-name
 
 ## Testing Conventions
 
+### Fast vs Slow Tests
+
+Tests are split into two tiers using the `@pytest.mark.slow` marker:
+
+**Fast tests (`-m "not slow"`):** ~719 tests in ~2.4 seconds
+- Pure logic: aspects, dignities, chart shapes, models, registries, patterns
+- No ephemeris calls, no chart calculation
+- **Use this for TDD and rapid iteration**
+
+**Full suite (default `pytest`):** ~1938 tests in ~30 seconds
+- Includes chart calculations, electional search, I/O parsing, visualization
+- **Run before commits and releases**
+
+```bash
+# Fast TDD loop (2.4s)
+source ~/.zshrc && pyenv activate starlight && pytest -m "not slow"
+
+# Full suite (30s)
+source ~/.zshrc && pyenv activate starlight && pytest
+
+# Full with coverage
+source ~/.zshrc && pyenv activate starlight && pytest --cov=src --cov-report=term-missing
+```
+
+To mark a new test file as slow, add near the top (after imports):
+```python
+pytestmark = pytest.mark.slow
+```
+
 ### Test Organization
 
 - Place tests in `tests/` directory

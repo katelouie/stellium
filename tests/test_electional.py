@@ -13,6 +13,8 @@ from datetime import datetime, timedelta
 
 import pytest
 
+pytestmark = pytest.mark.slow
+
 # =============================================================================
 # ElectionalSearch Tests
 # =============================================================================

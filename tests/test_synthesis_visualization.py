@@ -12,6 +12,8 @@ import pytest
 from stellium.core.builder import ChartBuilder
 from stellium.core.synthesis import SynthesisBuilder
 
+pytestmark = pytest.mark.slow
+
 
 class TestSynthesisVisualization:
     """Tests for SynthesisChart visualization via inheritance."""

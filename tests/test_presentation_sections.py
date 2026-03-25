@@ -34,6 +34,8 @@ from stellium.presentation.sections import (
     get_object_sort_key,
 )
 
+pytestmark = pytest.mark.slow
+
 # ============================================================================
 # FIXTURES
 # ============================================================================

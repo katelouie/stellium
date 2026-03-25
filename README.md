@@ -40,9 +40,10 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 **Western:**
 
 - **Large-scale data analysis** with pandas DataFrames, batch calculation, and statistical tools
-- **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md))
+- **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md)).
+- **Multiple house systems in a single chart** for comparison of traditions and meta-analysis
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
-- **Bi-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
+- **Bi-, tri- and quad-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
 - **Sect-aware calculations** with proper day/night chart handling
 - **25+ Arabic Parts** with traditional formulas (see the [full list](docs/options_list.md))
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships

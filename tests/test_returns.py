@@ -11,6 +11,8 @@ import pytest
 from stellium.core.builder import ChartBuilder
 from stellium.returns import ReturnBuilder
 
+pytestmark = pytest.mark.slow
+
 # Precision threshold for return calculations
 # Returns should match natal position within 0.02 degrees
 # (Moon can be slightly less precise due to its fast motion)

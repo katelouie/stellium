@@ -5,6 +5,8 @@ import pytest
 from stellium import ChartBuilder, ComparisonBuilder
 from stellium.core.models import ComparisonType
 
+pytestmark = pytest.mark.slow
+
 
 @pytest.fixture(scope="module")
 def einstein_natal():

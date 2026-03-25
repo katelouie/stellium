@@ -11,6 +11,8 @@ from stellium.core.models import ChartDateTime, ChartLocation
 from stellium.core.native import Native, Notable
 from stellium.data import NotableRegistry, get_notable_registry
 
+pytestmark = pytest.mark.slow
+
 
 # Test fixtures with timezone data (fast!)
 @pytest.fixture

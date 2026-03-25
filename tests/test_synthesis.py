@@ -18,6 +18,8 @@ from stellium.core.synthesis import (
     julian_day_to_datetime,
 )
 
+pytestmark = pytest.mark.slow
+
 # =============================================================================
 # Helper Function Tests
 # =============================================================================

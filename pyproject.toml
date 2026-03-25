@@ -166,6 +166,9 @@ testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
+markers = [
+    "slow: marks tests that hit the Swiss Ephemeris or do chart calculations (deselect with '-m \"not slow\"')",
+]
 
 [tool.coverage.run]
 source = ["src"]

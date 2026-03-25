@@ -24,6 +24,8 @@ from stellium.presentation.sections import (
     PlanetPositionSection,
 )
 
+pytestmark = pytest.mark.slow
+
 # ============================================================================
 # FIXTURES
 # ============================================================================

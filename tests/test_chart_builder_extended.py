@@ -31,6 +31,8 @@ from stellium.engines.orbs import SimpleOrbEngine
 from stellium.engines.patterns import AspectPatternAnalyzer
 from stellium.utils.cache import Cache
 
+pytestmark = pytest.mark.slow
+
 
 class TestChartBuilderFromNotable:
     """Tests for ChartBuilder.from_notable() factory method."""

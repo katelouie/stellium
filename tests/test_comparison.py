@@ -11,10 +11,14 @@ These tests validate that:
 import datetime as dt
 from datetime import datetime
 
+import pytest
+
 from stellium.core.builder import ChartBuilder
 from stellium.core.comparison import ComparisonBuilder
 from stellium.core.models import ChartLocation, ComparisonType
 from stellium.core.native import Native
+
+pytestmark = pytest.mark.slow
 
 
 def test_synastry_cross_aspects_only():

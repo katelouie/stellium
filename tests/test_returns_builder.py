@@ -23,6 +23,8 @@ from stellium.engines.orbs import SimpleOrbEngine
 from stellium.engines.patterns import AspectPatternAnalyzer
 from stellium.returns.builder import ReturnBuilder, ReturnInfo
 
+pytestmark = pytest.mark.slow
+
 
 class TestSolarReturn:
     """Tests for solar return calculation."""

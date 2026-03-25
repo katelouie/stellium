@@ -41,6 +41,8 @@ from stellium.visualization.layers import (
 )
 from stellium.visualization.palettes import ZodiacPalette
 
+pytestmark = pytest.mark.slow
+
 # ============================================================================
 # FIXTURES
 # ============================================================================

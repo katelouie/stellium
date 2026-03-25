@@ -14,6 +14,8 @@ import pytest
 from stellium.core.builder import ChartBuilder
 from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
 
+pytestmark = pytest.mark.slow
+
 # =============================================================================
 # Fixtures
 # =============================================================================

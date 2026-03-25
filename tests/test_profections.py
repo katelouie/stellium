@@ -18,6 +18,8 @@ from stellium.engines.profections import (
     ProfectionTimeline,
 )
 
+pytestmark = pytest.mark.slow
+
 
 @pytest.fixture
 def einstein_natal():

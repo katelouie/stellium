@@ -15,6 +15,8 @@ from stellium.io.csv import (
     read_csv,
 )
 
+pytestmark = pytest.mark.slow
+
 
 class TestColumnFinding:
     """Tests for column name detection."""

@@ -23,6 +23,8 @@ from stellium.visualization.extended_canvas import (
     _is_comparison,
 )
 
+pytestmark = pytest.mark.slow
+
 
 class TestIsComparison:
     """Tests for _is_comparison() helper function."""

@@ -50,6 +50,8 @@ from stellium.visualization.dial.layers import (
 from stellium.visualization.dial.renderer import DialRenderer
 from stellium.visualization.themes import ChartTheme
 
+pytestmark = pytest.mark.slow
+
 # ============================================================================
 # FIXTURES
 # ============================================================================

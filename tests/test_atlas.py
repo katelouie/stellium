@@ -10,6 +10,8 @@ from stellium.core.models import ChartLocation
 from stellium.core.native import Native
 from stellium.visualization.atlas import AtlasBuilder, AtlasConfig, AtlasEntry
 
+pytestmark = pytest.mark.slow
+
 # =============================================================================
 # Test Fixtures
 # =============================================================================

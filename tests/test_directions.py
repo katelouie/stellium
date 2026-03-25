@@ -38,6 +38,8 @@ from stellium.engines.directions import (
     semi_arcs,
 )
 
+pytestmark = pytest.mark.slow
+
 # =============================================================================
 # SECTION 1: SPHERICAL MATH FUNCTION TESTS
 # =============================================================================

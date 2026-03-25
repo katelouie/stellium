@@ -19,6 +19,8 @@ from stellium.visualization.layers import (
     HeaderLayer,
 )
 
+pytestmark = pytest.mark.slow
+
 
 class TestHeaderLayerInit:
     """Tests for HeaderLayer initialization."""

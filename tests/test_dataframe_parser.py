@@ -12,6 +12,8 @@ from stellium.io.dataframe import (
 # Skip all tests if pandas is not available
 pd = pytest.importorskip("pandas")
 
+pytestmark = pytest.mark.slow
+
 
 class TestParseDataframe:
     """Tests for parse_dataframe function."""

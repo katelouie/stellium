@@ -22,6 +22,8 @@ from stellium.engines.releasing import (
     ZodiacalReleasingEngine,
 )
 
+pytestmark = pytest.mark.slow
+
 
 @pytest.fixture(scope="module")
 def einstein_natal():
