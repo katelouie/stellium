@@ -147,6 +147,22 @@ def test_traditional_calculator_initialization():
     assert calc.decans == "chaldean"
 
 
+def test_traditional_calculator_default_constructor():
+    """Regression: default constructor must work without arguments.
+
+    Previously the default was "chalean" (typo) which failed validation
+    against "chaldean". Fixed in issue #24.
+    """
+    calc = TraditionalDignityCalculator()
+    assert calc.decans == "chaldean"
+
+
+def test_modern_calculator_default_constructor():
+    """Regression: ModernDignityCalculator default constructor must also work."""
+    calc = ModernDignityCalculator()
+    assert calc.decans == "chaldean"
+
+
 def test_traditional_calculator_invalid_decans():
     """Test that invalid decan system raises ValueError."""
     with pytest.raises(ValueError, match="Decans must be either"):

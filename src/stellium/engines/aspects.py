@@ -50,6 +50,11 @@ def _angular_distance(long1: float, long2: float) -> float:
     return diff
 
 
+# Threshold for stationary detection (degrees/day).
+# A planet moving slower than this is effectively stationary.
+_STATIONARY_THRESHOLD = 0.005
+
+
 def _is_applying(
     obj1: CelestialPosition,
     obj2: CelestialPosition,
@@ -57,35 +62,46 @@ def _is_applying(
     current_distance: float,
 ) -> bool | None:
     """
-    Determine if aspect is applying or separating.
-    An aspect is "applying" if the planets are moving *toward*
-    the exact aspect angle.
+    Determine if aspect is applying or separating using relative velocity.
+
+    Uses the analytical approach: compares the relative angular velocity
+    of the two bodies against the aspect axis. This correctly handles the
+    0°/360° zodiac seam without numerical integration artifacts.
 
     Returns:
-        True if applying, False if separating, None if speed is unknown.
+        True if applying, False if separating,
+        None if speed is unavailable or either body is stationary.
     """
-    # Need speed data for both objects
-    if obj1.speed_longitude == 0 or obj2.speed_longitude == 0:
+    # Speed genuinely absent
+    if obj1.speed_longitude is None or obj2.speed_longitude is None:
         return None
 
-    # Use a 1-minute interval.
-    # This is (1 day / 24 hours / 60 minutes)
-    interval_fraction = 1.0 / (24.0 * 60.0)
+    # Either body is stationary — applying/separating is undefined
+    if abs(obj1.speed_longitude) < _STATIONARY_THRESHOLD:
+        return None
+    if abs(obj2.speed_longitude) < _STATIONARY_THRESHOLD:
+        return None
 
-    # Calculate where they'll be in one minute
-    future_long1 = (obj1.longitude + (obj1.speed_longitude * interval_fraction)) % 360
-    future_long2 = (obj2.longitude + (obj2.speed_longitude * interval_fraction)) % 360
-    future_distance = _angular_distance(future_long1, future_long2)
+    # Analytical approach: relative velocity tells us directly whether
+    # the angular distance is increasing or decreasing, without needing
+    # to compute future positions (which can fail at the 0°/360° seam).
+    #
+    # The signed angular distance from obj1 to obj2 (shortest arc):
+    delta = (obj2.longitude - obj1.longitude + 180) % 360 - 180
 
-    # Calculate the orb (distance from exactness) now and in one minute
-    current_orb = abs(current_distance - aspect_angle)
-    future_orb = abs(future_distance - aspect_angle)
+    # Relative velocity: how fast this delta is changing
+    relative_speed = obj2.speed_longitude - obj1.speed_longitude
 
-    # Applying = the future orb is smaller than the current orb
-    # This check is now safe from the "crossover" bug because
-    # the interval is too small to cross and return an equal
-    # absolute value.
-    return future_orb < current_orb
+    # If they're on the "positive side" of the aspect angle,
+    # applying means the gap is shrinking toward aspect_angle.
+    # If on the "negative side", applying means the gap is growing toward it.
+    current_orb = abs(abs(delta) - aspect_angle)
+
+    # A small perturbation using relative speed
+    perturbed_delta = delta + relative_speed * (1.0 / (24.0 * 60.0))
+    perturbed_orb = abs(abs(perturbed_delta) - aspect_angle)
+
+    return perturbed_orb < current_orb
 
 
 class ModernAspectEngine:

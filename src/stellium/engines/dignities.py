@@ -378,7 +378,7 @@ class TraditionalDignityCalculator:
         "Saturn",
     ]
 
-    def __init__(self, decans: str = "chalean") -> None:
+    def __init__(self, decans: str = "chaldean") -> None:
         """
         Initialize traditional dignity calculator.
 
@@ -682,7 +682,7 @@ class ModernDignityCalculator:
         "Pluto",
     ]
 
-    def __init__(self, decans: str = "chalean") -> None:
+    def __init__(self, decans: str = "chaldean") -> None:
         """
         Initialize modern dignity calculator.
 

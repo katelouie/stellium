@@ -152,14 +152,20 @@ def _calculate_span(planets: list[CelestialPosition]) -> float:
     if len(planets) < 2:
         return 0.0
 
-    # Already sorted, so first and last define the span
-    first = planets[0].longitude
-    last = planets[-1].longitude
+    # Correct approach: the span is 360° minus the largest gap between
+    # consecutive sorted planets. This handles the 0°/360° seam correctly.
+    # e.g., planets at 350°, 355°, 5°, 10° → largest gap is 340° (from 10° to 350°),
+    # so span = 360 - 340 = 20°. The naive (last - first) % 360 would give 340°.
+    longitudes = sorted(p.longitude for p in planets)
+    n = len(longitudes)
 
-    # Calculate span (handling 360° wrap)
-    span = (last - first) % 360
+    max_gap = 0.0
+    for i in range(n):
+        gap = (longitudes[(i + 1) % n] - longitudes[i]) % 360
+        if gap > max_gap:
+            max_gap = gap
 
-    return span
+    return 360.0 - max_gap
 
 
 def get_chart_shape_description(shape: ChartShape, metadata: dict) -> str:
