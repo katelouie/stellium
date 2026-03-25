@@ -42,6 +42,8 @@ docs/_build/
 # Internal docs
 docs/development/
 docs/planning/
+docs/archive/
+docs/DOCS_INDEX.md
 
 # Claude planning files
 .claude/

@@ -74,6 +74,25 @@ pytest --cov=src --cov-report=term-missing
 
 ---
 
+## Documentation Organization
+
+All project documentation lives under `docs/` with the following structure:
+
+- **`docs/planning/`** -- Future work, designs not yet started. Put new feature plans here.
+- **`docs/development/`** -- Active development guides, architecture references, implementation guides. Put technical references and in-progress implementation docs here.
+- **`docs/archive/`** -- Fully implemented plans, kept for historical reference. When a planning doc is fully implemented, move it here and add an `> **ARCHIVED**` notice at the top.
+- **`docs/`** (root) -- User-facing guides (visualization, reports, chart types, etc.)
+- **`claude_info/`** -- Research and analysis documents (competitive analysis, codebase audit, novel features)
+
+**Index:** See `docs/DOCS_INDEX.md` for a complete list of all documentation with descriptions and status.
+
+**When adding new docs:**
+- Planning a new feature? Create `docs/planning/YOUR_FEATURE.md`
+- Writing a dev guide or reference? Create `docs/development/YOUR_GUIDE.md`
+- Finished implementing a plan? Move it from `planning/` to `archive/` with an archive notice
+
+---
+
 ## Codebase Architecture
 
 Stellium is built on three foundational principles that enable extensibility, maintainability, and performance:
