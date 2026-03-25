@@ -471,8 +471,7 @@ class TransitListSection:
             "type": "text",
             "title": self.section_name,
             "subtitle": (
-                f"{self.start.strftime('%Y-%m-%d')} to "
-                f"{self.end.strftime('%Y-%m-%d')}"
+                f"{self.start.strftime('%Y-%m-%d')} to {self.end.strftime('%Y-%m-%d')}"
             ),
             "date_range": {
                 "start": self.start.strftime("%Y-%m-%d"),
@@ -631,8 +630,7 @@ class TransitGanttSection:
             "type": "svg",
             "title": self.section_name,
             "subtitle": (
-                f"{self.start.strftime('%Y-%m-%d')} to "
-                f"{self.end.strftime('%Y-%m-%d')}"
+                f"{self.start.strftime('%Y-%m-%d')} to {self.end.strftime('%Y-%m-%d')}"
             ),
             "content": svg_content,
             "width": self.width,

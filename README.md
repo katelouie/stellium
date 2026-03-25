@@ -65,10 +65,11 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 **Vedic:**
 
 - **Both tropical and sidereal zodiacs** with 9 ayanamsa systems for Vedic astrology
+- **North Indian and South Indian chart rendering** — traditional Vedic/Jyotish chart formats with 3 themes, 4 label styles, degree display, and full native info
 
 **Chinese:**
 
-- **[WIP]** Ba Zi system with Ten Gods and Hidden Stems
+- Ba Zi system with Ten Gods and Hidden Stems
 
 ### Visual Chart Example
 
@@ -82,6 +83,11 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 ### Report Sample Pages
 
 ![Einstein Report Sample Pages](images/report_sample_pages_1_2.png)
+
+### Vedic Charts (North Indian & South Indian)
+
+![North Indian Chart](images/vedic_north_indian_classic.svg)
+![South Indian Chart](images/vedic_south_indian_classic.svg)
 
 ### Transit Timeline (Gantt Chart)
 

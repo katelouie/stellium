@@ -20,6 +20,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Transit Gantt legend**: aspect color swatches, tick mark explanation ("Exact date"), and arrow indicator ("Extends beyond window").
 - **Transit Gantt bar clamping**: bars that extend before/after the chart window are now clipped to the chart area with subtle arrow indicators instead of overflowing into labels.
 - **Transit timeline feature** listed in README feature list.
+- **Vedic chart rendering** (`visualization/vedic/`): North Indian (diamond) and South Indian (grid) chart styles.
+  - `NorthIndianRenderer`: square frame with inner diamond + X diagonals, 12 triangular fixed houses, signs rotate based on ASC.
+  - `SouthIndianRenderer`: 4×4 grid with fixed sign positions, planets placed by sign, house numbers relative to ASC.
+  - 3 themes: classic (white), dark (navy), traditional (saffron/parchment).
+  - 4 label styles: abbreviation (Ari, Su), number (traditional North Indian sign numbers), glyph (Unicode symbols), full (spelled out).
+  - Degree + minutes display, retrograde markers, full native info (name, date/time, location).
+  - Both renderers share themes, abbreviations, and glyph font stack — no duplication.
+- **Vedic cookbook** (`examples/vedic_cookbook.py`): 7 examples covering both styles, themes, label styles, custom charts, ayanamsa comparison, and README image generation.
+- **Vedic chart images** added to README.
 
 ### Changed
 
