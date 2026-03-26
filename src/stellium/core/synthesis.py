@@ -258,6 +258,85 @@ class SynthesisChart(CalculatedChart):
     location_method: str | None = None
     """Davison only: "simple" or "great_circle" """
 
+    def _section_info(self, lines: list[str]) -> None:
+        """Override to include synthesis metadata in the header."""
+        method_label = (
+            self.synthesis_method.title() if self.synthesis_method else "Synthesis"
+        )
+        lines.append(
+            f"# {method_label} Chart: {self.chart1_label} + {self.chart2_label}"
+        )
+        lines.append("")
+        lines.append(f"*Method: {self.synthesis_method}*")
+
+        if self.synthesis_method == "composite" and self.midpoint_method:
+            lines.append(f"*Midpoint method: {self.midpoint_method}*")
+        if self.synthesis_method == "davison" and self.location_method:
+            lines.append(f"*Location method: {self.location_method}*")
+
+        # Datetime / location of the synthesis chart itself
+        if self.datetime:
+            if self.datetime.local_datetime:
+                dt_str = self.datetime.local_datetime.strftime("%B %d, %Y at %I:%M %p")
+            else:
+                dt_str = self.datetime.utc_datetime.strftime("%B %d, %Y at %H:%M UTC")
+            lines.append(f"*Synthesis date: {dt_str}*")
+
+        if self.location:
+            loc_name = getattr(self.location, "name", None)
+            if loc_name:
+                lines.append(f"*Location: {loc_name}*")
+
+        lines.append("")
+
+    def to_prompt_text(
+        self,
+        sections: set[str] | None = None,
+        include_extras: bool = True,
+        include_source_charts: bool = False,
+    ) -> str:
+        """
+        Export synthesis chart as prompt text.
+
+        Args:
+            sections: Section names to include (None = all available).
+            include_extras: Pick up unknown/future component data (default True).
+            include_source_charts: If True, also include the full prompt
+                text of both source charts for reference.
+
+        Returns:
+            A multi-line string ready to paste into an LLM prompt.
+        """
+        text = super().to_prompt_text(sections=sections, include_extras=include_extras)
+
+        if include_source_charts:
+            parts = [text]
+            if self.source_chart1:
+                parts.append("")
+                parts.append("---")
+                parts.append(f"## Source: {self.chart1_label}")
+                parts.append("")
+                parts.append(
+                    self.source_chart1.to_prompt_text(
+                        sections=sections,
+                        include_extras=include_extras,
+                    )
+                )
+            if self.source_chart2:
+                parts.append("")
+                parts.append("---")
+                parts.append(f"## Source: {self.chart2_label}")
+                parts.append("")
+                parts.append(
+                    self.source_chart2.to_prompt_text(
+                        sections=sections,
+                        include_extras=include_extras,
+                    )
+                )
+            text = "\n".join(parts)
+
+        return text
+
     def to_dict(self) -> dict[str, Any]:
         """Extend parent's to_dict with synthesis-specific fields."""
         base_dict = super().to_dict()

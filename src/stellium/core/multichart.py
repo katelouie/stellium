@@ -349,6 +349,106 @@ class MultiChart:
 
         return ChartDrawBuilder(self).with_filename(filename)
 
+    # ===== Prompt Text =====
+
+    def to_prompt_text(
+        self,
+        sections: set[str] | None = None,
+        include_extras: bool = True,
+    ) -> str:
+        """
+        Export multi-chart data as clean, human-readable text for LLM prompts.
+
+        Shows each chart clearly labeled, followed by cross-chart aspects
+        and house overlays.
+
+        Args:
+            sections: Passed through to each individual chart's
+                ``to_prompt_text`` call. ``None`` means all sections.
+            include_extras: Passed through to each chart. When True,
+                picks up data from unknown/future components.
+
+        Returns:
+            A multi-line string ready to paste into an LLM prompt.
+        """
+        lines: list[str] = []
+
+        # Header
+        rel_labels: list[str] = []
+        for (i, j), rel in self.relationships.items():
+            rel_labels.append(f"{self.labels[i]} / {self.labels[j]}: {rel.value}")
+        if rel_labels:
+            lines.append(f"# Multi-Chart ({', '.join(rel_labels)})")
+        else:
+            lines.append(f"# Multi-Chart ({self.chart_count} charts)")
+        lines.append("")
+
+        # Each chart
+        for idx, chart in enumerate(self.charts):
+            label = self.labels[idx] if idx < len(self.labels) else f"Chart {idx + 1}"
+            lines.append("---")
+            lines.append(f"## {label}")
+            lines.append("")
+            lines.append(
+                chart.to_prompt_text(sections=sections, include_extras=include_extras)
+            )
+            lines.append("")
+
+        # Cross-chart aspects
+        show_aspects = sections is None or "aspects" in sections
+        if show_aspects and self.cross_aspects:
+            lines.append("---")
+            lines.append("## Cross-Chart Aspects")
+            lines.append("")
+            for (i, j), aspects in self.cross_aspects.items():
+                label_i = self.labels[i] if i < len(self.labels) else f"Chart {i + 1}"
+                label_j = self.labels[j] if j < len(self.labels) else f"Chart {j + 1}"
+                if aspects:
+                    lines.append(f"### {label_i} / {label_j}")
+                    lines.append("")
+                    for asp in aspects:
+                        orb = f"{asp.orb:.1f}\u00b0"
+                        if asp.is_applying is True:
+                            state = " (applying)"
+                        elif asp.is_applying is False:
+                            state = " (separating)"
+                        else:
+                            state = ""
+                        lines.append(
+                            f"- [{label_i}] {asp.object1.name} "
+                            f"{asp.aspect_name} "
+                            f"[{label_j}] {asp.object2.name} "
+                            f"\u2014 orb {orb}{state}"
+                        )
+                    lines.append("")
+
+        # House overlays
+        if self.house_overlays:
+            lines.append("---")
+            lines.append("## House Overlays")
+            lines.append("")
+            for (planet_chart, house_chart), overlays in self.house_overlays.items():
+                label_p = (
+                    self.labels[planet_chart]
+                    if planet_chart < len(self.labels)
+                    else f"Chart {planet_chart + 1}"
+                )
+                label_h = (
+                    self.labels[house_chart]
+                    if house_chart < len(self.labels)
+                    else f"Chart {house_chart + 1}"
+                )
+                if overlays:
+                    lines.append(f"### {label_p}'s planets in {label_h}'s houses")
+                    lines.append("")
+                    for overlay in overlays:
+                        lines.append(
+                            f"- {overlay.planet_name} in House {overlay.falls_in_house}"
+                        )
+                    lines.append("")
+
+        return "\n".join(lines)
+
     # ===== Serialization =====
 
     def to_dict(self) -> dict[str, Any]:

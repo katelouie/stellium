@@ -1353,6 +1353,659 @@ class CalculatedChart:
 
         return DialDrawBuilder(self, filename=filename, dial_degrees=degrees)
 
+    # ── Prompt-text helper utilities ──
+
+    @staticmethod
+    def _display_name(name: str) -> str:
+        """Get the user-friendly display name for a celestial object.
+
+        Uses the CELESTIAL_REGISTRY to map internal names to friendly names,
+        e.g., 'Mean Apogee' → 'Black Moon Lilith', 'True Node' → 'North Node'.
+        Falls back to the internal name if not found in the registry.
+        """
+        from stellium.core.registry import get_object_info
+
+        info = get_object_info(name)
+        if info and info.display_name:
+            return info.display_name
+        return name
+
+    @staticmethod
+    def _fmt_deg(longitude: float) -> str:
+        """Format a longitude into sign degree-minutes string."""
+        deg = int(longitude % 30)
+        mins = int(((longitude % 30) - deg) * 60)
+        return f"{deg}\u00b0{mins:02d}'"
+
+    @staticmethod
+    def _fmt_aspect(aspect: "Aspect") -> str:
+        """Format a single aspect line with display names."""
+        from stellium.core.registry import get_object_info
+
+        def _dn(name: str) -> str:
+            info = get_object_info(name)
+            return info.display_name if info and info.display_name else name
+
+        orb = f"{aspect.orb:.1f}\u00b0"
+        if aspect.is_applying is True:
+            state = " (applying)"
+        elif aspect.is_applying is False:
+            state = " (separating)"
+        else:
+            state = ""
+        return (
+            f"- {_dn(aspect.object1.name)} {aspect.aspect_name} "
+            f"{_dn(aspect.object2.name)} \u2014 orb {orb}{state}"
+        )
+
+    @staticmethod
+    def _fmt_position(
+        pos: "CelestialPosition",
+        house_placements: dict[str, dict[str, int]] | None = None,
+    ) -> str:
+        """Format a single position line with optional multi-system house info."""
+        deg = int(pos.longitude % 30)
+        mins = int(((pos.longitude % 30) - deg) * 60)
+        retro = " (R)" if pos.speed_longitude and pos.speed_longitude < 0 else ""
+
+        # Collect house numbers across all systems
+        # Use display name
+        from stellium.core.registry import get_object_info as _goi
+
+        _info = _goi(pos.name)
+        display = _info.display_name if _info and _info.display_name else pos.name
+
+        house_parts: list[str] = []
+        if house_placements:
+            systems = list(house_placements.keys())
+            if len(systems) == 1:
+                h = house_placements[systems[0]].get(pos.name)
+                if h:
+                    house_parts.append(f"House {h}")
+            else:
+                for sys_name in systems:
+                    h = house_placements[sys_name].get(pos.name)
+                    if h:
+                        house_parts.append(f"{sys_name} H{h}")
+
+        house_str = f", {', '.join(house_parts)}" if house_parts else ""
+
+        # Declination info
+        decl_str = ""
+        if pos.declination is not None:
+            direction = "N" if pos.declination >= 0 else "S"
+            decl_str = f", decl {abs(pos.declination):.2f}\u00b0{direction}"
+            if pos.is_out_of_bounds:
+                decl_str += " (OOB)"
+
+        return (
+            f"- **{display}**: {pos.sign} {deg}\u00b0{mins:02d}'{retro}"
+            f"{house_str}{decl_str}"
+        )
+
+    # ── Main to_prompt_text method ──
+
+    _ALL_SECTIONS = frozenset(
+        {
+            "info",
+            "positions",
+            "angles",
+            "houses",
+            "aspects",
+            "declination_aspects",
+            "arabic_parts",
+            "midpoints",
+            "fixed_stars",
+            "dignities",
+            "antiscia",
+            "patterns",
+            "nodes",
+            "points",
+            "extras",
+        }
+    )
+
+    def to_prompt_text(
+        self,
+        sections: set[str] | None = None,
+        include_extras: bool = True,
+    ) -> str:
+        """
+        Export chart data as clean, human-readable text suitable for LLM prompts.
+
+        Produces a structured markdown-style summary of the chart including
+        planetary positions, house cusps, aspects, declination aspects, and
+        any component results (Arabic Parts, midpoints, fixed stars, dignities,
+        antiscia, aspect patterns, etc.).
+
+        Args:
+            sections: Set of section names to include. When ``None``
+                (the default), every section that has data is included.
+                Valid names: "info", "positions", "angles", "houses",
+                "aspects", "declination_aspects", "arabic_parts",
+                "midpoints", "fixed_stars", "dignities", "antiscia",
+                "patterns", "nodes", "points", "extras".
+            include_extras: When True (default), automatically picks up
+                data from unknown/future components that aren't handled
+                by a dedicated section. Set to False to only show data
+                from known, explicitly-supported sections.
+
+        Returns:
+            A multi-line string ready to paste into an LLM prompt.
+
+        Example::
+
+            text = chart.to_prompt_text()
+            prompt = f"Interpret this birth chart:\\n\\n{text}"
+
+            # Only specific sections
+            text = chart.to_prompt_text(sections={"info", "positions", "aspects"})
+        """
+        if sections is None:
+            sections = set(self._ALL_SECTIONS)
+        if not include_extras:
+            sections = sections - {"extras"}
+
+        lines: list[str] = []
+
+        # ── Native info ──
+        if "info" in sections:
+            self._section_info(lines)
+
+        # ── Chart tags / zodiac type ──
+        if "info" in sections:
+            self._section_chart_tags(lines)
+
+        # ── Planetary positions ──
+        if "positions" in sections:
+            self._section_positions(lines)
+
+        # ── Nodes ──
+        if "nodes" in sections:
+            self._section_nodes(lines)
+
+        # ── Points (Vertex, Lilith, etc.) ──
+        if "points" in sections:
+            self._section_points(lines)
+
+        # ── Angles ──
+        if "angles" in sections:
+            self._section_angles(lines)
+
+        # ── House cusps ──
+        if "houses" in sections:
+            self._section_houses(lines)
+
+        # ── Aspects ──
+        if "aspects" in sections:
+            self._section_aspects(lines)
+
+        # ── Declination aspects ──
+        if "declination_aspects" in sections:
+            self._section_declination_aspects(lines)
+
+        # ── Aspect patterns ──
+        if "patterns" in sections:
+            self._section_patterns(lines)
+
+        # ── Arabic Parts ──
+        if "arabic_parts" in sections:
+            self._section_arabic_parts(lines)
+
+        # ── Midpoints ──
+        if "midpoints" in sections:
+            self._section_midpoints(lines)
+
+        # ── Fixed Stars ──
+        if "fixed_stars" in sections:
+            self._section_fixed_stars(lines)
+
+        # ── Dignities ──
+        if "dignities" in sections:
+            self._section_dignities(lines)
+
+        # ── Antiscia ──
+        if "antiscia" in sections:
+            self._section_antiscia(lines)
+
+        # ── Catch-all: unknown position types and metadata ──
+        # Future-proofs the output: any new component that adds positions
+        # with a new ObjectType, or data to metadata, will be picked up
+        # automatically rather than silently dropped.
+        if "extras" in sections or sections == set(self._ALL_SECTIONS):
+            self._section_extras(lines)
+
+        return "\n".join(lines)
+
+    # ── Section helpers (each appends to *lines* in-place) ──
+
+    def _section_info(self, lines: list[str]) -> None:
+        """Append native/chart info header."""
+        name = self.metadata.get("name") if self.metadata else None
+        if name:
+            lines.append(f"# {name}")
+
+        if self.datetime:
+            if self.datetime.local_datetime:
+                dt_str = self.datetime.local_datetime.strftime("%B %d, %Y at %I:%M %p")
+            else:
+                dt_str = self.datetime.utc_datetime.strftime("%B %d, %Y at %H:%M UTC")
+            lines.append(f"**Date:** {dt_str}")
+
+        if self.location:
+            loc_name = getattr(self.location, "name", None)
+            if loc_name:
+                lines.append(f"**Location:** {loc_name}")
+            lines.append(
+                f"**Coordinates:** {self.location.latitude:.4f}, "
+                f"{self.location.longitude:.4f}"
+            )
+
+        lines.append("")
+
+    def _section_chart_tags(self, lines: list[str]) -> None:
+        """Append zodiac type, ayanamsa, and chart tags."""
+        tags: list[str] = []
+        if self.zodiac_type is not None:
+            tags.append(
+                f"Zodiac: {self.zodiac_type.value if hasattr(self.zodiac_type, 'value') else self.zodiac_type}"
+            )
+        if self.ayanamsa:
+            val = (
+                f" ({self.ayanamsa_value:.4f}\u00b0)"
+                if self.ayanamsa_value is not None
+                else ""
+            )
+            tags.append(f"Ayanamsa: {self.ayanamsa}{val}")
+        if self.house_systems:
+            tags.append(f"House system(s): {', '.join(self.house_systems.keys())}")
+        if self.chart_tags:
+            tags.append(f"Tags: {', '.join(self.chart_tags)}")
+        if tags:
+            for t in tags:
+                lines.append(f"*{t}*")
+            lines.append("")
+
+    def _section_positions(self, lines: list[str]) -> None:
+        """Append planetary positions section."""
+        planets = self.get_planets()
+        if not planets:
+            return
+        lines.append("## Planetary Positions")
+        lines.append("")
+        hp = self.house_placements if self.house_placements else None
+        for pos in planets:
+            lines.append(self._fmt_position(pos, hp))
+        lines.append("")
+
+    def _section_nodes(self, lines: list[str]) -> None:
+        """Append lunar/planetary nodes section."""
+        nodes = self.get_nodes()
+        if not nodes:
+            return
+        lines.append("## Nodes")
+        lines.append("")
+        hp = self.house_placements if self.house_placements else None
+        for pos in nodes:
+            lines.append(self._fmt_position(pos, hp))
+        lines.append("")
+
+    def _section_points(self, lines: list[str]) -> None:
+        """Append calculated points (Vertex, Lilith, etc.)."""
+        points = self.get_points()
+        if not points:
+            return
+        lines.append("## Points")
+        lines.append("")
+        hp = self.house_placements if self.house_placements else None
+        for pos in points:
+            lines.append(self._fmt_position(pos, hp))
+        lines.append("")
+
+    def _section_angles(self, lines: list[str]) -> None:
+        """Append angles section."""
+        angles = self.get_angles()
+        if not angles:
+            return
+        lines.append("## Angles")
+        lines.append("")
+        for pos in angles:
+            lines.append(
+                f"- **{self._display_name(pos.name)}**: {pos.sign} {self._fmt_deg(pos.longitude)}"
+            )
+        lines.append("")
+
+    def _section_houses(self, lines: list[str]) -> None:
+        """Append house cusps for each house system."""
+        if not self.house_systems:
+            return
+        lines.append("## House Cusps")
+        lines.append("")
+        for sys_name, cusps in self.house_systems.items():
+            if len(self.house_systems) > 1:
+                lines.append(f"### {sys_name}")
+                lines.append("")
+            for i in range(12):
+                sign, sign_deg = longitude_to_sign_and_degree(cusps.cusps[i])
+                deg = int(sign_deg)
+                mins = int((sign_deg - deg) * 60)
+                lines.append(f"- House {i + 1}: {sign} {deg}\u00b0{mins:02d}'")
+            lines.append("")
+
+    def _section_aspects(self, lines: list[str]) -> None:
+        """Append aspects section."""
+        if not self.aspects:
+            return
+        lines.append("## Aspects")
+        lines.append("")
+        for aspect in self.aspects:
+            lines.append(self._fmt_aspect(aspect))
+        lines.append("")
+
+    def _section_declination_aspects(self, lines: list[str]) -> None:
+        """Append declination aspects (parallels / contraparallels)."""
+        if not self.declination_aspects:
+            return
+        lines.append("## Declination Aspects")
+        lines.append("")
+        for aspect in self.declination_aspects:
+            lines.append(self._fmt_aspect(aspect))
+        lines.append("")
+
+    def _section_patterns(self, lines: list[str]) -> None:
+        """Append aspect patterns (Grand Trine, T-Square, etc.)."""
+        patterns = self.metadata.get("aspect_patterns") if self.metadata else None
+        if not patterns:
+            return
+        lines.append("## Aspect Patterns")
+        lines.append("")
+        for pat in patterns:
+            planet_names = ", ".join(
+                p.name if hasattr(p, "name") else str(p) for p in pat.planets
+            )
+            extra = ""
+            if pat.element:
+                extra += f" [{pat.element}]"
+            if pat.quality:
+                extra += f" [{pat.quality}]"
+            focal = pat.focal_planet
+            if focal:
+                extra += f" (focal: {focal.name})"
+            lines.append(f"- **{pat.name}**: {planet_names}{extra}")
+        lines.append("")
+
+    def _section_arabic_parts(self, lines: list[str]) -> None:
+        """Append Arabic Parts / Lots from positions."""
+        parts = [p for p in self.positions if p.object_type == ObjectType.ARABIC_PART]
+        if not parts:
+            return
+        lines.append("## Arabic Parts")
+        lines.append("")
+        hp = self.house_placements if self.house_placements else None
+        for pos in parts:
+            lines.append(self._fmt_position(pos, hp))
+        lines.append("")
+
+    def _section_midpoints(self, lines: list[str]) -> None:
+        """Append midpoint positions."""
+        midpoints = [p for p in self.positions if p.object_type == ObjectType.MIDPOINT]
+        if not midpoints:
+            return
+        lines.append("## Midpoints")
+        lines.append("")
+        for pos in midpoints:
+            deg = int(pos.longitude % 30)
+            mins = int(((pos.longitude % 30) - deg) * 60)
+            indirect = ""
+            if hasattr(pos, "is_indirect") and pos.is_indirect:
+                indirect = " (indirect)"
+            lines.append(
+                f"- **{self._display_name(pos.name)}**: {pos.sign} {deg}\u00b0{mins:02d}'"
+                f"{indirect}"
+            )
+        lines.append("")
+
+    def _section_fixed_stars(self, lines: list[str]) -> None:
+        """Append fixed star positions."""
+        stars = [p for p in self.positions if p.object_type == ObjectType.FIXED_STAR]
+        if not stars:
+            return
+        lines.append("## Fixed Stars")
+        lines.append("")
+        for pos in stars:
+            deg = int(pos.longitude % 30)
+            mins = int(((pos.longitude % 30) - deg) * 60)
+            extra_parts: list[str] = []
+            if hasattr(pos, "magnitude") and pos.magnitude:
+                extra_parts.append(f"mag {pos.magnitude:.1f}")
+            if hasattr(pos, "nature") and pos.nature:
+                extra_parts.append(f"nature: {pos.nature}")
+            if hasattr(pos, "constellation") and pos.constellation:
+                extra_parts.append(pos.constellation)
+            if hasattr(pos, "is_royal") and pos.is_royal:
+                extra_parts.append("Royal Star")
+            extra = f" ({', '.join(extra_parts)})" if extra_parts else ""
+            lines.append(
+                f"- **{self._display_name(pos.name)}**: {pos.sign} {deg}\u00b0{mins:02d}'"
+                f"{extra}"
+            )
+        lines.append("")
+
+    def _section_dignities(self, lines: list[str]) -> None:
+        """Append essential and accidental dignities."""
+        dignity_data = self.metadata.get("dignities") if self.metadata else None
+        accidental_data = (
+            self.metadata.get("accidental_dignities") if self.metadata else None
+        )
+        if not dignity_data and not accidental_data:
+            return
+
+        lines.append("## Dignities")
+        lines.append("")
+
+        # Essential dignities
+        if dignity_data:
+            planet_dignities = dignity_data.get("planet_dignities", {})
+            if planet_dignities:
+                lines.append("### Essential Dignities")
+                lines.append("")
+                for planet_name, data in planet_dignities.items():
+                    parts: list[str] = [f"**{planet_name}**"]
+                    for system in ("traditional", "modern"):
+                        sys_data = data.get(system)
+                        if not sys_data:
+                            continue
+                        dignity_type = sys_data.get("dignity", "")
+                        if dignity_type:
+                            label = f"({system})" if len(data) > 2 else ""
+                            parts.append(f"{dignity_type} {label}".strip())
+                    if len(parts) > 1:
+                        lines.append(f"- {': '.join(parts)}")
+                lines.append("")
+
+            # Mutual receptions
+            receptions = dignity_data.get("mutual_receptions", {})
+            for system, recs in receptions.items():
+                if recs:
+                    lines.append(f"### Mutual Receptions ({system})")
+                    lines.append("")
+                    for rec in recs:
+                        if isinstance(rec, dict):
+                            p1 = rec.get("planet1", "?")
+                            p2 = rec.get("planet2", "?")
+                            rtype = rec.get("type", "")
+                            lines.append(f"- {p1} <-> {p2} ({rtype})")
+                        else:
+                            lines.append(f"- {rec}")
+                    lines.append("")
+
+        # Accidental dignities
+        if accidental_data:
+            lines.append("### Accidental Dignities")
+            lines.append("")
+            for planet_name, data in accidental_data.items():
+                conditions: list[str] = []
+                universal = data.get("universal", {})
+                if isinstance(universal, dict):
+                    for cond_name, cond_val in universal.items():
+                        if cond_val:
+                            conditions.append(cond_name)
+                by_system = data.get("by_system", {})
+                for sys_name, sys_conds in by_system.items():
+                    if isinstance(sys_conds, dict):
+                        for cond_name, cond_val in sys_conds.items():
+                            if cond_val:
+                                conditions.append(f"{cond_name} ({sys_name})")
+                if conditions:
+                    lines.append(f"- **{planet_name}**: {', '.join(conditions)}")
+            lines.append("")
+
+    def _section_antiscia(self, lines: list[str]) -> None:
+        """Append antiscia / contra-antiscia data."""
+        antiscia_data = self.metadata.get("antiscia") if self.metadata else None
+        if not antiscia_data:
+            return
+
+        # Antiscia points are in positions
+        antiscia_positions = [
+            p
+            for p in self.positions
+            if p.object_type in (ObjectType.ANTISCION, ObjectType.CONTRA_ANTISCION)
+        ]
+        conjunctions = antiscia_data.get("conjunctions", [])
+        contra_conjunctions = antiscia_data.get("contra_conjunctions", [])
+
+        if not antiscia_positions and not conjunctions and not contra_conjunctions:
+            return
+
+        lines.append("## Antiscia")
+        lines.append("")
+
+        if antiscia_positions:
+            for pos in antiscia_positions:
+                label = (
+                    "Antiscion"
+                    if pos.object_type == ObjectType.ANTISCION
+                    else "Contra-antiscion"
+                )
+                deg = int(pos.longitude % 30)
+                mins = int(((pos.longitude % 30) - deg) * 60)
+                lines.append(
+                    f"- {label} of **{self._display_name(pos.name)}**: {pos.sign} "
+                    f"{deg}\u00b0{mins:02d}'"
+                )
+
+        if conjunctions:
+            lines.append("")
+            lines.append("**Antiscia conjunctions:**")
+            for conj in conjunctions:
+                if isinstance(conj, dict):
+                    p1 = conj.get("planet1", conj.get("object1", "?"))
+                    p2 = conj.get("planet2", conj.get("object2", "?"))
+                    orb = conj.get("orb", 0)
+                    lines.append(
+                        f"- {p1} antiscion conjunct {p2} (orb {orb:.1f}\u00b0)"
+                    )
+                else:
+                    lines.append(f"- {conj}")
+
+        if contra_conjunctions:
+            lines.append("")
+            lines.append("**Contra-antiscia conjunctions:**")
+            for conj in contra_conjunctions:
+                if isinstance(conj, dict):
+                    p1 = conj.get("planet1", conj.get("object1", "?"))
+                    p2 = conj.get("planet2", conj.get("object2", "?"))
+                    orb = conj.get("orb", 0)
+                    lines.append(
+                        f"- {p1} contra-antiscion conjunct {p2} (orb {orb:.1f}\u00b0)"
+                    )
+                else:
+                    lines.append(f"- {conj}")
+
+        lines.append("")
+
+    # Object types already handled by specific sections
+    _KNOWN_OBJECT_TYPES = {
+        ObjectType.PLANET,
+        ObjectType.ANGLE,
+        ObjectType.NODE,
+        ObjectType.POINT,
+        ObjectType.ARABIC_PART,
+        ObjectType.MIDPOINT,
+        ObjectType.FIXED_STAR,
+        ObjectType.ANTISCION,
+        ObjectType.CONTRA_ANTISCION,
+        ObjectType.TECHNICAL,
+    }
+
+    # Metadata keys already handled by specific sections
+    _KNOWN_METADATA_KEYS = {
+        "name",
+        "dignities",
+        "accidental_dignities",
+        "antiscia",
+        "aspect_patterns",
+        "zodiacal_releasing",
+    }
+
+    def _section_extras(self, lines: list[str]) -> None:
+        """Catch-all for data from unknown/future components.
+
+        Scans positions for ObjectTypes not handled by other sections,
+        and metadata for keys not handled by other sections. Renders
+        them generically so new components aren't silently dropped.
+        """
+        # ── Unknown position types ──
+        unknown_positions: dict[str, list] = {}
+        for pos in self.positions:
+            if pos.object_type not in self._KNOWN_OBJECT_TYPES:
+                type_name = (
+                    pos.object_type.value
+                    if hasattr(pos.object_type, "value")
+                    else str(pos.object_type)
+                )
+                unknown_positions.setdefault(type_name, []).append(pos)
+
+        for type_name, positions in unknown_positions.items():
+            header = type_name.replace("_", " ").title()
+            lines.append(f"## {header}")
+            lines.append("")
+            for pos in positions:
+                display = self._display_name(pos.name)
+                deg = int(pos.longitude % 30)
+                mins = int(((pos.longitude % 30) - deg) * 60)
+                lines.append(f"- **{display}**: {pos.sign} {deg}°{mins:02d}'")
+            lines.append("")
+
+        # ── Unknown metadata keys ──
+        if self.metadata:
+            unknown_meta = {
+                k: v
+                for k, v in self.metadata.items()
+                if k not in self._KNOWN_METADATA_KEYS
+            }
+            for key, value in unknown_meta.items():
+                header = key.replace("_", " ").title()
+                lines.append(f"## {header}")
+                lines.append("")
+                if isinstance(value, dict):
+                    for sub_key, sub_val in value.items():
+                        if isinstance(sub_val, str | int | float | bool):
+                            lines.append(f"- **{sub_key}**: {sub_val}")
+                        elif isinstance(sub_val, list):
+                            lines.append(
+                                f"- **{sub_key}**: {', '.join(str(x) for x in sub_val[:10])}"
+                            )
+                        else:
+                            lines.append(f"- **{sub_key}**: *(complex data)*")
+                elif isinstance(value, list):
+                    for item in value[:20]:
+                        lines.append(f"- {item}")
+                else:
+                    lines.append(f"{value}")
+                lines.append("")
+
     def to_dict(self) -> dict[str, Any]:
         """
         Serialize to dictionary for JSON export.
@@ -1673,6 +2326,50 @@ class UnknownTimeChart(CalculatedChart):
     def get_angles(self) -> list[CelestialPosition]:
         """Angles are not available for unknown time charts."""
         return []
+
+    def _section_info(self, lines: list[str]) -> None:
+        """Override to note unknown birth time and show Moon range."""
+        name = self.metadata.get("name") if self.metadata else None
+        if name:
+            lines.append(f"# {name}")
+
+        lines.append("**Time Unknown** (positions calculated for noon)")
+        lines.append("")
+
+        if self.datetime:
+            dt_str = self.datetime.utc_datetime.strftime("%B %d, %Y")
+            lines.append(f"**Date:** {dt_str}")
+
+        if self.location:
+            loc_name = getattr(self.location, "name", None)
+            if loc_name:
+                lines.append(f"**Location:** {loc_name}")
+            lines.append(
+                f"**Coordinates:** {self.location.latitude:.4f}, "
+                f"{self.location.longitude:.4f}"
+            )
+
+        # Moon range
+        lines.append("")
+        lines.append(f"**Moon range:** {self.moon_range}")
+        lines.append("")
+
+    def to_prompt_text(
+        self,
+        sections: set[str] | None = None,
+        include_extras: bool = True,
+    ) -> str:
+        """
+        Export unknown-time chart as prompt text.
+
+        Automatically excludes houses and angles sections since they are
+        not available without a birth time.
+        """
+        if sections is None:
+            sections = set(self._ALL_SECTIONS)
+        # Remove sections that require birth time
+        sections = sections - {"houses", "angles"}
+        return super().to_prompt_text(sections=sections, include_extras=include_extras)
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize to dictionary, including moon_range."""
