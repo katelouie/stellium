@@ -30,6 +30,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Integrated with main chart rendering engine via convenience method `.draw_vedic()`.
 - **Vedic cookbook** (`examples/vedic_cookbook.py`): 7 examples covering both styles, themes, label styles, custom charts, ayanamsa comparison, and README image generation.
 - **Vedic chart images** added to README.
+- **`draw_vedic()` convenience method** on CalculatedChart: one-liner Vedic chart generation with chaining support (`chart.draw_vedic("north.svg").draw_vedic("south.svg", style="south_indian")`).
+- **Prompt-friendly text export** (`chart.to_prompt_text()`): generates clean, human-readable markdown from any chart — ready to paste into LLM prompts.
+  - All chart types: single, multi-chart (synastry/transits), synthesis (composite/davison), unknown-time.
+  - Planetary positions with sign, degree+minutes, house, declination, OOB flag, retrograde marker.
+  - Component results: Arabic Parts, midpoints, fixed stars, dignities, antiscia, aspect patterns.
+  - Multi-house-system support: per-planet placements + per-system cusp listings.
+  - Display name resolution via CELESTIAL_REGISTRY ("Mean Apogee" → "Black Moon Lilith").
+  - `sections` parameter for selective output. `include_extras` catch-all for future components.
+  - Multi-chart: labeled charts, cross-chart aspects, house overlays.
+  - 39 tests across all chart types (`test_prompt_text.py`).
 
 ### Changed
 

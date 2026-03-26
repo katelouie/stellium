@@ -55,6 +55,7 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 - **Primary and Zodiacal directions** with 3D modeling and and distribution across bounds
 - **Draconic Charts and Void of Course Moon**
 - **Transit timeline analysis** - Calculate transit-to-natal aspect periods with orb entry/exit windows, retrograde multi-pass detection, plain-text list output, and SVG Gantt chart visualization
+- **Prompt-friendly text export** - `chart.to_prompt_text()` generates clean markdown from any chart type, ready for LLM prompts. Handles single charts, synastry, composites, unknown-time charts, multiple house systems, and all components
 - **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
 - **Antiscia and contra-antiscia** with a dedicated report section
