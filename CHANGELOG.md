@@ -9,6 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`get_component_result()` method** on `CalculatedChart`: unified accessor for component and analyzer results by name. Works with all storage patterns — position-based (Arabic Parts, Midpoints, Fixed Stars), metadata-based (Dignities, Accidental Dignities), dual-storage (Antiscia), and analyzers (Aspect Patterns, Zodiacal Releasing). Supports alias lookup by metadata key (e.g., `"dignities"` or `"Essential Dignities"`). Raises `KeyError` with helpful message listing available components. (GitHub issue #25)
+- **`available_components()` method** on `CalculatedChart`: returns sorted list of all component/analyzer names whose results are available on the chart.
+- **Component manifest** in `ChartBuilder.calculate()`: components and analyzers now self-describe their storage pattern at build time via `metadata["_component_manifest"]`. New components automatically work with `get_component_result()` without any changes to `CalculatedChart`.
+- **20 new tests** (`test_get_component_result.py`): covers all 4 storage patterns, metadata key alias lookup, discovery, error handling, user-reported scenario reproduction, and inheritance verification.
+
+### Changed
+
+### Fixed
+
+- **README `part.house` reference** in Arabic Parts example: `CelestialPosition` has no `.house` attribute — house placement depends on the house system and lives on the chart, not the position. Changed to `chart.get_house(part.name)`.
+
+## [0.16.0] - 2026-03-25
+
+### Added
+
 - **Comprehensive applying/separating tests** (`test_applying_separating.py`): 24 tests covering basic detection, stationary bodies, zodiac seam edge cases, retrograde motion, and angular distance helper.
 - **Chart shape tests** (`test_chart_shape.py`): 19 tests covering span calculation, 0°/360° seam regression, chart shape detection (Bundle, Bowl, Splash, Seesaw), and edge cases.
 - **Dignity default constructor tests**: regression tests ensuring `TraditionalDignityCalculator()` and `ModernDignityCalculator()` work without arguments.

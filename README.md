@@ -308,7 +308,7 @@ chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
 # Arabic Parts (automatically sect-aware)
 arabic_parts = chart.get_component_result("Arabic Parts")
 for part in arabic_parts:
-    print(f"{part.name:25} {part.longitude:6.2f}° {part.sign:12} House {part.house}")
+    print(f"{part.name:25} {part.longitude:6.2f}° {part.sign:12} House {chart.get_house(part.name)}")
 
 # Midpoints
 midpoints = chart.get_component_result("Midpoints")

@@ -931,6 +931,100 @@ class CalculatedChart:
         return dignity_data.get("sect")
 
     # =========================================================================
+    # Component Result Access
+    # =========================================================================
+
+    def get_component_result(
+        self, name: str
+    ) -> "list[CelestialPosition] | dict | list | None":
+        """
+        Get the result of a component or analyzer by name.
+
+        Works with any component added via .add_component() or analyzer
+        added via .add_analyzer() on ChartBuilder.
+
+        Args:
+            name: The component or analyzer name (e.g., "Arabic Parts",
+                  "Essential Dignities", "Aspect Patterns").
+                  Also accepts the metadata key as an alias (e.g., "dignities").
+
+        Returns:
+            - For position-based components: list of CelestialPosition objects
+            - For metadata-based components/analyzers: the stored dict or list
+            - For dual-storage components: dict with "positions" and "metadata" keys
+
+        Raises:
+            KeyError: If no component with that name was used. The error message
+                      lists all available component names.
+
+        Examples::
+
+            parts = chart.get_component_result("Arabic Parts")
+            dignities = chart.get_component_result("Essential Dignities")
+            patterns = chart.get_component_result("Aspect Patterns")
+            chart.available_components()
+        """
+        manifest = self.metadata.get("_component_manifest", {})
+
+        # Direct lookup by component/analyzer name
+        entry = manifest.get(name)
+
+        # Fallback: match by metadata_key alias
+        if entry is None:
+            for _comp_name, comp_entry in manifest.items():
+                if comp_entry.get("metadata_key") == name:
+                    entry = comp_entry
+                    break
+
+        if entry is None:
+            available = sorted(manifest.keys()) if manifest else []
+            available_str = (
+                ", ".join(f'"{n}"' for n in available) if available else "none"
+            )
+            raise KeyError(
+                f"No component or analyzer named '{name}' was used when "
+                f"building this chart. Available: {available_str}. "
+                f"Add components via ChartBuilder.add_component() or "
+                f".add_analyzer()."
+            )
+
+        source = entry["source"]
+
+        if source == "metadata":
+            return self.metadata.get(entry["metadata_key"])
+
+        if source == "positions":
+            target_types = set(entry["object_types"] or [])
+            return [p for p in self.positions if p.object_type.value in target_types]
+
+        if source == "both":
+            target_types = set(entry["object_types"] or [])
+            return {
+                "positions": [
+                    p for p in self.positions if p.object_type.value in target_types
+                ],
+                "metadata": self.metadata.get(entry["metadata_key"]),
+            }
+
+        return None
+
+    def available_components(self) -> list[str]:
+        """
+        List all components and analyzers whose results are available.
+
+        Returns:
+            Sorted list of component/analyzer names that can be passed to
+            get_component_result().
+
+        Examples::
+
+            chart.available_components()
+            # ['Arabic Parts', 'Aspect Patterns', 'Essential Dignities']
+        """
+        manifest = self.metadata.get("_component_manifest", {})
+        return sorted(manifest.keys())
+
+    # =========================================================================
     # Chart Transformations
     # =========================================================================
 

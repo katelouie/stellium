@@ -636,6 +636,7 @@ class ChartBuilder:
         # Step 5: Run additional components (Arabic parts, etc)
         # (Components can now see angles in the position list)
         component_metadata = {}
+        _component_manifest: dict = {}
 
         for component in self._components:
             additional = component.calculate(
@@ -660,6 +661,27 @@ class ChartBuilder:
             if hasattr(component, "get_metadata"):
                 metadata_key = component.metadata_name
                 component_metadata[metadata_key] = component.get_metadata()
+
+            # Record this component in the manifest
+            manifest_entry = {
+                "source": "positions",
+                "object_types": None,
+                "metadata_key": None,
+            }
+
+            if additional:
+                manifest_entry["object_types"] = sorted(
+                    {pos.object_type.value for pos in additional}
+                )
+
+            if hasattr(component, "get_metadata") and component.metadata_name:
+                manifest_entry["metadata_key"] = component.metadata_name
+                if additional:
+                    manifest_entry["source"] = "both"
+                else:
+                    manifest_entry["source"] = "metadata"
+
+            _component_manifest[component.component_name] = manifest_entry
 
         # Step 6: Calculate aspects (if engine provided)
         aspects = []
@@ -696,6 +718,14 @@ class ChartBuilder:
             final_metadata.update(self._extra_metadata)
         for analyzer in self._analyzers:
             final_metadata[analyzer.metadata_name] = analyzer.analyze(provisional_chart)
+            _component_manifest[analyzer.analyzer_name] = {
+                "source": "metadata",
+                "object_types": None,
+                "metadata_key": analyzer.metadata_name,
+            }
+
+        # Store the component manifest in metadata
+        final_metadata["_component_manifest"] = _component_manifest
 
         # Note: Cache stats removed from metadata for performance.
         # get_stats() was scanning 100k+ files on every calculate() call.
