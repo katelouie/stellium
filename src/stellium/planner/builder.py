@@ -103,7 +103,7 @@ class PlannerBuilder:
         self._station_planets: list[str] | None = None
 
         # Page layout
-        self._page_size: Literal["a4", "letter", "half-letter"] = "a4"
+        self._page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
         self._binding_margin = 0.0
         self._week_starts_on: Literal["sunday", "monday"] = "sunday"
 

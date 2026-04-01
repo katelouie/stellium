@@ -1334,7 +1334,7 @@ class ReportBuilder:
             >>> chart = (ChartBuilder.from_native(native)
             ...     .with_aspects()
             ...     .add_component(DignityComponent())
-            ...     .add_component(AspectPatternAnalyzer())
+            ...     .add_analyzer(AspectPatternAnalyzer())
             ...     .add_component(MidpointCalculator())
             ...     .add_component(FixedStarsComponent())
             ...     .add_analyzer(ZodiacalReleasingAnalyzer(["Part of Fortune", "Part of Spirit"]))

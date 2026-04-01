@@ -16,9 +16,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **`GraphicEphemeris.draw()` signature** now accepts `str | Path` for the filename parameter (was `str` only).
+- **`PlannerBuilder._page_size` type annotation** now includes `"a5"` to match the `page_size()` method and `PlannerConfig`.
+
 ### Fixed
 
 - **README `part.house` reference** in Arabic Parts example: `CelestialPosition` has no `.house` attribute — house placement depends on the house system and lives on the chart, not the position. Changed to `chart.get_house(part.name)`.
+- **Cookbook audit — 25 issues fixed across 13 cookbook files:**
+  - *Critical (C1-C5):* `cross_aspects` and `house_overlays` dict iteration crashes in `progressions_cookbook.py` and `arc_directions_cookbook.py` — replaced with `get_all_cross_aspects()` / `get_all_house_overlays()`. Fixed `save(str(path))` misuse in `arc_directions_cookbook.py` (11 locations) — moved filename into `draw()`.
+  - *Critical (C6-C8):* `"Full Moon"` → `"Full"` in `electional_cookbook.py`. `getattr(c, "patterns", [])` → `c.metadata.get("aspect_patterns", [])` in `analysis_cookbook.ipynb`. Arabic Parts metadata access → `get_object("Part of Fortune")` in `returns_cookbook.py`.
+  - *Critical (C3-C4):* `comparison_type` → `get_relationship()` and integer `planet_owner` comparison → string literals in `comparison_cookbook.py` and `progressions_cookbook.py`.
+  - *Moderate (M1-M10):* Added None-guards on `get_object()` calls (5 files), `local_datetime` None fallback, fixed planner comments, added `.with_zr_timeline()` to full planner, fixed transit label access, overlay comment, profection comment, quotidian metadata note, Typst dependency note, planetary hour UTC note.
+  - *Minor (m1-m7):* Fixed preset descriptions in chart notebook, EXTENDED_PLANETS comment, redundant `.with_aspects()` comments on ReturnBuilder, `to_dict()` key serialization note.
+- **`polymaths.yml` renamed to `polymaths.yaml`** so notable births registry glob (`*.yaml`) picks it up.
+- **`TraditionalAspectEngine` reference removed** from `engines/__init__.py` docstring (class doesn't exist; replaced with `HarmonicAspectEngine`).
+- **`add_component(AspectPatternAnalyzer())` → `add_analyzer()`** in `preset_full()` docstring in `presentation/builder.py`.
 
 ## [0.16.0] - 2026-03-25
 

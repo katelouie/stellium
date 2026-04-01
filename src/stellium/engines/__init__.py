@@ -3,7 +3,7 @@ Calculation engines for ephemeris, houses, aspects, orbs, dignities, and fixed s
 
 Common engines:
     >>> from stellium.engines import PlacidusHouses, WholeSignHouses
-    >>> from stellium.engines import ModernAspectEngine, TraditionalAspectEngine
+    >>> from stellium.engines import ModernAspectEngine, HarmonicAspectEngine
     >>> from stellium.engines import SimpleOrbEngine, LuminariesOrbEngine
     >>> from stellium.engines import SwissEphemerisFixedStarsEngine
 """

@@ -17,6 +17,7 @@ Example:
 
 from dataclasses import dataclass, field
 from datetime import date, datetime, timedelta
+from pathlib import Path
 from typing import TYPE_CHECKING, Literal
 
 import svgwrite
@@ -1181,7 +1182,7 @@ class GraphicEphemeris:
                 )
             )
 
-    def draw(self, filename: str = "ephemeris.svg") -> svgwrite.Drawing:
+    def draw(self, filename: str | Path = "ephemeris.svg") -> svgwrite.Drawing:
         """
         Render the graphic ephemeris to SVG.
 
