@@ -69,9 +69,8 @@ def example_1_solar_arc_by_age():
     print(
         f"Natal Moon: {natal.get_object('Moon').longitude:.2f}° {natal.get_object('Moon').sign}"
     )
-    print(
-        f"Natal MC: {natal.get_object('MC').longitude:.2f}° {natal.get_object('MC').sign}"
-    )
+    if mc := natal.get_object("MC"):
+        print(f"Natal MC: {mc.longitude:.2f}° {mc.sign}")
 
     # Calculate solar arc directions for age 26 (1905 - Einstein's "Miracle Year")
     directed = MultiChartBuilder.arc_direction(
@@ -94,15 +93,16 @@ def example_1_solar_arc_by_age():
     )
 
     # Show cross-aspects between directed and natal
-    print(f"\nDirected-to-Natal Aspects: {len(directed.cross_aspects)}")
-    for asp in sorted(directed.cross_aspects, key=lambda a: a.orb)[:5]:
+    cross = directed.get_all_cross_aspects()
+    print(f"\nDirected-to-Natal Aspects: {len(cross)}")
+    for asp in sorted(cross, key=lambda a: a.orb)[:5]:
         print(
             f"  D.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)"
         )
 
     # Save chart
     output_file = OUTPUT_DIR / "01_solar_arc_age26.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -142,7 +142,7 @@ def example_2_solar_arc_by_date():
 
     # Save chart
     output_file = OUTPUT_DIR / "02_solar_arc_date.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -188,7 +188,7 @@ def example_3_naibod_arc():
 
     # Save naibod chart
     output_file = OUTPUT_DIR / "03_naibod_arc.svg"
-    naibod.draw().with_header().save(str(output_file))
+    naibod.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -237,7 +237,7 @@ def example_4_lunar_arc():
 
     # Save lunar arc chart
     output_file = OUTPUT_DIR / "04_lunar_arc.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -265,8 +265,10 @@ def example_5_sect_arc():
     sun = einstein.get_object("Sun")
     asc = einstein.get_object("ASC")
     print("Einstein's Chart:")
-    print(f"  Sun: {sun.longitude:.2f}° {sun.sign}")
-    print(f"  ASC: {asc.longitude:.2f}° {asc.sign}")
+    if sun:
+        print(f"  Sun: {sun.longitude:.2f}° {sun.sign}")
+    if asc:
+        print(f"  ASC: {asc.longitude:.2f}° {asc.sign}")
 
     # Calculate sect-based arc
     directed = MultiChartBuilder.arc_direction(
@@ -287,7 +289,7 @@ def example_5_sect_arc():
 
     # Save chart
     output_file = OUTPUT_DIR / "05_sect_arc.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -316,8 +318,8 @@ def example_6_chart_ruler_arc_traditional():
 
     natal = ChartBuilder.from_notable("Steve Jobs").with_aspects().calculate()
 
-    asc = natal.get_object("ASC")
-    print(f"Ascendant: {asc.longitude:.2f}° {asc.sign}")
+    if asc := natal.get_object("ASC"):
+        print(f"Ascendant: {asc.longitude:.2f}° {asc.sign}")
 
     # Calculate chart ruler arc with traditional rulerships
     directed = MultiChartBuilder.arc_direction(
@@ -343,7 +345,7 @@ def example_6_chart_ruler_arc_traditional():
 
     # Save chart
     output_file = OUTPUT_DIR / "06_chart_ruler_traditional.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -360,8 +362,8 @@ def example_7_chart_ruler_arc_modern():
 
     natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-    asc = natal.get_object("ASC")
-    print(f"Einstein's Ascendant: {asc.longitude:.2f}° {asc.sign}")
+    if asc := natal.get_object("ASC"):
+        print(f"Einstein's Ascendant: {asc.longitude:.2f}° {asc.sign}")
 
     # Compare traditional vs modern chart ruler
     trad = MultiChartBuilder.arc_direction(
@@ -386,7 +388,7 @@ def example_7_chart_ruler_arc_modern():
 
     # Save chart
     output_file = OUTPUT_DIR / "07_chart_ruler_modern.svg"
-    modern.draw().with_header().save(str(output_file))
+    modern.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -429,7 +431,7 @@ def example_8_mars_arc():
 
     # Save chart
     output_file = OUTPUT_DIR / "08_mars_arc.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -454,7 +456,7 @@ def example_9_venus_arc():
 
     # Show directed Venus aspects to natal chart
     venus_aspects = [
-        asp for asp in directed.cross_aspects if asp.object2.name == "Venus"
+        asp for asp in directed.get_all_cross_aspects() if asp.object2.name == "Venus"
     ]
 
     print("\nDirected Venus aspects to natal chart:")
@@ -463,7 +465,7 @@ def example_9_venus_arc():
 
     # Save chart
     output_file = OUTPUT_DIR / "09_venus_arc.svg"
-    directed.draw().with_header().save(str(output_file))
+    directed.draw(str(output_file)).with_header().save()
     print(f"\nSaved: {output_file}")
 
 
@@ -537,7 +539,7 @@ def example_11_finding_exact_aspects():
             natal, age=age, arc_type="solar_arc"
         ).calculate()
 
-        for asp in directed.cross_aspects:
+        for asp in directed.get_all_cross_aspects():
             if asp.orb < 1.0:
                 tight_aspects.append((age, asp))
 
@@ -601,11 +603,11 @@ def example_13_styled_arc_chart():
     # Apply styling
     output_file = OUTPUT_DIR / "13_styled_arc.svg"
     (
-        directed.draw()
+        directed.draw(str(output_file))
         .with_header()
         .with_theme("celestial")
         .with_zodiac_palette("rainbow_celestial")
-        .save(str(output_file))
+        .save()
     )
 
     print(f"Styled arc direction chart saved: {output_file}")
@@ -628,10 +630,10 @@ def example_14_arc_with_tables():
     # Save with tables
     output_file = OUTPUT_DIR / "14_arc_with_tables.svg"
     (
-        directed.draw()
+        directed.draw(str(output_file))
         .with_header()
         .with_tables(position="right", show_position_table=True, show_aspectarian=True)
-        .save(str(output_file))
+        .save()
     )
 
     print(f"Arc chart with tables saved: {output_file}")

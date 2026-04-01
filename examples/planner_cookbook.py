@@ -78,8 +78,9 @@ def full_planner():
         .with_solar_return()
         .with_profections()
         .with_graphic_ephemeris(harmonic=90)  # 90° shows hard aspects as conjunctions
+        .with_zr_timeline()
         # Daily content - all planets
-        .include_natal_transits()  # Default: all planets + Node + Chiron
+        .include_natal_transits()  # Default: outer planets (Jupiter, Saturn, Uranus, Neptune, Pluto)
         .include_moon_phases()
         .include_voc(mode="traditional")
         .include_ingresses(["Sun", "Moon", "Mercury", "Venus", "Mars"])

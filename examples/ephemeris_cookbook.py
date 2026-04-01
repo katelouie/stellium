@@ -133,7 +133,7 @@ def example_with_chiron_and_node():
     """
     Include Chiron and North Node using EXTENDED_PLANETS.
 
-    EXTENDED_PLANETS = Sun through Pluto + Chiron + True Node
+    EXTENDED_PLANETS = Sun, Mercury through Pluto + Chiron + True Node (no Moon)
     """
     eph = GraphicEphemeris(
         start_date="2025-01-01",

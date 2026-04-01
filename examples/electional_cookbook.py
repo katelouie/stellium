@@ -366,10 +366,10 @@ def example_5_moon_phase():
     print_results(results, max_show=3)
 
     print("\n" + "-" * 50)
-    print("\nC) Finding specific phases (First Quarter or Full Moon):")
+    print("\nC) Finding specific phases (First Quarter or Full):")
     results = (
         ElectionalSearch(*MONTH_RANGE, DEFAULT_LOCATION)
-        .where(moon_phase(["First Quarter", "Full Moon"]))
+        .where(moon_phase(["First Quarter", "Full"]))
         .find_moments(max_results=3, step="4hour")
     )
     print_results(results, max_show=3)
@@ -1459,6 +1459,7 @@ def example_37_jupiter_hour_elections():
     if results:
         for m in results[:5]:
             moon = m.chart.get_object("Moon")
+            # Note: datetime is naive local time; for precise planetary hours, convert to UTC first
             hour = get_planetary_hour(
                 m.datetime,
                 DEFAULT_LOCATION.latitude,

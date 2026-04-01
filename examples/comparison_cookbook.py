@@ -158,18 +158,18 @@ def example_4_house_overlays():
         .calculate()
     )
 
-    # Get house overlays for the pair (0, 1)
-    house_overlays = synastry.house_overlays.get((0, 1), [])
+    # Get all house overlays
+    house_overlays = synastry.get_all_house_overlays()
     print(f"House overlays calculated: {len(house_overlays)}")
 
     print("\nBarack's planets in Michelle's houses:")
     for overlay in house_overlays:
-        if overlay.planet_owner == 0 and overlay.house_owner == 1:
+        if overlay.planet_owner == "chart1" and overlay.house_owner == "chart2":
             print(f"  {overlay.planet_name} in house {overlay.falls_in_house}")
 
     print("\nMichelle's planets in Barack's houses:")
     for overlay in house_overlays:
-        if overlay.planet_owner == 1 and overlay.house_owner == 0:
+        if overlay.planet_owner == "chart2" and overlay.house_owner == "chart1":
             print(f"  {overlay.planet_name} in house {overlay.falls_in_house}")
 
     output = OUTPUT_DIR / "04_house_overlays.svg"
@@ -412,7 +412,7 @@ def example_10_no_house_overlays():
     all_aspects = synastry.get_all_cross_aspects()
     print(f"Aspects calculated: {len(all_aspects)}")
     overlays = synastry.get_house_overlays(0, 1)
-    print(f"House overlays: {len(overlays)} (skipped)")
+    print(f"House overlays: {len(overlays)}")
 
 
 # =============================================================================

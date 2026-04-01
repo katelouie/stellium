@@ -216,8 +216,8 @@ def example_6_ayanamsas():
             .calculate()
         )
 
-        sun = chart.get_object("Sun")
-        print(f"  {ayanamsa}: Sun at {sun.longitude:.2f}° ({sun.sign})")
+        if sun := chart.get_object("Sun"):
+            print(f"  {ayanamsa}: Sun at {sun.longitude:.2f}° ({sun.sign})")
 
         NorthIndianRenderer(
             size=400,

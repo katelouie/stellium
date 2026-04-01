@@ -57,8 +57,9 @@ def example_1_simple_annual_profection():
     # Create the natal chart (Einstein had Cancer Rising)
     natal = ChartBuilder.from_notable("Albert Einstein").calculate()
 
-    print(f"Einstein's Ascendant: {natal.get_object('ASC').sign}")
-    print(f"  at {natal.get_object('ASC').longitude:.2f}°")
+    if asc := natal.get_object("ASC"):
+        print(f"Einstein's Ascendant: {asc.sign}")
+        print(f"  at {asc.longitude:.2f}°")
 
     # Create profection engine
     engine = ProfectionEngine(natal)
@@ -148,6 +149,7 @@ def example_4_chart_convenience_methods():
     print(f"Einstein's Lord at age 26: {lord}")
 
     # Full profection result
+    # include_monthly=False required when using age-only (no birth month available)
     result = chart.profection(age=26, include_monthly=False)
     print("\nFull profection details:")
     print(f"  House: {result.profected_house}")

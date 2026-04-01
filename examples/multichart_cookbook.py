@@ -192,7 +192,7 @@ def example_05_triwheel():
     print(f"Labels: {mc.labels}")
     print(f"Chart 1 (Natal): {mc.chart1.metadata.get('name')}")
     print(f"Chart 2 (Progressed): {mc.chart2.metadata.get('name')}")
-    print(f"Chart 3 (Transit): {mc.chart3.metadata.get('name')}")
+    print(f"Chart 3 (Transit): {mc.labels[2]}")
 
     # Check relationships
     print("\nRelationships:")
@@ -685,6 +685,7 @@ mw.draw()           -> mc.draw()
 Key Differences:
 ----------------
 1. MultiChart ALWAYS uses dict for cross_aspects: {(0,1): aspects, ...}
+   Note: to_dict() serializes keys to strings, e.g., "0,1"
    (Comparison used tuple, MultiWheel used dict)
 
 2. MultiChart has per-pair relationships:

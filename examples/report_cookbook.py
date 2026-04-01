@@ -12,6 +12,8 @@ Usage:
     python examples/report_cookbook.py
 
 For full documentation, see docs/REPORTS.md
+
+Note: PDF generation requires Typst (brew install typst or see https://typst.app)
 """
 
 import os

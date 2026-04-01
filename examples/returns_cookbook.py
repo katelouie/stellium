@@ -364,7 +364,7 @@ def example_10_return_with_house_systems():
     sr = (
         ReturnBuilder.solar(natal, 1912)
         .with_house_systems([PlacidusHouses(), WholeSignHouses()])
-        .with_aspects()
+        .with_aspects()  # Optional — ReturnBuilder always enables aspects
         .calculate()
     )
 
@@ -397,7 +397,7 @@ def example_11_return_with_components():
     # 1952 Solar Return (year she became Queen)
     sr = (
         ReturnBuilder.solar(natal, 1952)
-        .with_aspects()
+        .with_aspects()  # Optional — ReturnBuilder always enables aspects
         .add_component(MidpointCalculator())
         .add_component(ArabicPartsCalculator())
         .calculate()
@@ -408,11 +408,10 @@ def example_11_return_with_components():
     print(f"  Sun: {sr.get_object('Sun').sign}")
     print(f"  Ascendant: {sr.get_object('ASC').sign}")
 
-    # Check for Part of Fortune
-    if "arabic_parts" in sr.metadata:
-        pof = sr.metadata["arabic_parts"].get("Part of Fortune")
-        if pof:
-            print(f"  Part of Fortune: {pof['longitude']:.1f}°")
+    # Check for Part of Fortune (Arabic Parts are stored as positions, not metadata)
+    pof = sr.get_object("Part of Fortune")
+    if pof:
+        print(f"  Part of Fortune: {pof.longitude:.1f}° {pof.sign}")
 
     output = OUTPUT_DIR / "11_return_components.svg"
     sr.draw(str(output)).with_header().save()

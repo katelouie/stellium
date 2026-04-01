@@ -85,8 +85,9 @@ def example_1_simple_progression_by_age():
     )
 
     # Show cross-aspects between progressed and natal
-    print(f"\nProgressed-to-Natal Aspects: {len(prog.cross_aspects)}")
-    for asp in sorted(prog.cross_aspects, key=lambda a: a.orb)[:5]:
+    cross = prog.get_all_cross_aspects()
+    print(f"\nProgressed-to-Natal Aspects: {len(cross)}")
+    for asp in sorted(cross, key=lambda a: a.orb)[:5]:
         print(
             f"  P.{asp.object2.name} {asp.aspect_name} N.{asp.object1.name} (orb: {asp.orb:.2f}°)"
         )
@@ -227,7 +228,7 @@ def example_5_current_progressions():
     prog = MultiChartBuilder.progression(natal).calculate()
 
     # Calculate current age
-    birth_dt = natal.datetime.local_datetime
+    birth_dt = natal.datetime.local_datetime or natal.datetime.utc_datetime
     now = datetime.now()
     current_age = (now - birth_dt).days / 365.25
 
@@ -325,7 +326,7 @@ def example_7_solar_arc_angles():
         f"  Progressed MC: {prog.chart2.get_object('MC').longitude:.2f}° (natal + {solar_arc:.2f}°)"
     )
 
-    # Verify the metadata
+    # Note: quotidian method doesn't store angle_method/angle_arc in metadata
     print(f"\n  Metadata: angle_method = {prog.chart2.metadata.get('angle_method')}")
     print(f"  Metadata: angle_arc = {prog.chart2.metadata.get('angle_arc', 0):.2f}°")
 
@@ -422,8 +423,9 @@ def example_10_progressed_aspects_to_natal():
     print("Progressed-to-Natal Aspects at Age 26:")
     print("-" * 50)
 
-    if prog.cross_aspects:
-        for asp in sorted(prog.cross_aspects, key=lambda a: a.orb):
+    cross = prog.get_all_cross_aspects()
+    if cross:
+        for asp in sorted(cross, key=lambda a: a.orb):
             # In progressions, object2 is progressed, object1 is natal
             print(
                 f"  P.{asp.object2.name:<8} {asp.aspect_name:<12} "
@@ -454,7 +456,9 @@ def example_11_house_overlays():
 
     # House overlays show where each chart's planets fall in the other's houses
     # Filter for progressed planets in natal houses (planet_owner="chart2")
-    prog_in_natal = [h for h in prog.house_overlays if h.planet_owner == "chart2"]
+    prog_in_natal = [
+        h for h in prog.get_all_house_overlays() if h.planet_owner == "chart2"
+    ]
 
     for overlay in prog_in_natal[:10]:  # Show first 10
         print(f"  P.{overlay.planet_name:<8} in Natal House {overlay.falls_in_house}")
@@ -495,8 +499,8 @@ def example_12_legacy_explicit_chart():
     prog = MultiChartBuilder.progression(natal, progressed).calculate()
 
     print("Legacy API works!")
-    print(f"  Comparison type: {prog.comparison_type}")
-    print(f"  Cross aspects: {len(prog.cross_aspects)}")
+    print(f"  Relationship: {prog.get_relationship(0, 1)}")
+    print(f"  Cross aspects: {len(prog.get_all_cross_aspects())}")
 
 
 def example_13_tuple_format():
@@ -514,7 +518,7 @@ def example_13_tuple_format():
     ).calculate()
 
     print("Tuple format works!")
-    print(f"  Comparison type: {prog.comparison_type}")
+    print(f"  Relationship: {prog.get_relationship(0, 1)}")
     print(
         f"  Days between: {prog.chart2.datetime.julian_day - prog.chart1.datetime.julian_day:.1f}"
     )
