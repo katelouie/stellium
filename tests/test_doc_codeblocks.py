@@ -91,3 +91,6 @@ def test_doc_codeblock(code, doc_file, tmp_path, monkeypatch):
     except FileNotFoundError:
         # Block tries to write to a path that doesn't exist in tmp
         pytest.skip("File output path not available in test environment")
+    except (ImportError, ModuleNotFoundError) as e:
+        # Optional dependency not installed (e.g., pandas for analysis examples)
+        pytest.skip(f"Optional dependency missing: {e}")
