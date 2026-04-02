@@ -198,8 +198,8 @@ def cached(
             return result
 
         # Add cache management methods to the function
-        wrapper.clear_cache = lambda: (_default_cache.clear(cache_type))
-        wrapper.cache_size = lambda: (_default_cache.size(cache_type))
+        wrapper.clear_cache = lambda: _default_cache.clear(cache_type)
+        wrapper.cache_size = lambda: _default_cache.size(cache_type)
 
         return wrapper
 

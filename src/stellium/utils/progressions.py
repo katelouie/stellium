@@ -1,17 +1,23 @@
 """
 Progression calculation utilities.
 
-Secondary progressions use the symbolic equation "one day = one year."
-To find progressed positions at age 30, look at where planets were 30 days after birth.
+Supports multiple progression types, each using a different time key:
+
+- **Secondary** (day-for-a-year): 1 day of motion = 1 year of life.
+  The most common type. To find progressions at age 30, look at day 30.
+- **Tertiary** (day-for-a-lunar-month): 1 day of motion = 1 lunar month (~27.3 days).
+  Faster-moving, useful for timing within a year.
+- **Minor** (lunar-month-for-a-year): 1 lunar month of motion = 1 year of life.
+  Intermediate rate between secondary and tertiary.
 
 This module provides:
-- Progressed datetime calculation (1 day = 1 year)
+- Progressed datetime calculation for all three types
 - Angle adjustment methods (Solar Arc, Naibod)
 """
 
 from dataclasses import replace
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from stellium.core.models import CelestialPosition
@@ -20,20 +26,34 @@ if TYPE_CHECKING:
 # This is the mean daily motion of the Sun
 NAIBOD_RATE_DEGREES_PER_YEAR = 59.1333 / 60  # ~0.9856 degrees
 
+# Mean synodic month (New Moon to New Moon) = 29.530588853 days
+# Mean sidereal month (Moon returns to same star) = 27.321661 days
+# Tertiary progressions traditionally use the sidereal month
+LUNAR_MONTH_DAYS = 27.321661
+
 
 def calculate_progressed_datetime(
     natal_datetime: datetime,
     target_date: datetime,
+    progression_type: Literal["secondary", "tertiary", "minor"] = "secondary",
 ) -> datetime:
     """
-    Calculate progressed datetime using the 1 day = 1 year rule.
+    Calculate progressed datetime using the appropriate time key.
 
-    For secondary progressions, each day after birth represents one year of life.
-    To find progressions for age 30, we look at the chart 30 days after birth.
+    Each progression type maps real elapsed time to symbolic chart time
+    at a different rate:
+
+    - **Secondary** (day-for-a-year): 1 real year → 1 progressed day.
+      At age 30, look at day 30 after birth.
+    - **Tertiary** (day-for-a-lunar-month): 1 real lunar month → 1 progressed day.
+      Moves ~13.4x faster than secondary.
+    - **Minor** (lunar-month-for-a-year): 1 real year → 1 progressed lunar month.
+      Moves ~27.3x faster than secondary.
 
     Args:
         natal_datetime: Birth datetime
         target_date: The date you want to progress TO (e.g., "2025-06-15")
+        progression_type: "secondary" (default), "tertiary", or "minor"
 
     Returns:
         The datetime to cast the progressed chart for
@@ -42,27 +62,43 @@ def calculate_progressed_datetime(
         >>> from datetime import datetime
         >>> birth = datetime(1994, 1, 6, 11, 47)
         >>> target = datetime(2024, 1, 6)  # 30th birthday
+        >>> # Secondary: ~30 days after birth
         >>> progressed = calculate_progressed_datetime(birth, target)
-        >>> # progressed will be ~30 days after birth
+        >>> # Tertiary: ~401 days after birth (30 years × 13.4 lunar months/year)
+        >>> progressed = calculate_progressed_datetime(birth, target, "tertiary")
     """
     # Normalize timezones - if one is aware and one is naive, make both naive
     natal_dt = natal_datetime
     target_dt = target_date
     if natal_dt.tzinfo is not None and target_dt.tzinfo is None:
-        # Remove timezone from natal for comparison
         natal_dt = natal_dt.replace(tzinfo=None)
     elif natal_dt.tzinfo is None and target_dt.tzinfo is not None:
-        # Remove timezone from target for comparison
         target_dt = target_dt.replace(tzinfo=None)
 
-    # Calculate how many days have elapsed (= years of life)
     days_elapsed = (target_dt - natal_dt).days
-    years_of_life = days_elapsed / 365.25
 
-    # Progressed chart is cast for natal + years_of_life DAYS
-    progressed_datetime = natal_datetime + timedelta(days=years_of_life)
+    if progression_type == "secondary":
+        # 1 day of real time = 1 year of life → 1 year = 1 progressed day
+        years_of_life = days_elapsed / 365.25
+        progressed_days = years_of_life
 
-    return progressed_datetime
+    elif progression_type == "tertiary":
+        # 1 day of real time = 1 lunar month of life → 1 lunar month = 1 progressed day
+        lunar_months_of_life = days_elapsed / LUNAR_MONTH_DAYS
+        progressed_days = lunar_months_of_life
+
+    elif progression_type == "minor":
+        # 1 lunar month of real time = 1 year of life → 1 year = 1 progressed lunar month
+        years_of_life = days_elapsed / 365.25
+        progressed_days = years_of_life * LUNAR_MONTH_DAYS
+
+    else:
+        raise ValueError(
+            f"Unknown progression_type '{progression_type}'. "
+            f"Use 'secondary', 'tertiary', or 'minor'."
+        )
+
+    return natal_datetime + timedelta(days=progressed_days)
 
 
 def calculate_years_elapsed(

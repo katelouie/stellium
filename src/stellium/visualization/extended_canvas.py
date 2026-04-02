@@ -1613,14 +1613,14 @@ class AspectarianLayer:
             ]
 
             chart1_objects.sort(
-                key=lambda p: object_order.index(p.name)
-                if p.name in object_order
-                else 99
+                key=lambda p: (
+                    object_order.index(p.name) if p.name in object_order else 99
+                )
             )
             chart2_objects.sort(
-                key=lambda p: object_order.index(p.name)
-                if p.name in object_order
-                else 99
+                key=lambda p: (
+                    object_order.index(p.name) if p.name in object_order else 99
+                )
             )
 
             # Build aspect lookup from cross_aspects
@@ -1660,9 +1660,9 @@ class AspectarianLayer:
                 "Midheaven",
             ]
             planets.sort(
-                key=lambda p: planet_order.index(p.name)
-                if p.name in planet_order
-                else 99
+                key=lambda p: (
+                    planet_order.index(p.name) if p.name in planet_order else 99
+                )
             )
 
             # Build aspect lookup

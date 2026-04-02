@@ -700,6 +700,7 @@ class MultiChartBuilder:
         *,
         target_date: str | datetime | None = None,
         age: float | None = None,
+        progression_type: Literal["secondary", "tertiary", "minor"] = "secondary",
         angle_method: Literal["quotidian", "solar_arc", "naibod"] = "quotidian",
         natal_label: str = "Natal",
         progressed_label: str = "Progressed",
@@ -707,19 +708,38 @@ class MultiChartBuilder:
         """
         Create a progression comparison with auto-calculation support.
 
-        Secondary progressions use the symbolic equation "one day = one year."
+        Supports three progression types:
+        - **secondary** (default): 1 day = 1 year. The standard progression.
+        - **tertiary**: 1 day = 1 lunar month (~27.3 days). Faster-moving.
+        - **minor**: 1 lunar month = 1 year. Intermediate rate.
 
         Args:
             natal_data: Natal chart data
             progressed_data: Optional pre-calculated progressed chart
             target_date: Target date for progression
             age: Age in years for progression
+            progression_type: "secondary" (default), "tertiary", or "minor"
             angle_method: How to progress angles
             natal_label: Label for natal chart
             progressed_label: Label for progressed chart
 
         Returns:
             MultiChartBuilder configured for progressions
+
+        Examples::
+
+            # Secondary (standard, 1 day = 1 year)
+            prog = MultiChartBuilder.progression(natal, age=30).calculate()
+
+            # Tertiary (1 day = 1 lunar month)
+            prog = MultiChartBuilder.progression(
+                natal, age=30, progression_type="tertiary"
+            ).calculate()
+
+            # Minor (1 lunar month = 1 year)
+            prog = MultiChartBuilder.progression(
+                natal, age=30, progression_type="minor"
+            ).calculate()
         """
         from stellium.utils.progressions import (
             calculate_naibod_arc,
@@ -748,13 +768,20 @@ class MultiChartBuilder:
             else:
                 target = datetime.now()
 
-            progressed_dt = calculate_progressed_datetime(natal_datetime, target)
+            progressed_dt = calculate_progressed_datetime(
+                natal_datetime, target, progression_type
+            )
 
             name = natal_chart.metadata.get("name", "Chart")
+            type_label = (
+                progression_type.capitalize()
+                if progression_type != "secondary"
+                else "Progressed"
+            )
             progressed_chart = ChartBuilder.from_details(
                 progressed_dt,
                 natal_chart.location,
-                name=f"{name} - Progressed",
+                name=f"{name} - {type_label}",
             ).calculate()
 
             if angle_method != "quotidian":
@@ -795,6 +822,7 @@ class MultiChartBuilder:
                         aspects=progressed_chart.aspects,
                         metadata={
                             **progressed_chart.metadata,
+                            "progression_type": progression_type,
                             "angle_method": angle_method,
                             "angle_arc": arc,
                         },
@@ -1023,6 +1051,7 @@ class MultiChartBuilder:
         *,
         target_date: str | datetime | None = None,
         age: float | None = None,
+        progression_type: Literal["secondary", "tertiary", "minor"] = "secondary",
         angle_method: Literal["quotidian", "solar_arc", "naibod"] = "quotidian",
         label: str = "Progressed",
     ) -> "MultiChartBuilder":
@@ -1032,6 +1061,7 @@ class MultiChartBuilder:
         Args:
             target_date: Target date for progression
             age: Age in years
+            progression_type: "secondary" (default), "tertiary", or "minor"
             angle_method: How to progress angles
             label: Label for progressed chart
 
@@ -1046,6 +1076,7 @@ class MultiChartBuilder:
             self._charts[0],
             target_date=target_date,
             age=age,
+            progression_type=progression_type,
             angle_method=angle_method,
         )
         progressed_chart = temp_builder._charts[1]
