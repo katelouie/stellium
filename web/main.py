@@ -14,7 +14,11 @@ Usage:
 Then visit http://localhost:8080
 """
 
+import logging
+
 from config import COLORS, FONTS, GOOGLE_FONTS_URL
+from fastapi import Request
+from fastapi.responses import JSONResponse
 from nicegui import ui
 from pages.explore import create_explore_page
 from pages.home import create_home_page
@@ -22,14 +26,52 @@ from pages.natal import create_natal_page
 from pages.planner import create_planner_page
 from pages.relationships import create_relationships_page
 from pages.timing import create_timing_page
+from starlette.responses import PlainTextResponse
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+
+logger = logging.getLogger("stellium.web")
+
+# Configure root logger for the webapp
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
+)
+
+# Quiet down noisy libraries
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("httpcore").setLevel(logging.WARNING)
+logging.getLogger("nicegui").setLevel(logging.WARNING)
+
+# =============================================================================
+# SEO / META
+# =============================================================================
+
+SITE_NAME = "Stellium"
+SITE_DESCRIPTION = (
+    "Free professional astrology charts, reports, and tools. "
+    "Generate natal charts, synastry, transits, progressions, "
+    "and PDF planners — powered by Swiss Ephemeris."
+)
+SITE_URL = "https://stelliumastro.app"
 
 # =============================================================================
 # GLOBAL STYLES
 # =============================================================================
 
 
-def setup_styles():
-    """Add global CSS styles and fonts."""
+def setup_styles(page_title: str = "", page_description: str = ""):
+    """Add global CSS styles, fonts, and meta tags.
+
+    Args:
+        page_title: Page-specific title (prepended to site name).
+        page_description: Page-specific description (falls back to site default).
+    """
+    full_title = f"{page_title} | {SITE_NAME}" if page_title else SITE_NAME
+    description = page_description or SITE_DESCRIPTION
 
     # Set Quasar's color palette using NiceGUI's built-in method
     ui.colors(
@@ -39,6 +81,19 @@ def setup_styles():
         positive=COLORS["primary"],
         warning=COLORS["gold"],
     )
+
+    # Meta tags for SEO and social sharing
+    ui.add_head_html(f"""
+    <title>{full_title}</title>
+    <meta name="description" content="{description}">
+    <meta property="og:title" content="{full_title}">
+    <meta property="og:description" content="{description}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{SITE_URL}">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{full_title}">
+    <meta name="twitter:description" content="{description}">
+    """)
 
     ui.add_head_html(f"""
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,36 +281,137 @@ async def home():
 @ui.page("/natal")
 async def natal():
     """Natal chart builder page."""
-    setup_styles()
+    setup_styles(
+        "Natal Chart",
+        "Generate a professional natal birth chart with aspects, houses, and dignities.",
+    )
     create_natal_page()
 
 
 @ui.page("/relationships")
 async def relationships():
     """Relationships chart page (synastry, composite, davison)."""
-    setup_styles()
+    setup_styles(
+        "Relationships", "Synastry, composite, and Davison relationship charts."
+    )
     create_relationships_page()
 
 
 @ui.page("/timing")
 async def timing():
     """Timing chart page (transits, progressions, returns)."""
-    setup_styles()
+    setup_styles(
+        "Timing", "Transits, progressions, solar returns, and timing analysis."
+    )
     create_timing_page()
 
 
 @ui.page("/planner")
 async def planner():
     """Astrological planner generation page."""
-    setup_styles()
+    setup_styles(
+        "Planner",
+        "Generate a personalized astrological PDF planner with transits and Moon phases.",
+    )
     create_planner_page()
 
 
 @ui.page("/explore")
 async def explore():
     """Notable births explorer."""
-    setup_styles()
+    setup_styles(
+        "Explore Notable Charts",
+        "Browse birth charts of famous historical figures — scientists, artists, leaders, and more.",
+    )
     create_explore_page()
+
+
+# =============================================================================
+# BOT / CRAWLER HANDLING
+# =============================================================================
+
+ROBOTS_TXT = """\
+# stelliumastro.app — interactive astrology chart tool
+# Most pages require user interaction and aren't useful to index.
+
+User-agent: *
+Allow: /
+Allow: /explore
+Disallow: /wp-admin/
+Disallow: /wp-login.php
+Disallow: /.env
+
+# Block aggressive SEO crawlers that add no value
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+"""
+
+
+@ui.page("/robots.txt", dark=False)
+async def robots_txt():
+    """Serve robots.txt to stop crawlers from 404-spamming the logs."""
+    return PlainTextResponse(ROBOTS_TXT, media_type="text/plain")
+
+
+@ui.app.get("/health")
+async def health_check():
+    """Health check endpoint for Railway and monitoring."""
+    return {"status": "ok", "service": "stellium-web"}
+
+
+@ui.app.middleware("http")
+async def request_middleware(request: Request, call_next):
+    """Bot filtering and request logging."""
+    import time
+
+    path = request.url.path.lower()
+
+    # Silently reject known bot probe paths
+    if any(
+        path.endswith(ext) for ext in (".php", ".asp", ".aspx", ".jsp", ".cgi")
+    ) or any(
+        probe in path
+        for probe in (
+            "/wp-admin",
+            "/wp-login",
+            "/wp-content",
+            "/wp-includes",
+            "/.env",
+            "/xmlrpc",
+            "/admin/",
+            "/phpmyadmin",
+        )
+    ):
+        return JSONResponse(status_code=404, content={"detail": "Not found"})
+
+    # Log real page requests (skip static assets and websocket noise)
+    start = time.time()
+    response = await call_next(request)
+    elapsed = time.time() - start
+
+    if (
+        not path.startswith("/_nicegui")
+        and not path.startswith("/static")
+        and not path.startswith("/_event")
+        and path != "/health"
+        and request.method == "GET"
+        and "websocket" not in request.headers.get("upgrade", "")
+    ):
+        logger.info(
+            "%s %s → %s (%.2fs)",
+            request.method,
+            request.url.path,
+            response.status_code,
+            elapsed,
+        )
+
+    return response
 
 
 # =============================================================================
