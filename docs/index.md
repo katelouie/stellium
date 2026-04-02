@@ -26,43 +26,17 @@ PALETTE_GALLERY
 
 ```{toctree}
 :maxdepth: 2
-:caption: Architecture
+:caption: Reference
 
 ARCHITECTURE
-development/ARCHITECTURE_QUICK_REFERENCE
-development/VIZ_ARCHITECTURE
+options_list
 ```
 
 ```{toctree}
 :maxdepth: 2
-:caption: Development Guides
+:caption: Guides
 
-development/BIWHEEL_USAGE
-development/DECLINATIONS
-development/SIDEREAL_IMPLEMENTATION
-development/VEDIC_DIGNITIES
-development/FUTURE_FEATURES
-development/VIZ_REFACTOR
-development/REFACTORING_GUIDE
-development/REFACTORING_GUIDE_CHANGES
-development/REFACTORING_GUIDE_WEEKS_3_4
-development/REFACTOR_CHECKLIST
 PUBLISHING
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: Planning & Design
-
-planning/NEXT_FEATURES
-planning/VISION_ARCHITECTURE
-planning/LIBRARY_COMPARISON
-planning/RETURNS_IMPLEMENTATION
-planning/FIXED_STARS_IMPLEMENTATION
-planning/TRANSITS_SYNASTRY_COMPOSITE_PLAN
-planning/SYNTHESIS_CHARTS_DESIGN
-planning/UNKNOWN_TIME_CHARTS_DESIGN
-planning/INTERACTIVE_HTML_REPORTS
 ```
 
 ```{toctree}

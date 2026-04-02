@@ -778,7 +778,7 @@ All examples in this gallery were generated using the same natal chart (Albert E
 ```python
 from stellium import ChartBuilder
 
-chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
+chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
 # Generate any palette
 chart.draw("my_palette.svg") \

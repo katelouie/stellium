@@ -248,7 +248,9 @@ chart.draw("chart.svg") \
 ### Generate a Report
 
 ```python
-from stellium import ReportBuilder
+from stellium import ChartBuilder, ReportBuilder
+
+chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
 # Terminal output
 ReportBuilder().from_chart(chart).preset_standard().render()
@@ -257,14 +259,13 @@ ReportBuilder().from_chart(chart).preset_standard().render()
 ReportBuilder().from_chart(chart).preset_detailed().render(
     format="pdf",
     file="report.pdf",
-    chart_svg_path="chart.svg"
 )
 ```
 
 ### Create a Synastry Chart
 
 ```python
-from stellium import MultiChartBuilder
+from stellium import ChartBuilder, MultiChartBuilder
 
 chart1 = ChartBuilder.from_notable("John Lennon").with_aspects().calculate()
 chart2 = ChartBuilder.from_notable("Yoko Ono").with_aspects().calculate()

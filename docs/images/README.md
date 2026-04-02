@@ -51,7 +51,7 @@ All images are generated using Albert Einstein's natal chart for consistency:
 ```python
 from stellium import ChartBuilder
 
-chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
+chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
 # Generate examples
 chart.draw("readme_einstein.svg").save()

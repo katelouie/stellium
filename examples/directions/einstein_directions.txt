@@ -3,13 +3,13 @@ ALBERT EINSTEIN - PRIMARY DIRECTIONS ANALYSIS
 
 DIRECTIONS TO ASCENDANT (Zodiacal, Naibod)
 --------------------------------------------------
-Sun          286.02°    290.2 years
-Moon         210.02°    213.1 years
-Mercury      290.54°    294.8 years
-Venus        297.14°    301.5 years
-Mars         253.34°    257.0 years
-Jupiter      273.03°    277.0 years
-Saturn       291.04°    295.3 years
+Sun          286.03°    290.2 years
+Moon         210.03°    213.1 years
+Mercury      290.55°    294.8 years
+Venus        297.15°    301.5 years
+Mars         253.35°    257.0 years
+Jupiter      273.05°    277.0 years
+Saturn       291.05°    295.3 years
 
 
 LIFE CHAPTERS (Term Distributions)

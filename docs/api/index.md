@@ -310,6 +310,16 @@ Core abstractions, data models, protocols, and configuration.
    :no-index:
 ```
 
+### Multiwheel (`stellium.core.multiwheel`)
+
+```{eval-rst}
+.. automodule:: stellium.core.multiwheel
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
 ### Protocols (`stellium.core.protocols`)
 
 Interface definitions for extending Stellium.
@@ -453,13 +463,85 @@ Optional calculation components that can be added to charts.
 Report building and rendering.
 
 ```{eval-rst}
-.. automodule:: stellium.presentation.sections
+.. automodule:: stellium.presentation.builder
    :members:
    :undoc-members:
    :show-inheritance:
    :no-index:
 
 .. automodule:: stellium.presentation.renderers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.aspects
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.dignities
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.midpoints
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.midpoint_tree
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.misc
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.timing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.transits
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.transit_periods
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.profection_visualization
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.presentation.sections.zr_visualization
    :members:
    :undoc-members:
    :show-inheritance:
@@ -503,7 +585,73 @@ Chart rendering and SVG generation.
    :show-inheritance:
    :no-index:
 
+.. automodule:: stellium.visualization.composer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layer_factory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
 .. automodule:: stellium.visualization.layers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.zodiac
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.houses
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.planets
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.aspects
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.angles
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.chart_frame
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layers.info_corners
    :members:
    :undoc-members:
    :show-inheritance:
@@ -586,6 +734,60 @@ Uranian dial chart visualization.
    :undoc-members:
    :show-inheritance:
    :no-index:
+
+.. automodule:: stellium.visualization.dial.layers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Layout Engine (`stellium.visualization.layout`)
+
+Planet label collision avoidance and layout measurement.
+
+```{eval-rst}
+.. automodule:: stellium.visualization.layout
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layout.engine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.layout.measurer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Vedic Charts (`stellium.visualization.vedic`)
+
+North and South Indian chart rendering.
+
+```{eval-rst}
+.. automodule:: stellium.visualization.vedic
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.vedic.north_indian
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.visualization.vedic.south_indian
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
 ```
 
 ---
@@ -610,6 +812,12 @@ Utility functions and helpers.
 
 ```{eval-rst}
 .. automodule:: stellium.utils.cache
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.utils.cache_utils
    :members:
    :undoc-members:
    :show-inheritance:
@@ -665,6 +873,16 @@ Data access and notable births registry.
 .. autofunction:: stellium.data.get_user_ephe_dir
 .. autofunction:: stellium.data.has_ephe_file
 .. autofunction:: stellium.data.initialize_ephemeris
+```
+
+### Paths (`stellium.data.paths`)
+
+```{eval-rst}
+.. automodule:: stellium.data.paths
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
 ```
 
 ### Notable Registry (`stellium.data.registry`)
@@ -765,6 +983,12 @@ Batch chart analysis and data processing.
    :undoc-members:
    :show-inheritance:
    :no-index:
+
+.. automodule:: stellium.analysis.vector
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
 ```
 
 ---
@@ -787,6 +1011,112 @@ Input/output formats for chart data.
    :no-index:
 
 .. automodule:: stellium.io.dataframe
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## Chinese Astrology (`stellium.chinese`)
+
+Ba Zi (Four Pillars) and related Chinese astrological systems.
+
+```{eval-rst}
+.. automodule:: stellium.chinese
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.core
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.calendar
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.protocols
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+### Ba Zi (`stellium.chinese.bazi`)
+
+Four Pillars of Destiny calculation engine.
+
+```{eval-rst}
+.. automodule:: stellium.chinese.bazi
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.bazi.engine
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.bazi.models
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.bazi.analysis
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.chinese.bazi.renderers
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+```
+
+---
+
+## CLI (`stellium.cli`)
+
+Command-line interface for chart generation, cache management, and ephemeris downloads.
+
+```{eval-rst}
+.. automodule:: stellium.cli
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.cli.chart
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.cli.cache
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.cli.ephemeris
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.cli.ephemeris_download
    :members:
    :undoc-members:
    :show-inheritance:

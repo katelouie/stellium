@@ -18,7 +18,7 @@ Planet Positions
 ┃ Planet              ┃ Position              ┃ House (Pl) ┃
 ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
 │ ☉ Sun               │ ♒︎ Aquarius 26°02'    │ 7          │
-│ ☽ Moon              │ ♏︎ Scorpio 27°15'     │ 4          │
+│ ☽ Moon              │ ♏︎ Scorpio 27°17'     │ 4          │
 │ ☿ Mercury           │ ♒︎ Aquarius 24°04'    │ 7          │
 │ ♀ Venus             │ ♓︎ Pisces 8°07'       │ 8          │
 │ ♂ Mars              │ ♉︎ Taurus 23°41'      │ 10         │
@@ -30,6 +30,6 @@ Planet Positions
 │ ☊ North Node        │ ♑︎ Capricorn 6°35'    │ 5          │
 │ ☋ South Node        │ ♋︎ Cancer 6°35'       │ 11         │
 │ ⚸ Black Moon Lilith │ ♍︎ Virgo 17°33'       │ 2          │
-│ 🜊 Vertex            │ ♐︎ Sagittarius 25°19' │ 5          │
+│ 🜊 Vertex            │ ♐︎ Sagittarius 25°52' │ 5          │
 └─────────────────────┴───────────────────────┴────────────┘
 

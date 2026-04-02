@@ -261,7 +261,7 @@ chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
 print(f"House System: {chart.default_house_system}")
 
 # Access house cusps for the specific system
-whole_sign_cusps = chart.get_house_cusps("Whole Sign")
+whole_sign_cusps = chart.get_houses("Whole Sign")
 print(whole_sign_cusps.get_description(1))  # First House
 ```
 
@@ -283,15 +283,12 @@ chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .calculate())
 
 # Access each system independently
-sun = chart.get_object("Sun")
-print(f"Sun in Placidus House: {sun.house}")
+print(f"Sun in Placidus House: {chart.get_house('Sun', 'Placidus')}")
 
 # House placements are tracked per-system
-sun_ws_house = sun.house_placements.get("Whole Sign")
-print(f"Sun in Whole Sign House: {sun_ws_house}")
+print(f"Sun in Whole Sign House: {chart.get_house('Sun', 'Whole Sign')}")
 
-sun_koch_house = sun.house_placements.get("Koch")
-print(f"Sun in Koch House: {sun_koch_house}")
+print(f"Sun in Koch House: {chart.get_house('Sun', 'Koch')}")
 ```
 
 ### Level 4: Arabic Parts & Components
@@ -327,13 +324,14 @@ for mp in midpoints[:5]:  # First 5 midpoints
 
 ```python
 from stellium import ChartBuilder, Native, ReportBuilder
-from stellium.components import DignityComponent, AspectPatternAnalyzer
+from stellium.components import DignityComponent
+from stellium.engines.patterns import AspectPatternAnalyzer
 from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
 chart = (ChartBuilder.from_native(native)
     .add_component(DignityComponent())
-    .add_component(AspectPatternAnalyzer())
+    .add_analyzer(AspectPatternAnalyzer())
     .calculate())
 
 # Build a comprehensive terminal report
@@ -357,12 +355,14 @@ report.render(format="pdf", file="my_chart.pdf")  # PDF with Typst
 ### Level 6: Advanced - Bi-Wheel Charts
 
 ```python
-from stellium import ComparisonBuilder
+from stellium import MultiChartBuilder
 
 # Synastry chart (relationship analysis)
-synastry = ComparisonBuilder.synastry(
-    ("1994-01-06 11:47", "Palo Alto, CA", "Kate"),
-    ("1995-06-15 14:30", "Seattle, WA", "Alex")
+synastry = MultiChartBuilder.synastry(
+    ("1994-01-06 11:47", "Palo Alto, CA"),
+    ("1995-06-15 14:30", "Seattle, WA"),
+    label1="Kate",
+    label2="Alex",
 ).calculate()
 
 # Draw bi-wheel with both charts
@@ -371,15 +371,15 @@ synastry.draw("synastry_biwheel.svg") \
     .save()
 
 # Access inner and outer charts separately
-inner_chart = synastry.inner_chart
-outer_chart = synastry.outer_chart
+inner_chart = synastry.inner
+outer_chart = synastry.outer
 
-# Get aspects between the two charts
-interaspects = synastry.interaspects
-for aspect in interaspects[:10]:
-    print(f"{aspect.object1.name} ({inner_chart.name}) "
+# Get cross-chart aspects
+cross_aspects = synastry.get_cross_aspects()
+for aspect in cross_aspects[:10]:
+    print(f"{aspect.object1.name} ({synastry.labels[0]}) "
           f"{aspect.aspect_name} "
-          f"{aspect.object2.name} ({outer_chart.name})")
+          f"{aspect.object2.name} ({synastry.labels[1]})")
 ```
 
 **Comparison Chart Types:**
@@ -480,32 +480,30 @@ if sun.is_out_of_bounds:
 Create relationship, timing, and synthesis charts:
 
 ```python
-from stellium import ComparisonBuilder
+from stellium import MultiChartBuilder, Native, SynthesisBuilder
 
 # Synastry (relationship analysis)
-synastry = ComparisonBuilder.synastry(
-    ("1994-01-06 11:47", "Palo Alto, CA", "Person A"),
-    ("1995-06-15 14:30", "Seattle, WA", "Person B")
+synastry = MultiChartBuilder.synastry(
+    ("1994-01-06 11:47", "Palo Alto, CA"),
+    ("1995-06-15 14:30", "Seattle, WA"),
+    label1="Person A",
+    label2="Person B",
 ).calculate()
 synastry.draw("synastry.svg").save()
 
 # Transits (timing analysis)
-transits = ComparisonBuilder.transit(
+transits = MultiChartBuilder.transit(
     natal_data=("1994-01-06 11:47", "Palo Alto, CA"),
-    transit_data=("2025-11-26 12:00", "Palo Alto, CA")
+    transit_data=("2025-11-26 12:00", "Palo Alto, CA"),
 ).calculate()
 
 # Composite (relationship midpoint chart)
-composite = ComparisonBuilder.composite(
-    ("1994-01-06 11:47", "Palo Alto, CA"),
-    ("1995-06-15 14:30", "Seattle, WA")
-).calculate()
+native_a = Native("1994-01-06 11:47", "Palo Alto, CA")
+native_b = Native("1995-06-15 14:30", "Seattle, WA")
+composite = SynthesisBuilder.composite(native_a, native_b).calculate()
 
 # Davison (relationship midpoint chart with actual location)
-davison = ComparisonBuilder.davison(
-    ("1994-01-06 11:47", "Palo Alto, CA"),
-    ("1995-06-15 14:30", "Seattle, WA")
-).calculate()
+davison = SynthesisBuilder.davison(native_a, native_b).calculate()
 ```
 
 **Comparison Types:**
@@ -587,6 +585,8 @@ Generate multi-page PDF documents with one chart per page, like an old-school as
 
 ```python
 from stellium.visualization.atlas import AtlasBuilder
+from stellium.core.native import Native
+from datetime import datetime
 
 # Create an atlas from notables
 (AtlasBuilder()
@@ -599,6 +599,9 @@ from stellium.visualization.atlas import AtlasBuilder
     .save("scientists_atlas.pdf"))
 
 # Or with Uranian dials
+native1 = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
+native2 = Native(datetime(1995, 6, 15, 14, 30), "Seattle, WA")
+native3 = Native(datetime(2000, 3, 20, 8, 0), "Portland, OR")
 (AtlasBuilder()
     .add_natives([native1, native2, native3])
     .with_chart_type("dial", degrees=90)
@@ -648,18 +651,19 @@ See the [analysis cookbook](examples/analysis_cookbook.ipynb) for comprehensive 
 ### Performance
 
 ```python
-from stellium.utils.cache import enable_cache, get_cache_stats
+from stellium import ChartBuilder, Native
+from stellium.utils.cache import cache_info, clear_cache
 
-enable_cache(max_age_seconds=604800)  # 1 week cache
+native = Native("2000-01-06 12:00", "Seattle, WA")
 
-# First calculation: ~200ms
+# First calculation: ~200ms (result is cached automatically)
 chart1 = ChartBuilder.from_native(native).calculate()
 
 # Subsequent calculations: ~10ms (20x faster!)
 chart2 = ChartBuilder.from_native(native).calculate()
 
-stats = get_cache_stats()
-print(f"Cache hits: {stats['hits']}, misses: {stats['misses']}")
+info = cache_info()
+print(f"Cached files: {info['total_cached_files']}, Size: {info['cache_size_mb']} MB")
 ```
 
 ---
@@ -752,6 +756,7 @@ Stellium is built on three core principles:
 
 Extend functionality by implementing protocols, not subclassing:
 
+<!--pytest.mark.skip-->
 ```python
 from stellium.core.protocols import ChartComponent
 from typing import Protocol
@@ -775,6 +780,7 @@ chart = ChartBuilder.from_native(native).add_component(MyCustomComponent()).calc
 
 Mix and match components freely:
 
+<!--pytest.mark.skip-->
 ```python
 # Every piece is optional and interchangeable
 chart = (ChartBuilder.from_native(native)

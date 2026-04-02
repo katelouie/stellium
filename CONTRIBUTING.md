@@ -527,6 +527,7 @@ One of Stellium's strengths is extensibility. Here's how to add new functionalit
 
 Implement the `HouseSystemEngine` protocol:
 
+<!--pytest.mark.skip-->
 ```python
 # In src/stellium/engines/houses.py (or your own module)
 
@@ -574,6 +575,7 @@ chart = ChartBuilder.from_native(native).with_house_systems([VedicHouses()]).cal
 
 Implement the `ChartComponent` protocol:
 
+<!--pytest.mark.skip-->
 ```python
 # In src/stellium/components/your_component.py
 
@@ -624,6 +626,7 @@ fixed_stars = chart.get_component_result("Fixed Stars")
 
 Implement the `ReportSection` protocol:
 
+<!--pytest.mark.skip-->
 ```python
 # In src/stellium/presentation/sections.py
 
@@ -668,10 +671,11 @@ report = (ReportBuilder()
 
 Implement the `IRenderLayer` protocol:
 
+<!--pytest-codeblocks:skip-->
 ```python
 # In src/stellium/visualization/layers.py
 
-from stellium.core.protocols import IRenderLayer
+from stellium.visualization.layer_factory import IRenderLayer
 from stellium.visualization.core import ChartRenderer
 
 class FixedStarsLayer:
@@ -752,13 +756,13 @@ Example demonstrating the new Fixed Stars component.
 """
 
 from stellium import ChartBuilder, Native
-from stellium.components import FixedStarsCalculator
+from stellium.components import FixedStarsComponent
 from datetime import datetime
 
 native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
 
 chart = (ChartBuilder.from_native(native)
-    .add_component(FixedStarsCalculator())
+    .add_component(FixedStarsComponent())
     .calculate())
 
 # Print fixed stars

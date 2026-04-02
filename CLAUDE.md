@@ -562,6 +562,7 @@ def calculate_position(
 
 Use **isort** (enforced by pre-commit):
 
+<!--pytest.mark.skip-->
 ```python
 # Standard library
 from datetime import datetime
@@ -617,6 +618,7 @@ def calculate_aspect_orb(
 
 **CRITICAL: Avoid circular dependencies**
 
+<!--pytest.mark.skip-->
 ```python
 # ❌ DON'T: core/ should NEVER import from engines/
 # In core/models.py
@@ -647,6 +649,7 @@ visualization/  # Imports from core, engines, components
 
 Implement the `HouseSystemEngine` protocol:
 
+<!--pytest.mark.skip-->
 ```python
 # In src/stellium/engines/houses.py
 
@@ -684,6 +687,7 @@ chart = ChartBuilder.from_native(native).with_house_systems([VedicHouses()]).cal
 
 Implement the `ChartComponent` protocol:
 
+<!--pytest.mark.skip-->
 ```python
 # In src/stellium/components/fixed_stars.py
 
@@ -725,6 +729,7 @@ fixed_stars = chart.get_component_result("Fixed Stars")
 
 Implement the `IRenderLayer` protocol:
 
+<!--pytest.mark.skip-->
 ```python
 # In src/stellium/visualization/layers.py
 
@@ -768,6 +773,7 @@ dwg.save()
 
 ### Task 4: Add Caching to Expensive Calculations
 
+<!--pytest.mark.skip-->
 ```python
 from stellium.utils.cache import cached
 
@@ -785,6 +791,7 @@ class MyEngine:
 
 ### Task 5: Working with the Notable Database
 
+<!--pytest.mark.skip-->
 ```python
 # List available notables
 from stellium.data import get_notable_registry
@@ -868,6 +875,7 @@ assert new_sun.longitude == 100
 
 Celestial objects and aspects are defined in registries:
 
+<!--pytest.mark.skip-->
 ```python
 from stellium.core.registry import CELESTIAL_REGISTRY, ASPECT_REGISTRY
 
@@ -939,6 +947,7 @@ new_pos = replace(chart.positions[0], longitude=999)
 
 ### Anti-Pattern 2: Circular Dependencies
 
+<!--pytest.mark.skip-->
 ```python
 # ❌ DON'T: Import from higher-level modules in core
 # In core/models.py

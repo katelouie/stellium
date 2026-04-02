@@ -95,6 +95,10 @@ Hypothetical points used in Uranian astrology.
 
 ```python
 from stellium import ChartBuilder
+from stellium.core.native import Native
+from datetime import datetime
+
+native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
 
 # Default: Traditional + Modern planets, Nodes, Chiron
 chart = ChartBuilder.from_native(native).calculate()
@@ -158,7 +162,11 @@ Stellium implements all major house systems via the Swiss Ephemeris. You can use
 
 ```python
 from stellium import ChartBuilder
+from stellium.core.native import Native
 from stellium.engines.houses import PlacidusHouses, WholeSignHouses, KochHouses
+from datetime import datetime
+
+native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
 
 # Single house system
 chart = ChartBuilder.from_native(native).with_house_systems([PlacidusHouses()]).calculate()
@@ -207,6 +215,10 @@ Stellium supports sidereal zodiac calculations with multiple ayanamsa options ac
 
 ```python
 from stellium import ChartBuilder
+from stellium.core.native import Native
+from datetime import datetime
+
+native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
 
 # Vedic chart with Lahiri ayanamsa
 chart = ChartBuilder.from_native(native).with_sidereal("lahiri").calculate()
@@ -275,7 +287,11 @@ Additional stars for detailed analysis.
 
 ```python
 from stellium import ChartBuilder
+from stellium.core.native import Native
 from stellium.components import FixedStarsComponent
+from datetime import datetime
+
+native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
 
 # All fixed stars
 chart = ChartBuilder.from_native(native).add_component(FixedStarsComponent()).calculate()
@@ -358,7 +374,11 @@ Based on each planet's exaltation sign ruler.
 
 ```python
 from stellium import ChartBuilder
+from stellium.core.native import Native
 from stellium.components import ArabicPartsCalculator
+from datetime import datetime
+
+native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
 
 # All Arabic parts
 chart = ChartBuilder.from_native(native).add_component(ArabicPartsCalculator()).calculate()
@@ -432,24 +452,28 @@ Stellium supports major, minor, harmonic, and declination aspects with configura
 
 ```python
 from stellium import ChartBuilder
+from stellium.core.native import Native
 from stellium.engines.aspects import ModernAspectEngine, HarmonicAspectEngine
+from datetime import datetime
 
-# Major aspects only
+native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
+
+# Major aspects only (default: Conjunction, Sextile, Square, Trine, Opposition)
 chart = ChartBuilder.from_native(native).with_aspects().calculate()
 
-# All aspects (major + minor)
-chart = ChartBuilder.from_native(native).with_aspects(mode="all").calculate()
+# Custom aspect selection via AspectConfig
+from stellium.core.config import AspectConfig
 
-# Include harmonic aspects
-from stellium.engines.aspects import HarmonicAspectEngine
+config = AspectConfig(aspects=["Conjunction", "Sextile", "Square", "Trine", "Opposition", "Semi-Sextile", "Quincunx"])
+chart = ChartBuilder.from_native(native).with_aspects(ModernAspectEngine(config)).calculate()
 
+# Harmonic aspects (e.g., Quintile = 5th harmonic)
 chart = (ChartBuilder.from_native(native)
-    .with_aspects()
-    .with_harmonic_aspects(harmonics=[5, 7, 9])  # Quintiles, Septiles, Noviles
+    .with_aspects(HarmonicAspectEngine(harmonic=5))  # Quintiles (72°)
     .calculate())
 
 # Access aspects
-for aspect in chart.aspects:
+for aspect in chart.aspects[:5]:
     print(f"{aspect.object1.name} {aspect.aspect_name} {aspect.object2.name} (orb: {aspect.orb:.2f}°)")
 ```
 

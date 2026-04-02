@@ -31,7 +31,7 @@ See the HTML full theme and palette reference overview [rendered here](https://h
 ```python
 from stellium import ChartBuilder
 
-chart = ChartBuilder.from_notable("Albert Einstein").with_angles().calculate()
+chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 chart.draw("einstein.svg").save()
 ```
 
@@ -852,6 +852,7 @@ chart.draw("comprehensive.svg") \
 
 The old `draw_chart()` function still works if you prefer functional style:
 
+<!--pytest.mark.skip-->
 ```python
 from stellium.visualization import draw_chart
 
@@ -907,9 +908,14 @@ chart.draw("extended_below.svg").with_theme("midnight").with_tables("below").sav
 Comparison charts (synastry, transits, progressions) use the same API:
 
 ```python
-from stellium import ComparisonBuilder
+from stellium import ChartBuilder, MultiChartBuilder
 
-comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
+chart1 = ChartBuilder.from_notable("John Lennon").with_aspects().calculate()
+chart2 = ChartBuilder.from_notable("Yoko Ono").with_aspects().calculate()
+
+comparison = MultiChartBuilder.synastry(chart1, chart2, label1="John", label2="Yoko") \
+    .with_cross_aspects() \
+    .calculate()
 
 comparison.draw("synastry.svg") \
     .preset_synastry() \

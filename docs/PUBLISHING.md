@@ -95,14 +95,12 @@ Note: The `--extra-index-url` is needed because dependencies (like `pyswisseph`)
 
 **Verify the test installation**:
 ```python
-from stellium import ChartBuilder
+from stellium import ChartBuilder, Native
 from datetime import datetime
 
 # Should work!
-chart = ChartBuilder.from_native(
-    datetime(2000, 1, 1, 12, 0),
-    "New York, NY"
-).build()
+native = Native(datetime(2000, 1, 1, 12, 0), "New York, NY")
+chart = ChartBuilder.from_native(native).calculate()
 print(f"Sun: {chart.get_object('Sun').longitude:.2f}°")
 ```
 
@@ -148,13 +146,11 @@ python -m twine upload dist/*
 
 3. Verify Swiss Ephemeris data works:
    ```python
-   from stellium import ChartBuilder
+   from stellium import ChartBuilder, Native
    from datetime import datetime
 
-   chart = ChartBuilder.from_native(
-       datetime(1994, 1, 6, 11, 47),
-       "Palo Alto, CA"
-   ).build()
+   native = Native(datetime(1994, 1, 6, 11, 47), "Palo Alto, CA")
+   chart = ChartBuilder.from_native(native).calculate()
 
    sun = chart.get_object("Sun")
    print(f"Sun at {sun.longitude:.2f}° in {sun.sign}")

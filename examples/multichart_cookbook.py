@@ -30,7 +30,14 @@ Run with:
     source ~/.zshrc && pyenv activate starlight && python examples/multichart_cookbook.py
 """
 
+import os
+from pathlib import Path
+
 from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
+
+SCRIPT_DIR = Path(__file__).parent
+OUTPUT_DIR = SCRIPT_DIR / "multicharts"
+os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
 def example_01_basic_synastry():
@@ -463,8 +470,8 @@ def example_12_visualization_basic():
     ).calculate()
 
     # Draw and save
-    mc.draw("examples/chart_examples/multichart_synastry.svg").save()
-    print("Saved: examples/chart_examples/multichart_synastry.svg")
+    mc.draw(str(OUTPUT_DIR / "multichart_synastry.svg")).save()
+    print(f"Saved: {OUTPUT_DIR / 'multichart_synastry.svg'}")
 
     # Triwheel
     natal = chart1
@@ -475,8 +482,8 @@ def example_12_visualization_basic():
         .calculate()
     )
 
-    mc_tri.draw("examples/chart_examples/multichart_triwheel.svg").save()
-    print("Saved: examples/chart_examples/multichart_triwheel.svg")
+    mc_tri.draw(str(OUTPUT_DIR / "multichart_triwheel.svg")).save()
+    print(f"Saved: {OUTPUT_DIR / 'multichart_triwheel.svg'}")
 
 
 def example_13_visualization_themes():
@@ -500,18 +507,16 @@ def example_13_visualization_themes():
     mc = MultiChartBuilder.synastry(chart1, chart2).calculate()
 
     # With theme
-    mc.draw("examples/chart_examples/multichart_midnight.svg").with_theme(
-        "midnight"
-    ).save()
-    print("Saved: examples/chart_examples/multichart_midnight.svg")
+    mc.draw(str(OUTPUT_DIR / "multichart_midnight.svg")).with_theme("midnight").save()
+    print(f"Saved: {OUTPUT_DIR / 'multichart_midnight.svg'}")
 
     # With size
-    mc.draw("examples/chart_examples/multichart_large.svg").with_size(1000).save()
-    print("Saved: examples/chart_examples/multichart_large.svg")
+    mc.draw(str(OUTPUT_DIR / "multichart_large.svg")).with_size(1000).save()
+    print(f"Saved: {OUTPUT_DIR / 'multichart_large.svg'}")
 
     # Without header
-    mc.draw("examples/chart_examples/multichart_no_header.svg").without_header().save()
-    print("Saved: examples/chart_examples/multichart_no_header.svg")
+    mc.draw(str(OUTPUT_DIR / "multichart_no_header.svg")).without_header().save()
+    print(f"Saved: {OUTPUT_DIR / 'multichart_no_header.svg'}")
 
 
 def example_14_reports_overview():

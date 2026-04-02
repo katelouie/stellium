@@ -41,11 +41,11 @@ chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 # Generate a report and display in terminal
 ReportBuilder().from_chart(chart).preset_standard().render()
 
-# Save as a beautiful PDF
-ReportBuilder().from_chart(chart).preset_detailed().render(
+# Generate chart SVG, then create a PDF report with the chart embedded
+chart.draw("einstein_chart.svg").save()
+ReportBuilder().from_chart(chart).preset_detailed().with_chart_image("einstein_chart.svg").render(
     format="pdf",
     file="einstein_report.pdf",
-    chart_svg_path="einstein_chart.svg"  # Optional: embed the chart wheel
 )
 ```
 
@@ -211,18 +211,18 @@ ReportBuilder().from_chart(chart).with_aspects(orbs=False).render()
 For comparison charts (synastry, transits), shows aspects between the two charts.
 
 ```python
-from stellium import ComparisonBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 
 # Create a synastry comparison
 chart1 = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 chart2 = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
-comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
+multichart = MultiChartBuilder.synastry(chart1, chart2).calculate()
 
 # Show cross-chart aspects
-ReportBuilder().from_chart(comparison).with_cross_aspects().render()
+ReportBuilder().from_chart(multichart).with_cross_aspects().render()
 
 # Major aspects only
-ReportBuilder().from_chart(comparison).with_cross_aspects(mode="major").render()
+ReportBuilder().from_chart(multichart).with_cross_aspects(mode="major").render()
 ```
 
 **Parameters:** Same as `with_aspects()`
@@ -337,13 +337,14 @@ ReportBuilder().from_chart(chart).with_dignities(show_details=True).render()
 Table of detected aspect patterns (requires `AspectPatternAnalyzer`).
 
 ```python
-from stellium.components import AspectPatternAnalyzer
+from stellium import ChartBuilder, ReportBuilder
+from stellium.engines.patterns import AspectPatternAnalyzer
 
 # Calculate chart with pattern analysis
 chart = (
     ChartBuilder.from_notable("Albert Einstein")
     .with_aspects()
-    .add_component(AspectPatternAnalyzer())
+    .add_analyzer(AspectPatternAnalyzer())
     .calculate()
 )
 
@@ -588,14 +589,16 @@ ReportBuilder().from_chart(chart).preset_detailed().render()
 Everything available.
 
 ```python
-from stellium.components import DignityComponent, AspectPatternAnalyzer, MidpointCalculator
+from stellium import ChartBuilder, ReportBuilder
+from stellium.components import DignityComponent, MidpointCalculator
+from stellium.engines.patterns import AspectPatternAnalyzer
 
 # Calculate with all components
 chart = (
     ChartBuilder.from_notable("Albert Einstein")
     .with_aspects()
     .add_component(DignityComponent())
-    .add_component(AspectPatternAnalyzer())
+    .add_analyzer(AspectPatternAnalyzer())
     .add_component(MidpointCalculator())
     .calculate()
 )
@@ -636,8 +639,8 @@ ReportBuilder().from_chart(chart).preset_aspects_only().render()
 Optimized for relationship comparison charts.
 
 ```python
-comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
-ReportBuilder().from_chart(comparison).preset_synastry().render()
+multichart = MultiChartBuilder.synastry(chart1, chart2).calculate()
+ReportBuilder().from_chart(multichart).preset_synastry().render()
 ```
 
 **Includes:** Chart Overview (both charts), Planet Positions (side-by-side), Cross-Chart Aspects (major), House Cusps (side-by-side)
@@ -649,7 +652,7 @@ ReportBuilder().from_chart(comparison).preset_synastry().render()
 Optimized for transit charts.
 
 ```python
-transit = ComparisonBuilder.transit(natal_chart, transit_datetime).calculate()
+transit = MultiChartBuilder.transit(natal_chart, transit_datetime).calculate()
 ReportBuilder().from_chart(transit).preset_transit().render()
 ```
 
@@ -715,18 +718,15 @@ ReportBuilder().from_chart(chart).preset_detailed().render(
 
 # PDF with embedded chart wheel
 chart.draw("chart.svg").save()  # First, save the chart as SVG
-ReportBuilder().from_chart(chart).preset_detailed().render(
+ReportBuilder().from_chart(chart).preset_detailed().with_chart_image("chart.svg").render(
     format="pdf",
     file="report.pdf",
-    chart_svg_path="chart.svg"
 )
 
 # Custom title
-ReportBuilder().from_chart(chart).preset_detailed().render(
+ReportBuilder().from_chart(chart).preset_detailed().with_chart_image("chart.svg").with_title("Albert Einstein — Natal Chart Analysis").render(
     format="pdf",
     file="report.pdf",
-    chart_svg_path="chart.svg",
-    title="Albert Einstein — Natal Chart Analysis"
 )
 ```
 
@@ -765,39 +765,33 @@ chart = (
 chart.draw("einstein_chart.svg").with_theme("celestial").save()
 
 # Generate PDF report
-ReportBuilder().from_chart(chart).preset_detailed().render(
+ReportBuilder().from_chart(chart).preset_detailed().with_chart_image("einstein_chart.svg").with_title("Albert Einstein — Natal Chart").render(
     format="pdf",
     file="einstein_report.pdf",
-    chart_svg_path="einstein_chart.svg",
-    title="Albert Einstein — Natal Chart"
 )
 ```
 
 **Synastry report for two people:**
 
 ```python
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 
 # Calculate individual charts
 einstein = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 curie = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
 
 # Create synastry comparison
-comparison = (
-    ComparisonBuilder.from_native(einstein, native_label="Albert Einstein")
-    .with_partner(curie, partner_label="Marie Curie")
-    .calculate()
-)
+synastry = MultiChartBuilder.synastry(
+    einstein, curie, label1="Albert Einstein", label2="Marie Curie"
+).calculate()
 
 # Generate biwheel chart
-comparison.draw("synastry_chart.svg").with_theme("midnight").save()
+synastry.draw("synastry_chart.svg").with_theme("midnight").save()
 
 # Generate synastry report
-ReportBuilder().from_chart(comparison).preset_synastry().render(
+ReportBuilder().from_chart(synastry).preset_synastry().with_chart_image("synastry_chart.svg").with_title("Einstein & Curie — Synastry Analysis").render(
     format="pdf",
     file="synastry_report.pdf",
-    chart_svg_path="synastry_chart.svg",
-    title="Einstein & Curie — Synastry Analysis"
 )
 ```
 
@@ -814,10 +808,9 @@ ReportBuilder().from_chart(chart).preset_standard().render(
 )
 
 # With embedded chart
-ReportBuilder().from_chart(chart).preset_standard().render(
+ReportBuilder().from_chart(chart).preset_standard().with_chart_image("chart.svg").render(
     format="html",
     file="report.html",
-    chart_svg_path="chart.svg"
 )
 ```
 
@@ -829,17 +822,17 @@ Stellium fully supports comparison charts (synastry, transits, composites) in re
 
 ### Side-by-Side Tables
 
-When you pass a `Comparison` object to ReportBuilder, sections that show chart data automatically render as side-by-side tables:
+When you pass a `MultiChart` object to ReportBuilder, sections that show chart data automatically render as side-by-side tables:
 
 - **Planet Positions:** Two tables, one for each chart
 - **House Cusps:** Two tables, one for each chart
 
-The tables are labeled with the chart labels you provide to ComparisonBuilder.
+The tables are labeled with the chart labels you provide to MultiChartBuilder.
 
 ### Example: Complete Synastry Report
 
 ```python
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 from stellium.components import DignityComponent
 
 # Calculate charts with dignities
@@ -857,15 +850,13 @@ chart2 = (
     .calculate()
 )
 
-# Create comparison with meaningful labels
-comparison = (
-    ComparisonBuilder.from_native(chart1, native_label="Albert")
-    .with_partner(chart2, partner_label="Marie")
-    .calculate()
-)
+# Create multichart with meaningful labels
+multichart = MultiChartBuilder.synastry(
+    chart1, chart2, label1="Albert", label2="Marie"
+).calculate()
 
 # Build custom synastry report
-ReportBuilder().from_chart(comparison) \
+ReportBuilder().from_chart(multichart) \
     .with_chart_overview() \
     .with_planet_positions(include_house=True) \
     .with_cross_aspects(mode="major", sort_by="orb") \
@@ -877,35 +868,18 @@ ReportBuilder().from_chart(comparison) \
 
 ```python
 from datetime import datetime
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 
 # Natal chart
 natal = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 
-# Current transits
-transit_chart = (
-    ChartBuilder.from_details(
-        datetime.now(),
-        natal.location.latitude,
-        natal.location.longitude,
-        natal.location.name,
-    )
-    .with_aspects()
-    .calculate()
-)
-
-# Create transit comparison
-transits = (
-    ComparisonBuilder.from_native(natal, native_label="Natal")
-    .with_partner(transit_chart, partner_label="Transits")
-    .calculate()
-)
+# Create transit comparison (uses natal chart's location automatically)
+transits = MultiChartBuilder.transit(natal, datetime.now()).calculate()
 
 # Generate transit report
-ReportBuilder().from_chart(transits).preset_transit().render(
+ReportBuilder().from_chart(transits).preset_transit().with_title("Current Transits for Albert Einstein").render(
     format="pdf",
     file="transits.pdf",
-    title="Current Transits for Albert Einstein"
 )
 ```
 
@@ -1047,8 +1021,9 @@ ReportBuilder().from_chart(chart).preset_standard().render()
 
 ```python
 from stellium import ChartBuilder, ReportBuilder
-from stellium.components import DignityComponent, AspectPatternAnalyzer, MidpointCalculator
+from stellium.components import DignityComponent, MidpointCalculator
 from stellium.engines import PlacidusHouses, WholeSignHouses
+from stellium.engines.patterns import AspectPatternAnalyzer
 
 # Calculate chart with all components and multiple house systems
 chart = (
@@ -1056,7 +1031,7 @@ chart = (
     .with_house_systems([PlacidusHouses(), WholeSignHouses()])
     .with_aspects()
     .add_component(DignityComponent())
-    .add_component(AspectPatternAnalyzer())
+    .add_analyzer(AspectPatternAnalyzer())
     .add_component(MidpointCalculator())
     .calculate()
 )
@@ -1070,39 +1045,33 @@ chart.draw("jung_chart.svg") \
     .save()
 
 # Generate comprehensive PDF report
-ReportBuilder().from_chart(chart).preset_full().render(
+ReportBuilder().from_chart(chart).preset_full().with_chart_image("jung_chart.svg").with_title("Carl Jung — Complete Natal Analysis").render(
     format="pdf",
     file="jung_report.pdf",
-    chart_svg_path="jung_chart.svg",
-    title="Carl Jung — Complete Natal Analysis"
 )
 ```
 
 ### Example 3: Comparison Report (Synastry)
 
 ```python
-from stellium import ChartBuilder, ComparisonBuilder, ReportBuilder
+from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 
 # Two charts
 person1 = ChartBuilder.from_notable("John Lennon").with_aspects().calculate()
 person2 = ChartBuilder.from_notable("Yoko Ono").with_aspects().calculate()
 
 # Synastry comparison
-synastry = (
-    ComparisonBuilder.from_native(person1, native_label="John Lennon")
-    .with_partner(person2, partner_label="Yoko Ono")
-    .calculate()
-)
+synastry = MultiChartBuilder.synastry(
+    person1, person2, label1="John Lennon", label2="Yoko Ono"
+).calculate()
 
 # Generate biwheel
 synastry.draw("lennon_ono_biwheel.svg").with_theme("celestial").save()
 
 # Generate report
-ReportBuilder().from_chart(synastry).preset_synastry().render(
+ReportBuilder().from_chart(synastry).preset_synastry().with_chart_image("lennon_ono_biwheel.svg").with_title("John Lennon & Yoko Ono — Synastry").render(
     format="pdf",
     file="lennon_ono_synastry.pdf",
-    chart_svg_path="lennon_ono_biwheel.svg",
-    title="John Lennon & Yoko Ono — Synastry"
 )
 ```
 
@@ -1139,11 +1108,9 @@ for name in notables:
     chart.draw(f"{filename}_chart.svg").with_theme("celestial").save()
 
     # Generate report
-    ReportBuilder().from_chart(chart).preset_detailed().render(
+    ReportBuilder().from_chart(chart).preset_detailed().with_chart_image(f"{filename}_chart.svg").with_title(f"{name} — Natal Chart").render(
         format="pdf",
         file=f"{filename}_report.pdf",
-        chart_svg_path=f"{filename}_chart.svg",
-        title=f"{name} — Natal Chart"
     )
 
     print(f"Generated report for {name}")
@@ -1185,9 +1152,9 @@ for name in notables:
 |-----------|------|---------|-------------|
 | `format` | `str` | `"rich_table"` | Output format |
 | `file` | `str \| None` | `None` | Save to file |
-| `show` | `bool` | `True` | Display in terminal |
-| `chart_svg_path` | `str \| None` | `None` | Chart SVG to embed (PDF/HTML) |
-| `title` | `str \| None` | `None` | Report title (PDF) |
+| `show` | `bool \| None` | `None` | Display in terminal (defaults to `True` for terminal formats, `False` for file formats) |
+
+> **Note:** Chart images and titles are configured via builder methods (`.with_chart_image(path)` and `.with_title(title)`), not as `render()` parameters.
 
 ### Output Formats
 
@@ -1225,13 +1192,14 @@ ReportBuilder().from_chart(chart).preset_standard().render()
 
 These sections require components to be added during chart calculation:
 ```python
-from stellium.components import DignityComponent, AspectPatternAnalyzer, MidpointCalculator
+from stellium.components import DignityComponent, MidpointCalculator
+from stellium.engines.patterns import AspectPatternAnalyzer
 
 chart = (
     ChartBuilder.from_native(native)
     .with_aspects()
     .add_component(DignityComponent())        # For .with_dignities()
-    .add_component(AspectPatternAnalyzer())   # For .with_aspect_patterns()
+    .add_analyzer(AspectPatternAnalyzer())    # For .with_aspect_patterns()
     .add_component(MidpointCalculator())      # For .with_midpoints()
     .calculate()
 )

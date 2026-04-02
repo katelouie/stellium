@@ -1,5 +1,13 @@
 # Stellium Astrology Library - Architecture Documentation
 
+> **WARNING: This document is significantly out of date (last updated November 2025).** Many code examples reference deprecated APIs (`ComparisonBuilder`, old import paths, removed functions). For current and accurate API usage, refer to:
+> - **[README.md](../README.md)** — Quick start and feature overview
+> - **[CLAUDE.md](../CLAUDE.md)** — Development instructions and patterns
+> - **[CONTRIBUTING.md](../CONTRIBUTING.md)** — How to extend Stellium
+> - **[docs/options_list.md](options_list.md)** — Complete configuration reference
+>
+> This document is retained for its architectural *concepts* (protocols, composability, immutability) which remain accurate, but its code examples should not be copy-pasted.
+
 **Version:** 1.0
 **Last Updated:** 2025-11-16
 

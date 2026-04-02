@@ -13,11 +13,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`available_components()` method** on `CalculatedChart`: returns sorted list of all component/analyzer names whose results are available on the chart.
 - **Component manifest** in `ChartBuilder.calculate()`: components and analyzers now self-describe their storage pattern at build time via `metadata["_component_manifest"]`. New components automatically work with `get_component_result()` without any changes to `CalculatedChart`.
 - **20 new tests** (`test_get_component_result.py`): covers all 4 storage patterns, metadata key alias lookup, discovery, error handling, user-reported scenario reproduction, and inheritance verification.
+- **Cookbook smoke tests** (`test_cookbooks.py`): 17 subprocess tests for every `.py` cookbook, plus 2 Jupyter notebook execution tests (`@pytest.mark.notebooks`, excluded from default runs). Catches API drift between source and examples. Typst-dependent cookbooks gracefully skip when not installed. Marked `@pytest.mark.slow`.
+- **Documentation code block tests** (`test_doc_codeblocks.py`): extracts and executes Python code blocks from 11 markdown files (README, CONTRIBUTING, CLAUDE, docs/REPORTS, docs/VISUALIZATION, docs/options_list, and more). Blocks with `<!--pytest.mark.skip-->` are excluded at collection time. Fragments auto-detected via NameError. Found and fixed 40+ broken doc examples during setup.
+- **`docs` and `notebooks` pytest markers** for documentation validation tests, excluded from default `pytest` via `addopts`. Run with `pytest -m docs` or `pytest -m notebooks`.
+- **Three-tier test architecture:** `pytest -m "not slow"` (~2.4s TDD), `pytest` (~32s full library), `pytest -m docs` (~4min doc validation), `pytest -m notebooks` (opt-in notebook execution).
+- **`pytest-codeblocks`, `nbconvert`, `ipykernel`** added to `[dev]` dependencies in `pyproject.toml`.
+- **CI workflow** (`tests.yml`): split into separate "library tests" and "documentation validation" steps so doc drift is caught on every push/PR.
 
 ### Changed
 
+- **All `options_list.md` code blocks** are now self-contained with their own imports and `native` definition — safe to copy-paste individually.
+- **README code blocks** are now self-contained where possible; architectural illustrations marked with skip markers.
+- **`CLAUDE.md`** template and anti-pattern code blocks marked with `<!--pytest.mark.skip-->`.
+- **docs/REPORTS.md** updated: replaced deprecated `ComparisonBuilder` with `MultiChartBuilder`, fixed `AspectPatternAnalyzer` imports, removed invalid `chart_svg_path` parameter from `render()` calls, added missing chart SVG generation step.
+- **docs/VISUALIZATION.md, PALETTE_GALLERY.md, THEME_GALLERY.md, PUBLISHING.md, examples/README.md** code blocks fixed.
+- **docs/ARCHITECTURE.md** marked as significantly out of date with warning banner — retained for architectural concepts but code examples should not be used.
+- **`multichart_cookbook.py`** fixed: hardcoded relative paths replaced with `OUTPUT_DIR` pattern matching other cookbooks.
 - **`GraphicEphemeris.draw()` signature** now accepts `str | Path` for the filename parameter (was `str` only).
 - **`PlannerBuilder._page_size` type annotation** now includes `"a5"` to match the `page_size()` method and `PlannerConfig`.
+- **`.gitignore`** updated to ignore test output artifacts (`/*.svg`, `/*.pdf`, `/*.txt`, cookbook output dirs).
 
 ### Fixed
 

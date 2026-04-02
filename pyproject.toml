@@ -46,6 +46,9 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
     "pytest-cov>=4.0.0",
+    "pytest-codeblocks>=0.17.0",
+    "nbconvert>=7.0.0",
+    "ipykernel>=6.0.0",
     "black>=24.0.0",
     "ruff>=0.8.0,<0.9.0",  # Pin to match pre-commit
     "isort>=5.13.0",
@@ -161,13 +164,15 @@ ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q --tb=short --strict-markers --strict-config"
+addopts = "-ra -q --tb=short --strict-markers --strict-config -m 'not docs and not notebooks'"
 testpaths = ["tests"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
 markers = [
     "slow: marks tests that hit the Swiss Ephemeris or do chart calculations (deselect with '-m \"not slow\"')",
+    "docs: marks documentation validation tests — cookbook smoke tests and doc code block tests (run with '-m docs')",
+    "notebooks: marks expensive Jupyter notebook execution tests (run with '-m notebooks')",
 ]
 
 [tool.coverage.run]
