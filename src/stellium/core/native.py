@@ -140,7 +140,11 @@ class Native:
 
         # 3. A tuple? Assume (lat, lon)
         if isinstance(loc_in, tuple) and len(loc_in) == 2:
-            lat, lon = loc_in
+            lat, lon = float(loc_in[0]), float(loc_in[1])
+            if not (-90 <= lat <= 90):
+                raise ValueError(f"Latitude {lat} outside valid range [-90, 90]")
+            if not (-180 <= lon <= 180):
+                raise ValueError(f"Longitude {lon} outside valid range [-180, 180]")
 
             # Find the timezone for this lat/lon
             tf = _get_timezone_finder()
@@ -161,6 +165,10 @@ class Native:
                 )
             lat = float(loc_in["latitude"])
             lon = float(loc_in["longitude"])
+            if not (-90 <= lat <= 90):
+                raise ValueError(f"Latitude {lat} outside valid range [-90, 90]")
+            if not (-180 <= lon <= 180):
+                raise ValueError(f"Longitude {lon} outside valid range [-180, 180]")
 
             # Find timezone if not provided
             timezone_str = loc_in.get("timezone")
@@ -327,6 +335,14 @@ class Native:
 
         # --- Final Conversion ---
         if utc_dt:
+            # Validate year is within ephemeris range
+            if utc_dt.year < 1800 or utc_dt.year > 2400:
+                raise ValueError(
+                    f"Year {utc_dt.year} is outside the supported ephemeris "
+                    f"range (1800-2400 CE). Swiss Ephemeris data files cover "
+                    f"this range only."
+                )
+
             # Calculate Julian Day from the UTC datetime
             # swe.julday() converts calendar date to Julian Day number.
             # Since we're giving it UTC, the result is JD(UT) - Universal Time.

@@ -319,6 +319,10 @@ class ElectionalSearch:
         """
         self.start = _parse_datetime(start)
         self.end = _parse_datetime(end)
+        if self.start >= self.end:
+            raise ValueError(
+                f"Start date ({self.start}) must be before end date ({self.end})"
+            )
         self.location = location
         self._conditions: list[Condition] = []
         self._progress_callback: Callable[[int, int], None] | None = None

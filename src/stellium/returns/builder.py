@@ -145,6 +145,17 @@ class ReturnBuilder:
         Example:
             >>> sr_2025 = ReturnBuilder.solar(natal, 2025).calculate()
         """
+        if not isinstance(year, int):
+            raise TypeError(f"year must be an integer, got {type(year).__name__}")
+        if year < 1800 or year > 2400:
+            raise ValueError(
+                f"Year {year} is outside the supported ephemeris range (1800-2400)"
+            )
+        natal_year = natal.datetime.utc_datetime.year
+        if year < natal_year:
+            raise ValueError(
+                f"Year {year} is before the natal birth year ({natal_year})"
+            )
         return cls(natal, "Sun", year=year, location=location)
 
     @classmethod
@@ -181,6 +192,11 @@ class ReturnBuilder:
         # Default to current time if neither specified
         if near_date is None and occurrence is None:
             near_date = dt.datetime.now(dt.UTC)
+
+        if occurrence is not None and (
+            not isinstance(occurrence, int) or occurrence < 1
+        ):
+            raise ValueError(f"occurrence must be a positive integer, got {occurrence}")
 
         return cls(
             natal, "Moon", near_date=near_date, occurrence=occurrence, location=location
@@ -222,6 +238,14 @@ class ReturnBuilder:
             raise ValueError(
                 "Must specify either near_date or occurrence for planetary returns"
             )
+
+        if not isinstance(planet, str) or not planet:
+            raise TypeError("planet must be a non-empty string")
+
+        if occurrence is not None and (
+            not isinstance(occurrence, int) or occurrence < 1
+        ):
+            raise ValueError(f"occurrence must be a positive integer, got {occurrence}")
 
         return cls(
             natal, planet, near_date=near_date, occurrence=occurrence, location=location

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`MoietyOrbEngine`** — traditional moiety-based orb calculation where each planet has its own sphere of influence. Effective orb = average of both planets' full orbs. Includes two named systems: `"lilly"` (medieval consensus: Lilly, Bonatti, Al-Biruni, Sahl) and `"ptolemy"` (wider Ptolemaic values). Supports custom `orb_map`, `fallback_orb`, and optional `minor_aspect_multiplier` for tighter minor/harmonic aspect orbs. Constants `LILLY_FULL_ORBS`, `PTOLEMY_FULL_ORBS`, and `MOIETY_SYSTEMS` exported for reference and customization.
 - **Aspects & Orbs cookbook** (`examples/aspects_and_orbs_cookbook.py`): 14 examples covering all 4 aspect engines (Modern, Harmonic, Declination, Cross-Chart), all 4 orb engines (Simple, Luminaries, Complex, Moiety), side-by-side comparisons, and a complete moiety calculation table.
+- **Input validation** on public API entry points: `Native` validates lat/lon bounds (±90°/±180°) and year range (1800-2400 CE). `ElectionalSearch` validates start < end. `ReturnBuilder.solar()` validates year range, year >= natal year, and int type. `ReturnBuilder.lunar()`/`.planetary()` validate occurrence >= 1. All errors fire immediately with clear messages rather than failing deep in calculation.
 
 ### Changed
 
