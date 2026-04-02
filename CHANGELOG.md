@@ -11,11 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`MoietyOrbEngine`** — traditional moiety-based orb calculation where each planet has its own sphere of influence. Effective orb = average of both planets' full orbs. Includes two named systems: `"lilly"` (medieval consensus: Lilly, Bonatti, Al-Biruni, Sahl) and `"ptolemy"` (wider Ptolemaic values). Supports custom `orb_map`, `fallback_orb`, and optional `minor_aspect_multiplier` for tighter minor/harmonic aspect orbs. Constants `LILLY_FULL_ORBS`, `PTOLEMY_FULL_ORBS`, and `MOIETY_SYSTEMS` exported for reference and customization.
 - **Aspects & Orbs cookbook** (`examples/aspects_and_orbs_cookbook.py`): 14 examples covering all 4 aspect engines (Modern, Harmonic, Declination, Cross-Chart), all 4 orb engines (Simple, Luminaries, Complex, Moiety), side-by-side comparisons, and a complete moiety calculation table.
-- **Input validation** on public API entry points: `Native` validates lat/lon bounds (±90°/±180°) and year range (1800-2400 CE). `ElectionalSearch` validates start < end. `ReturnBuilder.solar()` validates year range, year >= natal year, and int type. `ReturnBuilder.lunar()`/`.planetary()` validate occurrence >= 1. All errors fire immediately with clear messages rather than failing deep in calculation.
+- **Input validation** on public API entry points: `Native` validates lat/lon bounds (±90°/±180°). `ElectionalSearch` validates start < end. `ReturnBuilder.solar()` validates year >= natal year and int type. `ReturnBuilder.lunar()`/`.planetary()` validate occurrence >= 1 and planet name. All errors fire immediately with clear messages rather than failing deep in calculation.
+- **Vedic, transit, and aspects & orbs cookbooks** added to README cookbook table and run commands.
 
 ### Changed
 
+- **Ruff version aligned** — pre-commit hook updated from v0.8.0 to v0.12.4 to match CLI, eliminating persistent reformatting of the same files on every commit. Pyproject.toml ruff pin widened accordingly.
+
 ### Fixed
+
+- **Notable registry now loads entries individually** — previously, one bad entry in a YAML file would silently skip the entire file. Now each entry is loaded in its own try/except, so a single bad record only skips that record. Warning messages now include the entry name for easier debugging.
+- **Removed overly strict year range validation** — the 1800-2400 CE check on `Native` was rejecting historical charts (Newton 1643, da Vinci 1452, etc.) even though Swiss Ephemeris handles them via analytical methods. This also caused the notable registry to silently drop 8 YAML files on CI, reducing the registry from 197 to 101 entries.
 
 ## [0.17.0] - 2026-04-01
 
