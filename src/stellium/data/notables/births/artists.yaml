@@ -1,7 +1,3 @@
-# Notable births from AstroDatabank
-# Generated for Stellium astrology package
-# Source: https://www.astro.com/astro-databank/
-
 - name: Frida Kahlo
   event_type: birth
   year: 1907
@@ -101,8 +97,8 @@
   day: 30
   hour: 11
   minute: 0
-  latitude: 51.4667
-  longitude: 4.8667
+  latitude: 51.5057
+  longitude: 4.6463
   location_name: Groot-Zundert, Netherlands
   timezone: Europe/Amsterdam
   category: artist
@@ -157,8 +153,8 @@
   day: 16
   hour: 6
   minute: 0
-  latitude: 55.75
-  longitude: 37.5833
+  latitude: 55.6256
+  longitude: 37.6064
   location_name: Moscow, Russia
   timezone: Europe/Moscow
   category: artist
@@ -200,7 +196,6 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Michelangelo'
   - A. Gotti, Vita di Michelangelo
   verified: false
-
 - name: Salvador Dali
   event_type: birth
   year: 1904
@@ -214,17 +209,16 @@
   timezone: Europe/Madrid
   category: artist
   subcategories:
-    - Painter
-    - Surrealist
-    - Sculptor
-  notable_for: >-
-    Spanish surrealist artist renowned for his technical skill and striking imagery.
-    Known for "The Persistence of Memory" and his eccentric public persona. One of
-    the most influential artists of the 20th century.
+  - Painter
+  - Surrealist
+  - Sculptor
+  notable_for: Spanish surrealist artist renowned for his technical skill and striking
+    imagery. Known for "The Persistence of Memory" and his eccentric public persona.
+    One of the most influential artists of the 20th century.
   astrological_notes: Sun 20 Taurus
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Dali,_Salvador"
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Dali,_Salvador'
   verified: true
 - name: Andy Warhol
   event_type: birth
@@ -242,7 +236,9 @@
   - painter
   - filmmaker
   - pop artist
-  notable_for: American underground artist and filmmaker who had a genius for creating attention. An androgyne and voyeur himself, his salon became the New York center of the freak scene in the '60s.
+  notable_for: American underground artist and filmmaker who had a genius for creating
+    attention. An androgyne and voyeur himself, his salon became the New York center
+    of the freak scene in the '60s.
   astrological_notes: Asc. 13°49'
   data_quality: B
   sources:
@@ -256,8 +252,8 @@
   day: 31
   hour: 20
   minute: 0
-  latitude: 50.06
-  longitude: 3.33
+  latitude: 50.0914
+  longitude: 3.5405
   location_name: Le Cateau, France
   timezone: Europe/Paris
   category: artist
@@ -265,7 +261,10 @@
   - Painter
   - Sculptor
   - Lithographer
-  notable_for: French painter, sculptor and lithographer, noted for being one of the foremost decorative French painters of his time and one of the most influential of the 1900s. While his superbly simple line drawings rank among the greatest works of graphic art he is best known for his abstract, intellectual use of color.
+  notable_for: French painter, sculptor and lithographer, noted for being one of the
+    foremost decorative French painters of his time and one of the most influential
+    of the 1900s. While his superbly simple line drawings rank among the greatest
+    works of graphic art he is best known for his abstract, intellectual use of color.
   astrological_notes: 10°15' 25°19 Asc. 24°29'
   data_quality: AA
   sources:
@@ -279,15 +278,18 @@
   day: 8
   hour: 19
   minute: 30
-  latitude: 21.0167
-  longitude: -101.2500
+  latitude: 20.9877
+  longitude: -101.0
   location_name: Guanajuato, Mexico
   timezone: America/Mexico_City
   category: artist
   subcategories:
   - painter
   - muralist
-  notable_for: Mexican artist, controversial painter expressing political views through art; communist with themes of revolution and labor; noted for paintings of children; led campaign for Mexican artists to decorate government buildings with murals; tumultuous marriage to Frida Kahlo.
+  notable_for: Mexican artist, controversial painter expressing political views through
+    art; communist with themes of revolution and labor; noted for paintings of children;
+    led campaign for Mexican artists to decorate government buildings with murals;
+    tumultuous marriage to Frida Kahlo.
   astrological_notes: Ascendant 16°59' 18°33'
   data_quality: DD
   sources:
@@ -308,7 +310,11 @@
   subcategories:
   - photographer
   - modern art promoter
-  notable_for: American photographer and modern art promoter who was instrumental over his 50-year career in making photography an accepted art form. In addition to his photography, Stieglitz was known for the New York art galleries that he ran in the early part of the 20th century, where he introduced many avant-garde European artists to the U.S. He was married to painter Georgia O’Keeffe.
+  notable_for: American photographer and modern art promoter who was instrumental
+    over his 50-year career in making photography an accepted art form. In addition
+    to his photography, Stieglitz was known for the New York art galleries that he
+    ran in the early part of the 20th century, where he introduced many avant-garde
+    European artists to the U.S. He was married to painter Georgia O’Keeffe.
   astrological_notes: Sun sign Capricorn, Ascendant Aries, Moon sign Libra
   data_quality: X
   sources:
@@ -329,7 +335,12 @@
   subcategories:
   - illustrator
   - commercial artist
-  notable_for: British artist known for illustrating the Rider-Waite tarot deck, published in December 1909, the first deck where the pip cards (ace through ten) were fully illustrated. A member of the Order of the Golden Dawn, she worked on the deck in partnership with Arthur E. Waite, publisher of The Pictorial Key to the Tarot in 1911. The deck is now called the Waite-Smith deck and is the biggest-selling tarot deck of the 20th century.
+  notable_for: British artist known for illustrating the Rider-Waite tarot deck, published
+    in December 1909, the first deck where the pip cards (ace through ten) were fully
+    illustrated. A member of the Order of the Golden Dawn, she worked on the deck
+    in partnership with Arthur E. Waite, publisher of The Pictorial Key to the Tarot
+    in 1911. The deck is now called the Waite-Smith deck and is the biggest-selling
+    tarot deck of the 20th century.
   astrological_notes: Sun 27°44' Aquarius
   data_quality: X
   sources:

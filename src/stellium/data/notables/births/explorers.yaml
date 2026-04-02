@@ -5,14 +5,15 @@
   day: 24
   hour: 23
   minute: 30
-  latitude: 39.5636
-  longitude: -95.1208
+  latitude: 39.5458
+  longitude: -95.3326
   location_name: Atchison, Kansas
   timezone: America/Chicago
   category: explorer
   subcategories:
   - aviator
-  notable_for: American aviation pioneer and author. First female aviator to fly solo across the Atlantic Ocean.
+  notable_for: American aviation pioneer and author. First female aviator to fly solo
+    across the Atlantic Ocean.
   astrological_notes: Sun 3 Leo
   data_quality: AA
   sources:
@@ -25,15 +26,16 @@
   day: 5
   hour: 0
   minute: 31
-  latitude: 40.2833
-  longitude: -84.1833
+  latitude: 40.5678
+  longitude: -84.1936
   location_name: Wapakoneta, Ohio
   timezone: America/New_York
   category: explorer
   subcategories:
   - astronaut
   - first on Moon
-  notable_for: American astronaut and aeronautical engineer, and the first person to walk on the Moon.
+  notable_for: American astronaut and aeronautical engineer, and the first person
+    to walk on the Moon.
   astrological_notes: Sun 12 Leo
   data_quality: AA
   sources:
@@ -53,7 +55,8 @@
   category: explorer
   subcategories:
   - first human in space
-  notable_for: Soviet pilot and cosmonaut. He was the first human to journey into outer space.
+  notable_for: Soviet pilot and cosmonaut. He was the first human to journey into
+    outer space.
   astrological_notes: Sun 17 Pisces
   data_quality: X
   sources:
@@ -73,7 +76,9 @@
   category: explorer
   subcategories:
   - Everest climber
-  notable_for: New Zealand mountaineer, explorer, and philanthropist. On 29 May 1953, Hillary and Nepalese Sherpa mountaineer Tenzing Norgay became the first climbers confirmed as having reached the summit of Mount Everest.
+  notable_for: New Zealand mountaineer, explorer, and philanthropist. On 29 May 1953,
+    Hillary and Nepalese Sherpa mountaineer Tenzing Norgay became the first climbers
+    confirmed as having reached the summit of Mount Everest.
   astrological_notes: Sun 26 Cancer
   data_quality: C
   sources:
@@ -86,15 +91,17 @@
   day: 11
   hour: 13
   minute: 6
-  latitude: 44.9333
-  longitude: -0.25
+  latitude: 44.9954
+  longitude: -0.4441
   location_name: Saint-André-de-Cubzac, France
   timezone: Europe/Paris
   category: explorer
   subcategories:
   - oceanographer
   - explorer
-  notable_for: French naval officer, explorer, conservationist, filmmaker, innovator, scientist, photographer, author and researcher who studied the sea and all forms of life in water.
+  notable_for: French naval officer, explorer, conservationist, filmmaker, innovator,
+    scientist, photographer, author and researcher who studied the sea and all forms
+    of life in water.
   astrological_notes: Sun 20 Gemini
   data_quality: AA
   sources:

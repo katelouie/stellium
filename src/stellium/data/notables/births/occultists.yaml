@@ -1,7 +1,3 @@
-# Notable births from AstroDatabank
-# Generated for Stellium astrology package
-# Source: https://www.astro.com/astro-databank/
-
 - name: Aleister Crowley
   event_type: birth
   year: 1875
@@ -15,25 +11,23 @@
   timezone: Europe/London
   category: occultist
   subcategories:
-    - Magician
-    - Author
-    - Poet
-  notable_for: >-
-    British occultist, ceremonial magician, poet, and painter. Founded the religion
-    of Thelema ("Do what thou wilt"). Leader of the British O.T.O. Member of the
-    Golden Dawn. Author of "The Book of the Law" and many other occult texts.
+  - Magician
+  - Author
+  - Poet
+  notable_for: British occultist, ceremonial magician, poet, and painter. Founded
+    the religion of Thelema ("Do what thou wilt"). Leader of the British O.T.O. Member
+    of the Golden Dawn. Author of "The Book of the Law" and many other occult texts.
   astrological_notes: Sun 19 Libra, Moon 22 Pisces
   data_quality: B
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Crowley,_Aleister"
-    - "Confessions of Aleister Crowley"
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Crowley,_Aleister'
+  - Confessions of Aleister Crowley
   verified: false
-
 - name: Nostradamus
   event_type: birth
   year: 1503
   month: 12
-  day: 14  # Julian calendar
+  day: 14
   hour: 12
   minute: 0
   latitude: 43.7894
@@ -42,18 +36,17 @@
   timezone: Europe/Paris
   category: occultist
   subcategories:
-    - Astrologer
-    - Physician
-    - Seer
-  notable_for: >-
-    French astrologer, physician, and reputed seer. Author of "Les Propheties"
+  - Astrologer
+  - Physician
+  - Seer
+  notable_for: French astrologer, physician, and reputed seer. Author of "Les Propheties"
     (1555), a collection of 942 quatrains predicting future events. His prophecies
     have been interpreted as predicting major world events for centuries.
   astrological_notes: Sun 2 Capricorn (Julian)
   data_quality: C
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Nostradamus"
-    - "Chavigny, La Premiere face du Janus francois (1594)"
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Nostradamus'
+  - Chavigny, La Premiere face du Janus francois (1594)
   verified: false
 - name: Helena Blavatsky
   event_type: birth
@@ -70,7 +63,10 @@
   subcategories:
   - Spiritualist
   - Mystic
-  notable_for: Russian spiritualist and mystic, the founder of the Theosophical Society. The daughter of minor Russo-German aristocrats, she married Nikifor Blavatsky, vice-Governor of Yerevan in the Caucasus on 7 July 1848 when she was 17 and he, over 40, and fled from him a few weeks later.
+  notable_for: Russian spiritualist and mystic, the founder of the Theosophical Society.
+    The daughter of minor Russo-German aristocrats, she married Nikifor Blavatsky,
+    vice-Governor of Yerevan in the Caucasus on 7 July 1848 when she was 17 and he,
+    over 40, and fled from him a few weeks later.
   astrological_notes: Ascendant 18°29', Sun sign Leo
   data_quality: C
   sources:
@@ -91,7 +87,10 @@
   subcategories:
   - Mystic
   - Psychic
-  notable_for: American mystic known as "The Sleeping Prophet." While in a sleep state he could discuss history, geology, metaphysics, philosophy and medicine. He gave approximately 30,000 life-readings and medical diagnosis to people during his lifetime.
+  notable_for: American mystic known as "The Sleeping Prophet." While in a sleep state
+    he could discuss history, geology, metaphysics, philosophy and medicine. He gave
+    approximately 30,000 life-readings and medical diagnosis to people during his
+    lifetime.
   astrological_notes: Ascendant 28°24', Sun 12°23', Moon 24°29'
   data_quality: C
   sources:
@@ -112,7 +111,12 @@
   subcategories:
   - mystic
   - author
-  notable_for: American-born British poet and scholarly mystic who wrote extensively on occult and esoteric matters, and was the co-creator of the Rider-Waite tarot deck. He authored its companion volume, the Pictorial Key to the Tarot (1911), a guide to tarot reading. Waite joined the Hermetic Order of the Golden Dawn, was a Freemason, and founded several esoteric orders. He was a prolific author on divination, esotericism, Freemasonry, ceremonial magic, Kabbalah, and alchemy.
+  notable_for: American-born British poet and scholarly mystic who wrote extensively
+    on occult and esoteric matters, and was the co-creator of the Rider-Waite tarot
+    deck. He authored its companion volume, the Pictorial Key to the Tarot (1911),
+    a guide to tarot reading. Waite joined the Hermetic Order of the Golden Dawn,
+    was a Freemason, and founded several esoteric orders. He was a prolific author
+    on divination, esotericism, Freemasonry, ceremonial magic, Kabbalah, and alchemy.
   astrological_notes: Sun 9°28' Libra, Ascendant 4°12' Capricorn
   data_quality: B
   sources:
@@ -126,8 +130,8 @@
   day: 18
   hour: 5
   minute: 0
-  latitude: 22.9258
-  longitude: 88.4067
+  latitude: 22.8985
+  longitude: 87.6574
   location_name: Kamarpukur, India
   timezone: Asia/Kolkata
   category: occultist
@@ -210,8 +214,8 @@
   day: 12
   hour: 0
   minute: 30
-  latitude: 13.7333
-  longitude: 79.5167
+  latitude: 13.5558
+  longitude: 78.5015
   location_name: Madanapalle, India
   timezone: Asia/Kolkata
   category: occultist
@@ -294,8 +298,8 @@
   day: 11
   hour: 17
   minute: 13
-  latitude: 23.0833
-  longitude: 77.5833
+  latitude: 23.3287
+  longitude: 77.8011
   location_name: Kuchwada, India
   timezone: Asia/Kolkata
   category: occultist
@@ -315,8 +319,8 @@
   day: 8
   hour: 19
   minute: 10
-  latitude: 9.9667
-  longitude: 76.2833
+  latitude: 10.0384
+  longitude: 76.5074
   location_name: Ernakulam, India
   timezone: Asia/Kolkata
   category: occultist

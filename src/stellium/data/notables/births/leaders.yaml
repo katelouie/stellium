@@ -1,7 +1,3 @@
-# Notable births from AstroDatabank
-# Generated for Stellium astrology package
-# Source: https://www.astro.com/astro-databank/
-
 - name: Martin Luther King Jr.
   event_type: birth
   year: 1929
@@ -194,7 +190,6 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom'
   - The Times [London], 22 April 1926, p. 14
   verified: true
-
 - name: Queen of the United Kingdom Victoria
   event_type: birth
   year: 1819
@@ -208,20 +203,18 @@
   timezone: Europe/London
   category: leader
   subcategories:
-    - Queen
-    - Empress
-    - Monarch
-  notable_for: >-
-    Queen of the United Kingdom from 1837 until her death in 1901. Empress of India
-    from 1876. Her reign of nearly 64 years was known as the Victorian era, a period
-    of industrial, cultural, and scientific change.
+  - Queen
+  - Empress
+  - Monarch
+  notable_for: Queen of the United Kingdom from 1837 until her death in 1901. Empress
+    of India from 1876. Her reign of nearly 64 years was known as the Victorian era,
+    a period of industrial, cultural, and scientific change.
   astrological_notes: Sun 2 Gemini, Moon 3 Gemini
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Victoria,_Queen_of_the_United_Kingdom"
-    - "The London Gazette, 26 May 1819"
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Victoria,_Queen_of_the_United_Kingdom'
+  - The London Gazette, 26 May 1819
   verified: true
-
 - name: Princess of Wales Diana
   event_type: birth
   year: 1961
@@ -235,17 +228,16 @@
   timezone: Europe/London
   category: leader
   subcategories:
-    - Princess
-    - Royal
-    - Humanitarian
-  notable_for: >-
-    Princess of Wales as the first wife of Charles, Prince of Wales. Known for her
-    charity work, particularly with AIDS patients and landmine victims. Her death
-    in 1997 prompted unprecedented public mourning.
+  - Princess
+  - Royal
+  - Humanitarian
+  notable_for: Princess of Wales as the first wife of Charles, Prince of Wales. Known
+    for her charity work, particularly with AIDS patients and landmine victims. Her
+    death in 1997 prompted unprecedented public mourning.
   astrological_notes: Sun 9 Cancer, Moon 25 Aquarius
   data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Diana,_Princess_of_Wales"
+  - 'AstroDatabank: https://www.astro.com/astro-databank/Diana,_Princess_of_Wales'
   verified: true
 - name: Nelson Mandela
   event_type: birth
@@ -262,7 +254,10 @@
   subcategories:
   - Politician
   - Activist
-  notable_for: South African President, a civil rights hero and martyr who claimed victory in his lifetime crusade to establish a non-racial democracy for South Africa. He was arrested as a political prisoner on August 5, 1962 and spent 27 years in prison, released on February 11, 1990.
+  notable_for: South African President, a civil rights hero and martyr who claimed
+    victory in his lifetime crusade to establish a non-racial democracy for South
+    Africa. He was arrested as a political prisoner on August 5, 1962 and spent 27
+    years in prison, released on February 11, 1990.
   astrological_notes: Ascendant 20°15', Sun sign Cancer
   data_quality: DD
   sources:
@@ -275,15 +270,19 @@
   day: 2
   hour: 7
   minute: 8
-  latitude: 21.17
-  longitude: 69.6
+  latitude: 21.603
+  longitude: 69.8538
   location_name: Porbandar, India
   timezone: Asia/Kolkata
   category: leader
   subcategories:
   - Political Activist
   - Lawyer
-  notable_for: Indian lawyer and civil rights champion, the spiritual and political leader of India through her tempestuous birth of independence. Known as Mahatma, (great soul), he began the freedom movement in 1919 with nonviolent disobedience. India broke from England in August 1947 and Gandhi's rank as a saint and holy man was assured in history.
+  notable_for: Indian lawyer and civil rights champion, the spiritual and political
+    leader of India through her tempestuous birth of independence. Known as Mahatma,
+    (great soul), he began the freedom movement in 1919 with nonviolent disobedience.
+    India broke from England in August 1947 and Gandhi's rank as a saint and holy
+    man was assured in history.
   astrological_notes: Asc. 08°56' 19°56' 25°47'
   data_quality: C
   sources:
@@ -304,7 +303,8 @@
   subcategories:
   - U.S. President
   - author
-  notable_for: American author, politician and the 35th U.S. President from 1961-63, the first Catholic and the youngest man to win the nation's highest office.
+  notable_for: American author, politician and the 35th U.S. President from 1961-63,
+    the first Catholic and the youngest man to win the nation's highest office.
   astrological_notes: Asc. 17°13'
   data_quality: A
   sources:
@@ -317,14 +317,18 @@
   day: 10
   hour: 10
   minute: 0
-  latitude: 39.6000
-  longitude: 19.9333
+  latitude: 36.3427
+  longitude: 28.1978
   location_name: Mon Repos, Greece
   timezone: Europe/Athens
   category: leader
   subcategories:
   - royal family
-  notable_for: Greek-Danish-British husband of Queen Elizabeth II from 1947 until his death in 2021, longest-serving consort of a reigning British monarch, oldest ever male member of the British royal family at death; served in British Navy during WWII, pilot-Captain General of the Royal Marines, yachtsman, polo player, wildlife conservationist.
+  notable_for: Greek-Danish-British husband of Queen Elizabeth II from 1947 until
+    his death in 2021, longest-serving consort of a reigning British monarch, oldest
+    ever male member of the British royal family at death; served in British Navy
+    during WWII, pilot-Captain General of the Royal Marines, yachtsman, polo player,
+    wildlife conservationist.
   astrological_notes: Sun 18°53', Asc. 15°08'
   data_quality: AA
   sources:
@@ -345,7 +349,9 @@
   subcategories:
   - first lady
   - editor
-  notable_for: American First Lady, wife of US President John F. Kennedy; socialite, public figure, publisher; married and widowed twice to powerful men; journalist; mother of Caroline and John Jr.
+  notable_for: American First Lady, wife of US President John F. Kennedy; socialite,
+    public figure, publisher; married and widowed twice to powerful men; journalist;
+    mother of Caroline and John Jr.
   astrological_notes: Sun in Leo; Ascendant 05°10'
   data_quality: A
   sources:
@@ -439,8 +445,8 @@
   day: 2
   hour: 12
   minute: 0
-  latitude: 0.0667
-  longitude: 22.3667
+  latitude: -4.0764
+  longitude: 24.5509
   location_name: Onalua, Congo
   timezone: Africa/Kinshasa
   category: leader
@@ -459,8 +465,8 @@
   day: 21
   hour: 11
   minute: 50
-  latitude: 12.75
-  longitude: -1.7833
+  latitude: 12.9613
+  longitude: -2.2634
   location_name: Yako, Burkina Faso
   timezone: Africa/Ouagadougou
   category: leader
@@ -587,7 +593,8 @@
   category: leader
   subcategories:
   - UK Prime Minister
-  notable_for: British stateswoman who was Prime Minister of the United Kingdom from 1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
+  notable_for: British stateswoman who was Prime Minister of the United Kingdom from
+    1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
   astrological_notes: Sun 19 Libra
   data_quality: AA
   sources:
@@ -601,13 +608,14 @@
   hour: 18
   minute: 0
   latitude: 53.5507
-  longitude: 9.9930
+  longitude: 9.993
   location_name: Hamburg, Germany
   timezone: Europe/Berlin
   category: leader
   subcategories:
   - German Chancellor
-  notable_for: German politician who has been Chancellor of Germany since 2005 and leader of the Christian Democratic Union since 2000.
+  notable_for: German politician who has been Chancellor of Germany since 2005 and
+    leader of the Christian Democratic Union since 2000.
   astrological_notes: Sun 24 Cancer
   data_quality: B
   sources:
@@ -628,7 +636,8 @@
   subcategories:
   - Argentine first lady
   - icon
-  notable_for: Argentine political leader and actress. Second wife of President Juan Perón and served as First Lady of Argentina from 1946 until her death in 1952.
+  notable_for: Argentine political leader and actress. Second wife of President Juan
+    Perón and served as First Lady of Argentina from 1946 until her death in 1952.
   astrological_notes: Sun 16 Taurus
   data_quality: B
   sources:
@@ -642,14 +651,15 @@
   hour: 12
   minute: 0
   latitude: 28.6139
-  longitude: 77.2090
+  longitude: 77.209
   location_name: Delhi, India
   timezone: Asia/Kolkata
   category: leader
   subcategories:
   - Myanmar
   - Nobel laureate
-  notable_for: Burmese politician, diplomat, and author who is the leader of the National League for Democracy and the first State Counsellor of Myanmar.
+  notable_for: Burmese politician, diplomat, and author who is the leader of the National
+    League for Democracy and the first State Counsellor of Myanmar.
   astrological_notes: Sun 27 Gemini
   data_quality: X
   sources:
@@ -669,7 +679,8 @@
   category: leader
   subcategories:
   - Israeli Prime Minister
-  notable_for: Israeli teacher, kibbutznik, stateswoman, politician and the fourth Prime Minister of Israel.
+  notable_for: Israeli teacher, kibbutznik, stateswoman, politician and the fourth
+    Prime Minister of Israel.
   astrological_notes: Sun 13 Taurus
   data_quality: AA
   sources:
@@ -689,7 +700,8 @@
   category: leader
   subcategories:
   - Russian Empress
-  notable_for: Empress of Russia who came to power following a coup d'état that she organised against her husband, Peter III.
+  notable_for: Empress of Russia who came to power following a coup d'état that she
+    organised against her husband, Peter III.
   astrological_notes: Sun 11 Taurus
   data_quality: B
   sources:

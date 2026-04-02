@@ -1,7 +1,3 @@
-# Notable births from AstroDatabank
-# Generated for Stellium astrology package
-# Source: https://www.astro.com/astro-databank/
-
 - name: Maya Angelou
   event_type: birth
   year: 1928
@@ -56,8 +52,8 @@
   day: 11
   hour: 9
   minute: 47
-  latitude: 55.75
-  longitude: 37.5833
+  latitude: 55.6256
+  longitude: 37.6064
   location_name: Moscow, Russia
   timezone: Europe/Moscow
   category: writer
@@ -89,7 +85,10 @@
   - Playwright
   - Poet
   - Actor
-  notable_for: English playwright, poet, and actor, generally considered the greatest dramatist the world has known, as well as the finest poet of the English language. He is historically known as a true literary giant and is often called England's national poet and the "Bard of Avon".
+  notable_for: English playwright, poet, and actor, generally considered the greatest
+    dramatist the world has known, as well as the finest poet of the English language.
+    He is historically known as a true literary giant and is often called England's
+    national poet and the "Bard of Avon".
   astrological_notes: Ascendant 12°43', Sun 07°59', Moon 18°48'
   data_quality: XX
   sources:
@@ -102,14 +101,18 @@
   day: 16
   hour: 23
   minute: 45
-  latitude: 51.38
-  longitude: -1.2
+  latitude: 51.2289
+  longitude: -1.2191
   location_name: Steventon, England
   timezone: Europe/London
   category: writer
   subcategories:
   - Novelist
-  notable_for: Jane Austen was a British writer and the first renowned female novelist of England, known for her six major novels that interpret, critique, and comment upon the British landed gentry at the end of the 18th century, exploring themes of women's dependence on marriage for social standing and economic security through biting irony, realism, humour, and social commentary.
+  notable_for: Jane Austen was a British writer and the first renowned female novelist
+    of England, known for her six major novels that interpret, critique, and comment
+    upon the British landed gentry at the end of the 18th century, exploring themes
+    of women's dependence on marriage for social standing and economic security through
+    biting irony, realism, humour, and social commentary.
   astrological_notes: Ascendant 24°08'
   data_quality: C
   sources:
@@ -123,14 +126,15 @@
   hour: 5
   minute: 12
   latitude: 40.7167
-  longitude: -74.0000
+  longitude: -74.0
   location_name: New York, New York, USA
   timezone: America/New_York
   category: writer
   subcategories:
   - playwright
   - writer
-  notable_for: American writer who won awards for "All My Sons" and the Pulitzer Prize for "Death Of A Salesman," 1949; noted dramatist and contemporary playwright.
+  notable_for: American writer who won awards for "All My Sons" and the Pulitzer Prize
+    for "Death Of A Salesman," 1949; noted dramatist and contemporary playwright.
   astrological_notes: Asc. 16°25'
   data_quality: C
   sources:
@@ -151,12 +155,15 @@
   subcategories:
   - novelist
   - humorist
-  notable_for: British fantasy author, creator of the hugely popular 41-volume Discworld series; knighted in 2009; wrote over 70 books; diagnosed with posterior cortical atrophy (rare early-onset Alzheimer’s) in 2007 and became a prominent campaigner for assisted dying; died 12 March 2015.
+  notable_for: British fantasy author, creator of the hugely popular 41-volume Discworld
+    series; knighted in 2009; wrote over 70 books; diagnosed with posterior cortical
+    atrophy (rare early-onset Alzheimer’s) in 2007 and became a prominent campaigner
+    for assisted dying; died 12 March 2015.
   astrological_notes: Sun 08° Taurus, Moon 08° Capricorn
   data_quality: X
   sources:
-  - 'https://www.astrotheme.com/astrology/Terry_Pratchett'
-  - 'https://en.wikipedia.org/wiki/Terry_Pratchett'
+  - https://www.astrotheme.com/astrology/Terry_Pratchett
+  - https://en.wikipedia.org/wiki/Terry_Pratchett
   verified: false
 - name: Amrita Pritam
   event_type: birth
@@ -194,7 +201,8 @@
   subcategories:
   - novelist
   - modernist
-  notable_for: English writer and one of the foremost modernists of the twentieth century.
+  notable_for: English writer and one of the foremost modernists of the twentieth
+    century.
   astrological_notes: Sun 5 Aquarius
   data_quality: A
   sources:
@@ -207,8 +215,8 @@
   day: 21
   hour: 8
   minute: 0
-  latitude: 41.8795
-  longitude: -87.6241
+  latitude: 41.8878
+  longitude: -87.7888
   location_name: Oak Park, Illinois
   timezone: America/Chicago
   category: writer
@@ -228,15 +236,16 @@
   day: 6
   hour: 9
   minute: 0
-  latitude: 9.9833
-  longitude: -74.8
+  latitude: 10.5906
+  longitude: -74.1877
   location_name: Aracataca, Colombia
   timezone: America/Bogota
   category: writer
   subcategories:
   - magical realism
   - Nobel
-  notable_for: Colombian novelist, short-story writer, screenwriter and journalist, known affectionately as Gabo throughout Latin America.
+  notable_for: Colombian novelist, short-story writer, screenwriter and journalist,
+    known affectionately as Gabo throughout Latin America.
   astrological_notes: Sun 15 Pisces
   data_quality: B
   sources:
@@ -249,15 +258,16 @@
   day: 18
   hour: 11
   minute: 0
-  latitude: 41.4528
-  longitude: -82.1824
+  latitude: 41.2634
+  longitude: -82.1735
   location_name: Lorain, Ohio
   timezone: America/New_York
   category: writer
   subcategories:
   - novelist
   - Nobel laureate
-  notable_for: American novelist, editor, and professor. Her novels are known for their epic themes, vivid dialogue, and richly detailed characters.
+  notable_for: American novelist, editor, and professor. Her novels are known for
+    their epic themes, vivid dialogue, and richly detailed characters.
   astrological_notes: Sun 29 Aquarius
   data_quality: X
   sources:
@@ -291,8 +301,8 @@
   day: 30
   hour: 12
   minute: 0
-  latitude: 37.8747
-  longitude: 67.7786
+  latitude: 36.7581
+  longitude: 66.898
   location_name: Balkh, Afghanistan
   timezone: Asia/Kabul
   category: writer
@@ -319,7 +329,8 @@
   category: writer
   subcategories:
   - novelist
-  notable_for: German-language novelist and short story writer, widely regarded as one of the major figures of 20th-century literature.
+  notable_for: German-language novelist and short story writer, widely regarded as
+    one of the major figures of 20th-century literature.
   astrological_notes: Sun 11 Cancer
   data_quality: AA
   sources:
@@ -354,7 +365,7 @@
   hour: 14
   minute: 14
   latitude: 50.4625
-  longitude: -3.5250
+  longitude: -3.525
   location_name: Torquay, England
   timezone: Europe/London
   category: writer
@@ -381,7 +392,8 @@
   subcategories:
   - writer
   - poet
-  notable_for: Argentine short-story writer, essayist, poet and translator, and a key figure in Spanish-language literature.
+  notable_for: Argentine short-story writer, essayist, poet and translator, and a
+    key figure in Spanish-language literature.
   astrological_notes: Sun 1 Virgo
   data_quality: AA
   sources:
