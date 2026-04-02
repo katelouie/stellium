@@ -147,10 +147,6 @@ class ReturnBuilder:
         """
         if not isinstance(year, int):
             raise TypeError(f"year must be an integer, got {type(year).__name__}")
-        if year < 1800 or year > 2400:
-            raise ValueError(
-                f"Year {year} is outside the supported ephemeris range (1800-2400)"
-            )
         natal_year = natal.datetime.utc_datetime.year
         if year < natal_year:
             raise ValueError(

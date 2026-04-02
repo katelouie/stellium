@@ -335,14 +335,6 @@ class Native:
 
         # --- Final Conversion ---
         if utc_dt:
-            # Validate year is within ephemeris range
-            if utc_dt.year < 1800 or utc_dt.year > 2400:
-                raise ValueError(
-                    f"Year {utc_dt.year} is outside the supported ephemeris "
-                    f"range (1800-2400 CE). Swiss Ephemeris data files cover "
-                    f"this range only."
-                )
-
             # Calculate Julian Day from the UTC datetime
             # swe.julday() converts calendar date to Julian Day number.
             # Since we're giving it UTC, the result is JD(UT) - Universal Time.

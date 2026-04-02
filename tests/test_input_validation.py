@@ -46,22 +46,15 @@ class TestNativeLocationValidation:
             Native("2000-01-06 12:00", {"latitude": 0, "longitude": -999})
 
 
-class TestNativeYearRangeValidation:
-    """Validate year is within ephemeris range (1800-2400)."""
+class TestNativeHistoricalDates:
+    """Verify that historical dates work (no artificial year range restriction)."""
 
-    def test_year_too_early(self):
-        with pytest.raises(ValueError, match="outside the supported ephemeris range"):
-            Native("1000-01-06 12:00", (47.6, -122.3))
+    def test_historical_date_accepted(self):
+        """Isaac Newton (1643) should work — ephemeris supports it analytically."""
+        native = Native("1643-01-04 12:00", (52.8, -0.6))
+        assert native.datetime.utc_datetime.year == 1643
 
-    def test_year_too_late(self):
-        with pytest.raises(ValueError, match="outside the supported ephemeris range"):
-            Native("2500-01-06 12:00", (47.6, -122.3))
-
-    def test_year_at_lower_bound(self):
-        native = Native("1800-01-06 12:00", (47.6, -122.3))
-        assert native.datetime.utc_datetime.year == 1800
-
-    def test_year_at_upper_bound(self):
+    def test_modern_date_accepted(self):
         native = Native("2400-01-06 12:00", (47.6, -122.3))
         assert native.datetime.utc_datetime.year == 2400
 
@@ -98,18 +91,6 @@ class TestReturnBuilderValidation:
         return ChartBuilder.from_details(
             "1994-01-06 11:47", "Palo Alto, CA"
         ).calculate()
-
-    def test_solar_year_too_early(self, natal):
-        from stellium.returns.builder import ReturnBuilder
-
-        with pytest.raises(ValueError, match="outside the supported ephemeris range"):
-            ReturnBuilder.solar(natal, 1700)
-
-    def test_solar_year_too_late(self, natal):
-        from stellium.returns.builder import ReturnBuilder
-
-        with pytest.raises(ValueError, match="outside the supported ephemeris range"):
-            ReturnBuilder.solar(natal, 2500)
 
     def test_solar_year_before_birth(self, natal):
         from stellium.returns.builder import ReturnBuilder
