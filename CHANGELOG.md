@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.17.0] - 2026-04-01
+
+### Added
+
 - **`get_component_result()` method** on `CalculatedChart`: unified accessor for component and analyzer results by name. Works with all storage patterns — position-based (Arabic Parts, Midpoints, Fixed Stars), metadata-based (Dignities, Accidental Dignities), dual-storage (Antiscia), and analyzers (Aspect Patterns, Zodiacal Releasing). Supports alias lookup by metadata key (e.g., `"dignities"` or `"Essential Dignities"`). Raises `KeyError` with helpful message listing available components. (GitHub issue #25)
 - **`available_components()` method** on `CalculatedChart`: returns sorted list of all component/analyzer names whose results are available on the chart.
 - **Component manifest** in `ChartBuilder.calculate()`: components and analyzers now self-describe their storage pattern at build time via `metadata["_component_manifest"]`. New components automatically work with `get_component_result()` without any changes to `CalculatedChart`.
