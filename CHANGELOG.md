@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Notable registry now loads entries individually** — previously, one bad entry in a YAML file would silently skip the entire file. Now each entry is loaded in its own try/except, so a single bad record only skips that record. Warning messages now include the entry name for easier debugging.
 - **Removed overly strict year range validation** — the 1800-2400 CE check on `Native` was rejecting historical charts (Newton 1643, da Vinci 1452, etc.) even though Swiss Ephemeris handles them via analytical methods. This also caused the notable registry to silently drop 8 YAML files on CI, reducing the registry from 197 to 101 entries.
 - **29 notable birth coordinates corrected** — full verification of all 196 geocode cache entries against Nominatim revealed 28 locations with >0.1° drift in the notables YAML files. Worst cases: Prince Philip (986km off — Mon Repos placed in mainland Greece instead of Corfu), Patrice Lumumba (520km off), Rumi (158km off). These would have produced incorrect house cusps for `ChartBuilder.from_notable()` charts.
+- **Chiron ephemeris bundled** (`se00015.se1`, 389KB): Chiron is in the default planet list but the asteroid ephemeris file wasn't shipped. Every chart showed a "Missing ephemeris" warning. Now included and works out of the box.
+- **Asteroid download URL fixed** in CLI: `ephe2/` → `ephe/` on ephe.scryr.io. The old URL returned 404 for all asteroid downloads.
 
 ## [0.17.0] - 2026-04-01
 

@@ -86,6 +86,7 @@ where = ["src"]
     "notables/INDEX.md",
     "swisseph/ephe/*.se1",
     "swisseph/ephe/*.txt",
+    "geocode_cache.json",
 ]
 
 # Tool configurations

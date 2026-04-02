@@ -29,7 +29,7 @@ DROPBOX_BASE_URL = "https://www.dropbox.com/scl/fo/y3naz62gy6f6qfrhquu7u/h/ephe/
 
 # Asteroid ephemeris download server (thanks to scryr.io for hosting!)
 # Contains long-range asteroid files (6000 year coverage)
-ASTEROID_BASE_URL = "https://ephe.scryr.io/ephe2/"
+ASTEROID_BASE_URL = "https://ephe.scryr.io/ephe/"
 
 # Common TNO and dwarf planet asteroid numbers for easy reference
 COMMON_ASTEROIDS = {
