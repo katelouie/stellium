@@ -72,8 +72,12 @@ from stellium.engines.houses import (
 
 # Orbs
 from stellium.engines.orbs import (
+    LILLY_FULL_ORBS,
+    MOIETY_SYSTEMS,
+    PTOLEMY_FULL_ORBS,
     ComplexOrbEngine,
     LuminariesOrbEngine,
+    MoietyOrbEngine,
     SimpleOrbEngine,
 )
 
@@ -154,6 +158,7 @@ __all__ = [
     "SimpleOrbEngine",
     "LuminariesOrbEngine",
     "ComplexOrbEngine",
+    "MoietyOrbEngine",
     # Dignities
     "TraditionalDignityCalculator",
     "ModernDignityCalculator",

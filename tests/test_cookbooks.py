@@ -100,6 +100,10 @@ class TestCleanCookbooks:
         result = _run_cookbook("vedic_cookbook.py")
         assert result.returncode == 0, f"STDERR:\n{result.stderr}"
 
+    def test_aspects_and_orbs_cookbook(self):
+        result = _run_cookbook("aspects_and_orbs_cookbook.py")
+        assert result.returncode == 0, f"STDERR:\n{result.stderr}"
+
     def test_comparison_cookbook(self):
         result = _run_cookbook("comparison_cookbook.py")
         assert result.returncode == 0, f"STDERR:\n{result.stderr}"

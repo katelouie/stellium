@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **`MoietyOrbEngine`** — traditional moiety-based orb calculation where each planet has its own sphere of influence. Effective orb = average of both planets' full orbs. Includes two named systems: `"lilly"` (medieval consensus: Lilly, Bonatti, Al-Biruni, Sahl) and `"ptolemy"` (wider Ptolemaic values). Supports custom `orb_map`, `fallback_orb`, and optional `minor_aspect_multiplier` for tighter minor/harmonic aspect orbs. Constants `LILLY_FULL_ORBS`, `PTOLEMY_FULL_ORBS`, and `MOIETY_SYSTEMS` exported for reference and customization.
+- **Aspects & Orbs cookbook** (`examples/aspects_and_orbs_cookbook.py`): 14 examples covering all 4 aspect engines (Modern, Harmonic, Declination, Cross-Chart), all 4 orb engines (Simple, Luminaries, Complex, Moiety), side-by-side comparisons, and a complete moiety calculation table.
+
 ### Changed
 
 ### Fixed

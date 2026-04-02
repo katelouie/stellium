@@ -5,8 +5,56 @@ These engines implement the OrbEngine protocol to provide
 different systems for calculating aspect orbs.
 """
 
+from typing import Literal
+
 from stellium.core.models import CelestialPosition
 from stellium.core.registry import ASPECT_REGISTRY
+
+# ── Moiety System Defaults ──────────────────────────────────────────────
+# Full orbs (moiety = half). Effective orb = (full_A + full_B) / 2.
+
+LILLY_FULL_ORBS: dict[str, float] = {
+    # Septenary — William Lilly, Christian Astrology (1647) p.107
+    # Matches Bonatti (1277), Al-Biruni (1029), Sahl (820 CE)
+    "Sun": 15.0,
+    "Moon": 12.0,
+    "Saturn": 9.0,
+    "Jupiter": 9.0,
+    "Mars": 8.0,
+    "Venus": 7.0,
+    "Mercury": 7.0,
+    # Outer planets — modern rulership analogy (no classical authority)
+    "Uranus": 6.0,
+    "Neptune": 6.0,
+    "Pluto": 5.0,
+    # Minor bodies
+    "Chiron": 3.0,
+    "True Node": 3.0,
+    "Mean Node": 3.0,
+}
+
+PTOLEMY_FULL_ORBS: dict[str, float] = {
+    # Ptolemy, Tetrabiblos (2nd century CE) — divergent, larger values
+    "Sun": 17.0,
+    "Moon": 12.5,
+    "Jupiter": 12.0,
+    "Saturn": 10.0,
+    "Venus": 8.0,
+    "Mars": 7.5,
+    "Mercury": 7.5,
+    # Outer planets — same conservative defaults
+    "Uranus": 6.0,
+    "Neptune": 6.0,
+    "Pluto": 5.0,
+    "Chiron": 3.0,
+    "True Node": 3.0,
+    "Mean Node": 3.0,
+}
+
+MOIETY_SYSTEMS: dict[str, dict[str, float]] = {
+    "lilly": LILLY_FULL_ORBS,
+    "ptolemy": PTOLEMY_FULL_ORBS,
+}
 
 # --- Engine 1: The Simple Default ---
 
@@ -190,3 +238,83 @@ class ComplexOrbEngine:
 
         # 4. Return the final fallback
         return self._config.get("default", self._fallback_default_orb)
+
+
+# --- Engine 4: Traditional Moiety System ---
+
+
+class MoietyOrbEngine:
+    """
+    Implements OrbEngine using the traditional moiety (half-orb) system.
+
+    Each planet has its own full orb value. The effective orb for an aspect
+    between two planets is the average of their full orbs:
+
+        effective_orb = (full_orb_A + full_orb_B) / 2
+
+    This is the universal formula across all traditional sources from
+    Sahl ibn Bishr (820 CE) through William Lilly (1647).
+
+    Supports named systems ("lilly", "ptolemy") for preset values,
+    or custom orb maps for full control.
+
+    Example::
+
+        # Default (Lilly / medieval consensus)
+        engine = MoietyOrbEngine()
+
+        # Ptolemaic (larger orbs)
+        engine = MoietyOrbEngine(system="ptolemy")
+
+        # Custom values
+        engine = MoietyOrbEngine(orb_map={"Sun": 15, "Moon": 12, "Mars": 7})
+
+        # With tighter orbs for minor/harmonic aspects
+        engine = MoietyOrbEngine(minor_aspect_multiplier=0.4)
+    """
+
+    def __init__(
+        self,
+        orb_map: dict[str, float] | None = None,
+        system: Literal["lilly", "ptolemy"] | None = None,
+        fallback_orb: float | None = None,
+        minor_aspect_multiplier: float | None = None,
+    ) -> None:
+        """
+        Args:
+            orb_map: A dictionary of {planet_name: full_orb_value}. If None,
+                uses the system defaults. If provided alongside system, orb_map
+                values take precedence (merged on top of system defaults).
+            system: Named moiety system ("lilly" or "ptolemy"). Defaults to
+                "lilly" (medieval consensus: 15/12/9/9/8/7/7).
+            fallback_orb: Full orb for planets not in the orb_map.
+                Defaults to 3.0.
+            minor_aspect_multiplier: If set, non-major aspects use
+                effective_orb * multiplier. For example, 0.4 means minor
+                aspects get 40% of the moiety-calculated orb. If None,
+                all aspects use the full moiety calculation.
+        """
+        system = system or "lilly"
+        base_orbs = MOIETY_SYSTEMS.get(system, LILLY_FULL_ORBS).copy()
+
+        if orb_map:
+            base_orbs.update(orb_map)
+
+        self._orbs = base_orbs
+        self._fallback_orb = fallback_orb or 3.0
+        self._minor_multiplier = minor_aspect_multiplier
+
+    def get_orb_allowance(
+        self, obj1: CelestialPosition, obj2: CelestialPosition, aspect_name: str
+    ) -> float:
+        """Calculate effective orb as the average of both planets' full orbs."""
+        full_orb_a = self._orbs.get(obj1.name, self._fallback_orb)
+        full_orb_b = self._orbs.get(obj2.name, self._fallback_orb)
+        effective_orb = (full_orb_a + full_orb_b) / 2.0
+
+        if self._minor_multiplier is not None:
+            aspect_info = ASPECT_REGISTRY.get(aspect_name)
+            if aspect_info and aspect_info.category in ("Minor", "Harmonic"):
+                effective_orb *= self._minor_multiplier
+
+        return effective_orb
