@@ -54,6 +54,7 @@ dev = [
     "isort>=5.13.0",
     "mypy>=1.8.0",
     "pre-commit>=3.6.0",
+    "pandas>=2.0.0",
 ]
 docs = ["mkdocs>=1.5.0", "mkdocs-material>=9.5.0"]
 web = ["nicegui>=1.4.0"]
