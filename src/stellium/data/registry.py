@@ -76,43 +76,46 @@ class NotableRegistry:
             try:
                 with open(yaml_file) as f:
                     entries = yaml.safe_load(f) or []
-
-                    for entry in entries:
-                        # Determine location input format
-                        location_input = self._parse_location(entry)
-
-                        if location_input is None:
-                            print(
-                                f"Warning: No valid location data in {yaml_file} for {entry.get('name', 'unknown')}"
-                            )
-                            continue
-
-                        # Create Notable - it calls Native.__init__ internally!
-                        notable = Notable(
-                            name=entry["name"],
-                            event_type=entry["event_type"],
-                            year=entry["year"],
-                            month=entry["month"],
-                            day=entry["day"],
-                            hour=entry["hour"],
-                            minute=entry["minute"],
-                            location_input=location_input,  # Native handles it!
-                            category=entry["category"],
-                            subcategories=entry.get("subcategories"),
-                            notable_for=entry.get("notable_for", ""),
-                            astrological_notes=entry.get("astrological_notes", ""),
-                            data_quality=entry.get("data_quality", "C"),
-                            sources=entry.get("sources"),
-                            verified=entry.get("verified", False),
-                        )
-
-                        self._notables.append(notable)
-
             except Exception as e:
-                print(f"Warning: Failed to load {yaml_file}: {e}")
-                import traceback
+                print(f"Warning: Failed to read {yaml_file}: {e}")
+                continue
 
-                traceback.print_exc()
+            for entry in entries:
+                # Determine location input format
+                location_input = self._parse_location(entry)
+
+                if location_input is None:
+                    print(
+                        f"Warning: No valid location data in {yaml_file} for {entry.get('name', 'unknown')}"
+                    )
+                    continue
+
+                try:
+                    # Create Notable - it calls Native.__init__ internally!
+                    notable = Notable(
+                        name=entry["name"],
+                        event_type=entry["event_type"],
+                        year=entry["year"],
+                        month=entry["month"],
+                        day=entry["day"],
+                        hour=entry["hour"],
+                        minute=entry["minute"],
+                        location_input=location_input,  # Native handles it!
+                        category=entry["category"],
+                        subcategories=entry.get("subcategories"),
+                        notable_for=entry.get("notable_for", ""),
+                        astrological_notes=entry.get("astrological_notes", ""),
+                        data_quality=entry.get("data_quality", "C"),
+                        sources=entry.get("sources"),
+                        verified=entry.get("verified", False),
+                    )
+
+                    self._notables.append(notable)
+                except Exception as e:
+                    print(
+                        f"Warning: Failed to load notable "
+                        f"'{entry.get('name', 'unknown')}' from {yaml_file.name}: {e}"
+                    )
 
     def _parse_location(self, entry: dict) -> str | tuple[float, float] | dict | None:
         """
