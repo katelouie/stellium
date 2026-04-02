@@ -7,6 +7,7 @@ that the rest of the system requires.
 """
 
 import datetime as dt
+from pathlib import Path
 from typing import Any
 
 import pytz
@@ -460,9 +461,40 @@ class Notable(Native):
 
 
 # --- Geocoding Helper ---
+
+_BUNDLED_GEOCODE_CACHE: dict | None = None
+
+
+def _get_bundled_geocode_cache() -> dict:
+    """Load the bundled geocode cache (shipped with package)."""
+    global _BUNDLED_GEOCODE_CACHE
+    if _BUNDLED_GEOCODE_CACHE is None:
+        import json
+
+        cache_path = Path(__file__).parent.parent / "data" / "geocode_cache.json"
+        if cache_path.exists():
+            with open(cache_path) as f:
+                _BUNDLED_GEOCODE_CACHE = json.load(f)
+        else:
+            _BUNDLED_GEOCODE_CACHE = {}
+    return _BUNDLED_GEOCODE_CACHE
+
+
 @cached(cache_type="geocoding", max_age_seconds=604800)
 def _cached_geocode(location_name: str) -> dict:
-    """Cached geocoding."""
+    """Geocode a location string, checking bundled cache first.
+
+    Lookup order:
+    1. Bundled cache (shipped with package, ~200 common locations)
+    2. Nominatim API (network call, may be rate-limited or unavailable)
+    """
+    # Check bundled cache first (no network needed)
+    key = location_name.lower().strip()
+    bundled = _get_bundled_geocode_cache()
+    if key in bundled:
+        return bundled[key]
+
+    # Fall back to Nominatim
     try:
         geolocator = Nominatim(user_agent="stellium_astrology_package")
         location = geolocator.geocode(location_name)

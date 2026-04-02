@@ -1,0 +1,1178 @@
+{
+  "aberdeen, washington, usa": {
+    "address": "Aberdeen, Washington, USA",
+    "latitude": 46.9833,
+    "longitude": -123.8167,
+    "timezone": "America/Los_Angeles"
+  },
+  "alexandria, egypt": {
+    "address": "Alexandria, Egypt",
+    "latitude": 31.2,
+    "longitude": 29.9,
+    "timezone": "Africa/Cairo"
+  },
+  "allahabad, india": {
+    "address": "Allahabad, India",
+    "latitude": 25.45,
+    "longitude": 81.85,
+    "timezone": "Asia/Kolkata"
+  },
+  "amsterdam, netherlands": {
+    "address": "Amsterdam, Netherlands",
+    "latitude": 52.3676,
+    "longitude": 4.9041,
+    "timezone": "Europe/Amsterdam"
+  },
+  "aracataca, colombia": {
+    "address": "Aracataca, Colombia",
+    "latitude": 10.5906,
+    "longitude": -74.1877,
+    "timezone": "America/Lima"
+  },
+  "atchison, kansas": {
+    "address": "Atchison, Kansas",
+    "latitude": 39.5458,
+    "longitude": -95.3326,
+    "timezone": "America/Chicago"
+  },
+  "athens, greece": {
+    "address": "Athens, Greece",
+    "latitude": 37.9838,
+    "longitude": 23.7275,
+    "timezone": "Europe/Athens"
+  },
+  "atlanta, ga": {
+    "address": "Atlanta, GA, USA",
+    "latitude": 33.749,
+    "longitude": -84.388,
+    "timezone": "America/New_York"
+  },
+  "atlanta, georgia, usa": {
+    "address": "Atlanta, Georgia, USA",
+    "latitude": 33.749,
+    "longitude": -84.388,
+    "timezone": "America/New_York"
+  },
+  "auckland, new zealand": {
+    "address": "Auckland, New Zealand",
+    "latitude": -36.8485,
+    "longitude": 174.7633,
+    "timezone": "Pacific/Auckland"
+  },
+  "austin, tx": {
+    "address": "Austin, TX, USA",
+    "latitude": 30.2672,
+    "longitude": -97.7431,
+    "timezone": "America/Chicago"
+  },
+  "baghdad, iraq": {
+    "address": "Baghdad, Iraq",
+    "latitude": 33.3152,
+    "longitude": 44.3661,
+    "timezone": "Asia/Baghdad"
+  },
+  "balkh, afghanistan": {
+    "address": "Balkh, Afghanistan",
+    "latitude": 36.7581,
+    "longitude": 66.898,
+    "timezone": "Asia/Kabul"
+  },
+  "bangalore, india": {
+    "address": "Bangalore, India",
+    "latitude": 12.9716,
+    "longitude": 77.5946,
+    "timezone": "Asia/Kolkata"
+  },
+  "bangkok, thailand": {
+    "address": "Bangkok, Thailand",
+    "latitude": 13.7563,
+    "longitude": 100.5018,
+    "timezone": "Asia/Bangkok"
+  },
+  "beaconsfield, england": {
+    "address": "Beaconsfield, England",
+    "latitude": 51.6,
+    "longitude": -0.65,
+    "timezone": "Europe/London"
+  },
+  "beijing, china": {
+    "address": "Beijing, China",
+    "latitude": 39.9075,
+    "longitude": 116.3972,
+    "timezone": "Asia/Shanghai"
+  },
+  "berlin, germany": {
+    "address": "Berlin, Germany",
+    "latitude": 52.52,
+    "longitude": 13.405,
+    "timezone": "Europe/Berlin"
+  },
+  "bir\u00e1n, cuba": {
+    "address": "Bir\u00e1n, Cuba",
+    "latitude": 20.55,
+    "longitude": -75.8833,
+    "timezone": "America/Havana"
+  },
+  "blenheim palace, england": {
+    "address": "Blenheim Palace, England",
+    "latitude": 51.8412,
+    "longitude": -1.3617,
+    "timezone": "Europe/London"
+  },
+  "boston, ma": {
+    "address": "Boston, Suffolk County, Massachusetts, United States",
+    "latitude": 42.3588,
+    "longitude": -71.0578,
+    "timezone": "America/New_York"
+  },
+  "brookline, massachusetts, usa": {
+    "address": "Brookline, Massachusetts, USA",
+    "latitude": 42.3333,
+    "longitude": -71.1167,
+    "timezone": "America/New_York"
+  },
+  "brooklyn (kings county), new york, usa": {
+    "address": "Brooklyn (Kings County), New York, USA",
+    "latitude": 40.638,
+    "longitude": -73.933,
+    "timezone": "America/New_York"
+  },
+  "brooklyn, new york, usa": {
+    "address": "Brooklyn, New York, USA",
+    "latitude": 40.65,
+    "longitude": -73.95,
+    "timezone": "America/New_York"
+  },
+  "buenos aires, argentina": {
+    "address": "Buenos Aires, Argentina",
+    "latitude": -34.6131,
+    "longitude": -58.3772,
+    "timezone": "America/Argentina/Buenos_Aires"
+  },
+  "burlington, vermont, usa": {
+    "address": "Burlington, Vermont, USA",
+    "latitude": 44.4759,
+    "longitude": -73.2121,
+    "timezone": "America/New_York"
+  },
+  "cairo, egypt": {
+    "address": "Cairo, Egypt",
+    "latitude": 30.0444,
+    "longitude": 31.2357,
+    "timezone": "Africa/Cairo"
+  },
+  "cairo, georgia": {
+    "address": "Cairo, Georgia",
+    "latitude": 30.8773,
+    "longitude": -84.2079,
+    "timezone": "America/New_York"
+  },
+  "caprese michelangelo, italy": {
+    "address": "Caprese Michelangelo, Italy",
+    "latitude": 43.6389,
+    "longitude": 11.9875,
+    "timezone": "Europe/Rome"
+  },
+  "chicago, il": {
+    "address": "Chicago, South Chicago Township, Cook County, Illinois, United States",
+    "latitude": 41.8756,
+    "longitude": -87.6244,
+    "timezone": "America/Chicago"
+  },
+  "chicago, illinois": {
+    "address": "Chicago, Illinois",
+    "latitude": 41.8781,
+    "longitude": -87.6298,
+    "timezone": "America/Chicago"
+  },
+  "chicago, illinois, usa": {
+    "address": "Chicago, Illinois, USA",
+    "latitude": 41.8781,
+    "longitude": -87.6298,
+    "timezone": "America/Chicago"
+  },
+  "chimel, guatemala": {
+    "address": "Chimel, Guatemala",
+    "latitude": 15.3333,
+    "longitude": -90.8333,
+    "timezone": "America/Guatemala"
+  },
+  "cincinnati, ohio": {
+    "address": "Cincinnati, Ohio",
+    "latitude": 39.1031,
+    "longitude": -84.512,
+    "timezone": "America/New_York"
+  },
+  "columbus, ohio": {
+    "address": "Columbus, Ohio",
+    "latitude": 39.9612,
+    "longitude": -82.9988,
+    "timezone": "America/New_York"
+  },
+  "concord, california": {
+    "address": "Concord, California",
+    "latitude": 37.99,
+    "longitude": -122.02,
+    "timezone": "America/Los_Angeles"
+  },
+  "copenhagen, denmark": {
+    "address": "Copenhagen, Denmark",
+    "latitude": 55.6761,
+    "longitude": 12.5683,
+    "timezone": "Europe/Copenhagen"
+  },
+  "coyoac\u00e1n, mexico": {
+    "address": "Coyoac\u00e1n, Mexico",
+    "latitude": 19.3467,
+    "longitude": -99.1618,
+    "timezone": "America/Mexico_City"
+  },
+  "darvel, scotland": {
+    "address": "Darvel, Scotland",
+    "latitude": 55.6097,
+    "longitude": -4.2818,
+    "timezone": "Europe/London"
+  },
+  "delhi, india": {
+    "address": "Delhi, India",
+    "latitude": 28.6139,
+    "longitude": 77.209,
+    "timezone": "Asia/Kolkata"
+  },
+  "denver, co": {
+    "address": "Denver, CO, USA",
+    "latitude": 39.7392,
+    "longitude": -104.9903,
+    "timezone": "America/Denver"
+  },
+  "detroit, mi": {
+    "address": "Detroit, MI, USA",
+    "latitude": 42.3314,
+    "longitude": -83.0458,
+    "timezone": "America/Detroit"
+  },
+  "diseworth, leicestershire, england": {
+    "address": "Diseworth, Leicestershire, England",
+    "latitude": 52.8333,
+    "longitude": -1.2667,
+    "timezone": "Europe/London"
+  },
+  "dublin, ireland": {
+    "address": "Dublin, Ireland",
+    "latitude": 53.3498,
+    "longitude": -6.2603,
+    "timezone": "Europe/Dublin"
+  },
+  "edinburgh, uk": {
+    "address": "Edinburgh, UK",
+    "latitude": 55.9533,
+    "longitude": -3.1883,
+    "timezone": "Europe/London"
+  },
+  "ekaterinoslav, ukraine": {
+    "address": "Ekaterinoslav, Ukraine",
+    "latitude": 48.45,
+    "longitude": 34.9833,
+    "timezone": "Europe/Kyiv"
+  },
+  "ernakulam, india": {
+    "address": "Ernakulam, India",
+    "latitude": 10.0384,
+    "longitude": 76.5074,
+    "timezone": "Asia/Kolkata"
+  },
+  "falmouth, jamaica": {
+    "address": "Falmouth, Jamaica",
+    "latitude": 18.4929,
+    "longitude": -77.6574,
+    "timezone": "America/Lima"
+  },
+  "figueres, spain": {
+    "address": "Figueres, Spain",
+    "latitude": 42.2667,
+    "longitude": 2.9617,
+    "timezone": "Europe/Madrid"
+  },
+  "freiberg, moravia (now czech republic)": {
+    "address": "Freiberg, Moravia (now Czech Republic)",
+    "latitude": 49.65,
+    "longitude": 18.1667,
+    "timezone": "Europe/Prague"
+  },
+  "gorakhpur, india": {
+    "address": "Gorakhpur, India",
+    "latitude": 26.7667,
+    "longitude": 83.3667,
+    "timezone": "Asia/Kolkata"
+  },
+  "grantham, england": {
+    "address": "Grantham, England",
+    "latitude": 52.9167,
+    "longitude": -0.6333,
+    "timezone": "Europe/London"
+  },
+  "groot-zundert, netherlands": {
+    "address": "Groot-Zundert, Netherlands",
+    "latitude": 51.5057,
+    "longitude": 4.6463,
+    "timezone": "Europe/Paris"
+  },
+  "guanajuato, mexico": {
+    "address": "Guanajuato, Mexico",
+    "latitude": 20.9877,
+    "longitude": -101.0,
+    "timezone": "America/Mexico_City"
+  },
+  "guangzhou, china": {
+    "address": "Guangzhou, China",
+    "latitude": 23.1291,
+    "longitude": 113.2644,
+    "timezone": "Asia/Shanghai"
+  },
+  "gujranwala, pakistan": {
+    "address": "Gujranwala, Pakistan",
+    "latitude": 32.15,
+    "longitude": 74.1833,
+    "timezone": "Asia/Karachi"
+  },
+  "hamburg, germany": {
+    "address": "Hamburg, Germany",
+    "latitude": 53.5507,
+    "longitude": 9.993,
+    "timezone": "Europe/Berlin"
+  },
+  "hannover, germany": {
+    "address": "Hannover, Germany",
+    "latitude": 52.3667,
+    "longitude": 9.7333,
+    "timezone": "Europe/Berlin"
+  },
+  "helsinki, finland": {
+    "address": "Helsinki, Finland",
+    "latitude": 60.1699,
+    "longitude": 24.9384,
+    "timezone": "Europe/Helsinki"
+  },
+  "heston middlesex, england": {
+    "address": "Heston Middlesex, England",
+    "latitude": 51.4833,
+    "longitude": -0.3667,
+    "timezone": "Europe/London"
+  },
+  "hoboken, new jersey, usa": {
+    "address": "Hoboken, New Jersey, USA",
+    "latitude": 40.7439,
+    "longitude": -74.0322,
+    "timezone": "America/New_York"
+  },
+  "hodgenville, kentucky, usa": {
+    "address": "Hodgenville, Kentucky, USA",
+    "latitude": 37.5667,
+    "longitude": -85.7333,
+    "timezone": "America/Kentucky/Louisville"
+  },
+  "hong kong": {
+    "address": "Hong Kong",
+    "latitude": 22.2856,
+    "longitude": 114.1577,
+    "timezone": "Asia/Hong_Kong"
+  },
+  "honolulu, hawaii, usa": {
+    "address": "Honolulu, Hawaii, USA",
+    "latitude": 21.3,
+    "longitude": -157.8667,
+    "timezone": "Pacific/Honolulu"
+  },
+  "honolulu, hi": {
+    "address": "Honolulu, Honolulu County, Hawaii, United States",
+    "latitude": 21.3045,
+    "longitude": -157.8557,
+    "timezone": "Pacific/Honolulu"
+  },
+  "hopkinsville, kentucky": {
+    "address": "Hopkinsville, Kentucky",
+    "latitude": 36.85,
+    "longitude": -87.48,
+    "timezone": "America/Chicago"
+  },
+  "houston, texas": {
+    "address": "Houston, Texas",
+    "latitude": 29.76,
+    "longitude": -95.37,
+    "timezone": "America/Chicago"
+  },
+  "houston, tx": {
+    "address": "Houston, TX, USA",
+    "latitude": 29.7604,
+    "longitude": -95.3698,
+    "timezone": "America/Chicago"
+  },
+  "huntington, new york, usa": {
+    "address": "Huntington, New York, USA",
+    "latitude": 40.8667,
+    "longitude": -73.4333,
+    "timezone": "America/New_York"
+  },
+  "ihithe, kenya": {
+    "address": "Ihithe, Kenya",
+    "latitude": -0.55,
+    "longitude": 36.8333,
+    "timezone": "Africa/Nairobi"
+  },
+  "istanbul, turkey": {
+    "address": "Istanbul, Turkey",
+    "latitude": 41.0082,
+    "longitude": 28.9784,
+    "timezone": "Europe/Istanbul"
+  },
+  "ixelles, belgium": {
+    "address": "Ixelles, Belgium",
+    "latitude": 50.8333,
+    "longitude": 4.35,
+    "timezone": "Europe/Brussels"
+  },
+  "izmir, turkey": {
+    "address": "Izmir, Turkey",
+    "latitude": 38.4237,
+    "longitude": 27.1428,
+    "timezone": "Europe/Istanbul"
+  },
+  "jamaica plain, massachusetts": {
+    "address": "Jamaica Plain, Massachusetts",
+    "latitude": 42.3181,
+    "longitude": -71.1064,
+    "timezone": "America/New_York"
+  },
+  "jamestown, new york": {
+    "address": "Jamestown, New York",
+    "latitude": 42.097,
+    "longitude": -79.2353,
+    "timezone": "America/New_York"
+  },
+  "jersey city, new jersey": {
+    "address": "Jersey City, New Jersey",
+    "latitude": 40.7333,
+    "longitude": -74.0833,
+    "timezone": "America/New_York"
+  },
+  "johannesburg, south africa": {
+    "address": "Johannesburg, South Africa",
+    "latitude": -26.2023,
+    "longitude": 28.0436,
+    "timezone": "Africa/Johannesburg"
+  },
+  "kamarpukur, india": {
+    "address": "Kamarpukur, India",
+    "latitude": 22.8985,
+    "longitude": 87.6574,
+    "timezone": "Asia/Kolkata"
+  },
+  "karachi, pakistan": {
+    "address": "Karachi, Pakistan",
+    "latitude": 24.8667,
+    "longitude": 67.05,
+    "timezone": "Asia/Karachi"
+  },
+  "kensington palace, london, england": {
+    "address": "Kensington Palace, London, England",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "timezone": "Europe/London"
+  },
+  "kesswil, switzerland": {
+    "address": "Kesswil, Switzerland",
+    "latitude": 47.6,
+    "longitude": 9.3333,
+    "timezone": "Europe/Zurich"
+  },
+  "kiev, ukraine": {
+    "address": "Kiev, Ukraine",
+    "latitude": 50.4547,
+    "longitude": 30.5238,
+    "timezone": "Europe/Kyiv"
+  },
+  "klushino, russia": {
+    "address": "Klushino, Russia",
+    "latitude": 55.7167,
+    "longitude": 35.15,
+    "timezone": "Europe/Moscow"
+  },
+  "kolkata, india": {
+    "address": "Kolkata, India",
+    "latitude": 22.5726,
+    "longitude": 88.3639,
+    "timezone": "Asia/Kolkata"
+  },
+  "kosciusko, mississippi, usa": {
+    "address": "Kosciusko, Mississippi, USA",
+    "latitude": 33.0579,
+    "longitude": -89.5873,
+    "timezone": "America/Chicago"
+  },
+  "kuchwada, india": {
+    "address": "Kuchwada, India",
+    "latitude": 23.3287,
+    "longitude": 77.8011,
+    "timezone": "Asia/Kolkata"
+  },
+  "lake jackson, texas, usa": {
+    "address": "Lake Jackson, Texas, USA",
+    "latitude": 29.0297,
+    "longitude": -95.4008,
+    "timezone": "America/Chicago"
+  },
+  "las vegas, nv": {
+    "address": "Las Vegas, NV, USA",
+    "latitude": 36.1699,
+    "longitude": -115.1398,
+    "timezone": "America/Los_Angeles"
+  },
+  "le cateau, france": {
+    "address": "Le Cateau, France",
+    "latitude": 50.0914,
+    "longitude": 3.5405,
+    "timezone": "Europe/Paris"
+  },
+  "leamington spa, england": {
+    "address": "Leamington Spa, England",
+    "latitude": 52.2852,
+    "longitude": -1.5201,
+    "timezone": "Europe/London"
+  },
+  "lima, peru": {
+    "address": "Lima, Peru",
+    "latitude": -12.0464,
+    "longitude": -77.0428,
+    "timezone": "America/Lima"
+  },
+  "lisbon, portugal": {
+    "address": "Lisbon, Portugal",
+    "latitude": 38.7223,
+    "longitude": -9.1393,
+    "timezone": "Europe/Lisbon"
+  },
+  "liverpool, england": {
+    "address": "Liverpool, England",
+    "latitude": 53.4167,
+    "longitude": -2.9167,
+    "timezone": "Europe/London"
+  },
+  "london, england": {
+    "address": "London, England",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "timezone": "Europe/London"
+  },
+  "london, uk": {
+    "address": "Greater London, England, United Kingdom",
+    "latitude": 51.5074,
+    "longitude": -0.1278,
+    "timezone": "Europe/London"
+  },
+  "long beach, california": {
+    "address": "Long Beach, California",
+    "latitude": 33.7701,
+    "longitude": -118.191,
+    "timezone": "America/Los_Angeles"
+  },
+  "lorain, ohio": {
+    "address": "Lorain, Ohio",
+    "latitude": 41.2634,
+    "longitude": -82.1735,
+    "timezone": "America/New_York"
+  },
+  "los angeles, ca": {
+    "address": "Los Angeles, Los Angeles County, California, United States",
+    "latitude": 34.0537,
+    "longitude": -118.2428,
+    "timezone": "America/Los_Angeles"
+  },
+  "los angeles, california, usa": {
+    "address": "Los Angeles, California, USA",
+    "latitude": 34.0922,
+    "longitude": -118.2944,
+    "timezone": "America/Los_Angeles"
+  },
+  "louisville, kentucky, usa": {
+    "address": "Louisville, Kentucky, USA",
+    "latitude": 38.2527,
+    "longitude": -85.7585,
+    "timezone": "America/Kentucky/Louisville"
+  },
+  "machilipatnam, india": {
+    "address": "Machilipatnam, India",
+    "latitude": 16.1833,
+    "longitude": 81.1333,
+    "timezone": "Asia/Kolkata"
+  },
+  "madanapalle, india": {
+    "address": "Madanapalle, India",
+    "latitude": 13.5558,
+    "longitude": 78.5015,
+    "timezone": "Asia/Kolkata"
+  },
+  "madrid, spain": {
+    "address": "Madrid, Spain",
+    "latitude": 40.4168,
+    "longitude": -3.7038,
+    "timezone": "Europe/Madrid"
+  },
+  "madurai, india": {
+    "address": "Madurai, India",
+    "latitude": 9.9167,
+    "longitude": 78.1167,
+    "timezone": "Asia/Kolkata"
+  },
+  "mangalore, india": {
+    "address": "Mangalore, India",
+    "latitude": 12.8833,
+    "longitude": 74.85,
+    "timezone": "Asia/Kolkata"
+  },
+  "martinez, california, usa": {
+    "address": "Martinez, California, USA",
+    "latitude": 38.0167,
+    "longitude": -122.1333,
+    "timezone": "America/Los_Angeles"
+  },
+  "mayfair, london, england": {
+    "address": "Mayfair, London, England",
+    "latitude": 51.5086,
+    "longitude": -0.1439,
+    "timezone": "Europe/London"
+  },
+  "melbourne, australia": {
+    "address": "Melbourne, Australia",
+    "latitude": -37.8136,
+    "longitude": 144.9631,
+    "timezone": "Australia/Melbourne"
+  },
+  "mexico city, mexico": {
+    "address": "Ciudad de M\u00e9xico, M\u00e9xico",
+    "latitude": 19.3208,
+    "longitude": -99.1515,
+    "timezone": "America/Mexico_City"
+  },
+  "miami, fl": {
+    "address": "Miami, FL, USA",
+    "latitude": 25.7617,
+    "longitude": -80.1918,
+    "timezone": "America/New_York"
+  },
+  "milan, ohio, usa": {
+    "address": "Milan, Ohio, USA",
+    "latitude": 41.2978,
+    "longitude": -82.6208,
+    "timezone": "America/New_York"
+  },
+  "minneapolis, minnesota, usa": {
+    "address": "Minneapolis, Minnesota, USA",
+    "latitude": 44.9833,
+    "longitude": -93.2667,
+    "timezone": "America/Chicago"
+  },
+  "minneapolis, mn": {
+    "address": "Minneapolis, MN, USA",
+    "latitude": 44.9778,
+    "longitude": -93.265,
+    "timezone": "America/Chicago"
+  },
+  "mon repos, greece": {
+    "address": "Mon Repos, Greece",
+    "latitude": 36.3427,
+    "longitude": 28.1978,
+    "timezone": "Europe/Athens"
+  },
+  "moscow, russia": {
+    "address": "Moscow, Russia",
+    "latitude": 55.6256,
+    "longitude": 37.6064,
+    "timezone": "Europe/Moscow"
+  },
+  "mumbai, india": {
+    "address": "Mumbai, India",
+    "latitude": 19.076,
+    "longitude": 72.8777,
+    "timezone": "Asia/Kolkata"
+  },
+  "mvezo, south africa": {
+    "address": "Mvezo, South Africa",
+    "latitude": -31.95,
+    "longitude": 28.52,
+    "timezone": "Africa/Johannesburg"
+  },
+  "mysore, india": {
+    "address": "Mysore, India",
+    "latitude": 12.3167,
+    "longitude": 76.65,
+    "timezone": "Asia/Kolkata"
+  },
+  "m\u00e1laga, spain": {
+    "address": "M\u00e1laga, Spain",
+    "latitude": 36.7213,
+    "longitude": -4.4213,
+    "timezone": "Europe/Madrid"
+  },
+  "nairobi, kenya": {
+    "address": "Nairobi, Kenya",
+    "latitude": -1.2921,
+    "longitude": 36.8219,
+    "timezone": "Africa/Nairobi"
+  },
+  "new york, new york": {
+    "address": "New York, New York",
+    "latitude": 40.7128,
+    "longitude": -74.006,
+    "timezone": "America/New_York"
+  },
+  "new york, new york, usa": {
+    "address": "New York, New York, USA",
+    "latitude": 40.7167,
+    "longitude": -74.0,
+    "timezone": "America/New_York"
+  },
+  "new york, ny": {
+    "address": "New York, United States",
+    "latitude": 40.7127,
+    "longitude": -74.006,
+    "timezone": "America/New_York"
+  },
+  "oak park, illinois": {
+    "address": "Oak Park, Illinois",
+    "latitude": 41.8878,
+    "longitude": -87.7888,
+    "timezone": "America/Chicago"
+  },
+  "omaha, nebraska": {
+    "address": "Omaha, Nebraska",
+    "latitude": 41.16,
+    "longitude": -95.93,
+    "timezone": "America/Chicago"
+  },
+  "onalua, congo": {
+    "address": "Onalua, Congo",
+    "latitude": -4.0764,
+    "longitude": 24.5509,
+    "timezone": "Africa/Johannesburg"
+  },
+  "oslo, norway": {
+    "address": "Oslo, Norway",
+    "latitude": 59.9139,
+    "longitude": 10.7522,
+    "timezone": "Europe/Oslo"
+  },
+  "oxford, england": {
+    "address": "Oxford, England",
+    "latitude": 51.752,
+    "longitude": -1.2578,
+    "timezone": "Europe/London"
+  },
+  "paddington, london, england": {
+    "address": "Paddington, London, England",
+    "latitude": 51.5167,
+    "longitude": -0.175,
+    "timezone": "Europe/London"
+  },
+  "palo alto, ca": {
+    "address": "Palo Alto, Santa Clara County, California, United States",
+    "latitude": 37.4443,
+    "longitude": -122.1598,
+    "timezone": "America/Los_Angeles"
+  },
+  "paris, france": {
+    "address": "Paris, France",
+    "latitude": 48.8566,
+    "longitude": 2.3522,
+    "timezone": "Europe/Paris"
+  },
+  "philadelphia, pa": {
+    "address": "Philadelphia, PA, USA",
+    "latitude": 39.9526,
+    "longitude": -75.1652,
+    "timezone": "America/New_York"
+  },
+  "phoenix, az": {
+    "address": "Phoenix, AZ, USA",
+    "latitude": 33.4484,
+    "longitude": -112.074,
+    "timezone": "America/Phoenix"
+  },
+  "pisa, italy": {
+    "address": "Pisa, Italy",
+    "latitude": 43.4715,
+    "longitude": 10.6798,
+    "timezone": "Europe/Paris"
+  },
+  "pittsburgh, pennsylvania": {
+    "address": "Pittsburgh, Pennsylvania",
+    "latitude": 40.43,
+    "longitude": -80.0,
+    "timezone": "America/New_York"
+  },
+  "pontrhydyfen, wales": {
+    "address": "Pontrhydyfen, Wales",
+    "latitude": 51.6333,
+    "longitude": -3.7333,
+    "timezone": "Europe/London"
+  },
+  "porbandar, india": {
+    "address": "Porbandar, India",
+    "latitude": 21.603,
+    "longitude": 69.8538,
+    "timezone": "Asia/Kolkata"
+  },
+  "portland, or": {
+    "address": "Portland, OR, USA",
+    "latitude": 45.5155,
+    "longitude": -122.6789,
+    "timezone": "America/Los_Angeles"
+  },
+  "prague, czech republic": {
+    "address": "Prague, Czech Republic",
+    "latitude": 50.0755,
+    "longitude": 14.4378,
+    "timezone": "Europe/Prague"
+  },
+  "pretoria, south africa": {
+    "address": "Pretoria, South Africa",
+    "latitude": -25.7479,
+    "longitude": 28.2293,
+    "timezone": "Africa/Johannesburg"
+  },
+  "princeton, nj": {
+    "address": "Princeton, Mercer County, New Jersey, United States",
+    "latitude": 40.3497,
+    "longitude": -74.6597,
+    "timezone": "America/New_York"
+  },
+  "reading, berkshire, england": {
+    "address": "Reading, Berkshire, England",
+    "latitude": 51.4542,
+    "longitude": -0.9731,
+    "timezone": "Europe/London"
+  },
+  "richland center, wisconsin": {
+    "address": "Richland Center, Wisconsin",
+    "latitude": 43.3355,
+    "longitude": -90.3854,
+    "timezone": "America/Chicago"
+  },
+  "rome, italy": {
+    "address": "Rome, Italy",
+    "latitude": 41.9028,
+    "longitude": 12.4964,
+    "timezone": "Europe/Rome"
+  },
+  "rosario, argentina": {
+    "address": "Rosario, Argentina",
+    "latitude": -32.9468,
+    "longitude": -60.6393,
+    "timezone": "America/Argentina/Cordoba"
+  },
+  "rowena, texas, usa": {
+    "address": "Rowena, Texas, USA",
+    "latitude": 31.6472,
+    "longitude": -100.0431,
+    "timezone": "America/Chicago"
+  },
+  "r\u00f6cken, germany": {
+    "address": "R\u00f6cken, Germany",
+    "latitude": 51.242,
+    "longitude": 12.1143,
+    "timezone": "Europe/Paris"
+  },
+  "sabaneta, venezuela": {
+    "address": "Sabaneta, Venezuela",
+    "latitude": 8.7667,
+    "longitude": -69.9333,
+    "timezone": "America/Caracas"
+  },
+  "saginaw, michigan, usa": {
+    "address": "Saginaw, Michigan, USA",
+    "latitude": 43.4195,
+    "longitude": -83.9508,
+    "timezone": "America/Detroit"
+  },
+  "saint joseph, missouri, usa": {
+    "address": "Saint Joseph, Missouri, USA",
+    "latitude": 39.7667,
+    "longitude": -94.85,
+    "timezone": "America/Chicago"
+  },
+  "saint-andr\u00e9-de-cubzac, france": {
+    "address": "Saint-Andr\u00e9-de-Cubzac, France",
+    "latitude": 44.9954,
+    "longitude": -0.4441,
+    "timezone": "Europe/Paris"
+  },
+  "saint-remy-de-provence, france": {
+    "address": "Saint-Remy-de-Provence, France",
+    "latitude": 43.7894,
+    "longitude": 4.8319,
+    "timezone": "Europe/Paris"
+  },
+  "salzburg, austria": {
+    "address": "Salzburg, Austria",
+    "latitude": 47.8,
+    "longitude": 13.0333,
+    "timezone": "Europe/Vienna"
+  },
+  "san diego, ca": {
+    "address": "San Diego, CA, USA",
+    "latitude": 32.7157,
+    "longitude": -117.1611,
+    "timezone": "America/Los_Angeles"
+  },
+  "san francisco, ca": {
+    "address": "San Francisco, California, United States",
+    "latitude": 37.7879,
+    "longitude": -122.4075,
+    "timezone": "America/Los_Angeles"
+  },
+  "san francisco, california, usa": {
+    "address": "San Francisco, California, USA",
+    "latitude": 37.7749,
+    "longitude": -122.4194,
+    "timezone": "America/Los_Angeles"
+  },
+  "san jose, california, usa": {
+    "address": "San Jose, California, USA",
+    "latitude": 37.3333,
+    "longitude": -121.9,
+    "timezone": "America/Los_Angeles"
+  },
+  "sandringham, norfolk, england": {
+    "address": "Sandringham, Norfolk, England",
+    "latitude": 52.8264,
+    "longitude": 0.5139,
+    "timezone": "Europe/London"
+  },
+  "sao paulo, brazil": {
+    "address": "S\u00e3o Paulo, Brazil",
+    "latitude": -23.5505,
+    "longitude": -46.6333,
+    "timezone": "America/Sao_Paulo"
+  },
+  "seattle, wa": {
+    "address": "Seattle, King County, Washington, United States",
+    "latitude": 47.6038,
+    "longitude": -122.3301,
+    "timezone": "America/Los_Angeles"
+  },
+  "seattle, washington, usa": {
+    "address": "Seattle, Washington, USA",
+    "latitude": 47.6,
+    "longitude": -122.3333,
+    "timezone": "America/Los_Angeles"
+  },
+  "seoul, south korea": {
+    "address": "Seoul, South Korea",
+    "latitude": 37.5665,
+    "longitude": 126.978,
+    "timezone": "Asia/Seoul"
+  },
+  "shanghai, china": {
+    "address": "Shanghai, China",
+    "latitude": 31.2222,
+    "longitude": 121.4581,
+    "timezone": "Asia/Shanghai"
+  },
+  "shawnee, oklahoma, usa": {
+    "address": "Shawnee, Oklahoma, USA",
+    "latitude": 35.3333,
+    "longitude": -96.9333,
+    "timezone": "America/Chicago"
+  },
+  "shrewsbury, england": {
+    "address": "Shrewsbury, England",
+    "latitude": 52.72,
+    "longitude": -2.75,
+    "timezone": "Europe/London"
+  },
+  "singapore": {
+    "address": "Singapore",
+    "latitude": 1.3521,
+    "longitude": 103.8198,
+    "timezone": "Asia/Singapore"
+  },
+  "smiljan, croatia": {
+    "address": "Smiljan, Croatia",
+    "latitude": 44.5618,
+    "longitude": 15.3214,
+    "timezone": "Europe/Paris"
+  },
+  "southampton, new york, usa": {
+    "address": "Southampton, New York, USA",
+    "latitude": 40.8833,
+    "longitude": -72.3833,
+    "timezone": "America/New_York"
+  },
+  "springdale, pennsylvania": {
+    "address": "Springdale, Pennsylvania",
+    "latitude": 40.5409,
+    "longitude": -79.7839,
+    "timezone": "America/New_York"
+  },
+  "st. louis, missouri, usa": {
+    "address": "St. Louis, Missouri, USA",
+    "latitude": 38.627,
+    "longitude": -90.1994,
+    "timezone": "America/Chicago"
+  },
+  "steventon, england": {
+    "address": "Steventon, England",
+    "latitude": 51.2289,
+    "longitude": -1.2191,
+    "timezone": "Europe/London"
+  },
+  "stockholm, sweden": {
+    "address": "Stockholm, Sweden",
+    "latitude": 59.3293,
+    "longitude": 18.0686,
+    "timezone": "Europe/Stockholm"
+  },
+  "stratford-upon-avon, england": {
+    "address": "Stratford-Upon-Avon, England",
+    "latitude": 52.2,
+    "longitude": -1.6833,
+    "timezone": "Europe/London"
+  },
+  "sun prairie, wisconsin, usa": {
+    "address": "Sun Prairie, Wisconsin, USA",
+    "latitude": 43.1833,
+    "longitude": -89.2167,
+    "timezone": "America/Chicago"
+  },
+  "sydney, australia": {
+    "address": "Sydney, Australia",
+    "latitude": -33.8688,
+    "longitude": 151.2093,
+    "timezone": "Australia/Sydney"
+  },
+  "szczecin, poland": {
+    "address": "Szczecin, Poland",
+    "latitude": 53.3833,
+    "longitude": 14.5333,
+    "timezone": "Europe/Warsaw"
+  },
+  "taipei, taiwan": {
+    "address": "Taipei, Taiwan",
+    "latitude": 25.0478,
+    "longitude": 121.5319,
+    "timezone": "Asia/Taipei"
+  },
+  "taktser, china": {
+    "address": "Taktser, China",
+    "latitude": 36.3833,
+    "longitude": 101.8667,
+    "timezone": "Asia/Urumqi"
+  },
+  "tha tien, vietnam": {
+    "address": "Tha Tien, Vietnam",
+    "latitude": 15.9167,
+    "longitude": 107.8333,
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "tokyo, japan": {
+    "address": "Tokyo, Japan",
+    "latitude": 35.7,
+    "longitude": 139.7667,
+    "timezone": "Asia/Tokyo"
+  },
+  "toronto, canada": {
+    "address": "Toronto, Canada",
+    "latitude": 43.6532,
+    "longitude": -79.3832,
+    "timezone": "America/Toronto"
+  },
+  "torquay, england": {
+    "address": "Torquay, England",
+    "latitude": 50.4625,
+    "longitude": -3.525,
+    "timezone": "Europe/London"
+  },
+  "torun, poland": {
+    "address": "Torun, Poland",
+    "latitude": 53.0333,
+    "longitude": 18.5833,
+    "timezone": "Europe/Warsaw"
+  },
+  "tr\u00eas cora\u00e7\u00f5es (minas gerais), brazil": {
+    "address": "Tr\u00eas Cora\u00e7\u00f5es (Minas Gerais), Brazil",
+    "latitude": -21.7149,
+    "longitude": -45.2533,
+    "timezone": "America/Sao_Paulo"
+  },
+  "ulm, germany": {
+    "address": "Ulm, Germany",
+    "latitude": 48.3984,
+    "longitude": 9.9916,
+    "timezone": "Europe/Berlin"
+  },
+  "vancouver, canada": {
+    "address": "Vancouver, Canada",
+    "latitude": 49.2827,
+    "longitude": -123.1207,
+    "timezone": "America/Vancouver"
+  },
+  "vienna, austria": {
+    "address": "Vienna, Austria",
+    "latitude": 48.2082,
+    "longitude": 16.3738,
+    "timezone": "Europe/Vienna"
+  },
+  "vinci, italy": {
+    "address": "Vinci, Italy",
+    "latitude": 43.7811,
+    "longitude": 10.9237,
+    "timezone": "Europe/Rome"
+  },
+  "wapakoneta, ohio": {
+    "address": "Wapakoneta, Ohio",
+    "latitude": 40.5678,
+    "longitude": -84.1936,
+    "timezone": "America/New_York"
+  },
+  "warsaw, poland": {
+    "address": "Warsaw, Poland",
+    "latitude": 52.2297,
+    "longitude": 21.0122,
+    "timezone": "Europe/Warsaw"
+  },
+  "washington, dc": {
+    "address": "Washington, DC, USA",
+    "latitude": 38.9072,
+    "longitude": -77.0369,
+    "timezone": "America/New_York"
+  },
+  "weil der stadt, germany": {
+    "address": "Weil der Stadt, Germany",
+    "latitude": 48.75,
+    "longitude": 8.8667,
+    "timezone": "Europe/Berlin"
+  },
+  "westminster, england": {
+    "address": "Westminster, England",
+    "latitude": 51.5,
+    "longitude": -0.15,
+    "timezone": "Europe/London"
+  },
+  "woolsthorpe manor, lincolnshire, england": {
+    "address": "Woolsthorpe Manor, Lincolnshire, England",
+    "latitude": 52.8055,
+    "longitude": -0.6378,
+    "timezone": "Europe/London"
+  },
+  "yako, burkina faso": {
+    "address": "Yako, Burkina Faso",
+    "latitude": 12.9613,
+    "longitude": -2.2634,
+    "timezone": "Africa/Abidjan"
+  },
+  "zurich, switzerland": {
+    "address": "Z\u00fcrich, Bezirk Z\u00fcrich, Z\u00fcrich, Schweiz/Suisse/Svizzera/Svizra",
+    "latitude": 47.3744,
+    "longitude": 8.541,
+    "timezone": "Europe/Paris"
+  }
+}

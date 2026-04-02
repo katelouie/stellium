@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Aspects & Orbs cookbook** (`examples/aspects_and_orbs_cookbook.py`): 14 examples covering all 4 aspect engines (Modern, Harmonic, Declination, Cross-Chart), all 4 orb engines (Simple, Luminaries, Complex, Moiety), side-by-side comparisons, and a complete moiety calculation table.
 - **Input validation** on public API entry points: `Native` validates lat/lon bounds (±90°/±180°). `ElectionalSearch` validates start < end. `ReturnBuilder.solar()` validates year >= natal year and int type. `ReturnBuilder.lunar()`/`.planetary()` validate occurrence >= 1 and planet name. All errors fire immediately with clear messages rather than failing deep in calculation.
 - **Tertiary and minor progressions** via new `progression_type` parameter on `MultiChartBuilder.progression()` and `.add_progression()`. Tertiary (day-for-a-lunar-month) moves ~13x faster than secondary; minor (lunar-month-for-a-year) moves ~27x faster. All existing features (angle methods, cross-aspects, house overlays, visualization) work with all progression types. `LUNAR_MONTH_DAYS` constant exported from `stellium.utils.progressions`.
+- **Bundled geocode cache** (`data/geocode_cache.json`): 196 pre-geocoded locations shipped with the package. Includes all cookbook/doc locations, all notable birth locations, and ~50 top world cities. String geocoding now checks the bundled cache first (instant, no network) before falling back to Nominatim. Eliminates geocoding failures in CI and reduces API rate-limiting in production.
 - **Vedic, transit, and aspects & orbs cookbooks** added to README cookbook table and run commands.
 
 ### Changed
@@ -23,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Notable registry now loads entries individually** — previously, one bad entry in a YAML file would silently skip the entire file. Now each entry is loaded in its own try/except, so a single bad record only skips that record. Warning messages now include the entry name for easier debugging.
 - **Removed overly strict year range validation** — the 1800-2400 CE check on `Native` was rejecting historical charts (Newton 1643, da Vinci 1452, etc.) even though Swiss Ephemeris handles them via analytical methods. This also caused the notable registry to silently drop 8 YAML files on CI, reducing the registry from 197 to 101 entries.
+- **29 notable birth coordinates corrected** — full verification of all 196 geocode cache entries against Nominatim revealed 28 locations with >0.1° drift in the notables YAML files. Worst cases: Prince Philip (986km off — Mon Repos placed in mainland Greece instead of Corfu), Patrice Lumumba (520km off), Rumi (158km off). These would have produced incorrect house cusps for `ChartBuilder.from_notable()` charts.
 
 ## [0.17.0] - 2026-04-01
 
