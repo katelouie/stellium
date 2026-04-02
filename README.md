@@ -677,6 +677,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | Cookbook | Description |
 |----------|-------------|
 | **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
+| **[aspects_and_orbs_cookbook.py](examples/aspects_and_orbs_cookbook.py)** | 14 examples: aspect engines, orb engines (Simple, Luminaries, Complex, Moiety), traditional moiety systems |
 | **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
 | **[multichart_cookbook.py](examples/multichart_cookbook.py)** | Synastry, transits, bi-, tri- and quad-wheels, compatibility |
 | **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
@@ -685,6 +686,8 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
 | **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
 | **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
+| **[vedic_cookbook.py](examples/vedic_cookbook.py)** | 7 examples: North Indian and South Indian chart styles, themes, label styles, ayanamsa |
+| **[transit_cookbook.py](examples/transit_cookbook.py)** | 6 examples: transit lists, Gantt timelines, custom aspects/orbs, dark/light themes |
 | **[ephemeris_cookbook.py](examples/ephemeris_cookbook.py)** | Examples of graphic ephemeris charts with optional natal overlays |
 | **[electional_cookbook.py](examples/electional_cookbook.py)** | 43 examples: finding auspicious times, predicates, planetary hours, aspect exactitude |
 | **[planner_cookbook.py](examples/planner_cookbook.py)** | 9 examples: PDF planners with charts, transits, Moon phases, VOC, calendar layouts |
@@ -693,6 +696,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 ```bash
 # Run any cookbook
 python examples/chart_cookbook.py
+python examples/aspects_and_orbs_cookbook.py
 python examples/report_cookbook.py
 python examples/multichart_cookbook.py
 python examples/returns_cookbook.py
@@ -700,6 +704,8 @@ python examples/progressions_cookbook.py
 python examples/arc_directions_cookbook.py
 python examples/profections_cookbook.py
 python examples/zodiacal_releasing_cookbook.py
+python examples/vedic_cookbook.py
+python examples/transit_cookbook.py
 python examples/dial_cookbook.py
 python examples/electional_cookbook.py
 python examples/planner_cookbook.py
