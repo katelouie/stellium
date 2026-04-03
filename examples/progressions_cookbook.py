@@ -582,6 +582,167 @@ def example_15_progression_with_solar_arc_biwheel():
 
 
 # =============================================================================
+# PART 7: TERTIARY AND MINOR PROGRESSIONS
+# =============================================================================
+
+
+def example_16_tertiary_progressions():
+    """
+    Example 16: Tertiary Progressions (Day-for-a-Lunar-Month)
+
+    Tertiary progressions use the time key: 1 day of planetary motion
+    = 1 lunar month (~27.3 days) of life. This makes them move ~13x
+    faster than secondary progressions, useful for timing within a year.
+    """
+    section_header("Example 16: Tertiary Progressions")
+
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
+
+    prog = MultiChartBuilder.progression(
+        natal, age=30, progression_type="tertiary"
+    ).calculate()
+
+    natal_sun = natal.get_object("Sun")
+    prog_sun = prog.chart2.get_object("Sun")
+
+    print(f"Natal Sun: {natal_sun.longitude:.2f}° {natal_sun.sign}")
+    print(
+        f"Tertiary Progressed Sun (age 30): {prog_sun.longitude:.2f}° {prog_sun.sign}"
+    )
+    print(f"  Sun movement: {(prog_sun.longitude - natal_sun.longitude) % 360:.2f}°")
+    print(
+        f"  (~{(30 * 365.25 / 27.32):.0f} progressed days = ~{(30 * 365.25 / 27.32) / 365.25:.1f} years of solar motion)"
+    )
+
+    # Tertiary Moon moves much further than secondary
+    natal_moon = natal.get_object("Moon")
+    prog_moon = prog.chart2.get_object("Moon")
+    print(f"\nNatal Moon: {natal_moon.longitude:.2f}° {natal_moon.sign}")
+    print(f"Tertiary Progressed Moon: {prog_moon.longitude:.2f}° {prog_moon.sign}")
+
+    # Works with angle methods too
+    prog_sa = MultiChartBuilder.progression(
+        natal, age=30, progression_type="tertiary", angle_method="solar_arc"
+    ).calculate()
+    print("\nTertiary + Solar Arc angle method: ✓")
+    print(f"  Chart name: {prog_sa.chart2.metadata.get('name')}")
+
+
+def example_17_minor_progressions():
+    """
+    Example 17: Minor Progressions (Lunar-Month-for-a-Year)
+
+    Minor progressions use the time key: 1 lunar month (~27.3 days)
+    of planetary motion = 1 year of life. This gives ~27x more motion
+    than secondary progressions — intermediate between secondary and
+    tertiary rates.
+    """
+    section_header("Example 17: Minor Progressions")
+
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
+
+    prog = MultiChartBuilder.progression(
+        natal, age=30, progression_type="minor"
+    ).calculate()
+
+    natal_sun = natal.get_object("Sun")
+    prog_sun = prog.chart2.get_object("Sun")
+
+    print(f"Natal Sun: {natal_sun.longitude:.2f}° {natal_sun.sign}")
+    print(f"Minor Progressed Sun (age 30): {prog_sun.longitude:.2f}° {prog_sun.sign}")
+    print(f"  Sun movement: {(prog_sun.longitude - natal_sun.longitude) % 360:.2f}°")
+    print(
+        f"  (~{30 * 27.32:.0f} progressed days = ~{30 * 27.32 / 365.25:.1f} years of solar motion)"
+    )
+
+
+def example_18_compare_progression_types():
+    """
+    Example 18: Compare All Three Progression Types
+
+    Side-by-side comparison of secondary, tertiary, and minor progressions
+    for the same natal chart and age.
+    """
+    section_header("Example 18: Compare Progression Types")
+
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
+
+    natal_sun = natal.get_object("Sun")
+
+    print(f"Natal Sun: {natal_sun.longitude:.2f}° {natal_sun.sign}")
+    print("\nProgressed Sun at age 30:")
+    print(f"  {'Type':<12} {'Position':<20} {'Movement':<12} {'Rate'}")
+    print(f"  {'-' * 65}")
+
+    for ptype in ["secondary", "tertiary", "minor"]:
+        prog = MultiChartBuilder.progression(
+            natal, age=30, progression_type=ptype
+        ).calculate()
+        prog_sun = prog.chart2.get_object("Sun")
+        delta = (prog_sun.longitude - natal_sun.longitude) % 360
+        rate = delta / 30  # degrees per year of life
+        print(
+            f"  {ptype:<12} {prog_sun.longitude:>7.2f}° {prog_sun.sign:<10} {delta:>7.2f}°    ~{rate:.2f}°/year"
+        )
+
+    print("\n  Secondary: 1 day = 1 year (slowest, most traditional)")
+    print("  Tertiary:  1 day = 1 lunar month (~13x faster)")
+    print("  Minor:     1 lunar month = 1 year (~27x faster)")
+
+    # Cross-aspects work with all types
+    print("\n  Cross-aspects per type:")
+    for ptype in ["secondary", "tertiary", "minor"]:
+        prog = MultiChartBuilder.progression(
+            natal, age=30, progression_type=ptype
+        ).calculate()
+        cross = prog.get_all_cross_aspects()
+        print(f"    {ptype:<12}: {len(cross)} progressed-to-natal aspects")
+
+
+def example_19_triwheel_with_tertiary():
+    """
+    Example 19: Tri-Wheel with Tertiary Progression
+
+    Combine natal, secondary, and tertiary progressions in one chart.
+    """
+    section_header("Example 19: Tri-Wheel (Natal + Secondary + Tertiary)")
+
+    natal = (
+        ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
+        .with_aspects()
+        .calculate()
+    )
+
+    mc = (
+        MultiChartBuilder.from_chart(natal, "Natal")
+        .add_progression(age=30, progression_type="secondary", label="2° Progressed")
+        .add_progression(age=30, progression_type="tertiary", label="3° Progressed")
+        .calculate()
+    )
+
+    print(f"Charts: {mc.labels}")
+    print(f"  Natal Sun: {mc.chart1.get_object('Sun').longitude:.2f}°")
+    print(f"  Secondary Sun: {mc.chart2.get_object('Sun').longitude:.2f}°")
+    print(f"  Tertiary Sun: {mc.chart3.get_object('Sun').longitude:.2f}°")
+
+    output = OUTPUT_DIR / "19_triwheel_secondary_tertiary.svg"
+    mc.draw(str(output)).save()
+    print(f"\nSaved: {output}")
+
+
+# =============================================================================
 # RUN ALL EXAMPLES
 # =============================================================================
 
@@ -589,7 +750,8 @@ def example_15_progression_with_solar_arc_biwheel():
 def main():
     """Run all progression cookbook examples."""
     print("\n" + "=" * 60)
-    print("  SECONDARY PROGRESSIONS COOKBOOK")
+    print("  PROGRESSIONS COOKBOOK")
+    print("  Secondary, Tertiary, and Minor Progressions")
     print("  Stellium - Computational Astrology Library")
     print("=" * 60)
 
@@ -619,6 +781,12 @@ def main():
     # Part 6: Visualization
     example_14_draw_progression_biwheel()
     example_15_progression_with_solar_arc_biwheel()
+
+    # Part 7: Tertiary and Minor Progressions
+    example_16_tertiary_progressions()
+    example_17_minor_progressions()
+    example_18_compare_progression_types()
+    example_19_triwheel_with_tertiary()
 
     print("\n" + "=" * 60)
     print("  All examples complete!")
