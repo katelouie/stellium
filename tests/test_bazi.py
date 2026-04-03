@@ -1176,7 +1176,7 @@ class TestRootCounting:
         chart = engine.calculate(datetime(2000, 12, 21, 0, 0))
         dm_element = chart.day_master.element
         roots = _count_roots(chart, dm_element)
-        assert isinstance(roots, int)
+        assert isinstance(roots, float)
         assert roots >= 0
 
     def test_roots_range(self):
@@ -1233,7 +1233,7 @@ class TestStrengthAnalysis:
         assert result.strength is not None
         assert isinstance(result.score, float)
         assert isinstance(result.seasonal_score, int)
-        assert isinstance(result.root_count, int)
+        assert isinstance(result.root_count, float)
         assert isinstance(result.support_count, int)
         assert isinstance(result.drain_count, int)
 

@@ -129,28 +129,45 @@ def _get_seasonal_score(element: Element, month_branch: EarthlyBranch) -> int:
     return 0
 
 
-def _count_roots(chart: "BaZiChart", day_master_element: Element) -> int:
-    """Count how many branch hidden stems match the Day Master's element.
+def _count_roots(chart: "BaZiChart", day_master_element: Element) -> float:
+    """Calculate weighted root strength from branch hidden stems.
 
     A "root" (根) is when the Day Master's element appears as a hidden
-    stem in any of the four branches. More roots = more grounded and stable.
+    stem in any of the four branches. Root position matters:
 
-    The Day Pillar's own branch is especially significant (called 禄/lu
-    or 根/gen depending on the position).
+    - Day branch (坐下, "sitting beneath"): weight 1.5 — YOUR branch,
+      the strongest possible root
+    - Month branch (月支, "command"): weight 1.2 — seasonal authority
+    - Hour branch (时支): weight 0.8 — children/future pillar
+    - Year branch (年支): weight 0.6 — ancestors/distant pillar
+
+    Within each branch, the hidden stem position also matters:
+    - Main qi (本气): full weight — primary energy
+    - Middle qi (中气): 60% weight — secondary
+    - Residual qi (余气): 30% weight — trace energy
 
     Args:
         chart: The BaZi chart
         day_master_element: The Day Master's element
 
     Returns:
-        Number of matching hidden stems (0-12 theoretically, usually 0-4)
+        Weighted root score (typically 0-6)
     """
-    roots = 0
-    for pillar in chart.pillars:
-        for hidden_stem in pillar.branch.get_hidden_stem_objects():
+    # Pillar weights by position (Day is most significant)
+    pillar_weights = [0.6, 1.2, 1.5, 0.8]  # year, month, day, hour
+
+    # Hidden stem position weights (main > middle > residual)
+    position_weights = [1.0, 0.6, 0.3]
+
+    total = 0.0
+    for pillar, p_weight in zip(chart.pillars, pillar_weights, strict=True):
+        hidden_stems = pillar.branch.get_hidden_stem_objects()
+        for i, hidden_stem in enumerate(hidden_stems):
             if hidden_stem.element == day_master_element:
-                roots += 1
-    return roots
+                h_weight = position_weights[i] if i < len(position_weights) else 0.2
+                total += p_weight * h_weight
+
+    return total
 
 
 def _count_support_drain(
@@ -201,7 +218,7 @@ class StrengthAnalysis:
 
     # Component scores
     seasonal_score: int
-    root_count: int
+    root_count: float
     support_count: int
     drain_count: int
     month_branch: EarthlyBranch
@@ -261,7 +278,7 @@ class StrengthAnalysis:
             },
             "factors": {
                 "seasonal_score": self.seasonal_score,
-                "root_count": self.root_count,
+                "root_count": round(self.root_count, 2),
                 "support_count": self.support_count,
                 "drain_count": self.drain_count,
             },
@@ -282,8 +299,8 @@ class StrengthAnalysis:
             f"  Seasonal: {self.seasonal_score:+d} "
             f"({self.day_master_element.english} in "
             f"{self.month_branch.pinyin} month)",
-            f"  Roots: {self.root_count} "
-            f"(hidden stems matching {self.day_master_element.english})",
+            f"  Roots: {self.root_count:.1f} "
+            f"(weighted hidden stems matching {self.day_master_element.english})",
             f"  Support: {self.support_count} (Self + Companion + Resource)",
             f"  Drain: {self.drain_count} (Output + Wealth + Power)",
             "",
