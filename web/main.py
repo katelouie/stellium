@@ -19,7 +19,7 @@ import logging
 from config import COLORS, FONTS, GOOGLE_FONTS_URL
 from fastapi import Request
 from fastapi.responses import JSONResponse
-from nicegui import ui
+from nicegui import app, ui
 from pages.explore import create_explore_page
 from pages.home import create_home_page
 from pages.natal import create_natal_page
@@ -359,13 +359,13 @@ async def robots_txt():
     return PlainTextResponse(ROBOTS_TXT, media_type="text/plain")
 
 
-@ui.app.get("/health")
+@app.get("/health")
 async def health_check():
     """Health check endpoint for Railway and monitoring."""
     return {"status": "ok", "service": "stellium-web"}
 
 
-@ui.app.middleware("http")
+@app.middleware("http")
 async def request_middleware(request: Request, call_next):
     """Bot filtering and request logging."""
     import time
