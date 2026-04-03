@@ -22,10 +22,13 @@ from stellium.chinese.bazi import (
     BaZiCalculator,  # Backwards compatibility
     BaZiChart,
     BaZiEngine,
+    DayMasterStrength,
     Pillar,
+    StrengthAnalysis,
     # Analysis
     TenGod,
     TenGodRelation,
+    analyze_strength,
     analyze_ten_gods,
     calculate_ten_god,
 )

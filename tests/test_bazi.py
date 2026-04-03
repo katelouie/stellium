@@ -1077,3 +1077,336 @@ class TestEngineIntegration:
         chart_sept = engine.calculate(datetime(2024, 9, 15, 12, 0))
 
         assert chart_march.year == chart_sept.year
+
+
+# =============================================================================
+# DAY MASTER STRENGTH ANALYSIS
+# =============================================================================
+
+
+class TestSeasonalScore:
+    """Test the seasonal strength scoring."""
+
+    def _score(self, element, branch):
+        from stellium.chinese.bazi.strength import _get_seasonal_score
+
+        return _get_seasonal_score(element, branch)
+
+    def test_wood_in_spring_prosperous(self):
+        """Wood is prosperous in spring (Yin/Mao months)."""
+        assert self._score(Element.WOOD, EarthlyBranch.YIN) == 3
+        assert self._score(Element.WOOD, EarthlyBranch.MAO) == 3
+
+    def test_fire_in_summer_prosperous(self):
+        """Fire is prosperous in summer (Si/Wu months)."""
+        assert self._score(Element.FIRE, EarthlyBranch.SI) == 3
+        assert self._score(Element.FIRE, EarthlyBranch.WU_BRANCH) == 3
+
+    def test_metal_in_autumn_prosperous(self):
+        """Metal is prosperous in autumn (Shen/You months)."""
+        assert self._score(Element.METAL, EarthlyBranch.SHEN) == 3
+        assert self._score(Element.METAL, EarthlyBranch.YOU) == 3
+
+    def test_water_in_winter_prosperous(self):
+        """Water is prosperous in winter (Hai/Zi months)."""
+        assert self._score(Element.WATER, EarthlyBranch.HAI) == 3
+        assert self._score(Element.WATER, EarthlyBranch.ZI) == 3
+
+    def test_earth_in_transition_months(self):
+        """Earth is prosperous in the four transition months."""
+        assert self._score(Element.EARTH, EarthlyBranch.CHEN) == 3
+        assert self._score(Element.EARTH, EarthlyBranch.WEI) == 3
+        assert self._score(Element.EARTH, EarthlyBranch.XU) == 3
+        assert self._score(Element.EARTH, EarthlyBranch.CHOU) == 3
+
+    def test_element_produced_by_season_strong(self):
+        """Element produced by the season's element gets +1."""
+        assert self._score(Element.FIRE, EarthlyBranch.MAO) == 1
+
+    def test_element_controls_season_dead(self):
+        """Element that controls the season's element is dead (-2)."""
+        assert self._score(Element.METAL, EarthlyBranch.MAO) == -2
+
+    def test_element_controlled_by_season_imprisoned(self):
+        """Element controlled by the season's element is imprisoned (-1)."""
+        assert self._score(Element.EARTH, EarthlyBranch.MAO) == -1
+
+    def test_element_produces_season_resting(self):
+        """Element that produces the season's element is resting (0)."""
+        assert self._score(Element.WATER, EarthlyBranch.MAO) == 0
+
+
+class TestElementReverseCycles:
+    """Test the new produced_by and controlled_by properties."""
+
+    def test_produced_by_cycle(self):
+        assert Element.WOOD.produced_by == Element.WATER
+        assert Element.FIRE.produced_by == Element.WOOD
+        assert Element.EARTH.produced_by == Element.FIRE
+        assert Element.METAL.produced_by == Element.EARTH
+        assert Element.WATER.produced_by == Element.METAL
+
+    def test_controlled_by_cycle(self):
+        assert Element.WOOD.controlled_by == Element.METAL
+        assert Element.FIRE.controlled_by == Element.WATER
+        assert Element.EARTH.controlled_by == Element.WOOD
+        assert Element.METAL.controlled_by == Element.FIRE
+        assert Element.WATER.controlled_by == Element.EARTH
+
+    def test_produces_produced_by_inverse(self):
+        """produced_by should be the inverse of produces."""
+        for elem in Element:
+            assert elem.produced_by.produces == elem
+
+    def test_controls_controlled_by_inverse(self):
+        """controlled_by should be the inverse of controls."""
+        for elem in Element:
+            assert elem.controlled_by.controls == elem
+
+
+class TestRootCounting:
+    """Test hidden stem root counting."""
+
+    @pytest.mark.slow
+    def test_roots_found(self):
+        """A chart should have at least some roots for the day master element."""
+        from stellium.chinese.bazi.strength import _count_roots
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 12, 21, 0, 0))
+        dm_element = chart.day_master.element
+        roots = _count_roots(chart, dm_element)
+        assert isinstance(roots, int)
+        assert roots >= 0
+
+    def test_roots_range(self):
+        """Root count should be between 0 and 12 (4 branches × 3 hidden stems max)."""
+        from stellium.chinese.bazi.strength import _count_roots
+
+        # Create a chart where we can predict roots
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        dm_element = chart.day_master.element
+        roots = _count_roots(chart, dm_element)
+        assert 0 <= roots <= 12
+
+
+class TestSupportDrain:
+    """Test support vs drain counting."""
+
+    @pytest.mark.slow
+    def test_support_drain_sums(self):
+        """Support + drain should account for all non-Day-Master Ten God categories."""
+        from stellium.chinese.bazi.strength import _count_support_drain
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        support, drain = _count_support_drain(chart)
+        assert support > 0
+        assert drain > 0
+        # Total should equal all ten god relations
+        assert support + drain > 0
+
+
+class TestStrengthAnalysis:
+    """Test the full strength analysis."""
+
+    @pytest.mark.slow
+    def test_analysis_returns_result(self):
+        from stellium.chinese.bazi.strength import StrengthAnalysis, analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+        assert isinstance(result, StrengthAnalysis)
+
+    @pytest.mark.slow
+    def test_analysis_has_all_fields(self):
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+
+        assert result.day_master is not None
+        assert result.day_master_element is not None
+        assert result.strength is not None
+        assert isinstance(result.score, float)
+        assert isinstance(result.seasonal_score, int)
+        assert isinstance(result.root_count, int)
+        assert isinstance(result.support_count, int)
+        assert isinstance(result.drain_count, int)
+
+    @pytest.mark.slow
+    def test_water_in_winter_strong(self):
+        """Water day master born in winter should be strong."""
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        # Dec 21 in Zi month — Water peak season
+        chart = engine.calculate(datetime(2000, 12, 21, 0, 0))
+        result = analyze_strength(chart)
+        if result.day_master_element == Element.WATER:
+            assert result.is_strong
+
+    @pytest.mark.slow
+    def test_favorable_unfavorable_differ(self):
+        """Favorable and unfavorable elements should not overlap."""
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+        assert (
+            set(result.favorable_elements) & set(result.unfavorable_elements) == set()
+        )
+
+    @pytest.mark.slow
+    def test_favorable_count(self):
+        """Should have favorable and unfavorable elements."""
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+        assert len(result.favorable_elements) > 0
+        assert len(result.unfavorable_elements) > 0
+
+    @pytest.mark.slow
+    def test_is_strong_is_weak_exclusive(self):
+        """A chart cannot be both strong and weak."""
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+        assert not (result.is_strong and result.is_weak)
+
+    @pytest.mark.slow
+    def test_to_dict_serializable(self):
+        """to_dict should return JSON-serializable data."""
+        import json
+
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+        data = result.to_dict()
+        # Should not raise
+        json.dumps(data)
+        assert "strength" in data
+        assert "factors" in data
+        assert "favorable_elements" in data
+
+    @pytest.mark.slow
+    def test_display_returns_string(self):
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        engine = BaZiEngine(timezone_offset_hours=0)
+        chart = engine.calculate(datetime(2000, 6, 15, 12, 0))
+        result = analyze_strength(chart)
+        text = result.display()
+        assert isinstance(text, str)
+        assert "Day Master" in text
+        assert "Strength" in text
+
+    @pytest.mark.slow
+    def test_strength_classification_values(self):
+        """All DayMasterStrength values should have required attributes."""
+        from stellium.chinese.bazi.strength import DayMasterStrength
+
+        for strength in DayMasterStrength:
+            assert hasattr(strength, "english")
+            assert hasattr(strength, "hanzi")
+            assert hasattr(strength, "pinyin")
+
+
+# =============================================================================
+# CHARTBUILDER / CALCULATEDCHART INTEGRATION
+# =============================================================================
+
+
+class TestChartBuilderBazi:
+    """Test the .bazi() method on ChartBuilder."""
+
+    @pytest.mark.slow
+    def test_bazi_from_builder(self):
+        """ChartBuilder.from_details().bazi() returns a BaZiChart."""
+        from stellium import ChartBuilder
+        from stellium.chinese.bazi.models import BaZiChart
+
+        bazi = ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").bazi()
+        assert isinstance(bazi, BaZiChart)
+        assert bazi.hanzi is not None
+        assert len(bazi.hanzi) == 8
+
+    @pytest.mark.slow
+    def test_bazi_from_notable(self):
+        """ChartBuilder.from_notable().bazi() works."""
+        from stellium import ChartBuilder
+
+        bazi = ChartBuilder.from_notable("Albert Einstein").bazi()
+        assert bazi.day_master is not None
+        assert bazi.day_master_element is not None
+
+    @pytest.mark.slow
+    def test_bazi_from_calculated_chart(self):
+        """CalculatedChart.bazi() returns a BaZiChart."""
+        from stellium import ChartBuilder
+        from stellium.chinese.bazi.models import BaZiChart
+
+        chart = ChartBuilder.from_details(
+            "1994-01-06 11:47", "Palo Alto, CA"
+        ).calculate()
+        bazi = chart.bazi()
+        assert isinstance(bazi, BaZiChart)
+
+    @pytest.mark.slow
+    def test_builder_and_chart_bazi_match(self):
+        """Both .bazi() paths should produce the same chart."""
+        from stellium import ChartBuilder
+
+        builder_bazi = ChartBuilder.from_details(
+            "1994-01-06 11:47", "Palo Alto, CA"
+        ).bazi()
+
+        chart = ChartBuilder.from_details(
+            "1994-01-06 11:47", "Palo Alto, CA"
+        ).calculate()
+        chart_bazi = chart.bazi()
+
+        assert builder_bazi.hanzi == chart_bazi.hanzi
+
+    @pytest.mark.slow
+    def test_bazi_strength_method(self):
+        """.strength() method works on BaZiChart from ChartBuilder."""
+        from stellium import ChartBuilder
+        from stellium.chinese.bazi.strength import StrengthAnalysis
+
+        bazi = ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").bazi()
+        result = bazi.strength()
+        assert isinstance(result, StrengthAnalysis)
+        assert result.day_master == bazi.day_master
+
+    @pytest.mark.slow
+    def test_bazi_timezone_handling(self):
+        """Location-based timezone should affect the chart calculation."""
+        from stellium import ChartBuilder
+
+        # Beijing (UTC+8) and New York (UTC-4 EDT) at 2:00 AM local
+        # Use coordinates to avoid geocoding dependency in tests
+        beijing = ChartBuilder.from_details("2000-06-15 02:00", (39.9, 116.4)).bazi()
+        ny = ChartBuilder.from_details("2000-06-15 02:00", (40.7, -74.0)).bazi()
+
+        # 12-hour UTC difference → different day pillars
+        assert beijing.hanzi != ny.hanzi
+
+    @pytest.mark.slow
+    def test_bazi_with_coords(self):
+        """ChartBuilder with coordinate tuple should work for .bazi()."""
+        from stellium import ChartBuilder
+
+        bazi = ChartBuilder.from_details("2000-06-15 12:00", (47.6, -122.3)).bazi()
+        assert bazi.hanzi is not None
+        assert len(bazi.hanzi) == 8

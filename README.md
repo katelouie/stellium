@@ -691,6 +691,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 | **[ephemeris_cookbook.py](examples/ephemeris_cookbook.py)** | Examples of graphic ephemeris charts with optional natal overlays |
 | **[electional_cookbook.py](examples/electional_cookbook.py)** | 43 examples: finding auspicious times, predicates, planetary hours, aspect exactitude |
 | **[planner_cookbook.py](examples/planner_cookbook.py)** | 9 examples: PDF planners with charts, transits, Moon phases, VOC, calendar layouts |
+| **[bazi_cookbook.py](examples/bazi_cookbook.py)** | 22 examples: BaZi (Four Pillars) charts, pillars, hidden stems, Ten Gods, Day Master strength, elements |
 | **[analysis_cookbook.ipynb](examples/analysis_cookbook.ipynb)** | Jupyter notebook: batch calculation, pandas DataFrames, queries, statistics, export |
 
 ```bash
@@ -709,6 +710,7 @@ python examples/transit_cookbook.py
 python examples/dial_cookbook.py
 python examples/electional_cookbook.py
 python examples/planner_cookbook.py
+python examples/bazi_cookbook.py
 ```
 
 ### User Guides

@@ -50,6 +50,18 @@ class Element(Enum):
         return cycle[self]
 
     @property
+    def produced_by(self) -> "Element":
+        """What produces this element in the generative cycle (生我)."""
+        cycle = {
+            Element.WOOD: Element.WATER,
+            Element.FIRE: Element.WOOD,
+            Element.EARTH: Element.FIRE,
+            Element.METAL: Element.EARTH,
+            Element.WATER: Element.METAL,
+        }
+        return cycle[self]
+
+    @property
     def controls(self) -> "Element":
         """What this element controls/overcomes in the controlling cycle (克)."""
         cycle = {
@@ -58,6 +70,18 @@ class Element(Enum):
             Element.EARTH: Element.WATER,
             Element.METAL: Element.WOOD,
             Element.WATER: Element.FIRE,
+        }
+        return cycle[self]
+
+    @property
+    def controlled_by(self) -> "Element":
+        """What controls this element in the controlling cycle (克我)."""
+        cycle = {
+            Element.WOOD: Element.METAL,
+            Element.FIRE: Element.WATER,
+            Element.EARTH: Element.WOOD,
+            Element.METAL: Element.FIRE,
+            Element.WATER: Element.EARTH,
         }
         return cycle[self]
 

@@ -1025,6 +1025,55 @@ class CalculatedChart:
         return sorted(manifest.keys())
 
     # =========================================================================
+    # Cross-Tradition Charts
+    # =========================================================================
+
+    def bazi(self):
+        """
+        Calculate the BaZi (Four Pillars / 八字) chart for this birth data.
+
+        Uses the chart's datetime and location to compute the Chinese
+        Four Pillars, reusing the already-resolved timezone information.
+
+        Returns:
+            A BaZiChart with all four pillars, ready for analysis.
+
+        Example::
+
+            chart = ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").calculate()
+            bazi = chart.bazi()
+            print(bazi.hanzi)           # Eight characters
+            print(bazi.day_master)      # Day Master stem
+            print(bazi.strength())      # Strength analysis
+        """
+        import pytz
+
+        from stellium.chinese.bazi.engine import BaZiEngine
+
+        # Calculate timezone offset from the location
+        local_dt = self.datetime.local_datetime
+        utc_dt = self.datetime.utc_datetime
+
+        if local_dt and utc_dt:
+            # Offset = local - UTC (e.g., PST = -8, Beijing = +8)
+            offset_seconds = (
+                local_dt.replace(tzinfo=None) - utc_dt.replace(tzinfo=None)
+            ).total_seconds()
+            offset_hours = offset_seconds / 3600.0
+        elif self.location and self.location.timezone:
+            # Fall back to computing offset from location timezone
+            tz = pytz.timezone(self.location.timezone)
+            offset_hours = (
+                tz.utcoffset(utc_dt.replace(tzinfo=None)).total_seconds() / 3600.0
+            )
+        else:
+            offset_hours = 0.0
+
+        engine = BaZiEngine(timezone_offset_hours=offset_hours)
+        birth_dt = local_dt or utc_dt
+        return engine.calculate(birth_dt)
+
+    # =========================================================================
     # Chart Transformations
     # =========================================================================
 

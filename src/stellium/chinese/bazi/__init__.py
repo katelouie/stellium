@@ -32,6 +32,11 @@ from stellium.chinese.bazi.renderers import (
     BaziRichRenderer,
     BaziSVGRenderer,
 )
+from stellium.chinese.bazi.strength import (
+    DayMasterStrength,
+    StrengthAnalysis,
+    analyze_strength,
+)
 
 __all__ = [
     # Engine
@@ -47,6 +52,10 @@ __all__ = [
     "calculate_ten_god",
     "count_ten_gods",
     "count_ten_god_categories",
+    # Strength Analysis
+    "DayMasterStrength",
+    "StrengthAnalysis",
+    "analyze_strength",
     # Renderers
     "BaziRichRenderer",
     "BaziProseRenderer",

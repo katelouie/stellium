@@ -580,6 +580,44 @@ class ChartBuilder:
         # Ensure all names are unique
         return list(set(objects))
 
+    def bazi(self):
+        """
+        Calculate the BaZi (Four Pillars / 八字) chart directly from the builder.
+
+        Skips Western chart calculation entirely — uses the already-resolved
+        datetime and location to compute Chinese Four Pillars.
+
+        Returns:
+            A BaZiChart with all four pillars, ready for analysis.
+
+        Example::
+
+            bazi = ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").bazi()
+            print(bazi.hanzi)           # Eight characters
+            print(bazi.strength())      # Strength analysis
+        """
+        from stellium.chinese.bazi.engine import BaZiEngine
+
+        local_dt = self._datetime.local_datetime
+        utc_dt = self._datetime.utc_datetime
+
+        if local_dt and utc_dt:
+            offset_seconds = (
+                local_dt.replace(tzinfo=None) - utc_dt.replace(tzinfo=None)
+            ).total_seconds()
+            offset_hours = offset_seconds / 3600.0
+        elif self._location and self._location.timezone:
+            tz = pytz.timezone(self._location.timezone)
+            offset_hours = (
+                tz.utcoffset(utc_dt.replace(tzinfo=None)).total_seconds() / 3600.0
+            )
+        else:
+            offset_hours = 0.0
+
+        engine = BaZiEngine(timezone_offset_hours=offset_hours)
+        birth_dt = local_dt or utc_dt
+        return engine.calculate(birth_dt)
+
     def calculate(self) -> CalculatedChart | UnknownTimeChart:
         """
         Execute all calculations and return the final chart.

@@ -11,10 +11,15 @@ Each pillar has a Heavenly Stem and an Earthly Branch.
 Implements the ChineseChart protocol for interoperability with other systems.
 """
 
+from __future__ import annotations
+
 from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from stellium.chinese.bazi.strength import StrengthAnalysis
 
 from stellium.chinese.core import (
     EarthlyBranch,
@@ -286,6 +291,23 @@ class BaZiChart:
                 lines.append(f"    Hidden: {', '.join(hidden_parts)}")
 
         return "\n".join(lines)
+
+    def strength(self) -> StrengthAnalysis:
+        """Analyze the Day Master's strength.
+
+        Returns a StrengthAnalysis with classification (Strong/Weak/etc.),
+        component scores, and favorable/unfavorable elements.
+
+        Example::
+
+            bazi = ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").bazi()
+            result = bazi.strength()
+            print(result.strength.english)  # "Strong", "Weak", etc.
+            print(result.favorable_elements)
+        """
+        from stellium.chinese.bazi.strength import analyze_strength
+
+        return analyze_strength(self)
 
     def __str__(self) -> str:
         return self.hanzi
