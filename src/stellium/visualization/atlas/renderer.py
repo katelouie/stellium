@@ -71,10 +71,13 @@ class AtlasRenderer:
             # Get font directories
             font_dirs = self._get_font_dirs()
 
-            # Compile to PDF
+            # Compile to PDF. Use the temp directory as the Typst project
+            # root — all chart SVGs are generated inside _temp_dir, and this
+            # avoids platform-specific issues with root="/" on Windows where
+            # the temp dir may live on a different drive than the POSIX root.
             pdf_bytes = typst_lib.compile(
                 typst_path,
-                root="/",
+                root=self._temp_dir,
                 font_paths=font_dirs,
             )
 
@@ -351,7 +354,11 @@ class AtlasRenderer:
         Returns:
             Typst markup for the chart page
         """
-        abs_path = os.path.abspath(svg_path)
+        # Reference the SVG by its basename. The SVG lives inside
+        # self._temp_dir (see _generate_chart_svg) which is also the Typst
+        # project root, so Typst will resolve the image relative to the .typ
+        # source file in the same directory.
+        rel_path = os.path.basename(svg_path).replace("\\", "/")
 
         # Use align center+horizon to center the chart on the page
         # width: 100% and height: 100% with fit: contain ensures it fills
@@ -359,7 +366,7 @@ class AtlasRenderer:
         return f"""
 // Chart {index + 1}
 #align(center + horizon)[
-  #image("{abs_path}", width: 100%, height: 100%, fit: "contain")
+  #image("{rel_path}", width: 100%, height: 100%, fit: "contain")
 ]
 #pagebreak()
 """
