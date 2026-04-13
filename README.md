@@ -411,6 +411,44 @@ See `stellium --help` for full CLI documentation.
 
 ---
 
+## Ephemeris Data Location
+
+Stellium bundles enough Swiss Ephemeris data to cover **1800–2999 CE** and
+automatically copies it to `~/.stellium/ephe/` on first use, so most users
+never need to download anything. Use `stellium ephemeris download` if you
+need coverage outside that range or extra asteroid files.
+
+### Using a custom ephemeris directory
+
+You can point Stellium at any existing Swiss Ephemeris folder — handy for
+portable installs, read-only home directories (Docker, Lambda, shared
+hosts), or for reusing a folder you already maintain for another astrology
+tool. Two options, in order of precedence:
+
+```python
+# 1. Explicit argument wins over everything else
+from stellium import ChartBuilder
+from stellium.engines.ephemeris import SwissEphemerisEngine
+
+chart = (ChartBuilder.from_native(native)
+    .with_ephemeris(SwissEphemerisEngine(ephe_path=r"D:\swisseph\ephe"))
+    .calculate())
+```
+
+```bash
+# 2. Environment variable — no code changes required
+export STELLIUM_EPHE_PATH=/opt/swisseph/ephe       # macOS / Linux
+set STELLIUM_EPHE_PATH=D:\swisseph\ephe            # Windows (cmd)
+$env:STELLIUM_EPHE_PATH = "D:\swisseph\ephe"       # Windows (PowerShell)
+```
+
+When you supply a custom path Stellium uses it **as-is**: the folder is not
+created, and the bundled ephemeris files are **not** copied into it.
+Make sure it already contains every `.se1` file you need for the objects
+and date range you plan to calculate.
+
+---
+
 ## 🔍 Feature Highlights
 
 ### Zodiac Systems

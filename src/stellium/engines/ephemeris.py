@@ -1,5 +1,7 @@
 """Ephemeris calculation engines."""
 
+from pathlib import Path
+
 import swisseph as swe
 
 from stellium.core.ayanamsa import ZodiacType, get_ayanamsa
@@ -16,21 +18,26 @@ from stellium.data.paths import initialize_ephemeris
 from stellium.utils.cache import cached
 
 
-def _set_ephemeris_path() -> None:
+def _set_ephemeris_path(ephe_path: str | Path | None = None) -> None:
     """
     Set the path to Swiss Ephemeris data files.
 
     This function initializes the ephemeris system by:
-    1. Ensuring the user ephe directory exists (~/.stellium/ephe/)
-    2. Copying bundled ephemeris files from the package if needed
+    1. Resolving the ephemeris directory (explicit arg >
+       ``STELLIUM_EPHE_PATH`` env var > default ``~/.stellium/ephe/``)
+    2. For the default location, copying bundled ephemeris files if needed
     3. Setting the Swiss Ephemeris path
 
-    The ephemeris files are stored in the user's home directory so that:
+    By default Stellium stores ephemeris files in the user's home directory:
     - Users can add their own asteroid ephemeris files
     - The package size stays small (only essential files bundled)
     - Updates don't overwrite user-downloaded files
+
+    Passing ``ephe_path`` (or setting ``STELLIUM_EPHE_PATH``) lets you point
+    Stellium at an existing Swiss Ephemeris folder managed by another tool,
+    at a portable-install directory, or at a read-only shared location.
     """
-    initialize_ephemeris()
+    initialize_ephemeris(ephe_path)
 
 
 # Swiss Ephemeris object IDs
@@ -116,9 +123,19 @@ class SwissEphemerisEngine:
     # This prevents repeated warnings for the same object across multiple calculations
     _warned_missing_ephemeris: set[str] = set()
 
-    def __init__(self):
-        """Initialize Swiss Ephemeris."""
-        _set_ephemeris_path()
+    def __init__(self, ephe_path: str | Path | None = None) -> None:
+        """Initialize Swiss Ephemeris.
+
+        Args:
+            ephe_path: Optional override for the Swiss Ephemeris data
+                directory. If omitted, Stellium falls back to the
+                ``STELLIUM_EPHE_PATH`` environment variable and then to the
+                default ``~/.stellium/ephe/`` location. Supplying a custom
+                path makes Stellium use that directory as-is — no files are
+                created or copied into it.
+        """
+        _set_ephemeris_path(ephe_path)
+        self._ephe_path = ephe_path
         self._object_ids = SWISS_EPHEMERIS_IDS.copy()
 
     def _get_object_type(self, name: str) -> ObjectType:
