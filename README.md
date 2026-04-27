@@ -716,6 +716,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 |----------|-------------|
 | **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
 | **[aspects_and_orbs_cookbook.py](examples/aspects_and_orbs_cookbook.py)** | 14 examples: aspect engines, orb engines (Simple, Luminaries, Complex, Moiety), traditional moiety systems |
+| **[dignities_cookbook.py](examples/dignities_cookbook.py)** | 14 examples: essential/accidental dignities, scoring, peregrine, mutual reception, dispositor graphs |
 | **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
 | **[multichart_cookbook.py](examples/multichart_cookbook.py)** | Synastry, transits, bi-, tri- and quad-wheels, compatibility |
 | **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
@@ -736,6 +737,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 # Run any cookbook
 python examples/chart_cookbook.py
 python examples/aspects_and_orbs_cookbook.py
+python examples/dignities_cookbook.py
 python examples/report_cookbook.py
 python examples/multichart_cookbook.py
 python examples/returns_cookbook.py

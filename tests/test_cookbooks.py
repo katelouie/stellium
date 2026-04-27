@@ -108,6 +108,10 @@ class TestCleanCookbooks:
         result = _run_cookbook("bazi_cookbook.py")
         assert result.returncode == 0, f"STDERR:\n{result.stderr}"
 
+    def test_dignities_cookbook(self):
+        result = _run_cookbook("dignities_cookbook.py")
+        assert result.returncode == 0, f"STDERR:\n{result.stderr}"
+
     def test_comparison_cookbook(self):
         result = _run_cookbook("comparison_cookbook.py")
         assert result.returncode == 0, f"STDERR:\n{result.stderr}"
