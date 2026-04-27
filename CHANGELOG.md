@@ -9,6 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.18.0] - 2026-04-26
+
+### Added
+
 - **Configurable ephemeris directory** — the Swiss Ephemeris data path is now overridable via a three-tier precedence system, following the convention used by pip, cargo, and pyenv:
   1. `SwissEphemerisEngine(ephe_path="/my/ephe")` — explicit argument, highest priority
   2. `STELLIUM_EPHE_PATH` environment variable — no code changes needed
@@ -17,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Custom paths are used as-is: Stellium will not create the directory or copy bundled files into it, making it safe to point at an existing Swiss Ephemeris installation or a read-only folder. Missing custom directories emit a stderr warning instead of crashing. Re-initialization against a different path is supported; same-path is a no-op.
 
   **Quick usage:**
+
   ```python
   # Via engine argument (e.g., portable install, shared .se1 folder)
   from stellium.engines.ephemeris import SwissEphemerisEngine
