@@ -97,10 +97,14 @@ class PlannerRenderer:
             # Get font directories
             font_dirs = self._get_font_dirs()
 
-            # Compile to PDF
+            # Compile to PDF. Use the temp directory as the Typst project
+            # root — every file referenced by the document (charts, SVGs) is
+            # generated inside _temp_dir, and this avoids platform-specific
+            # issues with root="/" on Windows where the temp dir may live on
+            # a different drive than the POSIX root.
             pdf_bytes = typst_lib.compile(
                 typst_path,
-                root="/",
+                root=self._temp_dir,
                 font_paths=font_dirs,
             )
 
@@ -571,7 +575,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.natal}", width: 85%)
+    image("{os.path.basename(self._chart_paths.natal)}", width: 85%)
   )
 ]
 
@@ -590,7 +594,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.progressed}", width: 85%)
+    image("{os.path.basename(self._chart_paths.progressed)}", width: 85%)
   )
 ]
 
@@ -610,7 +614,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.solar_return}", width: 85%)
+    image("{os.path.basename(self._chart_paths.solar_return)}", width: 85%)
   )
 ]
 
@@ -634,7 +638,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.zr_overview}", width: 95%)
+    image("{os.path.basename(self._chart_paths.zr_overview)}", width: 95%)
   )
 ]
 
@@ -653,7 +657,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.zr_timeline}", width: 95%)
+    image("{os.path.basename(self._chart_paths.zr_timeline)}", width: 95%)
   )
 ]
 
@@ -672,7 +676,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.graphic_ephemeris}", width: 95%)
+    image("{os.path.basename(self._chart_paths.graphic_ephemeris)}", width: 95%)
   )
 ]
 
@@ -697,7 +701,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.profection_wheel}", width: 95%)
+    image("{os.path.basename(self._chart_paths.profection_wheel)}", width: 95%)
   )
 ]
 """)
@@ -714,7 +718,7 @@ class PlannerRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{self._chart_paths.profection_table}", width: 95%)
+    image("{os.path.basename(self._chart_paths.profection_table)}", width: 95%)
   )
 ]
 """)

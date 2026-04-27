@@ -730,6 +730,12 @@ class TypstRenderer:
             raise ImportError(
                 "Typst library not available. Install with: pip install typst"
             )
+        # Directory used as the Typst project root during a render. Set by
+        # render_report() so that section renderers can drop resources (like
+        # inline SVG images) next to the .typ source file and reference them
+        # with paths contained within the project root.
+        self._work_dir: str | None = None
+        self._svg_counter: int = 0
 
     def render_report(
         self,
@@ -750,20 +756,59 @@ class TypstRenderer:
         Returns:
             PDF as bytes
         """
+        # Use a dedicated temporary directory that holds every file the Typst
+        # compiler needs to reach (the .typ source and any referenced images).
+        # This directory becomes the Typst project root, which guarantees that
+        # the input file and all referenced resources are "contained in the
+        # project root" on every platform. Passing root="/" works on Linux but
+        # fails on Windows whenever the temp file and the chart SVG live on
+        # different drive letters (typst-py then raises
+        # "input file must be contained in project root").
+        try:
+            return self._render_report_inner(
+                sections, output_file, chart_svg_path, title
+            )
+        finally:
+            self._work_dir = None
+            self._svg_counter = 0
+
+    def _render_report_inner(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        output_file: str | None,
+        chart_svg_path: str | None,
+        title: str,
+    ) -> bytes:
         import os
+        import shutil
         import tempfile
 
-        # Generate Typst content
-        typst_content = self._generate_typst_document(sections, chart_svg_path, title)
+        with tempfile.TemporaryDirectory(prefix="stellium_report_") as tmp_dir:
+            self._work_dir = tmp_dir
+            self._svg_counter = 0
+            # If a chart SVG was provided, copy it into the temp directory so
+            # it is reachable under the Typst project root regardless of where
+            # the user stored the original file. The Typst source then
+            # references the SVG by its basename, which Typst resolves
+            # relative to the .typ file (also written into tmp_dir).
+            local_svg_ref: str | None = None
+            if chart_svg_path:
+                src_svg = os.path.abspath(chart_svg_path)
+                if os.path.exists(src_svg):
+                    dst_svg = os.path.join(tmp_dir, "chart.svg")
+                    shutil.copy2(src_svg, dst_svg)
+                    local_svg_ref = "chart.svg"
 
-        # Write to temp file (typst-py requires file path)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".typ", delete=False, encoding="utf-8"
-        ) as f:
-            f.write(typst_content)
-            temp_path = f.name
+            # Generate Typst content referencing the local copy of the SVG
+            typst_content = self._generate_typst_document(
+                sections, local_svg_ref, title
+            )
 
-        try:
+            # Write the .typ source into the temp directory
+            temp_path = os.path.join(tmp_dir, "report.typ")
+            with open(temp_path, "w", encoding="utf-8") as f:
+                f.write(typst_content)
+
             # Get font directories for custom fonts
             base_font_dir = os.path.join(
                 os.path.dirname(
@@ -780,12 +825,12 @@ class TypstRenderer:
                 os.path.join(base_font_dir, "Crimson_Pro", "static"),  # Static weights
             ]
 
-            # Compile to PDF
-            # Use root="/" to allow absolute paths in the document
-            # Add font_paths for all our custom fonts
+            # Compile to PDF. Use the temp directory as the Typst project root
+            # so the source file and any referenced resources are guaranteed
+            # to be contained within it on every platform.
             pdf_bytes = typst_lib.compile(
                 temp_path,
-                root="/",
+                root=tmp_dir,
                 font_paths=font_dirs,
             )
 
@@ -795,9 +840,6 @@ class TypstRenderer:
                     f.write(pdf_bytes)
 
             return pdf_bytes
-        finally:
-            # Clean up temp file
-            os.unlink(temp_path)
 
     def _generate_typst_document(
         self,
@@ -848,11 +890,12 @@ class TypstRenderer:
         parts.append("#star-divider")
         parts.append("#v(0.2in)")
 
-        # Chart wheel if provided
+        # Chart wheel if provided. The caller (render_report) is expected to
+        # pass a path that Typst can resolve — typically a basename relative
+        # to the .typ source file living in the Typst project root. We escape
+        # backslashes so Windows-style paths survive the Typst string literal.
         if chart_svg_path:
-            import os
-
-            abs_path = os.path.abspath(chart_svg_path)
+            typst_path = chart_svg_path.replace("\\", "/")
             parts.append(f"""
     #align(center)[
     #box(
@@ -861,7 +904,7 @@ class TypstRenderer:
         clip: true,
         inset: 10pt,
         fill: white,
-        image("{abs_path}", width: 80%)
+        image("{typst_path}", width: 80%)
     )
     ]
     """)
@@ -1250,8 +1293,11 @@ class TypstRenderer:
     def _render_svg_section(self, data: dict[str, Any]) -> str:
         """Render an inline SVG section.
 
-        For Typst, we need to save the SVG to a temp file and reference it,
-        or note that SVG embedding requires special handling.
+        For Typst we need to hand the SVG off as a file that lives *inside*
+        the Typst project root. render_report() sets self._work_dir to that
+        root, so we drop each inline SVG into it and reference it by a path
+        that Typst can resolve relative to the .typ source (which also lives
+        in self._work_dir).
         """
         import os
         import tempfile
@@ -1260,14 +1306,28 @@ class TypstRenderer:
         if not svg_content:
             return "_No SVG content available_"
 
-        # Write SVG to a temporary file
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".svg", delete=False, encoding="utf-8"
-        ) as f:
-            f.write(svg_content)
-            svg_path = f.name
-
-        abs_path = os.path.abspath(svg_path)
+        if self._work_dir is not None:
+            # Fast path: write directly into the Typst project root and
+            # reference the file by its basename. This keeps the input file
+            # and all resources contained within the project root, which is
+            # required by typst-py on every platform.
+            self._svg_counter += 1
+            filename = f"inline_{self._svg_counter}.svg"
+            svg_path = os.path.join(self._work_dir, filename)
+            with open(svg_path, "w", encoding="utf-8") as f:
+                f.write(svg_content)
+            typst_path = filename
+        else:
+            # Fallback for callers that invoke _render_svg_section directly
+            # without going through render_report (e.g. tests). Use a
+            # standalone temp file — note that passing this path to Typst
+            # still requires the project root to contain it.
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".svg", delete=False, encoding="utf-8"
+            ) as f:
+                f.write(svg_content)
+                svg_path = f.name
+            typst_path = os.path.abspath(svg_path).replace("\\", "/")
 
         return f"""
 #align(center)[
@@ -1277,7 +1337,7 @@ class TypstRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{abs_path}", width: 90%)
+    image("{typst_path}", width: 90%)
   )
 ]
 #v(0.5em)
