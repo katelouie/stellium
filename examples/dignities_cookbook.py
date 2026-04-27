@@ -620,9 +620,17 @@ def example_13_dispositor_graphviz():
     try:
         import graphviz as _gv  # noqa: F401
     except ImportError:
-        print("Graphviz not installed — skipping visualization.")
+        print("Graphviz Python package not installed — skipping visualization.")
         print("Install with: pip install graphviz")
-        print("Also requires the Graphviz binary: brew install graphviz")
+        return
+
+    import shutil
+
+    if not shutil.which("dot"):
+        print("Graphviz binary (dot) not found on PATH — skipping visualization.")
+        print(
+            "Install with: brew install graphviz (macOS) or apt install graphviz (Linux)"
+        )
         return
 
     chart = ChartBuilder.from_notable("Albert Einstein").calculate()
