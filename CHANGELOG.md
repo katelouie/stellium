@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Configurable ephemeris directory** — the Swiss Ephemeris data path is now overridable via a three-tier precedence system, following the convention used by pip, cargo, and pyenv:
+  1. `SwissEphemerisEngine(ephe_path="/my/ephe")` — explicit argument, highest priority
+  2. `STELLIUM_EPHE_PATH` environment variable — no code changes needed
+  3. Default `~/.stellium/ephe/` — unchanged for existing users
+
+  Custom paths are used as-is: Stellium will not create the directory or copy bundled files into it, making it safe to point at an existing Swiss Ephemeris installation or a read-only folder. Missing custom directories emit a stderr warning instead of crashing. Re-initialization against a different path is supported; same-path is a no-op.
+
+  **Quick usage:**
+  ```python
+  # Via engine argument (e.g., portable install, shared .se1 folder)
+  from stellium.engines.ephemeris import SwissEphemerisEngine
+  engine = SwissEphemerisEngine(ephe_path="/path/to/your/ephe")
+  chart = ChartBuilder.from_native(native).with_ephemeris(engine).calculate()
+
+  # Via environment variable (e.g., Docker, Lambda)
+  # export STELLIUM_EPHE_PATH=/opt/ephe
+  chart = ChartBuilder.from_native(native).calculate()  # picks it up automatically
+  ```
+
+  New helpers: `get_ephe_dir()` returns the currently active directory, `has_ephe_file(name)` checks the active directory, `reset_ephe_initialization()` for testing. 13 new tests in `test_ephemeris_paths.py` covering precedence, expansion, no-copy semantics, and end-to-end calculation against a custom path.
+
 - **`MoietyOrbEngine`** — traditional moiety-based orb calculation where each planet has its own sphere of influence. Effective orb = average of both planets' full orbs. Includes two named systems: `"lilly"` (medieval consensus: Lilly, Bonatti, Al-Biruni, Sahl) and `"ptolemy"` (wider Ptolemaic values). Supports custom `orb_map`, `fallback_orb`, and optional `minor_aspect_multiplier` for tighter minor/harmonic aspect orbs. Constants `LILLY_FULL_ORBS`, `PTOLEMY_FULL_ORBS`, and `MOIETY_SYSTEMS` exported for reference and customization.
 - **Aspects & Orbs cookbook** (`examples/aspects_and_orbs_cookbook.py`): 14 examples covering all 4 aspect engines (Modern, Harmonic, Declination, Cross-Chart), all 4 orb engines (Simple, Luminaries, Complex, Moiety), side-by-side comparisons, and a complete moiety calculation table.
 - **Input validation** on public API entry points: `Native` validates lat/lon bounds (±90°/±180°). `ElectionalSearch` validates start < end. `ReturnBuilder.solar()` validates year >= natal year and int type. `ReturnBuilder.lunar()`/`.planetary()` validate occurrence >= 1 and planet name. All errors fire immediately with clear messages rather than failing deep in calculation.
@@ -18,7 +39,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Seamless BaZi API via ChartBuilder** — `.bazi()` method on both `ChartBuilder` and `CalculatedChart`. Automatically resolves timezone from the location — no manual offset needed. `ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").bazi()` is now the recommended entry point. The same `ChartBuilder` works for Western, Vedic, and Chinese astrology.
 - **176 BaZi tests** (`test_bazi.py`): comprehensive coverage for core data models (elements, stems, branches), hour-to-branch mapping, known chart validation, year boundary/Li Chun tests, day pillar reference points, Five Tigers/Five Rats formulas, Ten Gods analysis, BaZiChart properties, solar terms, plus 25 Day Master strength tests (seasonal scoring, element reverse cycles, root counting, strength classification, favorable elements, serialization).
 - **BaZi cookbook** (`examples/bazi_cookbook.py`): 23 examples covering chart creation via ChartBuilder, pillar deep dives, Five Elements, Ten Gods analysis, Day Master strength, rendering (Rich/prose/JSON), and advanced direct engine usage.
-- **176 BaZi tests** (`test_bazi.py`): comprehensive coverage for core data models (elements, stems, branches), hour-to-branch mapping, known chart validation (Einstein, 1984 Jia Zi, 2024 Dragon, 2025 Snake), year boundary/Li Chun tests, day pillar reference points, Five Tigers/Five Rats formulas, Ten Gods analysis, BaZiChart properties, and solar terms.
 - **Vedic, transit, and aspects & orbs cookbooks** added to README cookbook table and run commands.
 
 ### Changed
@@ -32,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **29 notable birth coordinates corrected** — full verification of all 196 geocode cache entries against Nominatim revealed 28 locations with >0.1° drift in the notables YAML files. Worst cases: Prince Philip (986km off — Mon Repos placed in mainland Greece instead of Corfu), Patrice Lumumba (520km off), Rumi (158km off). These would have produced incorrect house cusps for `ChartBuilder.from_notable()` charts.
 - **Chiron ephemeris bundled** (`se00015.se1`, 389KB): Chiron is in the default planet list but the asteroid ephemeris file wasn't shipped. Every chart showed a "Missing ephemeris" warning. Now included and works out of the box.
 - **Asteroid download URL fixed** in CLI: `ephe2/` → `ephe/` on ephe.scryr.io. The old URL returned 404 for all asteroid downloads.
+- **Typst PDF compilation on Windows** — `typst_lib.compile()` was called with `root="/"`, which fails on Windows when `tempfile` returns a path on a different drive (e.g., `D:\`) than the interpreted `/` root (`C:\`). All three Typst call sites (`presentation/renderers.py`, `planner/renderer.py`, `visualization/atlas/renderer.py`) now use the temp directory itself as the Typst project root with resources referenced by relative paths.
 
 ## [0.17.0] - 2026-04-01
 
