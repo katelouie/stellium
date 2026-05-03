@@ -9,11 +9,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.18.1] - 2026-05-03
+
+### Added
+
 - Cookbook file for essential/accidental dignities, scoring, peregrine, mutual reception, dispositor graphs: `examples/dignities_cookbook.py`
 
 ### Changed
 
 ### Fixed
+
+- Added `.with_aspects()` method call for `ChartBuilder` examples in readme so aspects are properly calculated and drawn.
+- **Transit timeline `strftime` on Windows** — `%-d` (strip leading zero) is a Unix-only format code that raises `ValueError` on Windows. Replaced with `f"{d.day}"` for cross-platform date formatting in `TransitListSection`.
+- **`preset_detailed()` moon phase / chart shape overlap** — the auto-hide logic that suppresses the chart shape label when the moon phase occupies the bottom-right corner was not triggering when moon phase position was set to `None` (auto-detect). Since `None` resolves to the config default of `"bottom-right"`, the check now treats `None` equivalently, correctly hiding the chart shape to prevent overlap.
 
 ## [0.18.0] - 2026-04-26
 

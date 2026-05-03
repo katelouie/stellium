@@ -151,7 +151,7 @@ pip install stellium[analysis]
 ```python
 from stellium import ChartBuilder
 
-chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 chart.draw("einstein.svg").save()
 ```
 
@@ -196,7 +196,7 @@ from stellium import ChartBuilder
 chart = ChartBuilder.from_details(
     "2000-01-06 12:00",  # ISO format, US format, or European format
     "Seattle, WA"        # City name or (lat, lon) tuple
-).calculate()
+).with_aspects().calculate()
 
 # Access planetary positions
 sun = chart.get_object("Sun")
@@ -230,7 +230,7 @@ Phase: Full (100% illuminated)
 from stellium import ChartBuilder
 
 # Modern convenience method - accepts datetime strings!
-chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").calculate()
+chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").with_aspects().calculate()
 
 # Get all planets
 for planet in chart.get_planets():
@@ -330,6 +330,7 @@ from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
 chart = (ChartBuilder.from_native(native)
+    .with_aspects()
     .add_component(DignityComponent())
     .add_analyzer(AspectPatternAnalyzer())
     .calculate())

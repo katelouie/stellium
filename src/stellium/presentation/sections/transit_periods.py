@@ -344,10 +344,11 @@ def calculate_transit_periods(
 
 def _fmt_date(d: dt.datetime, ref_year: int | None = None) -> str:
     """Format a date concisely, omitting the year if it matches ref_year."""
+    day_month = f"{d.day} {d.strftime('%b')}"
     if ref_year is not None and d.year == ref_year:
-        return d.strftime("%-d %b")
+        return day_month
     short_year = str(d.year)[2:]
-    return f"{d.strftime('%-d %b')} '{short_year}"
+    return f"{day_month} '{short_year}"
 
 
 def _fmt_period(p: TransitPeriod, ref_year: int | None = None) -> str:
