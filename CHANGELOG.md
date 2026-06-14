@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Simplified Chinese (zh_CN) localization draft** — Frontend UI strings, report section strings, astrology terminology translations, and PDF report terminology. Contributed by Zhao Xin / 湛然星座 Astrosophy ([@zx8956-sketch](https://github.com/zx8956-sketch)). (#37)
+- **Sun-Moon ecliptic separation in Moon Phase report** — The Moon Phase section now displays the Sun-Moon ecliptic longitude separation (0-360°) inline with the phase name (e.g., "Waning Gibbous (234°)") and as a separate "Sun-Moon Separation" field. This allows users to verify phase boundaries against their own classification systems. (Closes #31, requested by [@daiwei9767](https://github.com/daiwei9767))
 
 ### Changed
 
