@@ -141,20 +141,20 @@ class TestProgressionByTargetDate:
 class TestAngleMethods:
     """Test different angle progression methods."""
 
-    def test_quotidian_is_default(self, kate_natal):
-        """Quotidian (actual daily motion) should be the default angle method."""
-        # Get quotidian progression
-        prog_q = ComparisonBuilder.progression(kate_natal, age=30).calculate()
+    def test_solar_arc_is_default(self, kate_natal):
+        """Solar arc should be the default angle method."""
+        # Get default progression
+        prog_default = ComparisonBuilder.progression(kate_natal, age=30).calculate()
 
-        # Get explicit quotidian
-        prog_q2 = ComparisonBuilder.progression(
-            kate_natal, age=30, angle_method="quotidian"
+        # Get explicit solar_arc
+        prog_sa = ComparisonBuilder.progression(
+            kate_natal, age=30, angle_method="solar_arc"
         ).calculate()
 
         # ASC should be the same
         assert (
-            prog_q.chart2.get_object("ASC").longitude
-            == prog_q2.chart2.get_object("ASC").longitude
+            prog_default.chart2.get_object("ASC").longitude
+            == prog_sa.chart2.get_object("ASC").longitude
         )
 
     def test_solar_arc_angles(self, kate_natal):
