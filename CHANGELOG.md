@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Bundled `seas_12.se1` for historical charts (1200-1799 CE)** — Chiron, Ceres, Pallas, Juno, and Vesta now calculate correctly for historical figures (e.g., Nostradamus, Leonardo da Vinci, Shakespeare). Previously, these charts emitted a misleading "Missing ephemeris file for Chiron" warning. Also removed the incorrectly-bundled `se00015.se1` (which was for asteroid Eunomia, not Chiron). Net package size decrease of ~170KB. (Fixes #34, reported by [@daiweisc](https://github.com/daiweisc))
+
 ### Changed
+
+- **Improved missing-ephemeris warning messages** — When a calculation fails due to a missing ephemeris file, the warning now distinguishes between date-range coverage issues (e.g., needing `seas_12.se1` for pre-1800 charts) and missing asteroid-specific files, with actionable download instructions for each case.
 
 ### Fixed
 

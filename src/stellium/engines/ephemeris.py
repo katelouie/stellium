@@ -350,37 +350,60 @@ class SwissEphemerisEngine:
         Args:
             object_name: Name of the object
             object_id: Swiss Ephemeris ID (includes AST_OFFSET for asteroids)
-            error_msg: Original error message
+            error_msg: Original error message from Swiss Ephemeris
         """
         # Only warn once per object
         if object_name in SwissEphemerisEngine._warned_missing_ephemeris:
             return
         SwissEphemerisEngine._warned_missing_ephemeris.add(object_name)
 
+        import re
         import sys
 
-        # For asteroids, the object_id includes AST_OFFSET (10000)
-        # We need to show the MPC number (without offset) in the message
-        mpc_number = object_id
-        if object_id >= swe.AST_OFFSET:
-            mpc_number = object_id - swe.AST_OFFSET
+        # Extract the actual missing filename from the swe error message
+        # Format: "SwissEph file 'seas_12.se1' not found in PATH '...'"
+        missing_file_match = re.search(r"'([^']+\.se1)'", error_msg)
+        missing_file = missing_file_match.group(1) if missing_file_match else None
 
-        # Determine the asteroid folder (ast0, ast1, etc.)
-        # Files are grouped: ast0 has 0-999, ast1 has 1000-1999, etc.
-        folder_num = mpc_number // 1000
+        # Determine if this is a date-range coverage issue (seas_XX/sepl_XX)
+        # vs a missing asteroid-specific file (se00NNN.se1)
+        is_date_range_file = missing_file and (
+            missing_file.startswith("seas_") or missing_file.startswith("sepl_")
+        )
 
         print(
             f"\n⚠️  Missing ephemeris file for {object_name} (skipping)",
             file=sys.stderr,
         )
-        print(
-            f"   To download, run: stellium ephemeris download-asteroid {mpc_number}",
-            file=sys.stderr,
-        )
-        print(
-            f"   Or manually download from: ast{folder_num}/ folder",
-            file=sys.stderr,
-        )
+
+        if is_date_range_file:
+            # The chart date falls outside the bundled ephemeris range (1800-2400)
+            print(
+                f"   Required file: {missing_file} (not bundled — "
+                f"Stellium bundles 1800-2400 CE coverage)",
+                file=sys.stderr,
+            )
+            print(
+                "   For historical/far-future charts, download additional "
+                "ephemeris files from https://www.astro.com/ftp/swisseph/ephe/",
+                file=sys.stderr,
+            )
+        else:
+            # Missing asteroid-specific file
+            mpc_number = object_id
+            if object_id >= swe.AST_OFFSET:
+                mpc_number = object_id - swe.AST_OFFSET
+
+            folder_num = mpc_number // 1000
+
+            print(
+                f"   To download, run: stellium ephemeris download-asteroid {mpc_number}",
+                file=sys.stderr,
+            )
+            print(
+                f"   Or manually download from: ast{folder_num}/ folder",
+                file=sys.stderr,
+            )
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_phase(

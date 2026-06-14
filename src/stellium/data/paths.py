@@ -42,6 +42,7 @@ ESSENTIAL_EPHE_FILES = [
     "sepl_24.se1",  # Planets 2400-2999
     "semo_18.se1",  # Moon 1800-2399
     "semo_24.se1",  # Moon 2400-2999
+    "seas_12.se1",  # Asteroids (Chiron, Ceres, etc.) 1200-1799
     "seas_18.se1",  # Asteroids 1800-2399
     "seas_24.se1",  # Asteroids 2400-2999
     "sefstars.txt",  # Fixed stars catalog
