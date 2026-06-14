@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **CI failure from pytest 9.x** — Capped pytest to `<9.0.0` due to `pytest-codeblocks` 0.17.0 using the deprecated `path` argument in `pytest_collect_file`, which pytest 9.0 removed. Will uncap when the plugin releases a compatible version.
+
 ## [0.18.1] - 2026-05-03
 
 ### Added
