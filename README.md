@@ -933,6 +933,7 @@ Stellium is released under the **AGPLv3.0 License**. See [LICENSE](LICENSE) for 
 - **[Swiss Ephemeris](https://www.astro.com/swisseph/)** - Astronomical calculations of exceptional accuracy
 - **[Astro.com](https://www.astro.com/)** - Ephemeris data and astrological resources
 - **[PySwissEph](https://astrorigin.com/pyswisseph/)** - Python bindings for Swiss Ephemeris
+- **Zhanran Astrology / 湛然星座** for Chinese localization.
 
 ---
 
