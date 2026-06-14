@@ -9,12 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [0.18.2] - 2026-06-14
+
+### Added
+
 - **Simplified Chinese (zh_CN) localization draft** — Frontend UI strings, report section strings, astrology terminology translations, and PDF report terminology. Contributed by Zhao Xin / 湛然星座 Astrosophy ([@zx8956-sketch](https://github.com/zx8956-sketch)). (#37)
 - **Sun-Moon ecliptic separation in Moon Phase report** — The Moon Phase section now displays the Sun-Moon ecliptic longitude separation (0-360°) inline with the phase name (e.g., "Waning Gibbous (234°)") and as a separate "Sun-Moon Separation" field. This allows users to verify phase boundaries against their own classification systems. (Closes #31, requested by [@daiwei9767](https://github.com/daiwei9767))
 
 ### Changed
 
-- **Progression angle method default changed from `"quotidian"` to `"solar_arc"`** — The previous default (`quotidian`) caused the progressed ASC to deviate ~1° per day of offset from the native's birthday, producing ~160° of error for a target date 6 months past the birthday. Solar Arc (natal angles + Sun's progressed arc) is now the default, matching the behavior of professional software (Solar Fire, Astro.com). Quotidian remains available via `angle_method="quotidian"` for advanced timing work. Affects `ComparisonBuilder.progression()`, `MultiChartBuilder.progression()`, and `MultiChartBuilder.add_progression()`. (Fixes #35)
+- **Progression angle method default changed from `"quotidian"` to `"solar_arc"`** — The previous default (`quotidian`) caused the progressed ASC to deviate ~1° per day of offset from the native's birthday, producing ~160° of error for a target date 6 months past the birthday. Solar Arc (natal angles + Sun's progressed arc) is now the default, matching the behavior of professional software (Solar Fire, Astro.com). Quotidian remains available via `angle_method="quotidian"` for advanced timing work. Affects `ComparisonBuilder.progression()`, `MultiChartBuilder.progression()`, and `MultiChartBuilder.add_progression()`. (Fixes #35, requested by [@yykeys](https://github.com/yykeys))
 
 ### Fixed
 
