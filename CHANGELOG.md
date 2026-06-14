@@ -9,7 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Simplified Chinese (zh_CN) localization draft** — Frontend UI strings, report section strings, astrology terminology translations, and PDF report terminology. Contributed by Zhao Xin / 湛然星座 Astrosophy ([@zx8956-sketch](https://github.com/zx8956-sketch)). (#37)
+
 ### Changed
+
+- **Progression angle method default changed from `"quotidian"` to `"solar_arc"`** — The previous default (`quotidian`) caused the progressed ASC to deviate ~1° per day of offset from the native's birthday, producing ~160° of error for a target date 6 months past the birthday. Solar Arc (natal angles + Sun's progressed arc) is now the default, matching the behavior of professional software (Solar Fire, Astro.com). Quotidian remains available via `angle_method="quotidian"` for advanced timing work. Affects `ComparisonBuilder.progression()`, `MultiChartBuilder.progression()`, and `MultiChartBuilder.add_progression()`. (Fixes #35)
 
 ### Fixed
 

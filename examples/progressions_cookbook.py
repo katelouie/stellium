@@ -246,18 +246,75 @@ def example_5_current_progressions():
 
 # =============================================================================
 # PART 3: ANGLE PROGRESSION METHODS
+#
+# In secondary progressions, planetary positions are unambiguous: cast a chart
+# for the progressed datetime (natal + N days for N years of life) and read
+# the planets. But ANGLES (ASC, MC) are a different story.
+#
+# The problem: the Ascendant rotates through the full 360° zodiac every ~24
+# hours (tied to Earth's rotation). In secondary progressions, 1 year of life
+# = 1 progressed day. This means the progressed ASC naturally cycles the ENTIRE
+# zodiac every year — which makes it hyper-sensitive to the fractional-day
+# component of the progressed datetime.
+#
+# Concretely: if your target date is your birthday, the progressed time lands
+# at an integer number of days (same time-of-day as birth). But if your target
+# is 6 months after your birthday, the progressed time shifts by ~12 hours,
+# and the ASC moves ~180°. This is mathematically correct but interpretively
+# useless for general progressed chart reading.
+#
+# Three solutions exist:
+#
+# SOLAR ARC (default) — "Move angles at the Sun's rate"
+#   Calculation: Natal ASC/MC + (Progressed Sun longitude - Natal Sun longitude)
+#   Rate: ~1°/year (varies slightly, since the Sun moves faster in Jan than Jul)
+#   Use case: Standard progressed chart interpretation. The most common method
+#   in professional software (Solar Fire, Astro.com default to this).
+#   Meaning: The angles unfold at the same pace as your core identity (Sun).
+#
+# NAIBOD — "Move angles at the Sun's MEAN rate"
+#   Calculation: Natal ASC/MC + (years × 59'08"/year)
+#   Rate: Exactly 0.9856°/year, constant regardless of birth date.
+#   Use case: When you want perfectly uniform angle progression. Popular in
+#   Uranian/cosmobiology traditions. Gives very similar results to Solar Arc
+#   (within ~1° over a lifetime) but with zero seasonal variation.
+#   Meaning: A standardized symbolic clock — pure time-as-meaning.
+#
+# QUOTIDIAN — "Use the raw chart-cast angles"
+#   Calculation: Cast a chart for the progressed datetime, use those angles.
+#   Rate: ~360°/year (full zodiac rotation per progressed day).
+#   Use case: ADVANCED TIMING TECHNIQUE. Not for general chart reading!
+#   Astrologers use quotidian progressions to time events WITHIN a year:
+#   "When does my progressed ASC cross my natal Mars?" — that gives a specific
+#   week or month. The ~1° per real-time day sensitivity is the feature, not
+#   a bug, for this application.
+#   Meaning: A fast-moving timer for pinpointing developmental moments.
+#
+# WHY SOLAR ARC IS THE DEFAULT:
+#   - Matches professional software behavior
+#   - Gives interpretively meaningful results (~30° of ASC motion over 30 years)
+#   - Stable across all target dates (no birthday-sensitivity)
+#   - The "expected" behavior for users comparing against other tools
 # =============================================================================
 
 
 def example_6_quotidian_angles():
     """
-    Example 6: Quotidian Angle Progression (Default)
+    Example 6: Quotidian Angle Progression (Advanced Timing Technique)
 
-    Quotidian uses the actual daily motion from Swiss Ephemeris.
-    The angles (ASC, MC) move at their natural rate based on
-    the progressed chart's actual sky positions.
+    Quotidian uses the actual angles from the progressed chart cast.
+    The ASC/MC cycle through the full zodiac every progressed day (= every
+    year of life), making this a precision timing tool rather than a general
+    progression method.
+
+    Use case: "When exactly does my progressed ASC conjoin natal Mars?"
+    The answer might be "age 30.27" — i.e., about April of your 30th year.
+
+    Note: Results vary dramatically with target date. This is intentional —
+    the sensitivity IS the feature for timing work. For general progressed
+    chart interpretation, use solar_arc (the default).
     """
-    section_header("Example 6: Quotidian Angles (Default)")
+    section_header("Example 6: Quotidian Angles (Advanced Timing)")
 
     natal = (
         ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
@@ -265,11 +322,11 @@ def example_6_quotidian_angles():
         .calculate()
     )
 
-    # Quotidian is the default (most accurate method)
+    # Quotidian must be explicitly requested (solar_arc is the default)
     prog = MultiChartBuilder.progression(
         natal,
         age=30,
-        angle_method="quotidian",  # This is the default
+        angle_method="quotidian",
     ).calculate()
 
     print("Quotidian Angles (actual ephemeris motion):")
@@ -289,14 +346,21 @@ def example_6_quotidian_angles():
 
 def example_7_solar_arc_angles():
     """
-    Example 7: Solar Arc Angle Progression
+    Example 7: Solar Arc Angle Progression (Default)
 
     In Solar Arc, ALL angles progress at the same rate as the
     progressed Sun. If the Sun moved 30°, so do ASC and MC.
 
-    This method is popular because it's predictable and symbolic.
+    This is the default method because:
+    - It produces stable, predictable results (~1°/year)
+    - It matches professional software defaults (Solar Fire, Astro.com)
+    - The rate is symbolically meaningful (angles unfold at the Sun's pace)
+    - Results don't vary wildly based on target date vs birthday
+
+    The Sun's actual rate varies slightly by season (~0.95°-1.02°/year)
+    because Earth's orbit is elliptical (faster in January near perihelion).
     """
-    section_header("Example 7: Solar Arc Angles")
+    section_header("Example 7: Solar Arc Angles (Default)")
 
     natal = (
         ChartBuilder.from_details("1994-01-06 11:47", (37.4419, -122.1430), name="Kate")
@@ -335,11 +399,17 @@ def example_8_naibod_angles():
     """
     Example 8: Naibod Angle Progression
 
-    Naibod uses the Sun's MEAN daily motion (59'08" per year)
-    rather than its actual motion. This gives a consistent,
-    predictable rate regardless of where the Sun is in its orbit.
+    Naibod uses the Sun's MEAN daily motion (59'08" per year = 0.9856°/year)
+    rather than its actual motion. This gives a perfectly consistent rate
+    regardless of birth date or season.
 
-    Naibod rate: ~0.9856° per year
+    Naibod rate: exactly 59'08" per year = 0.9856°/year
+    At age 30: 29.57° of arc
+    At age 60: 59.13° of arc
+
+    Compared to Solar Arc, Naibod differs by at most ~1° over a lifetime
+    (since the Sun's actual daily motion ranges from ~0.95° to ~1.02°).
+    Popular in Uranian astrology and cosmobiology traditions.
     """
     section_header("Example 8: Naibod Angles")
 
@@ -374,6 +444,15 @@ def example_9_compare_angle_methods():
     Example 9: Compare All Three Angle Methods
 
     See how the different methods produce different angle positions.
+
+    Expected results at age 30:
+    - Solar Arc: natal ASC + ~30° (Sun's actual motion)
+    - Naibod:    natal ASC + ~29.57° (Sun's mean motion)
+    - Quotidian: natal ASC + ??? (depends on fractional day — could be anything!)
+
+    Solar Arc and Naibod will always be within ~1° of each other.
+    Quotidian will appear to give a "random" angle unless the target
+    is exactly on a birthday (integer years).
     """
     section_header("Example 9: Compare Angle Methods")
 
