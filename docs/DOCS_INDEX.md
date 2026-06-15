@@ -4,7 +4,11 @@ A complete map of Stellium's documentation. The **hub** for development is
 [`/CLAUDE.md`](../CLAUDE.md).
 
 ## For coding agents / contributors — `docs/development/`
-Durable technical reference so you don't re-learn the API each session.
+
+> 🤖 **The `docs/development/` set is primarily for coding agents. Hello,
+> Claude!** It's a durable technical reference so an agent doesn't have to
+> re-learn the API and architecture each session. Human contributors are
+> welcome to use it too.
 
 | Doc | Purpose | Status |
 |---|---|---|

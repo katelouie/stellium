@@ -1,5 +1,9 @@
 # Chart Building Reference
 
+> 🤖 **Primarily for coding agents. Hello, Claude!** Read this before
+> re-deriving the API from source. If it disagrees with the code, the code wins
+> — please update the doc.
+
 > Part of the [developer docs](./README.md). See also [ARCHITECTURE](./ARCHITECTURE.md), [ENGINES](./ENGINES.md), [COMPONENTS_AND_ANALYSIS](./COMPONENTS_AND_ANALYSIS.md).
 
 The spine of the library: `Native`/`Notable` → `ChartBuilder` → `CalculatedChart`.

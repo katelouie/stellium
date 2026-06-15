@@ -1,5 +1,9 @@
 # Presentation / Reports Internals
 
+> 🤖 **Primarily for coding agents. Hello, Claude!** Read this before
+> re-deriving the API from source. If it disagrees with the code, the code wins
+> — please update the doc.
+
 > Part of the [developer docs](./README.md). User-facing guide: [`docs/REPORTS.md`](../REPORTS.md). To add a section: [EXTENDING](./EXTENDING.md).
 
 `ReportBuilder` assembles **sections** (data dicts) and hands them to a

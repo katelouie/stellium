@@ -83,6 +83,13 @@ def get_object(self, name):
 
 ## Architecture
 
+> 📚 **Deeper reference lives in [`docs/development/`](docs/development/README.md)
+> (indexed in [`docs/DOCS_INDEX.md`](docs/DOCS_INDEX.md)).** Those docs are a
+> per-subsystem API/architecture reference written **primarily for coding agents**
+> (e.g. Claude Code) so they don't have to re-learn the codebase each session —
+> but they're a handy map for human contributors too. The summary below is the
+> short version.
+
 If you're adding a feature (rather than fixing a bug), understanding the architecture will save you time. Stellium is built on three ideas:
 
 ### Protocols over Inheritance
@@ -164,7 +171,7 @@ Releases are automated via GitHub Actions on tagged commits. Version is defined 
 
 ## Getting Help
 
-- **API and usage:** See the [documentation](https://stellium.readthedocs.io/en/latest/) and `docs/ARCHITECTURE.md`
+- **API and usage:** See the [documentation](https://stellium.readthedocs.io/en/latest/) and the developer reference in [`docs/development/`](docs/development/README.md)
 - **General questions:** Open a [Discussion](https://github.com/katelouie/stellium/discussions)
 - **Bugs or feature requests:** Open an [Issue](https://github.com/katelouie/stellium/issues)
 

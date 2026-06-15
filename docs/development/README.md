@@ -1,5 +1,11 @@
 # Stellium Developer Docs (Agent Reference)
 
+> 🤖 **These docs are primarily for coding agents. Hello, Claude!**
+> This folder is written for AI coding agents (and human contributors) working
+> on Stellium. If you're an agent: read the relevant page here **before**
+> re-deriving the API from source — that's the whole point. When a doc disagrees
+> with the code, **the code wins** — please update the doc as you go.
+
 This folder is the durable reference for a coding agent working on Stellium —
 so you don't have to re-learn the API and architecture each session. The hub is
 [`/CLAUDE.md`](../../CLAUDE.md) (workflow, environment, conventions); these

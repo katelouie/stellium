@@ -1,5 +1,9 @@
 # Architecture (Agent Orientation)
 
+> 🤖 **Primarily for coding agents. Hello, Claude!** Read this before
+> re-deriving the architecture from source. If it disagrees with the code, the
+> code wins — please update the doc.
+
 > Part of the [developer docs](./README.md). Hub: [`/CLAUDE.md`](../../CLAUDE.md) · Index: [`docs/DOCS_INDEX.md`](../DOCS_INDEX.md)
 
 This is the map an agent should read first. It explains *how the pieces fit*

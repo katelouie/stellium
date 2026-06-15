@@ -1,5 +1,9 @@
 # Visualization Internals
 
+> 🤖 **Primarily for coding agents. Hello, Claude!** Read this before
+> re-deriving the API from source. If it disagrees with the code, the code wins
+> — please update the doc.
+
 > Part of the [developer docs](./README.md). User-facing guide: [`docs/VISUALIZATION.md`](../VISUALIZATION.md), galleries: [`docs/THEME_GALLERY.md`](../THEME_GALLERY.md) / [`docs/PALETTE_GALLERY.md`](../PALETTE_GALLERY.md). To add layers/themes: [EXTENDING](./EXTENDING.md).
 
 How SVG rendering actually works, for agents modifying it. Source:

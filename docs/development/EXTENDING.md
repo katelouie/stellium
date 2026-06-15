@@ -1,5 +1,9 @@
 # Extending Stellium
 
+> 🤖 **Primarily for coding agents. Hello, Claude!** Read this before
+> re-deriving the API from source. If it disagrees with the code, the code wins
+> — please update the doc.
+
 > Part of the [developer docs](./README.md). Background: [ARCHITECTURE](./ARCHITECTURE.md).
 
 Everything pluggable is a **Protocol** in `core/protocols.py` (or the
