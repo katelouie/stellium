@@ -28,3 +28,13 @@ jobs:
 
     - name: Run documentation validation
       run: pytest -m "docs or notebooks"
+
+    # Build the Sphinx site so a sphinx/plugin break is caught at PR time.
+    # Read the Docs only builds after merge to main, so without this a broken
+    # docs build would land before anyone notices. Non-strict (no -W): the site
+    # currently emits many pre-existing warnings, so we fail only on hard build
+    # errors, not warnings.
+    - name: Build Sphinx docs
+      run: |
+        pip install -r docs/requirements.txt
+        python -m sphinx -b html docs docs/_build/html
