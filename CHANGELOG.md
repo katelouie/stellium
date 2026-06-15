@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Markdown renderer** — New `format="markdown"` option for `ReportBuilder.render()`. Produces clean GitHub Flavored Markdown with pipe tables, bold key-value pairs, and standard heading levels. Suitable for Obsidian, Notion, GitHub READMEs, documentation sites, and blog posts. Also available directly via `MarkdownRenderer` class.
 - **Python 3.13 support** — Added 3.13 to PyPI classifiers, now tested in CI alongside 3.11 and 3.12.
 - **Cross-platform CI matrix** — CI now tests on Windows, macOS, and Ubuntu across Python 3.11/3.12/3.13 (9 combinations). Fixed Windows-specific issues: UTF-8 encoding for SVG file reads, file locking in temp file tests, `USERPROFILE` for `expanduser`, and `strftime` format codes.
+- **Retrograde marker (℞) on wheel charts** — Retrograde planets now display a small ℞ symbol in the info stack below the degree/minutes, using the theme's `retro_color`. Appears automatically in "full" and "no_sign" info modes for any object with negative speed.
 
 ### Changed
 

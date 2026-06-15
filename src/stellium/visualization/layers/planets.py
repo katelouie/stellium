@@ -316,6 +316,34 @@ class PlanetLayer:
                         )
                     )
 
+                # Retrograde marker (℞) for retrograde planets
+                if planet.is_retrograde and effective_info_mode in ("full", "no_sign"):
+                    retro_offset = 0.35
+                    if self.info_stack_direction == "outward":
+                        retro_radius = minutes_radius + (glyph_size_px * retro_offset)
+                    else:
+                        retro_radius = minutes_radius - (glyph_size_px * retro_offset)
+
+                    x_retro, y_retro = renderer.polar_to_cartesian(
+                        adjusted_long, retro_radius
+                    )
+
+                    # Parse info_size to get a smaller font size for the marker
+                    info_size_val = int(style["info_size"].replace("px", ""))
+                    retro_size = f"{max(info_size_val - 2, 7)}px"
+
+                    dwg.add(
+                        dwg.text(
+                            "\u211e",  # ℞
+                            insert=(x_retro, y_retro),
+                            text_anchor="middle",
+                            dominant_baseline="central",
+                            font_size=retro_size,
+                            fill=style["retro_color"],
+                            font_family=renderer.style["font_family_text"],
+                        )
+                    )
+
     def _calculate_adjusted_positions(
         self,
         planets: list[CelestialPosition],
