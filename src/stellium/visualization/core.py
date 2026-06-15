@@ -102,7 +102,7 @@ def get_glyph(object_name: str) -> dict[str, str]:
                 svg_path = project_root / obj_info.glyph_svg_path
             if svg_path.exists():
                 # Read SVG content for inline embedding
-                svg_content = svg_path.read_text()
+                svg_content = svg_path.read_text(encoding="utf-8")
                 return {"type": "svg", "value": svg_content}
             # Fall back to unicode glyph if SVG doesn't exist
             return {"type": "unicode", "value": obj_info.glyph}

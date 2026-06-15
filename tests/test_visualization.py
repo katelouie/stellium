@@ -533,7 +533,7 @@ class TestDrawChart:
         assert os.path.exists(filepath)
 
         # Check file has content
-        with open(filepath) as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
             assert len(content) > 0
             assert "<svg" in content
@@ -603,7 +603,7 @@ class TestDrawChart:
         assert os.path.exists(filepath)
 
         # Verify substantial content
-        with open(filepath) as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
             assert len(content) > 1000  # Should be substantial
 

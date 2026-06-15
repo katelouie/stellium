@@ -433,7 +433,7 @@ class TestDialDrawBuilder:
         builder.save()
 
         assert os.path.exists(filename)
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             content = f.read()
             assert content.startswith("<?xml") or content.startswith("<svg")
 
@@ -790,7 +790,7 @@ class TestDialIntegration:
         assert os.path.exists(filename)
 
         # Check that the file contains Aries Point glyph or Hamburg planet names
-        with open(filename) as f:
+        with open(filename, encoding="utf-8") as f:
             content = f.read()
             # Should contain at least some of the Uranian content
             assert "♈" in content or "Aries" in content or "Cupido" in content

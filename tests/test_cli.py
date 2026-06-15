@@ -217,7 +217,7 @@ class TestChartCommands:
             assert "Chart saved to" in result.output
             assert output_path.exists()
             # Verify it's an SVG file
-            content = output_path.read_text()
+            content = output_path.read_text(encoding="utf-8")
             assert "<svg" in content or "svg" in content.lower()
 
     def test_chart_from_registry_default_filename(self, runner: CliRunner):
@@ -562,7 +562,7 @@ class TestCLIIntegration:
             assert Path("einstein.svg").exists()
 
             # File should be valid SVG
-            content = Path("einstein.svg").read_text()
+            content = Path("einstein.svg").read_text(encoding="utf-8")
             assert len(content) > 1000  # Non-trivial SVG
 
     def test_cache_workflow(self, runner: CliRunner):
