@@ -4,8 +4,32 @@
 
 ---
 
+## 📍 Documentation Map (read this first)
+
+This file is the **hub**: environment, workflow, conventions, and anti-patterns.
+The **technical API/architecture reference** lives in
+[`docs/development/`](docs/development/README.md) — read those instead of
+re-deriving the API from source each session:
+
+| Need | Go to |
+|---|---|
+| How the codebase fits together, dependency rules, `.calculate()` flow | [docs/development/ARCHITECTURE.md](docs/development/ARCHITECTURE.md) |
+| `ChartBuilder`, `CalculatedChart`, `Native`, config, registries | [docs/development/CHART_BUILDING.md](docs/development/CHART_BUILDING.md) |
+| Ephemeris, houses, aspects, orbs, dignities, patterns, profections | [docs/development/ENGINES.md](docs/development/ENGINES.md) |
+| Components, analysis/DataFrames, IO, caching, utils | [docs/development/COMPONENTS_AND_ANALYSIS.md](docs/development/COMPONENTS_AND_ANALYSIS.md) |
+| SVG rendering internals, layers, themes/palettes, dial/vedic/atlas | [docs/development/VISUALIZATION_INTERNALS.md](docs/development/VISUALIZATION_INTERNALS.md) |
+| `ReportBuilder`, sections, renderers | [docs/development/PRESENTATION_INTERNALS.md](docs/development/PRESENTATION_INTERNALS.md) |
+| Multi-chart, returns, electional, planner, Chinese/BaZi, CLI | [docs/development/SUBSYSTEMS.md](docs/development/SUBSYSTEMS.md) |
+| Adding an engine / component / analyzer / layer / theme / section | [docs/development/EXTENDING.md](docs/development/EXTENDING.md) |
+| Full doc index (incl. user-facing guides) | [docs/DOCS_INDEX.md](docs/DOCS_INDEX.md) |
+
+> When a doc disagrees with the source, **the source wins** — fix the doc.
+
+---
+
 ## Table of Contents
 
+- [Documentation Map](#-documentation-map-read-this-first)
 - [Environment Setup Requirements](#environment-setup-requirements)
 - [Codebase Architecture](#codebase-architecture)
 - [Directory Structure](#directory-structure)
@@ -72,24 +96,37 @@ pytest
 pytest --cov=src --cov-report=term-missing
 ```
 
+> **Environment note.** The `pyenv activate starlight` step is the *local*
+> workflow. CI and any clean environment (containers, fresh checkouts) instead
+> do `pip install -e ".[dev]"` then run `pytest` / `ruff check .` /
+> `ruff format --check .` directly — no pyenv. Use whichever matches where you
+> are; the goal is just an interpreter with the package + dev deps installed.
+> CI runs on Python 3.11–3.13 across Linux/macOS/Windows (`.github/workflows/tests.yml`).
+
 ---
 
 ## Documentation Organization
 
-All project documentation lives under `docs/` with the following structure:
+All project documentation lives under `docs/`:
 
-- **`docs/planning/`** -- Future work, designs not yet started. Put new feature plans here.
-- **`docs/development/`** -- Active development guides, architecture references, implementation guides. Put technical references and in-progress implementation docs here.
-- **`docs/archive/`** -- Fully implemented plans, kept for historical reference. When a planning doc is fully implemented, move it here and add an `> **ARCHIVED**` notice at the top.
-- **`docs/`** (root) -- User-facing guides (visualization, reports, chart types, etc.)
-- **`claude_info/`** -- Research and analysis documents (competitive analysis, codebase audit, novel features)
+- **`docs/development/`** — **Agent/contributor API & architecture reference**
+  (the spokes linked in the [Documentation Map](#-documentation-map-read-this-first)).
+  Keep this current with the code.
+- **`docs/`** (root) — User-facing guides (`VISUALIZATION.md`, `REPORTS.md`,
+  `CHART_TYPES.md`, gallery pages, `options_list.md`, the Sphinx site).
+- **`docs/ARCHITECTURE.md`** — superseded historical doc (kept for concepts;
+  see the redirect banner at its top).
 
-**Index:** See `docs/DOCS_INDEX.md` for a complete list of all documentation with descriptions and status.
+**Index:** See [`docs/DOCS_INDEX.md`](docs/DOCS_INDEX.md) for the complete list
+with status.
 
 **When adding new docs:**
-- Planning a new feature? Create `docs/planning/YOUR_FEATURE.md`
-- Writing a dev guide or reference? Create `docs/development/YOUR_GUIDE.md`
-- Finished implementing a plan? Move it from `planning/` to `archive/` with an archive notice
+- Technical reference / how a subsystem works? Add or extend a file in
+  `docs/development/` and link it from `docs/development/README.md`,
+  `docs/DOCS_INDEX.md`, and the Documentation Map above.
+- User-facing guide? Add to `docs/` (root) and list it in `docs/DOCS_INDEX.md`.
+- Planning/archive folders are not currently used — create `docs/planning/`
+  only if a longer-lived design doc is needed.
 
 ---
 
@@ -118,114 +155,78 @@ Stellium is built on three foundational principles that enable extensibility, ma
 ### Data Flow
 
 ```
-User Request
+Native/Notable (birth data)
     ↓
-ChartBuilder (API layer) - Fluent interface for configuration
-    ↓
+ChartBuilder (API layer) — fluent, lazy configuration
+    ↓  .calculate()
 Engines (calculation layer)
-    ├── EphemerisEngine → CelestialPosition[]  (planetary positions)
-    ├── HouseSystemEngine → HouseCusps          (house systems)
-    ├── AspectEngine → Aspect[]                 (aspects)
-    └── OrbEngine → orb calculations
+    ├── EphemerisEngine    → CelestialPosition[]   (positions + declination + phase)
+    ├── HouseSystemEngine  → HouseCusps + angles   (per system)
+    ├── AspectEngine       → Aspect[]              (+ declination aspects)
+    └── OrbEngine          → orb allowances
     ↓
-Components (optional calculations)
-    ├── ArabicPartsCalculator → Arabic Parts
-    ├── MidpointCalculator → Midpoints
-    ├── DignityComponent → Essential/Accidental Dignities
-    └── PatternAnalysisEngine → Aspect Patterns
+Components (add positions)        Analyzers (add metadata)
+    ├── ArabicPartsCalculator         ├── AspectPatternAnalyzer
+    ├── MidpointCalculator            └── ZodiacalReleasingAnalyzer
+    ├── DignityComponent
+    └── FixedStarsComponent
     ↓
-CalculatedChart (immutable result)
-    ↓
-Presentation/Visualization/Export
-    ├── ReportBuilder → Terminal reports (Rich)
-    ├── ChartRenderer → SVG charts
-    └── to_dict() → JSON export
+CalculatedChart (immutable result) ──► transforms: profection(), zodiacal_releasing(),
+    ↓                                              draconic(), voc_moon(), returns
+Presentation / Visualization / Export / Analysis
+    ├── ReportBuilder  → rich / plain / markdown / html / pdf / prose
+    ├── chart.draw()   → SVG (wheel, dial, vedic, multiwheel, atlas PDF)
+    ├── to_dict()      → JSON  ·  to_prompt_text() → LLM context
+    └── analysis.* / io.* → pandas DataFrames, CSV/AAF import
 ```
+
+> Full detail: [docs/development/ARCHITECTURE.md](docs/development/ARCHITECTURE.md).
 
 ---
 
 ## Directory Structure
 
+> Per-subsystem API detail is in [docs/development/](docs/development/README.md).
+> This is the high-level layout only.
+
 ```
 /home/user/stellium/
-├── src/stellium/              # Main package source code
-│   ├── __init__.py            # Public API exports
-│   ├── core/                  # Core abstractions (NEVER import from engines here)
-│   │   ├── models.py         # Immutable data classes (CelestialPosition, Aspect, etc.)
-│   │   ├── protocols.py      # Interface definitions (Protocol classes)
-│   │   ├── builder.py        # ChartBuilder (main API entry point)
-│   │   ├── native.py         # Native, Notable (birth data containers)
-│   │   ├── config.py         # CalculationConfig
-│   │   └── registry.py       # CELESTIAL_REGISTRY, ASPECT_REGISTRY
-│   │
-│   ├── engines/               # Calculation engines
-│   │   ├── ephemeris.py      # SwissEphemerisEngine (planet positions)
-│   │   ├── houses.py         # House systems (Placidus, Whole Sign, Koch, etc.)
-│   │   ├── aspects.py        # Aspect engines (Modern, Traditional, Harmonic)
-│   │   ├── orbs.py           # Orb calculation engines
-│   │   ├── dignities.py      # Essential & Accidental dignity engines
-│   │   └── patterns.py       # Aspect pattern detection
-│   │
-│   ├── components/            # Optional calculation components
-│   │   ├── arabic_parts.py   # ArabicPartsCalculator (25+ lots)
-│   │   ├── midpoints.py      # MidpointCalculator
-│   │   ├── dignity.py        # DignityComponent
-│   │   └── patterns.py       # PatternAnalysisEngine
-│   │
-│   ├── presentation/          # Terminal reports and formatting
-│   │   ├── builder.py        # ReportBuilder
-│   │   ├── sections.py       # Report sections
-│   │   └── renderers.py      # Rich/plain text renderers
-│   │
-│   ├── visualization/         # SVG chart rendering
-│   │   ├── core.py           # ChartRenderer
-│   │   ├── builder.py        # ChartDrawBuilder (fluent API)
-│   │   ├── composer.py       # ChartComposer (orchestrator)
-│   │   └── layers.py         # Chart layers (Zodiac, Houses, Planets, etc.)
-│   │
-│   ├── data/                  # Data registries and notables database
-│   │   └── notables/         # Notable births YAML files
-│   │
-│   ├── utils/                 # Utilities
-│   │   ├── cache.py          # Caching decorators and utilities
-│   │   └── cache_utils.py    # Cache management
-│   │
-│   └── cli/                   # Command-line interface
+├── src/stellium/              # Main package
+│   ├── __init__.py            # Public API exports (the canonical surface)
+│   ├── core/                  # Abstractions — NEVER imports from higher layers
+│   │   ├── models.py          #   CelestialPosition, Aspect, CalculatedChart, MultiChart, …
+│   │   ├── protocols.py       #   ALL Protocols (engines, components, sections, layers)
+│   │   ├── builder.py         #   ChartBuilder (main entry point)
+│   │   ├── native.py          #   Native, Notable (parsing/geocoding/timezone)
+│   │   ├── config.py          #   CalculationConfig, AspectConfig
+│   │   ├── ayanamsa.py        #   ZodiacType + ayanamsa registry
+│   │   ├── registry.py        #   CELESTIAL_/ASPECT_/FIXED_STARS_REGISTRY
+│   │   ├── comparison.py multichart.py multiwheel.py synthesis.py  # multi-chart
+│   │   └── chart_utils.py     #   duck-typed chart-type helpers (avoids cycles)
+│   ├── engines/               # Calculation (ephemeris, houses, aspects, orbs,
+│   │                          #   dignities, patterns, dispositors, profections,
+│   │                          #   releasing, directions, voc, fixed_stars, search)
+│   ├── components/            # Optional add-ons (arabic_parts, midpoints,
+│   │                          #   dignity, fixed_stars, antiscia)
+│   ├── analysis/             # Batch + pandas (batch, frames, stats, queries, vector, export)
+│   ├── io/                    # Import natives (csv, aaf, dataframe)
+│   ├── electional/           # Time search (predicates, intervals, planetary_hours)
+│   ├── returns/              # Solar/lunar/planetary returns (ReturnBuilder)
+│   ├── planner/             # Personalized PDF planners (Typst)
+│   ├── chinese/             # BaZi / Four Pillars (+ ziwei: planned)
+│   ├── presentation/        # ReportBuilder, sections/, renderers (rich/md/html/pdf/prose)
+│   ├── visualization/       # SVG: builder→composer→layers/, themes, palettes,
+│   │                          #   dial/, vedic/, atlas/, layout/
+│   ├── data/                # Registries + notables YAML + bundled ephemeris
+│   ├── utils/               # cache, time/JD, chart_shape, chart_ruler, progressions
+│   └── cli/                 # `stellium` CLI (chart, ephemeris, cache)
 │
-├── tests/                     # Test suite
-│   ├── test_chart_builder.py
-│   ├── test_integration.py
-│   ├── test_ephemeris_engine.py
-│   ├── test_aspect_engine.py
-│   ├── test_arabic_parts.py
-│   ├── test_midpoints.py
-│   ├── test_celestial_registry.py
-│   ├── test_aspect_registry.py
-│   ├── test_notables.py
-│   ├── test_core_models.py
-│   └── benchmark_performance.py
-│
-├── examples/                  # Usage examples
-│   ├── viz_examples.py       # Visualization examples
-│   ├── report_examples.py    # Report generation examples
-│   └── chart_examples/       # Generated chart SVGs
-│
-├── data/                      # Swiss Ephemeris data files
-│   └── swisseph/ephe/        # Ephemeris data (1800-2400 CE)
-│
-├── docs/                      # Documentation
-│   ├── USER_GUIDE.md
-│   ├── development/
-│   │   ├── ARCHITECTURE_QUICK_REFERENCE.md
-│   │   ├── CONTRIBUTING.md
-│   │   └── REFACTORING_GUIDE.md
-│   └── planning/
-│
-├── pyproject.toml            # Package configuration
-├── README.md                 # User-facing documentation
-├── CONTRIBUTING.md           # Contribution guidelines
-├── TODO.md                   # Development roadmap
-└── CLAUDE.md                 # This file
+├── tests/                   # ~1900 tests; fast tier via `-m "not slow"`; conftest.py fixtures
+├── examples/                # *_cookbook.py per subsystem + notebooks
+├── docs/                    # Docs (see docs/DOCS_INDEX.md)
+│   └── development/         # ← Agent API/architecture reference (this set)
+├── web/                     # NiceGUI web app (optional)
+├── pyproject.toml  README.md  CONTRIBUTING.md  CHANGELOG.md  TODO.md  CLAUDE.md
 ```
 
 ---
