@@ -18,13 +18,13 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 
 **Try out some quick examples immediately, no installation needed:** [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/katelouie/stellium/blob/main/examples/stellium_sampler_colab.ipynb)
 
-**✨ Stellium The Webapp is live! [Visit it here!](https://www.stelliumastro.app/) ✨** It represents about 50-60% of the functionality of the full package, but is great for testing out the core capabilities and getting quick chart outputs.
+**Stellium The Webapp is live! [Visit it here!](https://www.stelliumastro.app/)** It represents about 50-60% of the functionality of the full package, but is great for testing out the core capabilities and getting quick chart outputs.
 
 *Star the repo if you find it useful!* ⭐
 
 ---
 
-## ✨ Why Stellium?
+## Why Stellium?
 
 ### **For Python Developers**
 
@@ -34,6 +34,8 @@ Read the extensive documentation and API autodocs at [Read The Docs](https://ste
 - **Flexible input formats** - accepts datetime strings, city names, or precise coordinates
 - **Modular & composable** - mix and match components as needed
 - **Production-ready** with comprehensive test coverage
+
+If you've used React (composable, plug-and-play components) or PyTorch (sensible defaults, progressive disclosure, lazy `.calculate()`), the API should feel familiar.
 
 ### **For Astrologers**
 
@@ -848,7 +850,7 @@ All calculation results are immutable dataclasses:
 ```python
 # Results are frozen - safe to cache and share
 sun = chart.get_object("Sun")
-sun.longitude = 100  # ❌ Error: frozen dataclass
+sun.longitude = 100  # Error: frozen dataclass
 
 # This makes caching safe and reliable
 cached_chart = chart  # Safe to reuse
@@ -879,20 +881,9 @@ pytest tests/test_integration.py
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 See [TODO.md](TODO.md) for the full development roadmap.
-
-### Recently Added
-
-- ✅ **PDF Planner Generator** - Create personalized astrological planners with charts, transits, Moon phases, and calendar layouts
-- ✅ **Electional Astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
-- ✅ **Data Analysis Module** - Batch calculation, pandas DataFrames, queries, statistics
-- ✅ **Sidereal Zodiac Support** - 9 ayanamsa systems (Lahiri, Fagan-Bradley, Raman, etc.)
-- ✅ **Declination Calculations** - Out-of-bounds detection, equatorial coordinates
-- ✅ **Bi-Wheel Charts** - Synastry, transits, progressions, composite charts
-- ✅ **Enhanced Reports** - Dignities, aspect patterns, house cusps, declinations
-- ✅ **Unknown Time Charts** - Moon arc visualization for charts without birth time
 
 ---
 

@@ -146,7 +146,7 @@ The protocol-based architecture means you can add things without touching existi
 - **New house system:** Implement `HouseSystemEngine` (see `engines/houses.py` for examples)
 - **New component:** Implement `ChartComponent` (see `components/` for examples)
 - **New report section:** Implement `ReportSection` (see `presentation/sections/` for examples)
-- **New renderer:** Implement `ReportRenderer` (see `presentation/renderers.py` for examples)
+- **New renderer:** Implement `ReportRenderer` (see `presentation/renderers.py` for examples). The reporting layer uses a Strategy pattern: sections produce typed data dicts, renderers consume them, and neither knows about the other. Adding a renderer means handling the data types (`table`, `key_value`, `text`, `compound`, `side_by_side_tables`), not learning any astrology.
 - **New visualization layer:** Implement `IRenderLayer` (see `visualization/layer_factory.py` for the protocol and `visualization/layers/` for examples)
 
 The cookbook files in `examples/` are the best way to see (and show) how all the pieces fit together.
