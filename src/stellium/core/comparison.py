@@ -671,7 +671,7 @@ class ComparisonBuilder:
         *,
         target_date: str | datetime | None = None,
         age: float | None = None,
-        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "quotidian",
+        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "solar_arc",
         natal_label: str = "Natal",
         progressed_label: str = "Progressed",
     ) -> "ComparisonBuilder":
@@ -693,9 +693,10 @@ class ComparisonBuilder:
             target_date: Target date for progression (triggers auto-calculation)
             age: Age in years for progression (alternative to target_date)
             angle_method: How to progress angles:
-                - "quotidian" (default): Actual daily motion from Swiss Ephemeris
-                - "solar_arc": Angles progress at rate of progressed Sun
+                - "solar_arc" (default): Angles progress at rate of progressed Sun
                 - "naibod": Angles progress at mean Sun rate (59'08"/year)
+                - "quotidian": Raw angles from progressed chart cast (not recommended;
+                  causes ~1° ASC deviation per day offset from birthday)
             natal_label: Label for natal chart (default: "Natal")
             progressed_label: Label for progressed chart (default: "Progressed")
 

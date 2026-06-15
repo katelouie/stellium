@@ -151,7 +151,7 @@ pip install stellium[analysis]
 ```python
 from stellium import ChartBuilder
 
-chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 chart.draw("einstein.svg").save()
 ```
 
@@ -196,7 +196,7 @@ from stellium import ChartBuilder
 chart = ChartBuilder.from_details(
     "2000-01-06 12:00",  # ISO format, US format, or European format
     "Seattle, WA"        # City name or (lat, lon) tuple
-).calculate()
+).with_aspects().calculate()
 
 # Access planetary positions
 sun = chart.get_object("Sun")
@@ -230,7 +230,7 @@ Phase: Full (100% illuminated)
 from stellium import ChartBuilder
 
 # Modern convenience method - accepts datetime strings!
-chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").calculate()
+chart = ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA").with_aspects().calculate()
 
 # Get all planets
 for planet in chart.get_planets():
@@ -330,6 +330,7 @@ from datetime import datetime
 
 native = Native(datetime(2000, 1, 6, 12, 00), "Seattle, WA")
 chart = (ChartBuilder.from_native(native)
+    .with_aspects()
     .add_component(DignityComponent())
     .add_analyzer(AspectPatternAnalyzer())
     .calculate())
@@ -408,6 +409,44 @@ stellium cache clear
 ```
 
 See `stellium --help` for full CLI documentation.
+
+---
+
+## Ephemeris Data Location
+
+Stellium bundles enough Swiss Ephemeris data to cover **1800–2999 CE** and
+automatically copies it to `~/.stellium/ephe/` on first use, so most users
+never need to download anything. Use `stellium ephemeris download` if you
+need coverage outside that range or extra asteroid files.
+
+### Using a custom ephemeris directory
+
+You can point Stellium at any existing Swiss Ephemeris folder — handy for
+portable installs, read-only home directories (Docker, Lambda, shared
+hosts), or for reusing a folder you already maintain for another astrology
+tool. Two options, in order of precedence:
+
+```python
+# 1. Explicit argument wins over everything else
+from stellium import ChartBuilder
+from stellium.engines.ephemeris import SwissEphemerisEngine
+
+chart = (ChartBuilder.from_native(native)
+    .with_ephemeris(SwissEphemerisEngine(ephe_path=r"D:\swisseph\ephe"))
+    .calculate())
+```
+
+```bash
+# 2. Environment variable — no code changes required
+export STELLIUM_EPHE_PATH=/opt/swisseph/ephe       # macOS / Linux
+set STELLIUM_EPHE_PATH=D:\swisseph\ephe            # Windows (cmd)
+$env:STELLIUM_EPHE_PATH = "D:\swisseph\ephe"       # Windows (PowerShell)
+```
+
+When you supply a custom path Stellium uses it **as-is**: the folder is not
+created, and the bundled ephemeris files are **not** copied into it.
+Make sure it already contains every `.se1` file you need for the objects
+and date range you plan to calculate.
 
 ---
 
@@ -678,6 +717,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 |----------|-------------|
 | **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
 | **[aspects_and_orbs_cookbook.py](examples/aspects_and_orbs_cookbook.py)** | 14 examples: aspect engines, orb engines (Simple, Luminaries, Complex, Moiety), traditional moiety systems |
+| **[dignities_cookbook.py](examples/dignities_cookbook.py)** | 14 examples: essential/accidental dignities, scoring, peregrine, mutual reception, dispositor graphs |
 | **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
 | **[multichart_cookbook.py](examples/multichart_cookbook.py)** | Synastry, transits, bi-, tri- and quad-wheels, compatibility |
 | **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
@@ -698,6 +738,7 @@ The `/examples` directory contains comprehensive, runnable cookbooks:
 # Run any cookbook
 python examples/chart_cookbook.py
 python examples/aspects_and_orbs_cookbook.py
+python examples/dignities_cookbook.py
 python examples/report_cookbook.py
 python examples/multichart_cookbook.py
 python examples/returns_cookbook.py
@@ -892,6 +933,7 @@ Stellium is released under the **AGPLv3.0 License**. See [LICENSE](LICENSE) for 
 - **[Swiss Ephemeris](https://www.astro.com/swisseph/)** - Astronomical calculations of exceptional accuracy
 - **[Astro.com](https://www.astro.com/)** - Ephemeris data and astrological resources
 - **[PySwissEph](https://astrorigin.com/pyswisseph/)** - Python bindings for Swiss Ephemeris
+- **Zhanran Astrology / 湛然星座** for Chinese localization.
 
 ---
 

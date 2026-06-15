@@ -620,16 +620,112 @@ class TestProgressionAutoCalculation:
 
         assert comparison.chart2.metadata.get("angle_method") == "naibod"
 
-    def test_progression_quotidian_angles_default(self):
-        """Test progression() uses quotidian angles by default."""
+    def test_progression_quotidian_angles_explicit(self):
+        """Test progression() with explicit quotidian angle method."""
         natal = Native("1990-01-15 10:00", "New York, NY")
 
         comparison = ComparisonBuilder.progression(
             natal, age=30, angle_method="quotidian"
         ).calculate()
 
-        # Quotidian doesn't add angle metadata
+        # Quotidian doesn't add angle metadata (no arc to store)
         assert comparison.chart2.metadata.get("angle_method") is None
+
+    def test_progression_default_is_solar_arc(self):
+        """Test that progression() defaults to solar_arc angles."""
+        natal = Native("1990-01-15 10:00", "New York, NY")
+
+        comparison = ComparisonBuilder.progression(natal, age=30).calculate()
+
+        assert comparison.chart2.metadata.get("angle_method") == "solar_arc"
+        assert "angle_arc" in comparison.chart2.metadata
+
+    def test_progression_solar_arc_asc_stable_across_targets(self):
+        """
+        Regression test for issue #35: ASC should not deviate wildly
+        between birthday and non-birthday target dates.
+
+        With the old quotidian default, a 6-month offset caused ~160° of
+        ASC deviation. Solar arc should give ~0.5° (half a year of arc).
+        """
+        natal = Native("1990-01-15 10:00", "New York, NY")
+
+        prog_birthday = ComparisonBuilder.progression(natal, age=30).calculate()
+        prog_half_year = ComparisonBuilder.progression(natal, age=30.5).calculate()
+
+        asc_birthday = prog_birthday.chart2.get_object("ASC").longitude
+        asc_half_year = prog_half_year.chart2.get_object("ASC").longitude
+
+        diff = abs(asc_half_year - asc_birthday)
+        if diff > 180:
+            diff = 360 - diff
+
+        # Solar arc: ~1°/year, so 0.5 year should be ~0.5°
+        # Allow generous margin but catch the old bug (which gave ~160°)
+        assert diff < 3.0, (
+            f"ASC deviated {diff:.1f}° over 6 months — "
+            f"expected <3° with solar arc, old quotidian bug gave ~160°"
+        )
+
+    def test_progression_naibod_rate_correct(self):
+        """Test that Naibod advances angles at ~0.986°/year (59'08"/year)."""
+        natal = Native("1990-01-15 10:00", "New York, NY")
+
+        comparison = ComparisonBuilder.progression(
+            natal, age=30, angle_method="naibod"
+        ).calculate()
+
+        arc = comparison.chart2.metadata.get("angle_arc", 0)
+        # Naibod rate: 0.9856°/year × 30 years ≈ 29.57°
+        assert 29.0 < arc < 30.0, (
+            f"Naibod arc at age 30 should be ~29.57°, got {arc:.2f}°"
+        )
+
+    def test_progression_solar_arc_rate_correct(self):
+        """Test that Solar Arc advances angles at the Sun's actual progressed motion."""
+        natal = Native("1990-01-15 10:00", "New York, NY")
+
+        comparison = ComparisonBuilder.progression(
+            natal, age=30, angle_method="solar_arc"
+        ).calculate()
+
+        arc = comparison.chart2.metadata.get("angle_arc", 0)
+        # Sun moves ~1°/day in secondary progressions, so ~30° in 30 days
+        # Actual rate varies slightly based on time of year
+        assert 28.0 < arc < 33.0, f"Solar arc at age 30 should be ~30°, got {arc:.2f}°"
+
+    def test_progression_quotidian_angles_cycle_full_zodiac(self):
+        """
+        Verify quotidian is intentionally different: angles cycle ~360°/year.
+
+        This is NOT a bug — quotidian progressions are a specialized timing
+        technique where the progressed angles traverse the full zodiac in
+        one progressed day (= one year of life).
+        """
+        natal = Native("1990-01-15 10:00", "New York, NY")
+
+        prog_30 = ComparisonBuilder.progression(
+            natal, age=30, angle_method="quotidian"
+        ).calculate()
+        prog_31 = ComparisonBuilder.progression(
+            natal, age=31, angle_method="quotidian"
+        ).calculate()
+
+        asc_30 = prog_30.chart2.get_object("ASC").longitude
+        asc_31 = prog_31.chart2.get_object("ASC").longitude
+
+        # In quotidian, 1 year ≈ 1 progressed day ≈ full zodiac rotation
+        # The ASC positions at integer ages should be SIMILAR (same time of day)
+        # but not identical (sidereal day vs solar day drift)
+        diff = abs(asc_31 - asc_30)
+        if diff > 180:
+            diff = 360 - diff
+        # Should be small-ish (< 5°) at exact year intervals due to
+        # the ~4min sidereal/solar day difference
+        assert diff < 10.0, (
+            f"Quotidian ASC at integer years should be close "
+            f"(same time of day), got {diff:.1f}° difference"
+        )
 
     def test_progression_default_to_now(self):
         """Test progression() defaults to current date when neither age nor target_date specified."""

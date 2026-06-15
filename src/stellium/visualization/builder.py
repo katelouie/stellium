@@ -722,8 +722,10 @@ class ChartDrawBuilder:
             wheel_kwargs["show_planet_ticks"] = self._show_planet_ticks
 
         # Auto-hide chart shape if moon phase is in bottom-right (they would overlap)
-        moon_in_bottom_right = (
-            self._moon_phase is True and self._moon_phase_position == "bottom-right"
+        # None resolves to the config default of "bottom-right", so treat it the same
+        moon_in_bottom_right = self._moon_phase is True and (
+            self._moon_phase_position == "bottom-right"
+            or self._moon_phase_position is None
         )
         if moon_in_bottom_right and self._chart_shape is True:
             # Disable chart shape to avoid collision with moon phase

@@ -1,5 +1,7 @@
 """Ephemeris calculation engines."""
 
+from pathlib import Path
+
 import swisseph as swe
 
 from stellium.core.ayanamsa import ZodiacType, get_ayanamsa
@@ -16,21 +18,26 @@ from stellium.data.paths import initialize_ephemeris
 from stellium.utils.cache import cached
 
 
-def _set_ephemeris_path() -> None:
+def _set_ephemeris_path(ephe_path: str | Path | None = None) -> None:
     """
     Set the path to Swiss Ephemeris data files.
 
     This function initializes the ephemeris system by:
-    1. Ensuring the user ephe directory exists (~/.stellium/ephe/)
-    2. Copying bundled ephemeris files from the package if needed
+    1. Resolving the ephemeris directory (explicit arg >
+       ``STELLIUM_EPHE_PATH`` env var > default ``~/.stellium/ephe/``)
+    2. For the default location, copying bundled ephemeris files if needed
     3. Setting the Swiss Ephemeris path
 
-    The ephemeris files are stored in the user's home directory so that:
+    By default Stellium stores ephemeris files in the user's home directory:
     - Users can add their own asteroid ephemeris files
     - The package size stays small (only essential files bundled)
     - Updates don't overwrite user-downloaded files
+
+    Passing ``ephe_path`` (or setting ``STELLIUM_EPHE_PATH``) lets you point
+    Stellium at an existing Swiss Ephemeris folder managed by another tool,
+    at a portable-install directory, or at a read-only shared location.
     """
-    initialize_ephemeris()
+    initialize_ephemeris(ephe_path)
 
 
 # Swiss Ephemeris object IDs
@@ -116,9 +123,19 @@ class SwissEphemerisEngine:
     # This prevents repeated warnings for the same object across multiple calculations
     _warned_missing_ephemeris: set[str] = set()
 
-    def __init__(self):
-        """Initialize Swiss Ephemeris."""
-        _set_ephemeris_path()
+    def __init__(self, ephe_path: str | Path | None = None) -> None:
+        """Initialize Swiss Ephemeris.
+
+        Args:
+            ephe_path: Optional override for the Swiss Ephemeris data
+                directory. If omitted, Stellium falls back to the
+                ``STELLIUM_EPHE_PATH`` environment variable and then to the
+                default ``~/.stellium/ephe/`` location. Supplying a custom
+                path makes Stellium use that directory as-is — no files are
+                created or copied into it.
+        """
+        _set_ephemeris_path(ephe_path)
+        self._ephe_path = ephe_path
         self._object_ids = SWISS_EPHEMERIS_IDS.copy()
 
     def _get_object_type(self, name: str) -> ObjectType:
@@ -333,37 +350,60 @@ class SwissEphemerisEngine:
         Args:
             object_name: Name of the object
             object_id: Swiss Ephemeris ID (includes AST_OFFSET for asteroids)
-            error_msg: Original error message
+            error_msg: Original error message from Swiss Ephemeris
         """
         # Only warn once per object
         if object_name in SwissEphemerisEngine._warned_missing_ephemeris:
             return
         SwissEphemerisEngine._warned_missing_ephemeris.add(object_name)
 
+        import re
         import sys
 
-        # For asteroids, the object_id includes AST_OFFSET (10000)
-        # We need to show the MPC number (without offset) in the message
-        mpc_number = object_id
-        if object_id >= swe.AST_OFFSET:
-            mpc_number = object_id - swe.AST_OFFSET
+        # Extract the actual missing filename from the swe error message
+        # Format: "SwissEph file 'seas_12.se1' not found in PATH '...'"
+        missing_file_match = re.search(r"'([^']+\.se1)'", error_msg)
+        missing_file = missing_file_match.group(1) if missing_file_match else None
 
-        # Determine the asteroid folder (ast0, ast1, etc.)
-        # Files are grouped: ast0 has 0-999, ast1 has 1000-1999, etc.
-        folder_num = mpc_number // 1000
+        # Determine if this is a date-range coverage issue (seas_XX/sepl_XX)
+        # vs a missing asteroid-specific file (se00NNN.se1)
+        is_date_range_file = missing_file and (
+            missing_file.startswith("seas_") or missing_file.startswith("sepl_")
+        )
 
         print(
             f"\n⚠️  Missing ephemeris file for {object_name} (skipping)",
             file=sys.stderr,
         )
-        print(
-            f"   To download, run: stellium ephemeris download-asteroid {mpc_number}",
-            file=sys.stderr,
-        )
-        print(
-            f"   Or manually download from: ast{folder_num}/ folder",
-            file=sys.stderr,
-        )
+
+        if is_date_range_file:
+            # The chart date falls outside the bundled ephemeris range (1800-2400)
+            print(
+                f"   Required file: {missing_file} (not bundled — "
+                f"Stellium bundles 1800-2400 CE coverage)",
+                file=sys.stderr,
+            )
+            print(
+                "   For historical/far-future charts, download additional "
+                "ephemeris files from https://www.astro.com/ftp/swisseph/ephe/",
+                file=sys.stderr,
+            )
+        else:
+            # Missing asteroid-specific file
+            mpc_number = object_id
+            if object_id >= swe.AST_OFFSET:
+                mpc_number = object_id - swe.AST_OFFSET
+
+            folder_num = mpc_number // 1000
+
+            print(
+                f"   To download, run: stellium ephemeris download-asteroid {mpc_number}",
+                file=sys.stderr,
+            )
+            print(
+                f"   Or manually download from: ast{folder_num}/ folder",
+                file=sys.stderr,
+            )
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_phase(

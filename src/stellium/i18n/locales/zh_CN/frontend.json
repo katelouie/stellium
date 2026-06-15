@@ -1,0 +1,251 @@
+{
+  "metadata": {
+    "language": "zh-CN",
+    "status": "draft",
+    "prepared_by": "Zhanran Astrology / 湛然星座",
+    "source": [
+      "web/i18n/zh.json"
+    ],
+    "notes": "Generic UI localization candidates only. Business, pricing, affiliate, payment, customer-service, and private marketing copy are intentionally excluded."
+  },
+  "navigation": {
+    "HOME": "首页",
+    "BIRTH CHART": "本命盘",
+    "RELATIONSHIPS": "合盘",
+    "TIMING": "行运时机",
+    "PLANNER": "年度星运",
+    "EXPLORE": "探索"
+  },
+  "buttons": {
+    "CREATE CHART": "生成星盘",
+    "GENERATE PLANNER": "生成计划手册",
+    "Download SVG": "下载 SVG",
+    "Download PDF": "下载 PDF",
+    "View as Python": "查看 Python",
+    "View Code": "查看代码",
+    "Generate Chart": "生成星盘",
+    "Generate PDF": "生成 PDF",
+    "Cancel": "取消",
+    "Close": "关闭"
+  },
+  "notifications": {
+    "Please fill in all required fields": "请填写所有必填项",
+    "Please fill in birth details for both people": "请填写两人的出生信息",
+    "Please fill in natal birth details": "请填写本命盘出生信息",
+    "Please enter a date or year": "请输入日期或年份",
+    "Chart generated!": "星盘已生成！",
+    "PDF generated!": "PDF 报告已生成！",
+    "Planner generated!": "计划手册已生成！",
+    "Please generate a chart first": "请先生成星盘",
+    "Error generating PDF:": "生成 PDF 时出错：",
+    "Error generating chart:": "生成星盘时出错：",
+    "Error:": "出错：",
+    "Please select a notable from the list": "请从列表中选择一位名人",
+    "No results found": "暂无结果",
+    "PDF coming soon!": "PDF 功能即将推出！",
+    "Code preview coming soon!": "代码预览功能即将推出！",
+    "loaded_prefix": "已载入：",
+    "chart_generated_suffix": "星盘已生成！",
+    "generated_suffix": "已生成！"
+  },
+  "home": {
+    "title_line1": "现代占星计算",
+    "title_line2": "精准无误",
+    "subtitle": "以 NASA 级别的精度进行专业星象计算。精美可视化图表。完全免费。",
+    "btn_create": "生成我的星盘",
+    "btn_explore": "探索名人星盘",
+    "features_title": "☆  功能特色",
+    "features": [
+      [
+        "★",
+        "23+ 宫位系统",
+        "普拉西度斯、整体星座、科赫、等宫等。可同时计算多个系统。"
+      ],
+      [
+        "★",
+        "恒星与热带黄道",
+        "双黄道系统，含 9 种阿亚南萨用于吠陀占星，包括拉希里和拉曼。"
+      ],
+      [
+        "★",
+        "必要尊贵",
+        "传统与现代守护、旺、三方守护、界守护及面守护。"
+      ],
+      [
+        "★",
+        "合盘与双轮星盘",
+        "关系星盘、行运、推运、合成图与达维森图。"
+      ],
+      [
+        "★",
+        "太阳回归与月亮回归",
+        "生日图、月回归、土星回归，可迁移至任意城市重新定位。"
+      ],
+      [
+        "★",
+        "二次推运",
+        "日代年行运，含每日推运、太阳弧及奈博德行进角度法。"
+      ],
+      [
+        "★",
+        "恒星",
+        "26 颗恒星，含波斯四皇星：毕宿五、轩辕十四、心宿二、北落师门。"
+      ],
+      [
+        "★",
+        "赤纬与超出限度行星",
+        "赤道坐标系，自动检测超出限度行星。"
+      ],
+      [
+        "★",
+        "相位图形",
+        "大三角、T形三角、神之手、三星连珠、大十字等。"
+      ],
+      [
+        "★",
+        "阿拉伯点",
+        "25 个传统命运点，包括福点、精神点与爱情点，支持昼夜区分计算。"
+      ],
+      [
+        "★",
+        "中点",
+        "宇宙生物学及天王星占星学技术的完整中点分析。"
+      ],
+      [
+        "★",
+        "精美报告",
+        "导出专业 PDF 报告与 SVG 星盘，提供 13 种精美主题。"
+      ]
+    ]
+  },
+  "natal": {
+    "page_title": "生成您的本命盘",
+    "page_subtitle": "本命盘 & 报告",
+    "chart_options_label": "☆  图表选项",
+    "report_options_label": "☆  报告选项",
+    "create_chart_btn": "生成星盘",
+    "chart_display_placeholder": "填写出生信息后点击『生成星盘』",
+    "report_title": "本命盘报告"
+  },
+  "relationships": {
+    "page_title": "合盘",
+    "page_subtitle": "合盘、合成图 & 达维森图",
+    "chart_type_label": "☆  星盘类型",
+    "chart_types": {
+      "synastry": "合盘（双轮叠加）",
+      "composite": "合成图（中点图）",
+      "davison": "达维森图（时空中点）"
+    },
+    "person1_label": "第一人",
+    "person2_label": "第二人",
+    "create_chart_btn": "生成星盘",
+    "chart_options_label": "☆  图表选项",
+    "report_options_label": "☆  报告选项",
+    "type_names": {
+      "synastry": "合盘",
+      "composite": "合成图",
+      "davison": "达维森图"
+    }
+  },
+  "timing": {
+    "page_title": "行运时机",
+    "page_subtitle": "行运、推运 & 回归图",
+    "chart_type_label": "☆  星盘类型",
+    "birth_data_label": "出生数据",
+    "timing_label": "☆  运势选项",
+    "transit_date_label": "行运日期：",
+    "progress_to_label": "推运至：",
+    "return_year_label": "回归年份：",
+    "near_date_label": "临近日期：",
+    "date_label": "日期：",
+    "return_planet_label": "回归行星：",
+    "relocate_label": "重新定位回归图",
+    "location_label": "地点：",
+    "chart_types": {
+      "transits": "行运图",
+      "progressions": "推运图",
+      "solar_return": "太阳回归",
+      "lunar_return": "月亮回归",
+      "planetary_return": "行星回归"
+    },
+    "chart_type_descs": {
+      "transits": "当前天象与本命盘的双轮叠加图",
+      "progressions": "推运至指定日期的二次推运图",
+      "solar_return": "指定年份的太阳回归盘",
+      "lunar_return": "临近指定日期的月亮回归盘",
+      "planetary_return": "任意行星回归盘"
+    },
+    "create_chart_btn": "生成星盘",
+    "chart_options_label": "☆  图表选项",
+    "report_options_label": "☆  报告选项",
+    "type_names": {
+      "transits": "行运图",
+      "progressions": "推运图",
+      "solar_return": "太阳回归",
+      "lunar_return": "月亮回归"
+    },
+    "secondary_progressions": "二次推运",
+    "return_suffix": "回归",
+    "natal_fallback": "本命盘"
+  },
+  "planner": {
+    "page_title": "年度星运",
+    "page_subtitle": "生成个性化 PDF 计划手册",
+    "birth_details_label": "出生信息",
+    "date_range_label": "☆  日期范围",
+    "timezone_label": "☆  时区",
+    "front_matter_label": "☆  前置页面",
+    "daily_content_label": "☆  每日内容",
+    "page_layout_label": "☆  页面布局",
+    "full_year": "完整年份",
+    "custom_range": "自定义范围",
+    "year_label": "年份：",
+    "start_label": "开始：",
+    "end_label": "结束：",
+    "timezone_field": "时区：",
+    "transit_timezone_note": "所有行运时间将以此时区显示。",
+    "front_matter_desc": "计划手册首页的图表与参考页面。",
+    "natal_chart": "本命盘",
+    "progressed_chart": "二次推运图",
+    "solar_return": "太阳回归图",
+    "profections": "小限法（年主星）",
+    "zr_timeline": "黄道释放时间线",
+    "lot_options": {
+      "Part of Fortune": "命运点",
+      "Part of Spirit": "精神点"
+    },
+    "graphic_ephemeris": "图形星历",
+    "graphic_ephemeris_harmonics": {
+      "360": "全黄道圈 (360°)",
+      "90": "90° 盘",
+      "45": "45° 盘"
+    },
+    "daily_desc": "每日/每周页面中包含的内容。",
+    "natal_transits": "行运至本命行星",
+    "outer_planets": "仅外行星",
+    "all_planets": "全部行星",
+    "mundane_transits": "世运行运（天空中行星间的相位）",
+    "moon_phases": "月相（新月、满月、弦月）",
+    "voc_moon": "月亮空亡",
+    "traditional_voc": "传统（太阳-土星）",
+    "modern_voc": "现代（含外行星）",
+    "ingresses": "入相过境",
+    "stations": "逆行/顺行站",
+    "page_size_label": "纸张大小：",
+    "week_starts_label": "每周开始：",
+    "binding_margin_label": "装订边距：",
+    "sunday": "周日",
+    "monday": "周一",
+    "generate_btn": "生成计划手册",
+    "generating": "正在生成您的计划手册...",
+    "generating_note": "这可能需要一两分钟。"
+  },
+  "excluded_categories": [
+    "payment and pricing copy",
+    "affiliate/distributor copy",
+    "customer-service links and WeCom links",
+    "company registration/footer license text",
+    "private product conversion copy",
+    "order, admin, token, or user-data related strings"
+  ]
+}

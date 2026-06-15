@@ -701,7 +701,7 @@ class MultiChartBuilder:
         target_date: str | datetime | None = None,
         age: float | None = None,
         progression_type: Literal["secondary", "tertiary", "minor"] = "secondary",
-        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "quotidian",
+        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "solar_arc",
         natal_label: str = "Natal",
         progressed_label: str = "Progressed",
     ) -> "MultiChartBuilder":
@@ -1052,7 +1052,7 @@ class MultiChartBuilder:
         target_date: str | datetime | None = None,
         age: float | None = None,
         progression_type: Literal["secondary", "tertiary", "minor"] = "secondary",
-        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "quotidian",
+        angle_method: Literal["quotidian", "solar_arc", "naibod"] = "solar_arc",
         label: str = "Progressed",
     ) -> "MultiChartBuilder":
         """

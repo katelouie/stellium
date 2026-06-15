@@ -93,8 +93,16 @@ class MoonPhaseSection:
 
         phase = moon.phase
 
+        # Ecliptic separation: Moon's angular distance ahead of Sun (0-360°)
+        if phase.moon_longitude is not None and phase.sun_longitude is not None:
+            separation = (phase.moon_longitude - phase.sun_longitude) % 360
+            phase_display = f"{phase.phase_name} ({separation:.0f}°)"
+        else:
+            separation = None
+            phase_display = phase.phase_name
+
         data = {
-            "Phase Name": phase.phase_name,
+            "Phase Name": phase_display,
             "Illumination": f"{phase.illuminated_fraction:.1%}",
             "Phase Angle": f"{phase.phase_angle:.1f}°",
             "Direction": "Waxing" if phase.is_waxing else "Waning",
@@ -102,6 +110,10 @@ class MoonPhaseSection:
             "Apparent Diameter": f"{phase.apparent_diameter:.1f}″",
             "Geocentric Parallax": f"{phase.geocentric_parallax:.4f} rad",
         }
+
+        if separation is not None:
+            # Insert after Phase Angle for users who want the raw number
+            data["Sun-Moon Separation"] = f"{separation:.1f}°"
 
         return {
             "type": "key_value",

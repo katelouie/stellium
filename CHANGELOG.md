@@ -9,6 +9,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Markdown renderer** — New `format="markdown"` option for `ReportBuilder.render()`. Produces clean GitHub Flavored Markdown with pipe tables, bold key-value pairs, and standard heading levels. Suitable for Obsidian, Notion, GitHub READMEs, documentation sites, and blog posts. Also available directly via `MarkdownRenderer` class.
+
+### Changed
+
+### Fixed
+
+## [0.18.3] - 2026-06-14
+
+### Added
+
+- **Bundled `seas_12.se1` for historical charts (1200-1799 CE)** — Chiron, Ceres, Pallas, Juno, and Vesta now calculate correctly for historical figures (e.g., Nostradamus, Leonardo da Vinci, Shakespeare). Previously, these charts emitted a misleading "Missing ephemeris file for Chiron" warning. Also removed the incorrectly-bundled `se00015.se1` (which was for asteroid Eunomia, not Chiron). Net package size decrease of ~170KB. (Fixes #34, reported by [@daiweisc](https://github.com/daiweisc))
+
+### Changed
+
+- **Improved missing-ephemeris warning messages** — When a calculation fails due to a missing ephemeris file, the warning now distinguishes between date-range coverage issues (e.g., needing `seas_12.se1` for pre-1800 charts) and missing asteroid-specific files, with actionable download instructions for each case.
+
+### Fixed
+
+## [0.18.2] - 2026-06-14
+
+### Added
+
+- **Simplified Chinese (zh_CN) localization draft** — Frontend UI strings, report section strings, astrology terminology translations, and PDF report terminology. Contributed by Zhao Xin / 湛然星座 Astrosophy ([@zx8956-sketch](https://github.com/zx8956-sketch)). (#37)
+- **Sun-Moon ecliptic separation in Moon Phase report** — The Moon Phase section now displays the Sun-Moon ecliptic longitude separation (0-360°) inline with the phase name (e.g., "Waning Gibbous (234°)") and as a separate "Sun-Moon Separation" field. This allows users to verify phase boundaries against their own classification systems. (Closes #31, requested by [@daiwei9767](https://github.com/daiwei9767))
+
+### Changed
+
+- **Progression angle method default changed from `"quotidian"` to `"solar_arc"`** — The previous default (`quotidian`) caused the progressed ASC to deviate ~1° per day of offset from the native's birthday, producing ~160° of error for a target date 6 months past the birthday. Solar Arc (natal angles + Sun's progressed arc) is now the default, matching the behavior of professional software (Solar Fire, Astro.com). Quotidian remains available via `angle_method="quotidian"` for advanced timing work. Affects `ComparisonBuilder.progression()`, `MultiChartBuilder.progression()`, and `MultiChartBuilder.add_progression()`. (Fixes #35, requested by [@yykeys](https://github.com/yykeys))
+
+### Fixed
+
+- **CI failure from pytest 9.x** — Capped pytest to `<9.0.0` due to `pytest-codeblocks` 0.17.0 using the deprecated `path` argument in `pytest_collect_file`, which pytest 9.0 removed. Will uncap when the plugin releases a compatible version.
+
+## [0.18.1] - 2026-05-03
+
+### Added
+
+- Cookbook file for essential/accidental dignities, scoring, peregrine, mutual reception, dispositor graphs: `examples/dignities_cookbook.py`
+
+### Changed
+
+### Fixed
+
+- Added `.with_aspects()` method call for `ChartBuilder` examples in readme so aspects are properly calculated and drawn.
+- **Transit timeline `strftime` on Windows** — `%-d` (strip leading zero) is a Unix-only format code that raises `ValueError` on Windows. Replaced with `f"{d.day}"` for cross-platform date formatting in `TransitListSection`.
+- **`preset_detailed()` moon phase / chart shape overlap** — the auto-hide logic that suppresses the chart shape label when the moon phase occupies the bottom-right corner was not triggering when moon phase position was set to `None` (auto-detect). Since `None` resolves to the config default of `"bottom-right"`, the check now treats `None` equivalently, correctly hiding the chart shape to prevent overlap.
+
+## [0.18.0] - 2026-04-26
+
+### Added
+
+- **Configurable ephemeris directory** — the Swiss Ephemeris data path is now overridable via a three-tier precedence system, following the convention used by pip, cargo, and pyenv:
+  1. `SwissEphemerisEngine(ephe_path="/my/ephe")` — explicit argument, highest priority
+  2. `STELLIUM_EPHE_PATH` environment variable — no code changes needed
+  3. Default `~/.stellium/ephe/` — unchanged for existing users
+
+  Custom paths are used as-is: Stellium will not create the directory or copy bundled files into it, making it safe to point at an existing Swiss Ephemeris installation or a read-only folder. Missing custom directories emit a stderr warning instead of crashing. Re-initialization against a different path is supported; same-path is a no-op.
+
+  **Quick usage:**
+
+  ```python
+  # Via engine argument (e.g., portable install, shared .se1 folder)
+  from stellium.engines.ephemeris import SwissEphemerisEngine
+  engine = SwissEphemerisEngine(ephe_path="/path/to/your/ephe")
+  chart = ChartBuilder.from_native(native).with_ephemeris(engine).calculate()
+
+  # Via environment variable (e.g., Docker, Lambda)
+  # export STELLIUM_EPHE_PATH=/opt/ephe
+  chart = ChartBuilder.from_native(native).calculate()  # picks it up automatically
+  ```
+
+  New helpers: `get_ephe_dir()` returns the currently active directory, `has_ephe_file(name)` checks the active directory, `reset_ephe_initialization()` for testing. 13 new tests in `test_ephemeris_paths.py` covering precedence, expansion, no-copy semantics, and end-to-end calculation against a custom path.
+
 - **`MoietyOrbEngine`** — traditional moiety-based orb calculation where each planet has its own sphere of influence. Effective orb = average of both planets' full orbs. Includes two named systems: `"lilly"` (medieval consensus: Lilly, Bonatti, Al-Biruni, Sahl) and `"ptolemy"` (wider Ptolemaic values). Supports custom `orb_map`, `fallback_orb`, and optional `minor_aspect_multiplier` for tighter minor/harmonic aspect orbs. Constants `LILLY_FULL_ORBS`, `PTOLEMY_FULL_ORBS`, and `MOIETY_SYSTEMS` exported for reference and customization.
 - **Aspects & Orbs cookbook** (`examples/aspects_and_orbs_cookbook.py`): 14 examples covering all 4 aspect engines (Modern, Harmonic, Declination, Cross-Chart), all 4 orb engines (Simple, Luminaries, Complex, Moiety), side-by-side comparisons, and a complete moiety calculation table.
 - **Input validation** on public API entry points: `Native` validates lat/lon bounds (±90°/±180°). `ElectionalSearch` validates start < end. `ReturnBuilder.solar()` validates year >= natal year and int type. `ReturnBuilder.lunar()`/`.planetary()` validate occurrence >= 1 and planet name. All errors fire immediately with clear messages rather than failing deep in calculation.
@@ -18,7 +91,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Seamless BaZi API via ChartBuilder** — `.bazi()` method on both `ChartBuilder` and `CalculatedChart`. Automatically resolves timezone from the location — no manual offset needed. `ChartBuilder.from_details("1994-01-06 11:47", "Palo Alto, CA").bazi()` is now the recommended entry point. The same `ChartBuilder` works for Western, Vedic, and Chinese astrology.
 - **176 BaZi tests** (`test_bazi.py`): comprehensive coverage for core data models (elements, stems, branches), hour-to-branch mapping, known chart validation, year boundary/Li Chun tests, day pillar reference points, Five Tigers/Five Rats formulas, Ten Gods analysis, BaZiChart properties, solar terms, plus 25 Day Master strength tests (seasonal scoring, element reverse cycles, root counting, strength classification, favorable elements, serialization).
 - **BaZi cookbook** (`examples/bazi_cookbook.py`): 23 examples covering chart creation via ChartBuilder, pillar deep dives, Five Elements, Ten Gods analysis, Day Master strength, rendering (Rich/prose/JSON), and advanced direct engine usage.
-- **176 BaZi tests** (`test_bazi.py`): comprehensive coverage for core data models (elements, stems, branches), hour-to-branch mapping, known chart validation (Einstein, 1984 Jia Zi, 2024 Dragon, 2025 Snake), year boundary/Li Chun tests, day pillar reference points, Five Tigers/Five Rats formulas, Ten Gods analysis, BaZiChart properties, and solar terms.
 - **Vedic, transit, and aspects & orbs cookbooks** added to README cookbook table and run commands.
 
 ### Changed
@@ -32,6 +104,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **29 notable birth coordinates corrected** — full verification of all 196 geocode cache entries against Nominatim revealed 28 locations with >0.1° drift in the notables YAML files. Worst cases: Prince Philip (986km off — Mon Repos placed in mainland Greece instead of Corfu), Patrice Lumumba (520km off), Rumi (158km off). These would have produced incorrect house cusps for `ChartBuilder.from_notable()` charts.
 - **Chiron ephemeris bundled** (`se00015.se1`, 389KB): Chiron is in the default planet list but the asteroid ephemeris file wasn't shipped. Every chart showed a "Missing ephemeris" warning. Now included and works out of the box.
 - **Asteroid download URL fixed** in CLI: `ephe2/` → `ephe/` on ephe.scryr.io. The old URL returned 404 for all asteroid downloads.
+- **Typst PDF compilation on Windows** — `typst_lib.compile()` was called with `root="/"`, which fails on Windows when `tempfile` returns a path on a different drive (e.g., `D:\`) than the interpreted `/` root (`C:\`). All three Typst call sites (`presentation/renderers.py`, `planner/renderer.py`, `visualization/atlas/renderer.py`) now use the temp directory itself as the Typst project root with resources referenced by relative paths.
 
 ## [0.17.0] - 2026-04-01
 

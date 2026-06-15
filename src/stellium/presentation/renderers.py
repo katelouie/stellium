@@ -488,6 +488,158 @@ class PlainTextRenderer:
         return "\n".join(output_parts)
 
 
+class MarkdownRenderer:
+    """
+    GitHub Flavored Markdown renderer with no dependencies.
+
+    Creates clean, portable markdown suitable for:
+    - Obsidian / Notion / any markdown editor
+    - GitHub READMEs, issues, and wikis
+    - Documentation sites (MkDocs, Docusaurus, etc.)
+    - Blog posts and static site generators
+    - Archival export of chart reports
+
+    Uses GFM pipe tables, bold keys, and standard heading levels.
+    """
+
+    def render_section(self, section_name: str, section_data: dict[str, Any]) -> str:
+        """Render a single section as markdown."""
+        data_type = section_data.get("type")
+
+        if data_type == "table":
+            return self._render_table(section_data)
+        elif data_type == "key_value":
+            return self._render_key_value(section_data)
+        elif data_type == "text":
+            return section_data.get("text", "")
+        elif data_type == "side_by_side_tables":
+            return self._render_side_by_side_tables(section_data)
+        elif data_type == "compound":
+            return self._render_compound(section_data)
+        elif data_type == "svg":
+            return self._render_svg(section_data)
+        else:
+            return f"*Unknown section type: {data_type}*"
+
+    def render_report(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        title: str | None = None,
+    ) -> str:
+        """Render complete report as markdown."""
+        parts = []
+
+        if title:
+            parts.append(f"# {title}")
+            parts.append("")
+
+        for section_name, section_data in sections:
+            parts.append(f"## {section_name}")
+            parts.append("")
+
+            content = self.render_section(section_name, section_data)
+            parts.append(content)
+            parts.append("")
+
+        return "\n".join(parts)
+
+    def _render_table(self, data: dict[str, Any]) -> str:
+        """Render a GFM pipe table."""
+        headers = data["headers"]
+        rows = data["rows"]
+
+        str_rows = [[str(cell) for cell in row] for row in rows]
+
+        # Calculate column widths (minimum 3 for the --- separator)
+        col_widths = []
+        for i, header in enumerate(headers):
+            width = max(len(header), 3)
+            for row in str_rows:
+                if i < len(row):
+                    width = max(width, len(row[i]))
+            col_widths.append(width)
+
+        lines = []
+
+        # Header row
+        header_cells = [h.ljust(w) for h, w in zip(headers, col_widths, strict=False)]
+        lines.append("| " + " | ".join(header_cells) + " |")
+
+        # GFM separator row
+        separator_cells = ["-" * w for w in col_widths]
+        lines.append("| " + " | ".join(separator_cells) + " |")
+
+        # Data rows
+        for row in str_rows:
+            padded_row = row + [""] * (len(headers) - len(row))
+            row_cells = [
+                cell.ljust(w) for cell, w in zip(padded_row, col_widths, strict=False)
+            ]
+            lines.append("| " + " | ".join(row_cells) + " |")
+
+        return "\n".join(lines)
+
+    def _render_key_value(self, data: dict[str, Any]) -> str:
+        """Render key-value pairs with bold keys."""
+        lines = []
+        for key, value in data["data"].items():
+            lines.append(f"**{key}:** {value}  ")
+        return "\n".join(lines)
+
+    def _render_compound(self, data: dict[str, Any]) -> str:
+        """Render compound section with sub-sections."""
+        parts = []
+        for sub_name, sub_data in data.get("sections", []):
+            sub_type = sub_data.get("type")
+
+            # Skip SVG sub-sections (aspectarian grid) — not renderable in markdown
+            if sub_type == "svg":
+                continue
+
+            parts.append(f"### {sub_name}")
+            parts.append("")
+
+            if sub_type == "table":
+                parts.append(self._render_table(sub_data))
+            elif sub_type == "key_value":
+                parts.append(self._render_key_value(sub_data))
+            elif sub_type == "text":
+                parts.append(sub_data.get("content", sub_data.get("text", "")))
+            else:
+                parts.append(f"*Unknown type: {sub_type}*")
+            parts.append("")
+        return "\n".join(parts)
+
+    def _render_side_by_side_tables(self, data: dict[str, Any]) -> str:
+        """Render multiple tables stacked vertically with sub-headings."""
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return ""
+
+        parts = []
+        for table_data in tables_data:
+            title = table_data.get("title", "")
+            if title:
+                parts.append(f"### {title}")
+                parts.append("")
+
+            parts.append(
+                self._render_table(
+                    {"headers": table_data["headers"], "rows": table_data["rows"]}
+                )
+            )
+            parts.append("")
+
+        return "\n".join(parts)
+
+    def _render_svg(self, data: dict[str, Any]) -> str:
+        """Render SVG reference as a markdown image or note."""
+        path = data.get("path", "")
+        if path:
+            return f"![Chart]({path})"
+        return "*Chart image not available in markdown format.*"
+
+
 class HTMLRenderer:
     """
     Renderer that converts report sections to HTML.
@@ -730,6 +882,12 @@ class TypstRenderer:
             raise ImportError(
                 "Typst library not available. Install with: pip install typst"
             )
+        # Directory used as the Typst project root during a render. Set by
+        # render_report() so that section renderers can drop resources (like
+        # inline SVG images) next to the .typ source file and reference them
+        # with paths contained within the project root.
+        self._work_dir: str | None = None
+        self._svg_counter: int = 0
 
     def render_report(
         self,
@@ -750,20 +908,59 @@ class TypstRenderer:
         Returns:
             PDF as bytes
         """
+        # Use a dedicated temporary directory that holds every file the Typst
+        # compiler needs to reach (the .typ source and any referenced images).
+        # This directory becomes the Typst project root, which guarantees that
+        # the input file and all referenced resources are "contained in the
+        # project root" on every platform. Passing root="/" works on Linux but
+        # fails on Windows whenever the temp file and the chart SVG live on
+        # different drive letters (typst-py then raises
+        # "input file must be contained in project root").
+        try:
+            return self._render_report_inner(
+                sections, output_file, chart_svg_path, title
+            )
+        finally:
+            self._work_dir = None
+            self._svg_counter = 0
+
+    def _render_report_inner(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        output_file: str | None,
+        chart_svg_path: str | None,
+        title: str,
+    ) -> bytes:
         import os
+        import shutil
         import tempfile
 
-        # Generate Typst content
-        typst_content = self._generate_typst_document(sections, chart_svg_path, title)
+        with tempfile.TemporaryDirectory(prefix="stellium_report_") as tmp_dir:
+            self._work_dir = tmp_dir
+            self._svg_counter = 0
+            # If a chart SVG was provided, copy it into the temp directory so
+            # it is reachable under the Typst project root regardless of where
+            # the user stored the original file. The Typst source then
+            # references the SVG by its basename, which Typst resolves
+            # relative to the .typ file (also written into tmp_dir).
+            local_svg_ref: str | None = None
+            if chart_svg_path:
+                src_svg = os.path.abspath(chart_svg_path)
+                if os.path.exists(src_svg):
+                    dst_svg = os.path.join(tmp_dir, "chart.svg")
+                    shutil.copy2(src_svg, dst_svg)
+                    local_svg_ref = "chart.svg"
 
-        # Write to temp file (typst-py requires file path)
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".typ", delete=False, encoding="utf-8"
-        ) as f:
-            f.write(typst_content)
-            temp_path = f.name
+            # Generate Typst content referencing the local copy of the SVG
+            typst_content = self._generate_typst_document(
+                sections, local_svg_ref, title
+            )
 
-        try:
+            # Write the .typ source into the temp directory
+            temp_path = os.path.join(tmp_dir, "report.typ")
+            with open(temp_path, "w", encoding="utf-8") as f:
+                f.write(typst_content)
+
             # Get font directories for custom fonts
             base_font_dir = os.path.join(
                 os.path.dirname(
@@ -780,12 +977,12 @@ class TypstRenderer:
                 os.path.join(base_font_dir, "Crimson_Pro", "static"),  # Static weights
             ]
 
-            # Compile to PDF
-            # Use root="/" to allow absolute paths in the document
-            # Add font_paths for all our custom fonts
+            # Compile to PDF. Use the temp directory as the Typst project root
+            # so the source file and any referenced resources are guaranteed
+            # to be contained within it on every platform.
             pdf_bytes = typst_lib.compile(
                 temp_path,
-                root="/",
+                root=tmp_dir,
                 font_paths=font_dirs,
             )
 
@@ -795,9 +992,6 @@ class TypstRenderer:
                     f.write(pdf_bytes)
 
             return pdf_bytes
-        finally:
-            # Clean up temp file
-            os.unlink(temp_path)
 
     def _generate_typst_document(
         self,
@@ -848,11 +1042,12 @@ class TypstRenderer:
         parts.append("#star-divider")
         parts.append("#v(0.2in)")
 
-        # Chart wheel if provided
+        # Chart wheel if provided. The caller (render_report) is expected to
+        # pass a path that Typst can resolve — typically a basename relative
+        # to the .typ source file living in the Typst project root. We escape
+        # backslashes so Windows-style paths survive the Typst string literal.
         if chart_svg_path:
-            import os
-
-            abs_path = os.path.abspath(chart_svg_path)
+            typst_path = chart_svg_path.replace("\\", "/")
             parts.append(f"""
     #align(center)[
     #box(
@@ -861,7 +1056,7 @@ class TypstRenderer:
         clip: true,
         inset: 10pt,
         fill: white,
-        image("{abs_path}", width: 80%)
+        image("{typst_path}", width: 80%)
     )
     ]
     """)
@@ -1250,8 +1445,11 @@ class TypstRenderer:
     def _render_svg_section(self, data: dict[str, Any]) -> str:
         """Render an inline SVG section.
 
-        For Typst, we need to save the SVG to a temp file and reference it,
-        or note that SVG embedding requires special handling.
+        For Typst we need to hand the SVG off as a file that lives *inside*
+        the Typst project root. render_report() sets self._work_dir to that
+        root, so we drop each inline SVG into it and reference it by a path
+        that Typst can resolve relative to the .typ source (which also lives
+        in self._work_dir).
         """
         import os
         import tempfile
@@ -1260,14 +1458,28 @@ class TypstRenderer:
         if not svg_content:
             return "_No SVG content available_"
 
-        # Write SVG to a temporary file
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".svg", delete=False, encoding="utf-8"
-        ) as f:
-            f.write(svg_content)
-            svg_path = f.name
-
-        abs_path = os.path.abspath(svg_path)
+        if self._work_dir is not None:
+            # Fast path: write directly into the Typst project root and
+            # reference the file by its basename. This keeps the input file
+            # and all resources contained within the project root, which is
+            # required by typst-py on every platform.
+            self._svg_counter += 1
+            filename = f"inline_{self._svg_counter}.svg"
+            svg_path = os.path.join(self._work_dir, filename)
+            with open(svg_path, "w", encoding="utf-8") as f:
+                f.write(svg_content)
+            typst_path = filename
+        else:
+            # Fallback for callers that invoke _render_svg_section directly
+            # without going through render_report (e.g. tests). Use a
+            # standalone temp file — note that passing this path to Typst
+            # still requires the project root to contain it.
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".svg", delete=False, encoding="utf-8"
+            ) as f:
+                f.write(svg_content)
+                svg_path = f.name
+            typst_path = os.path.abspath(svg_path).replace("\\", "/")
 
         return f"""
 #align(center)[
@@ -1277,7 +1489,7 @@ class TypstRenderer:
     clip: true,
     inset: 8pt,
     fill: white,
-    image("{abs_path}", width: 90%)
+    image("{typst_path}", width: 90%)
   )
 ]
 #v(0.5em)

@@ -21,7 +21,13 @@ Usage:
 from stellium.core.protocols import ReportRenderer, ReportSection
 
 from .builder import ReportBuilder
-from .renderers import HTMLRenderer, PlainTextRenderer, ProseRenderer, RichTableRenderer
+from .renderers import (
+    HTMLRenderer,
+    MarkdownRenderer,
+    PlainTextRenderer,
+    ProseRenderer,
+    RichTableRenderer,
+)
 
 # Import from the new sections package
 from .sections import (
@@ -45,6 +51,7 @@ __all__ = [
     # Renderers
     "RichTableRenderer",
     "PlainTextRenderer",
+    "MarkdownRenderer",
     "HTMLRenderer",
     "ProseRenderer",
 ]

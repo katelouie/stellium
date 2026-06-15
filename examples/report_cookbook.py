@@ -623,6 +623,47 @@ def example_14_save_and_display():
     print(f"\nAlso saved to {output_file}")
 
 
+def example_14b_markdown():
+    """
+    Example 14b: Markdown Output
+
+    Generate reports as GitHub Flavored Markdown — perfect for pasting into
+    Obsidian, Notion, GitHub issues, documentation sites, or blog posts.
+
+    Markdown output includes:
+    - GFM pipe tables for positions and aspects
+    - Bold key-value pairs for chart overview and moon phase
+    - Standard heading levels (# for title, ## for sections)
+    - Unicode astrological symbols preserved
+    """
+    section_header("Example 14b: Markdown Output")
+
+    chart = ChartBuilder.from_notable("Frida Kahlo").with_aspects().calculate()
+
+    # Save to .md file
+    output_file = OUTPUT_DIR / "frida_kahlo_chart.md"
+    print(f"Generating markdown report to {output_file}...")
+
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_planet_positions()
+        .with_aspects(mode="major")
+        .with_moon_phase()
+        .with_title("Frida Kahlo — Natal Chart")
+        .render(format="markdown", file=str(output_file), show=False)
+    )
+
+    print("Done! First 30 lines:\n")
+
+    with open(output_file) as f:
+        lines = f.readlines()[:30]
+        print("".join(lines))
+        if len(lines) == 30:
+            print("... (truncated)")
+
+
 # =============================================================================
 # PART 6: BATCH PROCESSING
 # =============================================================================
@@ -710,6 +751,7 @@ def main():
     # --- Part 5: Output Formats ---
     example_13_plain_text()
     example_14_save_and_display()
+    example_14b_markdown()
 
     # --- Part 6: Batch Processing ---
     example_15_batch_reports()

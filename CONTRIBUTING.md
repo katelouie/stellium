@@ -890,6 +890,7 @@ All contributors are recognized in:
 - The [Contributors](https://github.com/katelouie/stellium/graphs/contributors) page
 - The [CHANGELOG.md](CHANGELOG.md) for each release
 - A heartfelt thank you! ❤️
+- Thank you especially to Zhanran Astrology / 湛然星座 for the simplified Chinese localization strings.
 
 ---
 
