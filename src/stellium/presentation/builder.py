@@ -1261,7 +1261,10 @@ class ReportBuilder:
         - Chart overview
         - Planet positions (with house placements)
         - Major aspects (sorted by orb)
-        - House cusps
+        - House cusps (if birth time known)
+
+        Automatically adapts for unknown-time charts by skipping
+        house-dependent sections.
 
         Returns:
             Self for chaining
@@ -1269,12 +1272,16 @@ class ReportBuilder:
         Example:
             >>> report = ReportBuilder().from_chart(chart).preset_standard().render()
         """
-        return (
+        has_houses = bool(self._chart and self._chart.house_systems)
+
+        builder = (
             self.with_chart_overview()
-            .with_planet_positions(include_house=True)
+            .with_planet_positions(include_house=has_houses)
             .with_aspects(mode="major")
-            .with_house_cusps()
         )
+        if has_houses:
+            builder = builder.with_house_cusps()
+        return builder
 
     def preset_detailed(self) -> "ReportBuilder":
         """
@@ -1286,8 +1293,11 @@ class ReportBuilder:
         - Planet positions (with speed and all house systems)
         - Declinations
         - All aspects (sorted by orb)
-        - House cusps
-        - Essential dignities
+        - House cusps (if birth time known)
+        - Essential dignities (if birth time known)
+
+        Automatically adapts for unknown-time charts by skipping
+        house-dependent sections.
 
         Returns:
             Self for chaining
@@ -1295,15 +1305,18 @@ class ReportBuilder:
         Example:
             >>> report = ReportBuilder().from_chart(chart).preset_detailed().render()
         """
-        return (
+        has_houses = bool(self._chart and self._chart.house_systems)
+
+        builder = (
             self.with_chart_overview()
             .with_moon_phase()
-            .with_planet_positions(include_speed=True, include_house=True)
+            .with_planet_positions(include_speed=True, include_house=has_houses)
             .with_declinations()
             .with_aspects(mode="all")
-            .with_house_cusps()
-            .with_dignities()
         )
+        if has_houses:
+            builder = builder.with_house_cusps().with_dignities()
+        return builder
 
     def preset_full(self) -> "ReportBuilder":
         """
@@ -1341,25 +1354,33 @@ class ReportBuilder:
             ...     .calculate())
             >>> report = ReportBuilder().from_chart(chart).preset_full().render()
         """
-        return (
+        has_houses = bool(self._chart and self._chart.house_systems)
+
+        builder = (
             self.with_chart_overview()
             .with_moon_phase()
-            .with_planet_positions(include_speed=True, include_house=True)
-            .with_house_cusps()
+            .with_planet_positions(include_speed=True, include_house=has_houses)
             .with_aspects(mode="all")
             .with_aspect_patterns()
-            .with_dignities(show_details=True)
-            .with_dispositors()
             .with_declinations()
             .with_declination_aspects()
             .with_midpoints()
             .with_midpoint_aspects()
             .with_fixed_stars()
-            .with_zodiacal_releasing(
-                lots=["Part of Fortune", "Part of Spirit"],
-                mode="both",
-            )
         )
+
+        if has_houses:
+            builder = (
+                builder.with_house_cusps()
+                .with_dignities(show_details=True)
+                .with_dispositors()
+                .with_zodiacal_releasing(
+                    lots=["Part of Fortune", "Part of Spirit"],
+                    mode="both",
+                )
+            )
+
+        return builder
 
     def preset_positions_only(self) -> "ReportBuilder":
         """

@@ -835,11 +835,30 @@ class ChartBuilder:
                 self._orb_engine,
             )
 
+        # Step 4: Run additional components (midpoints, fixed stars, etc.)
+        # These don't need houses -- they work from planetary positions alone.
+        component_metadata: dict = {}
+        for component in self._components:
+            try:
+                additional = component.calculate(
+                    self._datetime,
+                    self._location,
+                    positions,
+                    {},  # No house cusps
+                    {},  # No house placements
+                )
+                positions.extend(additional)
+
+                if hasattr(component, "get_metadata"):
+                    metadata_key = component.metadata_name
+                    component_metadata[metadata_key] = component.get_metadata()
+            except Exception:
+                # Some components may fail without houses -- skip gracefully
+                pass
+
         # Build metadata
         final_metadata: dict = {}
-
-        # Note: Cache stats removed from metadata for performance.
-        # get_stats() was scanning 100k+ files on every calculate() call.
+        final_metadata.update(component_metadata)
 
         # Add chart name to metadata if set
         if self._name is not None:
@@ -848,7 +867,7 @@ class ChartBuilder:
         # Mark as time unknown
         final_metadata["time_unknown"] = True
 
-        # Step 4: Build UnknownTimeChart (no houses, no angles)
+        # Step 5: Build UnknownTimeChart (no houses, no angles)
         return UnknownTimeChart(
             datetime=self._datetime,
             location=self._location,

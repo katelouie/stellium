@@ -16,7 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Report presets adapt to unknown-time charts** — `preset_standard()`, `preset_detailed()`, and `preset_full()` now automatically skip house-dependent sections (house cusps, dignities, dispositors, zodiacal releasing) when the chart has no house systems (i.e., unknown birth time). Previously these presets would crash with a `ValueError` on unknown-time charts.
+
 ### Fixed
+
+- **Components now run for unknown-time charts** — `MidpointCalculator`, `FixedStarsComponent`, and other components added via `.add_component()` were silently skipped when `.with_unknown_time()` was set, because the unknown-time calculation path bypassed the component pipeline entirely. Components that don't require houses now execute normally.
 
 ## [0.18.3] - 2026-06-14
 
