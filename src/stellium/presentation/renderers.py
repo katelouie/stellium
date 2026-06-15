@@ -488,6 +488,158 @@ class PlainTextRenderer:
         return "\n".join(output_parts)
 
 
+class MarkdownRenderer:
+    """
+    GitHub Flavored Markdown renderer with no dependencies.
+
+    Creates clean, portable markdown suitable for:
+    - Obsidian / Notion / any markdown editor
+    - GitHub READMEs, issues, and wikis
+    - Documentation sites (MkDocs, Docusaurus, etc.)
+    - Blog posts and static site generators
+    - Archival export of chart reports
+
+    Uses GFM pipe tables, bold keys, and standard heading levels.
+    """
+
+    def render_section(self, section_name: str, section_data: dict[str, Any]) -> str:
+        """Render a single section as markdown."""
+        data_type = section_data.get("type")
+
+        if data_type == "table":
+            return self._render_table(section_data)
+        elif data_type == "key_value":
+            return self._render_key_value(section_data)
+        elif data_type == "text":
+            return section_data.get("text", "")
+        elif data_type == "side_by_side_tables":
+            return self._render_side_by_side_tables(section_data)
+        elif data_type == "compound":
+            return self._render_compound(section_data)
+        elif data_type == "svg":
+            return self._render_svg(section_data)
+        else:
+            return f"*Unknown section type: {data_type}*"
+
+    def render_report(
+        self,
+        sections: list[tuple[str, dict[str, Any]]],
+        title: str | None = None,
+    ) -> str:
+        """Render complete report as markdown."""
+        parts = []
+
+        if title:
+            parts.append(f"# {title}")
+            parts.append("")
+
+        for section_name, section_data in sections:
+            parts.append(f"## {section_name}")
+            parts.append("")
+
+            content = self.render_section(section_name, section_data)
+            parts.append(content)
+            parts.append("")
+
+        return "\n".join(parts)
+
+    def _render_table(self, data: dict[str, Any]) -> str:
+        """Render a GFM pipe table."""
+        headers = data["headers"]
+        rows = data["rows"]
+
+        str_rows = [[str(cell) for cell in row] for row in rows]
+
+        # Calculate column widths (minimum 3 for the --- separator)
+        col_widths = []
+        for i, header in enumerate(headers):
+            width = max(len(header), 3)
+            for row in str_rows:
+                if i < len(row):
+                    width = max(width, len(row[i]))
+            col_widths.append(width)
+
+        lines = []
+
+        # Header row
+        header_cells = [h.ljust(w) for h, w in zip(headers, col_widths, strict=False)]
+        lines.append("| " + " | ".join(header_cells) + " |")
+
+        # GFM separator row
+        separator_cells = ["-" * w for w in col_widths]
+        lines.append("| " + " | ".join(separator_cells) + " |")
+
+        # Data rows
+        for row in str_rows:
+            padded_row = row + [""] * (len(headers) - len(row))
+            row_cells = [
+                cell.ljust(w) for cell, w in zip(padded_row, col_widths, strict=False)
+            ]
+            lines.append("| " + " | ".join(row_cells) + " |")
+
+        return "\n".join(lines)
+
+    def _render_key_value(self, data: dict[str, Any]) -> str:
+        """Render key-value pairs with bold keys."""
+        lines = []
+        for key, value in data["data"].items():
+            lines.append(f"**{key}:** {value}  ")
+        return "\n".join(lines)
+
+    def _render_compound(self, data: dict[str, Any]) -> str:
+        """Render compound section with sub-sections."""
+        parts = []
+        for sub_name, sub_data in data.get("sections", []):
+            sub_type = sub_data.get("type")
+
+            # Skip SVG sub-sections (aspectarian grid) — not renderable in markdown
+            if sub_type == "svg":
+                continue
+
+            parts.append(f"### {sub_name}")
+            parts.append("")
+
+            if sub_type == "table":
+                parts.append(self._render_table(sub_data))
+            elif sub_type == "key_value":
+                parts.append(self._render_key_value(sub_data))
+            elif sub_type == "text":
+                parts.append(sub_data.get("content", sub_data.get("text", "")))
+            else:
+                parts.append(f"*Unknown type: {sub_type}*")
+            parts.append("")
+        return "\n".join(parts)
+
+    def _render_side_by_side_tables(self, data: dict[str, Any]) -> str:
+        """Render multiple tables stacked vertically with sub-headings."""
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return ""
+
+        parts = []
+        for table_data in tables_data:
+            title = table_data.get("title", "")
+            if title:
+                parts.append(f"### {title}")
+                parts.append("")
+
+            parts.append(
+                self._render_table(
+                    {"headers": table_data["headers"], "rows": table_data["rows"]}
+                )
+            )
+            parts.append("")
+
+        return "\n".join(parts)
+
+    def _render_svg(self, data: dict[str, Any]) -> str:
+        """Render SVG reference as a markdown image or note."""
+        path = data.get("path", "")
+        if path:
+            return f"![Chart]({path})"
+        return "*Chart image not available in markdown format.*"
+
+
 class HTMLRenderer:
     """
     Renderer that converts report sections to HTML.

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Markdown renderer** — New `format="markdown"` option for `ReportBuilder.render()`. Produces clean GitHub Flavored Markdown with pipe tables, bold key-value pairs, and standard heading levels. Suitable for Obsidian, Notion, GitHub READMEs, documentation sites, and blog posts. Also available directly via `MarkdownRenderer` class.
+
 ### Changed
 
 ### Fixed
