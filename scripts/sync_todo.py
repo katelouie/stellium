@@ -62,6 +62,9 @@ def collect_tasks() -> list[dict]:
         if not matches_project(fm):
             continue
 
+        if "private" in fm.get("tags", []):
+            continue
+
         tasks.append(
             {
                 "title": fm.get("title", filepath.stem),
