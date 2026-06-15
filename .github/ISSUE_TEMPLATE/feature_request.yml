@@ -1,0 +1,33 @@
+name: Feature Request
+description: Suggest a new feature or enhancement
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! I'm happy to hear about your idea.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What would you like Stellium to do?
+      placeholder: "It would be useful if Stellium could..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: How would you use this feature? What problem does it solve?
+
+  - type: textarea
+    id: example
+    attributes:
+      label: Example Code or API
+      description: If you have an idea of what the API could look like, sketch it out.
+      render: python
+      placeholder: |
+        # How you'd imagine using the feature:
+        chart = ChartBuilder.from_native(native).with_new_feature().calculate()
