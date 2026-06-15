@@ -759,7 +759,7 @@ def test_svg_well_formed(test_chart, temp_output_dir):
     filepath = os.path.join(temp_output_dir, "well_formed.svg")
     test_chart.draw(filepath).save()
 
-    with open(filepath) as f:
+    with open(filepath, encoding="utf-8") as f:
         content = f.read()
         assert content.startswith("<?xml") or content.startswith("<svg")
         assert "</svg>" in content

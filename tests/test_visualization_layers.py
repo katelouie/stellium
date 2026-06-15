@@ -254,7 +254,7 @@ class TestLayerIntegration:
         sample_chart.draw().with_filename(str(output_path)).save()
 
         assert output_path.exists()
-        content = output_path.read_text()
+        content = output_path.read_text(encoding="utf-8")
         assert "<svg" in content
 
     def test_comparison_chart_draw(self):

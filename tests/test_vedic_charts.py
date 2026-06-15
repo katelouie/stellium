@@ -203,14 +203,14 @@ class TestRenderToFile:
         path = tmp_path / "south.svg"
         SouthIndianRenderer().render_to_file(einstein_sidereal, str(path))
         assert path.exists()
-        content = path.read_text()
+        content = path.read_text(encoding="utf-8")
         assert content.startswith("<svg")
 
     def test_north_indian_render_to_file(self, einstein_sidereal, tmp_path):
         path = tmp_path / "north.svg"
         NorthIndianRenderer().render_to_file(einstein_sidereal, str(path))
         assert path.exists()
-        content = path.read_text()
+        content = path.read_text(encoding="utf-8")
         assert content.startswith("<svg")
 
 
