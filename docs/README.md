@@ -23,10 +23,19 @@ New to Stellium? Start with the [**main README**](../README.md) for installation
 
 ## Technical Documentation
 
+The full developer reference lives in [**`development/`**](development/README.md)
+— a per-subsystem API/architecture guide written primarily for coding agents
+(and handy for contributors). See the complete map in
+[**DOCS_INDEX.md**](DOCS_INDEX.md).
+
 | Document | Description |
 |----------|-------------|
-| [**ARCHITECTURE.md**](ARCHITECTURE.md) | System architecture, design patterns, and extension points |
-| [**PUBLISHING.md**](PUBLISHING.md) | Package publishing guide for maintainers |
+| [**development/**](development/README.md) | Architecture + API reference (chart building, engines, components, visualization, reports, extending) |
+| [**DOCS_INDEX.md**](DOCS_INDEX.md) | Complete index of all documentation |
+| [**ARCHITECTURE.md**](ARCHITECTURE.md) | ⚠️ Superseded historical architecture doc (kept for concepts only) |
+
+> Package publishing is maintainer-only and documented in
+> [`CONTRIBUTING.md`](../CONTRIBUTING.md#publishing).
 
 ## Example Cookbooks
 
@@ -45,32 +54,22 @@ python examples/report_cookbook.py
 python examples/comparison_cookbook.py
 ```
 
-## Planning & Development
+## Developer Reference (`/development/`)
 
-Internal documentation for contributors:
-
-### `/planning/`
-
-| Document | Description |
-|----------|-------------|
-| [VISION_ARCHITECTURE.md](planning/VISION_ARCHITECTURE.md) | High-level project vision and architectural decisions |
-| [LIBRARY_COMPARISON.md](planning/LIBRARY_COMPARISON.md) | Comparison with other Python astrology libraries |
-| [NEXT_FEATURES.md](planning/NEXT_FEATURES.md) | Planned features and development roadmap |
-| [TRANSITS_SYNASTRY_COMPOSITE_PLAN.md](planning/TRANSITS_SYNASTRY_COMPOSITE_PLAN.md) | Design for comparison chart types |
-| [SYNTHESIS_CHARTS_DESIGN.md](planning/SYNTHESIS_CHARTS_DESIGN.md) | Composite and Davison chart implementation |
-| [UNKNOWN_TIME_CHARTS_DESIGN.md](planning/UNKNOWN_TIME_CHARTS_DESIGN.md) | Charts without birth time |
-| [INTERACTIVE_HTML_REPORTS.md](planning/INTERACTIVE_HTML_REPORTS.md) | Future interactive report plans |
-
-### `/development/`
+The durable architecture + API reference, written primarily for coding agents
+(see each file's "Hello, Claude!" callout) but useful to any contributor.
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE_QUICK_REFERENCE.md](development/ARCHITECTURE_QUICK_REFERENCE.md) | Quick reference for the codebase architecture |
-| [VIZ_ARCHITECTURE.md](development/VIZ_ARCHITECTURE.md) | Visualization system architecture |
-| [SIDEREAL_IMPLEMENTATION.md](development/SIDEREAL_IMPLEMENTATION.md) | Sidereal zodiac implementation notes |
-| [DECLINATIONS.md](development/DECLINATIONS.md) | Declination calculations design |
-| [VEDIC_DIGNITIES.md](development/VEDIC_DIGNITIES.md) | Vedic dignity system notes |
-| [BIWHEEL_USAGE.md](development/BIWHEEL_USAGE.md) | Bi-wheel chart usage guide |
+| [README.md](development/README.md) | Reading order and scope of the developer docs |
+| [ARCHITECTURE.md](development/ARCHITECTURE.md) | Mental model, layer map, dependency rules, `.calculate()` flow |
+| [CHART_BUILDING.md](development/CHART_BUILDING.md) | `Native`/`Notable`, `ChartBuilder`, `CalculatedChart`, config, registries |
+| [ENGINES.md](development/ENGINES.md) | Ephemeris, houses, aspects, orbs, dignities, patterns, profections |
+| [COMPONENTS_AND_ANALYSIS.md](development/COMPONENTS_AND_ANALYSIS.md) | Components, analysis/DataFrames, IO, caching, utils |
+| [VISUALIZATION_INTERNALS.md](development/VISUALIZATION_INTERNALS.md) | SVG pipeline, layers, themes/palettes, dial/vedic/atlas |
+| [PRESENTATION_INTERNALS.md](development/PRESENTATION_INTERNALS.md) | `ReportBuilder`, sections, renderers |
+| [SUBSYSTEMS.md](development/SUBSYSTEMS.md) | Multi-chart, returns, electional, planner, Chinese/BaZi, CLI |
+| [EXTENDING.md](development/EXTENDING.md) | Adding engines/components/analyzers/layers/themes/sections |
 
 ### `/scripts/`
 
@@ -100,9 +99,9 @@ stellium/
 │   ├── CHART_TYPES.md        # Chart types guide
 │   ├── THEME_GALLERY.md      # Visual theme gallery
 │   ├── PALETTE_GALLERY.md    # Zodiac palette gallery
-│   ├── ARCHITECTURE.md       # System architecture
-│   ├── planning/             # Planning documents
-│   ├── development/          # Development docs
+│   ├── ARCHITECTURE.md       # Superseded architecture doc (historical)
+│   ├── DOCS_INDEX.md         # Index of all documentation
+│   ├── development/          # Developer/agent API & architecture reference
 │   ├── scripts/              # Doc generation scripts
 │   └── images/               # Documentation images
 │
