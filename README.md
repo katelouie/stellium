@@ -135,6 +135,7 @@ pip install stellium
 
 - Python 3.11 or higher
 - All dependencies installed automatically (pyswisseph, pytz, geopy, rich, svgwrite)
+- *Note: On Python 3.12+, installing requires a C toolchain (until `pyswisseph` ships newer wheels)*
 
 ### Optional Dependencies
 
