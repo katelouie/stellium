@@ -6,3 +6,13 @@ repos:
         # No --fix so you see the same errors as CI
       - id: ruff-format  # if you also want formatting
 
+  - repo: local
+    hooks:
+      - id: sync-todo
+        name: Sync TODO.md from Obsidian
+        entry: python scripts/sync_todo.py
+        language: python
+        additional_dependencies: [pyyaml]
+        pass_filenames: false
+        always_run: true
+

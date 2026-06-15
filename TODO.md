@@ -1,61 +1,42 @@
-# Todo
+# TODO
 
-## Reports
+*30 open tasks (synced from Obsidian)*
 
-- [ ] Add "text" option to presentation reports that outputs sentences of information.
-- [x] Midpoint trees
-- [ ] Uranian: Modulus 90 sort
+## High
 
-## Time Handling
+- Fix broad exception swallowing (30+ bare except clauses)
+- Resolve Comparison vs MultiChart API duality
 
-- [ ] LMT (Local Mean Time) support for historical charts
-  - Add `use_lmt` parameter to Native (True/False/None for auto-detect)
-  - LMT offset formula: longitude / 15 hours from UTC
-  - Auto-detect based on country + date (requires standardization date lookup)
-  - Country standardization dates: US (1883-11-18), UK (1880), France (1891), Germany (1893), etc.
-  - For raw lat/lon input: default to modern timezone with warning if date < 1900
-  - Store country in ChartLocation from geocoding result
+## Normal
 
-## Chart Visualization
+- Add cities gazetteer to webapp for geocoding reliability and autocomplete
+- Add eclipse Saros series and prenatal eclipse lookup
+- BaZi Annual pillars (流年)
+- BaZi Luck pillars calculation
+- BaZi: Clashes, combinations, and penalties
+- Build plugin ecosystem architecture (Phase 3 of VISION)
+- Evaluate component/analyzer support for non-ChartBuilder chart types
+- Implement Firdaria timing technique
+- Implement Vedic dignities engine (moolatrikona, Dig Bala, Navamsa)
+- Implement Vimshottari Dasha system
+- Implement interactive HTML reports (Jinja2 + Pico.css)
+- LMT (Local Mean Time) support for historical charts
+- Update ARCHITECTURE.md directory structure to match codebase
+- Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps
+- Update chart grid to accept arbitrary wheel-only charts
+- Uranian dial chart info header
+- Uranian midpoint calculation (planetary pictures)
 
-- [x] Add vedic square-type charts
-- [ ] Update chart grid to take in *arbitrary wheel-only charts*
+## Low
 
-## Core Functions
-
-- [x] Primary Directions
-- [ ] Orb moieties (sum orb of two planets and get average)
-- [x] Heliocentric calculations
-- [x] Draconic charts (nodal)
-- [ ] Topocentric parallax corrections for planet coordinates
-- [x] Uranian degree dial chart
-- [ ] Add chart info overview (header) to Uranian dial viz
-- [ ] Uranian-style midpoint calculation (A + B - C = D)
-- [x] Add Aries Point to objects (uranian)
-
-## Chinese Astrology
-
-### Bazi (Four Pillars) - In Progress
-- [x] Core primitives (stems, branches, elements, polarity)
-- [x] Solar term calculations
-- [x] Five Tigers / Five Rats formulas
-- [x] Basic BaZiChart and Pillar models
-- [x] Hidden stems (藏干) with position labels (本气/中气/余气)
-- [x] Ten Gods (十神) analysis module
-- [x] Rich table renderer (BaziRichRenderer)
-- [x] Prose renderer for conversations (BaziProseRenderer)
-- [x] SVG visual chart renderer (BaziSVGRenderer)
-- [ ] Clashes, combinations, and penalties (刑冲合害)
-- [ ] Luck pillars (大运) calculation
-- [ ] Annual pillars (流年)
-- [ ] Day Master strength analysis
-
-### Zi Wei Dou Shu (Purple Star) - Planned
-- [ ] Define star enums and metadata (14 main stars + auxiliaries)
-- [ ] Implement 12 palace system
-- [ ] Calculate main star positions
-- [ ] Calculate auxiliary stars
-- [ ] Implement transformations (四化)
-- [ ] Support decade/annual charts
-
-## Testing
+- AI tool definitions for LLM function-calling integration
+- Astrological weather API (daily dignities, VOC Moon, planetary hours)
+- Build research platform (hypothesis testing, batch analysis)
+- Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
+- Topocentric parallax corrections
+- Update ARCHITECTURE.md — significantly out of date
+- Uranian: Modulus 90 sort for reports
+- Zi Wei Dou Shu - 12 palace system
+- Zi Wei Dou Shu - Star enums and metadata
+- Zi Wei Dou Shu - Star position calculations
+- Zi Wei Dou Shu - Transformations and timing charts
