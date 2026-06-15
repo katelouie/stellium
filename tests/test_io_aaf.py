@@ -239,17 +239,17 @@ class TestParseAaf:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
-            natives = parse_aaf(f.name)
+        try:
+            natives = parse_aaf(temp_path)
 
             assert len(natives) == 1
             assert natives[0].name == "Kate Louie"
             assert natives[0].location.latitude == pytest.approx(37.383333, rel=1e-4)
             assert natives[0].location.longitude == pytest.approx(-122.083333, rel=1e-4)
-
-            # Clean up
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()
 
     def test_multiple_records(self):
         """Parse AAF file with multiple records."""
@@ -260,15 +260,16 @@ class TestParseAaf:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
-            natives = parse_aaf(f.name)
+        try:
+            natives = parse_aaf(temp_path)
 
             assert len(natives) == 2
             assert natives[0].name == "Albert Einstein"
             assert natives[1].name == "Marie Curie"
-
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()
 
     def test_with_comments(self):
         """Parse AAF file with comment lines."""
@@ -280,14 +281,15 @@ class TestParseAaf:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
-            natives = parse_aaf(f.name)
+        try:
+            natives = parse_aaf(temp_path)
 
             assert len(natives) == 1
             assert natives[0].name == "User Test"
-
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()
 
     def test_with_empty_lines(self):
         """Parse AAF file with empty lines between records."""
@@ -303,13 +305,14 @@ class TestParseAaf:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
-            natives = parse_aaf(f.name)
+        try:
+            natives = parse_aaf(temp_path)
 
             assert len(natives) == 2
-
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()
 
     def test_file_not_found(self):
         """Non-existent file raises FileNotFoundError."""
@@ -323,14 +326,15 @@ class TestParseAaf:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
+        try:
             # Pass Path object instead of string
-            natives = parse_aaf(Path(f.name))
+            natives = parse_aaf(Path(temp_path))
 
             assert len(natives) == 1
-
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()
 
     def test_native_datetime_values(self):
         """Verify Native datetime values are correct."""
@@ -339,9 +343,10 @@ class TestParseAaf:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
-            natives = parse_aaf(f.name)
+        try:
+            natives = parse_aaf(temp_path)
             native = natives[0]
 
             # Check the native has proper datetime
@@ -350,8 +355,8 @@ class TestParseAaf:
             assert native.datetime.local_datetime.day == 15
             assert native.datetime.local_datetime.hour == 14
             assert native.datetime.local_datetime.minute == 30
-
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()
 
 
 # =============================================================================
@@ -371,9 +376,10 @@ class TestIntegration:
 """
         with tempfile.NamedTemporaryFile(mode="w", suffix=".aaf", delete=False) as f:
             f.write(content)
-            f.flush()
+            temp_path = f.name
 
-            natives = parse_aaf(f.name)
+        try:
+            natives = parse_aaf(temp_path)
             native = natives[0]
 
             # Calculate chart from Native
@@ -384,5 +390,5 @@ class TestIntegration:
             assert sun is not None
             # Einstein's Sun is in Pisces
             assert sun.sign == "Pisces"
-
-            Path(f.name).unlink()
+        finally:
+            Path(temp_path).unlink()

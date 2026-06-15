@@ -61,7 +61,7 @@ class TestSynthesisVisualization:
             assert os.path.exists(filepath)
 
             # Verify it's a valid SVG (starts with XML/SVG)
-            with open(filepath) as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
                 assert "<?xml" in content or "<svg" in content
 
@@ -126,7 +126,7 @@ class TestSynthesisChartContent:
             filepath = os.path.join(tmpdir, "test.svg")
             davison_chart.draw(filepath).preset_standard().save()
 
-            with open(filepath) as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
 
             # SVG should contain circle elements (for zodiac wheel)
@@ -138,7 +138,7 @@ class TestSynthesisChartContent:
             filepath = os.path.join(tmpdir, "test.svg")
             davison_chart.draw(filepath).with_size(600).save()
 
-            with open(filepath) as f:
+            with open(filepath, encoding="utf-8") as f:
                 content = f.read()
 
             # Should contain viewBox with 600 dimensions

@@ -116,7 +116,9 @@ def test_custom_path_expands_user(reset_ephemeris_state, tmp_path, monkeypatch):
     """~ in a custom path is expanded via Path.expanduser()."""
     fake_home = tmp_path / "home"
     fake_home.mkdir()
+    # Set HOME for Unix and USERPROFILE for Windows
     monkeypatch.setenv("HOME", str(fake_home))
+    monkeypatch.setenv("USERPROFILE", str(fake_home))
 
     result = initialize_ephemeris("~/custom_ephe")
 

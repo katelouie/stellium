@@ -8,10 +8,15 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      # Don't cancel the other jobs when one platform fails — we want to see
+      # every platform's result on every run so a Windows-only regression
+      # doesn't hide a macOS-only regression (or vice versa).
+      fail-fast: false
       matrix:
-        python-version: ['3.12']
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.11', '3.12', '3.13']
 
     steps:
     - uses: actions/checkout@v4
@@ -30,6 +35,10 @@ jobs:
       run: pytest
 
     - name: Run linting
+      # Lint once on the canonical platform — ruff output is
+      # platform-independent so running it 9 times wastes CI minutes and
+      # clutters the status checks.
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
       run: |
         ruff check .
         ruff format --check .
