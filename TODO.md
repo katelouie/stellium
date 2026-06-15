@@ -1,6 +1,6 @@
 # TODO
 
-*30 open tasks (synced from Obsidian)*
+*31 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -20,6 +20,7 @@
 - Implement Vedic dignities engine (moolatrikona, Dig Bala, Navamsa)
 - Implement Vimshottari Dasha system
 - Implement interactive HTML reports (Jinja2 + Pico.css)
+- Integrate Simplified Chinese translation strings into main library and web
 - LMT (Local Mean Time) support for historical charts
 - Update ARCHITECTURE.md directory structure to match codebase
 - Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps
