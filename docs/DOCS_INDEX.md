@@ -1,0 +1,46 @@
+# Documentation Index
+
+A complete map of Stellium's documentation. The **hub** for development is
+[`/CLAUDE.md`](../CLAUDE.md).
+
+## For coding agents / contributors — `docs/development/`
+Durable technical reference so you don't re-learn the API each session.
+
+| Doc | Purpose | Status |
+|---|---|---|
+| [development/README.md](development/README.md) | Reading order + scope of the agent docs | Current |
+| [development/ARCHITECTURE.md](development/ARCHITECTURE.md) | Mental model, layer map, dependency rules, `.calculate()` flow | Current |
+| [development/CHART_BUILDING.md](development/CHART_BUILDING.md) | `Native`/`Notable`, `ChartBuilder`, `CalculatedChart`, config, registries | Current |
+| [development/ENGINES.md](development/ENGINES.md) | Ephemeris, houses, aspects, orbs, dignities, patterns, profections, … | Current |
+| [development/COMPONENTS_AND_ANALYSIS.md](development/COMPONENTS_AND_ANALYSIS.md) | Components, analysis/DataFrames, IO, caching, utils | Current |
+| [development/VISUALIZATION_INTERNALS.md](development/VISUALIZATION_INTERNALS.md) | SVG pipeline, coordinates, layers, themes/palettes, dial/vedic/atlas | Current |
+| [development/PRESENTATION_INTERNALS.md](development/PRESENTATION_INTERNALS.md) | `ReportBuilder`, sections, renderers | Current |
+| [development/SUBSYSTEMS.md](development/SUBSYSTEMS.md) | Multi-chart, returns, electional, planner, Chinese/BaZi, CLI | Current |
+| [development/EXTENDING.md](development/EXTENDING.md) | How to add engines/components/analyzers/layers/themes/sections | Current |
+
+## User-facing guides — `docs/`
+
+| Doc | Purpose |
+|---|---|
+| [README.md](README.md) | Docs landing page |
+| [index.md](index.md) | Sphinx/ReadTheDocs entry |
+| [VISUALIZATION.md](VISUALIZATION.md) | Drawing charts (themes, palettes, presets) |
+| [REPORTS.md](REPORTS.md) | Generating terminal/markdown/PDF reports |
+| [CHART_TYPES.md](CHART_TYPES.md) | Natal, synastry, transits, returns, composite, etc. |
+| [THEME_GALLERY.md](THEME_GALLERY.md) / [PALETTE_GALLERY.md](PALETTE_GALLERY.md) | Visual catalogs |
+| [options_list.md](options_list.md) | Complete configuration reference |
+| [api/index.md](api/index.md) | API reference |
+
+## Historical / superseded
+
+| Doc | Note |
+|---|---|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | **Superseded** (Nov 2025). Concepts still valid; for current API use `docs/development/`. |
+
+## Top-level references (repo root)
+
+- [`/README.md`](../README.md) — project overview & quick start
+- [`/CLAUDE.md`](../CLAUDE.md) — development hub for agents
+- [`/CONTRIBUTING.md`](../CONTRIBUTING.md) — contribution workflow
+- [`/CHANGELOG.md`](../CHANGELOG.md) — release history
+- [`/TODO.md`](../TODO.md) — roadmap
