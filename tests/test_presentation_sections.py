@@ -661,8 +661,8 @@ def test_arabic_parts_section_no_parts(mock_chart):
     data = section.generate_data(mock_chart)
 
     assert data["type"] == "text"
-    assert "No Arabic Parts calculated" in data["content"]
-    assert "ArabicPartsCalculator" in data["content"]
+    assert "No Arabic Parts calculated" in data["text"]
+    assert "ArabicPartsCalculator" in data["text"]
 
 
 def test_arabic_parts_section_all_mode(chart_with_arabic_parts):
