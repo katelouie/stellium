@@ -320,8 +320,8 @@ class TestReportIntegration:
         section = DispositorSection(mode="planetary")
         data = section.generate_data(einstein_chart)
 
-        # Single mode returns text type
-        assert data["type"] == "text"
+        # Single mode returns text (no graphviz) or compound (with SVG graph)
+        assert data["type"] in ("text", "compound")
 
     def test_report_house_only(self, einstein_chart):
         """Should work with house mode only."""
@@ -330,7 +330,7 @@ class TestReportIntegration:
         section = DispositorSection(mode="house")
         data = section.generate_data(einstein_chart)
 
-        assert data["type"] == "text"
+        assert data["type"] in ("text", "compound")
 
     def test_report_with_different_rulership(self, einstein_chart):
         """Should accept rulership parameter."""
@@ -339,7 +339,7 @@ class TestReportIntegration:
         section = DispositorSection(mode="planetary", rulership="modern")
         data = section.generate_data(einstein_chart)
 
-        assert data["type"] == "text"
+        assert data["type"] in ("text", "compound")
 
 
 # =============================================================================

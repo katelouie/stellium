@@ -1,6 +1,6 @@
 # TODO
 
-*31 open tasks (synced from Obsidian)*
+*32 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -34,6 +34,7 @@
 - Astrological weather API (daily dignities, VOC Moon, planetary hours)
 - Build research platform (hypothesis testing, batch analysis)
 - Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
+- Refactor SectionData to sealed dataclass hierarchy
 - Topocentric parallax corrections
 - Update ARCHITECTURE.md — significantly out of date
 - Uranian: Modulus 90 sort for reports

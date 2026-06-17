@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - **Components now run for unknown-time charts** — `MidpointCalculator`, `FixedStarsComponent`, and other components added via `.add_component()` were silently skipped when `.with_unknown_time()` was set, because the unknown-time calculation path bypassed the component pipeline entirely. Components that don't require houses now execute normally.
+- **Dispositors, ZR, and other sections blank in PDF/HTML** — Multiple report sections rendered blank in Typst (PDF) and HTML output due to two issues: (1) an inconsistent data key (`"content"` vs `"text"`) in the section data contract, and (2) the HTML renderer was missing handlers for `compound`, `side_by_side_tables`, and `svg` section types entirely. Standardized all `type: "text"` sections to use the `"text"` key, added `TypedDict` definitions (`section_types.py`) to enforce the contract, and added the missing HTML handlers. Renderers also accept `"content"` as a fallback for backwards compatibility. (Fixes #29, reported by [@daiwei9767](https://github.com/daiwei9767))
+- **Dispositor SVG graphs in HTML/PDF reports** — The Dispositors report section now renders graphviz node diagrams (with gold final dispositors, purple mutual receptions, and directional arrows) when graphviz is available. The SVG graph appears alongside the text chains, so visual and text representations are both present. Falls back to text-only when graphviz is not installed.
 
 ## [0.18.3] - 2026-06-14
 

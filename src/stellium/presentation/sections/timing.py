@@ -87,7 +87,7 @@ class ProfectionSection:
         except ValueError as e:
             return {
                 "type": "text",
-                "content": f"Could not calculate profections: {e}",
+                "text": f"Could not calculate profections: {e}",
             }
 
         # Calculate the age
@@ -242,7 +242,7 @@ class ProfectionSection:
 
         return {
             "type": "text",
-            "content": f"House {result.profected_house} contains: {', '.join(planet_names)}",
+            "text": f"House {result.profected_house} contains: {', '.join(planet_names)}",
         }
 
     def _build_lord_condition(self, result) -> dict:
@@ -250,7 +250,7 @@ class ProfectionSection:
         if result.ruler_position is None:
             return {
                 "type": "text",
-                "content": f"{result.ruler} position not found in chart.",
+                "text": f"{result.ruler} position not found in chart.",
             }
 
         pos = result.ruler_position
@@ -399,7 +399,7 @@ class ZodiacalReleasingSection:
         if "zodiacal_releasing" not in chart.metadata:
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "Zodiacal Releasing not calculated. Add ZodiacalReleasingAnalyzer:\n\n"
                     "  from stellium.engines.releasing import ZodiacalReleasingAnalyzer\n\n"
                     "  chart = (\n"
@@ -421,7 +421,7 @@ class ZodiacalReleasingSection:
         if not lots_to_show:
             return {
                 "type": "text",
-                "content": "No Zodiacal Releasing data found for the specified lot(s).",
+                "text": "No Zodiacal Releasing data found for the specified lot(s).",
             }
 
         # Build sections for each lot
@@ -558,12 +558,12 @@ class ZodiacalReleasingSection:
         """Build context table for L3 or L4 showing periods around current."""
         periods = timeline.periods.get(level, [])
         if not periods:
-            return {"type": "text", "content": f"No L{level} data available."}
+            return {"type": "text", "text": f"No L{level} data available."}
 
         # Find current period index
         current_period = snapshot.l3 if level == 3 else snapshot.l4
         if current_period is None:
-            return {"type": "text", "content": f"No L{level} data available."}
+            return {"type": "text", "text": f"No L{level} data available."}
 
         # Find index of current period
         current_idx = None
@@ -575,7 +575,7 @@ class ZodiacalReleasingSection:
         if current_idx is None:
             return {
                 "type": "text",
-                "content": f"Could not locate current L{level} period.",
+                "text": f"Could not locate current L{level} period.",
             }
 
         # Get context window
@@ -616,7 +616,7 @@ class ZodiacalReleasingSection:
         l1_periods = timeline.l1_periods()
 
         if not l1_periods:
-            return {"type": "text", "content": "No L1 timeline data available."}
+            return {"type": "text", "text": "No L1 timeline data available."}
 
         headers = ["Sign", "Ruler", "Ages", "Quality", "Status"]
         rows = []

@@ -86,7 +86,7 @@ class AspectPatternSection:
             # Graceful handling: return helpful message
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "Add AspectPatternAnalyzer() to chart builder to enable pattern detection.\n\n"
                     "Example:\n"
                     "  from stellium.engines.patterns import AspectPatternAnalyzer\n"
@@ -99,7 +99,7 @@ class AspectPatternSection:
         if not patterns:
             return {
                 "type": "text",
-                "content": "No aspect patterns detected in this chart.",
+                "text": "No aspect patterns detected in this chart.",
             }
 
         # Filter patterns if specific types requested
@@ -112,7 +112,7 @@ class AspectPatternSection:
         if not patterns:
             return {
                 "type": "text",
-                "content": f"No patterns of type {self.pattern_types} found.",
+                "text": f"No patterns of type {self.pattern_types} found.",
             }
 
         # Sort patterns
@@ -444,7 +444,7 @@ class CrossChartAspectSection:
         else:
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "Cross-chart aspects require a Comparison or MultiChart object.\n\n"
                     "Example:\n"
                     "  mc = MultiChartBuilder.synastry(chart1, chart2).calculate()\n"
@@ -509,7 +509,7 @@ class CrossChartAspectSection:
         if not aspects:
             return {
                 "type": "text",
-                "content": "No cross-chart aspects found.",
+                "text": "No cross-chart aspects found.",
             }
 
         # Sort aspects

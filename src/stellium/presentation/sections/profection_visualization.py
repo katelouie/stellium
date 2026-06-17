@@ -175,7 +175,7 @@ class ProfectionVisualizationSection:
         except ValueError as e:
             return {
                 "type": "text",
-                "content": f"Could not calculate profections: {e}",
+                "text": f"Could not calculate profections: {e}",
             }
 
         # Determine current age
@@ -240,7 +240,7 @@ class ProfectionVisualizationSection:
         else:
             return {
                 "type": "text",
-                "content": "No visualization requested.",
+                "text": "No visualization requested.",
             }
 
     # =========================================================================

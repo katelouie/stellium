@@ -52,13 +52,24 @@ from stellium import ReportBuilder
 ```python
 @property
 def section_name(self) -> str: ...
-def generate_data(self, chart) -> dict[str, Any]: ...   # must include "type"
+def generate_data(self, chart) -> SectionData: ...
 ```
 
-`generate_data` returns a dict whose `"type"` selects the shape:
-`"table"` (`headers`, `rows`), `"key_value"` (`data`), `"text"` (`text`),
-`"side_by_side_tables"` (`tables`), `"compound"` (`sections`: nested list),
-`"svg"` (`content`).
+`generate_data` returns a `SectionData` (typed union defined in
+`presentation/section_types.py`). The `"type"` key selects the shape:
+
+| Type | Payload keys | TypedDict |
+|---|---|---|
+| `"table"` | `headers`, `rows` | `TableData` |
+| `"key_value"` | `data` (dict) | `KeyValueData` |
+| `"text"` | `text` (str) | `TextData` |
+| `"svg"` | `content` (str) | `SvgData` |
+| `"side_by_side_tables"` | `tables` (list) | `SideBySideTablesData` |
+| `"compound"` | `sections` (list of (name, SectionData)) | `CompoundData` |
+
+**Important:** text-type sections use the `"text"` key (not `"content"`).
+The `"content"` key is reserved for SVG data. Renderers accept both as a
+fallback, but new sections should use `"text"`.
 
 **Section classes** live in `presentation/sections/` (core, aspects, dignities,
 midpoints, midpoint_tree, timing, transits, misc, profection_visualization,

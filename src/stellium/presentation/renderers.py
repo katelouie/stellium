@@ -158,7 +158,7 @@ class RichTableRenderer:
 
     def _render_text(self, section_name: str, data: dict[str, Any]) -> str:
         """Render plain text block."""
-        return data.get("text", "")
+        return data.get("text", data.get("content", ""))
 
     def _render_compound(self, section_name: str, data: dict[str, Any]) -> str:
         """Render compound section with multiple sub-sections (supports nesting)."""
@@ -371,7 +371,7 @@ class PlainTextRenderer:
             elif sub_type == "key_value":
                 parts.append(self._render_key_value(sub_name, sub_data))
             elif sub_type == "text":
-                parts.append(f"  {sub_data.get('content', sub_data.get('text', ''))}")
+                parts.append(f"  {sub_data.get('text', sub_data.get('content', ''))}")
             else:
                 parts.append(f"  (unknown type {sub_type})")
         return "\n".join(parts)
@@ -762,6 +762,12 @@ class HTMLRenderer:
             html += self._render_key_value(section_data)
         elif data_type == "text":
             html += self._render_text(section_data)
+        elif data_type == "compound":
+            html += self._render_compound(section_data)
+        elif data_type == "side_by_side_tables":
+            html += self._render_side_by_side_tables(section_data)
+        elif data_type == "svg":
+            html += self._render_svg(section_data)
         else:
             html += f"<p>Unknown section type: {data_type}</p>"
 
@@ -804,10 +810,50 @@ class HTMLRenderer:
 
     def _render_text(self, data: dict[str, Any]) -> str:
         """Convert text data to HTML paragraph."""
-        text = data.get("text", "")
+        text = data.get("text", data.get("content", ""))
         # Convert newlines to <br> tags
         text = text.replace("\n", "<br>\n")
         return f"<p>{text}</p>"
+
+    def _render_compound(self, data: dict[str, Any]) -> str:
+        """Render compound section with sub-sections."""
+        parts = []
+        for sub_name, sub_data in data.get("sections", []):
+            sub_type = sub_data.get("type")
+            parts.append(f"<h3>{sub_name}</h3>")
+
+            if sub_type == "table":
+                parts.append(self._render_table(sub_data))
+            elif sub_type == "key_value":
+                parts.append(self._render_key_value(sub_data))
+            elif sub_type == "text":
+                parts.append(self._render_text(sub_data))
+            elif sub_type == "svg":
+                parts.append(self._render_svg(sub_data))
+            elif sub_type == "compound":
+                parts.append(self._render_compound(sub_data))
+        return "\n".join(parts)
+
+    def _render_side_by_side_tables(self, data: dict[str, Any]) -> str:
+        """Render multiple tables with sub-headings."""
+        parts = []
+        for table_data in data.get("tables", []):
+            title = table_data.get("title", "")
+            if title:
+                parts.append(f"<h3>{title}</h3>")
+            parts.append(
+                self._render_table(
+                    {"headers": table_data["headers"], "rows": table_data["rows"]}
+                )
+            )
+        return "\n".join(parts)
+
+    def _render_svg(self, data: dict[str, Any]) -> str:
+        """Render inline SVG content."""
+        svg_content = data.get("content", "")
+        if svg_content:
+            return f'<div class="svg-container">{svg_content}</div>'
+        return ""
 
     def render_report(
         self,
@@ -1301,7 +1347,7 @@ class TypstRenderer:
 
     def _render_text(self, data: dict[str, Any]) -> str:
         """Convert text data to Typst paragraph."""
-        text = data.get("text", "")
+        text = data.get("text", data.get("content", ""))
         return self._escape(text)
 
     def _render_side_by_side_tables(self, data: dict[str, Any]) -> str:

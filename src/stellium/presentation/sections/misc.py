@@ -257,7 +257,7 @@ class DeclinationAspectSection:
         if not aspects:
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "No declination aspects calculated. Enable with:\n\n"
                     "  chart = (ChartBuilder.from_native(native)\n"
                     "      .with_aspects()\n"
@@ -275,7 +275,7 @@ class DeclinationAspectSection:
         if not aspects:
             return {
                 "type": "text",
-                "content": f"No {self.mode} aspects found.",
+                "text": f"No {self.mode} aspects found.",
             }
 
         # Sort
@@ -568,7 +568,7 @@ class ArabicPartsSection:
         if not parts:
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "No Arabic Parts calculated. Add ArabicPartsCalculator:\n\n"
                     "  from stellium.components.arabic_parts import ArabicPartsCalculator\n\n"
                     "  chart = (\n"
@@ -585,7 +585,7 @@ class ArabicPartsSection:
         if not parts:
             return {
                 "type": "text",
-                "content": f"No {self.mode} Arabic Parts found in this chart.",
+                "text": f"No {self.mode} Arabic Parts found in this chart.",
             }
 
         # Sort parts by category order, then alphabetically within category

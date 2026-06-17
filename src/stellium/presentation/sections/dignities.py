@@ -6,11 +6,14 @@ Includes:
 - DispositorSection: Dispositor chains and final dispositors
 """
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+
+if TYPE_CHECKING:
+    from stellium.engines.dispositors import DispositorResult
 
 from ._utils import get_object_display, get_object_sort_key
 
@@ -82,7 +85,7 @@ class DignitySection:
             # Graceful handling: return helpful message
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "Add DignityComponent() to chart builder to enable dignity calculations.\n\n"
                     "Example:\n"
                     "  chart = ChartBuilder.from_native(native).add_component(DignityComponent()).calculate()"
@@ -95,7 +98,7 @@ class DignitySection:
         if not planet_dignities:
             return {
                 "type": "text",
-                "content": "No dignity data available.",
+                "text": "No dignity data available.",
             }
 
         # Build headers
@@ -274,21 +277,28 @@ class DispositorSection:
         sections = []
 
         # Planetary dispositors
+        planetary = None
         if self.mode in ("planetary", "both"):
             planetary = engine.planetary()
             sections.append(self._format_result(planetary, "Planetary"))
 
         # House dispositors
+        house = None
         if self.mode in ("house", "both"):
             house = engine.house_based()
             sections.append(self._format_result(house, "House-Based"))
 
-        # If only one mode, return that directly (as text with section content)
+        # Try to generate SVG graph (for HTML/PDF rendering)
+        svg_section = self._render_graph_svg(planetary, house)
+        if svg_section:
+            sections.insert(0, svg_section)
+
+        # If only one mode and no SVG, return text directly
         if len(sections) == 1:
             title, data = sections[0]
             return {
                 "type": "text",
-                "text": data.get("content", ""),
+                "text": data.get("text", ""),
             }
 
         # Otherwise return compound section (list of tuples)
@@ -296,6 +306,37 @@ class DispositorSection:
             "type": "compound",
             "sections": sections,
         }
+
+    def _render_graph_svg(
+        self,
+        planetary: "DispositorResult | None",
+        house: "DispositorResult | None",
+    ) -> tuple[str, dict[str, Any]] | None:
+        """Try to render dispositor graph as SVG. Returns None if graphviz unavailable."""
+        import shutil
+
+        if not shutil.which("dot"):
+            return None
+
+        try:
+            from stellium.engines.dispositors import (
+                render_both_dispositors,
+                render_dispositor_graph,
+            )
+
+            if planetary and house:
+                dot = render_both_dispositors(planetary, house)
+            elif planetary:
+                dot = render_dispositor_graph(planetary, title="Planetary Dispositors")
+            elif house:
+                dot = render_dispositor_graph(house, title="House Dispositors")
+            else:
+                return None
+
+            svg_content = dot.pipe(format="svg").decode("utf-8")
+            return ("Dispositor Graph", {"type": "svg", "content": svg_content})
+        except Exception:
+            return None
 
     def _format_result(self, result, title: str) -> dict[str, Any]:
         """Format a DispositorResult for display."""
@@ -375,6 +416,6 @@ class DispositorSection:
             f"{title} Dispositors",
             {
                 "type": "text",
-                "content": "\n".join(lines),
+                "text": "\n".join(lines),
             },
         )

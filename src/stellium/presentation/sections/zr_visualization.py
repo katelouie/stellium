@@ -246,7 +246,7 @@ class ZRVisualizationSection:
         if "zodiacal_releasing" not in chart.metadata:
             return {
                 "type": "text",
-                "content": (
+                "text": (
                     "Zodiacal Releasing not calculated. Add ZodiacalReleasingAnalyzer:\n\n"
                     "  from stellium.engines.releasing import ZodiacalReleasingAnalyzer\n\n"
                     "  chart = (\n"
@@ -263,7 +263,7 @@ class ZRVisualizationSection:
             available = ", ".join(zr_data.keys())
             return {
                 "type": "text",
-                "content": f"Lot '{self.lot}' not found. Available: {available}",
+                "text": f"Lot '{self.lot}' not found. Available: {available}",
             }
 
         timeline: ZRTimeline = zr_data[self.lot]
