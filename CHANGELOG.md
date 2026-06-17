@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Python 3.13 support** — Added 3.13 to PyPI classifiers, now tested in CI alongside 3.11 and 3.12.
 - **Cross-platform CI matrix** — CI now tests on Windows, macOS, and Ubuntu across Python 3.11/3.12/3.13 (9 combinations). Fixed Windows-specific issues: UTF-8 encoding for SVG file reads, file locking in temp file tests, `USERPROFILE` for `expanduser`, and `strftime` format codes.
 - **Retrograde marker (℞) on wheel charts** — Retrograde planets now display a small ℞ symbol in the info stack below the degree/minutes, using the theme's `retro_color`. Appears automatically in "full" and "no_sign" info modes for any object with negative speed.
+- **Sidereal zodiac support in ElectionalSearch** — New `sidereal` parameter on `ElectionalSearch` enables sidereal chart calculations with any ayanamsa (e.g., `ElectionalSearch(..., sidereal="lahiri")`). Sign-based predicates, interval optimizers, and all ingress/sign-change search functions now accept an optional `ayanamsa` parameter. Both the chart-level (predicate) and search-level (boundary) layers are sidereal-aware. (Closes #26, requested by [@s-agapov](https://github.com/s-agapov))
 
 ### Changed
 

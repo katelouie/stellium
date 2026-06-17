@@ -309,6 +309,8 @@ class ElectionalSearch:
         start: dt.datetime | str,
         end: dt.datetime | str,
         location: str | ChartLocation,
+        *,
+        sidereal: str | None = None,
     ):
         """Initialize search with date range and location.
 
@@ -316,6 +318,10 @@ class ElectionalSearch:
             start: Start of search range (datetime or string like "2025-01-01")
             end: End of search range
             location: Location string (geocoded) or ChartLocation object
+            sidereal: Optional ayanamsa name for sidereal zodiac (e.g., "lahiri",
+                "fagan_bradley"). When set, all chart calculations use the sidereal
+                zodiac, so predicates like sign_in() check sidereal signs. Default
+                is None (tropical).
         """
         self.start = _parse_datetime(start)
         self.end = _parse_datetime(end)
@@ -324,6 +330,7 @@ class ElectionalSearch:
                 f"Start date ({self.start}) must be before end date ({self.end})"
             )
         self.location = location
+        self._sidereal = sidereal
         self._conditions: list[Condition] = []
         self._progress_callback: Callable[[int, int], None] | None = None
         # Cache resolved location with timezone for interval optimization
@@ -411,12 +418,14 @@ class ElectionalSearch:
 
     def _calculate_chart(self, when: dt.datetime) -> CalculatedChart:
         """Calculate a chart at the given datetime."""
-        # Use ChartBuilder.from_details for flexible input handling
-        return (
-            ChartBuilder.from_details(when, self.location)
-            .with_aspects()  # Need aspects for aspect conditions
-            .calculate()
+        builder = (
+            ChartBuilder.from_details(
+                when, self.location
+            ).with_aspects()  # Need aspects for aspect conditions
         )
+        if self._sidereal:
+            builder = builder.with_sidereal(self._sidereal)
+        return builder.calculate()
 
     def _check_conditions(self, chart: CalculatedChart) -> bool:
         """Check if all conditions pass for this chart."""

@@ -21,7 +21,7 @@ import swisseph as swe
 
 from stellium.engines.ephemeris import SWISS_EPHEMERIS_IDS, _set_ephemeris_path
 
-# Sign boundaries in longitude (0° of each sign)
+# Tropical sign boundaries in longitude (0° of each sign)
 SIGN_BOUNDARIES = {
     "Aries": 0.0,
     "Taurus": 30.0,
@@ -38,6 +38,40 @@ SIGN_BOUNDARIES = {
 }
 
 SIGN_ORDER = list(SIGN_BOUNDARIES.keys())
+
+
+def get_sign_boundaries(
+    ayanamsa: str | None = None,
+    julian_day: float | None = None,
+) -> dict[str, float]:
+    """Get sign boundaries, optionally shifted for sidereal zodiac.
+
+    For tropical (default), boundaries are 0°, 30°, 60°, etc.
+    For sidereal, boundaries are shifted by the ayanamsa offset so that
+    they represent the tropical longitudes where sidereal signs begin.
+
+    Args:
+        ayanamsa: Ayanamsa name (e.g., "lahiri"). None = tropical.
+        julian_day: Julian day for computing the ayanamsa offset (required
+            if ayanamsa is set). The offset changes ~50"/year, so the
+            midpoint of a search range is accurate enough.
+
+    Returns:
+        Dict mapping sign names to their boundary longitudes.
+    """
+    if ayanamsa is None:
+        return SIGN_BOUNDARIES
+
+    if julian_day is None:
+        raise ValueError("julian_day is required when using sidereal ayanamsa")
+
+    from stellium.core.ayanamsa import get_ayanamsa_value
+
+    offset = get_ayanamsa_value(julian_day, ayanamsa)
+
+    return {
+        sign: (longitude + offset) % 360 for sign, longitude in SIGN_BOUNDARIES.items()
+    }
 
 
 @dataclass(frozen=True)
@@ -515,9 +549,18 @@ def find_all_longitude_crossings(
 # =============================================================================
 
 
-def _get_sign_from_longitude(longitude: float) -> str:
-    """Get the zodiac sign for a given longitude."""
-    sign_index = int(longitude // 30) % 12
+def _get_sign_from_longitude(
+    longitude: float,
+    ayanamsa_offset: float = 0.0,
+) -> str:
+    """Get the zodiac sign for a given longitude.
+
+    Args:
+        longitude: Tropical longitude in degrees.
+        ayanamsa_offset: Ayanamsa offset to subtract for sidereal (default 0 = tropical).
+    """
+    sidereal_lon = (longitude - ayanamsa_offset) % 360
+    sign_index = int(sidereal_lon // 30) % 12
     return SIGN_ORDER[sign_index]
 
 
@@ -533,6 +576,7 @@ def find_ingress(
     start: datetime | float,
     direction: Literal["forward", "backward"] = "forward",
     max_days: float = 730.0,
+    ayanamsa: str | None = None,
 ) -> SignIngress | None:
     """Find when a celestial object next enters a specific zodiac sign.
 
@@ -556,7 +600,13 @@ def find_ingress(
             f"Unknown sign: {sign}. Must be one of {list(SIGN_BOUNDARIES.keys())}"
         )
 
-    target_longitude = SIGN_BOUNDARIES[sign]
+    # For sidereal, compute the shifted boundary for the sign
+    if ayanamsa:
+        start_jd = start if isinstance(start, float) else _datetime_to_julian_day(start)
+        boundaries = get_sign_boundaries(ayanamsa, start_jd)
+        target_longitude = boundaries[sign]
+    else:
+        target_longitude = SIGN_BOUNDARIES[sign]
 
     crossing = find_longitude_crossing(
         object_name,
@@ -589,6 +639,7 @@ def find_all_ingresses(
     start: datetime | float,
     end: datetime | float,
     max_results: int = 50,
+    ayanamsa: str | None = None,
 ) -> list[SignIngress]:
     """Find all times a celestial object enters a specific sign in a date range.
 
@@ -598,6 +649,7 @@ def find_all_ingresses(
         start: Start datetime (UTC) or Julian day
         end: End datetime (UTC) or Julian day
         max_results: Safety limit on number of results (default 50)
+        ayanamsa: Optional ayanamsa name for sidereal sign boundaries.
 
     Returns:
         List of SignIngress objects, chronologically ordered
@@ -616,7 +668,12 @@ def find_all_ingresses(
             f"Unknown sign: {sign}. Must be one of {list(SIGN_BOUNDARIES.keys())}"
         )
 
-    target_longitude = SIGN_BOUNDARIES[sign]
+    if ayanamsa:
+        start_jd = start if isinstance(start, float) else _datetime_to_julian_day(start)
+        boundaries = get_sign_boundaries(ayanamsa, start_jd)
+        target_longitude = boundaries[sign]
+    else:
+        target_longitude = SIGN_BOUNDARIES[sign]
     from_sign = _get_previous_sign(sign)
 
     crossings = find_all_longitude_crossings(
@@ -647,6 +704,7 @@ def find_next_sign_change(
     start: datetime | float,
     direction: Literal["forward", "backward"] = "forward",
     max_days: float = 60.0,
+    ayanamsa: str | None = None,
 ) -> SignIngress | None:
     """Find when a celestial object next changes signs (enters any sign).
 
@@ -659,6 +717,7 @@ def find_next_sign_change(
         start: Starting datetime (UTC) or Julian day
         direction: "forward" to search future, "backward" to search past
         max_days: Maximum days to search (default 60)
+        ayanamsa: Optional ayanamsa name for sidereal sign boundaries.
 
     Returns:
         SignIngress with exact time of sign change, or None if not found
@@ -679,9 +738,16 @@ def find_next_sign_change(
     else:
         start_jd = start
 
+    # Compute ayanamsa offset for sidereal sign determination
+    ayanamsa_offset = 0.0
+    if ayanamsa:
+        from stellium.core.ayanamsa import get_ayanamsa_value
+
+        ayanamsa_offset = get_ayanamsa_value(start_jd, ayanamsa)
+
     object_id = SWISS_EPHEMERIS_IDS[object_name]
     current_lon, _ = _get_position_and_speed(object_id, start_jd)
-    current_sign = _get_sign_from_longitude(current_lon)
+    current_sign = _get_sign_from_longitude(current_lon, ayanamsa_offset)
 
     # Determine which sign boundary to search for
     if direction == "forward":
@@ -698,6 +764,7 @@ def find_next_sign_change(
         start,
         direction=direction,
         max_days=max_days,
+        ayanamsa=ayanamsa,
     )
 
 
@@ -706,6 +773,7 @@ def find_all_sign_changes(
     start: datetime | float,
     end: datetime | float,
     max_results: int = 100,
+    ayanamsa: str | None = None,
 ) -> list[SignIngress]:
     """Find all sign changes for a celestial object in a date range.
 
@@ -714,6 +782,7 @@ def find_all_sign_changes(
         start: Start datetime (UTC) or Julian day
         end: End datetime (UTC) or Julian day
         max_results: Safety limit on number of results (default 100)
+        ayanamsa: Optional ayanamsa name for sidereal sign boundaries.
 
     Returns:
         List of SignIngress objects, chronologically ordered
@@ -749,6 +818,7 @@ def find_all_sign_changes(
             current_jd,
             direction="forward",
             max_days=end_jd - current_jd + 1,
+            ayanamsa=ayanamsa,
         )
 
         if ingress is None or ingress.julian_day > end_jd:

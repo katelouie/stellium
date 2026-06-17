@@ -383,6 +383,7 @@ def moon_sign_windows(
     signs: list[str],
     start: datetime | float,
     end: datetime | float,
+    ayanamsa: str | None = None,
 ) -> list[TimeWindow]:
     """Get windows when Moon is in specified signs.
 
@@ -390,6 +391,7 @@ def moon_sign_windows(
         signs: List of sign names (e.g., ["Taurus", "Cancer"])
         start: Start of search range
         end: End of search range
+        ayanamsa: Optional ayanamsa name for sidereal sign boundaries.
 
     Returns:
         List of TimeWindow objects
@@ -405,7 +407,9 @@ def moon_sign_windows(
     # Get all Moon sign changes in range (with buffer for edge cases)
     from datetime import timedelta
 
-    ingresses = find_all_sign_changes("Moon", start_dt - timedelta(days=3), end_dt)
+    ingresses = find_all_sign_changes(
+        "Moon", start_dt - timedelta(days=3), end_dt, ayanamsa=ayanamsa
+    )
 
     if not ingresses:
         return []
