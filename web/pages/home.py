@@ -4,11 +4,14 @@ Stellium Web - Home/Landing Page
 
 from components.header import create_header, create_nav
 from config import COLORS
+from i18n import wt, wt_list
 from nicegui import ui
 
 
 def create_home_page():
     """Create the home/landing page."""
+
+    _ = wt()
 
     create_header()
     create_nav()
@@ -26,17 +29,19 @@ def create_home_page():
             )
 
             # Headline
-            ui.label("Computational Astrology").classes(
+            ui.label(_("Computational Astrology")).classes(
                 "font-display text-4xl md:text-5xl lg:text-6xl tracking-wide mb-2"
             ).style(f"color: {COLORS['text']}")
-            ui.label("for the Modern Era").classes(
+            ui.label(_("for the Modern Era")).classes(
                 "font-display text-3xl md:text-4xl lg:text-5xl tracking-wide mb-8"
             ).style(f"color: {COLORS['secondary']}")
 
             # Subtitle
             ui.label(
-                "Professional-grade astrological calculations with NASA-level accuracy. "
-                "Beautiful visualizations. Completely free."
+                _(
+                    "Professional-grade astrological calculations with NASA-level accuracy. "
+                    "Beautiful visualizations. Completely free."
+                )
             ).classes("text-xl max-w-2xl mx-auto mb-10 leading-relaxed").style(
                 f"color: {COLORS['text_muted']}"
             )
@@ -44,13 +49,13 @@ def create_home_page():
             # CTA buttons
             with ui.row().classes("gap-4 justify-center"):
                 ui.button(
-                    "Create Your Chart", on_click=lambda: ui.navigate.to("/natal")
+                    _("Create Your Chart"), on_click=lambda: ui.navigate.to("/natal")
                 ).classes("px-8 py-4 text-base tracking-wide rounded").style(
                     f"background-color: {COLORS['primary']} !important; color: white !important;"
                 )
 
                 ui.button(
-                    "Explore Celebrity Charts",
+                    _("Explore Celebrity Charts"),
                     on_click=lambda: ui.navigate.to("/explore"),
                 ).classes("px-8 py-4 text-base tracking-wide rounded").props(
                     "outline"
@@ -71,7 +76,7 @@ def create_home_page():
                 .classes("mb-12 py-4 px-6 text-center rounded")
                 .style(f"background-color: {COLORS['primary']}; color: white;")
             ):
-                ui.label("☆  Features").classes(
+                ui.label(f"☆  {_('Features')}").classes(
                     "font-display text-base tracking-[0.15em]"
                 ).style("color: white; font-weight: 700;")
 
@@ -164,6 +169,7 @@ def create_home_page():
                     ),
                 ]
 
+                features = wt_list("features", features)
                 for star, title, desc in features:
                     with (
                         ui.element("div")
@@ -189,17 +195,19 @@ def create_home_page():
         .style(f"background-color: {COLORS['cream_dark']};")
     ):
         with ui.element("div").classes("w-full max-w-3xl mx-auto text-center"):
-            ui.label("Powered by the Stellium Python Library").classes(
+            ui.label(_("Powered by the Stellium Python Library")).classes(
                 "font-display text-xl mb-4"
             ).style(f"color: {COLORS['text']}")
 
             ui.label(
-                "Everything you see here is built on Stellium, a free and open-source "
-                "Python library for computational astrology. Use it in your own projects!"
+                _(
+                    "Everything you see here is built on Stellium, a free and open-source "
+                    "Python library for computational astrology. Use it in your own projects!"
+                )
             ).classes("text-base mb-6").style(f"color: {COLORS['text_muted']}")
 
             ui.link(
-                "View on GitHub →",
+                _("View on GitHub →"),
                 "https://github.com/katelouie/stellium",
                 new_tab=True,
             ).classes("text-base no-underline").style(f"color: {COLORS['gold']}")
@@ -213,6 +221,6 @@ def create_home_page():
         )
     ):
         with ui.element("div").classes("w-full max-w-5xl mx-auto text-center"):
-            ui.label("★  Generated with Stellium  ★").classes("text-sm").style(
+            ui.label(f"★  {_('Generated with Stellium')}  ★").classes("text-sm").style(
                 f"color: {COLORS['text_muted']}"
             )

@@ -10,6 +10,7 @@ A date input with:
 from datetime import datetime
 
 from config import COLORS
+from i18n import wt
 from nicegui import ui
 
 
@@ -23,12 +24,13 @@ def validate_date(date_str: str) -> tuple[bool, str]:
     Returns:
         Tuple of (is_valid, error_message)
     """
+    _ = wt()
     if not date_str:
         return True, ""  # Empty is valid (will be caught by form submission)
 
     # Check format
     if len(date_str) < 10:
-        return False, "Use format YYYY-MM-DD"
+        return False, _("Use format YYYY-MM-DD")
 
     # Try to parse
     try:
@@ -36,19 +38,19 @@ def validate_date(date_str: str) -> tuple[bool, str]:
 
         # Check reasonable year range for astrology (1 CE to 2200)
         if parsed.year < 1:
-            return False, "Year must be 1 or later"
+            return False, _("Year must be 1 or later")
         if parsed.year > 2200:
-            return False, "Year must be before 2200"
+            return False, _("Year must be before 2200")
 
         return True, ""
     except ValueError as e:
         error_msg = str(e)
         if "day is out of range" in error_msg:
-            return False, "Invalid day for this month"
+            return False, _("Invalid day for this month")
         elif "month must be in" in error_msg:
-            return False, "Month must be 1-12"
+            return False, _("Month must be 1-12")
         else:
-            return False, "Use format YYYY-MM-DD"
+            return False, _("Use format YYYY-MM-DD")
 
 
 def create_date_input(

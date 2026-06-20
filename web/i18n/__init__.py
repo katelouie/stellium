@@ -22,6 +22,34 @@ from nicegui import app
 
 _LOCALES_DIR = Path(__file__).parent
 _cache: dict[str, dict[str, str]] = {}
+_raw_cache: dict[str, dict] = {}
+
+
+def _load_raw(locale: str) -> dict:
+    """Load the raw (unflattened) locale JSON, preserving nested lists/dicts."""
+    if locale in _raw_cache:
+        return _raw_cache[locale]
+    locale_file = _LOCALES_DIR / f"{locale}.json"
+    data: dict = {}
+    if locale_file.exists():
+        try:
+            data = json.loads(locale_file.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            data = {}
+    _raw_cache[locale] = data
+    return data
+
+
+def _find_list(data: dict, key: str) -> list | None:
+    """Recursively find the first list stored under ``key`` in nested dicts."""
+    for k, v in data.items():
+        if k == key and isinstance(v, list):
+            return v
+        if isinstance(v, dict):
+            found = _find_list(v, key)
+            if found is not None:
+                return found
+    return None
 
 
 def _load_locale(locale: str) -> dict[str, str]:
@@ -94,6 +122,26 @@ def wt() -> Callable[[str], str]:
 
     strings = _get_strings(locale)
     return lambda key: strings.get(key, key)
+
+
+def wt_list(key: str, fallback: list) -> list:
+    """Return a translated nested list (e.g. the home ``features`` array).
+
+    Looks up ``key`` in the current user's raw locale data and returns the
+    nested list found there. Falls back to ``fallback`` (the English list)
+    when the locale is English, the key is missing, or the shape differs.
+
+    Usage:
+        features = wt_list("features", ENGLISH_FEATURES)
+    """
+    locale = get_user_locale()
+    if locale == "en":
+        return fallback
+
+    translated = _find_list(_load_raw(locale), key)
+    if translated is None or len(translated) != len(fallback):
+        return fallback
+    return translated
 
 
 def get_available_locales() -> dict[str, str]:

@@ -6,6 +6,7 @@ Designed to sit below the chart options in the left column.
 """
 
 from config import ASPECT_MODES, COLORS
+from i18n import wt
 from nicegui import ui
 from state import PDFReportState
 
@@ -18,6 +19,7 @@ def create_report_options(report_state: PDFReportState, on_change=None):
         report_state: PDFReportState instance to bind to
         on_change: Optional callback when any option changes
     """
+    _ = wt()
 
     def update_field(field: str, value):
         setattr(report_state, field, value)
@@ -27,25 +29,25 @@ def create_report_options(report_state: PDFReportState, on_change=None):
     with ui.element("div").classes("w-full"):
         # ===== CORE SECTIONS =====
         with (
-            ui.expansion("Report Sections", icon="article", value=True)
+            ui.expansion(_("Report Sections"), icon="article", value=True)
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-2 p-4"):
                 ui.checkbox(
-                    "Chart Overview",
+                    _("Chart Overview"),
                     value=report_state.include_chart_overview,
                     on_change=lambda e: update_field("include_chart_overview", e.value),
                 ).props("dense")
 
                 ui.checkbox(
-                    "Moon Phase",
+                    _("Moon Phase"),
                     value=report_state.include_moon_phase,
                     on_change=lambda e: update_field("include_moon_phase", e.value),
                 ).props("dense")
 
                 ui.checkbox(
-                    "Planet Positions",
+                    _("Planet Positions"),
                     value=report_state.include_planet_positions,
                     on_change=lambda e: update_field(
                         "include_planet_positions", e.value
@@ -57,14 +59,14 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ):
                     with ui.row().classes("ml-6 gap-4"):
                         ui.checkbox(
-                            "Speed (℞)",
+                            _("Speed (℞)"),
                             value=report_state.positions_include_speed,
                             on_change=lambda e: update_field(
                                 "positions_include_speed", e.value
                             ),
                         ).props("dense")
                         ui.checkbox(
-                            "Houses",
+                            _("Houses"),
                             value=report_state.positions_include_house,
                             on_change=lambda e: update_field(
                                 "positions_include_house", e.value
@@ -72,32 +74,32 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                         ).props("dense")
 
                 ui.checkbox(
-                    "House Cusps",
+                    _("House Cusps"),
                     value=report_state.include_house_cusps,
                     on_change=lambda e: update_field("include_house_cusps", e.value),
                 ).props("dense")
 
                 ui.checkbox(
-                    "Declinations",
+                    _("Declinations"),
                     value=report_state.include_declinations,
                     on_change=lambda e: update_field("include_declinations", e.value),
                 ).props("dense")
 
                 ui.checkbox(
-                    "Include Chart Image",
+                    _("Include Chart Image"),
                     value=report_state.include_chart_image,
                     on_change=lambda e: update_field("include_chart_image", e.value),
                 ).props("dense")
 
         # ===== ASPECTS SECTION =====
         with (
-            ui.expansion("Aspects in Report", icon="hub")
+            ui.expansion(_("Aspects in Report"), icon="hub")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-2 p-4"):
                 ui.checkbox(
-                    "Aspects Table",
+                    _("Aspects Table"),
                     value=report_state.include_aspects,
                     on_change=lambda e: update_field("include_aspects", e.value),
                 ).props("dense")
@@ -112,46 +114,46 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                             on_change=lambda e: update_field("aspects_mode", e.value),
                         ).classes("w-36")
                         ui.checkbox(
-                            "Orbs",
+                            _("Orbs"),
                             value=report_state.aspects_show_orbs,
                             on_change=lambda e: update_field(
                                 "aspects_show_orbs", e.value
                             ),
                         ).props("dense")
 
-                    ui.label("Sort by:").classes("text-xs ml-6 mt-1").style(
+                    ui.label(_("Sort by:")).classes("text-xs ml-6 mt-1").style(
                         f"color: {COLORS['text_muted']}"
                     )
                     ui.select(
                         {
-                            "orb": "Tightest First",
-                            "planet": "By Planet",
-                            "aspect_type": "By Aspect Type",
+                            "orb": _("Tightest First"),
+                            "planet": _("By Planet"),
+                            "aspect_type": _("By Aspect Type"),
                         },
                         value=report_state.aspects_sort_by,
                         on_change=lambda e: update_field("aspects_sort_by", e.value),
                     ).classes("w-36 ml-6")
 
                 ui.checkbox(
-                    "Aspect Patterns",
+                    _("Aspect Patterns"),
                     value=report_state.include_aspect_patterns,
                     on_change=lambda e: update_field(
                         "include_aspect_patterns", e.value
                     ),
                 ).props("dense")
-                ui.label("Grand Trines, T-Squares, Yods, etc.").classes(
+                ui.label(_("Grand Trines, T-Squares, Yods, etc.")).classes(
                     "text-xs ml-6 -mt-1"
                 ).style(f"color: {COLORS['accent']}")
 
         # ===== DIGNITIES SECTION =====
         with (
-            ui.expansion("Dignities in Report", icon="star")
+            ui.expansion(_("Dignities in Report"), icon="star")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-2 p-4"):
                 ui.checkbox(
-                    "Essential Dignities",
+                    _("Essential Dignities"),
                     value=report_state.include_dignities,
                     on_change=lambda e: update_field("include_dignities", e.value),
                 ).props("dense")
@@ -161,16 +163,16 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ):
                     ui.select(
                         {
-                            "both": "Traditional & Modern",
-                            "traditional": "Traditional Only",
-                            "modern": "Modern Only",
+                            "both": _("Traditional & Modern"),
+                            "traditional": _("Traditional Only"),
+                            "modern": _("Modern Only"),
                         },
                         value=report_state.dignities_system,
                         on_change=lambda e: update_field("dignities_system", e.value),
                     ).classes("w-44 ml-6")
 
                     ui.checkbox(
-                        "Show Details",
+                        _("Show Details"),
                         value=report_state.dignities_show_details,
                         on_change=lambda e: update_field(
                             "dignities_show_details", e.value
@@ -179,13 +181,13 @@ def create_report_options(report_state: PDFReportState, on_change=None):
 
         # ===== MIDPOINTS SECTION =====
         with (
-            ui.expansion("Midpoints in Report", icon="commit")
+            ui.expansion(_("Midpoints in Report"), icon="commit")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-2 p-4"):
                 ui.checkbox(
-                    "Midpoints Table",
+                    _("Midpoints Table"),
                     value=report_state.include_midpoints,
                     on_change=lambda e: update_field("include_midpoints", e.value),
                 ).props("dense")
@@ -195,15 +197,15 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ):
                     ui.select(
                         {
-                            "all": "All Midpoints",
-                            "core": "Core (Sun/Moon/ASC/MC)",
+                            "all": _("All Midpoints"),
+                            "core": _("Core (Sun/Moon/ASC/MC)"),
                         },
                         value=report_state.midpoints_mode,
                         on_change=lambda e: update_field("midpoints_mode", e.value),
                     ).classes("w-44 ml-6")
 
                 ui.checkbox(
-                    "Midpoint Aspects",
+                    _("Midpoint Aspects"),
                     value=report_state.include_midpoint_aspects,
                     on_change=lambda e: update_field(
                         "include_midpoint_aspects", e.value
@@ -216,9 +218,9 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                     with ui.row().classes("ml-6 gap-2 items-center"):
                         ui.select(
                             {
-                                "conjunction": "Conjunctions",
-                                "hard": "Hard Aspects",
-                                "all": "All Aspects",
+                                "conjunction": _("Conjunctions"),
+                                "hard": _("Hard Aspects"),
+                                "all": _("All Aspects"),
                             },
                             value=report_state.midpoint_aspects_mode,
                             on_change=lambda e: update_field(
@@ -238,13 +240,13 @@ def create_report_options(report_state: PDFReportState, on_change=None):
 
         # ===== FIXED STARS SECTION =====
         with (
-            ui.expansion("Fixed Stars in Report", icon="auto_awesome")
+            ui.expansion(_("Fixed Stars in Report"), icon="auto_awesome")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-2 p-4"):
                 ui.checkbox(
-                    "Fixed Stars Table",
+                    _("Fixed Stars Table"),
                     value=report_state.include_fixed_stars,
                     on_change=lambda e: update_field("include_fixed_stars", e.value),
                 ).props("dense")
@@ -254,16 +256,16 @@ def create_report_options(report_state: PDFReportState, on_change=None):
                 ):
                     ui.select(
                         {
-                            "royal": "Royal Stars (4)",
-                            "major": "Major Stars (15)",
-                            "all": "All Stars (26)",
+                            "royal": _("Royal Stars (4)"),
+                            "major": _("Major Stars (15)"),
+                            "all": _("All Stars (26)"),
                         },
                         value=report_state.fixed_stars_tier,
                         on_change=lambda e: update_field("fixed_stars_tier", e.value),
                     ).classes("w-36 ml-6")
 
                     ui.checkbox(
-                        "Include Keywords",
+                        _("Include Keywords"),
                         value=report_state.fixed_stars_include_keywords,
                         on_change=lambda e: update_field(
                             "fixed_stars_include_keywords", e.value
