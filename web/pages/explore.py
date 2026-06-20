@@ -7,6 +7,7 @@ Browse and view charts for notable births and historical events.
 from components.chart_display import create_chart_actions, create_chart_display
 from components.header import create_header, create_nav
 from config import COLORS
+from i18n import wt
 from nicegui import ui
 
 # Stellium imports
@@ -16,6 +17,8 @@ from stellium.data import get_notable_registry
 
 def create_explore_page():
     """Create the explore/notable births page."""
+
+    _ = wt()
 
     # Load registry
     registry = get_notable_registry()
@@ -76,12 +79,12 @@ def create_explore_page():
         filtered = get_filtered_notables()
 
         if not filtered:
-            ui.label("No results found").classes("text-center py-8").style(
+            ui.label(_("No results found")).classes("text-center py-8").style(
                 f"color: {COLORS['text_muted']}"
             )
             return
 
-        ui.label(f"{len(filtered)} results").classes("text-xs mb-2").style(
+        ui.label(f"{len(filtered)} {_('results')}").classes("text-xs mb-2").style(
             f"color: {COLORS['text_muted']}"
         )
 
@@ -129,7 +132,7 @@ def create_explore_page():
         """Create the notable info display."""
         notable = state["selected_notable"]
         if not notable:
-            ui.label("Select a notable to view their chart").classes(
+            ui.label(_("Select a notable to view their chart")).classes(
                 "text-center py-4"
             ).style(f"color: {COLORS['text_muted']}")
             return
@@ -174,7 +177,7 @@ def create_explore_page():
                 "DD": COLORS["gold"],
             }
             with ui.row().classes("items-center gap-2 mt-2"):
-                ui.label("Data quality:").classes("text-xs").style(
+                ui.label(_("Data quality:")).classes("text-xs").style(
                     f"color: {COLORS['text_muted']}"
                 )
                 ui.label(notable.data_quality).classes("text-xs font-bold").style(
@@ -200,7 +203,7 @@ def create_explore_page():
             refresh_chart_display()
 
         except Exception as e:
-            ui.notify(f"Error generating chart: {str(e)}", type="negative")
+            ui.notify(f"{_('Error generating chart:')} {str(e)}", type="negative")
             import traceback
 
             traceback.print_exc()
@@ -217,8 +220,8 @@ def create_explore_page():
             with refs["actions_container"]:
                 create_chart_actions(
                     on_download_svg=download_svg,
-                    on_download_pdf=lambda: ui.notify("PDF coming soon!"),
-                    on_view_code=lambda: ui.notify("Code preview coming soon!"),
+                    on_download_pdf=lambda: ui.notify(_("PDF coming soon!")),
+                    on_view_code=lambda: ui.notify(_("Code preview coming soon!")),
                     enabled=state["chart_svg"] is not None,
                 )
 
@@ -255,10 +258,10 @@ def create_explore_page():
                 ui.label("★  ☆  ★").classes("text-lg mb-4").style(
                     f"color: {COLORS['gold']}"
                 )
-                ui.label("Explore Notable Charts").classes(
+                ui.label(_("Explore Notable Charts")).classes(
                     "font-display text-3xl md:text-4xl tracking-wide"
                 ).style(f"color: {COLORS['text']}")
-                ui.label(f"{len(all_notables)} births and events").classes(
+                ui.label(f"{len(all_notables)} {_('births and events')}").classes(
                     "text-base mt-2"
                 ).style(f"color: {COLORS['text_muted']}")
 
@@ -272,18 +275,18 @@ def create_explore_page():
                         .classes("w-full p-4 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  SEARCH").classes(
+                        ui.label(f"☆  {_('SEARCH')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
                         # Search input
                         ui.input(
-                            placeholder="Search by name...",
+                            placeholder=_("Search by name..."),
                             on_change=on_search_change,
                         ).classes("w-full mb-3").props("outlined dense")
 
                         # Category filter
-                        category_options = {"all": "All Categories"}
+                        category_options = {"all": _("All Categories")}
                         for cat in categories:
                             category_options[cat] = cat.title()
 
@@ -299,7 +302,7 @@ def create_explore_page():
                         .classes("w-full p-4 rounded-lg overflow-hidden")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  NOTABLES").classes(
+                        ui.label(f"☆  {_('NOTABLES')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 

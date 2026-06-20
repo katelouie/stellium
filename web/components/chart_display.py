@@ -7,6 +7,7 @@ Displays the generated SVG chart and provides download options.
 import re
 
 from config import COLORS
+from i18n import wt
 from nicegui import ui
 
 
@@ -55,6 +56,7 @@ def create_chart_display(svg_content: str | None = None, is_loading: bool = Fals
         svg_content: The SVG string to display, or None for placeholder
         is_loading: Whether a chart is currently being generated
     """
+    _ = wt()
 
     if is_loading:
         # Loading state - square placeholder with spinner
@@ -107,12 +109,12 @@ def create_chart_display(svg_content: str | None = None, is_loading: bool = Fals
                 ui.label("★").classes("text-6xl").style(
                     f"color: {COLORS['gold']}; opacity: 0.3;"
                 )
-                ui.label("Your chart will appear here").classes("text-lg").style(
+                ui.label(_("Your chart will appear here")).classes("text-lg").style(
                     f"color: {COLORS['text_muted']}"
                 )
-                ui.label("Fill in your birth details and click Create Chart").classes(
-                    "text-sm"
-                ).style(f"color: {COLORS['accent']}")
+                ui.label(
+                    _("Fill in your birth details and click Create Chart")
+                ).classes("text-sm").style(f"color: {COLORS['accent']}")
 
 
 def create_chart_actions(
@@ -127,21 +129,22 @@ def create_chart_actions(
         on_view_code: Callback for viewing Python code
         enabled: Whether buttons should be enabled
     """
+    _ = wt()
 
     with ui.row().classes("gap-4 justify-center mt-6"):
-        ui.button("Download SVG", icon="download", on_click=on_download_svg).props(
+        ui.button(_("Download SVG"), icon="download", on_click=on_download_svg).props(
             "outline"
         ).classes("text-sm").style(
             f"color: {COLORS['primary']} !important; border-color: {COLORS['primary']} !important;"
         ).set_enabled(enabled)
 
         ui.button(
-            "Download PDF", icon="picture_as_pdf", on_click=on_download_pdf
+            _("Download PDF"), icon="picture_as_pdf", on_click=on_download_pdf
         ).props("outline").classes("text-sm").style(
             f"color: {COLORS['primary']} !important; border-color: {COLORS['primary']} !important;"
         ).set_enabled(enabled)
 
-        ui.button("View as Python", icon="code", on_click=on_view_code).props(
+        ui.button(_("View as Python"), icon="code", on_click=on_view_code).props(
             "outline"
         ).classes("text-sm").style(
             f"color: {COLORS['gold']} !important; border-color: {COLORS['gold']} !important;"

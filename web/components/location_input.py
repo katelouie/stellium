@@ -13,6 +13,7 @@ from collections.abc import Callable
 
 from config import COLORS
 from geopy.geocoders import Nominatim
+from i18n import wt
 from nicegui import ui
 from timezonefinder import TimezoneFinder
 
@@ -33,28 +34,30 @@ def _get_timezone_finder():
 
 def validate_latitude(value: str) -> tuple[bool, str]:
     """Validate latitude value (-90 to 90)."""
+    _ = wt()
     if not value:
         return True, ""
     try:
         lat = float(value)
         if lat < -90 or lat > 90:
-            return False, "Must be -90 to 90"
+            return False, _("Must be -90 to 90")
         return True, ""
     except ValueError:
-        return False, "Invalid number"
+        return False, _("Invalid number")
 
 
 def validate_longitude(value: str) -> tuple[bool, str]:
     """Validate longitude value (-180 to 180)."""
+    _ = wt()
     if not value:
         return True, ""
     try:
         lon = float(value)
         if lon < -180 or lon > 180:
-            return False, "Must be -180 to 180"
+            return False, _("Must be -180 to 180")
         return True, ""
     except ValueError:
-        return False, "Invalid number"
+        return False, _("Invalid number")
 
 
 async def search_locations(query: str, limit: int = 5) -> list[dict]:
@@ -314,6 +317,7 @@ def create_location_input_with_coords(
     Returns:
         Dict with methods to access/update the input
     """
+    _ = wt()
 
     # State
     state = {
@@ -446,7 +450,7 @@ def create_location_input_with_coords(
             with ui.column().classes("gap-2 w-full"):
                 # Latitude
                 with ui.row().classes("items-center gap-2 w-full"):
-                    ui.label("Lat:").classes("text-sm w-8").style(
+                    ui.label(_("Lat:")).classes("text-sm w-8").style(
                         f"color: {COLORS['text_muted']}"
                     )
                     refs["lat_input"] = (
@@ -470,7 +474,7 @@ def create_location_input_with_coords(
 
                 # Longitude
                 with ui.row().classes("items-center gap-2 w-full"):
-                    ui.label("Lon:").classes("text-sm w-8").style(
+                    ui.label(_("Lon:")).classes("text-sm w-8").style(
                         f"color: {COLORS['text_muted']}"
                     )
                     refs["lon_input"] = (
@@ -493,7 +497,7 @@ def create_location_input_with_coords(
                 refs["lon_error"].set_visibility(False)
 
                 # Hint about timezone
-                ui.label("Timezone will be auto-detected from coordinates").classes(
+                ui.label(_("Timezone will be auto-detected from coordinates")).classes(
                     "text-xs mt-1"
                 ).style(f"color: {COLORS['text_muted']}")
 
@@ -502,7 +506,7 @@ def create_location_input_with_coords(
         # Mode toggle
         with ui.row().classes("items-center gap-2 mb-1"):
             ui.toggle(
-                {"place": "Place", "coords": "Coords"},
+                {"place": _("Place"), "coords": _("Coords")},
                 value=state["mode"],
                 on_change=on_mode_change,
             ).props("dense no-caps size=sm")

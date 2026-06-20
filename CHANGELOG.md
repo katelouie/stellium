@@ -11,10 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Internationalization (i18n) system** — New `with_locale("zh_CN")` on `ReportBuilder` translates section names, column headers, key-value labels, and astrology terms (planet names, sign names, aspect names, moon phases, house systems) in all output formats except prose. Built on a JSON locale file system (`i18n/locales/{locale}/strings.json`) with lazy loading, caching, and graceful fallback to English for untranslated strings. Simplified Chinese (zh_CN) ships with 231 translated strings. Public API: `from stellium.i18n import t, set_default_locale, get_available_locales`. Consolidated Zhao Xin's three locale files into a single `strings.json` and moved web UI translations to `web/i18n/`.
 - **Web app language selector** — Language dropdown in the header allows switching between English and Simplified Chinese (with full page reload). Navigation bar translates on language change. Uses NiceGUI's `app.storage.user` for per-session locale persistence. Web i18n loader (`web/i18n/`) is independent from the library's `stellium.i18n` system. Additional pages can be localized incrementally by wrapping strings with `wt()`.
+- **Full web app localization** — Every web page (home, birth chart, relationships, timing, planner, explore) and the shared components (chart options, report options, birth-data/location/date inputs, chart display) now translate through the web i18n system. Simplified Chinese ships with 234 UI strings. The home page feature cards translate by index via a new `wt_list()` helper. The web i18n system was standardized on an English-source-string-as-key scheme (the English text is the lookup key) with graceful fallback to English for any untranslated string.
+- **Translation coverage checker** — New `web/i18n/check_coverage.py` extracts every `_("…")` translator call from `web/` via the AST and fails if any string lacks a translation in a locale file (and lists orphaned keys). Runs as its own standalone `i18n-coverage` CI job (pure stdlib, no project install) so missing translations break the build with their own clearly-named status check instead of silently falling back to English.
+- **Selected language propagates into generated reports** — PDF report generation on the natal, relationships, and timing pages now applies the user's chosen language to the library report via `ReportBuilder.with_locale()`, using a new `report_locale()` helper that maps the web locale to an available `stellium.i18n` locale (falling back to English when unavailable). The "View as Python" code preview includes the matching `.with_locale("…")` call so the generated snippet reproduces the localized report.
 
 ### Changed
 
 ### Fixed
+
+- **Runnable "View as Python" snippets** — The relationships and timing code-preview generators emitted an unparenthesized `draw()` chain, so the trailing `.with_theme()`/`.save()` lines raised `IndentationError` when run. The `draw(…) … .save()` chains are now wrapped in parentheses (matching the natal generator), making every generated snippet valid, runnable Python.
 
 ## [0.19.0] - 2026-06-19
 

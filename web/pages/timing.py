@@ -21,6 +21,7 @@ from config import (
     TIMING_CHART_TYPES,
     ZODIAC_PALETTES,
 )
+from i18n import report_locale, wt
 from nicegui import ui
 from state import ChartState, PDFReportState, TimingState
 
@@ -93,6 +94,7 @@ def create_natal_input_form(state: ChartState, on_change=None):
 
 def create_timing_options(state: TimingState, on_change=None):
     """Create timing-specific options based on chart type."""
+    _ = wt()
     from components.location_input import create_location_input
 
     def update_field(field: str, value):
@@ -108,16 +110,16 @@ def create_timing_options(state: TimingState, on_change=None):
         # Timing date/year input (context-sensitive label)
         def get_timing_label():
             if state.chart_type == "transits":
-                return "Transit Date:"
+                return _("Transit Date:")
             elif state.chart_type == "progressions":
-                return "Progress To:"
+                return _("Progress To:")
             elif state.chart_type == "solar_return":
-                return "Return Year:"
+                return _("Return Year:")
             elif state.chart_type == "lunar_return":
-                return "Near Date:"
+                return _("Near Date:")
             elif state.chart_type == "planetary_return":
-                return "Near Date:"
-            return "Date:"
+                return _("Near Date:")
+            return _("Date:")
 
         def get_timing_placeholder():
             if state.chart_type == "solar_return":
@@ -137,7 +139,7 @@ def create_timing_options(state: TimingState, on_change=None):
         # Planetary return: planet selector
         if state.chart_type == "planetary_return":
             with ui.column().classes("gap-3 mb-4"):
-                ui.label("Return Planet:").classes("text-sm").style(
+                ui.label(_("Return Planet:")).classes("text-sm").style(
                     f"color: {COLORS['text_muted']}"
                 )
                 ui.select(
@@ -149,7 +151,7 @@ def create_timing_options(state: TimingState, on_change=None):
         # Relocation option (for returns)
         if state.chart_type in ("solar_return", "lunar_return", "planetary_return"):
             ui.checkbox(
-                "Relocate return chart",
+                _("Relocate return chart"),
                 value=state.relocate,
                 on_change=lambda e: update_field("relocate", e.value),
             ).props("dense").classes("mb-2")
@@ -158,19 +160,20 @@ def create_timing_options(state: TimingState, on_change=None):
                 state, "relocate", backward=lambda x: x
             ):
                 with ui.row().classes("items-center gap-3 w-full"):
-                    ui.label("Location:").classes("w-20 flex-shrink-0 text-sm").style(
-                        f"color: {COLORS['text']}"
-                    )
+                    ui.label(_("Location:")).classes(
+                        "w-20 flex-shrink-0 text-sm"
+                    ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
                         create_location_input(
                             value=state.relocation_location,
-                            placeholder="City, Country",
+                            placeholder=_("City, Country"),
                             on_change=on_relocation_change,
                         )
 
 
 def create_timing_chart_options(state: TimingState, on_change=None):
     """Create chart options for timing charts."""
+    _ = wt()
 
     def update_field(field: str, value):
         setattr(state, field, value)
@@ -180,7 +183,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
     with ui.element("div").classes("w-full"):
         # ===== HOUSE SYSTEM =====
         with (
-            ui.expansion("House System", icon="home")
+            ui.expansion(_("House System"), icon="home")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
@@ -193,13 +196,13 @@ def create_timing_chart_options(state: TimingState, on_change=None):
 
         # ===== ASPECTS =====
         with (
-            ui.expansion("Aspects", icon="hub")
+            ui.expansion(_("Aspects"), icon="hub")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-3 p-4"):
                 ui.checkbox(
-                    "Show Aspects",
+                    _("Show Aspects"),
                     value=state.include_aspects,
                     on_change=lambda e: update_field("include_aspects", e.value),
                 ).props("dense")
@@ -207,7 +210,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                 with ui.element("div").bind_visibility_from(
                     state, "include_aspects", backward=lambda x: x
                 ):
-                    ui.label("Aspect Set:").classes("text-sm mt-2").style(
+                    ui.label(_("Aspect Set:")).classes("text-sm mt-2").style(
                         f"color: {COLORS['text_muted']}"
                     )
                     ui.select(
@@ -218,12 +221,12 @@ def create_timing_chart_options(state: TimingState, on_change=None):
 
         # ===== THEME & PALETTES =====
         with (
-            ui.expansion("Theme & Palettes", icon="palette")
+            ui.expansion(_("Theme & Palettes"), icon="palette")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-3 p-4"):
-                ui.label("Chart Theme").classes("text-sm").style(
+                ui.label(_("Chart Theme")).classes("text-sm").style(
                     f"color: {COLORS['text_muted']}"
                 )
                 ui.select(
@@ -232,12 +235,12 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                     on_change=lambda e: update_field("theme", e.value),
                 ).classes("w-full")
 
-                ui.label("Color Palettes").classes("text-sm mt-3").style(
+                ui.label(_("Color Palettes")).classes("text-sm mt-3").style(
                     f"color: {COLORS['text_muted']}"
                 )
                 with ui.element("div").classes("grid grid-cols-2 gap-x-4 gap-y-2"):
                     with ui.column().classes("gap-1"):
-                        ui.label("Zodiac Ring").classes("text-xs").style(
+                        ui.label(_("Zodiac Ring")).classes("text-xs").style(
                             f"color: {COLORS['accent']}"
                         )
                         ui.select(
@@ -247,7 +250,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                         ).classes("w-full")
 
                     with ui.column().classes("gap-1"):
-                        ui.label("Aspect Lines").classes("text-xs").style(
+                        ui.label(_("Aspect Lines")).classes("text-xs").style(
                             f"color: {COLORS['accent']}"
                         )
                         ui.select(
@@ -257,7 +260,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                         ).classes("w-full")
 
                     with ui.column().classes("gap-1"):
-                        ui.label("Planet Glyphs").classes("text-xs").style(
+                        ui.label(_("Planet Glyphs")).classes("text-xs").style(
                             f"color: {COLORS['accent']}"
                         )
                         ui.select(
@@ -269,11 +272,11 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                         ).classes("w-full")
 
                     with ui.column().classes("gap-1"):
-                        ui.label("Sign Colors").classes("text-xs").style(
+                        ui.label(_("Sign Colors")).classes("text-xs").style(
                             f"color: {COLORS['accent']}"
                         )
                         ui.checkbox(
-                            "Color sign glyphs",
+                            _("Color sign glyphs"),
                             value=state.color_sign_info,
                             on_change=lambda e: update_field(
                                 "color_sign_info", e.value
@@ -282,19 +285,19 @@ def create_timing_chart_options(state: TimingState, on_change=None):
 
         # ===== DISPLAY OPTIONS =====
         with (
-            ui.expansion("Display Options", icon="visibility")
+            ui.expansion(_("Display Options"), icon="visibility")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-3 p-4"):
                 ui.checkbox(
-                    "Show Header Band",
+                    _("Show Header Band"),
                     value=state.show_header,
                     on_change=lambda e: update_field("show_header", e.value),
                 ).props("dense")
 
                 ui.checkbox(
-                    "Show Moon Phase",
+                    _("Show Moon Phase"),
                     value=state.show_moon_phase,
                     on_change=lambda e: update_field("show_moon_phase", e.value),
                 ).props("dense")
@@ -311,7 +314,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                             ),
                         ).classes("w-32")
                         ui.checkbox(
-                            "Label",
+                            _("Label"),
                             value=state.moon_phase_show_label,
                             on_change=lambda e: update_field(
                                 "moon_phase_show_label", e.value
@@ -319,29 +322,29 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                         ).props("dense")
 
                 # Info Corners
-                ui.label("Info Corners").classes("text-sm mt-3").style(
+                ui.label(_("Info Corners")).classes("text-sm mt-3").style(
                     f"color: {COLORS['text_muted']}"
                 )
                 ui.checkbox(
-                    "Chart Info",
+                    _("Chart Info"),
                     value=state.show_chart_info,
                     on_change=lambda e: update_field("show_chart_info", e.value),
                 ).props("dense")
                 ui.checkbox(
-                    "Aspect Counts",
+                    _("Aspect Counts"),
                     value=state.show_aspect_counts,
                     on_change=lambda e: update_field("show_aspect_counts", e.value),
                 ).props("dense")
 
         # ===== TABLES =====
         with (
-            ui.expansion("Tables (Extended View)", icon="table_chart")
+            ui.expansion(_("Tables (Extended View)"), icon="table_chart")
             .classes("w-full")
             .props('header-class="text-sm font-medium"')
         ):
             with ui.column().classes("gap-3 p-4"):
                 ui.checkbox(
-                    "Show Extended Tables",
+                    _("Show Extended Tables"),
                     value=state.show_tables,
                     on_change=lambda e: update_field("show_tables", e.value),
                 ).props("dense")
@@ -349,7 +352,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
                 with ui.element("div").bind_visibility_from(
                     state, "show_tables", backward=lambda x: x
                 ):
-                    ui.label("Table Position:").classes("text-sm mt-2").style(
+                    ui.label(_("Table Position:")).classes("text-sm mt-2").style(
                         f"color: {COLORS['text_muted']}"
                     )
                     ui.select(
@@ -361,6 +364,7 @@ def create_timing_chart_options(state: TimingState, on_change=None):
 
 def create_timing_page():
     """Create the timing/forecasts page."""
+    _ = wt()
 
     # Page state
     state = TimingState()
@@ -382,14 +386,14 @@ def create_timing_page():
         """Build chart from current state."""
         natal = state.natal
         if not natal.is_valid():
-            ui.notify("Please fill in natal birth details", type="warning")
+            ui.notify(_("Please fill in natal birth details"), type="warning")
             return
 
         if not state.timing_date and state.chart_type not in (
             "lunar_return",
             "planetary_return",
         ):
-            ui.notify("Please enter a date or year", type="warning")
+            ui.notify(_("Please enter a date or year"), type="warning")
             return
 
         try:
@@ -559,7 +563,9 @@ def create_timing_page():
                 drawer = return_chart.draw()
 
             else:
-                ui.notify(f"Unknown chart type: {state.chart_type}", type="negative")
+                ui.notify(
+                    f"{_('Unknown chart type:')} {state.chart_type}", type="negative"
+                )
                 return
 
             # Apply visualization options
@@ -601,11 +607,12 @@ def create_timing_page():
                 "planetary_return": f"{state.return_planet} Return",
             }
             ui.notify(
-                f"{type_names[state.chart_type]} chart generated!", type="positive"
+                f"{type_names[state.chart_type]} {_('chart generated!')}",
+                type="positive",
             )
 
         except Exception as e:
-            ui.notify(f"Error: {str(e)}", type="negative")
+            ui.notify(f"{_('Error:')} {str(e)}", type="negative")
             import traceback
 
             traceback.print_exc()
@@ -646,7 +653,7 @@ def create_timing_page():
     def download_pdf():
         """Generate and download the PDF report."""
         if not calculated_chart["ref"]:
-            ui.notify("Please generate a chart first", type="warning")
+            ui.notify(_("Please generate a chart first"), type="warning")
             return
 
         try:
@@ -654,7 +661,7 @@ def create_timing_page():
             rs = report_state
 
             # Build report
-            builder = ReportBuilder().from_chart(chart)
+            builder = ReportBuilder().from_chart(chart).with_locale(report_locale())
 
             if rs.include_chart_overview:
                 builder = builder.with_chart_overview()
@@ -716,7 +723,7 @@ def create_timing_page():
                     pdf_bytes = f.read()
 
                 ui.download(pdf_bytes, filename, "application/pdf")
-                ui.notify("PDF generated!", type="positive")
+                ui.notify(_("PDF generated!"), type="positive")
                 os.unlink(pdf_path)
 
             finally:
@@ -724,7 +731,7 @@ def create_timing_page():
                     os.unlink(chart_svg_path)
 
         except Exception as e:
-            ui.notify(f"Error generating PDF: {str(e)}", type="negative")
+            ui.notify(f"{_('Error generating PDF:')} {str(e)}", type="negative")
             import traceback
 
             traceback.print_exc()
@@ -749,10 +756,10 @@ def create_timing_page():
                 ui.label("★  ☆  ★").classes("text-lg mb-4").style(
                     f"color: {COLORS['gold']}"
                 )
-                ui.label("Timing & Forecasts").classes(
+                ui.label(_("Timing & Forecasts")).classes(
                     "font-display text-3xl md:text-4xl tracking-wide"
                 ).style(f"color: {COLORS['text']}")
-                ui.label("Transits, Progressions & Returns").classes(
+                ui.label(_("Transits, Progressions & Returns")).classes(
                     "text-base mt-2"
                 ).style(f"color: {COLORS['text_muted']}")
 
@@ -766,7 +773,7 @@ def create_timing_page():
                         .classes("w-full p-4 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  CHART TYPE").classes(
+                        ui.label(f"☆  {_('CHART TYPE')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
@@ -799,7 +806,7 @@ def create_timing_page():
                         .classes("w-full p-5 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  TIMING OPTIONS").classes(
+                        ui.label(f"☆  {_('TIMING OPTIONS')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
@@ -810,7 +817,7 @@ def create_timing_page():
                             create_timing_options(state, on_change=None)
 
                     # Create chart button
-                    ui.button("CREATE CHART", on_click=build_chart).classes(
+                    ui.button(_("CREATE CHART"), on_click=build_chart).classes(
                         "w-full py-4 text-sm tracking-[0.15em] rounded"
                     ).style(
                         f"background-color: {COLORS['primary']} !important; color: white !important;"
@@ -822,7 +829,7 @@ def create_timing_page():
                         .classes("w-full p-4 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  CHART OPTIONS").classes(
+                        ui.label(f"☆  {_('CHART OPTIONS')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
@@ -834,7 +841,7 @@ def create_timing_page():
                         .classes("w-full p-4 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  REPORT OPTIONS").classes(
+                        ui.label(f"☆  {_('REPORT OPTIONS')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 

@@ -11,6 +11,7 @@ from components.code_preview import create_natal_code_preview_dialog
 from components.header import create_header, create_nav
 from components.report_options import create_report_options
 from config import COLORS
+from i18n import report_locale, wt
 from nicegui import ui
 from state import ChartState, PDFReportState
 
@@ -76,6 +77,8 @@ HOUSE_SYSTEM_MAP = {
 def create_natal_page():
     """Create the natal chart page."""
 
+    _ = wt()
+
     # Page state
     state = ChartState()
     report_state = PDFReportState()  # Report options - always available
@@ -89,7 +92,7 @@ def create_natal_page():
     def build_chart():
         """Build chart from current state."""
         if not state.is_valid():
-            ui.notify("Please fill in all required fields", type="warning")
+            ui.notify(_("Please fill in all required fields"), type="warning")
             return
 
         try:
@@ -211,10 +214,10 @@ def create_natal_page():
             # Update display
             refresh_chart_display()
 
-            ui.notify("Chart generated!", type="positive")
+            ui.notify(_("Chart generated!"), type="positive")
 
         except Exception as e:
-            ui.notify(f"Error: {str(e)}", type="negative")
+            ui.notify(f"{_('Error:')} {str(e)}", type="negative")
             import traceback
 
             traceback.print_exc()
@@ -268,7 +271,7 @@ def create_natal_page():
     def download_pdf():
         """Generate and download the PDF report."""
         if not calculated_chart["ref"]:
-            ui.notify("Please generate a chart first", type="warning")
+            ui.notify(_("Please generate a chart first"), type="warning")
             return
 
         try:
@@ -276,7 +279,7 @@ def create_natal_page():
             rs = report_state
 
             # Build the report
-            builder = ReportBuilder().from_chart(chart)
+            builder = ReportBuilder().from_chart(chart).with_locale(report_locale())
 
             # Add sections based on report state
             if rs.include_chart_overview:
@@ -377,7 +380,7 @@ def create_natal_page():
                     pdf_bytes = f.read()
 
                 ui.download(pdf_bytes, filename, "application/pdf")
-                ui.notify("PDF generated!", type="positive")
+                ui.notify(_("PDF generated!"), type="positive")
 
                 # Clean up temp PDF
                 os.unlink(pdf_path)
@@ -388,7 +391,7 @@ def create_natal_page():
                     os.unlink(chart_svg_path)
 
         except Exception as e:
-            ui.notify(f"Error generating PDF: {str(e)}", type="negative")
+            ui.notify(f"{_('Error generating PDF:')} {str(e)}", type="negative")
             import traceback
 
             traceback.print_exc()
@@ -410,10 +413,10 @@ def create_natal_page():
                 ui.label("★  ☆  ★").classes("text-lg mb-4").style(
                     f"color: {COLORS['gold']}"
                 )
-                ui.label("Create Your Birth Chart").classes(
+                ui.label(_("Create Your Birth Chart")).classes(
                     "font-display text-3xl md:text-4xl tracking-wide"
                 ).style(f"color: {COLORS['text']}")
-                ui.label("Natal Chart & Report").classes("text-base mt-2").style(
+                ui.label(_("Natal Chart & Report")).classes("text-base mt-2").style(
                     f"color: {COLORS['text_muted']}"
                 )
 
@@ -430,7 +433,7 @@ def create_natal_page():
                         create_birth_input_form(state, on_change=None)
 
                         # Create chart button
-                        ui.button("CREATE CHART", on_click=build_chart).classes(
+                        ui.button(_("CREATE CHART"), on_click=build_chart).classes(
                             "w-full mt-6 py-4 text-sm tracking-[0.15em] rounded"
                         ).style(
                             f"background-color: {COLORS['primary']} !important; color: white !important;"
@@ -442,7 +445,7 @@ def create_natal_page():
                         .classes("w-full p-4 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  CHART OPTIONS").classes(
+                        ui.label(f"☆  {_('CHART OPTIONS')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 
@@ -456,7 +459,7 @@ def create_natal_page():
                         .classes("w-full p-4 rounded-lg")
                         .style(f"background-color: {COLORS['cream_dark']};")
                     ):
-                        ui.label("☆  REPORT OPTIONS").classes(
+                        ui.label(f"☆  {_('REPORT OPTIONS')}").classes(
                             "font-display text-xs tracking-[0.2em] mb-4"
                         ).style(f"color: {COLORS['primary']}")
 

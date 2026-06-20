@@ -20,6 +20,7 @@ from components.time_input import (
     parse_time_to_24h,
 )
 from config import COLORS
+from i18n import wt
 from nicegui import ui
 from state import ChartState
 
@@ -44,6 +45,7 @@ def create_unified_birth_input(
     Returns:
         Reference to the container element.
     """
+    _ = wt()
 
     # Local state for input mode
     mode_state = {"mode": "manual"}  # "manual" or "notable"
@@ -102,7 +104,7 @@ def create_unified_birth_input(
         # Refresh the form to show filled values
         refresh_form()
 
-        ui.notify(f"Loaded: {notable.name}", type="positive")
+        ui.notify(_("Loaded: ") + notable.name, type="positive")
 
     def on_mode_change(e):
         """Handle mode toggle change."""
@@ -124,12 +126,12 @@ def create_unified_birth_input(
         if mode_state["mode"] == "notable":
             # Notable search mode
             with ui.column().classes("gap-4 w-full"):
-                ui.label("Search famous charts:").classes("text-sm").style(
+                ui.label(_("Search famous charts:")).classes("text-sm").style(
                     f"color: {COLORS['text_muted']}"
                 )
                 create_notable_autocomplete(
                     on_select=on_notable_selected,
-                    placeholder="Type a name...",
+                    placeholder=_("Type a name..."),
                 )
 
                 # Show current selection if any
@@ -141,7 +143,7 @@ def create_unified_birth_input(
                             f"background-color: {COLORS['cream']}; border: 1px solid {COLORS['border']};"
                         )
                     ):
-                        ui.label("Selected:").classes("text-xs").style(
+                        ui.label(_("Selected:")).classes("text-xs").style(
                             f"color: {COLORS['text_muted']}"
                         )
                         ui.label(state.name).classes("font-medium").style(
@@ -161,18 +163,18 @@ def create_unified_birth_input(
             with ui.column().classes("gap-6 w-full"):
                 # Name field
                 with ui.row().classes("items-center gap-4 w-full"):
-                    ui.label("Name:").classes("w-28 flex-shrink-0 text-base").style(
+                    ui.label(_("Name:")).classes("w-28 flex-shrink-0 text-base").style(
                         f"color: {COLORS['text']}"
                     )
                     ui.input(
                         value=state.name,
-                        placeholder="(optional)",
+                        placeholder=_("(optional)"),
                         on_change=lambda e: update_field("name", e.value),
                     ).classes("minimal-input flex-grow").props("borderless dense")
 
                 # Location field with Place/Coords toggle
                 with ui.row().classes("items-start gap-4 w-full"):
-                    ui.label("Birth place:").classes(
+                    ui.label(_("Birth place:")).classes(
                         "w-28 flex-shrink-0 text-base mt-2"
                     ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
@@ -183,14 +185,14 @@ def create_unified_birth_input(
                             value=state.location,
                             latitude=initial_lat,
                             longitude=initial_lon,
-                            placeholder="City, State, Country",
+                            placeholder=_("City, State, Country"),
                             on_change=on_location_change,
                             on_coords_change=on_coords_change,
                         )
 
                 # Date field with validation and picker
                 with ui.row().classes("items-center gap-4 w-full"):
-                    ui.label("Birth date:").classes(
+                    ui.label(_("Birth date:")).classes(
                         "w-28 flex-shrink-0 text-base"
                     ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
@@ -202,7 +204,7 @@ def create_unified_birth_input(
 
                 # Time field with hour/minute/AM-PM
                 with ui.row().classes("items-center gap-4 w-full"):
-                    ui.label("Birth time:").classes(
+                    ui.label(_("Birth time:")).classes(
                         "w-28 flex-shrink-0 text-base"
                     ).style(f"color: {COLORS['text']}")
                     with ui.element("div").classes("flex-grow"):
@@ -216,7 +218,7 @@ def create_unified_birth_input(
 
                 # Unknown time checkbox
                 ui.checkbox(
-                    "I don't know my birth time",
+                    _("I don't know my birth time"),
                     value=state.time_unknown,
                     on_change=lambda e: update_field("time_unknown", e.value),
                 ).classes("mt-2").style(f"color: {COLORS['text_muted']}")
@@ -231,7 +233,7 @@ def create_unified_birth_input(
 
             if show_notable_toggle:
                 ui.toggle(
-                    {"manual": "Enter", "notable": "Famous"},
+                    {"manual": _("Enter"), "notable": _("Famous")},
                     value=mode_state["mode"],
                     on_change=on_mode_change,
                 ).props("dense no-caps")
