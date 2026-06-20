@@ -43,9 +43,19 @@ jobs:
         ruff check .
         ruff format --check .
 
+  i18n-coverage:
+    # Standalone job: surfaces as its own status check so a missing web
+    # translation is diagnosed independently of the test matrix. Pure-stdlib
+    # AST check — no project install needed, so it stays fast.
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+
     - name: Check web i18n translation coverage
-      # Pure-stdlib AST check (no extra deps): every _("...") string in web/
-      # must have a translation in each locale file. Runs once on the
-      # canonical platform, like linting.
-      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+      # Every _("...") string in web/ must have a translation in each locale file.
       run: python web/i18n/check_coverage.py
