@@ -118,14 +118,13 @@
       ]
     ]
   },
+  "sections": {
+    "CHART OPTIONS": "图表选项",
+    "REPORT OPTIONS": "报告选项"
+  },
   "natal": {
-    "page_title": "生成您的本命盘",
-    "page_subtitle": "本命盘 & 报告",
-    "chart_options_label": "☆  图表选项",
-    "report_options_label": "☆  报告选项",
-    "create_chart_btn": "生成星盘",
-    "chart_display_placeholder": "填写出生信息后点击『生成星盘』",
-    "report_title": "本命盘报告"
+    "Create Your Birth Chart": "生成您的本命盘",
+    "Natal Chart & Report": "本命盘 & 报告"
   },
   "relationships": {
     "page_title": "合盘",
