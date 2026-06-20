@@ -6,6 +6,7 @@ Supports Natal, Relationships (synastry/composite/davison), and Timing charts.
 """
 
 from config import COLORS
+from i18n import report_locale
 from nicegui import ui
 from state import ChartState, PDFReportState, RelationshipsState, TimingState
 
@@ -143,6 +144,11 @@ def generate_natal_code(state: ChartState, report_state: PDFReportState) -> str:
     # Generate report code
     lines.append("# Generate PDF report")
     lines.append("(ReportBuilder().from_chart(chart)")
+
+    # Mirror the app: localize the report to the selected language (no-op for English)
+    loc = report_locale()
+    if loc != "en":
+        lines.append(f'    .with_locale("{loc}")')
 
     rs = report_state
     if rs.include_chart_overview:
@@ -322,6 +328,11 @@ def generate_relationships_code(
     lines.append("# Generate PDF report")
     lines.append(f"(ReportBuilder().from_chart({chart_var})")
 
+    # Mirror the app: localize the report to the selected language (no-op for English)
+    loc = report_locale()
+    if loc != "en":
+        lines.append(f'    .with_locale("{loc}")')
+
     rs = report_state
     if rs.include_chart_overview:
         lines.append("    .with_chart_overview()")
@@ -492,6 +503,11 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
 
     lines.append("# Generate PDF report")
     lines.append(f"(ReportBuilder().from_chart({chart_var})")
+
+    # Mirror the app: localize the report to the selected language (no-op for English)
+    loc = report_locale()
+    if loc != "en":
+        lines.append(f'    .with_locale("{loc}")')
 
     rs = report_state
     if rs.include_chart_overview:
