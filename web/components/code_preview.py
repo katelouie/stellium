@@ -274,7 +274,7 @@ def generate_relationships_code(
         lines.append("    .calculate())")
         lines.append("")
         lines.append("# Generate bi-wheel chart")
-        lines.append('multichart.draw("synastry_chart.svg")')
+        lines.append('(multichart.draw("synastry_chart.svg")')
     elif state.chart_type == "composite":
         lines.append("# Create composite chart (midpoint method)")
         lines.append(
@@ -282,13 +282,13 @@ def generate_relationships_code(
         )
         lines.append("")
         lines.append("# Generate composite chart")
-        lines.append('composite.draw("composite_chart.svg")')
+        lines.append('(composite.draw("composite_chart.svg")')
     else:  # davison
         lines.append("# Create Davison chart (time-space midpoint)")
         lines.append("davison = SynthesisBuilder.davison(chart1, chart2).calculate()")
         lines.append("")
         lines.append("# Generate Davison chart")
-        lines.append('davison.draw("davison_chart.svg")')
+        lines.append('(davison.draw("davison_chart.svg")')
 
     # Visualization options
     lines.append(f'    .with_theme("{state.theme}")')
@@ -303,7 +303,7 @@ def generate_relationships_code(
     if state.show_moon_phase:
         lines.append(f'    .with_moon_phase(position="{state.moon_phase_position}")')
 
-    lines.append("    .save()")
+    lines.append("    .save())")
     lines.append("")
 
     # Generate report
@@ -482,14 +482,14 @@ def generate_timing_code(state: TimingState, report_state: PDFReportState) -> st
     # Visualization
     chart_file = f"{state.chart_type}_chart.svg"
     lines.append("# Generate chart visualization")
-    lines.append(f'{chart_var}.draw("{chart_file}")')
+    lines.append(f'({chart_var}.draw("{chart_file}")')
     lines.append(f'    .with_theme("{state.theme}")')
     lines.append(f'    .with_zodiac_palette("{state.zodiac_palette}")')
     if state.show_header:
         lines.append("    .with_header()")
     else:
         lines.append("    .without_header()")
-    lines.append("    .save()")
+    lines.append("    .save())")
     lines.append("")
 
     # Generate report
