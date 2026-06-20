@@ -19,7 +19,7 @@ from config import (
     TABLE_POSITIONS,
     ZODIAC_PALETTES,
 )
-from i18n import wt
+from i18n import report_locale, wt
 from nicegui import ui
 from state import ChartState, PDFReportState, RelationshipsState
 
@@ -452,7 +452,7 @@ def create_relationships_page():
             rs = report_state
 
             # Build report
-            builder = ReportBuilder().from_chart(chart)
+            builder = ReportBuilder().from_chart(chart).with_locale(report_locale())
 
             if rs.include_chart_overview:
                 builder = builder.with_chart_overview()

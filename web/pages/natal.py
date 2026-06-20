@@ -11,7 +11,7 @@ from components.code_preview import create_natal_code_preview_dialog
 from components.header import create_header, create_nav
 from components.report_options import create_report_options
 from config import COLORS
-from i18n import wt
+from i18n import report_locale, wt
 from nicegui import ui
 from state import ChartState, PDFReportState
 
@@ -279,7 +279,7 @@ def create_natal_page():
             rs = report_state
 
             # Build the report
-            builder = ReportBuilder().from_chart(chart)
+            builder = ReportBuilder().from_chart(chart).with_locale(report_locale())
 
             # Add sections based on report state
             if rs.include_chart_overview:

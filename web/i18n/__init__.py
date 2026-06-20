@@ -144,6 +144,28 @@ def wt_list(key: str, fallback: list) -> list:
     return translated
 
 
+def report_locale() -> str:
+    """Map the current user's web locale to a library (``stellium.i18n``) locale.
+
+    The web UI and the library use the same locale codes (e.g. ``"zh_CN"``),
+    but the two translation systems are independent. This returns the code to
+    pass to ``ReportBuilder.with_locale()`` so generated reports follow the
+    user's selected language -- or ``"en"`` if the library has no matching
+    locale file, so report rendering degrades gracefully to English.
+    """
+    locale = get_user_locale()
+    if locale == "en":
+        return "en"
+    try:
+        from stellium.i18n import get_available_locales as _lib_locales
+
+        if locale in _lib_locales():
+            return locale
+    except Exception:
+        pass
+    return "en"
+
+
 def get_available_locales() -> dict[str, str]:
     """Get available locales as {code: display_name} dict."""
     locales = {"en": "English"}
