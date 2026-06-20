@@ -18,8 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **`ChartType` is now a real type alias** — `core.protocols.ChartType` was a plain string (`"CalculatedChart | Comparison | MultiChart"`), which type checkers saw as `str` rather than a union — so it documented intent without enforcing it. It is now a proper `TypeAlias` with the referenced types imported under `TYPE_CHECKING`. Library-internal; no public API change.
+- **`ChartLike` protocol no longer declares `draw()`** — removes the lone core→visualization coupling from `core/protocols.py` (the `ChartDrawBuilder` import). `draw()` remains on the concrete chart classes (`CalculatedChart`, `MultiChart`, `Comparison`), so there is no user-facing change — the convenience method just isn't part of the data protocol's contract anymore.
+
 ### Fixed
 
+- **Web app refuses to start in production with the default session secret** — `web/main.py` previously fell back to a public, hardcoded `storage_secret` (`"stellium-dev-secret"`) when `STORAGE_SECRET` was unset. In a production deploy that would let anyone forge `app.storage.user` session data. The server now raises at startup in production (Railway) unless a unique `STORAGE_SECRET` is set; local development is unaffected.
 - **Runnable "View as Python" snippets** — The relationships and timing code-preview generators emitted an unparenthesized `draw()` chain, so the trailing `.with_theme()`/`.save()` lines raised `IndentationError` when run. The `draw(…) … .save()` chains are now wrapped in parentheses (matching the natal generator), making every generated snippet valid, runnable Python.
 
 ## [0.19.0] - 2026-06-19

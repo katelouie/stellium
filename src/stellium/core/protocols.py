@@ -8,7 +8,7 @@ Think of these as contracts: "If you want to be an EphemerisEngine,
 you must implement these methods with these signatures."
 """
 
-from typing import TYPE_CHECKING, Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol, TypeAlias
 
 from stellium.core.models import (
     Aspect,
@@ -20,12 +20,15 @@ from stellium.core.models import (
 )
 
 if TYPE_CHECKING:
+    from stellium.core.comparison import Comparison
     from stellium.core.config import CalculationConfig
-    from stellium.visualization.builder import ChartDrawBuilder
+    from stellium.core.multichart import MultiChart
 
 
-# Type alias for any chart-like object
-ChartType = "CalculatedChart | Comparison | MultiChart"
+# Type alias for any chart-like object.
+# NOTE: Comparison is deprecated (use MultiChart); it remains here while the
+# presentation/visualization layers still branch on it.
+ChartType: TypeAlias = "CalculatedChart | Comparison | MultiChart"
 
 
 class EphemerisEngine(Protocol):
@@ -320,18 +323,6 @@ class ChartLike(Protocol):
 
         Returns:
             List of planet CelestialPosition objects
-        """
-        ...
-
-    def draw(self, filename: str = "chart.svg") -> "ChartDrawBuilder":
-        """
-        Create a visualization builder for this chart.
-
-        Args:
-            filename: Default filename for saving
-
-        Returns:
-            ChartDrawBuilder configured for this chart
         """
         ...
 
