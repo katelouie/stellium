@@ -1,15 +1,16 @@
 """
 Stellium Web - Header Component
 
-Site header with logo, navigation, and user actions.
+Site header with logo, navigation, language selector, and user actions.
 """
 
 from config import COLORS
+from i18n import get_available_locales, get_user_locale, set_user_locale, wt
 from nicegui import ui
 
 
 def create_header():
-    """Create the site header."""
+    """Create the site header with language selector."""
 
     with (
         ui.element("header")
@@ -19,8 +20,11 @@ def create_header():
         )
     ):
         with ui.element("div").classes(
-            "w-full max-w-6xl mx-auto flex items-center justify-center"
+            "w-full max-w-6xl mx-auto flex items-center justify-between"
         ):
+            # Left spacer (for centering the logo)
+            ui.element("div").classes("w-24")
+
             # Center: Logo (clickable link to home)
             with (
                 ui.element("a").classes("no-underline cursor-pointer").props('href="/"')
@@ -32,17 +36,37 @@ def create_header():
                     ).style(f"color: {COLORS['text']}")
                     ui.label("★").classes("text-sm").style(f"color: {COLORS['gold']}")
 
+            # Right: Language selector
+            locales = get_available_locales()
+            if len(locales) > 1:
+                ui.select(
+                    options=locales,
+                    value=get_user_locale(),
+                    on_change=lambda e: _change_language(e.value),
+                ).classes("w-24").props("dense borderless").style(
+                    f"color: {COLORS['text_muted']}; font-size: 0.75rem;"
+                )
+            else:
+                ui.element("div").classes("w-24")
+
+
+def _change_language(locale: str) -> None:
+    """Change language and reload the page."""
+    set_user_locale(locale)
+    ui.navigate.reload()
+
 
 def create_nav():
     """Create the navigation bar."""
+    _ = wt()
 
     nav_items = [
-        ("HOME", "/"),
-        ("BIRTH CHART", "/natal"),
-        ("RELATIONSHIPS", "/relationships"),
-        ("TIMING", "/timing"),
-        ("PLANNER", "/planner"),
-        ("EXPLORE", "/explore"),
+        (_("HOME"), "/"),
+        (_("BIRTH CHART"), "/natal"),
+        (_("RELATIONSHIPS"), "/relationships"),
+        (_("TIMING"), "/timing"),
+        (_("PLANNER"), "/planner"),
+        (_("EXPLORE"), "/explore"),
     ]
 
     with (

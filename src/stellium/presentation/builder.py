@@ -40,6 +40,237 @@ from .sections import (
     ZRVisualizationSection,
 )
 
+_TRANSLATABLE_TERMS: list[str] | None = None
+
+
+def _get_translatable_terms() -> list[str]:
+    """Get list of known translatable terms, sorted longest-first.
+
+    These are the English strings that may appear inside table cell values
+    and should be replaced with their translated equivalents. Sorted
+    longest-first to prevent partial replacements (e.g., "North Node"
+    must be replaced before "Node").
+    """
+    global _TRANSLATABLE_TERMS
+    if _TRANSLATABLE_TERMS is not None:
+        return _TRANSLATABLE_TERMS
+
+    # Known astrology terms that appear in cell content
+    terms = [
+        # Planets and points
+        "Sun",
+        "Moon",
+        "Mercury",
+        "Venus",
+        "Mars",
+        "Jupiter",
+        "Saturn",
+        "Uranus",
+        "Neptune",
+        "Pluto",
+        "Chiron",
+        "Ceres",
+        "Pallas",
+        "Juno",
+        "Vesta",
+        "Eris",
+        "Black Moon Lilith",
+        "Mean Lilith",
+        "Lilith",
+        "True Node",
+        "North Node",
+        "South Node",
+        "Mean Node",
+        "ASC",
+        "Ascendant",
+        "MC",
+        "Midheaven",
+        "DC",
+        "IC",
+        "Vertex",
+        "East Point",
+        "Part of Fortune",
+        "Part of Spirit",
+        # Signs
+        "Aries",
+        "Taurus",
+        "Gemini",
+        "Cancer",
+        "Leo",
+        "Virgo",
+        "Libra",
+        "Scorpio",
+        "Sagittarius",
+        "Capricorn",
+        "Aquarius",
+        "Pisces",
+        # Aspects
+        "Conjunction",
+        "Sextile",
+        "Square",
+        "Trine",
+        "Opposition",
+        "Quincunx",
+        "Inconjunct",
+        "Semi-Sextile",
+        "Semi-Square",
+        "Sesquiquadrate",
+        "Sesqui-Square",
+        "Quintile",
+        "Bi-Quintile",
+        "Biquintile",
+        "Septile",
+        "Novile",
+        "Decile",
+        "Parallel",
+        "Contraparallel",
+        # Moon phases
+        "New Moon",
+        "Waxing Crescent",
+        "First Quarter",
+        "Waxing Gibbous",
+        "Full Moon",
+        "Waning Gibbous",
+        "Last Quarter",
+        "Third Quarter",
+        "Waning Crescent",
+        "Waxing",
+        "Waning",
+        # Motion
+        "Retrograde",
+        "Direct",
+        "Stationary",
+        "Applying",
+        "Separating",
+        # Elements and modalities
+        "Fire",
+        "Earth",
+        "Air",
+        "Water",
+        "Cardinal",
+        "Fixed",
+        "Mutable",
+        # House systems
+        "Placidus",
+        "Whole Sign",
+        "Koch",
+        "Equal",
+        "Porphyry",
+        "Regiomontanus",
+        "Campanus",
+        "Topocentric",
+        # General
+        "Tropical",
+        "Sidereal",
+        "Day Chart",
+        "Night Chart",
+    ]
+
+    # Sort longest first to prevent partial replacements
+    _TRANSLATABLE_TERMS = sorted(terms, key=len, reverse=True)
+    return _TRANSLATABLE_TERMS
+
+
+def _translate_section_data(
+    section_data: list[tuple[str, dict[str, Any]]],
+    locale: str,
+) -> list[tuple[str, dict[str, Any]]]:
+    """Translate section names, headers, labels, and cell content.
+
+    Walks the section data structure and applies t() to all translatable
+    strings. Section names are translated for display. Table headers,
+    key-value keys, and known terms in cell content are also translated.
+
+    Args:
+        section_data: List of (section_name, data_dict) tuples
+        locale: Target locale (e.g., "zh_CN")
+
+    Returns:
+        New list with translated strings (original is not mutated).
+    """
+    from stellium.i18n import t
+
+    def tr(s: str) -> str:
+        return t(s, locale=locale)
+
+    def translate_cell(value: Any) -> Any:
+        """Translate known terms within a cell value."""
+        if not isinstance(value, str):
+            return value
+        # Try direct translation first (exact match)
+        translated = tr(value)
+        if translated != value:
+            return translated
+        # Try replacing known terms within the string (for compound values
+        # like "☉ Sun" or "♑︎ Capricorn 25°12'" or "⚹ Sextile").
+        # Use word-boundary matching to avoid replacing "New" inside "New York".
+        import re
+
+        result = value
+        for term in _get_translatable_terms():
+            if term in result:
+                term_tr = tr(term)
+                if term_tr != term:
+                    # Word boundary: term must not be surrounded by letters
+                    pattern = r"(?<![A-Za-z])" + re.escape(term) + r"(?![A-Za-z])"
+                    result = re.sub(pattern, term_tr, result)
+        return result
+
+    def translate_data(data: dict[str, Any]) -> dict[str, Any]:
+        """Recursively translate a section data dict."""
+        dtype = data.get("type")
+
+        if dtype == "table":
+            return {
+                **data,
+                "headers": [tr(h) for h in data.get("headers", [])],
+                "rows": [
+                    [translate_cell(cell) for cell in row]
+                    for row in data.get("rows", [])
+                ],
+            }
+        elif dtype == "key_value":
+            return {
+                **data,
+                "data": {
+                    tr(k): translate_cell(v) for k, v in data.get("data", {}).items()
+                },
+            }
+        elif dtype == "text":
+            # Don't translate free-form text (sentence structure varies by language)
+            return data
+        elif dtype == "compound":
+            return {
+                **data,
+                "sections": [
+                    (tr(sub_name), translate_data(sub_data))
+                    for sub_name, sub_data in data.get("sections", [])
+                ],
+            }
+        elif dtype == "side_by_side_tables":
+            return {
+                **data,
+                "tables": [
+                    {
+                        **tbl,
+                        "title": tr(tbl.get("title", "")),
+                        "headers": [tr(h) for h in tbl.get("headers", [])],
+                        "rows": [
+                            [translate_cell(cell) for cell in row]
+                            for row in tbl.get("rows", [])
+                        ],
+                    }
+                    for tbl in data.get("tables", [])
+                ],
+            }
+        else:
+            # svg, unknown types: pass through
+            return data
+
+    return [
+        (tr(section_name), translate_data(data)) for section_name, data in section_data
+    ]
+
 
 class ReportBuilder:
     """
@@ -63,6 +294,7 @@ class ReportBuilder:
         self._chart_image_path: str | None = None
         self._auto_generate_chart_image: bool = False
         self._title: str | None = None
+        self._locale: str | None = None
 
     def from_chart(
         self, chart: CalculatedChart | Comparison | MultiChart
@@ -133,6 +365,30 @@ class ReportBuilder:
             report.with_title("Albert Einstein - Complete Natal Analysis")
         """
         self._title = title
+        return self
+
+    def with_locale(self, locale: str) -> "ReportBuilder":
+        """
+        Set the locale for report output.
+
+        When set, all section names, column headers, key-value labels,
+        and known astrology terms (planet names, sign names, aspect names,
+        etc.) are translated to the specified locale.
+
+        Requires a locale file at ``i18n/locales/{locale}/strings.json``.
+        Unknown strings fall back to English.
+
+        Args:
+            locale: Locale identifier (e.g., "zh_CN", "ja", "ko").
+                Use "en" or None for English (the default).
+
+        Returns:
+            Self for chaining
+
+        Examples:
+            report.with_locale("zh_CN")
+        """
+        self._locale = locale
         return self
 
     # -------------------------------------------------------------------------
@@ -1603,6 +1859,17 @@ class ReportBuilder:
             for section in self._sections
         ]
 
+        # Apply locale translation if set.
+        # Translates section names, headers, labels, and cell content.
+        # Prose format is English-only (it generates natural language sentences).
+        locale = self._locale if self._locale and self._locale != "en" else None
+        if locale and format != "prose":
+            section_data = _translate_section_data(section_data, locale)
+            if title:
+                from stellium.i18n import t
+
+                title = t(title, locale=locale)
+
         # Show in terminal if requested and format supports it
         if show and format in terminal_formats:
             self._print_to_console(section_data, format)
@@ -1696,7 +1963,7 @@ class ReportBuilder:
             # Natural language prose (for pasting into conversations)
             from stellium.presentation.renderers import ProseRenderer
 
-            renderer = ProseRenderer()
+            renderer = ProseRenderer(locale=self._locale)
             return renderer.render_report(section_data)
         elif format == "markdown":
             from stellium.presentation.renderers import MarkdownRenderer
@@ -1785,7 +2052,7 @@ class ReportBuilder:
             # Natural language prose output
             from stellium.presentation.renderers import ProseRenderer
 
-            renderer = ProseRenderer()
+            renderer = ProseRenderer(locale=self._locale)
             output = renderer.render_report(section_data)
             print(output)
         elif format == "markdown":

@@ -3,13 +3,9 @@
     "language": "zh-CN",
     "status": "draft",
     "prepared_by": "Zhanran Astrology / 湛然星座",
-    "source": [
-      "src/stellium/presentation/i18n.py",
-      "src/stellium/presentation/templates/astro_report.typ"
-    ],
-    "notes": "Core astrology terminology and PDF report terms. Excludes local brand, pricing, payment, and business-specific content."
+    "notes": "Merged from report.json and pdf_terms.json. Flat key-value mapping for the stellium i18n system."
   },
-  "chart_and_report_terms": {
+  "strings": {
     "Astrological Report": "占星报告",
     "Natal Chart Report": "本命盘报告",
     "Natal Chart": "本命盘",
@@ -19,9 +15,7 @@
     "Direct": "顺行",
     "Stationary": "停滞",
     "Applying": "入相",
-    "Separating": "出相"
-  },
-  "planets_and_points": {
+    "Separating": "出相",
     "Sun": "太阳",
     "Moon": "月亮",
     "Mercury": "水星",
@@ -39,6 +33,7 @@
     "Chiron": "凯龙星",
     "Lilith": "黑月",
     "Mean Lilith": "平均黑月",
+    "Black Moon Lilith": "黑月莉莉斯",
     "Ceres": "谷神星",
     "Pallas": "智神星",
     "Juno": "婚神星",
@@ -53,9 +48,7 @@
     "Vertex": "宿命点",
     "East Point": "东点",
     "Part of Fortune": "福点",
-    "Part of Spirit": "精神点"
-  },
-  "zodiac_signs": {
+    "Part of Spirit": "精神点",
     "Aries": "白羊座",
     "Taurus": "金牛座",
     "Gemini": "双子座",
@@ -67,9 +60,7 @@
     "Sagittarius": "射手座",
     "Capricorn": "摩羯座",
     "Aquarius": "水瓶座",
-    "Pisces": "双鱼座"
-  },
-  "aspects": {
+    "Pisces": "双鱼座",
     "Conjunction": "合相",
     "Sextile": "六分相",
     "Square": "四分相",
@@ -88,9 +79,7 @@
     "Novile": "九分相",
     "Decile": "十分相",
     "Parallel": "合纬",
-    "Contraparallel": "对纬"
-  },
-  "moon_phases": {
+    "Contraparallel": "对纬",
     "New": "新月",
     "New Moon": "新月",
     "Waxing": "渐盈",
@@ -103,9 +92,7 @@
     "Waning Gibbous": "亏凸月",
     "Last Quarter": "下弦月",
     "Third Quarter": "下弦月",
-    "Waning Crescent": "残月"
-  },
-  "house_systems": {
+    "Waning Crescent": "残月",
     "Placidus": "普拉西度斯",
     "Whole Sign": "整宫制",
     "Equal": "等宫制",
@@ -123,20 +110,14 @@
     "Gauquelin": "高克兰",
     "Horizontal": "地平制",
     "Axial Rotation": "轴向旋转制",
-    "APC": "APC"
-  },
-  "elements": {
+    "APC": "APC",
     "Fire": "火象",
     "Earth": "土象",
     "Air": "风象",
-    "Water": "水象"
-  },
-  "modalities": {
+    "Water": "水象",
     "Cardinal": "基本宫",
     "Fixed": "固定宫",
-    "Mutable": "变动宫"
-  },
-  "houses": {
+    "Mutable": "变动宫",
     "House 1": "第 1 宫",
     "House 2": "第 2 宫",
     "House 3": "第 3 宫",
@@ -148,9 +129,7 @@
     "House 9": "第 9 宫",
     "House 10": "第 10 宫",
     "House 11": "第 11 宫",
-    "House 12": "第 12 宫"
-  },
-  "report_section_titles": {
+    "House 12": "第 12 宫",
     "Chart Overview": "星盘概览",
     "Moon Phase": "月相",
     "Planet Positions": "行星位置",
@@ -188,16 +167,76 @@
     "House System": "宫位系统",
     "Eclipses": "食相",
     "Profections": "小限法",
-    "Zodiacal Releasing": "黄道释放"
-  },
-  "pdf_template_terms": {
-    "header_text": "占星报告",
-    "table_header_fill": "浅灰蓝背景",
-    "preferred_chinese_fonts": [
-      "PingFang SC",
-      "Hiragino Mincho ProN",
-      "Source Han Sans CN"
-    ],
-    "date_format_example": "1986年11月15日"
+    "Zodiacal Releasing": "黄道释放",
+    "Generated with Stellium": "由 群星 生成",
+    "Unknown": "未知",
+    "Yes": "是",
+    "No": "否",
+    "No cross-chart aspects found.": "未发现跨盘相位。",
+    "No aspect patterns detected.": "未检测到相位图形。",
+    "No aspect patterns detected in this chart.": "本星盘未检测到相位图形。",
+    "No planetary stations in this period.": "此期间没有行星停滞。",
+    "No sign ingresses in this period.": "此期间没有行星换座。",
+    "No eclipses in this period.": "此期间没有食相。",
+    "Name": "姓名",
+    "Date": "日期",
+    "Time": "时间",
+    "Location": "地点",
+    "Coordinates": "坐标",
+    "Timezone": "时区",
+    "Comparison Type": "比较类型",
+    "Relationships": "关系",
+    "Chart Type": "星盘类型",
+    "Chart Ruler": "星盘主星",
+    "Chart Sect": "昼夜属性",
+    "Zodiac": "黄道系统",
+    "Ayanamsa": "阿亚南萨",
+    "Activated House": "激活宫位",
+    "Activated Sign": "激活星座",
+    "Lord": "主星",
+    "Lord of the Year": "年主星",
+    "Lord of the Month": "月主星",
+    "Modern Ruler": "现代主星",
+    "Month in Year": "年内月份",
+    "Natal Sign": "本命星座",
+    "Natal Degree": "本命度数",
+    "Natal House": "本命宫位",
+    "Planet": "行星",
+    "Planet 1": "行星 1",
+    "Planet 2": "行星 2",
+    "Position": "位置",
+    "Sign": "星座",
+    "Station": "停滞",
+    "From": "从",
+    "To": "至",
+    "Node": "交点",
+    "House": "宫位",
+    "Aspect": "相位",
+    "Orb": "容许度",
+    "Motion": "运动",
+    "Speed": "速度",
+    "Phase": "月相",
+    "Phase Name": "月相",
+    "Illumination": "照明度",
+    "Direction": "盈亏方向",
+    "Age": "年龄",
+    "Ages": "年龄",
+    "Level": "层级",
+    "Ruler": "主星",
+    "Period": "周期",
+    "Quality": "性质",
+    "Status": "状态",
+    "Type": "类型",
+    "State": "状态",
+    "Point": "点",
+    "Midpoint": "中点",
+    "Pattern": "图形",
+    "Planets": "涉及行星",
+    "Element/Quality": "元素/模式",
+    "Details": "详情",
+    "Cusp": "宫尖",
+    "Apparent Magnitude": "视星光度",
+    "Apparent Diameter": "视直径",
+    "Geocentric Parallax": "地心视差"
   }
 }

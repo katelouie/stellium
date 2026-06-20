@@ -15,6 +15,7 @@ Then visit http://localhost:8080
 """
 
 import logging
+import os
 
 from config import COLORS, FONTS, GOOGLE_FONTS_URL
 from fastapi import Request
@@ -441,4 +442,5 @@ if __name__ in {"__main__", "__mp_main__"}:
         port=port,
         reload=not is_production,  # Hot reload only in development
         show=False,  # Don't auto-open browser
+        storage_secret=os.environ.get("STORAGE_SECRET", "stellium-dev-secret"),
     )

@@ -1564,14 +1564,16 @@ class ProseRenderer:
         ...
     """
 
-    def __init__(self, bullet: str = "•") -> None:
+    def __init__(self, bullet: str = "•", locale: str | None = None) -> None:
         """
         Initialize prose renderer.
 
         Args:
             bullet: Character to use for list items (default: •)
+            locale: If a non-English locale is set, a disclaimer is prepended.
         """
         self.bullet = bullet
+        self.locale = locale
 
     def render_report(self, sections: list[tuple[str, dict[str, Any]]]) -> str:
         """
@@ -1584,6 +1586,12 @@ class ProseRenderer:
             Prose text suitable for pasting into conversations
         """
         paragraphs = []
+
+        if self.locale and self.locale != "en":
+            paragraphs.append(
+                "Note: The prose rendering format currently only supports English. "
+                'For localized output, use format="markdown", "html", or "pdf".'
+            )
 
         for section_name, section_data in sections:
             prose = self._render_section(section_name, section_data)

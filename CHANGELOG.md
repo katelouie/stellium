@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Internationalization (i18n) system** — New `with_locale("zh_CN")` on `ReportBuilder` translates section names, column headers, key-value labels, and astrology terms (planet names, sign names, aspect names, moon phases, house systems) in all output formats except prose. Built on a JSON locale file system (`i18n/locales/{locale}/strings.json`) with lazy loading, caching, and graceful fallback to English for untranslated strings. Simplified Chinese (zh_CN) ships with 231 translated strings. Public API: `from stellium.i18n import t, set_default_locale, get_available_locales`. Consolidated Zhao Xin's three locale files into a single `strings.json` and moved web UI translations to `web/i18n/`.
+- **Web app language selector** — Language dropdown in the header allows switching between English and Simplified Chinese (with full page reload). Navigation bar translates on language change. Uses NiceGUI's `app.storage.user` for per-session locale persistence. Web i18n loader (`web/i18n/`) is independent from the library's `stellium.i18n` system. Additional pages can be localized incrementally by wrapping strings with `wt()`.
+
 ### Changed
 
 ### Fixed
