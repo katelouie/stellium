@@ -59,3 +59,25 @@ jobs:
     - name: Check web i18n translation coverage
       # Every _("...") string in web/ must have a translation in each locale file.
       run: python web/i18n/check_coverage.py
+
+  web-tests:
+    # In-process tests for the NiceGUI web app: import smoke, the pure-logic
+    # code-generator / i18n / state tests, and a few `user`-fixture interaction
+    # checks (no browser/Selenium). Standalone job so web failures are diagnosed
+    # independently and the library test matrix stays web-dependency-free.
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e ".[dev]" nicegui pytest-asyncio
+
+    - name: Run web app tests
+      run: pytest web/tests -c web/tests/pytest.ini
