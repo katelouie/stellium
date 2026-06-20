@@ -42,3 +42,10 @@ jobs:
       run: |
         ruff check .
         ruff format --check .
+
+    - name: Check web i18n translation coverage
+      # Pure-stdlib AST check (no extra deps): every _("...") string in web/
+      # must have a translation in each locale file. Runs once on the
+      # canonical platform, like linting.
+      if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+      run: python web/i18n/check_coverage.py
