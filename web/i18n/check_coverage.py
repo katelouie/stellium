@@ -25,7 +25,10 @@ WEB_DIR = Path(__file__).resolve().parent.parent
 I18N_DIR = Path(__file__).resolve().parent
 
 # Files/dirs that never contain UI strings to translate.
-SKIP_DIRS = {"i18n", "__pycache__", ".venv", "node_modules"}
+# Test files legitimately contain _() fixture strings that aren't app UI
+# (e.g. asserting graceful fallback for an untranslated key), so they must
+# not count toward translation coverage.
+SKIP_DIRS = {"i18n", "tests", "__pycache__", ".venv", "node_modules"}
 
 
 def extract_used_strings(py_file: Path) -> set[str]:
