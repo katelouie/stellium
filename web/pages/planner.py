@@ -6,6 +6,7 @@ Generate personalized astrological planners with transits, moon phases, and more
 
 from datetime import date, datetime
 
+from analytics import PLANNER_GENERATED, track_event
 from components.birth_input_unified import create_unified_birth_input
 from components.header import create_header, create_nav
 from config import COLORS
@@ -171,6 +172,7 @@ def create_planner_page():
             # Trigger download
             ui.download(pdf_bytes, filename, "application/pdf")
             ui.notify(_("Planner generated!"), type="positive")
+            track_event(PLANNER_GENERATED, {"page": "planner"})
 
         except Exception as e:
             # Close loading dialog on error too

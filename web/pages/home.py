@@ -210,7 +210,9 @@ def create_home_page():
                 _("View on GitHub →"),
                 "https://github.com/katelouie/stellium",
                 new_tab=True,
-            ).classes("text-base no-underline").style(f"color: {COLORS['gold']}")
+            ).classes("text-base no-underline").style(f"color: {COLORS['gold']}").props(
+                'data-umami-event="github-clicked"'
+            )
 
     # Footer
     with (

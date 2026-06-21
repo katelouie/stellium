@@ -16,6 +16,7 @@ Then visit http://localhost:8080
 
 import logging
 import os
+from pathlib import Path
 
 from config import COLORS, FONTS, GOOGLE_FONTS_URL
 from fastapi import Request
@@ -83,11 +84,10 @@ def setup_styles(page_title: str = "", page_description: str = ""):
         warning=COLORS["gold"],
     )
 
-    # Analytics (Umami Cloud — privacy-friendly, no cookies)
-    ui.add_head_html(
-        '<script defer src="https://cloud.umami.is/script.js" '
-        'data-website-id="9dba0c8a-b33a-4c19-a659-46b09218dbc6"></script>'
-    )
+    # Analytics (Umami — privacy-friendly, no cookies)
+    from analytics import tracking_script
+
+    ui.add_head_html(tracking_script())
 
     # Meta tags for SEO and social sharing
     ui.add_head_html(f"""
@@ -357,6 +357,8 @@ Disallow: /
 
 User-agent: MJ12bot
 Disallow: /
+
+Sitemap: https://stelliumastro.app/sitemap.xml
 """
 
 
@@ -364,6 +366,14 @@ Disallow: /
 async def robots_txt():
     """Serve robots.txt to stop crawlers from 404-spamming the logs."""
     return PlainTextResponse(ROBOTS_TXT, media_type="text/plain")
+
+
+@app.get("/sitemap.xml")
+async def sitemap():
+    """Serve sitemap.xml for search engines."""
+    sitemap_path = Path(__file__).parent / "static" / "sitemap.xml"
+    content = sitemap_path.read_text(encoding="utf-8")
+    return PlainTextResponse(content, media_type="application/xml")
 
 
 @app.get("/health")
