@@ -83,6 +83,12 @@ def setup_styles(page_title: str = "", page_description: str = ""):
         warning=COLORS["gold"],
     )
 
+    # Analytics (Umami Cloud — privacy-friendly, no cookies)
+    ui.add_head_html(
+        '<script defer src="https://cloud.umami.is/script.js" '
+        'data-website-id="9dba0c8a-b33a-4c19-a659-46b09218dbc6"></script>'
+    )
+
     # Meta tags for SEO and social sharing
     ui.add_head_html(f"""
     <title>{full_title}</title>
