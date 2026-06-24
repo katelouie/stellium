@@ -444,6 +444,17 @@ if __name__ in {"__main__", "__mp_main__"}:
     # Check if running in production (Railway sets RAILWAY_ENVIRONMENT)
     is_production = os.environ.get("RAILWAY_ENVIRONMENT") is not None
 
+    # Session cookies are signed with this secret. The dev default is public,
+    # so in production an unset/default secret would let anyone forge
+    # app.storage.user — refuse to start rather than ship a known secret.
+    DEV_STORAGE_SECRET = "stellium-dev-secret"
+    storage_secret = os.environ.get("STORAGE_SECRET", DEV_STORAGE_SECRET)
+    if is_production and storage_secret == DEV_STORAGE_SECRET:
+        raise RuntimeError(
+            "STORAGE_SECRET must be set to a unique secret in production "
+            "(the default dev secret is public and would allow session forgery)."
+        )
+
     # Only print startup message in main process (not multiprocessing worker)
     if __name__ == "__main__":
         print("\n" + "=" * 50)
@@ -458,5 +469,5 @@ if __name__ in {"__main__", "__mp_main__"}:
         port=port,
         reload=not is_production,  # Hot reload only in development
         show=False,  # Don't auto-open browser
-        storage_secret=os.environ.get("STORAGE_SECRET", "stellium-dev-secret"),
+        storage_secret=storage_secret,
     )
