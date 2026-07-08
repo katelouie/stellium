@@ -93,13 +93,19 @@ class TestPlanetPeriods:
         assert PLANET_PERIODS["Sun"] == 19
         assert PLANET_PERIODS["Mars"] == 15
         assert PLANET_PERIODS["Jupiter"] == 12
-        assert PLANET_PERIODS["Saturn"] == 27
+        # Saturn's minor years are 30 (-> Aquarius 30); Capricorn is reduced to
+        # 27 via SIGN_PERIOD_OVERRIDES.
+        assert PLANET_PERIODS["Saturn"] == 30
 
-    def test_total_cycle_is_208_years(self, kate_natal):
-        """Total cycle (all sign periods summed) should equal 208 years."""
+    def test_total_cycle_is_211_years(self, kate_natal):
+        """Total cycle (all sign periods summed) should equal 211 years.
+
+        The 12-sign sum with Aquarius 30 and Capricorn 27 (the documented ZR
+        asymmetry) is 211, not the 208 you get by giving both Saturn signs 27.
+        """
         engine = ZodiacalReleasingEngine(kate_natal)
         total = sum(engine.sign_periods.values())
-        assert total == 208
+        assert total == 211
 
 
 class TestZodiacalReleasingEngineInit:
@@ -203,11 +209,11 @@ class TestSignPeriods:
         # Sagittarius ruled by Jupiter (12 years)
         assert engine.sign_periods["Sagittarius"] == 12
 
-        # Capricorn ruled by Saturn (27 years)
+        # Capricorn: Saturn-ruled but reduced to 27 (documented ZR asymmetry)
         assert engine.sign_periods["Capricorn"] == 27
 
-        # Aquarius ruled by Saturn (27 years)
-        assert engine.sign_periods["Aquarius"] == 27
+        # Aquarius: Saturn-ruled, full 30 years
+        assert engine.sign_periods["Aquarius"] == 30
 
         # Pisces ruled by Jupiter (12 years)
         assert engine.sign_periods["Pisces"] == 12
@@ -837,29 +843,28 @@ class TestIntegration:
     def test_zr_cycle_repeats_correctly(self, kate_natal):
         """Verify ZR cycle with loosing of the bond after 12 periods.
 
-        In Valens method, after completing 12 signs (one full cycle), the 13th period
-        jumps to the opposite sign (loosing of the bond). So age 208 is NOT the same
-        sign as age 0, but rather the opposite.
+        In the Valens method, after completing 12 signs (one full L1 circuit),
+        the 13th period jumps to the opposite sign (loosing of the bond). The
+        12-sign circuit sums to 211 years (Aquarius 30 / Capricorn 27), so the
+        13th L1 period begins at age 211 -- a mundane-scale span used here only
+        to exercise the loosing logic.
         """
-        engine = ZodiacalReleasingEngine(kate_natal, lifespan=210)
+        engine = ZodiacalReleasingEngine(kate_natal, lifespan=215)
         timeline = engine.build_timeline()
 
-        # L1 at age 0 vs age 208
+        # L1 at age 0 vs just past the full 211-year circuit
         age_0 = timeline.at_age(0)
-        age_208 = timeline.at_age(208)
+        age_after = timeline.at_age(212)
 
-        # After 12 periods, the 13th period should be opposite (loosing of bond)
-        # So they should NOT be the same sign
         l1_periods = timeline.l1_periods()
 
-        # Verify we have more than 12 L1 periods
+        # The full 12-sign circuit (211 yrs) plus the loosing jump => 13+ periods
         assert len(l1_periods) >= 13, (
             "Should have 13+ L1 periods to demonstrate loosing of bond"
         )
 
-        # The 13th period should be the opposite of what would be next in sequence
-        # (i.e., loosing of bond has occurred)
-        assert age_0.l1.sign != age_208.l1.sign, (
+        # After the loosing of bond, the sign differs from the starting sign
+        assert age_0.l1.sign != age_after.l1.sign, (
             "After loosing of bond, sign should be different"
         )
 

@@ -11,6 +11,9 @@ from stellium.core.models import (
 )
 from stellium.engines.dignities import DIGNITIES
 
+# Planetary "minor years" -> the base period each sign receives from its
+# (traditional) ruler. Saturn's minor years are 30, so Aquarius gets the full
+# 30; Capricorn is reduced to 27 via SIGN_PERIOD_OVERRIDES below.
 PLANET_PERIODS = {
     "Moon": 25,
     "Mercury": 20,
@@ -18,8 +21,14 @@ PLANET_PERIODS = {
     "Sun": 19,
     "Mars": 15,
     "Jupiter": 12,
-    "Saturn": 27,
+    "Saturn": 30,
 }
+
+# Per-sign departures from the ruler's minor years. Zodiacal Releasing gives
+# Capricorn a documented reduction to 27 (Valens: Capricorn, opposite Cancer,
+# receives 1/4 of Cancer's *greater* years), while Aquarius (opposite Leo) keeps
+# Saturn's full 30. With this override the full cycle totals 211 years.
+SIGN_PERIOD_OVERRIDES = {"Capricorn": 27}
 
 
 class ZodiacalReleasingEngine:
@@ -45,10 +54,12 @@ class ZodiacalReleasingEngine:
             sign: PLANET_PERIODS[info["traditional"]["ruler"]]
             for sign, info in DIGNITIES.items()
         }
+        # Apply documented per-sign departures from ruler minor years (Cap 27).
+        self.sign_periods.update(SIGN_PERIOD_OVERRIDES)
 
         self.signs = list(self.sign_periods.keys())
 
-        self.total_cycle_period = sum(self.sign_periods.values())  # 208
+        self.total_cycle_period = sum(self.sign_periods.values())  # 211
 
         self.lot_position = self._get_lot_position()
         self.lot_sign = self.lot_position.sign
@@ -150,7 +161,7 @@ class ZodiacalReleasingEngine:
         """
         Unified period calculator for all levels.
 
-        L1: total_duration_days = 208 * 365.25, loops until lifespan
+        L1: total_duration_days = 211 * 365.25, loops until lifespan
         L2+: total_duration_days = parent.length_days, loops exactly 12
         """
         periods = []
@@ -376,7 +387,7 @@ class ZodiacalReleasingEngine:
             else self._calculate_periods_valens
         )
 
-        # L1: base duration = 208 years in days (so scaling = identity)
+        # L1: base duration = 211 years in days (so scaling = identity)
         base_duration = self.total_cycle_period * 365.25
         all_periods[1] = calc_fn(
             level=1,
