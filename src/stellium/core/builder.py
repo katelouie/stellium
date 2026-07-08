@@ -856,6 +856,16 @@ class ChartBuilder:
                 # Some components may fail without houses -- skip gracefully
                 pass
 
+        # Step 4b: Calculate declination aspects (if engine provided)
+        # Declinations depend only on the date, not the birth time, so these
+        # are fully valid for an unknown-time chart -- and often the single most
+        # useful thing it can offer. Mirror the known-time path here.
+        declination_aspects = []
+        if self._declination_aspect_engine:
+            declination_aspects = self._declination_aspect_engine.calculate_aspects(
+                positions
+            )
+
         # Build metadata
         final_metadata: dict = {}
         final_metadata.update(component_metadata)
@@ -875,6 +885,7 @@ class ChartBuilder:
             house_systems={},  # No houses for unknown time
             house_placements={},  # No house placements
             aspects=tuple(aspects),
+            declination_aspects=tuple(declination_aspects),
             metadata=final_metadata,
             moon_range=moon_range,
         )

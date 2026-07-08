@@ -324,6 +324,28 @@ class TestFullChart:
         # It may be in "Essential Dignities" or "Dignities" section
         assert "dignit" in text.lower() or "Rulership" in text or "Exaltation" in text
 
+    def test_essential_dignities_rows_emit(self, full_chart):
+        """Regression: the Essential Dignities subsection must emit planet rows.
+
+        The renderer previously reached for a singular ``"dignity"`` key that
+        the component never produces (it emits a plural ``"dignities"`` list),
+        so the '### Essential Dignities' header printed with zero rows below it
+        even though metadata held all the bodies. A header-substring check
+        ('dignit' in text) passed anyway, hiding the bug.
+        """
+        text = full_chart.to_prompt_text(sections=["dignities"])
+        assert "### Essential Dignities" in text
+
+        # Isolate the Essential Dignities block (up to the next '###' header).
+        after = text.split("### Essential Dignities", 1)[1]
+        block = after.split("###", 1)[0]
+        bullets = [ln for ln in block.splitlines() if ln.startswith("- ")]
+        assert bullets, "Essential Dignities header emitted with no planet rows"
+
+        # A planet actually present in metadata should appear as a row.
+        planet_dignities = full_chart.metadata["dignities"]["planet_dignities"]
+        assert any(any(name in b for b in bullets) for name in planet_dignities)
+
     def test_larger_than_basic(self, basic_chart, full_chart):
         basic = basic_chart.to_prompt_text()
         full = full_chart.to_prompt_text()

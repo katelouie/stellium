@@ -1959,17 +1959,24 @@ class CalculatedChart:
                 lines.append("### Essential Dignities")
                 lines.append("")
                 for planet_name, data in planet_dignities.items():
-                    parts: list[str] = [f"**{planet_name}**"]
+                    both_systems = bool(data.get("traditional")) and bool(
+                        data.get("modern")
+                    )
+                    segments: list[str] = []
                     for system in ("traditional", "modern"):
                         sys_data = data.get(system)
                         if not sys_data:
                             continue
-                        dignity_type = sys_data.get("dignity", "")
-                        if dignity_type:
-                            label = f"({system})" if len(data) > 2 else ""
-                            parts.append(f"{dignity_type} {label}".strip())
-                    if len(parts) > 1:
-                        lines.append(f"- {': '.join(parts)}")
+                        dignities = sys_data.get("dignities") or []
+                        if not dignities:
+                            continue
+                        dignity_str = ", ".join(dignities)
+                        score = sys_data.get("score")
+                        score_str = f" [{score:+d}]" if isinstance(score, int) else ""
+                        label = f" ({system})" if both_systems else ""
+                        segments.append(f"{dignity_str}{score_str}{label}")
+                    if segments:
+                        lines.append(f"- **{planet_name}**: {'; '.join(segments)}")
                 lines.append("")
 
             # Mutual receptions
