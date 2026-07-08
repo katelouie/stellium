@@ -251,7 +251,7 @@ def _chart_to_record(chart: CalculatedChart, include_patterns: bool) -> dict[str
     record["mutable_count"] = modalities["mutable"]
 
     # Sect
-    record["sect"] = chart.sect()
+    record["sect"] = chart.sect
 
     # Retrograde count
     record["retrograde_count"] = _count_retrogrades(chart)

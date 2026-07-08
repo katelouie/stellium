@@ -517,7 +517,7 @@ def example_15_period_quality_scoring():
 
     snapshot = chart.zr_at_age(30)
 
-    print(f"Chart Sect: {chart.sect()}")
+    print(f"Chart Sect: {chart.sect}")
     print()
     print("L1 Period Quality:")
     print(f"  Sign: {snapshot.l1.sign}")
@@ -560,7 +560,7 @@ def example_16_timeline_with_quality():
     timeline = chart.zodiacal_releasing("Part of Fortune")
     l1_periods = timeline.l1_periods()
 
-    print(f"Chart Sect: {chart.sect()}")
+    print(f"Chart Sect: {chart.sect}")
     print()
     print(f"L1 Timeline with Quality Scores from {timeline.lot_sign}:\n")
     print(
@@ -663,7 +663,7 @@ def example_18_sect_based_analysis():
     )
 
     print("DAY CHART Sect Roles:")
-    print(f"  Chart Sect: {day_chart.sect()}")
+    print(f"  Chart Sect: {day_chart.sect}")
     print("  Sect Benefic: Jupiter (+2)")
     print("  Contrary Benefic: Venus (+1)")
     print("  Sect Malefic: Saturn (-1, constructive difficulty)")
@@ -671,7 +671,7 @@ def example_18_sect_based_analysis():
     print()
 
     print("NIGHT CHART Sect Roles:")
-    print(f"  Chart Sect: {night_chart.sect()}")
+    print(f"  Chart Sect: {night_chart.sect}")
     print("  Sect Benefic: Venus (+2)")
     print("  Contrary Benefic: Jupiter (+1)")
     print("  Sect Malefic: Mars (-1, constructive difficulty)")

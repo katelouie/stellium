@@ -95,7 +95,7 @@ class ZodiacalReleasingEngine:
 
     def _setup_quality_lookups(self) -> None:
         """Build fast lookups for planet roles and sign contents."""
-        sect = self.chart.sect()
+        sect = self.chart.sect
 
         # 1. Define Roles based on Sect
         # Format: (PlanetName, RoleName, ScoreModifier)

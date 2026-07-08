@@ -379,7 +379,7 @@ class ChartStats:
         counts: Counter[str] = Counter()
 
         for chart in self._charts:
-            sect = chart.sect()
+            sect = chart.sect
             if sect:
                 counts[sect.lower()] += 1
 
@@ -439,7 +439,7 @@ class ChartStats:
         """Extract a variable value from a chart."""
         # Sect
         if var_name == "sect":
-            return chart.sect()
+            return chart.sect
 
         # Sign variables (object_sign)
         if var_name.endswith("_sign"):

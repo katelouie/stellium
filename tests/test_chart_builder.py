@@ -34,7 +34,7 @@ def test_sect_determination_day_jan():
 
     chart = ChartBuilder.from_details("1994-01-06 11:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "day"
+    assert chart.sect == "day"
 
 
 def test_sect_determination_night_jan():
@@ -42,7 +42,7 @@ def test_sect_determination_night_jan():
 
     chart = ChartBuilder.from_details("1994-01-06 23:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "night"
+    assert chart.sect == "night"
 
 
 def test_sect_determination_day_april():
@@ -50,7 +50,7 @@ def test_sect_determination_day_april():
 
     chart = ChartBuilder.from_details("1994-04-06 11:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "day"
+    assert chart.sect == "day"
 
 
 def test_sect_determination_night_april():
@@ -58,7 +58,7 @@ def test_sect_determination_night_april():
 
     chart = ChartBuilder.from_details("1994-04-06 23:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "night"
+    assert chart.sect == "night"
 
 
 def test_sect_determination_day_june():
@@ -66,7 +66,7 @@ def test_sect_determination_day_june():
 
     chart = ChartBuilder.from_details("1994-06-06 11:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "day"
+    assert chart.sect == "day"
 
 
 def test_sect_determination_night_june():
@@ -74,7 +74,7 @@ def test_sect_determination_night_june():
 
     chart = ChartBuilder.from_details("1994-06-06 23:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "night"
+    assert chart.sect == "night"
 
 
 def test_sect_determination_day_oct():
@@ -82,7 +82,7 @@ def test_sect_determination_day_oct():
 
     chart = ChartBuilder.from_details("1994-10-06 11:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "day"
+    assert chart.sect == "day"
 
 
 def test_sect_determination_night_oct():
@@ -90,7 +90,7 @@ def test_sect_determination_night_oct():
 
     chart = ChartBuilder.from_details("1994-10-06 23:40", "Palo Alto, CA").calculate()
 
-    assert chart.sect() == "night"
+    assert chart.sect == "night"
 
 
 def test_house_system_swapping():
