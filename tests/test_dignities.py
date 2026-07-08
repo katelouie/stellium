@@ -326,6 +326,52 @@ def test_mercury_in_virgo_rulership():
     assert result["score"] >= 5
 
 
+def test_modern_mutable_signs_no_grafted_dignities():
+    """Regression: Gemini/Sagittarius modern exalt/fall must not carry their
+    ruler-partner sign's data.
+
+    The modern blocks for these two mutable signs had their same-ruler partner
+    sign's values grafted in -- Gemini held Virgo's (Mercury exalt / Venus
+    fall), Sagittarius held Pisces's (Venus exalt / Ceres fall). A Venus in
+    Gemini therefore scored a bogus modern "fall" (-4). Modern exalt/fall
+    should mirror the traditional (node-based) values for these signs.
+    """
+    calc = ModernDignityCalculator(decans="chaldean")
+
+    # Venus at 10 deg Gemini -- the reported bug scored this as "fall".
+    venus_gemini = CelestialPosition(
+        name="Venus",
+        object_type=ObjectType.PLANET,
+        longitude=70.0,  # 10 deg Gemini (60 + 10)
+        speed_longitude=1.0,
+    )
+    result = calc.calculate_dignities(venus_gemini)
+    assert "fall" not in result["dignities"], "Venus is not in fall in Gemini"
+    assert result["score"] == 0  # peregrine
+
+    # Venus at 10 deg Sagittarius must not pick up a bogus modern exaltation.
+    venus_sag = CelestialPosition(
+        name="Venus",
+        object_type=ObjectType.PLANET,
+        longitude=250.0,  # 10 deg Sagittarius (240 + 10)
+        speed_longitude=1.0,
+    )
+    result_sag = calc.calculate_dignities(venus_sag)
+    assert "exaltation" not in result_sag["dignities"], (
+        "Venus does not exalt in Sagittarius"
+    )
+
+    # The tables themselves must mirror traditional exalt/fall for these signs.
+    for sign in ("Gemini", "Sagittarius"):
+        assert (
+            DIGNITIES[sign]["modern"]["exaltation"]
+            == DIGNITIES[sign]["traditional"]["exaltation"]
+        )
+        assert (
+            DIGNITIES[sign]["modern"]["fall"] == DIGNITIES[sign]["traditional"]["fall"]
+        )
+
+
 def test_multiple_planets_calculation():
     """Test calculating dignities for multiple planets at once."""
     calc = TraditionalDignityCalculator(decans="chaldean")
