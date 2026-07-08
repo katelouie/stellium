@@ -110,8 +110,11 @@ Methods: `get_cusp(h)`, `get_sign(h)`, `get_sign_degree(h)`, `get_description(h)
 ### `CalculatedChart` — the central output
 Inputs: `datetime` (`ChartDateTime`), `location` (`ChartLocation`).
 Data: `positions`, `house_systems` (dict name→`HouseCusps`), `house_placements`,
-`aspects`, `declination_aspects`, `metadata` (zodiac_type, ayanamsa,
-calculation_timestamp, chart_tags, plus analyzer/component output).
+`aspects`, `declination_aspects`, `metadata` (analyzer/component output — e.g.
+`_component_manifest`, `aspect_patterns`, `dignities`).
+**Top-level fields (NOT in `metadata`):** `zodiac_type`, `ayanamsa`,
+`ayanamsa_value` (sidereal only), `chart_tags`, `calculation_timestamp`. Read
+the sidereal offset via `chart.ayanamsa_value`, not `chart.metadata`.
 
 Key methods (verified against source):
 - **Lookup:** `get_object(name)`, `get_planets()`, `get_angles()`,

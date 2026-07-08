@@ -1889,6 +1889,50 @@ class ReportBuilder:
 
         return None
 
+    def to_string(self, format: str = "markdown") -> str:
+        """Render the report and return it as a string.
+
+        The counterpart to :meth:`render`, which prints to the terminal or
+        writes to a file and returns the filename (or ``None``). Use this when
+        you want the rendered text back directly -- e.g. to embed in another
+        document, diff in a test, or feed to an LLM.
+
+        Args:
+            format: A text format -- "markdown", "plain_table", "text",
+                "prose", "html", or "rich_table" (ANSI codes are stripped).
+                The binary "pdf" format is not supported here; use
+                ``render(format="pdf", file=...)`` instead.
+
+        Returns:
+            The rendered report as a string.
+
+        Raises:
+            ValueError: If no chart has been set, or format is "pdf".
+
+        Example:
+            >>> md = ReportBuilder().from_chart(chart).preset_standard().to_string("markdown")
+        """
+        if not self._chart:
+            raise ValueError("No chart set. Call .from_chart(chart) before rendering.")
+        if format == "pdf":
+            raise ValueError(
+                "to_string() does not support the binary 'pdf' format; use "
+                "render(format='pdf', file=...) instead."
+            )
+
+        section_data = [
+            (section.section_name, section.generate_data(self._chart))
+            for section in self._sections
+        ]
+
+        # Apply locale translation if set (prose is English-only).
+        locale = self._locale if self._locale and self._locale != "en" else None
+        if locale and format != "prose":
+            section_data = _translate_section_data(section_data, locale)
+
+        chart_svg_path = self._resolve_chart_image_path(None)
+        return self._to_string(section_data, format, chart_svg_path)
+
     def _resolve_chart_image_path(self, output_file: str | None) -> str | None:
         """
         Resolve the chart image path for rendering.

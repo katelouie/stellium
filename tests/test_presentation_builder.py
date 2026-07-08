@@ -93,6 +93,37 @@ def test_from_chart_returns_self(sample_chart):
     assert result is builder
 
 
+def test_to_string_returns_rendered_text(sample_chart):
+    """to_string() returns the rendered report as a string.
+
+    render() prints or writes to a file and returns the filename/None, so
+    previously there was no clean way to get the text back. to_string() fills
+    that gap.
+    """
+    out = (
+        ReportBuilder()
+        .from_chart(sample_chart)
+        .with_chart_overview()
+        .with_planet_positions()
+        .to_string("markdown")
+    )
+    assert isinstance(out, str)
+    assert len(out) > 0
+    assert "##" in out  # markdown headings present
+
+
+def test_to_string_rejects_pdf(sample_chart):
+    """to_string() is text-only; the binary pdf format must raise."""
+    with pytest.raises(ValueError, match="pdf"):
+        ReportBuilder().from_chart(sample_chart).with_chart_overview().to_string("pdf")
+
+
+def test_to_string_requires_chart():
+    """to_string() without a chart raises a clear error."""
+    with pytest.raises(ValueError, match="No chart set"):
+        ReportBuilder().to_string("markdown")
+
+
 # ============================================================================
 # SECTION ADDING TESTS
 # ============================================================================
