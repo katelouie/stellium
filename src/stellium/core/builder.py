@@ -22,7 +22,7 @@ from stellium.core.models import (
     UnknownTimeChart,
     longitude_to_sign_and_degree,
 )
-from stellium.core.native import Native
+from stellium.core.native import Native, build_chart_datetime
 from stellium.core.protocols import (
     AspectEngine,
     ChartAnalyzer,
@@ -519,35 +519,15 @@ class ChartBuilder:
         """
         self._time_unknown = True
 
-        # Normalize datetime to noon in local timezone
-        # This ensures planet positions (especially Moon) are calculated for midday
+        # Re-anchor the chart to local noon on the same date. We reuse the same
+        # ChartDateTime construction as Native (build_chart_datetime) so the two
+        # noon-normalizers can never drift apart.
         local_dt = self._datetime.local_datetime
         if local_dt is not None:
-            # Get the date and set time to noon
-            tz = pytz.timezone(self._location.timezone)
-            noon_local = local_dt.replace(hour=12, minute=0, second=0, microsecond=0)
-
-            # Localize if naive
-            if noon_local.tzinfo is None:
-                noon_local = tz.localize(noon_local)
-
-            # Convert to UTC
-            noon_utc = noon_local.astimezone(pytz.UTC)
-
-            # Calculate Julian Day for noon
-            hour_decimal = (
-                noon_utc.hour + noon_utc.minute / 60.0 + noon_utc.second / 3600.0
+            noon_local = local_dt.replace(
+                hour=12, minute=0, second=0, microsecond=0, tzinfo=None
             )
-            julian_day_noon = swe.julday(
-                noon_utc.year, noon_utc.month, noon_utc.day, hour_decimal
-            )
-
-            # Update the datetime with noon values
-            self._datetime = ChartDateTime(
-                utc_datetime=noon_utc,
-                julian_day=julian_day_noon,
-                local_datetime=noon_local.replace(tzinfo=None),  # Store naive local
-            )
+            self._datetime = build_chart_datetime(noon_local, self._location.timezone)
 
         return self
 
@@ -626,9 +606,12 @@ class ChartBuilder:
             CalculatedChart with all calculated data, or
             UnknownTimeChart if time_unknown flag is set
         """
-        # Dispatch to unknown time calculation if needed
-        if self._time_unknown:
-            return self._calculate_unknown_time_chart()
+        # Unknown-time charts run through this exact pipeline. They differ only
+        # in that houses/angles are skipped (they need a birth time) and a Moon
+        # day-range is carried instead. Sharing one pipeline is deliberate: a
+        # parallel code path silently drifts (declination aspects, analyzers,
+        # sidereal config, and manifest all went missing that way before).
+        is_unknown = self._time_unknown
 
         # Step 1: Calculate planetary positions
         objects_to_calculate = self._get_objects_list()
@@ -642,7 +625,9 @@ class ChartBuilder:
         calculated_angles: list[CelestialPosition] = []
         house_placements_map: dict[str, dict[str, int]] = {}
 
-        if not self._config.heliocentric:
+        # Houses and angles require a known birth time; heliocentric charts
+        # have no Earth horizon. Skip both -- everything downstream still runs.
+        if not self._config.heliocentric and not is_unknown:
             for engine in self._house_engines:
                 system_name = engine.system_name
                 if system_name in house_systems_map:
@@ -677,18 +662,28 @@ class ChartBuilder:
         _component_manifest: dict = {}
 
         for component in self._components:
-            additional = component.calculate(
-                self._datetime,
-                self._location,
-                positions,
-                house_systems_map,  # Pass the full map of cusps
-                house_placements_map,
-            )
+            try:
+                additional = component.calculate(
+                    self._datetime,
+                    self._location,
+                    positions,
+                    house_systems_map,  # Pass the full map of cusps
+                    house_placements_map,
+                )
+            except Exception:
+                # Some components (e.g. accidental dignities) need houses and
+                # cannot run on an unknown-time chart -- skip them there. On a
+                # known-time chart a component failure is a genuine bug, so let
+                # it propagate rather than silently dropping data.
+                if is_unknown:
+                    continue
+                raise
             positions.extend(additional)
 
-            # If component returned new CelestialPositions
-            # add their house placements to the placement map for all systems
-            if additional:
+            # If a component returned new CelestialPositions, add their house
+            # placements for every system -- but only when houses were actually
+            # calculated (never for unknown-time charts).
+            if additional and house_systems_map:
                 for engine in self._house_engines:
                     system_name = engine.system_name
                     cusps = house_systems_map[system_name]
@@ -736,19 +731,51 @@ class ChartBuilder:
                 positions
             )
 
-        # Run analyzers
-        # --- Create a "provisional" chart object ---
-        # Analyzers need the *full chart* to work on.
-        provisional_chart = CalculatedChart(
-            datetime=self._datetime,
-            location=self._location,
-            positions=tuple(positions),
-            house_systems=house_systems_map,
-            house_placements=house_placements_map,
-            aspects=tuple(aspects),
-            declination_aspects=tuple(declination_aspects),
-            metadata=component_metadata,  # Start with component metadata
-        )
+        # Compute zodiac + tag metadata now so the provisional chart (for
+        # analyzers) and the final chart are assembled through one code path.
+        ayanamsa_value = None
+        if self._config.zodiac_type == ZodiacType.SIDEREAL:
+            from stellium.core.ayanamsa import get_ayanamsa_value
+
+            ayanamsa_value = get_ayanamsa_value(
+                self._datetime.julian_day,
+                self._config.ayanamsa,  # type: ignore  # Already validated in config.__post_init__
+            )
+
+        chart_tags: tuple[str, ...] = ()
+        if self._config.heliocentric:
+            chart_tags = ("heliocentric",)
+
+        # Unknown-time charts carry the Moon's day-range in place of houses.
+        moon_range = self._calculate_moon_range() if is_unknown else None
+
+        def _assemble(metadata: dict) -> CalculatedChart:
+            """Build the correct chart type from the shared calculation state.
+
+            One factory used for both the provisional and final charts so an
+            unknown-time chart can never diverge from a known-time one.
+            """
+            common = {
+                "datetime": self._datetime,
+                "location": self._location,
+                "positions": tuple(positions),
+                "house_systems": house_systems_map,
+                "house_placements": house_placements_map,
+                "aspects": tuple(aspects),
+                "declination_aspects": tuple(declination_aspects),
+                "metadata": metadata,
+                "zodiac_type": self._config.zodiac_type,
+                "ayanamsa": self._config.ayanamsa,
+                "ayanamsa_value": ayanamsa_value,
+                "chart_tags": chart_tags,
+            }
+            if is_unknown:
+                return UnknownTimeChart(**common, moon_range=moon_range)
+            return CalculatedChart(**common)
+
+        # --- Run analyzers against a provisional chart ---
+        # Analyzers need the full (correctly-typed) chart to work on.
+        provisional_chart = _assemble(component_metadata)
 
         final_metadata = component_metadata.copy()
         # Allow external metadata injection (used by ReturnBuilder, etc.)
@@ -773,122 +800,12 @@ class ChartBuilder:
         if self._name is not None:
             final_metadata["name"] = self._name
 
-        # Calculate ayanamsa value if sidereal
-        ayanamsa_value = None
-        if self._config.zodiac_type == ZodiacType.SIDEREAL:
-            from stellium.core.ayanamsa import get_ayanamsa_value
-
-            ayanamsa_value = get_ayanamsa_value(
-                self._datetime.julian_day,
-                self._config.ayanamsa,  # type: ignore  # Already validated in config.__post_init__
-            )
-
-        # Build chart tags based on configuration
-        chart_tags: tuple[str, ...] = ()
-        if self._config.heliocentric:
-            chart_tags = ("heliocentric",)
+        # Flag unknown-time charts for downstream consumers.
+        if is_unknown:
+            final_metadata["time_unknown"] = True
 
         # Step 7: Build final chart
-        return CalculatedChart(
-            datetime=self._datetime,
-            location=self._location,
-            positions=tuple(positions),
-            house_systems=house_systems_map,
-            house_placements=house_placements_map,
-            aspects=tuple(aspects),
-            declination_aspects=tuple(declination_aspects),
-            metadata=final_metadata,
-            zodiac_type=self._config.zodiac_type,
-            ayanamsa=self._config.ayanamsa,
-            ayanamsa_value=ayanamsa_value,
-            chart_tags=chart_tags,
-        )
-
-    def _calculate_unknown_time_chart(self) -> UnknownTimeChart:
-        """
-        Calculate a chart for unknown birth time.
-
-        This is a specialized calculation that:
-        - Calculates planetary positions for noon
-        - Skips house and angle calculations entirely
-        - Calculates Moon range (positions at 00:00, 12:00, 23:59)
-        - Still calculates aspects (using noon Moon)
-
-        Returns:
-            UnknownTimeChart with moon_range and no houses/angles
-        """
-        # Step 1: Calculate planetary positions (at noon, already normalized)
-        objects_to_calculate = self._get_objects_list()
-        positions = self._ephemeris.calculate_positions(
-            self._datetime, self._location, objects_to_calculate
-        )
-
-        # Step 2: Calculate Moon range (need positions at start and end of day)
-        moon_range = self._calculate_moon_range()
-
-        # Step 3: Calculate aspects (if engine provided)
-        # Uses noon Moon position for aspect calculations
-        aspects = []
-        if self._aspect_engine:
-            aspects = self._aspect_engine.calculate_aspects(
-                positions,
-                self._orb_engine,
-            )
-
-        # Step 4: Run additional components (midpoints, fixed stars, etc.)
-        # These don't need houses -- they work from planetary positions alone.
-        component_metadata: dict = {}
-        for component in self._components:
-            try:
-                additional = component.calculate(
-                    self._datetime,
-                    self._location,
-                    positions,
-                    {},  # No house cusps
-                    {},  # No house placements
-                )
-                positions.extend(additional)
-
-                if hasattr(component, "get_metadata"):
-                    metadata_key = component.metadata_name
-                    component_metadata[metadata_key] = component.get_metadata()
-            except Exception:
-                # Some components may fail without houses -- skip gracefully
-                pass
-
-        # Step 4b: Calculate declination aspects (if engine provided)
-        # Declinations depend only on the date, not the birth time, so these
-        # are fully valid for an unknown-time chart -- and often the single most
-        # useful thing it can offer. Mirror the known-time path here.
-        declination_aspects = []
-        if self._declination_aspect_engine:
-            declination_aspects = self._declination_aspect_engine.calculate_aspects(
-                positions
-            )
-
-        # Build metadata
-        final_metadata: dict = {}
-        final_metadata.update(component_metadata)
-
-        # Add chart name to metadata if set
-        if self._name is not None:
-            final_metadata["name"] = self._name
-
-        # Mark as time unknown
-        final_metadata["time_unknown"] = True
-
-        # Step 5: Build UnknownTimeChart (no houses, no angles)
-        return UnknownTimeChart(
-            datetime=self._datetime,
-            location=self._location,
-            positions=tuple(positions),
-            house_systems={},  # No houses for unknown time
-            house_placements={},  # No house placements
-            aspects=tuple(aspects),
-            declination_aspects=tuple(declination_aspects),
-            metadata=final_metadata,
-            moon_range=moon_range,
-        )
+        return _assemble(final_metadata)
 
     def _calculate_moon_range(self) -> MoonRange:
         """
