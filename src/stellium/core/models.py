@@ -704,6 +704,16 @@ class CalculatedChart:
         """Get all nodes (True Node, South Node, etc.)."""
         return [p for p in self.positions if p.object_type == ObjectType.NODE]
 
+    @property
+    def is_time_unknown(self) -> bool:
+        """Whether this chart was calculated without a known birth time.
+
+        Always False for a standard chart; ``UnknownTimeChart`` overrides this
+        to True. Defined on the base so the predicate is safe to call on any
+        chart (no need to ``isinstance`` first).
+        """
+        return False
+
     def get_declination_aspects(self, aspect_type: str | None = None) -> list[Aspect]:
         """
         Get declination aspects (Parallel and Contraparallel).
