@@ -12,8 +12,7 @@
   category: explorer
   subcategories:
   - aviator
-  notable_for: American aviation pioneer and author. First female aviator to fly solo
-    across the Atlantic Ocean.
+  notable_for: American aviation pioneer and author. First female aviator to fly solo across the Atlantic Ocean.
   astrological_notes: Sun 3 Leo
   data_quality: AA
   sources:
@@ -34,8 +33,7 @@
   subcategories:
   - astronaut
   - first on Moon
-  notable_for: American astronaut and aeronautical engineer, and the first person
-    to walk on the Moon.
+  notable_for: American astronaut and aeronautical engineer, and the first person to walk on the Moon.
   astrological_notes: Sun 12 Leo
   data_quality: AA
   sources:
@@ -55,13 +53,14 @@
   category: explorer
   subcategories:
   - first human in space
-  notable_for: Soviet pilot and cosmonaut. He was the first human to journey into
-    outer space.
+  notable_for: Soviet pilot and cosmonaut. He was the first human to journey into outer space.
   astrological_notes: Sun 17 Pisces
   data_quality: X
   sources:
   - https://www.astro.com/astro-databank/Gagarin,_Yuri
   verified: false
+  has_reliable_time: false
+  verification_notes: "Midnight placeholder; no recorded time."
 - name: Edmund Hillary
   event_type: birth
   year: 1919
@@ -76,9 +75,7 @@
   category: explorer
   subcategories:
   - Everest climber
-  notable_for: New Zealand mountaineer, explorer, and philanthropist. On 29 May 1953,
-    Hillary and Nepalese Sherpa mountaineer Tenzing Norgay became the first climbers
-    confirmed as having reached the summit of Mount Everest.
+  notable_for: New Zealand mountaineer, explorer, and philanthropist. On 29 May 1953, Hillary and Nepalese Sherpa mountaineer Tenzing Norgay became the first climbers confirmed as having reached the summit of Mount Everest.
   astrological_notes: Sun 26 Cancer
   data_quality: C
   sources:
@@ -99,9 +96,7 @@
   subcategories:
   - oceanographer
   - explorer
-  notable_for: French naval officer, explorer, conservationist, filmmaker, innovator,
-    scientist, photographer, author and researcher who studied the sea and all forms
-    of life in water.
+  notable_for: French naval officer, explorer, conservationist, filmmaker, innovator, scientist, photographer, author and researcher who studied the sea and all forms of life in water.
   astrological_notes: Sun 20 Gemini
   data_quality: AA
   sources:

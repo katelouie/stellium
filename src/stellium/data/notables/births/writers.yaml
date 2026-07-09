@@ -16,10 +16,12 @@
   - activist
   notable_for: I Know Why the Caged Bird Sings and civil rights activism
   astrological_notes: Aries Sun - tests literary genius and resilience themes
-  data_quality: C
+  data_quality: A
   sources:
-  - Stellium Test Suite
+  - "AstroDataBank: https://www.astro.com/astro-databank/Angelou,_Maya"
   verified: false
+  has_reliable_time: true
+  verification_notes: "Replaces 'Stellium Test Suite' placeholder."
 - name: Carl Jung
   event_type: birth
   year: 1875
@@ -36,15 +38,18 @@
   - Psychiatrist
   - Author
   - Astrologer
-  notable_for: Swiss psychiatrist and founder of analytical psychology; developed
-    theories of the collective unconscious, archetypes, introvert-extrovert types,
-    individuation, and synchronicity. Advocate for astrology in psychological practice.
+  notable_for: Swiss psychiatrist and founder of analytical psychology; developed theories of the collective unconscious, archetypes, introvert-extrovert types, individuation, and synchronicity. Advocate for astrology in psychological practice.
   astrological_notes: Sun 3 Leo, Moon 15 Taurus, Asc 1 Aquarius
   data_quality: C
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Jung,_Carl'
   - 'Gerhard Wehr, Carl Gustav Jung: Leben, Werk, Wirkung (1985)'
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    Keep C for the exact minute, but the time is attested to within ~8 min:
+    19:24 Bern Mean Time = 19:32 LMT (Gret Baumann-Jung; Jung's own 'setting
+    sun'). Far better than typical C.
 - name: Fyodor Dostoevsky
   event_type: birth
   year: 1821
@@ -61,9 +66,7 @@
   - Novelist
   - Philosopher
   - Essayist
-  notable_for: Russian writer, one of Russia's greatest novelists. His works include
-    "Crime and Punishment" (1866), "The Idiot" (1869), and "The Brothers Karamazov"
-    (1880). Major influence on 20th century literature and philosophy.
+  notable_for: Russian writer, one of Russia's greatest novelists. His works include "Crime and Punishment" (1866), "The Idiot" (1869), and "The Brothers Karamazov" (1880). Major influence on 20th century literature and philosophy.
   astrological_notes: Sun 18 Scorpio, Moon 10 Gemini, Asc Sagittarius
   data_quality: C
   sources:
@@ -85,15 +88,16 @@
   - Playwright
   - Poet
   - Actor
-  notable_for: English playwright, poet, and actor, generally considered the greatest
-    dramatist the world has known, as well as the finest poet of the English language.
-    He is historically known as a true literary giant and is often called England's
-    national poet and the "Bard of Avon".
+  notable_for: English playwright, poet, and actor, generally considered the greatest dramatist the world has known, as well as the finest poet of the English language. He is historically known as a true literary giant and is often called England's national poet and the "Bard of Avon".
   astrological_notes: Ascendant 12°43', Sun 07°59', Moon 18°48'
   data_quality: XX
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Shakespeare,_William'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    XX confirmed. Only the 26 Apr 1564 baptism is recorded; the 23 Apr birth is
+    traditional and the 08:30 is invented. Pre-1752 English Julian.
 - name: Jane Austen
   event_type: birth
   year: 1775
@@ -108,11 +112,7 @@
   category: writer
   subcategories:
   - Novelist
-  notable_for: Jane Austen was a British writer and the first renowned female novelist
-    of England, known for her six major novels that interpret, critique, and comment
-    upon the British landed gentry at the end of the 18th century, exploring themes
-    of women's dependence on marriage for social standing and economic security through
-    biting irony, realism, humour, and social commentary.
+  notable_for: Jane Austen was a British writer and the first renowned female novelist of England, known for her six major novels that interpret, critique, and comment upon the British landed gentry at the end of the 18th century, exploring themes of women's dependence on marriage for social standing and economic security through biting irony, realism, humour, and social commentary.
   astrological_notes: Ascendant 24°08'
   data_quality: C
   sources:
@@ -133,8 +133,7 @@
   subcategories:
   - playwright
   - writer
-  notable_for: American writer who won awards for "All My Sons" and the Pulitzer Prize
-    for "Death Of A Salesman," 1949; noted dramatist and contemporary playwright.
+  notable_for: American writer who won awards for "All My Sons" and the Pulitzer Prize for "Death Of A Salesman," 1949; noted dramatist and contemporary playwright.
   astrological_notes: Asc. 16°25'
   data_quality: C
   sources:
@@ -155,16 +154,15 @@
   subcategories:
   - novelist
   - humorist
-  notable_for: British fantasy author, creator of the hugely popular 41-volume Discworld
-    series; knighted in 2009; wrote over 70 books; diagnosed with posterior cortical
-    atrophy (rare early-onset Alzheimer’s) in 2007 and became a prominent campaigner
-    for assisted dying; died 12 March 2015.
+  notable_for: British fantasy author, creator of the hugely popular 41-volume Discworld series; knighted in 2009; wrote over 70 books; diagnosed with posterior cortical atrophy (rare early-onset Alzheimer’s) in 2007 and became a prominent campaigner for assisted dying; died 12 March 2015.
   astrological_notes: Sun 08° Taurus, Moon 08° Capricorn
   data_quality: X
   sources:
   - https://www.astrotheme.com/astrology/Terry_Pratchett
   - https://en.wikipedia.org/wiki/Terry_Pratchett
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default (Astrotheme); no recorded time."
 - name: Amrita Pritam
   event_type: birth
   year: 1919
@@ -201,8 +199,7 @@
   subcategories:
   - novelist
   - modernist
-  notable_for: English writer and one of the foremost modernists of the twentieth
-    century.
+  notable_for: English writer and one of the foremost modernists of the twentieth century.
   astrological_notes: Sun 5 Aquarius
   data_quality: A
   sources:
@@ -244,8 +241,7 @@
   subcategories:
   - magical realism
   - Nobel
-  notable_for: Colombian novelist, short-story writer, screenwriter and journalist,
-    known affectionately as Gabo throughout Latin America.
+  notable_for: Colombian novelist, short-story writer, screenwriter and journalist, known affectionately as Gabo throughout Latin America.
   astrological_notes: Sun 15 Pisces
   data_quality: B
   sources:
@@ -266,13 +262,14 @@
   subcategories:
   - novelist
   - Nobel laureate
-  notable_for: American novelist, editor, and professor. Her novels are known for
-    their epic themes, vivid dialogue, and richly detailed characters.
+  notable_for: American novelist, editor, and professor. Her novels are known for their epic themes, vivid dialogue, and richly detailed characters.
   astrological_notes: Sun 29 Aquarius
   data_quality: X
   sources:
   - https://www.astro.com/astro-databank/Morrison,_Toni
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Sylvia Plath
   event_type: birth
   year: 1932
@@ -314,7 +311,11 @@
   sources:
   - https://www.astro.com/astro-databank/Rumi
   verified: false
-  calendar: gregorian
+  has_reliable_time: false
+  verification_notes: >
+    Noon default. 'calendar: gregorian' is anachronistic for 1207 (Gregorian
+    begins 1582) — remove or replace with julian/islamic. Birthplace Balkh vs
+    Wakhsh (Tajikistan) is scholarly-disputed.
 - name: Franz Kafka
   event_type: birth
   year: 1883
@@ -329,8 +330,7 @@
   category: writer
   subcategories:
   - novelist
-  notable_for: German-language novelist and short story writer, widely regarded as
-    one of the major figures of 20th-century literature.
+  notable_for: German-language novelist and short story writer, widely regarded as one of the major figures of 20th-century literature.
   astrological_notes: Sun 11 Cancer
   data_quality: AA
   sources:
@@ -357,6 +357,8 @@
   sources:
   - https://www.astro.com/astro-databank/Wilde,_Oscar
   verified: false
+  has_reliable_time: false
+  verification_notes: "Rated X; the 03:00 is round/traditional, not recorded."
 - name: Agatha Christie
   event_type: birth
   year: 1890
@@ -392,8 +394,7 @@
   subcategories:
   - writer
   - poet
-  notable_for: Argentine short-story writer, essayist, poet and translator, and a
-    key figure in Spanish-language literature.
+  notable_for: Argentine short-story writer, essayist, poet and translator, and a key figure in Spanish-language literature.
   astrological_notes: Sun 1 Virgo
   data_quality: AA
   sources:

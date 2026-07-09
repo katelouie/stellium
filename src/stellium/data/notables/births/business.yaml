@@ -15,9 +15,9 @@
   timezone: America/Los_Angeles
   category: business
   subcategories:
-    - Entrepreneur
-    - Inventor
-    - Visionary
+  - Entrepreneur
+  - Inventor
+  - Visionary
   notable_for: >-
     American business magnate and co-founder of Apple Inc. Revolutionized personal
     computing, animated movies (Pixar), music (iPod/iTunes), phones (iPhone), and
@@ -25,7 +25,7 @@
   astrological_notes: Sun 5 Pisces
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
   verified: true
 
 - name: Elon Musk
@@ -41,9 +41,9 @@
   timezone: Africa/Johannesburg
   category: business
   subcategories:
-    - Entrepreneur
-    - Engineer
-    - Investor
+  - Entrepreneur
+  - Engineer
+  - Investor
   notable_for: >-
     South African-born entrepreneur and business magnate. Founder of SpaceX, CEO of
     Tesla, owner of X (Twitter). Co-founded PayPal, Neuralink, and OpenAI.
@@ -51,10 +51,13 @@
   astrological_notes: Sun 6 Cancer
   data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Musk,_Elon"
-    - "Walter Isaacson, Elon Musk (2023)"
+  - "Walter Isaacson, 'Elon Musk' (2023): '7:30 on the morning of June 28, 1971' — biography, NOT a birth certificate."
   verified: false
 
+  has_reliable_time: true
+  verification_notes: >
+    Time provenance is a biography; keep at A, never AA. Isaacson doesn't cite
+    where the 07:30 came from.
 - name: Walt Disney
   event_type: birth
   year: 1901
@@ -68,9 +71,9 @@
   timezone: America/Chicago
   category: business
   subcategories:
-    - Animator
-    - Filmmaker
-    - Theme Park Creator
+  - Animator
+  - Filmmaker
+  - Theme Park Creator
   notable_for: >-
     American animator, film producer, and entrepreneur. Created Mickey Mouse in 1928.
     Founded The Walt Disney Company. Built Disneyland. Won 22 Academy Awards.
@@ -78,7 +81,7 @@
   astrological_notes: Sun 12 Sagittarius, Moon 9 Libra
   data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
   verified: true
 
 - name: Warren Buffett
@@ -120,10 +123,14 @@
   - philanthropist
   notable_for: American business magnate, co-founder of Microsoft Corporation, known for pioneering the microcomputer revolution and holding the title of the richest person in the world for most years from 1995 to 2017.
   astrological_notes: Ascendant 08°15'
-  data_quality: A
+  data_quality: DD
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Gates,_Bill'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Multiple incompatible times circulate (21:15, 22:00, others) with no
+    certificate consensus. Treat as dirty until a register is sighted.
 - name: Aristotle Onassis
   event_type: birth
   year: 1906
@@ -145,6 +152,10 @@
   sources:
   - 'Astrotheme: https://www.astrotheme.com/astrology/Aristotle_Onassis'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Noon default; no time. Birth YEAR also disputed (1900/1904/1906) — Onassis
+    self-reported 1900; most biographers give 20 Jan 1906. Flag the year.
 - name: Steve Wozniak
   event_type: birth
   year: 1950

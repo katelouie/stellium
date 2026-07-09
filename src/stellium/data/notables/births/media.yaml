@@ -19,12 +19,12 @@
   - entrepreneur
   - philanthropist
   notable_for: Media mogul and cultural icon
-  astrological_notes: Aquarius Sun with Sagittarius Rising - tests media influence
-    and humanitarian aspects
+  astrological_notes: Aquarius Sun with Sagittarius Rising - tests media influence and humanitarian aspects
   data_quality: C
   sources:
-  - Stellium Test Suite
+  - "AstroDataBank: https://www.astro.com/astro-databank/Winfrey,_Oprah"
   verified: false
+  verification_notes: "Replaces 'Stellium Test Suite' placeholder — re-source from ADB."
 - name: John Lennon
   event_type: birth
   year: 1940
@@ -41,9 +41,7 @@
   - Singer
   - Songwriter
   - Peace Activist
-  notable_for: British singer, songwriter and peace activist, founding member of The
-    Beatles. Wrote iconic songs including "Imagine," "Give Peace a Chance," and numerous
-    Beatles classics. Assassinated in New York City in 1980.
+  notable_for: British singer, songwriter and peace activist, founding member of The Beatles. Wrote iconic songs including "Imagine," "Give Peace a Chance," and numerous Beatles classics. Assassinated in New York City in 1980.
   astrological_notes: Sun 16 Libra, Moon 3 Aquarius
   data_quality: DD
   sources:
@@ -65,9 +63,7 @@
   - Conceptual Artist
   - Musician
   - Peace Activist
-  notable_for: Japanese conceptual artist, musician, designer, composer, poet and
-    performer. Became widely known through her marriage to John Lennon of The Beatles.
-    Pioneer of conceptual and performance art.
+  notable_for: Japanese conceptual artist, musician, designer, composer, poet and performer. Became widely known through her marriage to John Lennon of The Beatles. Pioneer of conceptual and performance art.
   astrological_notes: Sun 29 Aquarius, Moon in Sagittarius
   data_quality: A
   sources:
@@ -89,9 +85,7 @@
   - Singer
   - Songwriter
   - Multi-instrumentalist
-  notable_for: British singer, songwriter and multi-instrumentalist, founding member
-    of The Beatles. One of the most successful composers in pop music history. Knighted
-    in 1997 for services to music.
+  notable_for: British singer, songwriter and multi-instrumentalist, founding member of The Beatles. One of the most successful composers in pop music history. Knighted in 1997 for services to music.
   astrological_notes: Sun 27 Gemini, Moon in Leo
   data_quality: A
   sources:
@@ -113,40 +107,13 @@
   - Composer
   - Pianist
   - Child Prodigy
-  notable_for: Austrian composer widely regarded as among the greatest in Western
-    music history. Child prodigy who composed over 600 works including symphonies,
-    operas, and chamber music.
+  notable_for: Austrian composer widely regarded as among the greatest in Western music history. Child prodigy who composed over 600 works including symphonies, operas, and chamber music.
   astrological_notes: Sun 7 Aquarius
   data_quality: A
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus'
   verified: false
 
-- name: Mozart
-  event_type: birth
-  year: 1756
-  month: 1
-  day: 27
-  hour: 20
-  minute: 0
-  latitude: 47.8
-  longitude: 13.0333
-  location_name: Salzburg, Austria
-  timezone: Europe/Vienna
-  category: media
-  subcategories:
-    - Composer
-    - Pianist
-    - Child Prodigy
-  notable_for: >-
-    Wolfgang Amadeus Mozart - Austrian composer widely regarded as among the greatest
-    in Western music history. Child prodigy who composed over 600 works including
-    symphonies, operas, and chamber music.
-  astrological_notes: Sun 7 Aquarius
-  data_quality: A
-  sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus"
-  verified: false
 - name: Brad Pitt
   event_type: birth
   year: 1963
@@ -163,9 +130,7 @@
   - Actor
   - Producer
   - Film Star
-  notable_for: American actor and film producer. Won Academy Award for Best Supporting
-    Actor for "Once Upon a Time in Hollywood" (2019). Known for films like "Fight
-    Club," "Troy," and "Ocean's Eleven."
+  notable_for: American actor and film producer. Won Academy Award for Best Supporting Actor for "Once Upon a Time in Hollywood" (2019). Known for films like "Fight Club," "Troy," and "Ocean's Eleven."
   astrological_notes: Sun 26 Sagittarius, Moon in Capricorn
   data_quality: A
   sources:
@@ -187,9 +152,7 @@
   - Actor
   - Filmmaker
   - Humanitarian
-  notable_for: American actress, filmmaker and humanitarian. Won Academy Award for
-    Best Supporting Actress for "Girl, Interrupted" (1999). UNHCR Special Envoy and
-    noted humanitarian.
+  notable_for: American actress, filmmaker and humanitarian. Won Academy Award for Best Supporting Actress for "Girl, Interrupted" (1999). UNHCR Special Envoy and noted humanitarian.
   astrological_notes: Sun 13 Gemini, Moon 13 Aries, Asc 28 Cancer
   data_quality: AA
   sources:
@@ -211,9 +174,7 @@
   - Actor
   - Stage Actor
   - Film Star
-  notable_for: Welsh actor renowned for his Shakespearean performances and film roles.
-    Seven-time Academy Award nominee. Famous for his tumultuous relationship with
-    Elizabeth Taylor, whom he married twice.
+  notable_for: Welsh actor renowned for his Shakespearean performances and film roles. Seven-time Academy Award nominee. Famous for his tumultuous relationship with Elizabeth Taylor, whom he married twice.
   astrological_notes: Sun 17 Scorpio
   data_quality: DD
   sources:
@@ -233,9 +194,9 @@
   timezone: America/Los_Angeles
   category: media
   subcategories:
-    - Actress
-    - Model
-    - Singer
+  - Actress
+  - Model
+  - Singer
   notable_for: >-
     American actress, model and singer who became a major sex symbol. Starred in
     commercially successful films including "Some Like It Hot" and "Gentlemen Prefer
@@ -243,9 +204,13 @@
   astrological_notes: Sun 10 Gemini, Moon 19 Aquarius
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Monroe,_Marilyn"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Monroe,_Marilyn"
   verified: true
 
+  has_reliable_time: true
+  verification_notes: >
+    AA stands — genuine LA birth certificate at 9:30 AM (round, midwife-entered,
+    but authentic).
 - name: Elizabeth Taylor
   event_type: birth
   year: 1932
@@ -259,9 +224,9 @@
   timezone: Europe/London
   category: media
   subcategories:
-    - Actress
-    - Humanitarian
-    - Film Star
+  - Actress
+  - Humanitarian
+  - Film Star
   notable_for: >-
     British-American actress who became one of the great screen actresses of
     Hollywood's Golden Age. Won two Academy Awards. Known for her violet eyes,
@@ -269,7 +234,7 @@
   astrological_notes: Sun 7 Pisces
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
   verified: true
 - name: Beyoncé
   event_type: birth
@@ -358,6 +323,10 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Eminem'
   - Missouri birth certificate
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Missouri birth certificate gives date/place only, no time. Noon is a
+    placeholder.
 - name: Mariah Carey
   event_type: birth
   year: 1969
@@ -463,10 +432,14 @@
   - actor
   notable_for: Hong Kong singer-songwriter, actor, and film director; icon of Cantopop and queer culture
   astrological_notes: Virgo Sun, Pisces Moon
-  data_quality: AA
+  data_quality: X
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/leslie-cheung-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    NO birth time on record (Astro-Seek carries it as Wikipedia/unknown-time).
+    The 18:15 is fabricated. Drop the time; route to no-time handling.
 - name: Anita Mui
   event_type: birth
   year: 1963
@@ -484,10 +457,14 @@
   - actress
   notable_for: Hong Kong singer and actress, known as the Madonna of the East
   astrological_notes: Libra Sun, Aries Moon
-  data_quality: AA
+  data_quality: X
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/anita-mui-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    NO birth time on record. The 08:35 is fabricated. Drop the time; route to
+    no-time handling.
 - name: Selena Quintanilla
   event_type: birth
   year: 1971
@@ -505,10 +482,15 @@
   - Tejano musician
   notable_for: American Tejano singer-songwriter and fashion designer
   astrological_notes: Aries Sun, Leo Moon
-  data_quality: AA
+  data_quality: C
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Selena'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    astro.com has no verified time (the only cited 2:29 AM is 'not verified';
+    07:30 appears nowhere on ADB). Date conflict too: Texas Birth Index 16 Apr
+    vs birth notice 17 Apr.
 - name: Teresa Teng
   event_type: birth
   year: 1953
@@ -525,10 +507,14 @@
   - singer
   notable_for: Taiwanese singer known as the Voice of Asia
   astrological_notes: Aquarius Sun, Leo Moon
-  data_quality: A
+  data_quality: C
   sources:
   - 'Facebook: https://www.facebook.com/61562750093865/posts/teresa-teng-was-born-on-january-29-1953-at-5-am-her-sun-was-in-aquarius-her-moon/122159929790425003/'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    The 'A' rested on a Facebook post — not a valid source. Round 05:00.
+    Downgrade to C pending a real register.
 - name: Wong Kar-wai
   event_type: birth
   year: 1958
@@ -549,6 +535,8 @@
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/kar-wai-wong-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Faye Wong
   event_type: birth
   year: 1969
@@ -590,6 +578,8 @@
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/yun-fat-chow-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Miriam Makeba
   event_type: birth
   year: 1932
@@ -611,6 +601,8 @@
   sources:
   - 'Astro-Charts: https://astro-charts.com/persons/chart/miriam-makeba/'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Shah Rukh Khan
   event_type: birth
   year: 1965
@@ -627,10 +619,12 @@
   - actor
   notable_for: Indian actor known as the King of Bollywood
   astrological_notes: Scorpio Sun, Aquarius Moon
-  data_quality: AA
+  data_quality: A
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Khan,_Shah_Rukh'
   verified: false
+  has_reliable_time: true
+  verification_notes: "astro.com rates A (from memory/person), not a certificate."
 - name: Aishwarya Rai
   event_type: birth
   year: 1973
@@ -672,13 +666,13 @@
   sources:
   - 'Astro-Charts: https://astro-charts.com/persons/chart/ryuichi-sakamoto/'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Alfred Hitchcock
   event_type: birth
   year: 1899
   month: 8
   day: 13
-  hour: 3
-  minute: 15
   latitude: 51.5074
   longitude: -0.1278
   location_name: London, England
@@ -692,6 +686,10 @@
   sources:
   - https://www.astro.com/astro-databank/Hitchcock,_Alfred
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    INTERNAL CONTRADICTION: rated X (no time) yet carried 03:15. His time is
+    genuinely unknown — drop the speculative clock time.
 - name: Akira Kurosawa
   event_type: birth
   year: 1910
@@ -712,6 +710,8 @@
   sources:
   - https://www.astro.com/astro-databank/Kurosawa,_Akira
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Steven Spielberg
   event_type: birth
   year: 1946
@@ -754,6 +754,8 @@
   sources:
   - https://www.astro.com/astro-databank/Chaplin,_Charles
   verified: false
+  has_reliable_time: false
+  verification_notes: "Rated X; the 20:00 is speculative, not recorded."
 - name: Robin Williams
   event_type: birth
   year: 1951

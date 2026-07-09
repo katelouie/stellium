@@ -14,9 +14,7 @@
   - Magician
   - Author
   - Poet
-  notable_for: British occultist, ceremonial magician, poet, and painter. Founded
-    the religion of Thelema ("Do what thou wilt"). Leader of the British O.T.O. Member
-    of the Golden Dawn. Author of "The Book of the Law" and many other occult texts.
+  notable_for: British occultist, ceremonial magician, poet, and painter. Founded the religion of Thelema ("Do what thou wilt"). Leader of the British O.T.O. Member of the Golden Dawn. Author of "The Book of the Law" and many other occult texts.
   astrological_notes: Sun 19 Libra, Moon 22 Pisces
   data_quality: B
   sources:
@@ -39,15 +37,18 @@
   - Astrologer
   - Physician
   - Seer
-  notable_for: French astrologer, physician, and reputed seer. Author of "Les Propheties"
-    (1555), a collection of 942 quatrains predicting future events. His prophecies
-    have been interpreted as predicting major world events for centuries.
+  notable_for: French astrologer, physician, and reputed seer. Author of "Les Propheties" (1555), a collection of 942 quatrains predicting future events. His prophecies have been interpreted as predicting major world events for centuries.
   astrological_notes: Sun 2 Capricorn (Julian)
   data_quality: C
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Nostradamus'
   - Chavigny, La Premiere face du Janus francois (1594)
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Noon reflects Chavigny's 'around noon' AND Nostradamus's own habit of
+    casting for noon — not a recorded birth time. Pre-1582 Julian
+    (14 Dec 1503 Jul). Date may be 14 or 21 Dec.
 - name: Helena Blavatsky
   event_type: birth
   year: 1831
@@ -63,15 +64,16 @@
   subcategories:
   - Spiritualist
   - Mystic
-  notable_for: Russian spiritualist and mystic, the founder of the Theosophical Society.
-    The daughter of minor Russo-German aristocrats, she married Nikifor Blavatsky,
-    vice-Governor of Yerevan in the Caucasus on 7 July 1848 when she was 17 and he,
-    over 40, and fled from him a few weeks later.
+  notable_for: Russian spiritualist and mystic, the founder of the Theosophical Society. The daughter of minor Russo-German aristocrats, she married Nikifor Blavatsky, vice-Governor of Yerevan in the Caucasus on 7 July 1848 when she was 17 and he, over 40, and fled from him a few weeks later.
   astrological_notes: Ascendant 18°29', Sun sign Leo
   data_quality: C
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Blavatsky,_Helena'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    The 02:17 is a rectification (Rodden C); claimed times span 4:38 AM to
+    2:33 AM. Born 31 Jul OS = 12 Aug NS 1831 — NS date correct for the engine.
 - name: Edgar Cayce
   event_type: birth
   year: 1877
@@ -87,10 +89,7 @@
   subcategories:
   - Mystic
   - Psychic
-  notable_for: American mystic known as "The Sleeping Prophet." While in a sleep state
-    he could discuss history, geology, metaphysics, philosophy and medicine. He gave
-    approximately 30,000 life-readings and medical diagnosis to people during his
-    lifetime.
+  notable_for: American mystic known as "The Sleeping Prophet." While in a sleep state he could discuss history, geology, metaphysics, philosophy and medicine. He gave approximately 30,000 life-readings and medical diagnosis to people during his lifetime.
   astrological_notes: Ascendant 28°24', Sun 12°23', Moon 24°29'
   data_quality: C
   sources:
@@ -111,12 +110,7 @@
   subcategories:
   - mystic
   - author
-  notable_for: American-born British poet and scholarly mystic who wrote extensively
-    on occult and esoteric matters, and was the co-creator of the Rider-Waite tarot
-    deck. He authored its companion volume, the Pictorial Key to the Tarot (1911),
-    a guide to tarot reading. Waite joined the Hermetic Order of the Golden Dawn,
-    was a Freemason, and founded several esoteric orders. He was a prolific author
-    on divination, esotericism, Freemasonry, ceremonial magic, Kabbalah, and alchemy.
+  notable_for: American-born British poet and scholarly mystic who wrote extensively on occult and esoteric matters, and was the co-creator of the Rider-Waite tarot deck. He authored its companion volume, the Pictorial Key to the Tarot (1911), a guide to tarot reading. Waite joined the Hermetic Order of the Golden Dawn, was a Freemason, and founded several esoteric orders. He was a prolific author on divination, esotericism, Freemasonry, ceremonial magic, Kabbalah, and alchemy.
   astrological_notes: Sun 9°28' Libra, Ascendant 4°12' Capricorn
   data_quality: B
   sources:
@@ -140,10 +134,14 @@
   - spiritual teacher
   notable_for: Indian mystic and spiritual leader
   astrological_notes: Aquarius Sun, Aquarius Moon
-  data_quality: AA
+  data_quality: B
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ramakrishna-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    No civil record exists for an 1836 Indian villager. astro.com rates B
+    (biography, ~5:15 AM traditional). AA was inherited from Astro-Seek.
 - name: Ramana Maharshi
   event_type: birth
   year: 1879
@@ -182,10 +180,15 @@
   - monk
   notable_for: Indian Hindu monk and philosopher
   astrological_notes: Capricorn Sun, Sagittarius Moon
-  data_quality: AA
+  data_quality: A
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/swami-vivekananda-horoscope'
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    ADB's AA rests on a 1908 Modern Astrology second-hand quote. Displayed
+    06:33 conflicts with 06:45 and 06:49 (Nikhilananda). Sunrise-ish and
+    genuinely transmitted, but flag the 6:33/6:45/6:49 spread.
 - name: Paramahansa Yogananda
   event_type: birth
   year: 1893
@@ -245,10 +248,14 @@
   - yogi
   notable_for: Indian philosopher, yogi, and nationalist
   astrological_notes: Leo Sun, Sagittarius Moon
-  data_quality: AA
+  data_quality: B
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/sri-aurobindo-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    astro.com rates B; time is a traditional pre-sunrise 'danda' calculation
+    (~5:16 AM), not a register. AA was inherited from Astro-Seek.
 - name: Thich Nhat Hanh
   event_type: birth
   year: 1926
@@ -270,6 +277,8 @@
   sources:
   - 'Astrotheme: https://www.astrotheme.com/astrology/Nhat_Hanh'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default (Astrotheme); no recorded time."
 - name: Sadhguru
   event_type: birth
   year: 1957

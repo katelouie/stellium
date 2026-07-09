@@ -14,12 +14,15 @@
   - physicist
   - theorist
   notable_for: Theory of Relativity and contributions to quantum mechanics
-  astrological_notes: Pisces Sun with strong Sagittarius - tests fire/water balance
-    and scientific genius aspects
-  data_quality: C
+  astrological_notes: Pisces Sun with strong Sagittarius - tests fire/water balance and scientific genius aspects
+  data_quality: AA
   sources:
-  - Stellium Test Suite
-  verified: false
+  - "AstroDataBank: birth certificate in Einstein Archive, 'vormittag um elf ein halb Uhr' = 11:30 AM (note updated 28 Aug 2013)."
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Replaces the 'Stellium Test Suite' placeholder. Genuine birth certificate
+    confirms 1879-03-14, 11:30, Ulm. Upgrade C -> AA.
 - name: Marie Curie
   event_type: birth
   year: 1867
@@ -36,12 +39,15 @@
   - physicist
   - chemist
   notable_for: Pioneer in radioactivity research, first woman to win Nobel Prize
-  astrological_notes: Scorpio Sun - tests scientific breakthrough and transformational
-    themes
-  data_quality: C
+  astrological_notes: Scorpio Sun - tests scientific breakthrough and transformational themes
+  data_quality: X
   sources:
-  - Stellium Test Suite
+  - "Date/place well documented (Warsaw, then Russian Empire); no birth time on record."
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Replaces 'Stellium Test Suite' placeholder. Noon is a default — no
+    recorded time exists. Route to no-time handling.
 - name: Nikola Tesla
   event_type: birth
   year: 1856
@@ -58,12 +64,15 @@
   - inventor
   - electrical_engineer
   notable_for: Pioneer of alternating current and wireless technology
-  astrological_notes: Cancer Sun with midnight birth - tests electrical genius and
-    innovative aspects
+  astrological_notes: Cancer Sun with midnight birth - tests electrical genius and innovative aspects
   data_quality: C
   sources:
-  - Stellium Test Suite
+  - "Family lore ('born at midnight during a lightning storm'); no civil clock time. Born Austrian Empire (Military Frontier), modern Croatia."
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Replaces 'Stellium Test Suite' placeholder. The 00:00 is legend, not a
+    recorded time — do not treat as a real midnight birth.
 - name: Isaac Newton
   event_type: birth
   year: 1643
@@ -81,10 +90,7 @@
   - Physicist
   - Astronomer
   - Astrologer
-  notable_for: British astronomer, physicist, mathematician and astrologer who showed
-    how the universe is held together through laws of motion and gravity. Often described
-    as one of the greatest names in the history of human thought. Author of "Principia
-    Mathematica" (1687).
+  notable_for: British astronomer, physicist, mathematician and astrologer who showed how the universe is held together through laws of motion and gravity. Often described as one of the greatest names in the history of human thought. Author of "Principia Mathematica" (1687).
   astrological_notes: Sun 13 Capricorn, Moon 2 Cancer, Asc Libra
   data_quality: B
   sources:
@@ -107,9 +113,7 @@
   - Astronomer
   - Physicist
   - Mathematician
-  notable_for: Italian astronomer, physicist and mathematician. Known as the "father
-    of modern observational astronomy." Improved the telescope and made key astronomical
-    observations supporting heliocentrism.
+  notable_for: Italian astronomer, physicist and mathematician. Known as the "father of modern observational astronomy." Improved the telescope and made key astronomical observations supporting heliocentrism.
   astrological_notes: Sun 6 Pisces (Julian)
   data_quality: B
   sources:
@@ -132,14 +136,17 @@
   - Astronomer
   - Mathematician
   - Author
-  notable_for: Polish astronomer and author, considered the founder of modern astronomy.
-    He established the theory that the earth rotates daily on its axis and that planets
-    revolve in orbits around the sun. Author of "De revolutionibus orbium coelestium."
+  notable_for: Polish astronomer and author, considered the founder of modern astronomy. He established the theory that the earth rotates daily on its axis and that planets revolve in orbits around the sun. Author of "De revolutionibus orbium coelestium."
   astrological_notes: Sun 10 Pisces, Moon 5 Sagittarius, Asc Virgo
-  data_quality: AA
+  data_quality: C
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Copernicus,_Nicolaus'
-  verified: true
+  - "AstroDataBank source note: 'data from astrologers present at his birth' (Constellations '77; NN No.469) — a QUOTED NATIVITY, not a civil record."
+  verified: false
+  has_reliable_time: false
+  verification_notes: >
+    AA was indefensible: astro.com's own note shows the 5:00 PM LAT time is a
+    reconstructed Renaissance nativity, not a register. Downgrade to C.
+    Pre-1582 Julian (19 Feb 1473 Jul = 28 Feb 1473 Greg).
 - name: Johannes Kepler
   event_type: birth
   year: 1571
@@ -156,9 +163,7 @@
   - Mathematician
   - Astronomer
   - Astrologer
-  notable_for: German author, mathematician, scientist, astronomer, court astrologer
-    and teacher. Known as "the father of modern astronomy," he discovered the three
-    laws of planetary motion which paved the way for Newton's theory of gravity.
+  notable_for: German author, mathematician, scientist, astronomer, court astrologer and teacher. Known as "the father of modern astronomy," he discovered the three laws of planetary motion which paved the way for Newton's theory of gravity.
   astrological_notes: Sun 15 Capricorn, Moon 4 Gemini, Asc Gemini
   data_quality: B
   sources:
@@ -180,9 +185,7 @@
   - Inventor
   - Businessman
   - Engineer
-  notable_for: American inventor and businessman who developed many devices including
-    the phonograph, motion picture camera, and practical electric light bulb. Held
-    over 1,000 patents.
+  notable_for: American inventor and businessman who developed many devices including the phonograph, motion picture camera, and practical electric light bulb. Held over 1,000 patents.
   astrological_notes: Sun 22 Aquarius
   data_quality: C
   sources:
@@ -205,9 +208,7 @@
   - Astronomer
   - Astrophysicist
   - Author
-  notable_for: American astronomer, astrophysicist, exobiologist, educator and popular
-    celebrity. Host of the TV series "Cosmos" which inspired a generation. Author
-    of numerous books on science and space exploration.
+  notable_for: American astronomer, astrophysicist, exobiologist, educator and popular celebrity. Host of the TV series "Cosmos" which inspired a generation. Author of numerous books on science and space exploration.
   astrological_notes: Sun 16 Scorpio, Moon 21 Sagittarius
   data_quality: AA
   sources:
@@ -229,15 +230,18 @@
   - Psychologist
   - Neurologist
   - Author
-  notable_for: Austrian neurologist and founder of psychoanalysis. Developed theories
-    of the unconscious mind, dream interpretation, and the structure of personality
-    (id, ego, superego). His work profoundly influenced 20th century thought.
+  notable_for: Austrian neurologist and founder of psychoanalysis. Developed theories of the unconscious mind, dream interpretation, and the structure of personality (id, ego, superego). His work profoundly influenced 20th century thought.
   astrological_notes: Sun 15 Taurus, Moon in Gemini
-  data_quality: AA
+  data_quality: A
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Freud,_Sigmund'
   - Ernest Jones, The Life and Works of Sigmund Freud (1953)
   verified: true
+  has_reliable_time: true
+  verification_notes: >
+    18:30 is biographical (Ernest Jones), not certificate-based; and the local
+    register recorded a March date that Jones calls a clerical error for May 6.
+    Sound but not AA. Flag the March/May 6 date question.
 - name: Charles Darwin
   event_type: birth
   year: 1809
@@ -253,9 +257,7 @@
   subcategories:
   - Naturalist
   - Biologist
-  notable_for: English naturalist and author of "Origin of the Species" 1859, causing
-    a storm of debate. His theories of evolution through natural selection instigated
-    a revolution in biological science.
+  notable_for: English naturalist and author of "Origin of the Species" 1859, causing a storm of debate. His theories of evolution through natural selection instigated a revolution in biological science.
   astrological_notes: 23°04' 21°28 Asc. 07°19'
   data_quality: DD
   sources:
@@ -275,16 +277,14 @@
   category: scientist
   subcategories:
   - Physicist
-  notable_for: British theoretical physicist who was a Professor at the University
-    of Oxford. He studied at Oxford, then spent his career in Cambridge, holding a
-    chair there from 1977. His work was concerned with cosmology in a variety of aspects,
-    dealing with black holes, singularities, and the "big bang" theory of the origin
-    of the universe.
+  notable_for: British theoretical physicist who was a Professor at the University of Oxford. He studied at Oxford, then spent his career in Cambridge, holding a chair there from 1977. His work was concerned with cosmology in a variety of aspects, dealing with black holes, singularities, and the "big bang" theory of the origin of the universe.
   astrological_notes: 17°33'
   data_quality: X
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Hawking,_Stephen'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Ada Lovelace
   event_type: birth
   year: 1815
@@ -300,20 +300,7 @@
   subcategories:
   - mathematician
   - computer pioneer
-  notable_for: British noted family, the Countess of Lovelace. Daughter and only legitimate
-    child of the sixth Lord Byron, whose marriage to her mom lasted a year. Mom was
-    obsessive and dominating, giving her a good education but with massive social
-    repression. Showed early gift in math from age five, formed ambition to work as
-    a mathematician. Byron was an accomplished harpist. With few friends, married
-    an older man at 19 and had three kids before 24. Met Cambridge professor Charles
-    Babbage on 5 June 1833 at a party. Became friends, lost interest in household
-    and social life, offered to work as his assistant in 1842. Did brilliant technical
-    annotations to his calculator. Recognized as having genius, often called "the
-    first programmer." In 1841, greatly upset by expose of family scandal alleging
-    her dad had incestuous relationship with her half-sister. Byron had health problems
-    and mood swings from elation to fatalism, treated with opium and brandy. Had an
-    impulsive love affair. Found to have uterine cancer, Byron died just before her
-    37th birthday on 28 November 1852.
+  notable_for: British noted family, the Countess of Lovelace. Daughter and only legitimate child of the sixth Lord Byron, whose marriage to her mom lasted a year. Mom was obsessive and dominating, giving her a good education but with massive social repression. Showed early gift in math from age five, formed ambition to work as a mathematician. Byron was an accomplished harpist. With few friends, married an older man at 19 and had three kids before 24. Met Cambridge professor Charles Babbage on 5 June 1833 at a party. Became friends, lost interest in household and social life, offered to work as his assistant in 1842. Did brilliant technical annotations to his calculator. Recognized as having genius, often called "the first programmer." In 1841, greatly upset by expose of family scandal alleging her dad had incestuous relationship with her half-sister. Byron had health problems and mood swings from elation to fatalism, treated with opium and brandy. Had an impulsive love affair. Found to have uterine cancer, Byron died just before her 37th birthday on 28 November 1852.
   astrological_notes: Sun 18° Sagittarius, Moon in Aries, Ascendant 28° Pisces approx
   data_quality: B
   sources:
@@ -335,23 +322,7 @@
   - mathematician
   - computer scientist
   - cryptanalyst
-  notable_for: British mathematician, logician, scientist and the technical genius
-    behind Britain’s successful efforts to break German codes in World War II; made
-    inestimable contributions to cybernetics; his "Computable Numbers," 1937, is considered
-    one of the outstanding scientific papers of the 20th century, a blueprint for
-    what would become the electronic digital computer; his "Universal Turing Machine"
-    was an ancestor for the entire information age; second-born of two sons to a member
-    of the British civil service in India; raised in foster households in England,
-    separated from parents; enrolled at Sherbourne School at 13, showed gift for mathematics;
-    fell in love with another boy who died of tuberculosis, driving him into atheism
-    and materialistic explanations; failed twice to win fellowship at Trinity College,
-    Cambridge, but received one from King’s College; served in Government Code and
-    Cypher School during WWII, invented primitive machine to decipher Nazi Enigma
-    codes; post-war, created Turing machine at British National Physical Laboratory
-    but left due to bureaucracy, joined University of Manchester; convicted of gross
-    indecency in 1952 for homosexual relations, given probation and estrogen injections;
-    committed suicide by eating apple laced with cyanide on 7 June 1954; pardoned
-    by Queen Elizabeth II on 24 December 2013.
+  notable_for: British mathematician, logician, scientist and the technical genius behind Britain’s successful efforts to break German codes in World War II; made inestimable contributions to cybernetics; his "Computable Numbers," 1937, is considered one of the outstanding scientific papers of the 20th century, a blueprint for what would become the electronic digital computer; his "Universal Turing Machine" was an ancestor for the entire information age; second-born of two sons to a member of the British civil service in India; raised in foster households in England, separated from parents; enrolled at Sherbourne School at 13, showed gift for mathematics; fell in love with another boy who died of tuberculosis, driving him into atheism and materialistic explanations; failed twice to win fellowship at Trinity College, Cambridge, but received one from King’s College; served in Government Code and Cypher School during WWII, invented primitive machine to decipher Nazi Enigma codes; post-war, created Turing machine at British National Physical Laboratory but left due to bureaucracy, joined University of Manchester; convicted of gross indecency in 1952 for homosexual relations, given probation and estrogen injections; committed suicide by eating apple laced with cyanide on 7 June 1954; pardoned by Queen Elizabeth II on 24 December 2013.
   astrological_notes: Sun 01° Cancer, Moon 24° Scorpio, Ascendant 18° Gemini
   data_quality: A
   sources:
@@ -372,14 +343,14 @@
   subcategories:
   - crystallographer
   - DNA structure
-  notable_for: English chemist and X-ray crystallographer who made contributions to
-    the understanding of the molecular structures of DNA, RNA, viruses, coal, and
-    graphite.
+  notable_for: English chemist and X-ray crystallographer who made contributions to the understanding of the molecular structures of DNA, RNA, viruses, coal, and graphite.
   astrological_notes: Sun 2 Leo
   data_quality: X
   sources:
   - https://www.wikidata.org/wiki/Q7474
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default (Wikidata); no recorded time."
 - name: Grace Hopper
   event_type: birth
   year: 1906
@@ -395,14 +366,15 @@
   subcategories:
   - computer scientist
   - COBOL creator
-  notable_for: American computer scientist and United States Navy rear admiral. A
-    pioneer in the field, she was one of the first programmers of the Harvard Mark
-    I computer, and invented the first compiler for a computer programming language.
+  notable_for: American computer scientist and United States Navy rear admiral. A pioneer in the field, she was one of the first programmers of the Harvard Mark I computer, and invented the first compiler for a computer programming language.
   astrological_notes: Sun 17 Sagittarius
   data_quality: X
   sources:
-  - https://www.astro.com/astro-databank/Hooper,_Grace
+  - "https://www.astro.com/astro-databank/Hopper,_Grace"       # fixed: was 'Hooper'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Source URL misspelled 'Hooper' -> 'Hopper'. Noon default; no recorded time.
 - name: Richard Feynman
   event_type: birth
   year: 1918
@@ -418,14 +390,16 @@
   subcategories:
   - physicist
   - Nobel laureate
-  notable_for: American theoretical physicist known for his work in the path integral
-    formulation of quantum mechanics, the theory of quantum electrodynamics, and the
-    physics of the superfluidity of supercooled liquid helium.
+  notable_for: American theoretical physicist known for his work in the path integral formulation of quantum mechanics, the theory of quantum electrodynamics, and the physics of the superfluidity of supercooled liquid helium.
   astrological_notes: Sun 19 Taurus
   data_quality: AA
   sources:
   - https://www.astro.com/astro-databank/Feynman,_Richard
   verified: true
+  has_reliable_time: true
+  verification_notes: >
+    14:49 is oddly precise and widely repeated, but confirm the ADB
+    certificate basis before trusting the AA. Flagged, not downgraded.
 - name: Rachel Carson
   event_type: birth
   year: 1907
@@ -441,8 +415,7 @@
   subcategories:
   - marine biologist
   - Silent Spring
-  notable_for: American marine biologist and conservationist whose book Silent Spring
-    and other writings are credited with advancing the global environmental movement.
+  notable_for: American marine biologist and conservationist whose book Silent Spring and other writings are credited with advancing the global environmental movement.
   astrological_notes: Sun 4 Gemini
   data_quality: A
   sources:
@@ -462,14 +435,17 @@
   category: scientist
   subcategories:
   - penicillin discoverer
-  notable_for: Scottish bacteriologist and Nobel laureate. His best-known discoveries
-    are the enzyme lysozyme in 1923 and the antibiotic substance benzylpenicillin
-    (Penicillin G) from the mould Penicillium notatum in 1928.
+  notable_for: Scottish bacteriologist and Nobel laureate. His best-known discoveries are the enzyme lysozyme in 1923 and the antibiotic substance benzylpenicillin (Penicillin G) from the mould Penicillium notatum in 1928.
   astrological_notes: Sun 13 Leo
-  data_quality: AA
+  data_quality: B
   sources:
   - https://www.astro.com/astro-databank/Fleming,_Alexander
-  verified: true
+  verified: false
+  has_reliable_time: true
+  verification_notes: >
+    An AA for an 1881 rural Darvel (Scotland) birth is implausible; the round
+    02:00 signals approximation. Confirm the ADB note before restoring AA;
+    downgraded to B pending a sighted register.
 - name: Tim Berners-Lee
   event_type: birth
   year: 1955
@@ -484,10 +460,11 @@
   category: scientist
   subcategories:
   - invented the World Wide Web
-  notable_for: English computer scientist, best known as the inventor of the World
-    Wide Web.
+  notable_for: English computer scientist, best known as the inventor of the World Wide Web.
   astrological_notes: Sun 17 Gemini
   data_quality: X
   sources:
   - https://www.astro.com/astro-databank/Berners-Lee,_Tim
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."

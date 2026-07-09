@@ -14,12 +14,15 @@
   - painter
   - surrealist
   notable_for: Iconic self-portraits and Mexican folk art
-  astrological_notes: Cancer Sun with Leo Rising - tests artistic creativity and emotional
-    intensity
-  data_quality: C
+  astrological_notes: Cancer Sun with Leo Rising - tests artistic creativity and emotional intensity
+  data_quality: A
   sources:
-  - Stellium Test Suite
+  - "AstroDataBank: https://www.astro.com/astro-databank/Kahlo,_Frida"
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    Replaces 'Stellium Test Suite' placeholder. Note Kahlo publicly claimed
+    1910; documented birth year is 1907.
 - name: Pablo Picasso
   event_type: birth
   year: 1881
@@ -38,10 +41,14 @@
   - cubist
   notable_for: Co-founder of Cubism, revolutionary modern artist
   astrological_notes: Scorpio Sun - tests artistic revolution and creative transformation
-  data_quality: C
+  data_quality: A
   sources:
-  - Stellium Test Suite
+  - "AstroDataBank: https://www.astro.com/astro-databank/Picasso,_Pablo"
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    Replaces 'Stellium Test Suite' placeholder. 23:15 well attested (thought
+    stillborn at birth).
 - name: Georgia O'Keeffe
   event_type: birth
   year: 1887
@@ -57,9 +64,7 @@
   subcategories:
   - Painter
   - Modernist
-  notable_for: American artist known as the "Mother of American modernism". Famous
-    for paintings of enlarged flowers, New York skyscrapers, and New Mexico landscapes.
-    Received Presidential Medal of Freedom (1977) and National Medal of Arts (1985).
+  notable_for: American artist known as the "Mother of American modernism". Famous for paintings of enlarged flowers, New York skyscrapers, and New Mexico landscapes. Received Presidential Medal of Freedom (1977) and National Medal of Arts (1985).
   astrological_notes: Sun 22 Scorpio, Moon in Virgo (approx)
   data_quality: C
   sources:
@@ -81,15 +86,15 @@
   subcategories:
   - Painter
   - Impressionist
-  notable_for: French painter, initiator and leader of the Impressionist movement.
-    Known for series paintings of haystacks, Rouen Cathedral, and water lilies at
-    his Giverny garden. His work achieved record-breaking popularity in museum exhibitions.
+  notable_for: French painter, initiator and leader of the Impressionist movement. Known for series paintings of haystacks, Rouen Cathedral, and water lilies at his Giverny garden. His work achieved record-breaking popularity in museum exhibitions.
   astrological_notes: Sun 22 Scorpio (no birth time - Moon/Asc unknown)
   data_quality: X
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Monet,_Claude'
   - Baptismal record from Notre-Dame-de-Lorette parish, dated 20 May 1841
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Vincent van Gogh
   event_type: birth
   year: 1853
@@ -105,9 +110,7 @@
   subcategories:
   - Painter
   - Post-Impressionist
-  notable_for: Dutch Post-Impressionist painter, one of the most famous and influential
-    figures in Western art history. Created over 2,100 artworks including "The Starry
-    Night" and "Sunflowers."
+  notable_for: Dutch Post-Impressionist painter, one of the most famous and influential figures in Western art history. Created over 2,100 artworks including "The Starry Night" and "Sunflowers."
   astrological_notes: Sun 9 Aries
   data_quality: A
   sources:
@@ -132,16 +135,12 @@
   - Inventor
   - Scientist
   - Mathematician
-  notable_for: Italian Renaissance polymath - painter, sculptor, architect, musician,
-    mathematician, engineer, inventor, anatomist, and writer. Created masterpieces
-    including the Mona Lisa and The Last Supper. His notebooks contain designs for
-    flying machines, tanks, and submarines centuries ahead of their time.
+  notable_for: Italian Renaissance polymath - painter, sculptor, architect, musician, mathematician, engineer, inventor, anatomist, and writer. Created masterpieces including the Mona Lisa and The Last Supper. His notebooks contain designs for flying machines, tanks, and submarines centuries ahead of their time.
   astrological_notes: Sun 3 Taurus, Moon 3 Pisces, Asc 6 Sagittarius
   data_quality: AA
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Da_Vinci,_Leonardo'
-  - 'Family diary: ''A grandson of mine was born April 15, Saturday, three hours into
-    the night'''
+  - 'Family diary: ''A grandson of mine was born April 15, Saturday, three hours into the night'''
   - Leonardo da Vinci, Reynal & Co.
   verified: true
   calendar: julian_original
@@ -162,9 +161,7 @@
   - Painter
   - Expressionist
   - Abstract Art Pioneer
-  notable_for: Russian artist and expressionist painter who helped lay the foundations
-    for abstract art in Munich before World War I. One of the pioneers of abstraction
-    in western art. Founded the influential Blue Rider group.
+  notable_for: Russian artist and expressionist painter who helped lay the foundations for abstract art in Munich before World War I. One of the pioneers of abstraction in western art. Founded the influential Blue Rider group.
   astrological_notes: Sun 24 Sagittarius, Moon 5 Aries
   data_quality: C
   sources:
@@ -187,9 +184,7 @@
   - Painter
   - Architect
   - Poet
-  notable_for: Italian sculptor, painter, architect and poet of the High Renaissance.
-    Created the ceiling of the Sistine Chapel, the statue of David, and the Pietà.
-    Considered one of the greatest artists of all time.
+  notable_for: Italian sculptor, painter, architect and poet of the High Renaissance. Created the ceiling of the Sistine Chapel, the statue of David, and the Pietà. Considered one of the greatest artists of all time.
   astrological_notes: Sun 25 Pisces (Julian)
   data_quality: B
   sources:
@@ -212,9 +207,7 @@
   - Painter
   - Surrealist
   - Sculptor
-  notable_for: Spanish surrealist artist renowned for his technical skill and striking
-    imagery. Known for "The Persistence of Memory" and his eccentric public persona.
-    One of the most influential artists of the 20th century.
+  notable_for: Spanish surrealist artist renowned for his technical skill and striking imagery. Known for "The Persistence of Memory" and his eccentric public persona. One of the most influential artists of the 20th century.
   astrological_notes: Sun 20 Taurus
   data_quality: AA
   sources:
@@ -236,15 +229,18 @@
   - painter
   - filmmaker
   - pop artist
-  notable_for: American underground artist and filmmaker who had a genius for creating
-    attention. An androgyne and voyeur himself, his salon became the New York center
-    of the freak scene in the '60s.
+  notable_for: American underground artist and filmmaker who had a genius for creating attention. An androgyne and voyeur himself, his salon became the New York center of the freak scene in the '60s.
   astrological_notes: Asc. 13°49'
   data_quality: B
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Warhol,_Andy'
   - Ultra Violet, "Famous For 15 Minutes"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Date 1928-08-06 confirmed via baptismal record; the 06:30 time is NOT
+    certificate-based and is effectively unsourced. Keep B for the date, treat
+    time as unreliable.
 - name: Henri Matisse
   event_type: birth
   year: 1869
@@ -261,10 +257,7 @@
   - Painter
   - Sculptor
   - Lithographer
-  notable_for: French painter, sculptor and lithographer, noted for being one of the
-    foremost decorative French painters of his time and one of the most influential
-    of the 1900s. While his superbly simple line drawings rank among the greatest
-    works of graphic art he is best known for his abstract, intellectual use of color.
+  notable_for: French painter, sculptor and lithographer, noted for being one of the foremost decorative French painters of his time and one of the most influential of the 1900s. While his superbly simple line drawings rank among the greatest works of graphic art he is best known for his abstract, intellectual use of color.
   astrological_notes: 10°15' 25°19 Asc. 24°29'
   data_quality: AA
   sources:
@@ -286,10 +279,7 @@
   subcategories:
   - painter
   - muralist
-  notable_for: Mexican artist, controversial painter expressing political views through
-    art; communist with themes of revolution and labor; noted for paintings of children;
-    led campaign for Mexican artists to decorate government buildings with murals;
-    tumultuous marriage to Frida Kahlo.
+  notable_for: Mexican artist, controversial painter expressing political views through art; communist with themes of revolution and labor; noted for paintings of children; led campaign for Mexican artists to decorate government buildings with murals; tumultuous marriage to Frida Kahlo.
   astrological_notes: Ascendant 16°59' 18°33'
   data_quality: DD
   sources:
@@ -310,16 +300,14 @@
   subcategories:
   - photographer
   - modern art promoter
-  notable_for: American photographer and modern art promoter who was instrumental
-    over his 50-year career in making photography an accepted art form. In addition
-    to his photography, Stieglitz was known for the New York art galleries that he
-    ran in the early part of the 20th century, where he introduced many avant-garde
-    European artists to the U.S. He was married to painter Georgia O’Keeffe.
+  notable_for: American photographer and modern art promoter who was instrumental over his 50-year career in making photography an accepted art form. In addition to his photography, Stieglitz was known for the New York art galleries that he ran in the early part of the 20th century, where he introduced many avant-garde European artists to the U.S. He was married to painter Georgia O’Keeffe.
   astrological_notes: Sun sign Capricorn, Ascendant Aries, Moon sign Libra
   data_quality: X
   sources:
   - 'Astrologify: https://astrologify.com/people/alfred-stieglitz/'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Jan-1 date + noon = no real time (Astrologify, ungraded)."
 - name: Pamela Colman Smith
   event_type: birth
   year: 1878
@@ -335,15 +323,12 @@
   subcategories:
   - illustrator
   - commercial artist
-  notable_for: British artist known for illustrating the Rider-Waite tarot deck, published
-    in December 1909, the first deck where the pip cards (ace through ten) were fully
-    illustrated. A member of the Order of the Golden Dawn, she worked on the deck
-    in partnership with Arthur E. Waite, publisher of The Pictorial Key to the Tarot
-    in 1911. The deck is now called the Waite-Smith deck and is the biggest-selling
-    tarot deck of the 20th century.
+  notable_for: British artist known for illustrating the Rider-Waite tarot deck, published in December 1909, the first deck where the pip cards (ace through ten) were fully illustrated. A member of the Order of the Golden Dawn, she worked on the deck in partnership with Arthur E. Waite, publisher of The Pictorial Key to the Tarot in 1911. The deck is now called the Waite-Smith deck and is the biggest-selling tarot deck of the 20th century.
   astrological_notes: Sun 27°44' Aquarius
   data_quality: X
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Smith,_Pamela_Colman'
   - LMR quotes Elizabeth Hazel who speculates 3:30 PM
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; 3:30 PM is Elizabeth Hazel's speculation only."
