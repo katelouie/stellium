@@ -320,9 +320,10 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh'
   verified: false
   verification_notes: >
-    COORDINATES corrected: the 36.34/28.20 pin sat near Rhodes, but Mon Repos
-    (his birthplace) is on Corfu (39.6081/19.9283). Timezone Europe/Athens is
-    unchanged (Greece uses a single zone).
+    COORDINATES revised from the 36.34/28.20 pin (near Rhodes -- wrong) to Mon
+    Repos, Corfu (39.6081/19.9283) as an INTERIM best-guess. Birthplace and its
+    exact coordinates are still PENDING the round-2 research pass (they have been
+    revised more than once). Timezone Europe/Athens unchanged.
 - name: Jacqueline Kennedy Onassis
   event_type: birth
   year: 1929
