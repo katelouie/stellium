@@ -16,6 +16,7 @@ Covers:
 
 import pytest
 
+from stellium.components import MidpointCalculator
 from stellium.core.builder import ChartBuilder
 from stellium.core.config import CalculationConfig
 from stellium.core.models import UnknownTimeChart
@@ -256,6 +257,169 @@ class TestChartBuilderUnknownTime:
             time_unknown=True,
         ).calculate()
 
+        assert isinstance(chart, UnknownTimeChart)
+
+    # ------------------------------------------------------------------
+    # Regression: unknown-time charts share the main calculate() pipeline.
+    # These previously failed because the no-time path was a separate fork
+    # that silently dropped config, analyzers, the manifest, and metadata.
+    # ------------------------------------------------------------------
+
+    def test_unknown_time_respects_sidereal_config(self):
+        """Unknown-time charts must honor .with_sidereal().
+
+        The old fork called the ephemeris without the config, so a sidereal
+        request silently produced tropical positions and dropped the zodiac
+        metadata. Positions must match a sidereal known-time (noon) chart and
+        differ from a tropical one; the zodiac metadata must survive.
+        """
+        known_sid = (
+            ChartBuilder.from_details("1994-01-06 12:00", "Palo Alto, CA")
+            .with_sidereal("lahiri")
+            .calculate()
+        )
+        unknown_sid = (
+            ChartBuilder.from_details("1994-01-06 12:00", "Palo Alto, CA")
+            .with_sidereal("lahiri")
+            .with_unknown_time()
+            .calculate()
+        )
+        unknown_trop = ChartBuilder.from_details(
+            "1994-01-06 12:00", "Palo Alto, CA", time_unknown=True
+        ).calculate()
+
+        sun_sid = unknown_sid.get_object("Sun").longitude
+        # Matches the sidereal known chart (same instant)...
+        assert abs(sun_sid - known_sid.get_object("Sun").longitude) < 0.01
+        # ...and is shifted from tropical by roughly the ayanamsa (~24 deg).
+        assert abs(sun_sid - unknown_trop.get_object("Sun").longitude) > 1.0
+
+        # Zodiac metadata must survive on the frozen model (gap F).
+        assert unknown_sid.zodiac_type == known_sid.zodiac_type
+        assert unknown_sid.ayanamsa == "lahiri"
+        assert unknown_sid.ayanamsa_value is not None
+
+    def test_unknown_time_runs_analyzers(self):
+        """add_analyzer() must run on unknown-time charts (gap C)."""
+        native = Native("1994-01-06", "Palo Alto, CA")
+        chart = (
+            ChartBuilder.from_native(native)
+            .with_aspects()
+            .with_unknown_time()
+            .add_analyzer(AspectPatternAnalyzer())
+            .calculate()
+        )
+        assert "aspect_patterns" in chart.metadata
+
+    def test_unknown_time_builds_component_manifest(self):
+        """Component manifest must be populated on unknown charts (gap D)."""
+        native = Native("1994-01-06", "Palo Alto, CA")
+        chart = (
+            ChartBuilder.from_native(native)
+            .with_unknown_time()
+            .add_component(MidpointCalculator(calculate_all=True))
+            .calculate()
+        )
+        assert "Midpoints" in chart.available_components()
+
+    def test_unknown_time_injects_extra_metadata(self):
+        """External _extra_metadata must be injected, e.g. ReturnBuilder (gap E)."""
+        native = Native("1994-01-06", "Palo Alto, CA")
+        builder = ChartBuilder.from_native(native).with_unknown_time()
+        builder._extra_metadata = {"return_number": 7}
+        chart = builder.calculate()
+        assert chart.metadata.get("return_number") == 7
+
+    def test_known_and_unknown_share_pipeline(self):
+        """Structural anti-drift guard: an unknown-time chart must carry the
+        same computed data as its known-time (noon) twin -- components,
+        analyzers, declination aspects, and zodiac metadata -- differing only
+        in houses/angles. If the two calculate paths ever fork again, this
+        test fails.
+        """
+
+        def build(unknown: bool):
+            b = (
+                ChartBuilder.from_details("1994-01-06 12:00", "Palo Alto, CA")
+                .with_sidereal("lahiri")
+                .with_aspects()
+                .with_declination_aspects(orb=1.0)
+                .add_component(MidpointCalculator(calculate_all=True))
+                .add_analyzer(AspectPatternAnalyzer())
+            )
+            if unknown:
+                b = b.with_unknown_time()
+            return b.calculate()
+
+        known = build(False)
+        unknown = build(True)
+
+        # Same optional data present on both.
+        assert unknown.available_components() == known.available_components()
+        assert "aspect_patterns" in unknown.metadata
+        assert len(unknown.declination_aspects) == len(known.declination_aspects)
+        assert len(unknown.declination_aspects) > 0
+        # Same zodiac metadata (gaps A + F).
+        assert unknown.zodiac_type == known.zodiac_type
+        assert unknown.ayanamsa == known.ayanamsa
+        assert unknown.ayanamsa_value is not None
+
+        # Differ only in houses/angles + type.
+        assert known.get_houses() is not None
+        assert unknown.get_houses() is None
+        assert known.is_time_unknown is False
+        assert unknown.is_time_unknown is True
+
+    def test_unknown_time_entry_points_agree(self):
+        """with_unknown_time() and from_details(time_unknown=True) must produce
+        identical positions -- they share one noon-normalizer.
+        """
+        via_method = (
+            ChartBuilder.from_details("1994-01-06 03:15", "Palo Alto, CA")
+            .with_unknown_time()
+            .calculate()
+        )
+        via_ctor = ChartBuilder.from_details(
+            "1994-01-06 03:15", "Palo Alto, CA", time_unknown=True
+        ).calculate()
+        for name in ("Sun", "Moon", "Mars"):
+            assert (
+                abs(
+                    via_method.get_object(name).longitude
+                    - via_ctor.get_object(name).longitude
+                )
+                < 1e-9
+            )
+
+    def test_component_failure_propagates_on_known_but_not_unknown(self):
+        """House-dependent components must fail-soft only on unknown-time charts.
+
+        On a known-time chart a component failure is a genuine bug and must
+        propagate; on an unknown-time chart it is expected (no houses) and is
+        skipped so the chart still builds.
+        """
+
+        class ExplodingComponent:
+            component_name = "Exploder"
+
+            def calculate(self, datetime, location, positions, houses, placements):
+                raise RuntimeError("boom")
+
+        native = Native("1994-01-06", "Palo Alto, CA")
+
+        # Known-time: the error must surface.
+        with pytest.raises(RuntimeError, match="boom"):
+            ChartBuilder.from_native(native).add_component(
+                ExplodingComponent()
+            ).calculate()
+
+        # Unknown-time: swallowed; the chart still builds.
+        chart = (
+            ChartBuilder.from_native(native)
+            .with_unknown_time()
+            .add_component(ExplodingComponent())
+            .calculate()
+        )
         assert isinstance(chart, UnknownTimeChart)
 
 
