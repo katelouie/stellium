@@ -98,8 +98,10 @@ class NotableRegistry:
                         year=entry["year"],
                         month=entry["month"],
                         day=entry["day"],
-                        hour=entry["hour"],
-                        minute=entry["minute"],
+                        # hour/minute may be absent for timeless notables — the
+                        # audit removes speculative times (null). Tolerate it.
+                        hour=entry.get("hour"),
+                        minute=entry.get("minute"),
                         location_input=location_input,  # Native handles it!
                         category=entry["category"],
                         subcategories=entry.get("subcategories"),
@@ -108,6 +110,8 @@ class NotableRegistry:
                         data_quality=entry.get("data_quality", "C"),
                         sources=entry.get("sources"),
                         verified=entry.get("verified", False),
+                        has_reliable_time=entry.get("has_reliable_time"),
+                        verification_notes=entry.get("verification_notes", ""),
                     )
 
                     self._notables.append(notable)

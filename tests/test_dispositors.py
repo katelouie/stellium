@@ -19,8 +19,13 @@ def einstein_chart():
 
 @pytest.fixture(scope="module")
 def second_chart():
-    """A second notable chart for additional testing."""
-    return ChartBuilder.from_notable("Nikola Tesla").calculate()
+    """A second notable chart for additional testing.
+
+    Must be a reliable-time notable so house_based() dispositors work: Tesla's
+    "midnight" is legend (has_reliable_time=False -> unknown-time, no houses),
+    whereas Monroe has a genuine 9:30 AM birth certificate.
+    """
+    return ChartBuilder.from_notable("Marilyn Monroe").calculate()
 
 
 @pytest.fixture(scope="module")

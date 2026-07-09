@@ -15,9 +15,9 @@
   timezone: America/Denver
   category: event
   subcategories:
-    - Nuclear
-    - Military
-    - Scientific
+  - Nuclear
+  - Military
+  - Scientific
   notable_for: >-
     First detonation of a nuclear weapon. Code-named "Trinity" by J. Robert Oppenheimer.
     Part of the Manhattan Project. The 18.6 kiloton explosion vaporized the test tower
@@ -25,7 +25,7 @@
   astrological_notes: Sun 23 Cancer
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Nuclear:_First_Atomic_Test"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Nuclear:_First_Atomic_Test"
   verified: true
 
 - name: Moon Landing
@@ -33,7 +33,7 @@
   year: 1969
   month: 7
   day: 20
-  hour: 20
+  hour: 15
   minute: 17
   latitude: 29.7604
   longitude: -95.3698
@@ -41,9 +41,9 @@
   timezone: America/Chicago
   category: event
   subcategories:
-    - Space
-    - Scientific
-    - Historical
+  - Space
+  - Scientific
+  - Historical
   notable_for: >-
     Apollo 11 lunar landing. Neil Armstrong and Buzz Aldrin became the first humans
     to walk on the Moon. "That's one small step for man, one giant leap for mankind."
@@ -51,25 +51,29 @@
   astrological_notes: Sun 27 Cancer
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Space:_Moon_Landing"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Space:_Moon_Landing"
   verified: true
 
+  verification_notes: >
+    20:17:40 is UTC (LM touchdown). With Houston coords + America/Chicago on
+    file, store the LOCAL equivalent 15:17 CDT. (Alt: keep 20:17 and set
+    timezone: UTC.) As-was, the chart was ~5h off.
 - name: Titanic Sinking
   event_type: event
   year: 1912
   month: 4
   day: 15
-  hour: 2
-  minute: 20
+  hour: 5
+  minute: 18
   latitude: 41.7325
   longitude: -49.9469
   location_name: North Atlantic Ocean
   timezone: UTC
   category: event
   subcategories:
-    - Maritime
-    - Disaster
-    - Historical
+  - Maritime
+  - Disaster
+  - Historical
   notable_for: >-
     Sinking of the RMS Titanic after striking an iceberg. Over 1,500 people died,
     making it one of the deadliest peacetime maritime disasters. The "unsinkable"
@@ -77,9 +81,12 @@
   astrological_notes: Sun 25 Aries
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Historic:_Titanic_Sinking"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Historic:_Titanic_Sinking"
   verified: true
 
+  verification_notes: >
+    02:20 was ship's local time (~UTC-2h58m), mislabeled UTC. Store 05:18 UTC
+    to be unambiguous (Wikipedia: '02:20 ship's time (05:18 GMT)').
 - name: September 11 Attacks
   event_type: event
   year: 2001
@@ -93,9 +100,9 @@
   timezone: America/New_York
   category: event
   subcategories:
-    - Terrorist
-    - Historical
-    - Political
+  - Terrorist
+  - Historical
+  - Political
   notable_for: >-
     Terrorist attacks on the World Trade Center. First plane struck at 8:46 AM,
     second at 9:03 AM. Towers collapsed at 9:59 AM and 10:28 AM. Nearly 3,000 people
@@ -103,8 +110,8 @@
   astrological_notes: Sun 18 Virgo
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Terrorist:_WTC_(2001)"
-    - "Columbia University Lamont-Doherty Earth Observatory seismograph data"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Terrorist:_WTC_(2001)"
+  - "Columbia University Lamont-Doherty Earth Observatory seismograph data"
   verified: true
 - name: John F. Kennedy Assassination
   event_type: event
@@ -164,12 +171,15 @@
   category: historic
   subcategories:
   - political
-  notable_for: German historic event, the fall of the Berlin Wall after 28 years dividing East and West Berlin.
+  notable_for: Fall of the Berlin Wall after 28 years dividing East and West Berlin. The chart time (18:57) marks Günter Schabowski's press-conference announcement that the borders were open; crowds forced the Bornholmer Straße crossing open ~21:20 and the wall was fully breached by ~23:00-23:30.
   astrological_notes: 17°19' 28°04 Asc. 05°13'
   data_quality: A
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Historic:_Fall_of_Berlin_Wall'
   verified: false
+  verification_notes: >
+    18:57 captures the ANNOUNCEMENT, defensible. If you intend 'the wall fell',
+    use ~23:30. Documented, not auto-changed — your call which moment to model.
 - name: Chernobyl Explosion
   event_type: event
   year: 1986
@@ -207,20 +217,23 @@
   subcategories:
   - achievement
   - scientific
-  notable_for: American airplane flight as first attempted by the Wright Brothers on Kill Devil Hill, a flight that lasted a matter of seconds. Orville and Wilbur Wright had built an aircraft and they tossed a coin as to which of them would take the test flight. Orville won the toss and he piloted the first flight of 120 feet for 12 seconds on 17 December 1902.
+  notable_for: American airplane flight as first attempted by the Wright Brothers on Kill Devil Hill, a flight that lasted a matter of seconds. Orville and Wilbur Wright had built an aircraft and they tossed a coin as to which of them would take the test flight. Orville won the toss and he piloted the first flight of 120 feet for 12 seconds on 17 December 1903.
   astrological_notes: 24°32' 10°13 Asc. 19°27'
   data_quality: B
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Aviation:_First_flight'
   - Rick Ostrander quotes historic records.
   verified: false
+  verification_notes: >
+    Confirmed 1903-12-17, 10:35 AM (Smithsonian NASM, NPS, Library of Congress).
+    The '1902' in the description is a typo.
 - name: Pearl Harbor Attack
   event_type: event
   year: 1941
   month: 12
   day: 7
   hour: 7
-  minute: 30
+  minute: 48
   latitude: 21.3
   longitude: -157.8667
   location_name: Honolulu, Hawaii, USA
@@ -236,6 +249,10 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Military:_Pearl_Harbor'
   - Nick Campion, p.486, between 7:30 and 7:55 AM with a note that Parnell’s "History of the Second World War" gives 7:55 and adds that the Japanese planes took off at 6:00 AM.
   verified: false
+  verification_notes: >
+    First strike ~07:48–07:55 HST (Britannica/IWM), not 07:30. Keep
+    timezone Pacific/Honolulu — IANA already encodes the historical UTC-10:30
+    offset for 1941, so no manual offset needed.
 - name: Indian Independence
   event_type: event
   year: 1947
@@ -330,19 +347,20 @@
   category: accident
   subcategories:
   - nuclear disaster
-  notable_for: Fukushima Daiichi nuclear disaster
+  notable_for: Tohoku earthquake (14:46 JST) that triggered the Fukushima Daiichi nuclear disaster. The chart time is the earthquake onset; the meltdowns developed over the following days (Unit 1 hydrogen explosion 15:36 JST, 12 Mar).
   astrological_notes: Pisces Sun
   data_quality: AA
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Accident:_Fukushima_nuclear_disaster'
   verified: false
+  verification_notes: "Relabel event; the time itself (14:46 JST quake) is correct."
 - name: Arab Spring begins Tunisia
   event_type: event
   year: 2010
   month: 12
   day: 17
-  hour: 16
-  minute: 0
+  hour: 11
+  minute: 30
   latitude: 33.8869
   longitude: 9.5375
   location_name: Sidi Bouzid, Tunisia
@@ -356,6 +374,8 @@
   sources:
   - 'Al Jazeera: https://www.aljazeera.com/news/2021/1/14/arab-spring-ten-years-on'
   verified: false
+  verification_notes: >
+    Bouazizi began work 8 a.m. (Wikipedia). E-International Relations, 'Biopolitics of the Self-Immolation of Mohamed Bouazizi' (2012): 'At around 11.30 a.m. on the 17th December 2010... set himself on fire.' Corroborated by The Africa Report ('less than an hour before the weekly [Friday] prayer') and Middle East Monitor. On-file 16:00 unsupported; corrected to ~11:30 (minute approximate).
 - name: Sputnik Launch
   event_type: event
   year: 1957
@@ -376,6 +396,9 @@
   sources:
   - Wikipedia
   verified: true
+  verification_notes: >
+    19:28 UTC is correct; note the LOCAL date at Baikonur was already 5 Oct.
+    Confirm the engine treats the stored time as UTC, not local Kazakh time.
 - name: COVID-19 WHO Declaration
   event_type: event
   year: 2020
@@ -396,12 +419,16 @@
   sources:
   - https://www.who.int/emergencies/diseases/novel-coronavirus-2019
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Noon is a placeholder; Tedros declared in the afternoon (CET) on
+    2020-03-11, exact minute undocumented. Flag as approximate.
 - name: 1929 Stock Market Crash
   event_type: event
   year: 1929
   month: 10
   day: 29
-  hour: 12
+  hour: 10
   minute: 0
   latitude: 40.7069
   longitude: -74.0113
@@ -416,6 +443,9 @@
   sources:
   - Wikipedia
   verified: false
+  verification_notes: >
+    NYSE opened 10:00 AM ET on Black Tuesday. Noon was a placeholder;
+    market-open is the meaningful chart time.
 - name: End of World War II
   event_type: event
   year: 1945

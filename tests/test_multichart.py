@@ -81,6 +81,21 @@ def fourth_chart():
     ).calculate()
 
 
+@pytest.fixture(scope="module")
+def unknown_time_chart():
+    """A birth-time-unknown chart (no houses/angles).
+
+    Models a notable with an unreliable/absent birth time — the chart still
+    has planetary positions but ``get_houses()`` returns ``None``.
+    """
+    return ChartBuilder.from_details(
+        "1867-11-07",
+        (52.2297, 21.0122),  # Warsaw, Poland
+        name="Timeless Partner",
+        time_unknown=True,
+    ).calculate()
+
+
 # =============================================================================
 # MultiChart Dataclass Tests
 # =============================================================================
@@ -735,3 +750,78 @@ class TestMultiChartIntegration:
         natal_houses = natal_chart.get_houses()
         mc_natal = mc.chart1
         assert mc_natal.get_houses() is natal_houses
+
+
+# =============================================================================
+# Unknown-Time (Timeless) Chart Handling
+# =============================================================================
+
+
+class TestMultiChartUnknownTime:
+    """Synastry with a birth-time-unknown chart must degrade gracefully.
+
+    Astrologically, cross-chart aspects never require houses; only house
+    overlays (a planet falling into a house) do. A timeless chart has no
+    houses, so it cannot *host* the other chart's planets, but its own
+    planets can still fall into the other (timed) chart's houses. None of
+    these paths — calculate, overlay access, or drawing — may raise.
+
+    Regression: previously ``.calculate()`` and ``.draw()`` crashed with
+    ``AttributeError: 'NoneType' object has no attribute 'cusps'`` /
+    ``ValueError: No house systems calculated``.
+    """
+
+    def test_calculate_does_not_raise(self, natal_chart, unknown_time_chart):
+        """synastry().calculate() succeeds when one chart is timeless."""
+        mc = (
+            MultiChartBuilder.synastry(natal_chart, unknown_time_chart)
+            .with_cross_aspects()
+            .with_house_overlays()
+            .calculate()
+        )
+        assert isinstance(mc, MultiChart)
+
+    def test_cross_aspects_still_computed(self, natal_chart, unknown_time_chart):
+        """Cross-chart aspects don't need houses, so they're still found."""
+        mc = (
+            MultiChartBuilder.synastry(natal_chart, unknown_time_chart)
+            .with_cross_aspects()
+            .calculate()
+        )
+        assert len(mc.get_all_cross_aspects()) > 0
+
+    def test_overlays_only_into_the_timed_chart(self, natal_chart, unknown_time_chart):
+        """Overlays exist for planets-into-timed-houses, but not the reverse."""
+        mc = (
+            MultiChartBuilder.synastry(natal_chart, unknown_time_chart)
+            .with_house_overlays()
+            .calculate()
+        )
+        # Chart 1 (timeless) planets fall into chart 0 (natal) houses: present.
+        assert len(mc.get_house_overlays(1, 0)) > 0
+        # Chart 0 planets into chart 1 (timeless) houses: impossible -> empty.
+        assert mc.get_house_overlays(0, 1) == ()
+
+    def test_draw_does_not_raise(self, natal_chart, unknown_time_chart, tmp_path):
+        """Biwheel rendering skips the timeless chart's house/angle rings."""
+        mc = (
+            MultiChartBuilder.synastry(natal_chart, unknown_time_chart)
+            .with_cross_aspects()
+            .calculate()
+        )
+        out = tmp_path / "timeless_synastry.svg"
+        mc.draw(str(out)).save()
+        assert out.exists()
+
+    def test_draw_with_timeless_primary(
+        self, natal_chart, unknown_time_chart, tmp_path
+    ):
+        """The timeless chart as the primary (inner) wheel must also render."""
+        mc = (
+            MultiChartBuilder.synastry(unknown_time_chart, natal_chart)
+            .with_cross_aspects()
+            .calculate()
+        )
+        out = tmp_path / "timeless_primary.svg"
+        mc.draw(str(out)).save()
+        assert out.exists()

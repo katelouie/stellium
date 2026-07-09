@@ -1435,15 +1435,11 @@ class MultiChartBuilder:
             list(chart.positions), orb_engine
         )
 
-        return CalculatedChart(
-            datetime=chart.datetime,
-            location=chart.location,
-            positions=chart.positions,
-            house_systems=chart.house_systems,
-            house_placements=chart.house_placements,
-            aspects=tuple(internal_aspects),
-            metadata=chart.metadata,
-        )
+        # Use replace() so the chart's concrete type (e.g. UnknownTimeChart)
+        # and every field are preserved — a manual CalculatedChart(...) rebuild
+        # silently downgrades a timeless chart to a plain chart with
+        # is_time_unknown=False, which then crashes house-dependent rendering.
+        return replace(chart, aspects=tuple(internal_aspects))
 
     def _calculate_cross_aspects(
         self,
@@ -1477,9 +1473,17 @@ class MultiChartBuilder:
         overlays = []
 
         try:
-            house_cusps = house_chart.get_houses().cusps
+            houses = house_chart.get_houses()
         except (ValueError, KeyError):
             return overlays
+
+        # An unknown-time chart has no houses, so it cannot host the other
+        # chart's planets. Cross-chart aspects are unaffected; only overlays
+        # into this (timeless) chart are unavailable.
+        if houses is None:
+            return overlays
+
+        house_cusps = houses.cusps
 
         for pos in planet_chart.positions:
             house_num = find_house_for_longitude(pos.longitude, house_cusps)

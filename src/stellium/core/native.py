@@ -421,6 +421,8 @@ class Notable(Native):
     data_quality: str
     sources: list[str] | None
     verified: bool
+    has_reliable_time: bool | None
+    verification_notes: str
 
     def __init__(
         self,
@@ -429,8 +431,8 @@ class Notable(Native):
         year: int,
         month: int,
         day: int,
-        hour: int,
-        minute: int,
+        hour: int | None,
+        minute: int | None,
         location_input: LocationInput,  # Reuse Native's type!
         category: str,
         subcategories: list[str] | None = None,
@@ -439,6 +441,8 @@ class Notable(Native):
         data_quality: str = "C",
         sources: list[str] | None = None,
         verified: bool = False,
+        has_reliable_time: bool | None = None,
+        verification_notes: str = "",
     ):
         """
         Create Notable from structured data.
@@ -449,7 +453,9 @@ class Notable(Native):
         Args:
             name: Name of person or event
             event_type: "birth" or "event"
-            year, month, day, hour, minute: Local time components
+            year, month, day: Local date components
+            hour, minute: Local time components, or None when no clock time is
+                on record (the notable is then treated as unknown-time).
             location_input: Location (string name, (lat, lon) tuple, or ChartLocation)
             category: Primary category (scientist, artist, leader, etc.)
             subcategories: Optional subcategories
@@ -458,14 +464,30 @@ class Notable(Native):
             data_quality: Rodden rating (AA, A, B, C, DD)
             sources: List of data sources
             verified: Whether data has been verified
+            has_reliable_time: Routing flag from the source audit. False means the
+                recorded time is a noon/midnight default, rectification, or
+                fabrication and the chart should be built as unknown-time. None
+                means "not audited" (fall back to using the time if one exists).
+            verification_notes: Audit justification for the record's provenance.
         """
-        # Create naive datetime (local time)
-        local_dt = dt.datetime(year, month, day, hour, minute)
+        # Decide time reliability: a notable is unknown-time when the audit
+        # flagged it (has_reliable_time is False) or when no clock time exists.
+        # Route on this, not on data_quality (a source rating != time validity).
+        has_clock_time = hour is not None and minute is not None
+        time_unreliable = has_reliable_time is False or not has_clock_time
 
-        # Let Native handle ALL the parsing!
+        # Missing components default to noon; when time_unreliable, Native
+        # re-normalizes to noon anyway, so these only bind on the reliable path.
+        # Use explicit None checks (0 = valid midnight, must not fall through).
+        h = hour if hour is not None else 12
+        m = minute if minute is not None else 0
+        local_dt = dt.datetime(year, month, day, h, m)
+
+        # Let Native handle ALL the parsing (and noon-normalization when unknown)!
         super().__init__(
             datetime_input=local_dt,  # Naive datetime
             location_input=location_input,  # String, tuple, or ChartLocation
+            time_unknown=time_unreliable,
         )
 
         # Add our metadata
@@ -478,6 +500,8 @@ class Notable(Native):
         self.data_quality = data_quality
         self.sources = sources or []
         self.verified = verified
+        self.has_reliable_time = has_reliable_time
+        self.verification_notes = verification_notes
 
     @property
     def is_birth(self) -> bool:

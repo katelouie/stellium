@@ -18,6 +18,10 @@
   sources:
   - https://www.astro.com/astro-databank/Wright,_Frank_Lloyd
   verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Verify 17:00 against ADB note. Birth YEAR is 1867 (records); Wright vainly
+    claimed 1869 — flag if you surface birth years.
 - name: Zaha Hadid
   event_type: birth
   year: 1950
@@ -39,6 +43,8 @@
   sources:
   - https://www.astro.com/astro-databank/Hadid,_Zaha
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: I.M. Pei
   event_type: birth
   year: 1917
@@ -60,3 +66,5 @@
   sources:
   - Wikidata
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default (Wikidata); no recorded time."
