@@ -338,6 +338,62 @@ class TestZRParameterization:
         idx = engine.signs.index(engine.fortune_sign)
         assert engine.lot_sign == engine.signs[(idx + 1) % 12]
 
+    def test_loosing_target_opposite_vs_trine(self, kate_natal):
+        """loosing_target switches the loosing jump between opposite and trine."""
+        opp = ZodiacalReleasingEngine(kate_natal, lifespan=215)
+        tri = ZodiacalReleasingEngine(kate_natal, lifespan=215, loosing_target="trine")
+
+        def loosing_sign(engine):
+            for p in engine.calculate_all_periods()[1]:
+                if p.is_loosing_bond:
+                    return p.sign
+            return None
+
+        opp_sign, tri_sign = loosing_sign(opp), loosing_sign(tri)
+        assert opp_sign is not None and tri_sign is not None
+        assert opp_sign != tri_sign
+
+        # The opposite target is 6 signs from the parent; trine is 4.
+        signs = opp.signs
+        # Parent (release) sign is the same for both engines.
+        parent = opp.lot_sign
+        pidx = signs.index(parent)
+        assert opp_sign == signs[(pidx + 6) % 12]
+        assert tri_sign == signs[(pidx + 4) % 12]
+
+    def test_invalid_loosing_target_raises(self, kate_natal):
+        """An unknown loosing_target is rejected."""
+        with pytest.raises(ValueError, match="loosing_target"):
+            ZodiacalReleasingEngine(kate_natal, loosing_target="square")
+
+
+class TestZRWorkedExamples:
+    """Validate the engine end-to-end against published ZR examples."""
+
+    def test_gw_bush_leo_peak_1998(self):
+        """Brennan's published George W. Bush example.
+
+        Fortune in Scorpio; releasing from Spirit, the peak (10th from Fortune)
+        is Leo, beginning 1998 -- "shortly before he first ran for president"
+        (Brennan, "Annual Profections, Lots, and Zodiacal Releasing"). This
+        exercises Fortune-anchored peaks (we release from Spirit, not Fortune)
+        and the 360-day-year L1 dates end to end. It would fail if peaks were
+        anchored to the release lot.
+        """
+        # Born 1946-07-06 07:26 EDT, New Haven, CT (Rodden AA).
+        chart = ChartBuilder.from_details(
+            "1946-07-06 07:26", "New Haven, CT"
+        ).calculate()
+        engine = ZodiacalReleasingEngine(chart, lot="Part of Spirit")
+
+        assert engine.fortune_sign == "Scorpio"
+
+        l1 = engine.calculate_all_periods()[1]
+        leo = next(p for p in l1 if p.sign == "Leo")
+        assert leo.angle_from_lot == 10  # 10th from Fortune (Scorpio)
+        assert leo.is_peak
+        assert leo.start.year == 1998
+
 
 class TestL2Periods:
     """Test Level 2 (sub-periods) calculations."""

@@ -43,6 +43,7 @@ class ZodiacalReleasingEngine:
         method: str = "valens",
         year_length: float = 360.0,
         capricorn_years: int = 27,
+        loosing_target: str = "opposite",
     ) -> None:
         """
         Args:
@@ -60,13 +61,21 @@ class ZodiacalReleasingEngine:
                 parent, so a month is year_length/12, etc.
             capricorn_years: Capricorn's period. 27 (default, the documented
                 Valens reduction) or 30 (strict Saturn minor years).
+            loosing_target: Where the loosing of the bond jumps: "opposite"
+                (default, the sign opposite the parent -- Valens' preference) or
+                "trine" (the sign some of his contemporaries used instead).
         """
+        if loosing_target not in ("opposite", "trine"):
+            raise ValueError(
+                f"loosing_target must be 'opposite' or 'trine', got {loosing_target!r}"
+            )
         self.chart = chart
         self.lot = lot
         self.max_level = max_level
         self.lifespan = lifespan
         self.method = method  # Can be "valens" or "fractal"
         self.year_length = year_length
+        self.loosing_target = loosing_target
 
         self.planet_periods = PLANET_PERIODS
 
@@ -402,14 +411,19 @@ class ZodiacalReleasingEngine:
 
         Args:
             current_sign: current sign name
-            jump: If the transition is a "loosing of the bond" jump to the opposite sign of the next
+            jump: If True this is a "loosing of the bond" transition, which jumps
+                to the sign opposite the parent (or the trine, per loosing_target)
+                instead of continuing zodiacally.
 
         Returns:
             Name of "next" sign
         """
         consecutive_sign = self.signs[(self.signs.index(current_sign) + 1) % 12]
         if jump:
-            return self.signs[(self.signs.index(consecutive_sign) + 6) % 12]
+            # consecutive_sign is the parent's sign here; jump to its opposite
+            # (6 signs) or trine (4 signs) per loosing_target.
+            offset = 6 if self.loosing_target == "opposite" else 4
+            return self.signs[(self.signs.index(consecutive_sign) + offset) % 12]
 
         return consecutive_sign
 
@@ -471,6 +485,7 @@ class ZodiacalReleasingAnalyzer:
         lifespan: int = 100,
         year_length: float = 360.0,
         capricorn_years: int = 27,
+        loosing_target: str = "opposite",
     ) -> None:
         self.lots = lots
         self.engine = engine
@@ -478,6 +493,7 @@ class ZodiacalReleasingAnalyzer:
         self.lifespan = lifespan
         self.year_length = year_length
         self.capricorn_years = capricorn_years
+        self.loosing_target = loosing_target
 
     @property
     def analyzer_name(self) -> str:
@@ -505,6 +521,7 @@ class ZodiacalReleasingAnalyzer:
                 lifespan=self.lifespan,
                 year_length=self.year_length,
                 capricorn_years=self.capricorn_years,
+                loosing_target=self.loosing_target,
             )
             results[lot] = lot_engine.build_timeline()
 
