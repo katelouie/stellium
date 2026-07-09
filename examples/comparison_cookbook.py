@@ -51,12 +51,12 @@ def example_1_simple_synastry():
 
     # Calculate individual charts
     person1 = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
-    person2 = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
+    person2 = ChartBuilder.from_notable("Ada Lovelace").with_aspects().calculate()
 
     # Create synastry comparison using MultiChartBuilder
     synastry = (
         MultiChartBuilder.synastry(
-            person1, person2, label1="Albert Einstein", label2="Marie Curie"
+            person1, person2, label1="Albert Einstein", label2="Ada Lovelace"
         )
         .with_cross_aspects()
         .calculate()
@@ -304,7 +304,7 @@ def example_8_transit_with_tight_orbs():
     """
     section_header("Example 8: Tight Orb Transits")
 
-    natal = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
+    natal = ChartBuilder.from_notable("Ada Lovelace").with_aspects().calculate()
 
     transit_time = datetime(2025, 3, 20, 0, 0)  # Spring equinox 2025
 
@@ -511,7 +511,7 @@ def example_13_batch_synastry():
     section_header("Example 13: Batch Synastry")
 
     couples = [
-        ("Albert Einstein", "Marie Curie", "scientific"),
+        ("Albert Einstein", "Ada Lovelace", "scientific"),
         ("John Lennon", "Yoko Ono", "artistic"),
         ("Barack Obama", "Michelle Obama", "political"),
     ]

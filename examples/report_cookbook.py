@@ -284,7 +284,7 @@ def example_8_aspect_focused():
     """
     section_header("Example 8: Aspect-Focused Report")
 
-    chart = ChartBuilder.from_notable("Mozart").with_aspects().calculate()
+    chart = ChartBuilder.from_notable("Wolfgang Mozart").with_aspects().calculate()
 
     output_file = OUTPUT_DIR / "mozart_aspects.pdf"
 
