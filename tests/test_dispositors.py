@@ -23,6 +23,47 @@ def second_chart():
     return ChartBuilder.from_notable("Nikola Tesla").calculate()
 
 
+@pytest.fixture(scope="module")
+def unknown_time_chart():
+    """A chart with no house systems (unknown birth time)."""
+    return ChartBuilder.from_details(
+        "1994-01-06", "Palo Alto, CA", time_unknown=True
+    ).calculate()
+
+
+# =============================================================================
+# House-less Charts (planetary dispositors need no houses)
+# =============================================================================
+
+
+class TestDispositorsWithoutHouses:
+    """Planetary dispositors must work on charts that have no house systems.
+
+    Regression: the engine used to resolve the house system eagerly in
+    __init__, so constructing DispositorEngine(chart) raised ValueError for a
+    house-less chart -- even though planetary() never touches houses.
+    """
+
+    def test_construct_on_house_less_chart(self, unknown_time_chart):
+        """Constructing the engine must not require a house system."""
+        engine = DispositorEngine(unknown_time_chart)
+        assert engine is not None
+
+    def test_planetary_works_without_houses(self, unknown_time_chart):
+        """planetary() uses only sign rulerships -- no houses needed."""
+        engine = DispositorEngine(unknown_time_chart)
+        result = engine.planetary()
+        assert isinstance(result, DispositorResult)
+        assert result.mode == "planetary"
+        assert len(result.edges) > 0
+
+    def test_house_based_raises_clear_error_without_houses(self, unknown_time_chart):
+        """house_based() genuinely needs houses; the error must be actionable."""
+        engine = DispositorEngine(unknown_time_chart)
+        with pytest.raises(ValueError, match="planetary()"):
+            engine.house_based()
+
+
 # =============================================================================
 # Planetary Dispositor Tests
 # =============================================================================
