@@ -378,6 +378,46 @@ class TestDeclinationAspectsIntegration:
         assert chart.get_parallels() == []
         assert chart.get_contraparallels() == []
 
+    def test_unknown_time_chart_keeps_declination_aspects(self):
+        """Regression: declination aspects must survive on an UnknownTimeChart.
+
+        Declination depends on the date; over the hours of a single day it
+        drifts only slightly (mostly the Moon). An unknown-time chart
+        normalizes to noon, so its declination aspects must match a known-time
+        chart *also* built at noon -- exactly, since both use the same instant.
+        Previously the unknown-time code path skipped the declination engine
+        entirely and returned an empty tuple.
+        """
+        known = (
+            ChartBuilder.from_details("1994-01-06 12:00", "Palo Alto, CA")
+            .with_declination_aspects(orb=1.0)
+            .calculate()
+        )
+        unknown = (
+            ChartBuilder.from_details(
+                "1994-01-06 12:00", "Palo Alto, CA", time_unknown=True
+            )
+            .with_declination_aspects(orb=1.0)
+            .calculate()
+        )
+
+        # The unknown-time chart must not silently drop them.
+        assert len(unknown.declination_aspects) > 0
+        assert len(unknown.declination_aspects) == len(known.declination_aspects)
+
+        # Same instant (noon) -> the identical set, orbs and all.
+        def key(aspects):
+            return sorted(
+                (
+                    tuple(sorted((a.object1.name, a.object2.name))),
+                    a.aspect_name,
+                    round(a.orb, 4),
+                )
+                for a in aspects
+            )
+
+        assert key(unknown.declination_aspects) == key(known.declination_aspects)
+
     def test_custom_orb_via_builder(self):
         """Test custom orb configuration via builder."""
         # Tight orb

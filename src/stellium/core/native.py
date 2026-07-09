@@ -36,6 +36,57 @@ DateTimeInput = dt.datetime | ChartDateTime | dict[str, Any] | str
 LocationInput = str | ChartLocation | tuple[float, float] | dict[str, float | str]
 
 
+def build_chart_datetime(local_dt: dt.datetime, timezone: str) -> ChartDateTime:
+    """Build a ``ChartDateTime`` from a local datetime and an IANA timezone.
+
+    This is the single place that turns local wall-clock time into the
+    UTC + Julian Day representation the engines use. A naive ``local_dt`` is
+    localized to ``timezone``; an already-aware one is used as-is. Both
+    ``Native`` (datetime parsing) and ``ChartBuilder.with_unknown_time()``
+    (re-anchoring to noon) call this so the two can never drift apart.
+
+    Args:
+        local_dt: The local wall-clock time (naive or timezone-aware).
+        timezone: IANA timezone string (required when ``local_dt`` is naive).
+
+    Returns:
+        A ``ChartDateTime`` carrying UTC time, Julian Day (UT), and the
+        original local datetime.
+    """
+    if local_dt.tzinfo is None:
+        if not timezone:
+            raise ValueError(
+                "Datetime is naive (no timezone) and location has no timezone. "
+                "Cannot determine time."
+            )
+        try:
+            aware_dt = pytz.timezone(timezone).localize(local_dt)
+        except pytz.UnknownTimeZoneError as exc:
+            raise ValueError(f"Invalid location timezone: {timezone}") from exc
+    else:
+        aware_dt = local_dt
+
+    utc_dt = aware_dt.astimezone(dt.UTC)
+
+    # swe.julday() converts calendar date to Julian Day number. Since we're
+    # giving it UTC, the result is JD(UT); no Delta T adjustment is needed.
+    hour_decimal = (
+        (utc_dt.minute / 60.0)
+        + (utc_dt.second / 3600.0)
+        + (utc_dt.microsecond / 3600000000.0)
+    )
+    julian_day_ut = swe.julday(
+        utc_dt.year,
+        utc_dt.month,
+        utc_dt.day,
+        utc_dt.hour + hour_decimal,
+    )
+
+    return ChartDateTime(
+        utc_datetime=utc_dt, julian_day=julian_day_ut, local_datetime=local_dt
+    )
+
+
 class Native:
     """
     Represents the "native" data (time and place) for a chart.
@@ -275,27 +326,9 @@ class Native:
             time_input = self._parse_datetime_string(time_input)
             # Now time_input is a dt.datetime, continue to next step
 
-        # 3. Datetime Object Input
+        # 3. Datetime Object Input (naive -> localize, aware -> as-is)
         if isinstance(time_input, dt.datetime):
-            local_dt = time_input  # Store for the final object
-            if time_input.tzinfo is None:
-                # Naive datetime. Localize it using the location's timezone.
-                if not loc_timezone:
-                    raise ValueError(
-                        "Datetime is naive (no timezone) and location has no timezone. "
-                        "Cannot determine time."
-                    )
-                try:
-                    loc_tz = pytz.timezone(loc_timezone)
-                    aware_dt = loc_tz.localize(time_input)
-                    utc_dt = aware_dt.astimezone(dt.UTC)
-                except pytz.UnknownTimeZoneError:
-                    raise ValueError(
-                        f"Invalid location timezone: {loc_timezone}"
-                    ) from pytz.UnknownTimeZoneError
-            else:
-                # Aware datetime. Just convert to UTC.
-                utc_dt = time_input.astimezone(dt.UTC)
+            return build_chart_datetime(time_input, loc_timezone)
 
         # 4. Dictionary Input
         elif isinstance(time_input, dict):
