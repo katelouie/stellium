@@ -6,7 +6,7 @@
 
 - Fix broad exception swallowing (30+ bare except clauses)
 - Resolve Comparison vs MultiChart API duality
-- Zodiacal Releasing engine rewrite (parameterized, preset-based)
+- Zodiacal Releasing engine rewrite (parameterized, preset-based) `in-progress`
 
 ## Normal
 
