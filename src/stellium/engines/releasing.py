@@ -41,12 +41,32 @@ class ZodiacalReleasingEngine:
         max_level: int = 4,
         lifespan: int = 100,
         method: str = "valens",
+        year_length: float = 360.0,
+        capricorn_years: int = 27,
     ) -> None:
+        """
+        Args:
+            chart: The calculated chart.
+            lot: Which lot to release from ("Part of Fortune", "Part of Spirit",
+                "Part of Eros (Love)", ...). Peaks are always measured from
+                Fortune regardless of this choice.
+            max_level: Deepest subdivision level to compute (1-4).
+            lifespan: Years of L1 timeline to generate.
+            method: "valens" (loosing of the bond + truncation, the canonical
+                default) or "fractal" (pure recursive subdivision, non-canonical).
+            year_length: Days per "year" for period distribution. Valens/Brennan
+                use the 360-day ideal year (default); pass 365.25 for the
+                civil-year variant. Each level below L1 is exactly 1/12 of its
+                parent, so a month is year_length/12, etc.
+            capricorn_years: Capricorn's period. 27 (default, the documented
+                Valens reduction) or 30 (strict Saturn minor years).
+        """
         self.chart = chart
         self.lot = lot
         self.max_level = max_level
         self.lifespan = lifespan
         self.method = method  # Can be "valens" or "fractal"
+        self.year_length = year_length
 
         self.planet_periods = PLANET_PERIODS
 
@@ -54,44 +74,58 @@ class ZodiacalReleasingEngine:
             sign: PLANET_PERIODS[info["traditional"]["ruler"]]
             for sign, info in DIGNITIES.items()
         }
-        # Apply documented per-sign departures from ruler minor years (Cap 27).
+        # Apply documented per-sign departures from ruler minor years. Capricorn
+        # is the only one (27 by default; 30 = strict Saturn minor years).
         self.sign_periods.update(SIGN_PERIOD_OVERRIDES)
+        self.sign_periods["Capricorn"] = capricorn_years
 
         self.signs = list(self.sign_periods.keys())
 
-        self.total_cycle_period = sum(self.sign_periods.values())  # 211
+        self.total_cycle_period = sum(self.sign_periods.values())  # 211 (Cap 27)
 
-        self.lot_position = self._get_lot_position()
+        self.lot_position = self._get_lot_position(self.lot)
         self.lot_sign = self.lot_position.sign
+
+        # Peaks are angular to the Lot of Fortune regardless of the release lot,
+        # so resolve Fortune's sign separately (reuse it if we're releasing from
+        # Fortune).
+        if self.lot == "Part of Fortune":
+            self.fortune_sign = self.lot_sign
+        else:
+            self.fortune_sign = self._get_lot_position("Part of Fortune").sign
+
+        # Same-sign Spirit rule (Valens): when releasing from Spirit and Spirit
+        # falls in the same sign as Fortune (near New/Full Moon births), release
+        # Spirit from the next sign instead. Fortune is left in place.
+        if self.lot == "Part of Spirit" and self.lot_sign == self.fortune_sign:
+            self.lot_sign = self._next_sign(self.lot_sign)
 
         self.angular_signs = self._get_angular_signs()
 
         self._setup_quality_lookups()  # Get all sect-relevant placements
 
-    def _get_lot_position(self) -> CelestialPosition:
-        """Get the base lot position."""
-        if self.lot not in ARABIC_PARTS_CATALOG:
+    def _get_lot_position(self, lot_name: str) -> CelestialPosition:
+        """Get the position of a named lot, computing it if not already present."""
+        if lot_name not in ARABIC_PARTS_CATALOG:
             raise ValueError(
-                "Provided Lot name unknown. Try 'Part of Fortune', 'Part of Spirit', or others."
+                f"Unknown lot '{lot_name}'. Try 'Part of Fortune', "
+                "'Part of Spirit', or others."
             )
-        else:
-            # Check if lot has already been calculated
-            lot_options = [x for x in self.chart.positions if x.name == self.lot]
 
-            if lot_options:
-                lot_pos = lot_options[0]
-            else:
-                # Calculate just this lot
-                calculator = ArabicPartsCalculator([self.lot])
-                lot_pos = calculator.calculate(
-                    self.chart.datetime,
-                    self.chart.location,
-                    self.chart.positions,
-                    self.chart.house_systems,
-                    self.chart.house_placements,
-                )[0]
+        # Reuse the lot if it was already calculated on the chart
+        lot_options = [x for x in self.chart.positions if x.name == lot_name]
+        if lot_options:
+            return lot_options[0]
 
-        return lot_pos
+        # Otherwise calculate just this lot
+        calculator = ArabicPartsCalculator([lot_name])
+        return calculator.calculate(
+            self.chart.datetime,
+            self.chart.location,
+            self.chart.positions,
+            self.chart.house_systems,
+            self.chart.house_placements,
+        )[0]
 
     def _setup_quality_lookups(self) -> None:
         """Build fast lookups for planet roles and sign contents."""
@@ -141,14 +175,19 @@ class ZodiacalReleasingEngine:
         return parent_duration * (sign_period / self.total_cycle_period)
 
     def _get_angular_signs(self) -> dict[str, int]:
-        """Get signs that are angular to the Lot."""
-        lot_sign_index = self.signs.index(self.lot_sign)
+        """Get signs angular to the Lot of Fortune.
+
+        Peak/angular periods are always measured from Fortune, regardless of
+        which lot is being released (Valens/Brennan). The 10th from Fortune is
+        the major peak.
+        """
+        fortune_index = self.signs.index(self.fortune_sign)
 
         return {
-            self.signs[lot_sign_index]: 1,
-            self.signs[(lot_sign_index + 3) % 12]: 4,
-            self.signs[(lot_sign_index + 6) % 12]: 7,
-            self.signs[(lot_sign_index + 9) % 12]: 10,  # Peak!
+            self.signs[fortune_index]: 1,
+            self.signs[(fortune_index + 3) % 12]: 4,
+            self.signs[(fortune_index + 6) % 12]: 7,
+            self.signs[(fortune_index + 9) % 12]: 10,  # Peak!
         }
 
     def _calculate_periods(
@@ -251,12 +290,10 @@ class ZodiacalReleasingEngine:
         total_duration: float,
     ) -> list[ZRPeriod]:
         """Calculate the traditional Valens-style period traversal with loosing of the bond."""
-        level_multipliers = {
-            1: 365.25,  # Years
-            2: 30.437,  # Months
-            3: 1.0146,  # Days
-            4: 0.0417,  # Hours
-        }
+        # Each level below L1 is exactly 1/12 of its parent, counted in
+        # year_length-day years (360 by default): L1 = year, L2 = month
+        # (year/12), L3 = year/144, L4 = year/1728.
+        unit_days = self.year_length / (12 ** (level - 1))
 
         periods = []
         current_sign = start_sign
@@ -267,7 +304,7 @@ class ZodiacalReleasingEngine:
         while True:
             # Calculate the "ideal" duration for this sign period
             sign_period = self.sign_periods[current_sign]
-            ideal_period_days = sign_period * level_multipliers[level]
+            ideal_period_days = sign_period * unit_days
 
             # Check remaining budget (for L2+)
             final_duration = ideal_period_days
@@ -387,8 +424,8 @@ class ZodiacalReleasingEngine:
             else self._calculate_periods_valens
         )
 
-        # L1: base duration = 211 years in days (so scaling = identity)
-        base_duration = self.total_cycle_period * 365.25
+        # L1: base duration = full cycle in days (so per-sign scaling = identity)
+        base_duration = self.total_cycle_period * self.year_length
         all_periods[1] = calc_fn(
             level=1,
             start_sign=self.lot_sign,
@@ -432,11 +469,15 @@ class ZodiacalReleasingAnalyzer:
         engine=ZodiacalReleasingEngine,
         max_level: int = 4,
         lifespan: int = 100,
+        year_length: float = 360.0,
+        capricorn_years: int = 27,
     ) -> None:
         self.lots = lots
         self.engine = engine
         self.max_level = max_level
         self.lifespan = lifespan
+        self.year_length = year_length
+        self.capricorn_years = capricorn_years
 
     @property
     def analyzer_name(self) -> str:
@@ -458,7 +499,12 @@ class ZodiacalReleasingAnalyzer:
         results = {}
         for lot in self.lots:
             lot_engine = self.engine(
-                chart, lot, max_level=self.max_level, lifespan=self.lifespan
+                chart,
+                lot,
+                max_level=self.max_level,
+                lifespan=self.lifespan,
+                year_length=self.year_length,
+                capricorn_years=self.capricorn_years,
             )
             results[lot] = lot_engine.build_timeline()
 

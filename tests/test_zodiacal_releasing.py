@@ -160,7 +160,7 @@ class TestZodiacalReleasingEngineInit:
 
     def test_engine_invalid_lot_raises_error(self, kate_natal):
         """Invalid lot name should raise ValueError."""
-        with pytest.raises(ValueError, match="Provided Lot name unknown"):
+        with pytest.raises(ValueError, match="Unknown lot"):
             ZodiacalReleasingEngine(kate_natal, lot="Not A Real Lot")
 
     def test_engine_identifies_angular_signs(self, kate_natal):
@@ -271,15 +271,72 @@ class TestL1Periods:
         assert age_at_end >= 100
 
     def test_l1_period_durations_match_sign_periods(self, kate_natal):
-        """L1 period durations should match sign years converted to days."""
+        """L1 period durations should match sign years in 360-day years."""
         engine = ZodiacalReleasingEngine(kate_natal)
         periods = engine.calculate_all_periods()
 
         for period in periods[1]:
             expected_years = engine.sign_periods[period.sign]
-            expected_days = expected_years * 365.25
+            expected_days = expected_years * 360  # default 360-day year
             # Allow small tolerance for floating point
             assert abs(period.length_days - expected_days) < 0.01
+
+
+class TestZRParameterization:
+    """Toggles and Fortune-anchored conventions added in the July 2026 pass."""
+
+    def test_year_length_default_360(self, kate_natal):
+        """Default year length is the 360-day ideal year (Valens/Brennan)."""
+        engine = ZodiacalReleasingEngine(kate_natal)
+        assert engine.year_length == 360.0
+        p = engine.calculate_all_periods()[1][0]
+        assert abs(p.length_days - engine.sign_periods[p.sign] * 360) < 0.01
+
+    def test_year_length_365_opt_in(self, kate_natal):
+        """year_length=365.25 restores the civil-year variant."""
+        engine = ZodiacalReleasingEngine(kate_natal, year_length=365.25)
+        p = engine.calculate_all_periods()[1][0]
+        assert abs(p.length_days - engine.sign_periods[p.sign] * 365.25) < 0.01
+
+    def test_capricorn_years_toggle(self, kate_natal):
+        """capricorn_years switches Capricorn 27 <-> 30 and the cycle total."""
+        default = ZodiacalReleasingEngine(kate_natal)
+        assert default.sign_periods["Capricorn"] == 27
+        assert default.total_cycle_period == 211
+
+        strict = ZodiacalReleasingEngine(kate_natal, capricorn_years=30)
+        assert strict.sign_periods["Capricorn"] == 30
+        assert strict.total_cycle_period == 214
+
+    def test_peaks_anchored_to_fortune_not_release_lot(self):
+        """Peaks are angular to Fortune regardless of which lot is released."""
+        chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+        spirit = ZodiacalReleasingEngine(chart, lot="Part of Spirit")
+        # 10th-from-Fortune is computed from fortune_sign, not the Spirit sign.
+        fi = spirit.signs.index(spirit.fortune_sign)
+        expected_peak = spirit.signs[(fi + 9) % 12]
+        peaks = [s for s, a in spirit.angular_signs.items() if a == 10]
+        assert peaks == [expected_peak]
+        # For this chart Fortune's sign differs from the Spirit release sign.
+        assert spirit.fortune_sign != spirit.lot_sign
+
+    def test_same_sign_spirit_rule(self):
+        """When Spirit shares Fortune's sign, release Spirit from the next sign.
+
+        2000-01-06 (near New Moon) has both lots in Aries; the rule advances the
+        Spirit release point to Taurus while Fortune stays in Aries.
+        """
+        chart = ChartBuilder.from_details(
+            "2000-01-06 12:00", "New York, NY"
+        ).calculate()
+        raw_spirit = (
+            ZodiacalReleasingEngine(chart)._get_lot_position("Part of Spirit").sign
+        )
+        engine = ZodiacalReleasingEngine(chart, lot="Part of Spirit")
+        assert engine.fortune_sign == raw_spirit  # the two lots coincide
+        assert engine.lot_sign != engine.fortune_sign  # Spirit was advanced
+        idx = engine.signs.index(engine.fortune_sign)
+        assert engine.lot_sign == engine.signs[(idx + 1) % 12]
 
 
 class TestL2Periods:
@@ -1187,37 +1244,31 @@ class TestValensMethodDebug:
     - Loosing of Bond: Jump to opposite after completing 12 periods
     """
 
-    def test_valens_level_multipliers(self, kate_natal):
-        """Verify Valens method uses correct level multipliers by checking period durations."""
+    def test_level_units_are_twelfths(self, kate_natal):
+        """Each level below L1 is exactly 1/12 of its parent (360-day default).
+
+        Regression: the old implementation used calendar-ish multipliers
+        (365.25, 30.437, 1.0146, 0.0417) that divided by 12, then 30, then ~24 --
+        correct for L1/L2 but wrong for L3/L4, which must each be exactly 1/12
+        of the parent. Correct per-sign-year units are L1=360, L2=30, L3=2.5,
+        L4=2.5/12 (~5 hours) days.
+        """
         engine = ZodiacalReleasingEngine(kate_natal, max_level=4)
-
-        # Expected multipliers (from implementation)
-        expected_multipliers = {
-            1: 365.25,  # L1: years
-            2: 30.437,  # L2: months
-            3: 1.0146,  # L3: days
-            4: 0.0417,  # L4: hours
-        }
-
-        print("\nValens Method Level Multipliers:")
-        for level, expected in expected_multipliers.items():
-            print(f"  L{level}: {expected} (days per unit)")
-
-        # We can't directly access multipliers, but we can verify periods match expected formula
         periods = engine.calculate_all_periods()
 
-        # Check L1 periods match year multiplier
-        l1_periods = periods[1]
-        if l1_periods:
-            first_period = l1_periods[0]
-            sign_period = engine.sign_periods[first_period.sign]
-            expected_days = sign_period * expected_multipliers[1]
-            print(f"\nL1 {first_period.sign}: {first_period.length_days:.1f} days")
-            print(f"  Expected: {expected_days:.1f} days ({sign_period} × 365.25)")
-            assert abs(first_period.length_days - expected_days) < 1.0
+        units = {1: 360.0, 2: 30.0, 3: 2.5, 4: 2.5 / 12}
+        for level, unit in units.items():
+            # The first period at each level starts with its parent's own sign
+            # and is never truncated, so its length is sign_period * unit exactly.
+            first = periods[level][0]
+            expected = engine.sign_periods[first.sign] * unit
+            assert abs(first.length_days - expected) < 0.01, (
+                f"L{level} {first.sign}: expected {expected:.4f} days, "
+                f"got {first.length_days:.4f}"
+            )
 
     def test_l1_period_durations(self, kate_natal):
-        """Verify L1 periods use year multiplier (sign_period × 365.25)."""
+        """Verify L1 periods use the 360-day year (sign_period × 360 by default)."""
         engine = ZodiacalReleasingEngine(kate_natal)
         periods = engine.calculate_all_periods()
 
@@ -1226,7 +1277,7 @@ class TestValensMethodDebug:
         # Check first few L1 periods
         for period in l1_periods[:5]:
             sign_period = engine.sign_periods[period.sign]
-            expected_days = sign_period * 365.25
+            expected_days = sign_period * 360
 
             # Allow small floating point tolerance
             assert abs(period.length_days - expected_days) < 1.0, (

@@ -17,10 +17,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Web app test suite** — In-process pytest suite for the NiceGUI web app under `web/tests/` (no browser): import smoke tests, valid-Python (`ast.parse`) checks on the "View as Python" code generators, web i18n unit tests (`wt`, `wt_list`, `report_locale`), state-validation tests, and a few NiceGUI `user`-fixture interaction tests. Runs under its own pytest config as a standalone `web-tests` CI job (49 tests in <1s), keeping web/async dependencies out of the library test matrix.
 - **`ReportBuilder.to_string(format=...)`** — Returns the rendered report as a string, complementing `render()` (which prints or writes to a file and returns the filename/None). Supports all text formats; raises for the binary `pdf` format. Use it to embed a report in another document, diff it in a test, or feed it to an LLM.
 - **`MissingEphemerisWarning`** — Missing ephemeris files are now reported through a dedicated, capturable `warnings` category (`from stellium.engines import MissingEphemerisWarning`) instead of a bare `print`, so callers can catch, filter, silence it, or detect which bodies were skipped via `warnings.catch_warnings`.
+- **Zodiacal Releasing toggles** — `ZodiacalReleasingEngine` and `ZodiacalReleasingAnalyzer` now accept `year_length` (360 default | 365.25) and `capricorn_years` (27 default | 30).
 
 ### Changed
 
 - **`CalculatedChart.sect` is now a property** *(breaking)* — Previously a method requiring `chart.sect()`; it takes no arguments and is now accessed as `chart.sect`, matching the documented contract and every other computed accessor (`is_retrograde`, `is_time_unknown`, …). Update call sites from `chart.sect()` to `chart.sect`. The functional form remains available as `stellium.components.dignity.determine_sect(positions)`.
+- **Zodiacal Releasing now uses the 360-day ideal year by default** *(behavior change)* — Period distribution uses 360-day years (the Valens/Brennan standard that Astro-Seek, Solar Fire, and Delphic Oracle produce) instead of 365.25, shifting existing ZR dates toward the canonical values. Pass `year_length=365.25` for the previous civil-year behavior. (Months are exactly 1/12 of a year, etc.)
 
 ### Fixed
 
@@ -29,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Zodiacal Releasing: Aquarius period was 27, should be 30** — Both Saturn-ruled signs received 27. Capricorn is correctly reduced to 27, but Aquarius keeps Saturn's full 30 (Valens' documented asymmetry). The full cycle now totals 211 years, correcting all L2/L3/L4 sub-period scaling for any timeline passing through an Aquarius period.
 - **Doc drift in `docs/development/CHART_BUILDING.md`** — `zodiac_type`, `ayanamsa`, and `ayanamsa_value` are top-level fields on `CalculatedChart`, not `metadata` keys; the doc now points readers to `chart.ayanamsa_value` for the sidereal offset.
 - **Planetary dispositors required a house system** — `DispositorEngine` resolved the house system eagerly in its constructor, so `DispositorEngine(chart).planetary()` raised `ValueError` on a chart with no house systems (e.g. an unknown-time chart), even though planetary dispositors use only sign rulerships. House-system resolution is now lazy: `planetary()` works house-less, while `house_based()` (which genuinely needs houses) raises a clear, actionable error pointing to `planetary()`.
+- **Zodiacal Releasing L3/L4 sub-period durations were mis-scaled** — Each level must be exactly 1/12 of its parent, but the old per-level multipliers divided year→month→day→hour by 12, then 30, then ~24 — correct for L1/L2 but wrong for L3 (~2.5× too short) and L4. Levels are now `year_length / 12**(level-1)` throughout (L1=year, L2=month, L3=2.5-day, L4=~5-hour in the 360-day default).
+- **Zodiacal Releasing peaks anchored to the release lot instead of Fortune** — Peak/angular periods (1st/4th/7th/10th) are always measured from the Lot of Fortune regardless of which lot is released. Releasing from Spirit previously anchored peaks to Spirit's sign, mislabeling every peak.
+- **Same-sign Spirit rule added to Zodiacal Releasing** — When releasing from Spirit and Spirit falls in the same sign as Fortune (near New/Full Moon births), Spirit is released from the next sign per Valens; Fortune stays in place.
 
 ## [0.19.0] - 2026-06-19
 
