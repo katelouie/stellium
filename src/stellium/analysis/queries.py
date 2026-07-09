@@ -401,7 +401,7 @@ class ChartQuery:
         sect_lower = sect.lower()
 
         def sect_filter(chart: CalculatedChart) -> bool:
-            chart_sect = chart.sect()
+            chart_sect = chart.sect
             return chart_sect is not None and chart_sect.lower() == sect_lower
 
         return self._add_filter(sect_filter)

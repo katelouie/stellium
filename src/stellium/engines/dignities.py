@@ -80,9 +80,9 @@ DIGNITIES = {
         },
         "modern": {
             "ruler": "Mercury",
-            "exaltation": "Mercury",
+            "exaltation": "North Node",
             "detriment": "Jupiter",
-            "fall": "Venus",
+            "fall": "South Node",
         },
         "decan_trip": ["Mercury", "Venus", "Saturn"],
         "decan_chaldean": ["Jupiter", "Mars", "Sun"],
@@ -248,9 +248,9 @@ DIGNITIES = {
         },
         "modern": {
             "ruler": "Jupiter",
-            "exaltation": "Venus",
+            "exaltation": "South Node",
             "detriment": "Mercury",
-            "fall": "Ceres",
+            "fall": "North Node",
         },
         "decan_trip": ["Jupiter", "Mars", "Sun"],
         "decan_chaldean": ["Mercury", "Moon", "Saturn"],

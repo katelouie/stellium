@@ -43,7 +43,10 @@ from stellium.engines.dispositors import (
     render_both_dispositors,
     render_dispositor_graph,
 )
-from stellium.engines.ephemeris import SwissEphemerisEngine
+from stellium.engines.ephemeris import (
+    MissingEphemerisWarning,
+    SwissEphemerisEngine,
+)
 
 # Fixed Stars
 from stellium.engines.fixed_stars import SwissEphemerisFixedStarsEngine
@@ -131,6 +134,7 @@ from stellium.engines.voc import (
 __all__ = [
     # Ephemeris
     "SwissEphemerisEngine",
+    "MissingEphemerisWarning",
     # Houses
     "AlcabitiusHouses",
     "APCHouses",

@@ -216,11 +216,28 @@ class DispositorEngine:
         Args:
             chart: The calculated chart to analyze
             rulership_system: "traditional" or "modern" rulerships
-            house_system: House system to use (defaults to chart's default)
+            house_system: House system to use for house_based() (defaults to the
+                chart's default). Resolved lazily -- see the house_system
+                property -- so the engine can be constructed (and planetary()
+                run) on a chart that has no house systems.
         """
         self.chart = chart
         self.rulership_system = rulership_system
-        self.house_system = house_system or chart.default_house_system
+        # Store the raw argument and resolve lazily. planetary() uses only sign
+        # rulerships (no houses), so requiring a house system here would wrongly
+        # couple it to houses -- and break the engine entirely for a house-less
+        # chart such as an unknown-time chart.
+        self._house_system = house_system
+
+    @property
+    def house_system(self) -> str:
+        """House system used by house_based() dispositors, resolved lazily.
+
+        Falls back to the chart's default system. Only house_based() reads this,
+        so planetary() works even when the chart has no house systems. Accessing
+        it on a house-less chart raises ValueError (via default_house_system).
+        """
+        return self._house_system or self.chart.default_house_system
 
     def planetary(self) -> DispositorResult:
         """
@@ -282,7 +299,18 @@ class DispositorEngine:
 
         Returns:
             DispositorResult with house-based dispositor analysis
+
+        Raises:
+            ValueError: If the chart has no house systems (e.g. an unknown-time
+                chart). Use planetary() for that case.
         """
+        if not self.chart.house_systems:
+            raise ValueError(
+                "House-based dispositors require a chart with house systems, but "
+                "this chart has none (e.g. an unknown-time chart). Use "
+                "planetary() for sign-rulership dispositors instead."
+            )
+
         edges = []
         graph = {}  # house_num_str -> target_house_num_str
         house_rulers = {}  # house_num_str -> ruling planet name

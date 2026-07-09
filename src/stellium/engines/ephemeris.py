@@ -1,5 +1,6 @@
 """Ephemeris calculation engines."""
 
+import warnings
 from pathlib import Path
 
 import swisseph as swe
@@ -16,6 +17,24 @@ from stellium.core.models import (
 from stellium.core.registry import get_object_info
 from stellium.data.paths import initialize_ephemeris
 from stellium.utils.cache import cached
+
+
+class MissingEphemerisWarning(UserWarning):
+    """Warned when a requested body is skipped because its ephemeris file is
+    missing.
+
+    Emitted via the ``warnings`` module (not a bare print) so callers can
+    capture, filter, or silence it -- e.g.::
+
+        import warnings
+        from stellium.engines import MissingEphemerisWarning
+        warnings.filterwarnings("ignore", category=MissingEphemerisWarning)
+        # or capture which bodies were skipped:
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always", MissingEphemerisWarning)
+            chart = ChartBuilder.from_native(n).with_tnos().calculate()
+        skipped = [w for w in caught if issubclass(w.category, MissingEphemerisWarning)]
+    """
 
 
 def _set_ephemeris_path(ephe_path: str | Path | None = None) -> None:
@@ -343,9 +362,11 @@ class SwissEphemerisEngine:
         self, object_name: str, object_id: int, error_msg: str
     ) -> None:
         """
-        Print a helpful warning when an ephemeris file is missing.
+        Emit a capturable warning when an ephemeris file is missing.
 
-        Only warns once per object per session to avoid spam.
+        Uses ``warnings.warn`` with the ``MissingEphemerisWarning`` category so
+        callers can capture, filter, or silence it (unlike a bare print). Warns
+        once per object per session to avoid spam.
 
         Args:
             object_name: Name of the object
@@ -358,7 +379,6 @@ class SwissEphemerisEngine:
         SwissEphemerisEngine._warned_missing_ephemeris.add(object_name)
 
         import re
-        import sys
 
         # Extract the actual missing filename from the swe error message
         # Format: "SwissEph file 'seas_12.se1' not found in PATH '...'"
@@ -371,39 +391,26 @@ class SwissEphemerisEngine:
             missing_file.startswith("seas_") or missing_file.startswith("sepl_")
         )
 
-        print(
-            f"\n⚠️  Missing ephemeris file for {object_name} (skipping)",
-            file=sys.stderr,
-        )
-
+        parts = [f"Missing ephemeris file for {object_name} (skipping)."]
         if is_date_range_file:
             # The chart date falls outside the bundled ephemeris range (1800-2400)
-            print(
-                f"   Required file: {missing_file} (not bundled — "
-                f"Stellium bundles 1800-2400 CE coverage)",
-                file=sys.stderr,
-            )
-            print(
-                "   For historical/far-future charts, download additional "
-                "ephemeris files from https://www.astro.com/ftp/swisseph/ephe/",
-                file=sys.stderr,
+            parts.append(
+                f"Required file: {missing_file} (not bundled -- Stellium bundles "
+                "1800-2400 CE coverage). For historical/far-future charts, "
+                "download from https://www.astro.com/ftp/swisseph/ephe/"
             )
         else:
             # Missing asteroid-specific file
             mpc_number = object_id
             if object_id >= swe.AST_OFFSET:
                 mpc_number = object_id - swe.AST_OFFSET
-
             folder_num = mpc_number // 1000
+            parts.append(
+                f"To download, run: stellium ephemeris download-asteroid "
+                f"{mpc_number} (or manually from the ast{folder_num}/ folder)."
+            )
 
-            print(
-                f"   To download, run: stellium ephemeris download-asteroid {mpc_number}",
-                file=sys.stderr,
-            )
-            print(
-                f"   Or manually download from: ast{folder_num}/ folder",
-                file=sys.stderr,
-            )
+        warnings.warn(" ".join(parts), MissingEphemerisWarning, stacklevel=2)
 
     @cached(cache_type="ephemeris", max_age_seconds=86400)
     def _calculate_phase(

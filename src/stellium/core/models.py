@@ -912,9 +912,15 @@ class CalculatedChart:
         else:
             return "Severely challenged - very difficult condition"
 
+    @property
     def sect(self) -> str | None:
         """
-        Check which sect this chart is (day or night) (Sun above the horizon).
+        Which sect this chart is: "day" or "night" (Sun above/below the horizon).
+
+        A computed property (no arguments). Uses the cached value from a
+        DignityComponent if present, otherwise derives it from the Sun/ASC
+        positions. For the standalone functional form, use
+        ``stellium.components.dignity.determine_sect(positions)``.
 
         Returns:
             "day" or "night"
