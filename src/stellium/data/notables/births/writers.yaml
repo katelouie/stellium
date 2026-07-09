@@ -168,8 +168,6 @@
   year: 1919
   month: 8
   day: 31
-  hour: 13
-  minute: 49
   latitude: 32.15
   longitude: 74.1833
   location_name: Gujranwala, Pakistan
@@ -180,10 +178,13 @@
   - novelist
   notable_for: Indian writer and poet
   astrological_notes: Virgo Sun
-  data_quality: A
+  data_quality: X
   sources:
-  - 'AstroSage: https://celebrity.astrosage.com/amrita-pritam-1-birth-chart.asp'
+  - "No astro.com AstroDataBank entry exists (verified); only AstroSage aggregator with self-contradictory uncited times (1:30 AM vs 13:49); birth date 31 Aug 1919 Gujranwala per Wikipedia"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    No primary time source; aggregator times contradict each other and one is likely rectified — date-only (X), remove time. High confidence on time.
 - name: Virginia Woolf
   event_type: birth
   year: 1882
@@ -332,10 +333,13 @@
   - novelist
   notable_for: German-language novelist and short story writer, widely regarded as one of the major figures of 20th-century literature.
   astrological_notes: Sun 11 Cancer
-  data_quality: AA
+  data_quality: DD
   sources:
-  - https://www.astro.com/astro-databank/Kafka,_Franz
+  - "AstroDataBank, Kafka,_Franz (rated DD): birth record found by Sy Scholfield records NO time of birth; 07:00 is Max Brod/Ritter (biographical) and conflicts with 6:40 AM, 02:15, 03:58, 'before midnight'; only computed time (04:30:32 LMT) is a Starkman rectification"
   verified: true
+  has_reliable_time: false
+  verification_notes: >
+    Register carries no time; 07:00 is biographical and contested — downgrade AA to DD, time not reliable. High confidence.
 - name: Oscar Wilde
   event_type: birth
   year: 1854

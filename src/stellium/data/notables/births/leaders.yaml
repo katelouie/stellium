@@ -306,9 +306,9 @@
   day: 10
   hour: 10
   minute: 0
-  latitude: 39.6081
-  longitude: 19.9283
-  location_name: Mon Repos, Corfu, Greece
+  latitude: 39.6064
+  longitude: 19.9261
+  location_name: "Mon Repos, Corfu, Greece"
   timezone: Europe/Athens
   category: leader
   subcategories:
@@ -317,13 +317,11 @@
   astrological_notes: Sun 18°53', Asc. 15°08'
   data_quality: AA
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh'
+  - "Wikipedia (Prince Philip; Mon Repos, Corfu): born 10 June 1921 at the Mon Repos villa, Corfu. Coordinates: Wikidata Q824940, Mon Repos villa = 39 deg 36'23\"N, 19 deg 55'34\"E (= 39.6064, 19.9261). Time: 2021 birth certificate registered by priest Spiridon Tryfonas (Mail on Sunday) states born 'at 10am' (Julian 28 May 1921 = 10 June 1921 Gregorian)"
   verified: false
   verification_notes: >
-    COORDINATES revised from the 36.34/28.20 pin (near Rhodes -- wrong) to Mon
-    Repos, Corfu (39.6081/19.9283) as an INTERIM best-guess. Birthplace and its
-    exact coordinates are still PENDING the round-2 research pass (they have been
-    revised more than once). Timezone Europe/Athens unchanged.
+    Birthplace (Mon Repos villa) confirmed; coordinates corrected ~250m to the Wikidata villa point; 10:00 AA stands on the 2021 sighted certificate — time unchanged. High confidence.
+  has_reliable_time: true
 - name: Jacqueline Kennedy Onassis
   event_type: birth
   year: 1929
@@ -728,8 +726,11 @@
   - Russian Empress
   notable_for: Empress of Russia who came to power following a coup d'état that she organised against her husband, Peter III.
   astrological_notes: Sun 11 Taurus
-  data_quality: B
+  data_quality: A
   sources:
-  - https://www.astro.com/astro-databank/Catherine_the_Great,_Empress
+  - "AstroDataBank, Catherine_the_Great,_Empress: Sy Scholfield quoting Katharine S. Anthony, Memoirs of Catherine the Great (Tudor, 1935), p.71 — Prince Christian August's contemporary letter from Stettin, 2 May 1729: 'this morning at half past two o'clock'"
   verified: false
   calendar: gregorian
+  has_reliable_time: true
+  verification_notes: >
+    Father's cited, sighted contemporary letter fixes 02:30 (family source) — upgrade B to A, reliable time. High confidence.

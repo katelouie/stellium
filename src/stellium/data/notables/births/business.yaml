@@ -101,10 +101,13 @@
   - Philanthropist
   notable_for: American investor, business tycoon, philanthropist, and the chairman and CEO of Berkshire Hathaway, an American multinational conglomerate holding company headquartered in Omaha, Nebraska. Following a finance accounting field in college, Buffett received a BS and MS in Economics. He is considered one of the most savvy investors in the world and has a net worth of over US$85.6 billion as of December 2020, making him the world's fourth-wealthiest person.
   astrological_notes: 06°45' 05°18 Asc. 25°30'
-  data_quality: A
+  data_quality: C
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Buffett,_Warren'
+  - "AstroDataBank, Buffett,_Warren: 'Paul Hewitt collection ... a source who wishes to remain anonymous wrote to PT that a friend of his obtained the data from Buffett himself' (round-hour 15:00, no register)"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Round-hour 15:00 from unverifiable anonymous third-hand memory chain, not a certificate — caution grade, time not reliable. Medium-high confidence.
 - name: Bill Gates
   event_type: birth
   year: 1955
@@ -125,12 +128,11 @@
   astrological_notes: Ascendant 08°15'
   data_quality: DD
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Gates,_Bill'
+  - "AstroDataBank, Gates,_Bill: 2018 birth certificate confirms Seattle but records NO time (WA recorded no birth times 1949-1967); conflicting accounts 'shortly after 9:00 PM' (Wallace & Erickson, Hard Drive, 1992) vs '10:00 PM' (Gates via Cindy Rempel)"
   verified: false
   has_reliable_time: false
   verification_notes: >
-    Multiple incompatible times circulate (21:15, 22:00, others) with no
-    certificate consensus. Treat as dirty until a register is sighted.
+    Certificate has no time; sources conflict — DD stands, time not reliable. High confidence.
 - name: Aristotle Onassis
   event_type: birth
   year: 1906
@@ -175,6 +177,8 @@
   astrological_notes: Sun 18°26' Leo, Moon 24°11' Cancer, Asc. 29°07' Virgo
   data_quality: AA
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Wozniak,_Steve'
-  - Quoted BC/BR
+  - "AstroDataBank, Wozniak,_Steve: 09:45, 'LMR quotes announcement in CA magazine 7/1982 (same Contemporary American Horoscopes)', Rodden AA (accuracy: excellent)"
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file rounded time to 09:45; keep AA/reliable. High confidence.

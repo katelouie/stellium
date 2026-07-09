@@ -359,8 +359,8 @@
   year: 2010
   month: 12
   day: 17
-  hour: 16
-  minute: 0
+  hour: 11
+  minute: 30
   latitude: 33.8869
   longitude: 9.5375
   location_name: Sidi Bouzid, Tunisia
@@ -374,6 +374,8 @@
   sources:
   - 'Al Jazeera: https://www.aljazeera.com/news/2021/1/14/arab-spring-ten-years-on'
   verified: false
+  verification_notes: >
+    Bouazizi began work 8 a.m. (Wikipedia). E-International Relations, 'Biopolitics of the Self-Immolation of Mohamed Bouazizi' (2012): 'At around 11.30 a.m. on the 17th December 2010... set himself on fire.' Corroborated by The Africa Report ('less than an hour before the weekly [Friday] prayer') and Middle East Monitor. On-file 16:00 unsupported; corrected to ~11:30 (minute approximate).
 - name: Sputnik Launch
   event_type: event
   year: 1957

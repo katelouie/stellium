@@ -542,8 +542,6 @@
   year: 1969
   month: 8
   day: 8
-  hour: 11
-  minute: 30
   latitude: 39.9075
   longitude: 116.3972
   location_name: Beijing, China
@@ -554,10 +552,13 @@
   - actress
   notable_for: Chinese singer-songwriter and actress
   astrological_notes: Leo Sun, Gemini Moon
-  data_quality: A
+  data_quality: X
   sources:
-  - 'Astro-Seek: https://www.astro-seek.com/birth-chart/faye-wong-horoscope'
+  - "Astro-Seek celebrity entry: '8 August 1969 - unknown time (?)', source 'Wikipedia', Rodden XX; no astro.com AstroDataBank timed entry exists"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    On-file 'A via Astro-Seek' unsupported; Astro-Seek itself shows XX/unknown, no primary time source exists — date-only (X), remove bogus time. High confidence.
 - name: Chow Yun-fat
   event_type: birth
   year: 1955
@@ -641,10 +642,13 @@
   - actress
   notable_for: Indian actress and former Miss World
   astrological_notes: Scorpio Sun, Capricorn Moon
-  data_quality: AA
+  data_quality: C
   sources:
-  - 'AstroSage: https://astrosage.com/celebrity-horoscope/aishwarya-rai-bachchan-birth-chart.asp'
+  - "AstroDataBank, Rai,_Aishwarya (rated C): '4:05 AM from ganeshaspeaks.com, original source not known'; The Astrological Magazine v96 (Raman, 2007) p.38 '4h.05m' source unknown; 11am is speculative"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    AstroSage 'AA' is fabricated; astro.com rates C with 4:05 AM of unknown origin — downgrade to C, time not reliable. High confidence.
 - name: Ryuichi Sakamoto
   event_type: birth
   year: 1952
