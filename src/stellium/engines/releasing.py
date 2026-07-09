@@ -32,7 +32,23 @@ SIGN_PERIOD_OVERRIDES = {"Capricorn": 27}
 
 
 class ZodiacalReleasingEngine:
-    """Calculate Zodiacal Releasing periods."""
+    """Calculate Zodiacal Releasing periods.
+
+    **The defaults are the "Brennan / Modern Standard" configuration** — the
+    most-tested, most-documented setup, matching the free calculators
+    (Astro-Seek, zodiacalreleasing.net) and the major software (Solar Fire,
+    Delphic Oracle) that users cross-check against: 360-day ideal years,
+    Capricorn 27 / Aquarius 30, loosing of the bond to the opposite sign after a
+    full 12-sign circuit, truncation at parent boundaries, the same-sign Spirit
+    rule, sect-reversed lots, and peaks measured from the Lot of Fortune. So
+    ``ZodiacalReleasingEngine(chart)`` needs no preset — it *is* the standard.
+
+    The individual conventions are exposed as constructor arguments
+    (``year_length``, ``capricorn_years``, ``loosing_target``) for the minority
+    variants. ``method="fractal"`` selects a pure recursive subdivision with no
+    loosing of the bond — an **experimental, non-canonical** mode with no
+    traditional authority; use it only for comparison.
+    """
 
     def __init__(
         self,
