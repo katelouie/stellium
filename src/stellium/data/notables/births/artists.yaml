@@ -264,6 +264,10 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Matisse,_Henri'
   - Birth certificate in Didier Geslain archive, 'sculpteurs' pdf file, p. 78
   verified: false
+  verification_notes: >
+    VERIFIED, no change (audit trail): the round-hour 20:00 survived scrutiny --
+    it rests on the French etat-civil birth certificate (Didier Geslain archive
+    'sculpteurs' p.78; Gauquelin Vol 4/742 marked 'recorded'). AA stands.
 - name: Diego Rivera
   event_type: birth
   year: 1886

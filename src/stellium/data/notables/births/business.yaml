@@ -181,4 +181,8 @@
   verified: false
   has_reliable_time: true
   verification_notes: >
-    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file rounded time to 09:45; keep AA/reliable. High confidence.
+    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file
+    rounded time to 09:45; keep AA/reliable. High confidence. Caveat: the AA
+    rests on a 1982 printed birth announcement (Contemporary American
+    Horoscopes), not a hand-sighted certificate; a stricter "AA = sighted BC/BR"
+    rule would prefer A.
