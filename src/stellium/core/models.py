@@ -610,6 +610,73 @@ class ZRTimeline:
 
 
 @dataclass(frozen=True)
+class FirdariaPeriod:
+    """A single Firdaria period (major or sub-period).
+
+    Attributes:
+        ruler: The planet (or node) ruling this period. For a level-2
+            sub-period this is the *major*-period ruler.
+        sub_ruler: The sub-period ("partner") ruler, or ``None`` for a
+            level-1 major (and for node majors, which do not subdivide).
+        level: 1 = major period ("lord"), 2 = sub-period ("partner").
+        start: When the period begins.
+        end: When the period ends.
+        start_age: Age in years at ``start``.
+        end_age: Age in years at ``end``.
+    """
+
+    ruler: str
+    sub_ruler: str | None
+    level: int
+    start: dt.datetime
+    end: dt.datetime
+    start_age: float
+    end_age: float
+
+    @property
+    def length_years(self) -> float:
+        return self.end_age - self.start_age
+
+
+@dataclass(frozen=True)
+class FirdariaTimeline:
+    """A full Firdaria life timeline (Persian time-lord periods).
+
+    Attributes:
+        sect: ``"day"`` or ``"night"`` (determines the period order).
+        birth: The native's birth moment (UTC).
+        periods: All periods, both levels, in chronological order within level.
+        preset: The configuration preset used (e.g. ``"abu_mashar"``).
+    """
+
+    sect: str
+    birth: dt.datetime
+    periods: tuple[FirdariaPeriod, ...]
+    preset: str
+
+    def majors(self) -> tuple[FirdariaPeriod, ...]:
+        """The level-1 major periods ("lords")."""
+        return tuple(p for p in self.periods if p.level == 1)
+
+    def subperiods(self) -> tuple[FirdariaPeriod, ...]:
+        """The level-2 sub-periods ("partners")."""
+        return tuple(p for p in self.periods if p.level == 2)
+
+    def at(self, when: dt.datetime) -> FirdariaPeriod | None:
+        """The most-specific period active at ``when``.
+
+        Returns the level-2 sub-period in effect, or the level-1 major if it
+        has no sub-periods (a node major), or ``None`` if ``when`` is outside
+        the computed span.
+        """
+        for level in (2, 1):
+            for p in self.periods:
+                if p.level == level and p.start <= when < p.end:
+                    return p
+        return None
+
+
+@dataclass(frozen=True)
 class CalculatedChart:
     """
     Complete calculated chart - the final output.
@@ -1388,6 +1455,53 @@ class CalculatedChart:
             Snapshot of ZR for that age's datetime
         """
         return self.metadata["zodiacal_releasing"][lot].at_age(age)
+
+    def firdaria(
+        self,
+        *,
+        preset: str = "abu_mashar",
+        year_length: float = 365.2425,
+        repeat: bool = True,
+        max_age: float = 96.0,
+    ) -> "FirdariaTimeline":
+        """Compute the Firdaria time-lord timeline for this chart.
+
+        Firdaria is a Persian time-lord system: each planet (and the lunar
+        nodes) rules a fixed-length chunk of life in sect-determined order, each
+        major period subdividing into seven sub-periods.
+
+        Args:
+            preset: Configuration preset. ``"abu_mashar"`` (default; nodes at
+                the end in both sects), ``"bonatti"`` (nocturnal nodes after
+                Mars), ``"al_biruni"`` (alias of the default), or ``"no_nodes"``
+                (seven planets, 70-year cycle).
+            year_length: Days per year (default 365.2425; the 360-day ideal year
+                is *not* used for natal Firdaria).
+            repeat: Repeat the sequence after it completes, up to ``max_age``.
+            max_age: Horizon in years to compute out to.
+
+        Returns:
+            A :class:`FirdariaTimeline`.
+
+        Raises:
+            ValueError: If the chart has no known birth time (sect is
+                undetermined) — Firdaria requires sect.
+
+        Example::
+
+            timeline = chart.firdaria()
+            period = timeline.at(datetime(2025, 6, 15))
+            print(period.ruler, period.sub_ruler)
+        """
+        from stellium.engines.firdaria import FirdariaEngine
+
+        return FirdariaEngine(
+            self,
+            preset=preset,
+            year_length=year_length,
+            repeat=repeat,
+            max_age=max_age,
+        ).calculate()
 
     # =========================================================================
     # Visualization
