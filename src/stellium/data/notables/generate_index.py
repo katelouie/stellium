@@ -25,6 +25,25 @@ def load_notables_from_file(filepath: Path) -> list[dict]:
     return data if data else []
 
 
+def format_birth_datetime(entry: dict) -> str:
+    """Render an entry's birth date + clock time as ``YYYY-MM-DD HH:MM``.
+
+    Missing month/day fall back to ``??``; missing hour/minute to ``00``. Note
+    that when ``has_reliable_time`` is false the stored time is a noon
+    placeholder, so callers should tag it as unreliable (see ``main``).
+    """
+    year = entry.get("year")
+    month = entry.get("month")
+    day = entry.get("day")
+    hour = entry.get("hour", 0) or 0
+    minute = entry.get("minute", 0) or 0
+
+    year_str = f"{year:04d}" if isinstance(year, int) else str(year or "????")
+    month_str = f"{month:02d}" if isinstance(month, int) else "??"
+    day_str = f"{day:02d}" if isinstance(day, int) else "??"
+    return f"{year_str}-{month_str}-{day_str} {hour:02d}:{minute:02d}"
+
+
 def main():
     # Get the directory where this script lives
     script_dir = Path(__file__).parent
@@ -54,6 +73,13 @@ def main():
                         "subcategories": subcats,
                         "notable_for": notable_for,
                         "source_file": yaml_file.name,
+                        "birth_datetime": format_birth_datetime(entry),
+                        "location_name": entry.get("location_name", "unknown"),
+                        "timezone": entry.get("timezone", ""),
+                        "rating": entry.get("data_quality") or "unrated",
+                        "has_reliable_time": bool(
+                            entry.get("has_reliable_time", False)
+                        ),
                     }
                 )
 
@@ -84,6 +110,15 @@ def main():
         "",
         f"**Total entries:** {sum(len(v) for v in births.values()) + len(events)}",
         "",
+        "Each birth entry lists, on its second line: `birth date + local clock "
+        "time · place [IANA timezone] · rating · time-reliability`. The **rating** "
+        "is the Rodden data quality (`AA`/`A`/`B`/`C`/`DD`/`X`/`unrated`). "
+        "**Time reliability** is an explicit curation flag: when it reads *NOT "
+        "reliable*, the clock time is a low-confidence value or a `12:00` noon "
+        "placeholder and must **not** be treated as ground truth. For "
+        "rectification-corpus purposes, only `AA`/`A` entries marked *time "
+        "reliable* are usable as ground truth.",
+        "",
     ]
 
     # Births section
@@ -101,7 +136,20 @@ def main():
                 ", ".join(entry["subcategories"]) if entry["subcategories"] else ""
             )
             subcat_str = f" ({subcats})" if subcats else ""
+
+            loc = entry["location_name"]
+            tz = f" [{entry['timezone']}]" if entry["timezone"] else ""
+            if entry["has_reliable_time"]:
+                time_flag = "time reliable"
+            elif entry["birth_datetime"].endswith(" 12:00"):
+                time_flag = "time NOT reliable (noon placeholder)"
+            else:
+                time_flag = "time NOT reliable"
             lines.append(f"- **{entry['name']}** ({entry['year']}){subcat_str}")
+            lines.append(
+                f"  - {entry['birth_datetime']} · {loc}{tz} · "
+                f"rating {entry['rating']} · {time_flag}"
+            )
 
         lines.append("")
 
