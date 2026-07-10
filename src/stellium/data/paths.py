@@ -18,10 +18,13 @@ The user directory structure:
 import importlib.resources
 import os
 import shutil
-import sys
 from pathlib import Path
 
 import swisseph as swe
+
+from stellium._logging import get_logger
+
+log = get_logger("data.paths")
 
 # User data directory
 USER_DATA_DIR = Path.home() / ".stellium"
@@ -135,7 +138,7 @@ def _copy_bundled_ephe_files() -> int:
                 shutil.copy2(src, dst)
                 copied += 1
             except OSError as e:
-                print(f"Warning: Could not copy {filename}: {e}", file=sys.stderr)
+                log.warning("Could not copy %s: %s", filename, e)
 
     return copied
 
@@ -206,11 +209,11 @@ def initialize_ephemeris(ephe_path: str | Path | None = None) -> Path:
         # We still warn (not raise) if it doesn't exist so that misconfigured
         # paths fail loudly at the first calculation rather than silently.
         if not resolved.exists():
-            print(
-                f"Stellium: warning — custom ephemeris path {resolved} does "
-                "not exist. Swiss Ephemeris calculations will fail until "
-                "the directory is created and populated.",
-                file=sys.stderr,
+            log.warning(
+                "Custom ephemeris path %s does not exist. Swiss Ephemeris "
+                "calculations will fail until the directory is created and "
+                "populated.",
+                resolved,
             )
     else:
         # Default location: ensure the directory exists and populate it
@@ -218,7 +221,7 @@ def initialize_ephemeris(ephe_path: str | Path | None = None) -> Path:
         resolved.mkdir(parents=True, exist_ok=True)
         copied = _copy_bundled_ephe_files()
         if copied > 0:
-            print(f"Stellium: Initialized {copied} ephemeris files in {resolved}")
+            log.info("Initialized %d ephemeris files in %s", copied, resolved)
 
     # Set Swiss Ephemeris path (trailing separator is required by the C lib).
     swe.set_ephe_path(str(resolved) + os.sep)

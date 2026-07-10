@@ -32,6 +32,7 @@ A complete map of Stellium's documentation. The **hub** for development is
 | [REPORTS.md](REPORTS.md) | Generating terminal/markdown/PDF reports |
 | [CHART_TYPES.md](CHART_TYPES.md) | Natal, synastry, transits, returns, composite, etc. |
 | [THEME_GALLERY.md](THEME_GALLERY.md) / [PALETTE_GALLERY.md](PALETTE_GALLERY.md) | Visual catalogs |
+| [DIAGNOSTICS.md](DIAGNOSTICS.md) | Logging & warnings — silencing, filtering, capturing, `configure_logging` |
 | [options_list.md](options_list.md) | Complete configuration reference |
 | [api/index.md](api/index.md) | API reference |
 

@@ -31,9 +31,11 @@ Example usage:
 
 from __future__ import annotations
 
+import warnings
 from typing import TYPE_CHECKING
 
 from stellium.core.native import Native
+from stellium.exceptions import DataQualityWarning
 from stellium.io.csv import (
     CSVColumnMapping,
     _auto_detect_mapping,
@@ -136,11 +138,14 @@ def parse_dataframe(
                 raise ValueError(f"Error parsing row {idx}: {e}") from e
 
     if errors:
-        print(f"Warning: Skipped {len(errors)} row(s) with errors:")
-        for row_idx, error in errors[:5]:  # Show first 5 errors
-            print(f"  Row {row_idx}: {error}")
+        detail = "\n".join(f"  Row {row_idx}: {error}" for row_idx, error in errors[:5])
         if len(errors) > 5:
-            print(f"  ... and {len(errors) - 5} more")
+            detail += f"\n  ... and {len(errors) - 5} more"
+        warnings.warn(
+            f"Skipped {len(errors)} row(s) with errors:\n{detail}",
+            DataQualityWarning,
+            stacklevel=2,
+        )
 
     return natives
 

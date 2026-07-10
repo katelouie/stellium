@@ -16,25 +16,12 @@ from stellium.core.models import (
 )
 from stellium.core.registry import get_object_info
 from stellium.data.paths import initialize_ephemeris
+
+# MissingEphemerisWarning is defined in stellium.exceptions (under the
+# StelliumWarning hierarchy); re-exported here and from stellium.engines for
+# backward compatibility.
+from stellium.exceptions import MissingEphemerisWarning
 from stellium.utils.cache import cached
-
-
-class MissingEphemerisWarning(UserWarning):
-    """Warned when a requested body is skipped because its ephemeris file is
-    missing.
-
-    Emitted via the ``warnings`` module (not a bare print) so callers can
-    capture, filter, or silence it -- e.g.::
-
-        import warnings
-        from stellium.engines import MissingEphemerisWarning
-        warnings.filterwarnings("ignore", category=MissingEphemerisWarning)
-        # or capture which bodies were skipped:
-        with warnings.catch_warnings(record=True) as caught:
-            warnings.simplefilter("always", MissingEphemerisWarning)
-            chart = ChartBuilder.from_native(n).with_tnos().calculate()
-        skipped = [w for w in caught if issubclass(w.category, MissingEphemerisWarning)]
-    """
 
 
 def _set_ephemeris_path(ephe_path: str | Path | None = None) -> None:

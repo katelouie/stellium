@@ -6,11 +6,13 @@ that can be used for examples, testing, and research.
 """
 
 import importlib.resources
+import warnings
 from pathlib import Path
 
 import yaml
 
 from stellium.core.native import Notable
+from stellium.exceptions import DataQualityWarning
 
 
 class NotableRegistry:
@@ -77,7 +79,11 @@ class NotableRegistry:
                 with open(yaml_file) as f:
                     entries = yaml.safe_load(f) or []
             except Exception as e:
-                print(f"Warning: Failed to read {yaml_file}: {e}")
+                warnings.warn(
+                    f"Failed to read {yaml_file}: {e}",
+                    DataQualityWarning,
+                    stacklevel=2,
+                )
                 continue
 
             for entry in entries:
@@ -85,8 +91,11 @@ class NotableRegistry:
                 location_input = self._parse_location(entry)
 
                 if location_input is None:
-                    print(
-                        f"Warning: No valid location data in {yaml_file} for {entry.get('name', 'unknown')}"
+                    warnings.warn(
+                        f"No valid location data in {yaml_file} for "
+                        f"{entry.get('name', 'unknown')}",
+                        DataQualityWarning,
+                        stacklevel=2,
                     )
                     continue
 
@@ -116,9 +125,11 @@ class NotableRegistry:
 
                     self._notables.append(notable)
                 except Exception as e:
-                    print(
-                        f"Warning: Failed to load notable "
-                        f"'{entry.get('name', 'unknown')}' from {yaml_file.name}: {e}"
+                    warnings.warn(
+                        f"Failed to load notable "
+                        f"'{entry.get('name', 'unknown')}' from {yaml_file.name}: {e}",
+                        DataQualityWarning,
+                        stacklevel=2,
                     )
 
     def _parse_location(self, entry: dict) -> str | tuple[float, float] | dict | None:

@@ -26,12 +26,14 @@ Example CSV formats supported:
 
 import csv
 import datetime as dt
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 from stellium.core.models import ChartLocation
 from stellium.core.native import Native
+from stellium.exceptions import DataQualityWarning
 
 
 @dataclass
@@ -602,11 +604,14 @@ def parse_csv(
                     raise ValueError(f"Error parsing row {i}: {e}") from e
 
     if errors:
-        print(f"Warning: Skipped {len(errors)} row(s) with errors:")
-        for row_num, error in errors[:5]:  # Show first 5 errors
-            print(f"  Row {row_num}: {error}")
+        detail = "\n".join(f"  Row {row_num}: {error}" for row_num, error in errors[:5])
         if len(errors) > 5:
-            print(f"  ... and {len(errors) - 5} more")
+            detail += f"\n  ... and {len(errors) - 5} more"
+        warnings.warn(
+            f"Skipped {len(errors)} row(s) with errors:\n{detail}",
+            DataQualityWarning,
+            stacklevel=2,
+        )
 
     return natives
 

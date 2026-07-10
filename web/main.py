@@ -43,6 +43,13 @@ logging.basicConfig(
     datefmt="%Y-%m-%d %H:%M:%S",
 )
 
+# Route Python warnings (including Stellium's StelliumWarning family — bad
+# import rows, geocoding failures, invalid config) into the logging system so
+# they land in the app log instead of being lost to stderr. Stellium's own
+# logger already propagates here via the root handler above; see
+# docs/development/specs/STRUCTURED_LOGGING_SPEC.md (Phase 6).
+logging.captureWarnings(True)
+
 # Quiet down noisy libraries
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.getLogger("httpcore").setLevel(logging.WARNING)

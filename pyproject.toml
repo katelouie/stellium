@@ -119,13 +119,16 @@ line-length = 88
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+    "T20", # flake8-print — no bare print() in the package (use warnings/logging,
+    #        or click.echo in the CLI). See docs/development/specs/
+    #        STRUCTURED_LOGGING_SPEC.md.
 ]
 ignore = [
     "E501", # line too long, handled by black
@@ -135,7 +138,13 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/**/*" = ["B011"]
+"tests/**/*" = ["B011", "T20"]
+# T20 (bare print) is allowed only where terminal output *is* the product:
+"src/stellium/presentation/builder.py" = ["T20"]  # ReportBuilder.render() output
+"examples/**/*" = ["T20"]  # example scripts print by design
+"scripts/**/*" = ["T20"]  # dev/build tooling
+"docs/**/*" = ["T20"]  # doc build/render scripts
+"web/**/*" = ["T20"]  # NiceGUI app (logging adoption tracked separately)
 
 [tool.isort]
 profile = "black"

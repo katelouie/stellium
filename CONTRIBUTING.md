@@ -67,6 +67,24 @@ Pre-commit hooks handle most of this automatically. The short version:
 
 If hooks fail, they usually auto-fix things. Just `git add` the changes and commit again.
 
+### Diagnostics: no bare `print()`
+
+Library code must **not** `print()` — it's banned by ruff (`T20`) everywhere
+under `src/stellium/` except `ReportBuilder.render()`. A library writing to a
+caller's stdout can't be silenced, filtered, or captured. Route diagnostics by
+audience:
+
+- **The caller should see it** (their input or a result is degraded — bad import
+  rows, a geocoding failure, an invalid config value) → `warnings.warn(msg,
+  <StelliumWarning subclass>, stacklevel=2)`. On by default; filterable.
+- **Internal operational detail** (cache/file IO, "here's what I did") →
+  `from stellium._logging import get_logger; log = get_logger("module.name")`
+  then `log.info/warning(...)`. Silent by default (NullHandler); the app opts in.
+- **The user asked to see it** (a rendered report, CLI output) → `render()`, or
+  `click.echo()` / Rich `Console` in the `cli/` layer.
+
+Full rationale and the site-by-site map: [`docs/development/specs/STRUCTURED_LOGGING_SPEC.md`](docs/development/specs/STRUCTURED_LOGGING_SPEC.md).
+
 ### Type Hints
 
 All functions need type hints. This is enforced by mypy. Stellium is a typed codebase and I'd like to keep that coverage comprehensive.
