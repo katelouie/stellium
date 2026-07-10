@@ -160,8 +160,15 @@ timed chart, `rectify()` can still *refine* around the known time.
 
 - **Corpus:** AA-rated notables with documented, dated life events + temperament
   notes, gathered via the companion research prompt
-  (`rectification-corpus-research-prompt.md`). True times cross-referenced from
-  Stellium's notables DB.
+  (`rectification-corpus-research-prompt.md`). **Provenance is verified at the
+  source, not trusted from our DB** — our `data_quality`/`has_reliable_time`
+  layer proved unreliable (rectified times mislabeled AA, uncited biography times
+  mislabeled A), so the prompt independently re-establishes each birth time from
+  an AstroDataBank/primary source note and *rejects* anything rectified,
+  aggregator-sourced, or undocumented before it can enter the corpus. Its
+  `rejected:` output back-corrects the notables DB, so the verify-reject loop
+  runs **once**. Critically, **rectified times are excluded** — validating a
+  rectifier against a rectified time is circular.
 - **Fit:** global per-technique weights + temperature; hold out a slice for
   honest reporting.
 - **Report:** sect accuracy; time median-abs-error; **coverage** (does the 68%

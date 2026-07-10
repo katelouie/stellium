@@ -54,7 +54,11 @@ migration plan, and acceptance criteria.
   with the astrology engine as an exact forward model, sect read off as a marginal,
   the likelihood calibrated on the AA-notables corpus. Theory doc explains the
   model; spec doc has the data models, API, and phased plan (companion research
-  prompt: [specs/rectification-corpus-research-prompt.md](./specs/rectification-corpus-research-prompt.md)).
+  prompt: [specs/rectification-corpus-research-prompt.md](./specs/rectification-corpus-research-prompt.md)
+  — a single-pass *verify-then-gather* prompt that provenance-checks every
+  candidate from primary sources before it can enter the corpus, and returns its
+  rejections so they back-correct our notables DB; roster:
+  [specs/rectification-corpus-candidates.md](./specs/rectification-corpus-candidates.md)).
   *Status: Exploration.*
 
 ## How these docs are scoped
