@@ -7,7 +7,7 @@ OPTIMIZED VERSION - uses dicts with timezone to avoid slow TimezoneFinder lookup
 import pytest
 
 from stellium.core.builder import ChartBuilder
-from stellium.core.models import ChartDateTime, ChartLocation
+from stellium.core.models import ChartDateTime, ChartLocation, UnknownTimeChart
 from stellium.core.native import Native, Notable
 from stellium.data import NotableRegistry, get_notable_registry
 
@@ -231,6 +231,83 @@ class TestNotableClass:
             category="scientist",
         )
         assert repr(notable) == "<Notable: Test Person (scientist)>"
+
+
+class TestNotableReliableTime:
+    """Routing notables to unknown-time via has_reliable_time / missing time.
+
+    Introduced with the source-verification audit: a notable whose recorded
+    time is a default/rectification/fabrication (has_reliable_time=False), or
+    that has no clock time at all, must build as an UnknownTimeChart rather than
+    silently charting a fake time.
+    """
+
+    def _make(self, loc, **kw):
+        base = {
+            "name": "X",
+            "event_type": "birth",
+            "year": 1990,
+            "month": 6,
+            "day": 15,
+            "hour": 9,
+            "minute": 30,
+            "location_input": loc,
+            "category": "test",
+        }
+        base.update(kw)
+        return Notable(**base)
+
+    def test_has_reliable_time_false_is_unknown_time(self, test_location_nyc):
+        """has_reliable_time=False marks the native time_unknown."""
+        n = self._make(test_location_nyc, has_reliable_time=False)
+        assert n.time_unknown is True
+        assert n.has_reliable_time is False
+
+    def test_missing_time_is_unknown_time(self, test_location_nyc):
+        """No hour/minute on record (the Hitchcock case) => unknown-time."""
+        n = self._make(test_location_nyc, hour=None, minute=None)
+        assert n.time_unknown is True
+
+    def test_reliable_time_is_kept(self, test_location_nyc):
+        """has_reliable_time=True keeps the real time (not unknown)."""
+        n = self._make(test_location_nyc, hour=11, minute=30, has_reliable_time=True)
+        assert n.time_unknown is False
+        assert n.datetime.local_datetime.hour == 11
+        assert n.datetime.local_datetime.minute == 30
+
+    def test_unaudited_with_time_uses_time(self, test_location_nyc):
+        """has_reliable_time absent (None) + a time present => backward-compatible
+        (uses the time; not routed to unknown)."""
+        n = self._make(test_location_nyc)  # has_reliable_time defaults to None
+        assert n.has_reliable_time is None
+        assert n.time_unknown is False
+
+    def test_reliable_midnight_not_defaulted_to_noon(self, test_location_nyc):
+        """A genuine 00:00 birth must not be turned into noon (0 is valid)."""
+        n = self._make(test_location_nyc, hour=0, minute=0, has_reliable_time=True)
+        assert n.time_unknown is False
+        assert n.datetime.local_datetime.hour == 0
+
+    def test_from_notable_builds_unknown_time_chart(self, test_location_nyc):
+        """End to end: an unreliable-time notable produces an UnknownTimeChart."""
+        n = self._make(test_location_nyc, has_reliable_time=False)
+        chart = ChartBuilder.from_native(n).calculate()
+        assert isinstance(chart, UnknownTimeChart)
+
+    def test_registry_loads_timeless_notable(self, registry):
+        """Regression: a notable with no hour/minute must load, not crash.
+
+        The loader used entry["hour"] (direct access), so a timeless notable
+        (e.g. Alfred Hitchcock after the audit removed his speculative 03:15)
+        raised KeyError and was silently dropped.
+        """
+        hitchcock = registry.get_by_name("Alfred Hitchcock")
+        assert hitchcock is not None
+        assert hitchcock.time_unknown is True
+        assert isinstance(
+            ChartBuilder.from_notable("Alfred Hitchcock").calculate(),
+            UnknownTimeChart,
+        )
 
 
 class TestNotableRegistry:

@@ -416,6 +416,9 @@ class LayerFactory:
         # These render first so fills don't cover other elements
         for wheel_idx in range(chart_count - 1, -1, -1):  # Reverse: outer to inner
             current_chart = chart.charts[wheel_idx]
+            # A timeless chart has no houses; skip its cusp ring.
+            if current_chart.is_time_unknown:
+                continue
             layers.append(
                 HouseCuspLayer(
                     house_system_name=current_chart.default_house_system,
@@ -433,13 +436,15 @@ class LayerFactory:
             current_chart = chart.charts[wheel_idx]
 
             # Draw angles for all charts in multiwheel
-            # Each chart shows its own ASC/MC/DSC/IC in its ring
-            layers.append(
-                AngleLayer(
-                    wheel_index=wheel_idx,
-                    chart=current_chart,
+            # Each chart shows its own ASC/MC/DSC/IC in its ring.
+            # Angles require a birth time; skip for timeless charts.
+            if not current_chart.is_time_unknown:
+                layers.append(
+                    AngleLayer(
+                        wheel_index=wheel_idx,
+                        chart=current_chart,
+                    )
                 )
-            )
 
             # Planets for this ring
             planets = [
@@ -545,6 +550,9 @@ class LayerFactory:
         # Layers 2-N: House cusps for all chart rings (OUTER to INNER)
         for wheel_idx in range(chart_count - 1, -1, -1):
             current_chart = chart.charts[wheel_idx]
+            # A timeless chart has no houses; skip its cusp ring.
+            if current_chart.is_time_unknown:
+                continue
             layers.append(
                 HouseCuspLayer(
                     house_system_name=current_chart.default_house_system,
@@ -560,12 +568,14 @@ class LayerFactory:
         for wheel_idx in range(chart_count - 1, -1, -1):
             current_chart = chart.charts[wheel_idx]
 
-            layers.append(
-                AngleLayer(
-                    wheel_index=wheel_idx,
-                    chart=current_chart,
+            # Angles (ASC/MC/DSC/IC) require a birth time; skip for timeless charts.
+            if not current_chart.is_time_unknown:
+                layers.append(
+                    AngleLayer(
+                        wheel_index=wheel_idx,
+                        chart=current_chart,
+                    )
                 )
-            )
 
             planets = [
                 p for p in current_chart.positions if self._is_planetary_object(p)

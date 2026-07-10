@@ -704,6 +704,16 @@ class CalculatedChart:
         """Get all nodes (True Node, South Node, etc.)."""
         return [p for p in self.positions if p.object_type == ObjectType.NODE]
 
+    @property
+    def is_time_unknown(self) -> bool:
+        """Whether this chart was calculated without a known birth time.
+
+        Always False for a standard chart; ``UnknownTimeChart`` overrides this
+        to True. Defined on the base so the predicate is safe to call on any
+        chart (no need to ``isinstance`` first).
+        """
+        return False
+
     def get_declination_aspects(self, aspect_type: str | None = None) -> list[Aspect]:
         """
         Get declination aspects (Parallel and Contraparallel).
@@ -912,9 +922,15 @@ class CalculatedChart:
         else:
             return "Severely challenged - very difficult condition"
 
+    @property
     def sect(self) -> str | None:
         """
-        Check which sect this chart is (day or night) (Sun above the horizon).
+        Which sect this chart is: "day" or "night" (Sun above/below the horizon).
+
+        A computed property (no arguments). Uses the cached value from a
+        DignityComponent if present, otherwise derives it from the Sun/ASC
+        positions. For the standalone functional form, use
+        ``stellium.components.dignity.determine_sect(positions)``.
 
         Returns:
             "day" or "night"
@@ -1953,17 +1969,24 @@ class CalculatedChart:
                 lines.append("### Essential Dignities")
                 lines.append("")
                 for planet_name, data in planet_dignities.items():
-                    parts: list[str] = [f"**{planet_name}**"]
+                    both_systems = bool(data.get("traditional")) and bool(
+                        data.get("modern")
+                    )
+                    segments: list[str] = []
                     for system in ("traditional", "modern"):
                         sys_data = data.get(system)
                         if not sys_data:
                             continue
-                        dignity_type = sys_data.get("dignity", "")
-                        if dignity_type:
-                            label = f"({system})" if len(data) > 2 else ""
-                            parts.append(f"{dignity_type} {label}".strip())
-                    if len(parts) > 1:
-                        lines.append(f"- {': '.join(parts)}")
+                        dignities = sys_data.get("dignities") or []
+                        if not dignities:
+                            continue
+                        dignity_str = ", ".join(dignities)
+                        score = sys_data.get("score")
+                        score_str = f" [{score:+d}]" if isinstance(score, int) else ""
+                        label = f" ({system})" if both_systems else ""
+                        segments.append(f"{dignity_str}{score_str}{label}")
+                    if segments:
+                        lines.append(f"- **{planet_name}**: {'; '.join(segments)}")
                 lines.append("")
 
             # Mutual receptions

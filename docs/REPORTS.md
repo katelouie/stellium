@@ -63,7 +63,7 @@ ReportBuilder uses a fluent interface (method chaining) to construct reports. Th
 ```python
 from stellium import ChartBuilder, ReportBuilder
 
-chart = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
+chart = ChartBuilder.from_notable("Ada Lovelace").with_aspects().calculate()
 
 # Build a custom report
 report = (
@@ -215,7 +215,7 @@ from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 
 # Create a synastry comparison
 chart1 = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
-chart2 = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
+chart2 = ChartBuilder.from_notable("Ada Lovelace").with_aspects().calculate()
 multichart = MultiChartBuilder.synastry(chart1, chart2).calculate()
 
 # Show cross-chart aspects
@@ -778,18 +778,18 @@ from stellium import ChartBuilder, MultiChartBuilder, ReportBuilder
 
 # Calculate individual charts
 einstein = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
-curie = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
+lovelace = ChartBuilder.from_notable("Ada Lovelace").with_aspects().calculate()
 
 # Create synastry comparison
 synastry = MultiChartBuilder.synastry(
-    einstein, curie, label1="Albert Einstein", label2="Marie Curie"
+    einstein, lovelace, label1="Albert Einstein", label2="Ada Lovelace"
 ).calculate()
 
 # Generate biwheel chart
 synastry.draw("synastry_chart.svg").with_theme("midnight").save()
 
 # Generate synastry report
-ReportBuilder().from_chart(synastry).preset_synastry().with_chart_image("synastry_chart.svg").with_title("Einstein & Curie — Synastry Analysis").render(
+ReportBuilder().from_chart(synastry).preset_synastry().with_chart_image("synastry_chart.svg").with_title("Einstein & Lovelace — Synastry Analysis").render(
     format="pdf",
     file="synastry_report.pdf",
 )
@@ -844,7 +844,7 @@ chart1 = (
 )
 
 chart2 = (
-    ChartBuilder.from_notable("Marie Curie")
+    ChartBuilder.from_notable("Ada Lovelace")
     .with_aspects()
     .add_component(DignityComponent())
     .calculate()
@@ -852,7 +852,7 @@ chart2 = (
 
 # Create multichart with meaningful labels
 multichart = MultiChartBuilder.synastry(
-    chart1, chart2, label1="Albert", label2="Marie"
+    chart1, chart2, label1="Albert", label2="Ada"
 ).calculate()
 
 # Build custom synastry report

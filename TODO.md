@@ -1,11 +1,12 @@
 # TODO
 
-*32 open tasks (synced from Obsidian)*
+*38 open tasks (synced from Obsidian)*
 
 ## High
 
 - Fix broad exception swallowing (30+ bare except clauses)
 - Resolve Comparison vs MultiChart API duality
+- Zodiacal Releasing engine rewrite (parameterized, preset-based) `in-progress`
 
 ## Normal
 
@@ -15,12 +16,15 @@
 - BaZi Luck pillars calculation
 - BaZi: Clashes, combinations, and penalties
 - Build plugin ecosystem architecture (Phase 3 of VISION)
+- DX: surface silent None returns from component-dependent accessors
 - Evaluate component/analyzer support for non-ChartBuilder chart types
+- Fix aspect-pattern over-counting on conjunct points
 - Implement Firdaria timing technique
 - Implement Vedic dignities engine (moolatrikona, Dig Bala, Navamsa)
 - Implement Vimshottari Dasha system
 - Implement interactive HTML reports (Jinja2 + Pico.css)
 - Integrate Simplified Chinese translation strings into main library and web
+- Introduce structured logging system (replace bare prints)
 - LMT (Local Mean Time) support for historical charts
 - Update ARCHITECTURE.md directory structure to match codebase
 - Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps
@@ -34,6 +38,8 @@
 - Astrological weather API (daily dignities, VOC Moon, planetary hours)
 - Build research platform (hypothesis testing, batch analysis)
 - Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
+- Hygiea silently absent from CalculationConfig.comprehensive()
+- Reconcile Carl Jung notable record (time + data quality)
 - Refactor SectionData to sealed dataclass hierarchy
 - Topocentric parallax corrections
 - Update ARCHITECTURE.md — significantly out of date

@@ -4,6 +4,7 @@ Stellium Web - Explore Page
 Browse and view charts for notable births and historical events.
 """
 
+from analytics import CHART_GENERATED, SVG_DOWNLOADED, track_event
 from components.chart_display import create_chart_actions, create_chart_display
 from components.header import create_header, create_nav
 from config import COLORS
@@ -201,6 +202,7 @@ def create_explore_page():
 
             state["chart_svg"] = drawer.save(to_string=True)
             refresh_chart_display()
+            track_event(CHART_GENERATED, {"page": "explore", "notable": notable.name})
 
         except Exception as e:
             ui.notify(f"{_('Error generating chart:')} {str(e)}", type="negative")
@@ -231,6 +233,7 @@ def create_explore_page():
             name = state["selected_notable"].name.replace(" ", "_").lower()
             filename = f"{name}_natal_chart.svg"
             ui.download(state["chart_svg"].encode("utf-8"), filename, "image/svg+xml")
+            track_event(SVG_DOWNLOADED, {"page": "explore"})
 
     def on_search_change(e):
         """Handle search input change."""

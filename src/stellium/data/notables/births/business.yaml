@@ -15,9 +15,9 @@
   timezone: America/Los_Angeles
   category: business
   subcategories:
-    - Entrepreneur
-    - Inventor
-    - Visionary
+  - Entrepreneur
+  - Inventor
+  - Visionary
   notable_for: >-
     American business magnate and co-founder of Apple Inc. Revolutionized personal
     computing, animated movies (Pixar), music (iPod/iTunes), phones (iPhone), and
@@ -25,7 +25,7 @@
   astrological_notes: Sun 5 Pisces
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
   verified: true
 
 - name: Elon Musk
@@ -41,9 +41,9 @@
   timezone: Africa/Johannesburg
   category: business
   subcategories:
-    - Entrepreneur
-    - Engineer
-    - Investor
+  - Entrepreneur
+  - Engineer
+  - Investor
   notable_for: >-
     South African-born entrepreneur and business magnate. Founder of SpaceX, CEO of
     Tesla, owner of X (Twitter). Co-founded PayPal, Neuralink, and OpenAI.
@@ -51,10 +51,13 @@
   astrological_notes: Sun 6 Cancer
   data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Musk,_Elon"
-    - "Walter Isaacson, Elon Musk (2023)"
+  - "Walter Isaacson, 'Elon Musk' (2023): '7:30 on the morning of June 28, 1971' — biography, NOT a birth certificate."
   verified: false
 
+  has_reliable_time: true
+  verification_notes: >
+    Time provenance is a biography; keep at A, never AA. Isaacson doesn't cite
+    where the 07:30 came from.
 - name: Walt Disney
   event_type: birth
   year: 1901
@@ -68,9 +71,9 @@
   timezone: America/Chicago
   category: business
   subcategories:
-    - Animator
-    - Filmmaker
-    - Theme Park Creator
+  - Animator
+  - Filmmaker
+  - Theme Park Creator
   notable_for: >-
     American animator, film producer, and entrepreneur. Created Mickey Mouse in 1928.
     Founded The Walt Disney Company. Built Disneyland. Won 22 Academy Awards.
@@ -78,7 +81,7 @@
   astrological_notes: Sun 12 Sagittarius, Moon 9 Libra
   data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
   verified: true
 
 - name: Warren Buffett
@@ -98,10 +101,13 @@
   - Philanthropist
   notable_for: American investor, business tycoon, philanthropist, and the chairman and CEO of Berkshire Hathaway, an American multinational conglomerate holding company headquartered in Omaha, Nebraska. Following a finance accounting field in college, Buffett received a BS and MS in Economics. He is considered one of the most savvy investors in the world and has a net worth of over US$85.6 billion as of December 2020, making him the world's fourth-wealthiest person.
   astrological_notes: 06°45' 05°18 Asc. 25°30'
-  data_quality: A
+  data_quality: C
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Buffett,_Warren'
+  - "AstroDataBank, Buffett,_Warren: 'Paul Hewitt collection ... a source who wishes to remain anonymous wrote to PT that a friend of his obtained the data from Buffett himself' (round-hour 15:00, no register)"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Round-hour 15:00 from unverifiable anonymous third-hand memory chain, not a certificate — caution grade, time not reliable. Medium-high confidence.
 - name: Bill Gates
   event_type: birth
   year: 1955
@@ -120,10 +126,13 @@
   - philanthropist
   notable_for: American business magnate, co-founder of Microsoft Corporation, known for pioneering the microcomputer revolution and holding the title of the richest person in the world for most years from 1995 to 2017.
   astrological_notes: Ascendant 08°15'
-  data_quality: A
+  data_quality: DD
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Gates,_Bill'
+  - "AstroDataBank, Gates,_Bill: 2018 birth certificate confirms Seattle but records NO time (WA recorded no birth times 1949-1967); conflicting accounts 'shortly after 9:00 PM' (Wallace & Erickson, Hard Drive, 1992) vs '10:00 PM' (Gates via Cindy Rempel)"
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Certificate has no time; sources conflict — DD stands, time not reliable. High confidence.
 - name: Aristotle Onassis
   event_type: birth
   year: 1906
@@ -145,6 +154,10 @@
   sources:
   - 'Astrotheme: https://www.astrotheme.com/astrology/Aristotle_Onassis'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Noon default; no time. Birth YEAR also disputed (1900/1904/1906) — Onassis
+    self-reported 1900; most biographers give 20 Jan 1906. Flag the year.
 - name: Steve Wozniak
   event_type: birth
   year: 1950
@@ -164,6 +177,12 @@
   astrological_notes: Sun 18°26' Leo, Moon 24°11' Cancer, Asc. 29°07' Virgo
   data_quality: AA
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Wozniak,_Steve'
-  - Quoted BC/BR
+  - "AstroDataBank, Wozniak,_Steve: 09:45, 'LMR quotes announcement in CA magazine 7/1982 (same Contemporary American Horoscopes)', Rodden AA (accuracy: excellent)"
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file
+    rounded time to 09:45; keep AA/reliable. High confidence. Caveat: the AA
+    rests on a 1982 printed birth announcement (Contemporary American
+    Horoscopes), not a hand-sighted certificate; a stricter "AA = sighted BC/BR"
+    rule would prefer A.

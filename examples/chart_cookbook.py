@@ -179,7 +179,7 @@ def example_7_theme_matched_palettes():
     """
     section_header("Example 7: Theme-Matched Palettes")
 
-    chart = ChartBuilder.from_notable("Mozart").with_aspects().calculate()
+    chart = ChartBuilder.from_notable("Wolfgang Mozart").with_aspects().calculate()
 
     combos = [
         ("dark", "rainbow_dark"),

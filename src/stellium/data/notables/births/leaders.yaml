@@ -18,8 +18,12 @@
   astrological_notes: Capricorn Sun - tests leadership and social justice themes
   data_quality: C
   sources:
-  - Stellium Test Suite
+  - "AstroDataBank: https://www.astro.com/astro-databank/King,_Martin_Luther,_Jr."
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    Replaces 'Stellium Test Suite' placeholder. Noon is a placeholder, not a
+    confirmed noon birth — verify against ADB before assigning a real time.
 - name: Winston Churchill
   event_type: birth
   year: 1874
@@ -36,12 +40,15 @@
   - statesman
   - author
   notable_for: British Prime Minister during World War II
-  astrological_notes: Sagittarius Sun with Leo Rising - tests wartime leadership and
-    oratory skills
+  astrological_notes: Sagittarius Sun with Leo Rising - tests wartime leadership and oratory skills
   data_quality: C
   sources:
-  - Stellium Test Suite
+  - "AstroDataBank: https://www.astro.com/astro-databank/Churchill,_Winston"
   verified: false
+  has_reliable_time: true
+  verification_notes: >
+    Replaces 'Stellium Test Suite' placeholder. The famous 01:30 AM Blenheim
+    birth is well attested; confirm the ADB letter (likely A/B).
 - name: Abraham Lincoln
   event_type: birth
   year: 1809
@@ -58,16 +65,18 @@
   - U.S. President
   - Lawyer
   - Public Speaker
-  notable_for: 16th President of the United States (1861-1865). Issued the Emancipation
-    Proclamation in 1863, preserved the Union during the Civil War, and is considered
-    one of the greatest American presidents. Assassinated in 1865.
+  notable_for: 16th President of the United States (1861-1865). Issued the Emancipation Proclamation in 1863, preserved the Union during the Civil War, and is considered one of the greatest American presidents. Assassinated in 1865.
   astrological_notes: Sun 23 Aquarius, Moon 27 Capricorn, Asc 22 Aquarius
-  data_quality: B
+  data_quality: C
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Lincoln,_Abraham'
   - William E. Barton, Women Lincoln Loved (1927)
   - 'Carl Sandburg, Abraham Lincoln: The Prairie Years and the War Years'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    The precise 06:54 is almost certainly rectified; tradition gives only
+    'sunrise'/'early morning'. Treat as C / no reliable time.
 - name: Barack Obama
   event_type: birth
   year: 1961
@@ -84,9 +93,7 @@
   - U.S. President
   - Lawyer
   - Author
-  notable_for: 44th President of the United States (2009-2017), first African American
-    to hold the office. Won Nobel Peace Prize in 2009. Previously served as U.S. Senator
-    from Illinois.
+  notable_for: 44th President of the United States (2009-2017), first African American to hold the office. Won Nobel Peace Prize in 2009. Previously served as U.S. Senator from Illinois.
   astrological_notes: Sun 12 Leo, Moon 3 Gemini
   data_quality: AA
   sources:
@@ -108,14 +115,14 @@
   - First Lady
   - Lawyer
   - Author
-  notable_for: American attorney, author and former First Lady of the United States
-    (2009-2017). Founded the Let's Move! initiative. Her memoir "Becoming" became
-    a bestseller.
+  notable_for: American attorney, author and former First Lady of the United States (2009-2017). Founded the Let's Move! initiative. Her memoir "Becoming" became a bestseller.
   astrological_notes: Sun 26 Capricorn
   data_quality: X
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Obama,_Michelle'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Prince William
   event_type: birth
   year: 1982
@@ -132,9 +139,7 @@
   - Prince of Wales
   - Royal
   - Philanthropist
-  notable_for: Prince of Wales and heir apparent to the British throne. Elder son
-    of King Charles III and Diana, Princess of Wales. Founder of charitable initiatives
-    including The Royal Foundation.
+  notable_for: Prince of Wales and heir apparent to the British throne. Elder son of King Charles III and Diana, Princess of Wales. Founder of charitable initiatives including The Royal Foundation.
   astrological_notes: Sun 0 Cancer, Moon in Cancer
   data_quality: AA
   sources:
@@ -157,9 +162,7 @@
   - Princess of Wales
   - Royal
   - Philanthropist
-  notable_for: Catherine, Princess of Wales. Wife of William, Prince of Wales. Patron
-    of numerous charitable organizations focusing on children's welfare, mental health
-    and the arts.
+  notable_for: Catherine, Princess of Wales. Wife of William, Prince of Wales. Patron of numerous charitable organizations focusing on children's welfare, mental health and the arts.
   astrological_notes: Sun 19 Capricorn
   data_quality: C
   sources:
@@ -181,9 +184,7 @@
   - Queen
   - Head of State
   - Monarch
-  notable_for: Queen of the United Kingdom from 1952 to 2022. Longest-reigning British
-    monarch (70 years). Oversaw significant changes in British society and the transformation
-    of the British Empire into the Commonwealth.
+  notable_for: Queen of the United Kingdom from 1952 to 2022. Longest-reigning British monarch (70 years). Oversaw significant changes in British society and the transformation of the British Empire into the Commonwealth.
   astrological_notes: Sun 0 Taurus, Moon 12 Leo, Asc 21 Capricorn
   data_quality: AA
   sources:
@@ -206,9 +207,7 @@
   - Queen
   - Empress
   - Monarch
-  notable_for: Queen of the United Kingdom from 1837 until her death in 1901. Empress
-    of India from 1876. Her reign of nearly 64 years was known as the Victorian era,
-    a period of industrial, cultural, and scientific change.
+  notable_for: Queen of the United Kingdom from 1837 until her death in 1901. Empress of India from 1876. Her reign of nearly 64 years was known as the Victorian era, a period of industrial, cultural, and scientific change.
   astrological_notes: Sun 2 Gemini, Moon 3 Gemini
   data_quality: AA
   sources:
@@ -231,9 +230,7 @@
   - Princess
   - Royal
   - Humanitarian
-  notable_for: Princess of Wales as the first wife of Charles, Prince of Wales. Known
-    for her charity work, particularly with AIDS patients and landmine victims. Her
-    death in 1997 prompted unprecedented public mourning.
+  notable_for: Princess of Wales as the first wife of Charles, Prince of Wales. Known for her charity work, particularly with AIDS patients and landmine victims. Her death in 1997 prompted unprecedented public mourning.
   astrological_notes: Sun 9 Cancer, Moon 25 Aquarius
   data_quality: A
   sources:
@@ -254,10 +251,7 @@
   subcategories:
   - Politician
   - Activist
-  notable_for: South African President, a civil rights hero and martyr who claimed
-    victory in his lifetime crusade to establish a non-racial democracy for South
-    Africa. He was arrested as a political prisoner on August 5, 1962 and spent 27
-    years in prison, released on February 11, 1990.
+  notable_for: South African President, a civil rights hero and martyr who claimed victory in his lifetime crusade to establish a non-racial democracy for South Africa. He was arrested as a political prisoner on August 5, 1962 and spent 27 years in prison, released on February 11, 1990.
   astrological_notes: Ascendant 20°15', Sun sign Cancer
   data_quality: DD
   sources:
@@ -278,11 +272,7 @@
   subcategories:
   - Political Activist
   - Lawyer
-  notable_for: Indian lawyer and civil rights champion, the spiritual and political
-    leader of India through her tempestuous birth of independence. Known as Mahatma,
-    (great soul), he began the freedom movement in 1919 with nonviolent disobedience.
-    India broke from England in August 1947 and Gandhi's rank as a saint and holy
-    man was assured in history.
+  notable_for: Indian lawyer and civil rights champion, the spiritual and political leader of India through her tempestuous birth of independence. Known as Mahatma, (great soul), he began the freedom movement in 1919 with nonviolent disobedience. India broke from England in August 1947 and Gandhi's rank as a saint and holy man was assured in history.
   astrological_notes: Asc. 08°56' 19°56' 25°47'
   data_quality: C
   sources:
@@ -303,8 +293,7 @@
   subcategories:
   - U.S. President
   - author
-  notable_for: American author, politician and the 35th U.S. President from 1961-63,
-    the first Catholic and the youngest man to win the nation's highest office.
+  notable_for: American author, politician and the 35th U.S. President from 1961-63, the first Catholic and the youngest man to win the nation's highest office.
   astrological_notes: Asc. 17°13'
   data_quality: A
   sources:
@@ -317,23 +306,22 @@
   day: 10
   hour: 10
   minute: 0
-  latitude: 36.3427
-  longitude: 28.1978
-  location_name: Mon Repos, Greece
+  latitude: 39.6064
+  longitude: 19.9261
+  location_name: "Mon Repos, Corfu, Greece"
   timezone: Europe/Athens
   category: leader
   subcategories:
   - royal family
-  notable_for: Greek-Danish-British husband of Queen Elizabeth II from 1947 until
-    his death in 2021, longest-serving consort of a reigning British monarch, oldest
-    ever male member of the British royal family at death; served in British Navy
-    during WWII, pilot-Captain General of the Royal Marines, yachtsman, polo player,
-    wildlife conservationist.
+  notable_for: Greek-Danish-British husband of Queen Elizabeth II from 1947 until his death in 2021, longest-serving consort of a reigning British monarch, oldest ever male member of the British royal family at death; served in British Navy during WWII, pilot-Captain General of the Royal Marines, yachtsman, polo player, wildlife conservationist.
   astrological_notes: Sun 18°53', Asc. 15°08'
   data_quality: AA
   sources:
-  - 'AstroDatabank: https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh'
+  - "Wikipedia (Prince Philip; Mon Repos, Corfu): born 10 June 1921 at the Mon Repos villa, Corfu. Coordinates: Wikidata Q824940, Mon Repos villa = 39 deg 36'23\"N, 19 deg 55'34\"E (= 39.6064, 19.9261). Time: 2021 birth certificate registered by priest Spiridon Tryfonas (Mail on Sunday) states born 'at 10am' (Julian 28 May 1921 = 10 June 1921 Gregorian)"
   verified: false
+  verification_notes: >
+    Birthplace (Mon Repos villa) confirmed; coordinates corrected ~250m to the Wikidata villa point; 10:00 AA stands on the 2021 sighted certificate — time unchanged. High confidence.
+  has_reliable_time: true
 - name: Jacqueline Kennedy Onassis
   event_type: birth
   year: 1929
@@ -349,9 +337,7 @@
   subcategories:
   - first lady
   - editor
-  notable_for: American First Lady, wife of US President John F. Kennedy; socialite,
-    public figure, publisher; married and widowed twice to powerful men; journalist;
-    mother of Caroline and John Jr.
+  notable_for: American First Lady, wife of US President John F. Kennedy; socialite, public figure, publisher; married and widowed twice to powerful men; journalist; mother of Caroline and John Jr.
   astrological_notes: Sun in Leo; Ascendant 05°10'
   data_quality: A
   sources:
@@ -374,10 +360,14 @@
   - spiritual leader
   notable_for: Tibetan spiritual leader and Nobel Peace Prize laureate
   astrological_notes: Cancer Sun, Leo Moon
-  data_quality: AA
+  data_quality: A
   sources:
   - 'Astro.com: https://astro.com/samples/sp_dlama_e.htm'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    astro.com rates A, not AA. Time is contested (sunrise ~04:38 traditional,
+    but sources scatter 04:30 -> 11:45 AM LMT). Treat time as unreliable.
 - name: Fidel Castro
   event_type: birth
   year: 1926
@@ -394,10 +384,15 @@
   - revolutionary
   notable_for: Cuban revolutionary and politician
   astrological_notes: Leo Sun, Aquarius Moon
-  data_quality: AA
+  data_quality: DD
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/fidel-castro-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    astro.com rates DD, not AA — conflicting 2:00 AM (autobiography), 1:00 PM
+    ('official sources'), 4:44 AM, plus a 1926/1927 year dispute. AA was
+    fabricated from an Astro-Seek mirror.
 - name: Che Guevara
   event_type: birth
   year: 1928
@@ -414,10 +409,15 @@
   - revolutionary
   notable_for: Argentine Marxist revolutionary
   astrological_notes: Taurus Sun, Taurus Moon
-  data_quality: AA
+  data_quality: DD
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/ernesto-che-guevara-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    TRUE date is 1928-05-14 (mother faked the official 14 Jun date). The
+    3:05 AM comes from the FRAUDULENT June certificate, so its provenance is
+    tangled; some astrologers argue ~7 AM. Keep 05-14 date; distrust the time.
 - name: Hugo Chávez
   event_type: birth
   year: 1954
@@ -434,10 +434,14 @@
   - politician
   notable_for: Venezuelan politician and president
   astrological_notes: Leo Sun, Aquarius Moon
-  data_quality: AA
+  data_quality: DD
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/hugo-chavez-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    astro.com rates DD; the only certificate-derived quote (Ramonet 2014) says
+    'a las dos de la madrugada' (2 AM), NOT the 04:00 on file. AA fabricated.
 - name: Patrice Lumumba
   event_type: birth
   year: 1925
@@ -458,6 +462,8 @@
   sources:
   - 'Astrotheme: https://www.astrotheme.com/astrology/Patrice_Lumumba'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Thomas Sankara
   event_type: birth
   year: 1949
@@ -474,10 +480,14 @@
   - revolutionary
   notable_for: Burkinabé military officer and president
   astrological_notes: Capricorn Sun
-  data_quality: A
+  data_quality: X
   sources:
   - 'Infospacetalk: https://www.infospacetalk.com/astrovolta-horoscope-databank/categories/world-leader/capt-thomas-sankara'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    No astro.com record exists; 'Infospacetalk' gives date only. The 11:50 is
+    effectively a near-noon placeholder.
 - name: Gamal Abdel Nasser
   event_type: birth
   year: 1918
@@ -519,6 +529,8 @@
   sources:
   - 'Astro-Charts: https://astro-charts.com/persons/chart/wangari-maathai/'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default; no recorded time."
 - name: Rigoberta Menchú
   event_type: birth
   year: 1959
@@ -555,10 +567,15 @@
   - politician
   notable_for: Pakistani politician and prime minister
   astrological_notes: Cancer Sun, Capricorn Moon
-  data_quality: AA
+  data_quality: DD
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/benazir-bhutto-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    astro.com rates DD; the 19:21 is explicitly 'third-hand... use with
+    caution', with 19:59 / 21:00 / 19:43 / 19:32 competing. AA inherited
+    without provenance.
 - name: Indira Gandhi
   event_type: birth
   year: 1917
@@ -593,8 +610,7 @@
   category: leader
   subcategories:
   - UK Prime Minister
-  notable_for: British stateswoman who was Prime Minister of the United Kingdom from
-    1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
+  notable_for: British stateswoman who was Prime Minister of the United Kingdom from 1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
   astrological_notes: Sun 19 Libra
   data_quality: AA
   sources:
@@ -614,8 +630,7 @@
   category: leader
   subcategories:
   - German Chancellor
-  notable_for: German politician who has been Chancellor of Germany since 2005 and
-    leader of the Christian Democratic Union since 2000.
+  notable_for: German politician who has been Chancellor of Germany since 2005 and leader of the Christian Democratic Union since 2000.
   astrological_notes: Sun 24 Cancer
   data_quality: B
   sources:
@@ -628,21 +643,25 @@
   day: 7
   hour: 5
   minute: 14
-  latitude: -34.6131
-  longitude: -58.3772
-  location_name: Buenos Aires, Argentina
+  latitude: -34.9925
+  longitude: -61.0350
+  location_name: "Los Toldos, Buenos Aires Province, Argentina"
   timezone: America/Argentina/Buenos_Aires
   category: leader
   subcategories:
   - Argentine first lady
   - icon
-  notable_for: Argentine political leader and actress. Second wife of President Juan
-    Perón and served as First Lady of Argentina from 1946 until her death in 1952.
+  notable_for: Argentine political leader and actress. Second wife of President Juan Perón and served as First Lady of Argentina from 1946 until her death in 1952.
   astrological_notes: Sun 16 Taurus
   data_quality: B
   sources:
-  - https://www.astro.com/astro-databank/Per%C3%B3n,_Eva
+  - "Wikipedia; Britannica: born Los Toldos, 7 May 1919, as 'Eva María Ibarguren'."
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    BIRTHPLACE likely wrong (Los Toldos, not Buenos Aires city). Eva forged her
+    own birth records; the 05:14 time has no clear provenance. Treat as B/no
+    reliable time.
 - name: Aung San Suu Kyi
   event_type: birth
   year: 1945
@@ -650,21 +669,25 @@
   day: 19
   hour: 12
   minute: 0
-  latitude: 28.6139
-  longitude: 77.209
-  location_name: Delhi, India
-  timezone: Asia/Kolkata
+  latitude: 16.8661
+  longitude: 96.1951
+  location_name: "Rangoon (Yangon), Burma"
+  timezone: Asia/Yangon
   category: leader
   subcategories:
   - Myanmar
   - Nobel laureate
-  notable_for: Burmese politician, diplomat, and author who is the leader of the National
-    League for Democracy and the first State Counsellor of Myanmar.
+  notable_for: Burmese politician, diplomat, and author who is the leader of the National League for Democracy and the first State Counsellor of Myanmar.
   astrological_notes: Sun 27 Gemini
   data_quality: X
   sources:
-  - https://www.astro.com/astro-databank/Aung_San_Suu_Kyi
+  - "NobelPrize.org: 'Born: 19 June 1945, Rangoon, Burma (now Yangon, Myanmar)'."
+  - "Burma Campaign UK; Britannica — moved to Delhi in 1960, not born there."
   verified: false
+  has_reliable_time: false
+  verification_notes: >
+    BIRTHPLACE ERROR: born in Rangoon, not Delhi (she moved to Delhi in 1960).
+    Time unknown (noon default).
 - name: Golda Meir
   event_type: birth
   year: 1898
@@ -679,13 +702,14 @@
   category: leader
   subcategories:
   - Israeli Prime Minister
-  notable_for: Israeli teacher, kibbutznik, stateswoman, politician and the fourth
-    Prime Minister of Israel.
+  notable_for: Israeli teacher, kibbutznik, stateswoman, politician and the fourth Prime Minister of Israel.
   astrological_notes: Sun 13 Taurus
   data_quality: AA
   sources:
   - https://www.astro.com/astro-databank/Meir,_Golda
   verified: true
+  has_reliable_time: false
+  verification_notes: "Noon default; verify Kiev birthplace/date."
 - name: Catherine the Great
   event_type: birth
   year: 1729
@@ -700,11 +724,13 @@
   category: leader
   subcategories:
   - Russian Empress
-  notable_for: Empress of Russia who came to power following a coup d'état that she
-    organised against her husband, Peter III.
+  notable_for: Empress of Russia who came to power following a coup d'état that she organised against her husband, Peter III.
   astrological_notes: Sun 11 Taurus
-  data_quality: B
+  data_quality: A
   sources:
-  - https://www.astro.com/astro-databank/Catherine_the_Great,_Empress
+  - "AstroDataBank, Catherine_the_Great,_Empress: Sy Scholfield quoting Katharine S. Anthony, Memoirs of Catherine the Great (Tudor, 1935), p.71 — Prince Christian August's contemporary letter from Stettin, 2 May 1729: 'this morning at half past two o'clock'"
   verified: false
   calendar: gregorian
+  has_reliable_time: true
+  verification_notes: >
+    Father's cited, sighted contemporary letter fixes 02:30 (family source) — upgrade B to A, reliable time. High confidence.

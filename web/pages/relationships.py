@@ -4,6 +4,12 @@ Stellium Web - Relationships Page
 Chart types for comparing two people: Synastry, Composite, Davison.
 """
 
+from analytics import (
+    CHART_GENERATED,
+    PDF_DOWNLOADED,
+    SVG_DOWNLOADED,
+    track_event,
+)
 from components.chart_display import create_chart_actions, create_chart_display
 from components.code_preview import create_relationships_code_preview_dialog
 from components.header import create_header, create_nav
@@ -403,6 +409,9 @@ def create_relationships_page():
                 f"{type_names[state.chart_type]} {_('chart generated!')}",
                 type="positive",
             )
+            track_event(
+                CHART_GENERATED, {"page": "relationships", "type": state.chart_type}
+            )
 
         except Exception as e:
             ui.notify(f"{_('Error:')} {str(e)}", type="negative")
@@ -440,6 +449,9 @@ def create_relationships_page():
             name_part = f"{p1_name}_{p2_name}".replace(" ", "_").lower()
             filename = f"{name_part}_{state.chart_type}_chart.svg"
             ui.download(chart_svg["content"].encode("utf-8"), filename, "image/svg+xml")
+            track_event(
+                SVG_DOWNLOADED, {"page": "relationships", "type": state.chart_type}
+            )
 
     def download_pdf():
         """Generate and download the PDF report."""
@@ -509,6 +521,9 @@ def create_relationships_page():
 
                 ui.download(pdf_bytes, filename, "application/pdf")
                 ui.notify(_("PDF generated!"), type="positive")
+                track_event(
+                    PDF_DOWNLOADED, {"page": "relationships", "type": state.chart_type}
+                )
                 os.unlink(pdf_path)
 
             finally:

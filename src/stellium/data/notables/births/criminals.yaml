@@ -16,14 +16,14 @@
   timezone: America/New_York
   category: criminal
   subcategories:
-    - Serial Killer
+  - Serial Killer
   notable_for: >-
     American serial killer who confessed to 30 homicides committed between 1974 and
     1978. Studied for criminological and psychological research. Executed in 1989.
   astrological_notes: Sun 2 Sagittarius
   data_quality: AA
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Bundy,_Ted"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Bundy,_Ted"
   verified: true
 - name: Al Capone
   event_type: birth
@@ -61,7 +61,9 @@
   - murderer
   notable_for: American murderer, known as part of the criminal duo Bonnie and Clyde.
   astrological_notes: Sun in Libra 7°40’, Moon in Virgo 13°04’
-  data_quality: XX
+  data_quality: X
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/bonnie-parker-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: "Noon default (Astro-Seek). Date known, so X not XX."

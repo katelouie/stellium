@@ -4,6 +4,7 @@ Stellium Web - Natal Chart Page
 The main chart building experience.
 """
 
+from analytics import CHART_GENERATED, PDF_DOWNLOADED, SVG_DOWNLOADED, track_event
 from components.birth_input import create_birth_input_form
 from components.chart_display import create_chart_actions, create_chart_display
 from components.chart_options import create_chart_options
@@ -215,6 +216,7 @@ def create_natal_page():
             refresh_chart_display()
 
             ui.notify(_("Chart generated!"), type="positive")
+            track_event(CHART_GENERATED, {"page": "natal"})
 
         except Exception as e:
             ui.notify(f"{_('Error:')} {str(e)}", type="negative")
@@ -249,6 +251,7 @@ def create_natal_page():
 
             # Trigger download
             ui.download(chart_svg["content"].encode("utf-8"), filename, "image/svg+xml")
+            track_event(SVG_DOWNLOADED, {"page": "natal"})
 
     def show_code():
         """Show the Python code dialog."""
@@ -381,6 +384,7 @@ def create_natal_page():
 
                 ui.download(pdf_bytes, filename, "application/pdf")
                 ui.notify(_("PDF generated!"), type="positive")
+                track_event(PDF_DOWNLOADED, {"page": "natal"})
 
                 # Clean up temp PDF
                 os.unlink(pdf_path)

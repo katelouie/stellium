@@ -36,6 +36,57 @@ DateTimeInput = dt.datetime | ChartDateTime | dict[str, Any] | str
 LocationInput = str | ChartLocation | tuple[float, float] | dict[str, float | str]
 
 
+def build_chart_datetime(local_dt: dt.datetime, timezone: str) -> ChartDateTime:
+    """Build a ``ChartDateTime`` from a local datetime and an IANA timezone.
+
+    This is the single place that turns local wall-clock time into the
+    UTC + Julian Day representation the engines use. A naive ``local_dt`` is
+    localized to ``timezone``; an already-aware one is used as-is. Both
+    ``Native`` (datetime parsing) and ``ChartBuilder.with_unknown_time()``
+    (re-anchoring to noon) call this so the two can never drift apart.
+
+    Args:
+        local_dt: The local wall-clock time (naive or timezone-aware).
+        timezone: IANA timezone string (required when ``local_dt`` is naive).
+
+    Returns:
+        A ``ChartDateTime`` carrying UTC time, Julian Day (UT), and the
+        original local datetime.
+    """
+    if local_dt.tzinfo is None:
+        if not timezone:
+            raise ValueError(
+                "Datetime is naive (no timezone) and location has no timezone. "
+                "Cannot determine time."
+            )
+        try:
+            aware_dt = pytz.timezone(timezone).localize(local_dt)
+        except pytz.UnknownTimeZoneError as exc:
+            raise ValueError(f"Invalid location timezone: {timezone}") from exc
+    else:
+        aware_dt = local_dt
+
+    utc_dt = aware_dt.astimezone(dt.UTC)
+
+    # swe.julday() converts calendar date to Julian Day number. Since we're
+    # giving it UTC, the result is JD(UT); no Delta T adjustment is needed.
+    hour_decimal = (
+        (utc_dt.minute / 60.0)
+        + (utc_dt.second / 3600.0)
+        + (utc_dt.microsecond / 3600000000.0)
+    )
+    julian_day_ut = swe.julday(
+        utc_dt.year,
+        utc_dt.month,
+        utc_dt.day,
+        utc_dt.hour + hour_decimal,
+    )
+
+    return ChartDateTime(
+        utc_datetime=utc_dt, julian_day=julian_day_ut, local_datetime=local_dt
+    )
+
+
 class Native:
     """
     Represents the "native" data (time and place) for a chart.
@@ -275,27 +326,9 @@ class Native:
             time_input = self._parse_datetime_string(time_input)
             # Now time_input is a dt.datetime, continue to next step
 
-        # 3. Datetime Object Input
+        # 3. Datetime Object Input (naive -> localize, aware -> as-is)
         if isinstance(time_input, dt.datetime):
-            local_dt = time_input  # Store for the final object
-            if time_input.tzinfo is None:
-                # Naive datetime. Localize it using the location's timezone.
-                if not loc_timezone:
-                    raise ValueError(
-                        "Datetime is naive (no timezone) and location has no timezone. "
-                        "Cannot determine time."
-                    )
-                try:
-                    loc_tz = pytz.timezone(loc_timezone)
-                    aware_dt = loc_tz.localize(time_input)
-                    utc_dt = aware_dt.astimezone(dt.UTC)
-                except pytz.UnknownTimeZoneError:
-                    raise ValueError(
-                        f"Invalid location timezone: {loc_timezone}"
-                    ) from pytz.UnknownTimeZoneError
-            else:
-                # Aware datetime. Just convert to UTC.
-                utc_dt = time_input.astimezone(dt.UTC)
+            return build_chart_datetime(time_input, loc_timezone)
 
         # 4. Dictionary Input
         elif isinstance(time_input, dict):
@@ -388,6 +421,8 @@ class Notable(Native):
     data_quality: str
     sources: list[str] | None
     verified: bool
+    has_reliable_time: bool | None
+    verification_notes: str
 
     def __init__(
         self,
@@ -396,8 +431,8 @@ class Notable(Native):
         year: int,
         month: int,
         day: int,
-        hour: int,
-        minute: int,
+        hour: int | None,
+        minute: int | None,
         location_input: LocationInput,  # Reuse Native's type!
         category: str,
         subcategories: list[str] | None = None,
@@ -406,6 +441,8 @@ class Notable(Native):
         data_quality: str = "C",
         sources: list[str] | None = None,
         verified: bool = False,
+        has_reliable_time: bool | None = None,
+        verification_notes: str = "",
     ):
         """
         Create Notable from structured data.
@@ -416,7 +453,9 @@ class Notable(Native):
         Args:
             name: Name of person or event
             event_type: "birth" or "event"
-            year, month, day, hour, minute: Local time components
+            year, month, day: Local date components
+            hour, minute: Local time components, or None when no clock time is
+                on record (the notable is then treated as unknown-time).
             location_input: Location (string name, (lat, lon) tuple, or ChartLocation)
             category: Primary category (scientist, artist, leader, etc.)
             subcategories: Optional subcategories
@@ -425,14 +464,30 @@ class Notable(Native):
             data_quality: Rodden rating (AA, A, B, C, DD)
             sources: List of data sources
             verified: Whether data has been verified
+            has_reliable_time: Routing flag from the source audit. False means the
+                recorded time is a noon/midnight default, rectification, or
+                fabrication and the chart should be built as unknown-time. None
+                means "not audited" (fall back to using the time if one exists).
+            verification_notes: Audit justification for the record's provenance.
         """
-        # Create naive datetime (local time)
-        local_dt = dt.datetime(year, month, day, hour, minute)
+        # Decide time reliability: a notable is unknown-time when the audit
+        # flagged it (has_reliable_time is False) or when no clock time exists.
+        # Route on this, not on data_quality (a source rating != time validity).
+        has_clock_time = hour is not None and minute is not None
+        time_unreliable = has_reliable_time is False or not has_clock_time
 
-        # Let Native handle ALL the parsing!
+        # Missing components default to noon; when time_unreliable, Native
+        # re-normalizes to noon anyway, so these only bind on the reliable path.
+        # Use explicit None checks (0 = valid midnight, must not fall through).
+        h = hour if hour is not None else 12
+        m = minute if minute is not None else 0
+        local_dt = dt.datetime(year, month, day, h, m)
+
+        # Let Native handle ALL the parsing (and noon-normalization when unknown)!
         super().__init__(
             datetime_input=local_dt,  # Naive datetime
             location_input=location_input,  # String, tuple, or ChartLocation
+            time_unknown=time_unreliable,
         )
 
         # Add our metadata
@@ -445,6 +500,8 @@ class Notable(Native):
         self.data_quality = data_quality
         self.sources = sources or []
         self.verified = verified
+        self.has_reliable_time = has_reliable_time
+        self.verification_notes = verification_notes
 
     @property
     def is_birth(self) -> bool:
