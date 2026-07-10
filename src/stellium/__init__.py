@@ -36,6 +36,8 @@ from stellium.core.models import (
     CelestialPosition,
     ChartDateTime,
     ChartLocation,
+    FirdariaPeriod,
+    FirdariaTimeline,
     FixedStarPosition,
     HouseCusps,
     PhaseData,
@@ -158,6 +160,9 @@ __all__ = [
     "ProfectionResult",
     "MultiProfectionResult",
     "ProfectionTimeline",
+    # Firdaria (Persian time-lord)
+    "FirdariaTimeline",
+    "FirdariaPeriod",
     # File I/O
     "parse_aaf",
     "parse_csv",

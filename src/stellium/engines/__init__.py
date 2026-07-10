@@ -48,6 +48,9 @@ from stellium.engines.ephemeris import (
     SwissEphemerisEngine,
 )
 
+# Firdaria (Persian time-lord)
+from stellium.engines.firdaria import FirdariaEngine
+
 # Fixed Stars
 from stellium.engines.fixed_stars import SwissEphemerisFixedStarsEngine
 
@@ -215,6 +218,8 @@ __all__ = [
     # Zodiacal Releasing
     "ZodiacalReleasingEngine",
     "ZodiacalReleasingAnalyzer",
+    # Firdaria
+    "FirdariaEngine",
     # Void of Course Moon
     "VOCMoonResult",
     "calculate_voc_moon",
