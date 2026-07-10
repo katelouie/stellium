@@ -19,6 +19,9 @@ __version__ = "0.19.0"
 # === Convenience Re-exports ===
 # Allow: from stellium.engines import PlacidusHouses
 from stellium import components, engines, presentation, visualization
+
+# === Diagnostics (Logging & Warnings) ===
+from stellium._logging import configure_logging
 from stellium.core.builder import ChartBuilder
 from stellium.core.comparison import (
     Comparison,
@@ -66,6 +69,13 @@ from stellium.engines.profections import (
     ProfectionEngine,
     ProfectionResult,
     ProfectionTimeline,
+)
+from stellium.exceptions import (
+    ConfigurationWarning,
+    DataQualityWarning,
+    GeocodingWarning,
+    MissingEphemerisWarning,
+    StelliumWarning,
 )
 
 # === File I/O (Import/Export) ===
@@ -160,4 +170,11 @@ __all__ = [
     "ElectionalSearch",
     # Planner
     "PlannerBuilder",
+    # Diagnostics (Logging & Warnings)
+    "configure_logging",
+    "StelliumWarning",
+    "DataQualityWarning",
+    "GeocodingWarning",
+    "ConfigurationWarning",
+    "MissingEphemerisWarning",
 ]
