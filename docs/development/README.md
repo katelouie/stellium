@@ -48,6 +48,14 @@ migration plan, and acceptance criteria.
   classical length-of-life technique (hyleg → alcocoden → years-table, Lilly
   default) plus reusable almuten-of-a-degree and hyleg primitives. *Status:
   Draft.*
+- **[specs/RECTIFICATION_THEORY.md](./specs/RECTIFICATION_THEORY.md)** &
+  **[specs/RECTIFICATION_SPEC.md](./specs/RECTIFICATION_SPEC.md)** — computational
+  birth-time rectification: a hierarchical Bayesian grid posterior over birth time
+  with the astrology engine as an exact forward model, sect read off as a marginal,
+  the likelihood calibrated on the AA-notables corpus. Theory doc explains the
+  model; spec doc has the data models, API, and phased plan (companion research
+  prompt: [specs/rectification-corpus-research-prompt.md](./specs/rectification-corpus-research-prompt.md)).
+  *Status: Exploration.*
 
 ## How these docs are scoped
 
