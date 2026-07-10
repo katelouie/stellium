@@ -6,7 +6,7 @@
 | **Created** | 2026-07-09 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
-| **Research** | `~/Downloads/hellenistic-years.md` (303-source verification) |
+| **Sources** | [docs/methodology/README.md](../../methodology/README.md) · report: [research/planetary-years.md](../../methodology/research/planetary-years.md) |
 
 ---
 
@@ -347,7 +347,7 @@ Each imports from `planetary_years` — no re-typing.
   yes (it's a clear bug; the cross-check guards it), but it changes dignity
   output, so bundle-here vs. separate dignity-fix PR is your decision.
 
-**Resolved by the Firdaria research** (`~/Downloads/firdaria.md`):
+**Resolved by the Firdaria research** ([docs/methodology/research/firdaria.md](../../methodology/research/firdaria.md)):
 
 - **Q2 — `year_length` → 365.2425** (Gregorian mean solar year). The 360-day
   ideal year is explicitly *not* appropriate for natal firdaria. Toggle exposed

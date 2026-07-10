@@ -7,7 +7,7 @@
 | **Owner** | Kate |
 | **Type** | SDD design doc (short) |
 | **Depends on** | `core/planetary_years.py` (greater/mean/least years) |
-| **Research** | `~/Downloads/hellenistic-years.md` (alcocoden section) |
+| **Sources** | [docs/methodology/README.md](../../methodology/README.md#length-of-life-hyleg--alcocoden) · report: [research/planetary-years.md](../../methodology/research/planetary-years.md) |
 
 ---
 
