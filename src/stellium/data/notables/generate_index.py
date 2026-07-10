@@ -28,9 +28,7 @@ def load_notables_from_file(filepath: Path) -> list[dict]:
 def format_birth_datetime(entry: dict) -> str:
     """Render an entry's birth date + clock time as ``YYYY-MM-DD HH:MM``.
 
-    Missing month/day fall back to ``??``; missing hour/minute to ``00``. Note
-    that when ``has_reliable_time`` is false the stored time is a noon
-    placeholder, so callers should tag it as unreliable (see ``main``).
+    Missing month/day fall back to ``??``; missing hour/minute to ``00``.
     """
     year = entry.get("year")
     month = entry.get("month")
@@ -42,6 +40,32 @@ def format_birth_datetime(entry: dict) -> str:
     month_str = f"{month:02d}" if isinstance(month, int) else "??"
     day_str = f"{day:02d}" if isinstance(day, int) else "??"
     return f"{year_str}-{month_str}-{day_str} {hour:02d}:{minute:02d}"
+
+
+def is_noon_placeholder(entry: dict) -> bool:
+    """True when the stored time is the 12:00 unknown-time default."""
+    return (entry.get("hour"), entry.get("minute", 0)) == (12, 0)
+
+
+def resolve_time_reliability(entry: dict) -> bool | None:
+    """Resolve an entry's time-reliability as a genuine tri-state.
+
+    ``has_reliable_time`` is *not* present on every entry (it was retrofitted
+    onto a curation subset), so its absence carries **no** information — it
+    means "not yet assessed", not "unreliable". We therefore never default it:
+
+    * **Explicit flag present** -> ``True`` / ``False`` (a deliberate curator
+      override, e.g. Golda Meir is AA by *date* but a 12:00 noon default ->
+      ``False``; the Dalai Lama's time is contested -> ``False``).
+    * **Flag absent** -> ``None`` (unknown). The rating and the noon-placeholder
+      fact are surfaced alongside so a consumer can triage: AstroDatabank AA/A
+      are *time* ratings (AA = birth certificate, A = family/memory), so an
+      un-flagged AA/A entry with a real (non-noon) time is *probably* usable,
+      but that judgement is left explicit rather than fabricated here.
+    """
+    if "has_reliable_time" in entry:
+        return bool(entry["has_reliable_time"])
+    return None
 
 
 def main():
@@ -77,9 +101,8 @@ def main():
                         "location_name": entry.get("location_name", "unknown"),
                         "timezone": entry.get("timezone", ""),
                         "rating": entry.get("data_quality") or "unrated",
-                        "has_reliable_time": bool(
-                            entry.get("has_reliable_time", False)
-                        ),
+                        "time_reliable": resolve_time_reliability(entry),
+                        "noon_placeholder": is_noon_placeholder(entry),
                     }
                 )
 
@@ -113,11 +136,20 @@ def main():
         "Each birth entry lists, on its second line: `birth date + local clock "
         "time · place [IANA timezone] · rating · time-reliability`. The **rating** "
         "is the Rodden data quality (`AA`/`A`/`B`/`C`/`DD`/`X`/`unrated`). "
-        "**Time reliability** is an explicit curation flag: when it reads *NOT "
-        "reliable*, the clock time is a low-confidence value or a `12:00` noon "
-        "placeholder and must **not** be treated as ground truth. For "
-        "rectification-corpus purposes, only `AA`/`A` entries marked *time "
-        "reliable* are usable as ground truth.",
+        "**Time reliability** is a tri-state curation flag (`has_reliable_time`):",
+        "",
+        "- *time reliable* — curator-confirmed the clock time is trustworthy.",
+        "- *time NOT reliable* — curator flagged the time as unusable (disputed, "
+        "rounded, or a `12:00` noon placeholder). Never treat as ground truth.",
+        "- *time reliability unverified* — **not yet assessed** (the flag was "
+        "retrofitted onto a subset; absence is not a negative signal). Triage by "
+        "the rating + noon flag: AstroDatabank `AA`/`A` are *time* ratings "
+        "(AA = birth certificate, A = family/memory), so an *unverified* `AA`/`A` "
+        "entry on a real (non-noon) time is very likely usable ground truth.",
+        "",
+        "For the rectification corpus, use entries that are `AA`/`A` **and** "
+        "either *time reliable* or *unverified with a real (non-noon) time*; "
+        "exclude anything *NOT reliable* or sitting on a noon placeholder.",
         "",
     ]
 
@@ -139,12 +171,15 @@ def main():
 
             loc = entry["location_name"]
             tz = f" [{entry['timezone']}]" if entry["timezone"] else ""
-            if entry["has_reliable_time"]:
+            reliable = entry["time_reliable"]
+            if reliable is True:
                 time_flag = "time reliable"
-            elif entry["birth_datetime"].endswith(" 12:00"):
-                time_flag = "time NOT reliable (noon placeholder)"
-            else:
+            elif reliable is False:
                 time_flag = "time NOT reliable"
+            else:
+                time_flag = "time reliability unverified"
+            if entry["noon_placeholder"]:
+                time_flag += " (noon placeholder)"
             lines.append(f"- **{entry['name']}** ({entry['year']}){subcat_str}")
             lines.append(
                 f"  - {entry['birth_datetime']} · {loc}{tz} · "
