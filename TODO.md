@@ -1,6 +1,6 @@
 # TODO
 
-*37 open tasks (synced from Obsidian)*
+*38 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -25,6 +25,7 @@
 - Implement interactive HTML reports (Jinja2 + Pico.css)
 - Integrate Simplified Chinese translation strings into main library and web
 - LMT (Local Mean Time) support for historical charts
+- Optimize 'stellium cache info' — get_stats() walks the whole cache dir (slow/hangs on large caches)
 - Update ARCHITECTURE.md directory structure to match codebase
 - Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps
 - Update chart grid to accept arbitrary wheel-only charts
