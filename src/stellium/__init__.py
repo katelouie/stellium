@@ -36,9 +36,14 @@ from stellium.core.models import (
     CelestialPosition,
     ChartDateTime,
     ChartLocation,
+    FirdariaPeriod,
+    FirdariaTimeline,
     FixedStarPosition,
     HouseCusps,
+    HylegResult,
+    LengthOfLifeResult,
     PhaseData,
+    YearModifier,
 )
 from stellium.core.multichart import MultiChart, MultiChartBuilder
 from stellium.core.multiwheel import MultiWheel, MultiWheelBuilder
@@ -158,6 +163,13 @@ __all__ = [
     "ProfectionResult",
     "MultiProfectionResult",
     "ProfectionTimeline",
+    # Firdaria (Persian time-lord)
+    "FirdariaTimeline",
+    "FirdariaPeriod",
+    # Length of life (hyleg / alcocoden / years-table)
+    "HylegResult",
+    "LengthOfLifeResult",
+    "YearModifier",
     # File I/O
     "parse_aaf",
     "parse_csv",

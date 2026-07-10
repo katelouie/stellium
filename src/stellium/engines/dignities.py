@@ -258,8 +258,15 @@ DIGNITIES = {
             0: "Jupiter",
             12: "Venus",
             17: "Mercury",
-            21: "Mars",
-            26: "Saturn",
+            # Corrected: the last two Egyptian terms were transposed. The
+            # canonical Ptolemaic terms give Saturn 21-26deg and Mars 26-30deg
+            # (Tetrabiblos I.20; Lilly; Houlding). The swap made a planet at
+            # 21-26deg Sagittarius report term-ruler Mars instead of Saturn, and
+            # threw the Saturn/Mars greater-years term-sums off by 1deg
+            # (Saturn 56/Mars 67 instead of 57/66). Guarded by
+            # test_planetary_years' term-sum cross-check.
+            21: "Saturn",
+            26: "Mars",
         },
         "triplicity": {"day": "Sun", "night": "Jupiter", "coop": "Saturn"},
     },

@@ -144,6 +144,10 @@ class TestCleanCookbooks:
         result = _run_cookbook("zodiacal_releasing_cookbook.py")
         assert result.returncode == 0, f"STDERR:\n{result.stderr}"
 
+    def test_hellenistic_cookbook(self):
+        result = _run_cookbook("hellenistic_cookbook.py")
+        assert result.returncode == 0, f"STDERR:\n{result.stderr}"
+
 
 # ─── Expensive cookbooks (longer timeout) ────────────────────────────────
 

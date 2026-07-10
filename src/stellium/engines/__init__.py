@@ -10,6 +10,8 @@ Common engines:
 
 # Ephemeris
 # Aspects
+# Almuten of a degree (essential-dignity victor)
+from stellium.engines.almuten import AlmutenResult, almuten_of_degree
 from stellium.engines.aspects import (
     DeclinationAspectEngine,
     HarmonicAspectEngine,
@@ -48,6 +50,9 @@ from stellium.engines.ephemeris import (
     SwissEphemerisEngine,
 )
 
+# Firdaria (Persian time-lord)
+from stellium.engines.firdaria import FirdariaEngine
+
 # Fixed Stars
 from stellium.engines.fixed_stars import SwissEphemerisFixedStarsEngine
 
@@ -72,6 +77,9 @@ from stellium.engines.houses import (
     VehlowEqualHouses,
     WholeSignHouses,
 )
+
+# Length of life (hyleg / alcocoden / years-table)
+from stellium.engines.length_of_life import find_hyleg, length_of_life
 
 # Orbs
 from stellium.engines.orbs import (
@@ -215,6 +223,14 @@ __all__ = [
     # Zodiacal Releasing
     "ZodiacalReleasingEngine",
     "ZodiacalReleasingAnalyzer",
+    # Firdaria
+    "FirdariaEngine",
+    # Almuten of a degree
+    "almuten_of_degree",
+    "AlmutenResult",
+    # Length of life
+    "find_hyleg",
+    "length_of_life",
     # Void of Course Moon
     "VOCMoonResult",
     "calculate_voc_moon",

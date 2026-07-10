@@ -1778,3 +1778,30 @@ class TestFindAllAngleCrossings:
             max_results=5,
         )
         assert len(results) == 5
+
+
+class TestLunationDirection:
+    """The lunation finder searches both forward and backward (for e.g. the
+    prenatal syzygy — the most recent new/full moon before birth)."""
+
+    def test_backward_finds_prior_lunation(self):
+        from stellium.engines.search import _find_lunation
+
+        jd = 2448058.167  # 1990-06-15 (a known chart in the suite)
+        for phase in ("new", "full"):
+            back = _find_lunation(jd, phase, direction="backward")
+            fwd = _find_lunation(jd, phase, direction="forward")
+            assert back is not None and fwd is not None
+            # Backward is before the start, forward is after.
+            assert back[0] < jd < fwd[0]
+            # Consecutive same-phase lunations are ~one synodic month apart.
+            assert 29.0 < (fwd[0] - back[0]) < 30.0
+
+    def test_backward_default_is_forward(self):
+        from stellium.engines.search import _find_lunation
+
+        jd = 2448058.167
+        assert (
+            _find_lunation(jd, "new")[0]
+            == _find_lunation(jd, "new", direction="forward")[0]
+        )

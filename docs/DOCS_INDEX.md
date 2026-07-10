@@ -36,6 +36,17 @@ A complete map of Stellium's documentation. The **hub** for development is
 | [options_list.md](options_list.md) | Complete configuration reference |
 | [api/index.md](api/index.md) | API reference |
 
+## Methodology & sources — `docs/methodology/`
+
+Scholarly provenance: what Stellium's traditional techniques implement and on
+whose authority. Separate from the practitioner-facing astrology guide
+(`docs/astrology/`, teaching) and the code reference (`docs/development/`).
+
+| Doc | Purpose |
+|---|---|
+| [methodology/README.md](methodology/README.md) | Traditional Methods & Sources — per-technique defaults, citations, contested forks, and simplifications |
+| [methodology/research/](methodology/research/) | The raw source-verification reports (ZR, Firdaria, planetary years) kept as provenance |
+
 ## Historical / superseded
 
 | Doc | Note |

@@ -610,6 +610,143 @@ class ZRTimeline:
 
 
 @dataclass(frozen=True)
+class FirdariaPeriod:
+    """A single Firdaria period (major or sub-period).
+
+    Attributes:
+        ruler: The planet (or node) ruling this period. For a level-2
+            sub-period this is the *major*-period ruler.
+        sub_ruler: The sub-period ("partner") ruler, or ``None`` for a
+            level-1 major (and for node majors, which do not subdivide).
+        level: 1 = major period ("lord"), 2 = sub-period ("partner").
+        start: When the period begins.
+        end: When the period ends.
+        start_age: Age in years at ``start``.
+        end_age: Age in years at ``end``.
+    """
+
+    ruler: str
+    sub_ruler: str | None
+    level: int
+    start: dt.datetime
+    end: dt.datetime
+    start_age: float
+    end_age: float
+
+    @property
+    def length_years(self) -> float:
+        return self.end_age - self.start_age
+
+
+@dataclass(frozen=True)
+class FirdariaTimeline:
+    """A full Firdaria life timeline (Persian time-lord periods).
+
+    Attributes:
+        sect: ``"day"`` or ``"night"`` (determines the period order).
+        birth: The native's birth moment (UTC).
+        periods: All periods, both levels, in chronological order within level.
+        preset: The configuration preset used (e.g. ``"abu_mashar"``).
+    """
+
+    sect: str
+    birth: dt.datetime
+    periods: tuple[FirdariaPeriod, ...]
+    preset: str
+
+    def majors(self) -> tuple[FirdariaPeriod, ...]:
+        """The level-1 major periods ("lords")."""
+        return tuple(p for p in self.periods if p.level == 1)
+
+    def subperiods(self) -> tuple[FirdariaPeriod, ...]:
+        """The level-2 sub-periods ("partners")."""
+        return tuple(p for p in self.periods if p.level == 2)
+
+    def at(self, when: dt.datetime) -> FirdariaPeriod | None:
+        """The most-specific period active at ``when``.
+
+        Returns the level-2 sub-period in effect, or the level-1 major if it
+        has no sub-periods (a node major), or ``None`` if ``when`` is outside
+        the computed span. A naive ``when`` is aligned to the period datetimes'
+        timezone (the birth moment is UTC-aware) so callers can pass either.
+        """
+        if self.birth.tzinfo is not None and when.tzinfo is None:
+            when = when.replace(tzinfo=self.birth.tzinfo)
+        elif self.birth.tzinfo is None and when.tzinfo is not None:
+            when = when.replace(tzinfo=None)
+        for level in (2, 1):
+            for p in self.periods:
+                if p.level == level and p.start <= when < p.end:
+                    return p
+        return None
+
+
+@dataclass(frozen=True)
+class HylegResult:
+    """The hyleg (prorogator / giver of life) chosen for a chart.
+
+    Attributes:
+        point: Which candidate won — ``"Sun"``, ``"Moon"``, ``"Fortune"``, or
+            ``"Ascendant"``.
+        longitude: The hyleg's zodiacal longitude.
+        place: The hylegiacal house it occupies (1, 7, 9, 10, or 11).
+        method: The authority method used (e.g. ``"lilly"``).
+        candidates_tried: Ordered trace of ``(candidate, qualified?)`` — shows
+            which earlier candidates were skipped (not in a hylegiacal place).
+    """
+
+    point: str
+    longitude: float
+    place: int
+    method: str
+    candidates_tried: tuple[tuple[str, bool], ...]
+
+
+@dataclass(frozen=True)
+class YearModifier:
+    """One itemized adjustment to the alcocoden's base years."""
+
+    source: str  # e.g. "Jupiter"
+    reason: str  # e.g. "benefic trine to alcocoden (+ least years)"
+    delta: float  # years added (+) or subtracted (-)
+
+
+@dataclass(frozen=True)
+class LengthOfLifeResult:
+    """A computed length-of-life estimate (a traditional *indicator*).
+
+    This is a computed classical indicator, **not** a prediction of actual
+    lifespan. The result is intentionally transparent: the hyleg, the
+    alcocoden and its angularity, the base years, and every modifier are all
+    exposed so the reasoning can be inspected.
+
+    Attributes:
+        hyleg: The chosen prorogator.
+        alcocoden: The planet granting the years (almuten of the hyleg's degree).
+        alcocoden_angularity: ``"angular"`` | ``"succedent"`` | ``"cadent"``.
+        base_years: Years granted before modifiers (from the years family).
+        base_family: ``"greater"`` | ``"mean"`` | ``"least"``.
+        modifiers: Itemized adjustments; their deltas sum into ``total``.
+        total: Base years plus modifiers (in ``unit``).
+        unit: ``"years"`` normally; ``"months"``/``"days"`` if the alcocoden is
+            combust.
+        method: The authority method used (e.g. ``"lilly"``).
+        notes: Caveats and any fallbacks taken.
+    """
+
+    hyleg: HylegResult
+    alcocoden: str
+    alcocoden_angularity: str
+    base_years: float
+    base_family: str
+    modifiers: tuple[YearModifier, ...]
+    total: float
+    unit: str
+    method: str
+    notes: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class CalculatedChart:
     """
     Complete calculated chart - the final output.
@@ -1388,6 +1525,98 @@ class CalculatedChart:
             Snapshot of ZR for that age's datetime
         """
         return self.metadata["zodiacal_releasing"][lot].at_age(age)
+
+    def firdaria(
+        self,
+        *,
+        preset: str = "abu_mashar",
+        year_length: float = 365.2425,
+        repeat: bool = True,
+        max_age: float = 96.0,
+    ) -> "FirdariaTimeline":
+        """Compute the Firdaria time-lord timeline for this chart.
+
+        Firdaria is a Persian time-lord system: each planet (and the lunar
+        nodes) rules a fixed-length chunk of life in sect-determined order, each
+        major period subdividing into seven sub-periods.
+
+        Args:
+            preset: Configuration preset. ``"abu_mashar"`` (default; nodes at
+                the end in both sects), ``"bonatti"`` (nocturnal nodes after
+                Mars), ``"al_biruni"`` (alias of the default), or ``"no_nodes"``
+                (seven planets, 70-year cycle).
+            year_length: Days per year (default 365.2425; the 360-day ideal year
+                is *not* used for natal Firdaria).
+            repeat: Repeat the sequence after it completes, up to ``max_age``.
+            max_age: Horizon in years to compute out to.
+
+        Returns:
+            A :class:`FirdariaTimeline`.
+
+        Raises:
+            ValueError: If the chart has no known birth time (sect is
+                undetermined) — Firdaria requires sect.
+
+        Example::
+
+            timeline = chart.firdaria()
+            period = timeline.at(datetime(2025, 6, 15))
+            print(period.ruler, period.sub_ruler)
+        """
+        from stellium.engines.firdaria import FirdariaEngine
+
+        return FirdariaEngine(
+            self,
+            preset=preset,
+            year_length=year_length,
+            repeat=repeat,
+            max_age=max_age,
+        ).calculate()
+
+    def hyleg(self, method: str = "lilly") -> "HylegResult":
+        """Find the hyleg (prorogator / giver of life) for this chart.
+
+        Args:
+            method: Authority method (``"lilly"``).
+
+        Returns:
+            A :class:`HylegResult` with a candidacy trace.
+
+        Raises:
+            ValueError: If the chart has no known birth time.
+        """
+        from stellium.engines.length_of_life import find_hyleg
+
+        return find_hyleg(self, method)
+
+    def length_of_life(self, method: str = "lilly") -> "LengthOfLifeResult":
+        """Estimate length of life via the years-table method (Lilly default).
+
+        A **computed traditional indicator, not a prediction of actual
+        lifespan.** The result exposes the hyleg, the alcocoden and its
+        angularity, the base years, and every itemized modifier.
+
+        Args:
+            method: ``"lilly"`` (default). ``"ptolemy"`` (directional) is
+                reserved but not implemented.
+
+        Returns:
+            A :class:`LengthOfLifeResult`.
+
+        Raises:
+            ValueError: If the chart has no known birth time.
+            NotImplementedError: For ``method="ptolemy"``.
+
+        Example::
+
+            r = chart.length_of_life()
+            print(r.hyleg.point, r.alcocoden, r.total, r.unit)
+            for m in r.modifiers:
+                print(m.source, m.reason, m.delta)
+        """
+        from stellium.engines.length_of_life import length_of_life
+
+        return length_of_life(self, method)
 
     # =========================================================================
     # Visualization

@@ -39,7 +39,15 @@ migration plan, and acceptance criteria.
 
 - **[specs/STRUCTURED_LOGGING_SPEC.md](./specs/STRUCTURED_LOGGING_SPEC.md)** —
   replace bare `print()` in the package with stdlib `warnings`/`logging` (and
-  `click.echo`/Rich for the CLI), plus a lint guard. *Status: Draft.*
+  `click.echo`/Rich for the CLI), plus a lint guard. *Status: Implemented.*
+- **[specs/HELLENISTIC_PERIODS_SPEC.md](./specs/HELLENISTIC_PERIODS_SPEC.md)** —
+  a canonical `core/planetary_years.py` primitive (least/mean/greater/greatest +
+  Firdaria), ZR refactored onto it, and a new Firdaria time-lord engine. *Status:
+  Draft.*
+- **[specs/LENGTH_OF_LIFE_SPEC.md](./specs/LENGTH_OF_LIFE_SPEC.md)** — the
+  classical length-of-life technique (hyleg → alcocoden → years-table, Lilly
+  default) plus reusable almuten-of-a-degree and hyleg primitives. *Status:
+  Draft.*
 
 ## How these docs are scoped
 
