@@ -1817,8 +1817,9 @@ def _find_lunation(
     start_jd: float,
     lunation_type: Literal["new", "full"],
     max_days: float = 32.0,
+    direction: Literal["forward", "backward"] = "forward",
 ) -> tuple[float, float, float] | None:
-    """Find the next New Moon or Full Moon.
+    """Find the nearest New Moon or Full Moon from a start point.
 
     Uses Newton-Raphson on Sun-Moon separation.
 
@@ -1826,14 +1827,18 @@ def _find_lunation(
         start_jd: Julian day to start search from
         lunation_type: "new" (conjunction) or "full" (opposition)
         max_days: Maximum days to search
+        direction: "forward" for the *next* lunation after ``start_jd``,
+            "backward" for the most recent one *before* it (e.g. a prenatal
+            syzygy).
 
     Returns:
         Tuple of (julian_day, sun_longitude, moon_longitude) or None
     """
-    # Start with a sweep to bracket the lunation
+    # Start with a sweep to bracket the lunation, stepping in the requested
+    # direction.
+    step = 1.0 if direction == "forward" else -1.0
     current_jd = start_jd
-    end_jd = start_jd + max_days
-    step = 1.0  # Day step for initial sweep
+    end_jd = start_jd + max_days * (1 if direction == "forward" else -1)
 
     sep, _, _, _ = _get_sun_moon_separation(current_jd)
     # Adjust for target
@@ -1846,7 +1851,7 @@ def _find_lunation(
     bracket_start = None
     bracket_end = None
 
-    while current_jd < end_jd:
+    while (current_jd < end_jd) if step > 0 else (current_jd > end_jd):
         next_jd = current_jd + step
         sep, _, _, _ = _get_sun_moon_separation(next_jd)
 
@@ -1869,6 +1874,10 @@ def _find_lunation(
 
     if bracket_start is None:
         return None
+
+    # Order the bracket ascending so the refinement below (which assumes
+    # bracket_start < bracket_end) works for a backward sweep too.
+    bracket_start, bracket_end = sorted((bracket_start, bracket_end))
 
     # Refine with Newton-Raphson / bisection
     t = (bracket_start + bracket_end) / 2
