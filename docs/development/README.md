@@ -44,6 +44,10 @@ migration plan, and acceptance criteria.
   a canonical `core/planetary_years.py` primitive (least/mean/greater/greatest +
   Firdaria), ZR refactored onto it, and a new Firdaria time-lord engine. *Status:
   Draft.*
+- **[specs/LENGTH_OF_LIFE_SPEC.md](./specs/LENGTH_OF_LIFE_SPEC.md)** — the
+  classical length-of-life technique (hyleg → alcocoden → years-table, Lilly
+  default) plus reusable almuten-of-a-degree and hyleg primitives. *Status:
+  Draft.*
 
 ## How these docs are scoped
 
