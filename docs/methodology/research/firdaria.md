@@ -1,17 +1,17 @@
-> **Preserved research report.** This is the source-verification investigation
-> behind Stellium's implementation of this technique, kept verbatim as
-> provenance. For the curated summary of *what Stellium actually implements*
-> (defaults, chosen forks, simplifications) and how these sources map to the
-> code, see [../README.md](../README.md).
+> **Source-verification research.** The scholarly sourcing, citations, and
+> contested points behind this technique — pure research, with no
+> implementation detail. For the curated summary of *what Stellium implements*
+> (defaults, the forks it chose, simplifications) and how these sources map to
+> the code, see [../README.md](../README.md).
 
 ---
 
-# FIRDARIA: A Fully-Parameterized Reference for Implementation and Documentation
+# FIRDARIA: Sources, Values, and Contested Points
 
 ## TL;DR
 - **The period values are stable and near-universal across all sources** (Sun 10, Venus 8, Mercury 13, Moon 9, Saturn 11, Jupiter 12, Mars 7, North Node 3, South Node 2 = 75 years); the day-order (Sun-first, Chaldean) is undisputed. The **one genuine mechanical fork** is where the lunar nodes fall in *nocturnal* charts: Abu Ma'shar / al-Qabisi (as correctly read) / al-Biruni / Robert Hand / Birchfield put both nodes at the **very end (after Mercury, ages 70–75)**; Bonatti (as read by Zoller and much modern software) puts them **after Mars (ages ~39–44)**.
 - **Sub-periods** are standard: each planetary major divides into **7 equal sub-periods** in Chaldean order **starting from the major-period ruler**; nodes neither subdivide nor participate as sub-rulers. A modern minority variant (Aswin Subramanyan's "AB Method") uses **proportional/weighted** sub-periods and **includes the nodes** as participants.
-- **Ship a default of: Abu Ma'shar/Persian nodes-at-end, 7 equal sub-periods from the major ruler, nodes non-subdividing, cycle repeats past 75, and 365.2425-day year** — but expose every one of these as a toggle with Bonatti and AB-Method presets, because the nocturnal-node question is unresolved and practitioners are genuinely split.
+- **The dominant and earliest position is Abu Ma'shar's:** nodes at the end (both sects), seven equal sub-periods from the major ruler, node majors non-subdividing, the cycle repeating past 75, reckoned in real (365.2425-day) years. The nocturnal-node question is genuinely unresolved — Bonatti (nodes after Mars) and the modern AB Method (proportional sub-periods, participating nodes) are the principal alternatives, and practitioners are split.
 
 ## Key Findings
 
@@ -23,7 +23,7 @@
 
 ## Details
 
-### The node controversy (the central implementation fork)
+### The node controversy (the central methodological fork)
 This is the one substantive disagreement, and it affects only nocturnal charts.
 
 - **Abu Ma'shar (the primary source):** In *On the Revolutions of the Years of Nativities*, Book IV ch. 7 (Dykes translation): "Now, the Head and Tail distribute for diurnal nativities after the years of Mars, and for nocturnal nativities after the years of Mercury: and it is when the native enters year 71 — and he will begin in the distribution of the fardārs with the Head, then the Tail, whether the native was diurnal or nocturnal." So the nodes ALWAYS come last (ages 70–75), in both sects. The independent al-Dāmaghānī quotation of al-Andarzaghar gives the identical rule.
@@ -44,7 +44,7 @@ Some practitioners drop the nodes entirely and use only the seven planets (a 70-
 The sequence always begins at birth (age 0) with the sect light's ruler (Sun by day, Moon by night), regardless of any other chart factor. It proceeds forward in fixed order. After 75 years (or 70 if nodes omitted) it repeats from the beginning — Abu Ma'shar: "then it returns to the Sun." Schoener explicitly delineates a Sun-Sun period recurring after age 75. Whether nodes are included in the repeat follows whatever node setting is chosen.
 
 ### Year length and date conversion
-The classical texts do not specify a day-count; they speak of "years." Modern implementations diverge: the astrology-api.io service uses 365.2422 (mean tropical year); others use 365.2425 (Gregorian mean) or 365.25 (Julian). The Perso-Arabic astronomical context worked with real solar years (the *Zīj* tradition), not the ideal 360-day year — the 360-day "year" belongs to the mundane "mighty fardar" (1°/year across the zodiac) and to some Vedic savana-year usage, not to natal firdaria. For calendar output, most software counts real years from the birth moment. This is a genuine implementation fork but a low-stakes one: over 75 years, 365.25 vs 365.2425 differ by under a day.
+The classical texts do not specify a day-count; they speak of "years." Modern implementations diverge: the astrology-api.io service uses 365.2422 (mean tropical year); others use 365.2425 (Gregorian mean) or 365.25 (Julian). The Perso-Arabic astronomical context worked with real solar years (the *Zīj* tradition), not the ideal 360-day year — the 360-day "year" belongs to the mundane "mighty fardar" (1°/year across the zodiac) and to some Vedic savana-year usage, not to natal firdaria. For calendar output, most practitioners count real years from the birth moment. This is a genuine divergence but a low-stakes one: over 75 years, 365.25 vs 365.2425 differ by under a day.
 
 ### Interpretation conventions
 A period is judged by the natal condition of its ruling planet: essential dignity, house occupied and ruled, aspects, and sect status (an out-of-sect or debilitated firdaria lord is judged more harshly; a Mars period is worse for a day chart, Saturn worse for a night chart). The major ("lord of the period") and sub-ruler ("partner") combine — Robert Hand cites the idea (via Darrelyn Gunzburg / his Australis '97 workshop) that the major ruler is "Matter" and the sub-ruler "Form." When the two are configured (aspecting) in the natal chart, their combined period is intensified; a planet natally aspecting the firdaria lord is also "activated." Schoener's *Three Books on the Judgment of Nativities* (Book III ch. 8) provides a complete set of two-planet delineations (translated in Hand's ARHAT booklet), and the *Liber Aristotilis* offers parallel material. The nodes, when ruling, are read as Head = generally fortunate/gainful, Tail = troubles and loss.
@@ -55,40 +55,43 @@ Firdaria is a long-range "background climate" chronocrator, sitting above annual
 ### Tropical/sidereal and unknown time
 Firdaria is purely time-based, not position-based, so the tropical/sidereal zodiac choice does NOT affect the period calculation itself (it only affects the natal-chart interpretation layer). The one hard requirement is **sect**: the calculation cannot start without knowing day vs night, which requires at least an approximate birth time and location. Near sunrise/sunset (within ~10 minutes) sect can flip and invalidate the entire downstream sequence; for genuinely unknown times, no reliable firdaria is possible and rectification is required.
 
-## Recommendations
+## The positions in the tradition
 
-### (a) Parameters/toggles a robust implementation should expose
-1. `sect_source` — how day/night is determined (Sun above/below horizon; default) and a manual override.
-2. `node_mode` — {`none` (7 planets, 70-yr cycle), `classical_end` (both nodes at ages 70–75), `bonatti_after_mars` (nodes after Mars)}.
-3. `nocturnal_node_placement` — {`end` (Abu Ma'shar/al-Biruni), `after_mars` (Bonatti/Zoller)} — only meaningful for night charts.
-4. `subperiod_division` — {`equal` (each = major/7, classical), `proportional` (AB Method, share = major×sub-years/75)}.
-5. `subperiod_participants` — {`seven_planets` (classical), `nine_with_nodes` (AB Method)}.
-6. `node_subdivision` — {`off` (classical; node majors not subdivided), `on`}.
-7. `subperiod_order` — {`chaldean_from_ruler` (default/standard)}; exposed for completeness though no real alternative is attested.
-8. `year_length_days` — {365.2425 (default), 365.25, 365.2422, 360}.
-9. `repeat_past_75` — bool (default true).
-10. `levels` — {2 (major+sub, default), 1 (major only)}.
-11. `anchor` — {exact birth moment (default), birth date midnight}.
+The seven-planet order and the period values are undisputed; the schools differ
+only on the nodes and on how sub-periods are divided.
 
-### (b) Preset modes
-- **"Abu Ma'shar / Persian" (recommended default):** nodes on, nocturnal nodes at END (after Mercury, ages 70–75), 7 equal sub-periods from major ruler, nodes non-subdividing, repeat on, year 365.2425. Justification: this is the fullest and earliest primary source, and the position with the strongest historical and scholarly (Hand, Birchfield) support.
-- **"Bonatti / Zoller / Lilly":** nodes on, nocturnal nodes AFTER MARS (ages ~39–44), 7 equal sub-periods, nodes non-subdividing, repeat on, year 365.2425. Justification: the dominant reading in the Latin/Renaissance line and in Zoller-lineage modern practice; matches many existing calculators.
-- **"Al-Biruni":** identical to the Abu Ma'shar preset (nodes at end); offered as a named alias because some software (e.g., Janus) labels the nodes-at-end option "Al-Biruni."
-- **"AB Method (Subramanyan)":** nodes on and PARTICIPATING as sub-rulers (9 sub-periods), PROPORTIONAL sub-period division, node majors optionally subdivided, year 365.2425. Justification: the main modern methodological alternative; implemented in Delphic Oracle and Planet Dance.
-- Optional **"Seven-planet / no nodes":** node_mode = none, 70-year cycle — for practitioners who reject the (Indian-derived) node periods.
+- **Abu Ma'shar / Persian** — nodes at the end in both sects (ages 70–75), seven
+  equal sub-periods from the major ruler, node majors non-subdividing, cycle
+  repeating past 75, real (365.2425-day) years. The fullest and earliest primary
+  source, and the position with the strongest historical and modern-scholarly
+  support (Hand, Birchfield). Often labelled **"Al-Biruni"** in software (e.g.
+  Janus), since al-Biruni follows the same nodes-at-end order.
+- **Bonatti / Zoller / Lilly** — nocturnal nodes **after Mars** (ages ~39–44),
+  otherwise as above. The dominant reading in the Latin/Renaissance line and in
+  Zoller-lineage modern practice; matches many existing calculators. It rests on
+  an ambiguous al-Qabisi paraphrase rather than an explicit statement.
+- **AB Method (Subramanyan, 2019)** — the nodes **participate** as sub-rulers
+  (nine sub-periods) and sub-periods are divided **proportionally** (share =
+  major × sub-years / 75). A minority modern innovation, not a classical
+  convention; implemented in Delphic Oracle and Planet Dance.
+- **Seven-planet (no nodes)** — a 70-year cycle, used by practitioners who
+  reject the (Indian-derived) node periods.
 
-### (c) Out-of-the-box default and justification
-Ship the **Abu Ma'shar / Persian** preset as default: it rests on the most complete primary source, is internally consistent (nodes always last in both sects), and is favored by the leading modern scholarly treatments. Because the nocturnal-node question is genuinely unresolved, surface it prominently in the UI/docs with a one-click switch to the Bonatti preset. For unknown birth times, refuse to compute (or clearly flag as unreliable) rather than silently assuming a sect.
+The settled points: sub-period order is Chaldean-descending from the major ruler
+(unambiguous across sources); the classical sub-period division is equal
+(major/7); the 360-day year is **not** appropriate for natal firdaria (it
+belongs to the mundane "mighty fardar"); the sequence repeats past 75 (Abu
+Ma'shar's "returns to the Sun"; Schoener delineates the recurrence). Sect is a
+hard requirement — near sunrise/sunset it can flip and invalidate the whole
+sequence.
 
-**Explicit answers to the open spec questions:**
-- *Sub-period order:* Chaldean-descending starting from the major-period ruler — unambiguous across sources; ship this, no alternative needed.
-- *Equal vs weighted division:* classical = equal (major/7); weighted (proportional) is only the modern AB Method — default to equal.
-- *Node placement / subdivision:* default nodes-at-end (both sects), node majors NOT subdivided, nodes NOT sub-rulers — with Bonatti "after Mars" and AB "participating" as toggles.
-- *Default year_length:* 365.2425 (Gregorian mean); the 360-day year is NOT appropriate for natal firdaria (it belongs to the mundane "mighty fardar").
-- *Repeat past 75:* yes (Abu Ma'shar's "returns to the Sun"; Schoener delineates the recurrence).
-- *Unknown-time charts:* do not compute; require sect (hence at least approximate time + place), and flag sunrise/sunset ambiguity.
+## What would revise these findings
 
-**Thresholds that would change the recommendation:** if a future authoritative critical edition or a strong body of empirical rectification work were to vindicate the Bonatti "after Mars" reading, promote that to default; if the AB Method accumulates broad practitioner adoption and validation, promote proportional division from a preset to a co-default.
+If a future authoritative critical edition or a strong body of empirical
+rectification work were to vindicate the Bonatti "after Mars" reading, it would
+gain a stronger claim than the currently-dominant nodes-at-end position; if the
+AB Method accumulated broad practitioner adoption and validation, proportional
+division would move from a minority innovation toward a mainstream alternative.
 
 ## Caveats
 - The strongest primary quotations here (Abu Ma'shar Book IV, al-Qabisi IV) come through Benjamin Dykes's and Steven Birchfield's translations; the al-Biruni wording is anchored to the Wright 1934 translation's contents (§446–447) plus near-verbatim secondary quotations, not a re-verified page scan (the exact printed page ~259–260 is consistent with the pagination but was not confirmed against a live scan).

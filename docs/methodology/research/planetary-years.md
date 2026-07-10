@@ -1,8 +1,8 @@
-> **Preserved research report.** This is the source-verification investigation
-> behind Stellium's implementation of this technique, kept verbatim as
-> provenance. For the curated summary of *what Stellium actually implements*
-> (defaults, chosen forks, simplifications) and how these sources map to the
-> code, see [../README.md](../README.md).
+> **Source-verification research.** The scholarly sourcing, citations, and
+> contested points behind this technique — pure research, with no
+> implementation detail. For the curated summary of *what Stellium implements*
+> (defaults, the forks it chose, simplifications) and how these sources map to
+> the code, see [../README.md](../README.md).
 
 ---
 
@@ -88,7 +88,7 @@ The astronomically-reconstructed set (Houlding/Skyscript, following Neugebauer, 
 | Mercury | 461 | period relation |
 | Moon | 520 | three eclipse periods |
 
-**The Moon's greatest year is explicitly the most contested figure.** Per Houlding: Antiochus and Rhetorius made it **25** (which clashes with the least-year 25); later authors — Al-Qabisi, Al-Biruni, and Ibn Ezra — made it **520**; Bonatti records **420** (likely a transmission error); William Lilly records **320**. This is the clearest example where a documentation supplement should present variants rather than a single number. The greatest years were used chiefly for mundane/dynastic timespans, not natal work.
+**The Moon's greatest year is explicitly the most contested figure.** Per Houlding: Antiochus and Rhetorius made it **25** (which clashes with the least-year 25); later authors — Al-Qabisi, Al-Biruni, and Ibn Ezra — made it **520**; Bonatti records **420** (likely a transmission error); William Lilly records **320**. This is the clearest example of a value that cannot be reduced to a single figure. The greatest years were used chiefly for mundane/dynastic timespans, not natal work.
 
 ### 5. Zodiacal Releasing sign-periods and the Capricorn = 27 problem
 Zodiacal Releasing (Valens *Anthology* Book IV, chs. 4–10) assigns each sign the minor years of its domicile ruler:
@@ -130,17 +130,21 @@ Ptolemy (*Tetrabiblos* III.10–11) treats only the apheta/prorogator and the an
 - **Deborah Houlding / skyscript.co.uk:** the glossary entries "Least years," "Mean years," "Great years," and "Greatest years" (from her Annotated Lilly, footnote 154, pp. 58–59) are the most convenient sourced tables, including the terms-sum derivation and the greatest-years variants.
 - **Curtis Manwaring / astrology-x-files.com:** ZR and firdaria material; the "27 = lunar mansions" note ("The Mystery of 27"); the Delphic Oracle software.
 
-## Recommendations
-1. **Publish four columns (least, mean, greater, greatest) but flag their differing reliability.** Least years: cite as canonical (Valens *Anthology* III/IV; Firmicus *Mathesis* II.29). Greater years: cite with the terms-sum derivation (Ptolemy *Tetrabiblos* I.20–21; Houlding). Mean years: present explicitly as "(least + greatest) / 2" and use the half-integer luminary values (Sun 69.5, Moon 66.5).
-2. **For GREATEST years, present both traditions side by side and list the Moon variants explicitly** (Antiochus/Rhetorius 25; Lilly 320; Bonatti 420; Al-Qabisi/Al-Biruni/Ibn Ezra and astronomical reconstruction 520). Do not print a single "greatest" number as authoritative.
-3. **For the Capricorn = 27 note, state plainly that the "¼ of greater years" derivation is a modern rationalization not found in Valens or endorsed by major commentators.** Present it as folk-etymology; if a sourced symbolic note is wanted, cite Manwaring's "27 lunar mansions." Treat the value itself (Capricorn 27) as an inherited exception attested in the text.
-4. **Keep the Firdaria period values in a clearly separate table** with a header warning that they are NOT the least years, and document the day/night sequences and the node-placement variant.
-5. **For the alcocoden mapping, use angular = greater / succedent = mean / cadent = least, and add a footnote noting the inverted minority reading** so users of other software aren't confused.
-6. **Benchmarks that would change these recommendations:** if a direct verbatim Valens Book IV passage explaining Capricorn's 27 is located (it is currently not preserved), or if a named commentator's published derivation of the ¼-greater-years rule surfaces, update §5. If Dykes's Bonatti or a primary Perso-Arabic text is consulted directly, reconcile the greatest-years variants against it.
+## What would revise these findings
+
+- If a direct, verbatim *Valens* Book IV passage explaining Capricorn's 27 were
+  located (none is currently preserved), or if a named commentator's published
+  derivation of the "¼ of greater years" rule surfaced, §5 would change — at
+  present the derivation is unsupported folk-etymology.
+- If Dykes's Bonatti or a primary Perso-Arabic text were consulted directly, the
+  greatest-years variants could be reconciled against it more firmly.
+- The reliability tiers stand: least / greater / mean are near-universal;
+  greatest is genuinely unsettled and no single value can be treated as
+  authoritative (see Caveats).
 
 ## Caveats
-- **Greatest years are genuinely unsettled.** Numbers cited for the Moon (25 / 320 / 420 / 520) and for the superior/inferior planets differ between the "De Vore table" tradition and the astronomical reconstruction (Neugebauer/Houlding). Both are reported above; neither should be presented as the single correct value.
-- **The alcocoden angular/cadent → greater/least mapping has a documented inversion in some modern sources.** The dominant traditional rule (angular = greater) is used here.
+- **Greatest years are genuinely unsettled.** Numbers cited for the Moon (25 / 320 / 420 / 520) and for the superior/inferior planets differ between the "De Vore table" tradition and the astronomical reconstruction (Neugebauer/Houlding). Both are reported above; neither can be treated as the single correct value.
+- **The alcocoden angular/cadent → greater/least mapping has a documented inversion in some modern sources.** The dominant traditional rule is angular = greater.
 - **Ptolemy does not supply a planetary-years table for length of life;** his method (*Tetrabiblos* III.10–11) is directional (apheta to anareta). The four-column years-table apparatus is Perso-Arabic/medieval. Attributing the full table to Ptolemy directly would be inaccurate — his contribution is the terms whose sums yield the greater years, plus the aphetic framework.
-- **Mean-year rounding varies** (Sun 69 vs. 69.5; Moon 66 vs. 66.5) across popular tables; use the half-integer values for internal consistency with the alcocoden tables.
-- **The Metonic cycle is properly 235 synodic months** (Britannica); the "254" often quoted counts sidereal months. Confirm the exact Valens Book III/IV and Firmicus II.29 passages against the printed Riley (2010/2022) and Kroll critical editions for a citable supplement, since several supporting values here were corroborated through secondary reproductions of the Riley translation and the De Vore encyclopedia rather than the printed critical editions.
+- **Mean-year rounding varies** (Sun 69 vs. 69.5; Moon 66 vs. 66.5) across popular tables; the half-integer values are the ones used in the alcocoden tables.
+- **The Metonic cycle is properly 235 synodic months** (Britannica); the "254" often quoted counts sidereal months. Several supporting values here were corroborated through secondary reproductions of the Riley translation and the De Vore encyclopedia rather than the printed critical editions; the exact Valens Book III/IV and Firmicus II.29 passages are best confirmed against the printed Riley (2010/2022) and Kroll critical editions.

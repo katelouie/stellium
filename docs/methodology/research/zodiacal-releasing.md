@@ -1,17 +1,17 @@
-> **Preserved research report.** This is the source-verification investigation
-> behind Stellium's implementation of this technique, kept verbatim as
-> provenance. For the curated summary of *what Stellium actually implements*
-> (defaults, chosen forks, simplifications) and how these sources map to the
-> code, see [../README.md](../README.md).
+> **Source-verification research.** The scholarly sourcing, citations, and
+> contested points behind this technique — pure research, with no
+> implementation detail. For the curated summary of *what Stellium implements*
+> (defaults, the forks it chose, simplifications) and how these sources map to
+> the code, see [../README.md](../README.md).
 
 ---
 
-# Zodiacal Releasing (ZR): A Fully-Parameterized Implementation & Documentation Supplement
+# Zodiacal Releasing (ZR): Sources, Reconstruction, and Contested Points
 
 ## TL;DR
 - **Zodiacal Releasing derives entirely from one source — Vettius Valens' *Anthology*, Book IV (Ch. 4–10 in Riley's numbering) — and every "standard" convention traces to how Robert Schmidt (Project Hindsight, 1990s) and Chris Brennan (2005–present) reconstructed and popularized it; the modern default is: release from the Lot of Spirit for career and Lot of Fortune for body, using whole-sign tropical signs, 360-day years, and the loosing-of-the-bond jump to the opposite sign after a full 12-sign subperiod circuit.**
-- **The genuinely contested implementation forks are: (a) whether to reverse the Fortune/Spirit formula by sect (Valens/Schmidt/Brennan say YES; Ptolemy/Lilly say NO); (b) 360-day "ideal" year vs 365.25-day year for converting periods to dates (Valens/Brennan use 360; a minority use 365.25); (c) Capricorn = 27 vs 30 years; and (d) whether the loosing of the bond triggers on "12 subperiods completed" jumping opposite the parent sign.**
-- **A robust implementation should expose 16 toggles and ship four presets — "Brennan/Modern Standard" (the recommended out-of-the-box default), "Valens Purist," "Schmidt/Project Hindsight," and "Fractal/Experimental" — with the Brennan preset as default because it is the most tested, most documented, and matches the free calculators (Astro-Seek, zodiacalreleasing.net) most users will cross-check against.**
+- **The genuinely contested forks are: (a) whether to reverse the Fortune/Spirit formula by sect (Valens/Schmidt/Brennan say YES; Ptolemy/Lilly say NO); (b) 360-day "ideal" year vs 365.25-day year for converting periods to dates (Valens/Brennan use 360; a minority use 365.25); (c) Capricorn = 27 vs 30 years; and (d) whether the loosing of the bond triggers on "12 subperiods completed" jumping opposite the parent sign.**
+- **"The standard" is a modern reconstruction with several named configurations** — the *Brennan / Modern Standard* (the most tested and documented, and what the free calculators and major software produce), the stricter *Valens Purist* and *Schmidt / Project Hindsight* readings, and a non-canonical *fractal* variant that drops the loosing of the bond. They differ only on the contested forks above.
 
 ## Key Findings
 
@@ -43,16 +43,22 @@ Confirmed across all sources (planet → years → sign):
 Sum of minor years = 129 (this is also the L1 length in the equal Decennials system). Note an OCR artifact in some scanned Schmidt text shows "Moon 23" — this is an error; the correct value is **25** (required for the 129 sum).
 
 - **Cancer/Leo question:** Cancer gets the Moon's full 25 and Leo gets the Sun's full 19 — there is **no special reduction** for the luminaries' own signs. The only sign that deviates from its ruler's minor years is **Capricorn**.
-- **The Capricorn Controversy (27 vs 30):** Saturn rules both Capricorn and Aquarius with a 30-year minor period. Aquarius gets 30, but **Capricorn is reduced to 27**. Valens' rationale (per Manwaring's summary of Book IV / "Capricorn Controversy"): Capricorn, being opposite Cancer, should get ¼ of the **greater years** of Cancer, while Aquarius, opposite Leo, gets ¼ of the greater years of Leo — producing the asymmetry. The alternative (rejected by Valens) was to use the minor years strictly, giving Capricorn 30 too. **27 is the standard/default.** A handful of tools let the user toggle Capricorn = 30.
+- **The Capricorn Controversy (27 vs 30):** Saturn rules both Capricorn and Aquarius with a 30-year minor period. Aquarius gets 30, but **Capricorn is reduced to 27**. Valens' rationale (per Manwaring's summary of Book IV / "Capricorn Controversy"): Capricorn, being opposite Cancer, should get ¼ of the **greater years** of Cancer, while Aquarius, opposite Leo, gets ¼ of the greater years of Leo — producing the asymmetry. The alternative (rejected by Valens) was to use the minor years strictly, giving Capricorn 30 too. **27 is the standard.** A handful of tools also offer Capricorn = 30.
 
 ### 3. The Four Levels and Time Scaling
 - **L1 = years, L2 = months (1/12 of L1), L3 ≈ 2.5-day "weeks" (1/12 of L2), L4 ≈ 5-hour "days" (1/12 of L3).** Each level is exactly 1/12 of its parent. Brennan/Watson note L3 increment = 2.5 days, L4 = 5 hours; labeling them "weeks/days" is loose but reflects lived experience (L3 = weeks-to-a-couple-months, L4 = a handful of days).
 - Worked scaling (per hand-calc guides): Cancer L1 = 25 years; L2 = 2 years 1 month; L3 = 2 months 2 days 12 hours; L4 = 5 days 4 hours 48 minutes. Mercury (20): L3 = 50 days, L4 ≈ 4 days 4 hours. Saturn/Aquarius (30): L3 = 75 days, L4 = 6 days 6 hours. Saturn/Capricorn (27): L3 = 67.5 days, L4 = 5 days 15 hours.
-- **360 vs 365.25 day year — the MAJOR implementation fork.** Valens explicitly used a **360-day "ideal" year** for the distribution while noting the civil year is 365¼: *"Since the universal year has 365 1/4 days, while the year with respect to the distribution has 360, we subtract the 5 intercalary days and the one-fourth of a day, then we find the number of years."* Brennan confirms the convention (Astrology Podcast Ep. 192, Feb. 5, 2019): *"for the purpose of calculation, the technique uses 360-day years and 30-day months... it's not using a 365-day year, it's using a 360-day year in order to divide up the entire year and in order to make the months exactly 1/12th of the year."* The compounding effect: a period nominally 25 "years" ends ~25×360/365.25 ≈ 24.64 civil years later; the drift is ~1 month per 5 years 10 months, ~1 year per ~70 years. A minority of practitioners prefer 365.25 — Aswin Subramanyan reports, verbatim: *"Earlier, I tested with the 360 day format which did not seem to match with the events of some of the charts I tested. After sometime, I switched to 365.25 day method of calculating the zodiacal releasing periods and it started working."* Software (AstroApp, Delphic Oracle) exposes the year-length as a parameter; the "most common practice is to use the 360-day conversion." **Default: 360.**
+- **360 vs 365.25 day year — the major fork.** Valens explicitly used a **360-day "ideal" year** for the distribution while noting the civil year is 365¼: *"Since the universal year has 365 1/4 days, while the year with respect to the distribution has 360, we subtract the 5 intercalary days and the one-fourth of a day, then we find the number of years."* Brennan confirms the convention (Astrology Podcast Ep. 192, Feb. 5, 2019): *"for the purpose of calculation, the technique uses 360-day years and 30-day months... it's not using a 365-day year, it's using a 360-day year in order to divide up the entire year and in order to make the months exactly 1/12th of the year."* The compounding effect: a period nominally 25 "years" ends ~25×360/365.25 ≈ 24.64 civil years later; the drift is ~1 month per 5 years 10 months, ~1 year per ~70 years. A minority of practitioners prefer 365.25 — Aswin Subramanyan reports, verbatim: *"Earlier, I tested with the 360 day format which did not seem to match with the events of some of the charts I tested. After sometime, I switched to 365.25 day method of calculating the zodiacal releasing periods and it started working."* Software (AstroApp, Delphic Oracle) lets the year-length be chosen; the most common practice is the 360-day conversion, which is the standard.
 
 ### 4. Loosing of the Bond (lusis / λύσις desmou)
 - **Trigger (canonical):** After a full circuit of **12 subperiods** has been distributed within a parent period long enough to complete one (only signs with periods > ~17.5 years: Cancer 25, Leo 19, Gemini/Virgo 20, Capricorn 27, Aquarius 30 — i.e., signs of Moon, Sun, Mercury, Saturn), instead of returning to the parent sign for the 13th subperiod, **the sequence jumps to the sign OPPOSITE the parent sign** and continues from there. Riley (via Louis/Cosmoazul), verbatim: *"after twelve subperiods have been completed, instead of with the sign that served to initiate the subperiod, the releasing jumps to the opposite sign and continues from there. For example, when Cancer as a major period is subdivided, the first subperiod is Cancer and the twelfth subperiod is Gemini. The thirteenth subperiod instead of going back to Cancer is, instead, the opposite sign Capricorn."*
-- **On the "signs_processed == 12" question:** The current code trigger ("12 signs processed, jump to opposite") is **essentially correct** but must be precise: the jump target is the sign **opposite the PARENT (Level-above) sign**, which equals the sign *following* the one where the 12-sign circuit ended (12th subperiod = sign before parent; opposite-of-parent = sign after that). Al Gore worked example (Brennan): Capricorn L1; L2 circuit ends on Sagittarius (12th); 13th jumps to **Cancer** (opposite Capricorn), not back to Capricorn.
+- **The trigger and target, precisely:** the bond looses after a full 12-sign
+  sub-circuit, and the jump target is the sign **opposite the PARENT (level-above)
+  sign** — which equals the sign *following* the one where the 12-sign circuit
+  ended (the 12th subperiod is the sign before the parent; opposite-of-parent is
+  the sign after that). Al Gore worked example (Brennan): Capricorn L1; the L2
+  circuit ends on Sagittarius (12th); the 13th jumps to **Cancer** (opposite
+  Capricorn), not back to Capricorn.
 - **~17.5 year timing:** Because the 12 subperiods sum to 129 months ≈ 17 years 7 months (in 360-day terms, ~17.5 years), the L2 loosing always falls ~17.5 years into any qualifying L1.
 - **Does it happen at all levels?** YES — the loosing occurs on **any** level whose parent is long enough for a full sub-circuit (L2 within long L1; also L3 and L4). Brennan and Manwaring confirm L3/L4 loosings. It does **not** occur in short signs (Venus/Mars/Jupiter-ruled) because the circuit never completes.
 - **Truncation of remaining subperiods:** After the loosing, the opposite sign takes over distributing the **remaining** time; each subperiod runs and hands over, and **the final subperiod is truncated at the parent boundary**. Ellen Loehr Black (co-founder of Project Hindsight), in "Zodiacal Releasing from Spirit: The Tsunami Effect in the Life of John Kerry" (projecthindsight.com), on Valens' procedure: *"Each profection breaks off when its time is over and the new profection begins immediately."* (Her worked Kerry example locates key turns at "the LOOSING OF THE BOND AT LEVEL THREE" and the "LOOSING OF THE BOND AT LEVEL ONE in Kerry's 10th House Virgo major profection.") This is truncation, not overflow — matching Delphic Oracle, Solar Fire, and Astro-Seek. See §5.
@@ -77,7 +83,7 @@ Sum of minor years = 129 (this is also the L1 length in the equal Decennials sys
 - **Fortune vs Spirit domains:** Fortune for health/body/accidents (Brennan/Schaim note it's more hit-or-miss and best for charts already predisposed to health issues; also legal-liability caution); Spirit for career/action; Eros for relationships.
 
 ### 8. Fractal vs Valens methods
-- The **"Valens" method** (loosing of the bond + truncation) is the authentic, universally-used approach. A **pure "fractal" recursive subdivision** (each parent simply subdivides into 12 proportional children in fixed zodiacal order from the parent sign, **without** the loosing jump) is **NOT a recognized traditional method** and **no named practitioner uses it**. It is a simplification/computational convenience. Some casual descriptions loosely call the nesting "fractal," but every serious source (Valens, Schmidt, Brennan, George, Manwaring) includes the loosing of the bond. **Recommendation: expose "fractal" only as an explicitly-labeled experimental/non-canonical mode.**
+- The **"Valens" method** (loosing of the bond + truncation) is the authentic, universally-used approach. A **pure "fractal" recursive subdivision** (each parent simply subdivides into 12 proportional children in fixed zodiacal order from the parent sign, **without** the loosing jump) is **NOT a recognized traditional method** and **no named practitioner uses it**. It is a simplification/computational convenience. Some casual descriptions loosely call the nesting "fractal," but every serious source (Valens, Schmidt, Brennan, George, Manwaring) includes the loosing of the bond, so a fractal subdivision without it has no traditional authority.
 
 ### 9. Other Gotchas
 - **Tropical zodiac, whole-sign only.** ZR is **tropical** (no ayanamsha/precession) in the Brennan/Schmidt standard. (Aswin Subramanyan idiosyncratically used sidereal in one worked example, but this is non-standard.) Whole-sign houses/aspects throughout; the Lot's *degree* is used only to fix the sign, then the whole sign carries the topic.
@@ -86,7 +92,7 @@ Sum of minor years = 129 (this is also the L1 length in the equal Decennials sys
 - **Very long lifespans / total sum:** L1 minor-years sum ≈ 208–210; the 12-major-period loosing (~210 yrs) never occurs in a lifetime.
 - **Leap-year handling** when converting 360-day periods to civil dates requires care (subtract accumulated leap days), a common source of small date discrepancies between calculators.
 
-## Details: Documentation citations for each decision point
+## Details: Citations for each point
 - **Name/aphesis translation:** Schmidt, intro to Valens Book I/IV (1996); Brennan ep. 192 transcript (defends "releasing" over transliteration "aphesis"; notes other academics rendered *aphesis* as "starter/starting point").
 - **360-day year:** Valens Book IV Ch. 9 ("Concerning the Cosmic Year and the Year Relative to Division"); quoted via Seven Stars Astrology. Brennan ep. 192 (Feb. 5, 2019).
 - **Loosing trigger & opposite-sign jump:** Valens Book IV Ch. 5 (Riley/Schmidt); Riley text via Louis/Cosmoazul; Brennan astro.com/TMA (Apr/May 2012 article, "Annual Profections, Lots, and Zodiacal Releasing"); Manwaring Delphic Oracle help.
@@ -96,39 +102,40 @@ Sum of minor years = 129 (this is also the L1 length in the equal Decennials sys
 - **Truncation:** Ellen Loehr Black, Project Hindsight, "Zodiacal Releasing from Spirit: The Tsunami Effect in the Life of John Kerry."
 - **Three types of loosing:** Manwaring, Delphic Oracle "Loosing the Bond" help; Cosmoazul/Riley.
 
-## Recommendations
+## The reconstructions in practice
 
-### (a) Parameters/toggles a robust implementation should expose (16 total)
-1. `lot` — which lot to release from: Fortune | Spirit | Eros | Necessity | custom-degree. (default Spirit for career module; Fortune for health module)
-2. `sect_reversal` — reverse Fortune/Spirit formula by night: True | False. (default True)
-3. `eros_formula` — Paulus/Brennan | Astrodienst-variant. (default Paulus/Brennan)
-4. `capricorn_years` — 27 | 30. (default 27)
-5. `year_length_days` — 360 | 365.25 | 365.2422. (default 360)
-6. `month_definition` — 1/12-of-year (30 ideal days) | civil. (default 1/12 ideal)
-7. `levels` — max depth 1–4. (default 4, display 2)
-8. `loosing_of_bond` — enabled | disabled. (default enabled)
-9. `loosing_target` — opposite | trine. (default opposite)
-10. `loosing_trigger` — "12 subperiods completed" (canonical). (fixed)
-11. `subperiod_boundary` — truncate | overflow. (default truncate)
-12. `same_sign_spirit_rule` — apply +1 sign to Spirit if coincident with Fortune. (default True; never for Eros)
-13. `peak_anchor_lot` — always Fortune | same-as-release. (default Fortune)
-14. `zodiac` — tropical | sidereal(+ayanamsha). (default tropical)
-15. `sect_light_edge_rule` — handling Sun exactly on horizon (modified day/night). (default: below-horizon = night)
-16. `leap_day_handling` — accumulate/subtract leap days in civil conversion. (default on)
+Because ZR survives in a single source, "the standard" is really a modern
+reconstruction. The main configurations found across the literature and software:
 
-### (b) Preset modes
-- **"Brennan / Modern Standard" (DEFAULT):** sect_reversal=True, capricorn=27, year=360, loosing=enabled/opposite/12-subperiod, boundary=truncate, same_sign_rule=True, peak_anchor=Fortune, zodiac=tropical, lots=Fortune/Spirit/Eros. *Why:* most tested, matches Astro-Seek & zodiacalreleasing.net & Solar Fire; the configuration in Brennan's book and ep. 192.
-- **"Valens Purist":** identical mechanics (reversal, 360, Cap 27, opposite, truncate, same-sign rule) but **lots limited to Fortune & Spirit only** (no Eros), ruler-of-sign weighted equally with in-sign planets for interpretation, no modern peak-rank overlay. *Why:* strict to Book IV.
-- **"Schmidt / Project Hindsight":** as Valens Purist + Schmidt terminology (Spirit not Daimon, "Reciprocal Handing Over," *chrematistikos*="busy/speaking"), angular-triad interpretive framing emphasized, Greek planet names optional. *Why:* reflects the reconstruction lineage.
-- **"Fractal / Experimental":** loosing_of_bond=disabled (pure recursive 1/12 subdivision from parent sign), optionally year=365.25. **Clearly labeled non-canonical.** *Why:* for comparison/experimentation only; no traditional authority.
+- **Brennan / Modern Standard** — sect-reversed lots, Spirit for career and
+  Fortune for body (peaks always measured from Fortune), 360-day years,
+  Capricorn 27, loosing of the bond enabled (opposite-sign jump on completing a
+  12-subperiod circuit), truncation at parent boundaries, the same-sign Spirit
+  rule, tropical whole-sign. The most extensively tested and documented
+  configuration; it is what the free public calculators and the major software
+  (Solar Fire, Delphic Oracle) produce, and it is faithful to Valens on every
+  mechanical point while adding only the well-validated modern extra (the Lot of
+  Eros). It is the configuration in Brennan's book and Astrology Podcast ep. 192.
+- **Valens Purist** — identical mechanics but lots limited to Fortune and Spirit
+  (no Eros), no modern peak-rank overlay. Strict to Book IV.
+- **Schmidt / Project Hindsight** — as Valens Purist, in Schmidt's reconstruction
+  terminology ("Spirit," "Reciprocal Handing Over," *chrematistikos* = "busy /
+  speaking"), Greek planet names optional. Reflects the reconstruction lineage.
+- **"Fractal" (non-canonical)** — pure recursive 1/12 subdivision from the parent
+  sign with the loosing of the bond *disabled*. This is **not a recognized
+  traditional method** and no named practitioner uses it — every serious source
+  (Valens, Schmidt, Brennan, George, Manwaring) includes the loosing of the
+  bond; it is a computational simplification only.
 
-### (c) Out-of-the-box default
-Ship **"Brennan / Modern Standard"** as default: sect-reversed lots, Spirit for career / Fortune for body + peaks-from-Fortune, 360-day year, Capricorn 27, loosing-of-the-bond enabled (opposite-sign jump on 12-subperiod completion), truncation at parent boundaries, same-sign Spirit rule applied, tropical whole-sign. **Justification:** it is the most extensively tested and documented configuration, it is what every free public calculator and the major paid software (Solar Fire, Delphic Oracle) produce, so users cross-checking results will match; and it is faithful to Valens on every mechanical point while incorporating only the well-validated modern addition (Eros) as an optional extra.
+## What would revise these findings
 
-### Thresholds that would change the recommendation
-- If you require civil-date precision validated against a large event database and testing shows 365.25 aligns better, switch `year_length_days` to 365.25 (some practitioners already report this).
-- If building for a strictly scholarly/reconstruction audience, default to "Valens Purist" (drop Eros).
-- If a future consensus emerges that Capricorn=30 (strict minor years) performs better, expose it prominently rather than as an edge toggle.
+- If civil-date precision were validated against a large event database and the
+  365.25-day year aligned better than the 360-day standard, the year-length
+  consensus would weaken (some practitioners already report preferring 365.25).
+- For a strictly scholarly/reconstruction reading, the Valens Purist
+  configuration (Fortune and Spirit only, no Eros) is the more defensible
+  baseline.
+- If a future consensus emerged that Capricorn = 30 (strict minor years) performs better, it would displace the standard 27.
 
 ## Caveats
 - ZR rests on a **single ancient source** (Valens Book IV); much interpretive practice is 21st-century reconstruction by Schmidt and Brennan, who themselves stress that parts remain incompletely understood.
