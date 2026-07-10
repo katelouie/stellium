@@ -24,7 +24,7 @@
 - Implement Vimshottari Dasha system
 - Implement interactive HTML reports (Jinja2 + Pico.css)
 - Integrate Simplified Chinese translation strings into main library and web
-- Introduce structured logging system (replace bare prints)
+- Introduce structured logging system (replace bare prints) `in-progress`
 - LMT (Local Mean Time) support for historical charts
 - Update ARCHITECTURE.md directory structure to match codebase
 - Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps

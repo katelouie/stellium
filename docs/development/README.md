@@ -30,6 +30,17 @@ spokes hold the technical detail.
 8. **[EXTENDING.md](./EXTENDING.md)** — how to plug in every protocol
    (engines, components, analyzers, layers, themes, palettes, report sections).
 
+## Design specs
+
+Spec-Driven Development (SDD) design docs for planned work live in
+[`specs/`](./specs/). Unlike the reference pages above (which describe the code
+as it *is*), specs describe a change *before* it's built — motivation, design,
+migration plan, and acceptance criteria.
+
+- **[specs/STRUCTURED_LOGGING_SPEC.md](./specs/STRUCTURED_LOGGING_SPEC.md)** —
+  replace bare `print()` in the package with stdlib `warnings`/`logging` (and
+  `click.echo`/Rich for the CLI), plus a lint guard. *Status: Draft.*
+
 ## How these docs are scoped
 
 Depth is concentrated on the most-used path (chart building, engines,
