@@ -9,25 +9,22 @@ from stellium.core.models import (
     ZRPeriod,
     ZRTimeline,
 )
+from stellium.core.planetary_years import LEAST_YEARS
 from stellium.engines.dignities import DIGNITIES
 
-# Planetary "minor years" -> the base period each sign receives from its
-# (traditional) ruler. Saturn's minor years are 30, so Aquarius gets the full
-# 30; Capricorn is reduced to 27 via SIGN_PERIOD_OVERRIDES below.
-PLANET_PERIODS = {
-    "Moon": 25,
-    "Mercury": 20,
-    "Venus": 8,
-    "Sun": 19,
-    "Mars": 15,
-    "Jupiter": 12,
-    "Saturn": 30,
-}
+# Each sign receives the "least (minor) years" of its (traditional) ruler as its
+# base period. Canonical values live in stellium.core.planetary_years; this alias
+# preserves the historical name/import path.
+PLANET_PERIODS = LEAST_YEARS
 
 # Per-sign departures from the ruler's minor years. Zodiacal Releasing gives
-# Capricorn a documented reduction to 27 (Valens: Capricorn, opposite Cancer,
-# receives 1/4 of Cancer's *greater* years), while Aquarius (opposite Leo) keeps
-# Saturn's full 30. With this override the full cycle totals 211 years.
+# Capricorn a reduction to 27 while Aquarius (also Saturn-ruled) keeps the full
+# 30; with this override the full cycle totals 211 years. The reason for
+# Capricorn's 27 is *not preserved* in Valens — he assigns the number without
+# explanation. The popular "27 = 1/4 of the Moon's greater years (108/4)" story
+# is folk-etymology (the arithmetic is coincidental; no source in the tradition
+# connects it to the ZR sign-periods). The sourced symbolic association is
+# Manwaring's "27 lunar mansions," not a quarter of greater years.
 SIGN_PERIOD_OVERRIDES = {"Capricorn": 27}
 
 
