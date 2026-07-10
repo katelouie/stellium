@@ -14,6 +14,7 @@ Output:
 
 from pathlib import Path
 
+import click
 import yaml
 
 
@@ -119,11 +120,11 @@ def main():
     with open(index_path, "w") as f:
         f.write("\n".join(lines))
 
-    print(f"Generated {index_path}")
-    print(
+    click.echo(f"Generated {index_path}")
+    click.echo(
         f"  Births: {sum(len(v) for v in births.values())} entries across {len(births)} categories"
     )
-    print(f"  Events: {len(events)} entries")
+    click.echo(f"  Events: {len(events)} entries")
 
 
 if __name__ == "__main__":

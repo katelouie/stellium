@@ -23,6 +23,8 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+import click
+
 # Swiss Ephemeris official download URLs
 EPHEMERIS_BASE_URL = "https://www.astro.com/ftp/swisseph/ephe/"
 DROPBOX_BASE_URL = "https://www.dropbox.com/scl/fo/y3naz62gy6f6qfrhquu7u/h/ephe/"
@@ -150,29 +152,29 @@ def download_file(
     """Download a single ephemeris file."""
     if filepath.exists() and not force:
         if not quiet:
-            print(f"⏭️  Skipping {filepath.name} (already exists)")
+            click.echo(f"⏭️  Skipping {filepath.name} (already exists)")
         return True
 
     if not quiet:
-        print(f"📥 Downloading {filepath.name}...")
+        click.echo(f"📥 Downloading {filepath.name}...")
 
     try:
         # Try primary URL first
         try:
             urllib.request.urlretrieve(url, filepath)
             if not quiet:
-                print(f"✅ Downloaded {filepath.name}")
+                click.echo(f"✅ Downloaded {filepath.name}")
             return True
         except urllib.error.URLError:
             # Try dropbox URL as fallback
             dropbox_url = url.replace(EPHEMERIS_BASE_URL, DROPBOX_BASE_URL) + "?dl=1"
             urllib.request.urlretrieve(dropbox_url, filepath)
             if not quiet:
-                print(f"✅ Downloaded {filepath.name} (via dropbox)")
+                click.echo(f"✅ Downloaded {filepath.name} (via dropbox)")
             return True
 
     except Exception as e:
-        print(f"❌ Failed to download {filepath.name}: {e}")
+        click.echo(f"❌ Failed to download {filepath.name}: {e}", err=True)
         return False
 
 
@@ -255,11 +257,11 @@ def download_asteroid_file(
 
     if filepath.exists() and not force:
         if not quiet:
-            print(f"⏭️  Skipping {filename} (already exists)")
+            click.echo(f"⏭️  Skipping {filename} (already exists)")
         return True
 
     if not quiet:
-        print(f"📥 Downloading {filename} from {folder}/...")
+        click.echo(f"📥 Downloading {filename} from {folder}/...")
 
     # Download from ephe.scryr.io (primary source for asteroid files)
     url = f"{ASTEROID_BASE_URL}{folder}/{filename}"
@@ -274,12 +276,12 @@ def download_asteroid_file(
                     filepath.unlink()
                     raise ValueError("Downloaded HTML instead of ephemeris data")
         if not quiet:
-            print(f"✅ Downloaded {filename}")
+            click.echo(f"✅ Downloaded {filename}")
         return True
     except Exception as e:
         if filepath.exists():
             filepath.unlink()  # Remove partial/invalid file
-        print(f"❌ Failed to download {filename}: {e}")
+        click.echo(f"❌ Failed to download {filename}: {e}", err=True)
         return False
 
 
@@ -298,23 +300,23 @@ def download_common_asteroids(force: bool = False, quiet: bool = False) -> int:
     """
     success_count = 0
     if not quiet:
-        print("🌟 Downloading common TNO/dwarf planet ephemeris files...")
-        print("-" * 50)
+        click.echo("🌟 Downloading common TNO/dwarf planet ephemeris files...")
+        click.echo("-" * 50)
 
     for name, number in COMMON_ASTEROIDS.items():
         if not quiet:
-            print(f"   {name} (#{number})...")
+            click.echo(f"   {name} (#{number})...")
         if download_asteroid_file(number, force=force, quiet=True):
             success_count += 1
             if not quiet:
-                print(f"   ✅ {name}")
+                click.echo(f"   ✅ {name}")
         else:
             if not quiet:
-                print(f"   ❌ {name} (failed)")
+                click.echo(f"   ❌ {name} (failed)")
 
     if not quiet:
-        print("-" * 50)
-        print(f"✅ Downloaded {success_count}/{len(COMMON_ASTEROIDS)} files")
+        click.echo("-" * 50)
+        click.echo(f"✅ Downloaded {success_count}/{len(COMMON_ASTEROIDS)} files")
 
     return success_count
 
