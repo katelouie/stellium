@@ -667,8 +667,13 @@ class FirdariaTimeline:
 
         Returns the level-2 sub-period in effect, or the level-1 major if it
         has no sub-periods (a node major), or ``None`` if ``when`` is outside
-        the computed span.
+        the computed span. A naive ``when`` is aligned to the period datetimes'
+        timezone (the birth moment is UTC-aware) so callers can pass either.
         """
+        if self.birth.tzinfo is not None and when.tzinfo is None:
+            when = when.replace(tzinfo=self.birth.tzinfo)
+        elif self.birth.tzinfo is None and when.tzinfo is not None:
+            when = when.replace(tzinfo=None)
         for level in (2, 1):
             for p in self.periods:
                 if p.level == level and p.start <= when < p.end:

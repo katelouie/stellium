@@ -182,6 +182,16 @@ def test_at_outside_span_returns_none(day_chart):
     assert tl.at(birth + dt.timedelta(days=50 * 365.2425)) is None
 
 
+def test_at_accepts_naive_datetime(day_chart):
+    # Periods use UTC-aware datetimes (from birth); a naive datetime must not
+    # raise a tz-comparison error — it's aligned to the periods' timezone.
+    tl = day_chart.firdaria()
+    naive = dt.datetime(1995, 1, 1)  # ~age 5 for a 1990 birth
+    period = tl.at(naive)
+    assert period is not None
+    assert period.ruler == "Sun"
+
+
 # === Repeat & horizon =======================================================
 
 
