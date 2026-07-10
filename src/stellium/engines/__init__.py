@@ -10,6 +10,8 @@ Common engines:
 
 # Ephemeris
 # Aspects
+# Almuten of a degree (essential-dignity victor)
+from stellium.engines.almuten import AlmutenResult, almuten_of_degree
 from stellium.engines.aspects import (
     DeclinationAspectEngine,
     HarmonicAspectEngine,
@@ -220,6 +222,9 @@ __all__ = [
     "ZodiacalReleasingAnalyzer",
     # Firdaria
     "FirdariaEngine",
+    # Almuten of a degree
+    "almuten_of_degree",
+    "AlmutenResult",
     # Void of Course Moon
     "VOCMoonResult",
     "calculate_voc_moon",
