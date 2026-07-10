@@ -48,10 +48,13 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Sect-aware calculations** with proper day/night chart handling
 - **25+ Arabic Parts** with traditional formulas (see the [full list](docs/options_list.md))
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
+- **Fixed stars** — the four Royal Stars and beyond, by tier or by name (e.g. Regulus, Algol)
 - **Chart rulership and profections** for traditional astrology
 - **Dispositor graphs** for planets and (experimentally) houses in reports
 - **Aspect pattern detection** - Grand Trines, T-Squares, Yods, Stelliums, and more
 - **Zodiacal Releasing** for 25+ lots (including Fortune and Spirit) and optional "fractal" calculation mode
+- **Firdaria** — the Persian time-lord system with day/night sequencing, seven Chaldean sub-periods, and Abu Ma'shar / Bonatti node presets
+- **Length of life** — the classical hyleg → alcocoden years-table (Lilly) with a fully itemized, auditable result, plus a reusable almuten-of-a-degree calculator
 - **Uranian astrology** including Trans-Neptunian Planets and 45/90/360-degree dials with pointers.
 - **Primary and Zodiacal directions** with 3D modeling and and distribution across bounds
 - **Draconic Charts and Void of Course Moon**
@@ -62,6 +65,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Antiscia and contra-antiscia** with a dedicated report section
 - **Beautiful visualizations** with professional SVG chart rendering and 13 themes
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
+- **Localized reports** — render terminal, Markdown, HTML, and PDF reports in multiple languages (Simplified Chinese included) via `with_locale()`
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
 
 **Vedic:**
