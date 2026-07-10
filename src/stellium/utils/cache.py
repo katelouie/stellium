@@ -9,6 +9,10 @@ from functools import wraps
 from pathlib import Path
 from typing import Any
 
+from stellium._logging import get_logger
+
+log = get_logger("utils.cache")
+
 
 class Cache:
     """File-based cache for expensive operations."""
@@ -79,7 +83,7 @@ class Cache:
             with open(cache_path, "wb") as f:
                 pickle.dump(value, f)
         except Exception as e:
-            print(f"Warning: Could not write to cache: {e}")
+            log.warning("Could not write to cache: %s", e)
 
     def clear(self, cache_type: str | None = None) -> int:
         """Clear cache entries. Returns number of files removed."""
