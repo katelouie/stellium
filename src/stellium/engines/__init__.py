@@ -78,6 +78,9 @@ from stellium.engines.houses import (
     WholeSignHouses,
 )
 
+# Length of life (hyleg / alcocoden / years-table)
+from stellium.engines.length_of_life import find_hyleg, length_of_life
+
 # Orbs
 from stellium.engines.orbs import (
     LILLY_FULL_ORBS,
@@ -225,6 +228,9 @@ __all__ = [
     # Almuten of a degree
     "almuten_of_degree",
     "AlmutenResult",
+    # Length of life
+    "find_hyleg",
+    "length_of_life",
     # Void of Course Moon
     "VOCMoonResult",
     "calculate_voc_moon",

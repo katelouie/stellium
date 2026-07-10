@@ -677,6 +677,71 @@ class FirdariaTimeline:
 
 
 @dataclass(frozen=True)
+class HylegResult:
+    """The hyleg (prorogator / giver of life) chosen for a chart.
+
+    Attributes:
+        point: Which candidate won — ``"Sun"``, ``"Moon"``, ``"Fortune"``, or
+            ``"Ascendant"``.
+        longitude: The hyleg's zodiacal longitude.
+        place: The hylegiacal house it occupies (1, 7, 9, 10, or 11).
+        method: The authority method used (e.g. ``"lilly"``).
+        candidates_tried: Ordered trace of ``(candidate, qualified?)`` — shows
+            which earlier candidates were skipped (not in a hylegiacal place).
+    """
+
+    point: str
+    longitude: float
+    place: int
+    method: str
+    candidates_tried: tuple[tuple[str, bool], ...]
+
+
+@dataclass(frozen=True)
+class YearModifier:
+    """One itemized adjustment to the alcocoden's base years."""
+
+    source: str  # e.g. "Jupiter"
+    reason: str  # e.g. "benefic trine to alcocoden (+ least years)"
+    delta: float  # years added (+) or subtracted (-)
+
+
+@dataclass(frozen=True)
+class LengthOfLifeResult:
+    """A computed length-of-life estimate (a traditional *indicator*).
+
+    This is a computed classical indicator, **not** a prediction of actual
+    lifespan. The result is intentionally transparent: the hyleg, the
+    alcocoden and its angularity, the base years, and every modifier are all
+    exposed so the reasoning can be inspected.
+
+    Attributes:
+        hyleg: The chosen prorogator.
+        alcocoden: The planet granting the years (almuten of the hyleg's degree).
+        alcocoden_angularity: ``"angular"`` | ``"succedent"`` | ``"cadent"``.
+        base_years: Years granted before modifiers (from the years family).
+        base_family: ``"greater"`` | ``"mean"`` | ``"least"``.
+        modifiers: Itemized adjustments; their deltas sum into ``total``.
+        total: Base years plus modifiers (in ``unit``).
+        unit: ``"years"`` normally; ``"months"``/``"days"`` if the alcocoden is
+            combust.
+        method: The authority method used (e.g. ``"lilly"``).
+        notes: Caveats and any fallbacks taken.
+    """
+
+    hyleg: HylegResult
+    alcocoden: str
+    alcocoden_angularity: str
+    base_years: float
+    base_family: str
+    modifiers: tuple[YearModifier, ...]
+    total: float
+    unit: str
+    method: str
+    notes: tuple[str, ...]
+
+
+@dataclass(frozen=True)
 class CalculatedChart:
     """
     Complete calculated chart - the final output.
@@ -1502,6 +1567,51 @@ class CalculatedChart:
             repeat=repeat,
             max_age=max_age,
         ).calculate()
+
+    def hyleg(self, method: str = "lilly") -> "HylegResult":
+        """Find the hyleg (prorogator / giver of life) for this chart.
+
+        Args:
+            method: Authority method (``"lilly"``).
+
+        Returns:
+            A :class:`HylegResult` with a candidacy trace.
+
+        Raises:
+            ValueError: If the chart has no known birth time.
+        """
+        from stellium.engines.length_of_life import find_hyleg
+
+        return find_hyleg(self, method)
+
+    def length_of_life(self, method: str = "lilly") -> "LengthOfLifeResult":
+        """Estimate length of life via the years-table method (Lilly default).
+
+        A **computed traditional indicator, not a prediction of actual
+        lifespan.** The result exposes the hyleg, the alcocoden and its
+        angularity, the base years, and every itemized modifier.
+
+        Args:
+            method: ``"lilly"`` (default). ``"ptolemy"`` (directional) is
+                reserved but not implemented.
+
+        Returns:
+            A :class:`LengthOfLifeResult`.
+
+        Raises:
+            ValueError: If the chart has no known birth time.
+            NotImplementedError: For ``method="ptolemy"``.
+
+        Example::
+
+            r = chart.length_of_life()
+            print(r.hyleg.point, r.alcocoden, r.total, r.unit)
+            for m in r.modifiers:
+                print(m.source, m.reason, m.delta)
+        """
+        from stellium.engines.length_of_life import length_of_life
+
+        return length_of_life(self, method)
 
     # =========================================================================
     # Visualization
