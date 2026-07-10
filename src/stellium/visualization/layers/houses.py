@@ -2,6 +2,7 @@
 House cusp layers - inner and outer house cusp rendering.
 """
 
+import warnings
 from typing import Any
 
 import svgwrite
@@ -10,6 +11,7 @@ from stellium.core.models import (
     CalculatedChart,
     HouseCusps,
 )
+from stellium.exceptions import ConfigurationWarning
 from stellium.visualization.core import (
     ChartRenderer,
 )
@@ -90,8 +92,10 @@ class HouseCuspLayer:
         try:
             house_cusps: HouseCusps = actual_chart.get_houses(self.system_name)
         except (ValueError, KeyError):
-            print(
-                f"Warning: House system '{self.system_name}' not found in chart data."
+            warnings.warn(
+                f"House system '{self.system_name}' not found in chart data.",
+                ConfigurationWarning,
+                stacklevel=2,
             )
             return
 
@@ -251,8 +255,10 @@ class OuterHouseCuspLayer:
         try:
             house_cusps: HouseCusps = actual_chart.get_houses(self.system_name)
         except (ValueError, KeyError):
-            print(
-                f"Warning: House system '{self.system_name}' not found in chart data."
+            warnings.warn(
+                f"House system '{self.system_name}' not found in chart data.",
+                ConfigurationWarning,
+                stacklevel=2,
             )
             return
 

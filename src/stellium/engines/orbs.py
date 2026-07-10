@@ -5,10 +5,12 @@ These engines implement the OrbEngine protocol to provide
 different systems for calculating aspect orbs.
 """
 
+import warnings
 from typing import Literal
 
 from stellium.core.models import CelestialPosition
 from stellium.core.registry import ASPECT_REGISTRY
+from stellium.exceptions import ConfigurationWarning
 
 # ── Moiety System Defaults ──────────────────────────────────────────────
 # Full orbs (moiety = half). Effective orb = (full_A + full_B) / 2.
@@ -191,7 +193,11 @@ class ComplexOrbEngine:
                 normalized_pairs[new_key] = rules
             except ValueError:
                 # Handle invalid keys gracefully, e.g., "Sun" or "Sun-Moon-Mars"
-                print(f"Warning: Invalid 'by_pair' key format '{key}'. Skipping.")
+                warnings.warn(
+                    f"Invalid 'by_pair' key format '{key}'. Skipping.",
+                    ConfigurationWarning,
+                    stacklevel=2,
+                )
 
     def _get_pair_key(self, obj1_name: str, obj2_name: str) -> str:
         """Creates a consistent, sorted key (e.g., "Moon-Sun")"""

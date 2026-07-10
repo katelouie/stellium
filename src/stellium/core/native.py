@@ -7,6 +7,7 @@ that the rest of the system requires.
 """
 
 import datetime as dt
+import warnings
 from pathlib import Path
 from typing import Any
 
@@ -17,6 +18,7 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
 from stellium.core.models import ChartDateTime, ChartLocation
+from stellium.exceptions import GeocodingWarning
 from stellium.utils.cache import cached
 
 # Cache TimezoneFinder instance - initialization is expensive
@@ -568,8 +570,12 @@ def _cached_geocode(location_name: str) -> dict:
             }
         return {}
     except GeocoderUnavailable:
-        print("Warning: Geocoding service is unavailable.")
+        warnings.warn(
+            "Geocoding service is unavailable.",
+            GeocodingWarning,
+            stacklevel=2,
+        )
         return {}
     except Exception as e:
-        print(f"Warning: Geocoding error: {e}")
+        warnings.warn(f"Geocoding error: {e}", GeocodingWarning, stacklevel=2)
         return {}

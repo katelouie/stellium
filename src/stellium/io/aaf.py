@@ -12,10 +12,12 @@ Example AAF record:
 """
 
 import re
+import warnings
 from pathlib import Path
 
 from stellium.core.models import ChartLocation
 from stellium.core.native import Native
+from stellium.exceptions import DataQualityWarning
 
 
 def _parse_coordinate(coord_str: str) -> float:
@@ -244,8 +246,12 @@ def parse_aaf(path: str | Path) -> list[Native]:
                 a93_data = _parse_a93_line(a93_content)
                 b93_data = _parse_b93_line(b93_content)
             except ValueError as e:
-                # Log warning and skip this record
-                print(f"Warning: Skipping malformed record: {e}")
+                # Warn and skip this record
+                warnings.warn(
+                    f"Skipping malformed record: {e}",
+                    DataQualityWarning,
+                    stacklevel=2,
+                )
                 i += 1
                 continue
 

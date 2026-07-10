@@ -12,6 +12,8 @@ Many lots are "sect-aware" - they flip the formula for day vs night charts:
 - Night Chart: Asc + Point1 - Point2
 """
 
+import warnings
+
 from stellium.components.dignity import determine_sect
 from stellium.core.models import (
     CelestialPosition,
@@ -20,6 +22,7 @@ from stellium.core.models import (
     HouseCusps,
     ObjectType,
 )
+from stellium.exceptions import DataQualityWarning
 
 # Arabic parts catalog
 # Each entry defines: which points to use, whether to flip for sect
@@ -255,7 +258,11 @@ class ArabicPartsCalculator:
                 parts.append(part_position)
             except KeyError as e:
                 # Missing required position
-                print(f"Warning: Could not calculate {part_name}: missing ({e})")
+                warnings.warn(
+                    f"Could not calculate {part_name}: missing ({e})",
+                    DataQualityWarning,
+                    stacklevel=2,
+                )
                 continue
 
         return parts
