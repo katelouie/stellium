@@ -99,7 +99,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Bill Gates** (1955) (software developer, investor, philanthropist)
   - 1955-10-28 22:00 · Seattle, Washington, USA [America/Los_Angeles] · rating DD · time NOT reliable
 - **Elon Musk** (1971) (Entrepreneur, Engineer, Investor)
-  - 1971-06-28 07:30 · Pretoria, South Africa [Africa/Johannesburg] · rating A · time reliable
+  - 1971-06-28 07:30 · Pretoria, South Africa [Africa/Johannesburg] · rating B · time NOT reliable
 - **Steve Jobs** (1955) (Entrepreneur, Inventor, Visionary)
   - 1955-02-24 19:15 · San Francisco, California, USA [America/Los_Angeles] · rating AA · time reliability unverified
 - **Steve Wozniak** (1950) (inventor, engineer)
@@ -350,7 +350,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Rachel Carson** (1907) (marine biologist, Silent Spring)
   - 1907-05-27 02:00 · Springdale, Pennsylvania [America/New_York] · rating A · time reliability unverified
 - **Richard Feynman** (1918) (physicist, Nobel laureate)
-  - 1918-05-11 14:49 · New York, New York [America/New_York] · rating AA · time reliable
+  - 1918-05-11 14:49 · New York, New York [America/New_York] · rating C · time NOT reliable
 - **Rosalind Franklin** (1920) (crystallographer, DNA structure)
   - 1920-07-25 12:00 · London, England [Europe/London] · rating X · time NOT reliable (noon placeholder)
 - **Sigmund Freud** (1856) (Psychologist, Neurologist, Author)

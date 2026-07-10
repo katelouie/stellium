@@ -49,15 +49,18 @@
     Tesla, owner of X (Twitter). Co-founded PayPal, Neuralink, and OpenAI.
     Became world's richest person in 2021.
   astrological_notes: Sun 6 Cancer
-  data_quality: A
+  data_quality: B
   sources:
   - "Walter Isaacson, 'Elon Musk' (2023): '7:30 on the morning of June 28, 1971' — biography, NOT a birth certificate."
   verified: false
 
-  has_reliable_time: true
+  has_reliable_time: false
   verification_notes: >
-    Time provenance is a biography; keep at A, never AA. Isaacson doesn't cite
-    where the 07:30 came from.
+    Time provenance is an uncited biography quote — Isaacson gives '07:30' but
+    never says where it came from. Per A_Rating-Rodden_source_guide.md a
+    biography time is a B source to distrust when reputation is at stake, so the
+    prior 'A + has_reliable_time: true' contradicted our own rule: downgraded to
+    B and time flagged NOT reliable. Not usable as rectification ground truth.
 - name: Walt Disney
   event_type: birth
   year: 1901

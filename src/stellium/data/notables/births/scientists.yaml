@@ -392,14 +392,18 @@
   - Nobel laureate
   notable_for: American theoretical physicist known for his work in the path integral formulation of quantum mechanics, the theory of quantum electrodynamics, and the physics of the superfluidity of supercooled liquid helium.
   astrological_notes: Sun 19 Taurus
-  data_quality: AA
+  data_quality: C
   sources:
   - https://www.astro.com/astro-databank/Feynman,_Richard
   verified: true
-  has_reliable_time: true
+  has_reliable_time: false
   verification_notes: >
-    14:49 is oddly precise and widely repeated, but confirm the ADB
-    certificate basis before trusting the AA. Flagged, not downgraded.
+    NOT a certificate: the birth time was unknown and 14:49:20 EWT is an Isaac
+    Starkman RECTIFICATION (astrologically computed), which is Rodden C by
+    definition — the "oddly precise" 14:49 is the rectification signature, not a
+    record. The prior AA + has_reliable_time: true was a fake AA. Downgraded to C,
+    time NOT reliable. MUST be excluded from any rectification-validation corpus:
+    grading a rectifier against a rectified time is circular.
 - name: Rachel Carson
   event_type: birth
   year: 1907

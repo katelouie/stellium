@@ -109,8 +109,13 @@
   verified: false
   has_reliable_time: true
   verification_notes: >
-    Birth CERTIFICATE gives 21 Oct 1940, 03:00, Três Corações (AA). His 2006
-    autobiography claims Oct 23 — prefer the record, flag the discrepancy.
+    Birth CERTIFICATE gives 21 Oct 1940, 03:00, Três Corações (AA), archived at
+    the Casa de Cultura de Três Corações (confirmed via ADB/Borges). His 2006
+    autobiography claims Oct 23 — the certificate wins; the date "dispute" is
+    resolved in favour of the record. Legitimate AA, kept. Caveat for corpus
+    use: Brazilian births were often registered days after the fact, so the
+    03:00 clock time is softer than a US/UK certificate — trust the date fully,
+    the minute less.
 - name: Usain Bolt
   event_type: birth
   year: 1986
