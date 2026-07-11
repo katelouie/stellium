@@ -1867,6 +1867,7 @@ class ReportBuilder:
         format: str = "rich_table",
         file: str | None = None,
         show: bool | None = None,
+        theme: str = "house",
     ) -> str | None:
         """
         Render the report with flexible output options.
@@ -1877,6 +1878,9 @@ class ReportBuilder:
             show: Whether to display in terminal. Defaults to True for terminal
                   formats (rich_table, plain_table, text, prose) and False for file
                   formats (pdf, html).
+            theme: PDF design-system theme (format="pdf" only). One of
+                  "house" (default), "sepia", "celestial", "blues", "greyscale".
+                  "greyscale" is the laser/B&W print theme.
 
         Returns:
             Filename if saved to file, None otherwise
@@ -1941,7 +1945,7 @@ class ReportBuilder:
         if file:
             # Handle PDF format (binary output via Typst)
             if format == "pdf":
-                content = self._to_typst_pdf(section_data, chart_svg_path, title)
+                content = self._to_typst_pdf(section_data, chart_svg_path, title, theme)
                 with open(file, "wb") as f:
                     f.write(content)
             else:
@@ -2104,6 +2108,7 @@ class ReportBuilder:
         section_data: list[tuple[str, dict[str, Any]]],
         chart_svg_path: str | None = None,
         title: str | None = None,
+        theme: str = "house",
     ) -> bytes:
         """
         Convert report to PDF bytes using Typst (internal helper).
@@ -2119,7 +2124,7 @@ class ReportBuilder:
         Returns:
             PDF as bytes
         """
-        from stellium.presentation.renderers import TypstRenderer
+        from stellium.presentation.typst_render import render_pdf
 
         # Build title from chart name if not provided
         if title is None and self._chart:
@@ -2129,11 +2134,12 @@ class ReportBuilder:
             else:
                 title = "Natal Chart Report"
 
-        renderer = TypstRenderer()
-        return renderer.render_report(
+        return render_pdf(
+            self._chart,
             section_data,
             chart_svg_path=chart_svg_path,
-            title=title or "Astrological Report",
+            title=title,
+            theme=theme,
         )
 
     def _print_to_console(
