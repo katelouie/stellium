@@ -2,7 +2,7 @@
 
 This document provides a comprehensive reference of all implemented options in Stellium. Whether you're looking for a specific house system, sidereal zodiac, fixed star, Arabic lot, or aspect type, you'll find it here.
 
-**Summary:** Stellium supports **37 celestial objects**, **18 house systems**, **9 ayanamsas**, **26 fixed stars**, **28 Arabic parts**, and **26 aspect types**.
+**Summary:** Stellium supports **37 celestial objects**, **17 house systems**, **9 ayanamsas**, **26 fixed stars**, **28 Arabic parts**, and **26 aspect types**.
 
 ---
 
@@ -153,7 +153,6 @@ Stellium implements all major house systems via the Swiss Ephemeris. You can use
 
 | Name | Code | Description |
 |------|------|-------------|
-| Gauquelin | G | 36-sector system used in statistical astrology research. |
 | Horizontal | H | Based on horizontal coordinate system. |
 | Axial Rotation | X | Based on Earth's axial rotation. |
 | APC | Y | Ascendant-Precedent-Consequent houses. |

@@ -42,7 +42,6 @@ from stellium.engines.houses import (
     EqualHouses,
     EqualMCHouses,
     EqualVertexHouses,
-    GauquelinHouses,
     HorizontalHouses,
     KochHouses,
     KrusinskiHouses,
@@ -79,7 +78,6 @@ HOUSE_SYSTEM_MAP = {
     "Vehlow Equal": VehlowEqualHouses,
     "Equal (Vertex)": EqualVertexHouses,
     # Specialized
-    "Gauquelin": GauquelinHouses,
     "Horizontal": HorizontalHouses,
     "Axial Rotation": AxialRotationHouses,
     "APC": APCHouses,

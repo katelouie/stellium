@@ -1,6 +1,6 @@
 # TODO
 
-*38 open tasks (synced from Obsidian)*
+*39 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -19,6 +19,7 @@
 - DX: surface silent None returns from component-dependent accessors
 - Evaluate component/analyzer support for non-ChartBuilder chart types
 - Fix aspect-pattern over-counting on conjunct points
+- Gauquelin sectors as an analysis primitive (gauquelin_sector) + Mars-effect study on notables DB
 - Implement Firdaria timing technique
 - Implement Vedic dignities engine (moolatrikona, Dig Bala, Navamsa)
 - Implement Vimshottari Dasha system

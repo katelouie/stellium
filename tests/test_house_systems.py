@@ -30,7 +30,6 @@ from stellium.engines.houses import (
     EqualHouses,
     EqualMCHouses,
     EqualVertexHouses,
-    GauquelinHouses,
     HorizontalHouses,
     KochHouses,
     KrusinskiHouses,
@@ -171,7 +170,6 @@ ALL_HOUSE_SYSTEMS = [
     TopocentricHouses,
     MorinusHouses,
     EqualVertexHouses,
-    GauquelinHouses,
     HorizontalHouses,
     KrusinskiHouses,
     AxialRotationHouses,
@@ -230,12 +228,6 @@ def test_house_system_inheritance(house_system):
 def test_calculate_house_data(house_system, standard_native):
     """Test that all house systems can calculate house data."""
     system = house_system()
-
-    # Gauquelin is a 36-sector system, which is not currently supported by HouseCusps model
-    if system.system_name == "Gauquelin":
-        pytest.skip(
-            "Gauquelin uses 36 sectors, not currently supported by HouseCusps model"
-        )
 
     cusps, angles = system.calculate_house_data(
         standard_native.datetime,
@@ -465,12 +457,6 @@ def test_southern_hemisphere(house_system):
     )
 
     system = house_system()
-
-    # Gauquelin is a 36-sector system, not currently supported by HouseCusps model
-    if system.system_name == "Gauquelin":
-        pytest.skip(
-            "Gauquelin uses 36 sectors, not currently supported by HouseCusps model"
-        )
 
     cusps, angles = system.calculate_house_data(native.datetime, native.location)
 

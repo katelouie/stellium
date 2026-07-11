@@ -73,7 +73,6 @@ HOUSE_SYSTEMS = [
     ("Vehlow Equal", "VehlowEqualHouses"),
     ("Equal (Vertex)", "EqualVertexHouses"),
     # Specialized
-    ("Gauquelin", "GauquelinHouses"),
     ("Horizontal", "HorizontalHouses"),
     ("Axial Rotation", "AxialRotationHouses"),
     ("APC", "APCHouses"),
