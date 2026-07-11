@@ -32,22 +32,24 @@ spokes hold the technical detail.
 
 ## Design specs
 
-Spec-Driven Development (SDD) design docs for planned work live in
-[`specs/`](./specs/). Unlike the reference pages above (which describe the code
-as it *is*), specs describe a change *before* it's built — motivation, design,
-migration plan, and acceptance criteria.
+Spec-Driven Development (SDD) design docs live in [`specs/`](./specs/) — see
+**[specs/README.md](./specs/README.md)** for the index. Unlike the reference pages
+above (which describe the code as it *is*), specs describe a change *before* it's
+built — motivation, design, migration plan, and acceptance criteria.
 
-- **[specs/STRUCTURED_LOGGING_SPEC.md](./specs/STRUCTURED_LOGGING_SPEC.md)** —
-  replace bare `print()` in the package with stdlib `warnings`/`logging` (and
-  `click.echo`/Rich for the CLI), plus a lint guard. *Status: Implemented.*
-- **[specs/HELLENISTIC_PERIODS_SPEC.md](./specs/HELLENISTIC_PERIODS_SPEC.md)** —
-  a canonical `core/planetary_years.py` primitive (least/mean/greater/greatest +
-  Firdaria), ZR refactored onto it, and a new Firdaria time-lord engine. *Status:
-  Draft.*
-- **[specs/LENGTH_OF_LIFE_SPEC.md](./specs/LENGTH_OF_LIFE_SPEC.md)** — the
-  classical length-of-life technique (hyleg → alcocoden → years-table, Lilly
-  default) plus reusable almuten-of-a-degree and hyleg primitives. *Status:
-  Draft.*
+- **Active:** [specs/STRUCTURED_LOGGING_SPEC.md](./specs/STRUCTURED_LOGGING_SPEC.md)
+  — migrate the library's remaining bare `print()`s to stdlib `logging`/`warnings`
+  (infrastructure landed; migration in progress).
+- **Completed** (`specs/archive/`): Hellenistic periods (`core/planetary_years.py`
+  + Firdaria engine) and length of life (hyleg → alcocoden years-table) — both
+  shipped; specs kept for history.
+- **Rectification** (`specs/rectification/`): the full computational birth-time
+  rectification arc — theory, phased specs, the 63-person verified corpus + events,
+  and the concluded empirical study. See
+  **[specs/rectification/README.md](./specs/rectification/README.md)**; the capstone
+  is [RECTIFICATION_REPORT.md](./specs/rectification/RECTIFICATION_REPORT.md). The
+  validated result (sect recovery) shipped as the `stellium.rectification` subsystem
+  — see [SUBSYSTEMS.md](./SUBSYSTEMS.md).
 
 ## How these docs are scoped
 

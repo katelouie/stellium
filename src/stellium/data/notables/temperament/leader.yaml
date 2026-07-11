@@ -1,0 +1,287 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Barack Obama
+  temperament:
+  - trait: Cerebral and even-tempered ('No Drama Obama')
+    tags:
+    - reserved
+    - disciplined
+    evidence: Widely noted by aides and biographers for calm, deliberative temperament
+    source: David Remnick, 'The Bridge' (2010); contemporary press
+  - trait: Ambitious and self-possessed
+    tags:
+    - ambitious
+    evidence: Rose from state senate to presidency in under a decade; mentor Abner Mikva called him 'a
+      very special political property'
+    source: NPR (Jan 16 2007), Abner Mikva interview
+  - trait: Charismatic orator
+    tags:
+    - charismatic
+    evidence: 2004 DNC keynote catapulted him to national fame; magnetic public presence
+    source: Miller Center; NPR
+  - trait: Introspective / reflective writer
+    tags:
+    - melancholic
+    - private
+    evidence: Self-described in 'Dreams from My Father'; meditative on family and identity
+    source: Obama, 'Dreams from My Father' (1995/2004 preface)
+- name: Catherine the Great
+  temperament:
+  - trait: Ambitious, driven by a sense of destiny
+    tags:
+    - ambitious
+    evidence: 'Massie quotes her memoir: ''The title of Queen rang sweetly in my ears'';  Britannica:
+      ''Her true passion, however, was ambition'''
+    source: 'Robert K. Massie, ''Catherine the Great: Portrait of a Woman'' (2011); Britannica'
+  - trait: Intelligent, well-read, shrewd judge of character
+    tags:
+    - intellectual
+    evidence: 'Massie: ''She was intelligent, well read, and a shrewd judge of character'''
+    source: Robert K. Massie (2011)
+  - trait: Industrious / hardworking
+    tags:
+    - disciplined
+    evidence: de Madariaga characterizes her as a hard-working ruler;  often worked 15-hour days with
+      four secretaries
+    source: Isabel de Madariaga, 'Russia in the Age of Catherine the Great' (1981); Encyclopedia.com
+  - trait: Charming and sociable
+    tags:
+    - charismatic
+    evidence: 'Catherine''s memoir: ''I tried to be as charming as possible to everyone and studied every
+      opportunity to win the affection of those...ill-disposed towards me'''
+    source: de Madariaga; Massie (2011)
+  - trait: Pragmatic and self-controlled
+    tags:
+    - pragmatic
+    - reserved
+    evidence: 'Massie: political morality ''founded on rationality and practical efficiency'';  disliked
+      temper tantrums'
+    source: Robert K. Massie (2011)
+- name: Indira Gandhi
+  temperament:
+  - trait: Steely, determined ('Iron Lady of India')
+    tags:
+    - combative
+    - disciplined
+    evidence: Declared 'I am not a person to be pressured — by anybody or any nation'; attested resolve
+      during 1971 war and Emergency
+    source: Biography.com, '7 Facts About Indira Gandhi'
+  - trait: Politically shrewd and autocratic
+    tags:
+    - ambitious
+    evidence: Underestimated as 'Goongi Gudiya' (dumb doll) by party bosses, she outmaneuvered them; centralized
+      power
+    source: Wikipedia, 'Indira Gandhi'
+  - trait: Reserved and private
+    tags:
+    - reserved
+    - private
+    evidence: Described as solitary; felt 'crushed and alone' after Sanjay's death
+    source: indiragandhi.in timeline
+  - trait: Self-reliant and independent-minded
+    tags:
+    - ambitious
+    evidence: Self-description valuing self-reliance; 'did things in her own way'
+    source: indiragandhi.in ('self-reliance' speech, 1972); BollywoodShaadis
+- name: Jacqueline Kennedy Onassis
+  temperament:
+  - trait: Dignified and composed under pressure
+    tags:
+    - reserved
+    - disciplined
+    evidence: Famed for her dignity escorting JFK's body to Washington in her blood-stained suit
+    source: Legacy obituary (1994)
+  - trait: Private and guarded
+    tags:
+    - private
+    - reserved
+    evidence: Withdrew from public life after 1963; married Onassis partly for 'privacy and security'
+    source: Wikipedia, 'Jacqueline Kennedy Onassis'
+  - trait: Cultured and intellectually refined
+    tags:
+    - intellectual
+    evidence: Studied art and French literature; the 'Jackie Look'; top literature student; later a book
+      editor
+    source: Biography.com; Britannica
+  - trait: Ambitious beyond convention
+    tags:
+    - ambitious
+    evidence: Wrote in her school yearbook that her ambition was 'not to be a housewife'
+    source: Biography.com, 'Jacqueline Kennedy Onassis'
+- name: John F. Kennedy
+  temperament:
+  - trait: Physically courageous / 'grace under pressure'
+    tags:
+    - combative
+    evidence: 'PT-109 heroism; endured chronic pain and near-fatal surgery; ''Profiles in Courage'' opens:
+      "''Grace under pressure,'' Ernest Hemingway defined it"'
+    source: JFK Library, 'About the Book'; Profiles in Courage (1956)
+  - trait: Charismatic and charming
+    tags:
+    - charismatic
+    evidence: Widely attested magnetic public presence; 'star status'
+    source: Contemporary press; JFK Library
+  - trait: Ambitious and competitive
+    tags:
+    - ambitious
+    evidence: Family-driven political ambition intensified after Joe Jr.'s death; 'I would rather win
+      a Pulitzer Prize than be president'
+    source: Craig Fehrman, Politico (2020); Medium/Esposito
+  - trait: Intellectually curious / historically minded
+    tags:
+    - intellectual
+    evidence: Harvard thesis 'Why England Slept'; long interest in political courage  and history
+    source: JFK Library, 'About the Book'
+- name: Margaret Thatcher
+  temperament:
+  - trait: Conviction-driven and uncompromising ('Iron Lady')
+    tags:
+    - combative
+    - disciplined
+    evidence: Self-described 'conviction politician'; 'The lady's not for turning'
+    source: Wikipedia, 'Margaret Thatcher'
+  - trait: Formidably hardworking and detail-oriented
+    tags:
+    - disciplined
+    evidence: Legendary for long hours and command of briefs; trained chemist and barrister
+    source: Museum of the PM; standard biographical record
+  - trait: Combative and confrontational
+    tags:
+    - combative
+    evidence: '''Increasingly divisive and confrontational approach''; clashes over Europe and the poll
+      tax'
+    source: Wikipedia, 'Resignation of Margaret Thatcher'
+  - trait: Resolute under threat
+    tags:
+    - disciplined
+    evidence: Insisted the Conservative conference proceed hours after the Brighton bombing
+    source: Wikipedia, 'Margaret Thatcher'
+- name: Prince Philip
+  temperament:
+  - trait: Blunt and outspoken
+    tags:
+    - combative
+    evidence: Known for outspoken nature and controversial remarks ('gaffes'); Daily Mirror's '90 classic
+      gaffes'
+    source: Biography.com, 'Prince Philip'
+  - trait: Disciplined and dutiful
+    tags:
+    - disciplined
+    evidence: Naval officer; 780+ patronages; the Queen called him her 'strength and stay'
+    source: Wikipedia; Biography.com
+  - trait: Energetic and practical / outdoorsy
+    tags:
+    - disciplined
+    evidence: Carriage-driving sportsman; founded the Duke of Edinburgh's Award; hands-on nature
+    source: Wikipedia; StudyGuides.com
+  - trait: Pragmatic moderniser
+    tags:
+    - pragmatic
+    evidence: Championed the televised coronation and the 1969 'Royal Family' documentary
+    source: Wikipedia, 'Prince Philip'
+- name: Prince William
+  temperament:
+  - trait: Relatable and at-ease in public
+    tags:
+    - charismatic
+    evidence: 'Britannica: ''known for his ease and relatability, traits that his mother also possessed'''
+    source: Britannica, 'William, prince of Wales'
+  - trait: Private / protective of family
+    tags:
+    - private
+    - reserved
+    evidence: Asked press to keep distance from Middleton; moved family for 'a more normal life'
+    source: Wikipedia, 'William, Prince of Wales'; Unofficial Royalty
+  - trait: Dutiful and steady
+    tags:
+    - disciplined
+    evidence: Military service; described post-marriage image as 'staid' and fatherly
+    source: Wikipedia, 'William, Prince of Wales'
+  - trait: Genial with a tougher side
+    tags:
+    - charismatic
+    evidence: Journalist Anne McElvoy describes a 'genial presence' with a 'tougher side' and his mother's
+      'inimitable style'
+    source: Wikipedia (McElvoy characterisation)
+- name: Princess of Wales Diana
+  temperament:
+  - trait: Warm, empathetic, 'led from the heart'
+    tags:
+    - nurturing
+    - charismatic
+    evidence: 'Panorama (1995): ''I lead from the heart, not the head, and albeit that''s got me into
+      trouble in my work, I understand that''; ''I''d like to be a queen of people''s hearts'''
+    source: BBC Panorama interview (20 Nov 1995); Tina Brown, 'The Diana Chronicles' (2007)
+  - trait: Emotionally vulnerable / prone to unhappiness
+    tags:
+    - melancholic
+    evidence: Morton documents bulimia and depression; friends noted paranoia in the final years
+    source: 'Andrew Morton, ''Diana: Her True Story'' (1992); Rosa Monckton (via Wikipedia)'
+  - trait: Media-savvy and image-conscious
+    tags:
+    - charismatic
+    evidence: 'Tina Brown: her Panorama ''purpose was to frame herself...as a betrayed woman'''
+    source: Tina Brown, quoted in Wikipedia; TODAY
+  - trait: Rebellious / unconventional within the royal family
+    tags:
+    - impulsive
+    evidence: '''I don''t go by a rulebook''; frequently at odds with royal protocol'
+    source: BBC Panorama interview (1995)
+- name: Queen Elizabeth II
+  temperament:
+  - trait: Dutiful and steadfast
+    tags:
+    - disciplined
+    evidence: Lifelong dedication pledge (1947, age 21); 70-year reign of consistent public service
+    source: 'Robert Lacey, ''Monarch: The Life and Reign of Elizabeth II'' / standard biographies'
+  - trait: Reserved and self-controlled
+    tags:
+    - reserved
+    - private
+    evidence: NY Times called her annus horribilis remark 'about the only public utterance that ever betrayed
+      any inner turmoil'
+    source: Time (2022); NY Times cited therein
+  - trait: Pragmatic and stoic
+    tags:
+    - pragmatic
+    evidence: Opened Buckingham Palace and began paying income tax to fund Windsor restoration after the
+      1992 fire
+    source: Wikipedia, '1992 Windsor Castle fire'; History.com
+  - trait: Understated humour and steadiness
+    tags:
+    - reserved
+    evidence: Annus horribilis speech noted for its wry 'touch of gentleness, good humour'
+    source: Britannica, 'annus horribilis'; History.com
+- name: Queen of the United Kingdom Victoria
+  temperament:
+  - trait: Obstinate and strong-willed
+    tags:
+    - stubborn
+    - strong-willed
+    evidence: 'Strachey: ''She was obstinate by temperament, and she prided herself very largely upon
+      it''; Hibbert portrait of a ''formidably strong-willed woman'''
+    source: 'Lytton Strachey, ''Queen Victoria'' (1921); Christopher Hibbert, ''Queen Victoria: A Personal
+      History'' (2000)'
+  - trait: Emotionally intense and passionate
+    tags:
+    - intense
+    - sentimental
+    evidence: 'Hibbert: ''passionately sensual, emotional, and deeply sentimental''; A.N. Wilson called
+      her ''physically and imaginatively passionate, a loveable monster'''
+    source: 'Christopher Hibbert (2000); A.N. Wilson, ''Victoria: A Life'' (2014)'
+  - trait: Devoted to Albert; grief-stricken widow
+    tags:
+    - devoted
+    - melancholic
+    evidence: Kept Albert's rooms and clothes laid out fresh for decades after his 1861 death; sank into
+      depression and rarely appeared in public into the late 1860s
+    source: Lytton Strachey (1921); royal.uk
+  - trait: Unforgiving with a long memory
+    tags:
+    - unforgiving
+    - reserved
+    evidence: Her retentive memory 'did not allow her to forgive readily'; her mother's actions 'taught
+      the future queen caution in her friendships'
+    source: Britannica 'Victoria'

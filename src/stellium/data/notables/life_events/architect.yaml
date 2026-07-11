@@ -1,0 +1,107 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Frank Lloyd Wright
+  events:
+  - date: 1889-06
+    precision: month
+    type: relationship
+    description: Married first wife Catherine 'Kitty' Lee Tobin in Chicago; they would have six children
+    significance: major
+    age_at_event: 22
+    source: 'Meryle Secrest, Frank Lloyd Wright: A Biography (Univ. of Chicago Press, 1992); Wikipedia
+      ''Frank Lloyd Wright'''
+  - date: '1893'
+    precision: year
+    type: career
+    description: Opened his own independent architectural practice in Chicago after leaving Adler & Sullivan
+    significance: major
+    age_at_event: 26
+    source: Frank Lloyd Wright Foundation biography
+  - date: '1909'
+    precision: year
+    type: relocation
+    description: Abandoned his family and practice and eloped to Europe with Mamah Borthwick Cheney
+    significance: major
+    age_at_event: 42
+    source: PBS Ken Burns 'Frank Lloyd Wright'; History.com
+  - date: '1911'
+    precision: year
+    type: relocation
+    description: Built Taliesin near Spring Green, Wisconsin as home and studio with Mamah
+    significance: major
+    age_at_event: 44
+    source: Frank Lloyd Wright Foundation; Keiran Murphy research
+  - date: '1914-08-15'
+    precision: day
+    type: bereavement_other
+    description: Servant Julian Carlton set fire to Taliesin and murdered seven, including Mamah Borthwick
+      and her two children, while Wright was in Chicago
+    significance: major
+    age_at_event: 47
+    source: History.com 'The Massacre at Frank Lloyd Wright's Love Cottage'; Crime Museum
+  - date: '1923-09-01'
+    precision: day
+    type: other
+    description: His Imperial Hotel in Tokyo survived the Great Kanto earthquake, enhancing his reputation
+    significance: moderate
+    age_at_event: 56
+    source: Milwaukee Art Museum biography; PBS
+  - date: 1923-11
+    precision: month
+    type: relationship
+    description: Married second wife Miriam Noel (after Kitty granted divorce in 1922)
+    significance: major
+    age_at_event: 56
+    source: Wikipedia 'Frank Lloyd Wright'
+  - date: '1925-04-20'
+    precision: day
+    type: financial_loss
+    description: Second major fire (electrical) destroyed the living quarters of Taliesin
+    significance: moderate
+    age_at_event: 57
+    source: Guggenheim archives; 'Tweedland' citing biographers
+  - date: '1925-12-02'
+    precision: day
+    type: childbirth
+    description: Daughter Iovanna born to Wright and Olgivanna Lazovich
+    significance: moderate
+    age_at_event: 58
+    source: '''Tweedland'' citing biographers'
+  - date: '1928-08-25'
+    precision: day
+    type: relationship
+    description: Married third wife Olga (Olgivanna) Lazovich at Rancho Santa Fe, California
+    significance: major
+    age_at_event: 61
+    source: Smithsonian Magazine; Guggenheim archives
+  - date: '1932'
+    precision: year
+    type: career
+    description: Founded the Taliesin Fellowship apprenticeship program and published An Autobiography
+    significance: major
+    age_at_event: 65
+    source: Frank Lloyd Wright Foundation
+  - date: '1935'
+    precision: year
+    type: career
+    description: Designed Fallingwater (Kaufmann Residence), Bear Run, PA (built 1936–37)
+    significance: major
+    age_at_event: 68
+    source: Frank Lloyd Wright Foundation; Smithsonian
+  - date: 1943-06
+    precision: month
+    type: career
+    description: Received the commission for the Solomon R. Guggenheim Museum
+    significance: major
+    age_at_event: 76
+    source: Frank Lloyd Wright Foundation
+  - date: '1959-04-09'
+    precision: day
+    type: health_crisis
+    description: Died in Phoenix, Arizona, age 91, six months before the Guggenheim opened
+    significance: major
+    age_at_event: 91
+    source: Britannica; Biography.com

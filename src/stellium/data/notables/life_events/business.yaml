@@ -1,0 +1,192 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Steve Jobs
+  events:
+  - date: '1974'
+    precision: year
+    type: spiritual
+    description: Traveled to India seeking spiritual enlightenment; returned drawn to Zen Buddhism.
+    significance: moderate
+    age_at_event: 19
+    source: Biography.com; New World Encyclopedia
+  - date: '1976'
+    precision: year
+    type: career
+    description: Co-founded Apple Computer with Steve Wozniak (and Ronald Wayne) in his family's garage.
+    significance: major
+    age_at_event: 21
+    source: Wikipedia; Biography.com
+  - date: '1978-05-17'
+    precision: day
+    type: childbirth
+    description: Daughter Lisa Brennan-Jobs born to Chrisann Brennan; Jobs initially denied paternity.
+    significance: moderate
+    age_at_event: 23
+    source: Wikipedia Lisa Brennan-Jobs; Biography.com
+  - date: '1985-09-17'
+    precision: day
+    type: career
+    description: Resigned/forced out of Apple after a board power struggle; founded NeXT the same year.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; allaboutstevejobs timeline
+  - date: '1986-02-03'
+    precision: day
+    type: career
+    description: Finalized purchase of the computer graphics division of Lucasfilm, paying George Lucas
+      $5M for technology rights plus $5M startup capital (~$10M total) for a 70% stake; incorporated it
+      as Pixar.
+    significance: major
+    age_at_event: 30
+    source: Fortune; MSN
+  - date: '1991-03-18'
+    precision: day
+    type: relationship
+    description: Married Laurene Powell in a Buddhist ceremony at Yosemite.
+    significance: major
+    age_at_event: 36
+    source: Wikipedia; Biography.com
+  - date: '1993-03-05'
+    precision: day
+    type: bereavement_parent
+    description: Adoptive father Paul Jobs died.
+    significance: moderate
+    age_at_event: 38
+    source: Wikipedia
+  - date: '1997'
+    precision: year
+    type: career
+    description: Returned to Apple (which bought NeXT) as interim CEO.
+    significance: major
+    age_at_event: 42
+    source: Wikipedia; biographyonline
+  - date: 2003-10
+    precision: month
+    type: health_crisis
+    description: Diagnosed with a pancreatic neuroendocrine tumor.
+    significance: major
+    age_at_event: 48
+    source: CNN Fast Facts; New World Encyclopedia
+  - date: '2004-07-31'
+    precision: day
+    type: health_crisis
+    description: Underwent surgery to remove the pancreatic tumor.
+    significance: major
+    age_at_event: 49
+    source: CNN Fast Facts; ADB seed
+  - date: '2009'
+    precision: year
+    type: health_crisis
+    description: Underwent a liver transplant.
+    significance: major
+    age_at_event: 54
+    source: Wikipedia; Biography Wiki
+  - date: '2011-08-24'
+    precision: day
+    type: career
+    description: Resigned as CEO of Apple, recommending Tim Cook.
+    significance: major
+    age_at_event: 56
+    source: Wikipedia
+  - date: '2011-10-05'
+    precision: day
+    type: bereavement_other
+    description: Died at home in Palo Alto from complications of his pancreatic tumor, age 56.
+    significance: major
+    age_at_event: 56
+    source: Wikipedia
+- name: Steve Wozniak
+  events:
+  - date: '1971'
+    precision: year
+    type: education
+    description: Enrolled at UC Berkeley (Electrical Engineering / Computer Sciences).
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia; ADB seed
+  - date: '1976-01-11'
+    precision: day
+    type: relationship
+    description: Married first wife Alice Robertson (divorced 1980).
+    significance: moderate
+    age_at_event: 25
+    source: EBSCO; encyclopedia.com
+  - date: '1976-04-01'
+    precision: day
+    type: career
+    description: Co-founded Apple Computer with Steve Jobs; designed the Apple I and later the Apple II.
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; FSU wiki
+  - date: '1980-12-12'
+    precision: day
+    type: windfall
+    description: Apple's IPO (shares priced at $22, market cap ~$1.8B) made Wozniak's ~7.9% stake (≈4
+      million shares) worth about $116 million on paper.
+    significance: major
+    age_at_event: 30
+    source: Mac History; Celebrity Net Worth
+  - date: '1981'
+    precision: year
+    type: windfall
+    description: 'Executed the ''Woz Plan'': sold/gave roughly $10 million of his own pre-IPO shares to
+      ~40-80 overlooked early employees at $5/share — a move Jobs declined to match. Wozniak: ''I gave
+      away a lot of my stock to almost everybody in the company.'''
+    significance: moderate
+    age_at_event: 30
+    source: Business Insider/Apple Wiki; Wozniak's own account
+  - date: '1981-02-07'
+    precision: day
+    type: accident
+    description: Crashed the Beechcraft Bonanza he was piloting on takeoff from Scotts Valley; suffered
+      head injuries and five weeks of anterograde amnesia.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Cult of Mac
+  - date: '1981-06-14'
+    precision: day
+    type: relationship
+    description: Married second wife Candice (Candi) Clark (divorced 1987).
+    significance: moderate
+    age_at_event: 30
+    source: encyclopedia.com; Wikipedia
+  - date: 1982-05
+    precision: month
+    type: career
+    description: Founded UNUSON and staged the first US Festival, blending music and technology (a second
+      followed in 1983); both lost money.
+    significance: moderate
+    age_at_event: 31
+    source: populartimelines; EBSCO
+  - date: '1985'
+    precision: year
+    type: career
+    description: Permanently left day-to-day work at Apple and founded CL 9 (later made the first programmable
+      universal remote).
+    significance: major
+    age_at_event: 34
+    source: Wikipedia; ADB seed
+  - date: '1986'
+    precision: year
+    type: education
+    description: Completed his UC Berkeley degree (enrolled as 'Rocky Raccoon Clark').
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia; ADB seed
+  - date: '1990'
+    precision: year
+    type: relationship
+    description: Married third wife Suzanne Mulkern.
+    significance: moderate
+    age_at_event: 39
+    source: encyclopedia.com; ADB seed
+  - date: '1994'
+    precision: year
+    type: career
+    description: Began teaching computer classes to grade-school students.
+    significance: moderate
+    age_at_event: 43
+    source: ADB seed; EBSCO

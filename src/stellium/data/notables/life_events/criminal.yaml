@@ -1,0 +1,112 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Ted Bundy
+  events:
+  - date: '1972'
+    precision: year
+    type: education
+    description: Graduated 'with distinction' with a psychology degree from the University of Washington
+      (born Theodore Robert Cowell).
+    significance: moderate
+    age_at_event: 25
+    source: Biography.com; Wikipedia
+  - date: 1973-09
+    precision: month
+    type: education
+    description: Entered University of Puget Sound Law School (later transferred to University of Utah).
+    significance: moderate
+    age_at_event: 26
+    source: Deseret News timeline; allthatsinteresting
+  - date: 1974-01
+    precision: month
+    type: other
+    description: 'Pattern onset: abruptly cut off girlfriend Diane Edwards; first confirmed attacks in
+      the Seattle area began; first confirmed killing Feb 1974.'
+    significance: major
+    age_at_event: 27
+    source: Wikipedia; refinery29 timeline
+  - date: '1975-08-16'
+    precision: day
+    type: legal
+    description: First arrest, pulled over in a Salt Lake City suburb; police found handcuffs, a ski mask
+      and other suspicious items.
+    significance: major
+    age_at_event: 28
+    source: Crime+Investigation (Deseret dates it Aug 18 — flagged)
+  - date: '1976-03-01'
+    precision: day
+    type: legal
+    description: Convicted of the aggravated kidnapping of Carol DaRonch in Utah; sentenced 1-15 years.
+    significance: major
+    age_at_event: 29
+    source: Deseret News timeline; Biography.com
+  - date: '1977-06-07'
+    precision: day
+    type: legal
+    description: 'First escape: jumped from a second-story window of the Pitkin County Courthouse in Aspen;
+      recaptured after six days.'
+    significance: major
+    age_at_event: 30
+    source: ABC News; Biography.com
+  - date: '1977-12-30'
+    precision: day
+    type: legal
+    description: 'Second escape: crawled through a ceiling opening at the Glenwood Springs jail and fled
+      to Florida.'
+    significance: major
+    age_at_event: 31
+    source: ABC News; Gnech & Associates
+  - date: '1978-01-15'
+    precision: day
+    type: legal
+    description: Chi Omega sorority attacks at Florida State University; killed Margaret Bowman and Lisa
+      Levy and injured two others.
+    significance: major
+    age_at_event: 31
+    source: ABC News timeline
+  - date: '1978-02-09'
+    precision: day
+    type: legal
+    description: Kidnapped and murdered 12-year-old Kimberly Leach in Lake City, Florida.
+    significance: major
+    age_at_event: 31
+    source: ABC News timeline
+  - date: '1978-02-15'
+    precision: day
+    type: legal
+    description: Captured for the final time in Pensacola, Florida, driving a stolen VW.
+    significance: major
+    age_at_event: 31
+    source: ABC News; Crime+Investigation
+  - date: 1980-02
+    precision: month
+    type: relationship
+    description: Married Carole Ann Boone in a surprise courtroom ceremony during the Leach murder trial.
+    significance: moderate
+    age_at_event: 33
+    source: Deseret News timeline (Feb 9, 1980); Britannica (dates it Oct 9, 1980 — flagged)
+  - date: '1980'
+    precision: year
+    type: legal
+    description: Convictions and death sentences finalized (Chi Omega verdict July 1979; Leach sentence
+      Feb 1980).
+    significance: major
+    age_at_event: 33
+    source: Deseret News; Britannica
+  - date: 1981-10
+    precision: month
+    type: childbirth
+    description: Daughter born to Carole Ann Boone (reportedly via prison conjugal visits).
+    significance: moderate
+    age_at_event: 34
+    source: Britannica; ADB seed
+  - date: '1989-01-24'
+    precision: day
+    type: legal
+    description: Executed in the electric chair at Florida State Prison, age 42.
+    significance: major
+    age_at_event: 42
+    source: Deseret News; Britannica

@@ -13,13 +13,15 @@
   subcategories:
   - existentialist
   - feminist
-  notable_for: French writer, intellectual, existentialist philosopher, political
-    activist, feminist and social theorist.
+  notable_for: French writer, intellectual, existentialist philosopher, political activist, feminist and social theorist.
   astrological_notes: Sun 17 Capricorn
   data_quality: AA
   sources:
   - https://www.astro.com/astro-databank/Beauvoir,_Simone_de
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Paris registry entry in hand; AA. Bulletproof. — "Petitalot quotes B/C in hand with 4.30 am... Sy Scholfield has since provided the birth registry entry from the online Paris archives (6th arr., acte n° 88) stating 'quatre heures et demie du matin' (4:30 AM)." — https://www.astro.com/astro-databank/Beauvoir,_Simone_de
 - name: Friedrich Nietzsche
   event_type: birth
   year: 1844
@@ -34,14 +36,15 @@
   category: philosopher
   subcategories:
   - philosopher
-  notable_for: German philosopher, cultural critic, poet, philologist, and Latin and
-    Greek scholar whose work has exerted a profound influence on Western philosophy
-    and modern intellectual history.
+  notable_for: German philosopher, cultural critic, poet, philologist, and Latin and Greek scholar whose work has exerted a profound influence on Western philosophy and modern intellectual history.
   astrological_notes: Sun 22 Libra
-  data_quality: AA
+  data_quality: B
   sources:
   - https://www.astro.com/astro-databank/Nietzsche,_Friedrich
   verified: true
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=biography rating=B: Biography without record; rated B, hint claimed AA. Soft data only. — "Sy Scholfield quotes a time of birth of 10 a.m. in the German biography, 'Der Junge Nietzsche' by his sister, Elisabeth Forster-Nietzsche (A. Kroner, 1922), p. 14." — https://www.astro.com/astro-databank/Nietzsche,_Friedrich
 - name: Jean-Paul Sartre
   event_type: birth
   year: 1905
@@ -56,13 +59,15 @@
   category: philosopher
   subcategories:
   - existentialist
-  notable_for: French philosopher, playwright, novelist, political activist, biographer,
-    and literary critic.
+  notable_for: French philosopher, playwright, novelist, political activist, biographer, and literary critic.
   astrological_notes: Sun 29 Gemini
   data_quality: AA
   sources:
   - https://www.astro.com/astro-databank/Sartre,_Jean-Paul
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth record, archive-confirmed; AA. — "Francoise Gauquelin quotes B.R. in correction of Gauquelin Vol. 6/727... Didier Geslain confirmed 18.45 from his archive." — https://www.astro.com/astro-databank/Sartre,_Jean-Paul
 - name: Hannah Arendt
   event_type: birth
   year: 1906
@@ -77,10 +82,12 @@
   category: philosopher
   subcategories:
   - political theorist
-  notable_for: German-American political theorist whose works deal with the nature
-    of power, and the subjects of politics, direct democracy, authority, and totalitarianism.
+  notable_for: German-American political theorist whose works deal with the nature of power, and the subjects of politics, direct democracy, authority, and totalitarianism.
   astrological_notes: Sun 20 Libra
   data_quality: AA
   sources:
   - https://www.astro.com/astro-databank/Arendt,_Hannah
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate cited plus corroborating quote; AA. — "Taeger Lexikon 4 quotes Arno Muller citing birth certificate... Sy Scholfield quotes... 'Das Kind Johanna... wurde geboren am 14. Oktober 1906 um 9 1/4 Uhr abends...'" — https://www.astro.com/astro-databank/Arendt,_Hannah

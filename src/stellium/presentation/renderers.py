@@ -747,6 +747,22 @@ class HTMLRenderer:
             .chart-svg svg text {{
                 font-family: 'Astronomicon', 'Apple Symbols', sans-serif;
             }}
+            .side-by-side {{
+                display: flex;
+                flex-wrap: wrap;
+                gap: 24px;
+                margin: 15px 0;
+            }}
+            .side-by-side > .sbs-col {{
+                flex: 1 1 320px;
+                min-width: 0;
+            }}
+            .side-by-side > .sbs-col table {{
+                margin: 8px 0;
+            }}
+            .side-by-side > .sbs-col h3 {{
+                margin: 0 0 4px;
+            }}
         </style>
         """
 
@@ -830,23 +846,31 @@ class HTMLRenderer:
                 parts.append(self._render_text(sub_data))
             elif sub_type == "svg":
                 parts.append(self._render_svg(sub_data))
+            elif sub_type == "side_by_side_tables":
+                parts.append(self._render_side_by_side_tables(sub_data))
             elif sub_type == "compound":
                 parts.append(self._render_compound(sub_data))
         return "\n".join(parts)
 
     def _render_side_by_side_tables(self, data: dict[str, Any]) -> str:
-        """Render multiple tables with sub-headings."""
-        parts = []
-        for table_data in data.get("tables", []):
+        """Render tables truly side by side via a responsive CSS flex row.
+
+        HTML is a visual medium, so (like the Rich terminal and Typst/PDF) it lays
+        the tables out horizontally; the row wraps to stacked columns on narrow
+        viewports. Linear-text formats (markdown/plain/prose) stack instead.
+        """
+        tables_data = data.get("tables", [])
+        if not tables_data:
+            return ""
+        columns = []
+        for table_data in tables_data:
             title = table_data.get("title", "")
-            if title:
-                parts.append(f"<h3>{title}</h3>")
-            parts.append(
-                self._render_table(
-                    {"headers": table_data["headers"], "rows": table_data["rows"]}
-                )
+            inner = f"<h3>{title}</h3>" if title else ""
+            inner += self._render_table(
+                {"headers": table_data["headers"], "rows": table_data["rows"]}
             )
-        return "\n".join(parts)
+            columns.append(f'<div class="sbs-col">{inner}</div>')
+        return '<div class="side-by-side">' + "".join(columns) + "</div>"
 
     def _render_svg(self, data: dict[str, Any]) -> str:
         """Render inline SVG content."""

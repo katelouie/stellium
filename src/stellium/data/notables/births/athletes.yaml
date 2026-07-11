@@ -21,6 +21,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Lee,_Bruce'
   - Robert Paige quoting B.C. in Constellations '77
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate on file; AA. 07:12 precision traces to the certificate, not a rectifier. — "Robert Paige quotes B.C. in Constellations '77. Same in Contemporary American Horoscopes. Birth certificate (Lee Jun Fan) now on file, found online by Sy Scholfield." — https://www.astro.com/astro-databank/Lee,_Bruce
 - name: Muhammad Ali
   event_type: birth
   year: 1942
@@ -43,6 +46,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Ali,_Muhammad'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand from Steinbrecher. (Same in Gauquelin Book of American Charts)." — https://www.astro.com/astro-databank/Ali,_Muhammad
 - name: Michael Jordan
   event_type: birth
   year: 1963
@@ -65,6 +71,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Jordan,_Michael'
   verified: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Kate decision - BC copy accepted as genuine; AA at 13:40 over Jordan's contradictory 12:50 AM self-report. — "Birth certificate sold at auction; a copy is on file, birth time 1:40 PM (13:40)." — https://www.astro.com/astro-databank/Jordan,_Michael
+  has_reliable_time: true
 - name: Serena Williams
   event_type: birth
   year: 1981
@@ -87,6 +96,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Williams,_Serena'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Quoted civil record (Hall of Records); AA. — "Shelley Ackerman quotes the Hall of Records" — https://www.astro.com/astro-databank/Williams,_Serena
 - name: Pelé
   event_type: birth
   year: 1940
@@ -108,9 +120,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Pelé'
   verified: false
   has_reliable_time: true
-  verification_notes: >
-    Birth CERTIFICATE gives 21 Oct 1940, 03:00, Três Corações (AA). His 2006
-    autobiography claims Oct 23 — prefer the record, flag the discrepancy.
+  verification_notes: |
+    Birth CERTIFICATE gives 21 Oct 1940, 03:00, Três Corações (AA), archived at the Casa de Cultura de Três Corações (confirmed via ADB/Borges). His 2006 autobiography claims Oct 23 — the certificate wins; the date "dispute" is resolved in favour of the record. Legitimate AA, kept. Caveat for corpus use: Brazilian births were often registered days after the fact, so the 03:00 clock time is softer than a US/UK certificate — trust the date fully, the minute less.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Brazilian birth-certificate copy in hand; accept DATE, treat 03:00 minute as soft. Note also records a REJECTED Starkman rectification (02:50:38) — the accepted datum is the BC, not that. — "B.C. copy in hand from Marcello Borges stating Pele's birth date as October 21st." — https://www.astro.com/astro-databank/Pel%C3%A9
 - name: Usain Bolt
   event_type: birth
   year: 1986
@@ -215,3 +227,29 @@
   sources:
   - https://www.astro.com/astro-databank/King,_Billie_Jean
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Quoted birth certificate; AA. Round-ish 11:45 is the record. — "D.C. Doane quotes B.C. in 'Progressions in Action.' (Same in Contemporary American Horoscopes and Gauquelin Book of Charts.)" — https://www.astro.com/astro-databank/King,_Billie_Jean
+- name: Sasha Cohen
+  event_type: birth
+  year: 1984
+  month: 10
+  day: 26
+  hour: 21
+  minute: 21
+  latitude: 34.05
+  longitude: -118.25
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+  - figure skater
+  notable_for: American figure skater; Olympic silver medallist (2006).
+  astrological_notes: Sun 3 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Cohen,_Sasha
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (PT).

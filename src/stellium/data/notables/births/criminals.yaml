@@ -25,6 +25,9 @@
   sources:
   - "AstroDatabank: https://www.astro.com/astro-databank/Bundy,_Ted"
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Quoted birth certificate; AA. — "T.Pat Davis quotes B.C." — https://www.astro.com/astro-databank/Bundy,_Ted
 - name: Al Capone
   event_type: birth
   year: 1899

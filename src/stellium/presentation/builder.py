@@ -6,6 +6,7 @@ by adding sections one at a time, then rendering in their chosen format.
 """
 
 import datetime as dt
+from collections.abc import Iterable
 from typing import Any
 
 from stellium.core.comparison import Comparison
@@ -35,6 +36,8 @@ from .sections import (
     PlanetPositionSection,
     ProfectionSection,
     ProfectionVisualizationSection,
+    SectConvergenceMatrixSection,
+    SectRectificationSection,
     StationSection,
     ZodiacalReleasingSection,
     ZRVisualizationSection,
@@ -724,6 +727,66 @@ class ReportBuilder:
                 show_description=show_description,
             )
         )
+        return self
+
+    def with_sect_rectification(
+        self,
+        events: Iterable | None = None,
+        temperament: Iterable | None = None,
+    ) -> "ReportBuilder":
+        """Add the compare-hypothesis **sect rectification** section.
+
+        Constructs both the day and night hypotheses from the chart's birth date +
+        place, derives the sect-dependent structures each implies (sect light,
+        out-of-sect malefic, in-sect benefic, Moon band), and anchors them with the
+        validated daylight × malefic-of-sect classifier (~70% LOO, out-of-sample
+        70.6%). An **indicator, not an oracle** — sect is only recoverable to a
+        truth-resolution ceiling, so the section is built for human adjudication.
+
+        Args:
+            events: life events to weigh (a sequence of
+                :class:`~stellium.data.LifeEvent`). If ``None``, auto-looked-up for
+                notables by chart name. Pass ``()`` for a geometry-only analysis.
+            temperament: soft character traits
+                (:class:`~stellium.data.Temperament`); auto-looked-up if ``None``.
+
+        Returns:
+            Self for chaining.
+
+        Example:
+            >>> chart = ChartBuilder.from_notable("Frida Kahlo").calculate()
+            >>> (ReportBuilder().from_chart(chart)
+            ...     .with_sect_rectification()
+            ...     .render(format="markdown"))
+        """
+        self._sections.append(
+            SectRectificationSection(events=events, temperament=temperament)
+        )
+        return self
+
+    def with_sect_convergence_matrix(
+        self,
+        events: Iterable | None = None,
+    ) -> "ReportBuilder":
+        """Add the **two-lens sect convergence matrix** (exploratory, ~10 s).
+
+        Lens A lays out the structurally-distinct charts across the 24h scored by
+        solar-arc / transits / profection; Lens B histograms which times the events
+        themselves nominate. The timing signals are *whisper-level* by the study's
+        own findings (single techniques reach only the ~55–59th percentile and blind
+        combination cancels) — so this is a **display for human adjudication**, never
+        a verdict, and it defers to the validated sect anchor on sect.
+
+        Heavy: it sweeps 96 candidate times with primary directions per candidate.
+        Prefer :meth:`with_sect_rectification` for the fast validated answer.
+
+        Args:
+            events: life events to weigh; auto-looked-up for notables if ``None``.
+
+        Returns:
+            Self for chaining.
+        """
+        self._sections.append(SectConvergenceMatrixSection(events=events))
         return self
 
     def with_house_cusps(self, systems: str | list[str] = "all") -> "ReportBuilder":

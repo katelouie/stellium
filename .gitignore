@@ -56,3 +56,5 @@ examples/multicharts/
 # Claude planning files
 .claude/
 claude_info/
+# Untracked local rectification proving harness (superseded by src/stellium/rectification/)
+docs/development/specs/rectification/harness/

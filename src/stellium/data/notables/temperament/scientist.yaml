@@ -1,0 +1,139 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Alan Turing
+  temperament:
+  - trait: Shy, reserved, boyish; often mistaken for an undergraduate
+    tags:
+    - shy
+    - reserved
+    evidence: Hodges and colleagues describe him as shy, kindly, boyish, with a stammer
+    source: Hodges (1983); PBS NewsHour; Copeland
+  - trait: Unconventional, indifferent to social convention and dress
+    tags:
+    - unconventional
+    - nonconformist
+    evidence: 'Hodges (quoted by PBS NewsHour): ''He was a hippie before his time... very casual in those
+      days, and thought very scruffy'''
+    source: Hodges (1983), via PBS NewsHour
+  - trait: Honest and unapologetic, even at personal cost
+    tags:
+    - honest
+    evidence: On arrest said the law was wrong; made little effort to hide his homosexuality; gave a frank
+      statement
+    source: Hodges (1983); PBS NewsHour
+  - trait: Humorous, cheerful, brimming with boyish enthusiasm
+    tags:
+    - humorous
+    - curious
+    evidence: 'Copeland: ''cheerful, lively, stimulating, comic''; raucous laugh;  keen sense of humor'
+    source: Copeland, OUPblog; Slate (on Hodges)
+  - trait: Athletic and solitary; a serious distance runner
+    tags:
+    - disciplined
+    - solitary
+    evidence: 'Competitive amateur marathoner: personal best 2 hr 46 min 3 sec  at the 1947 AAA Championships;
+      ran between work sites; Newman called him ''a confirmed solitary'''
+    source: MacTutor / Andrew Hodges; PBS NewsHour
+- name: Albert Einstein
+  temperament:
+  - trait: Intensely curious with a childlike sense of wonder
+    tags:
+    - curious
+    evidence: 'Isaacson: curiosity from a ''childlike sense of marvel''; ''I have no special talents,
+      I am only passionately curious'''
+    source: Isaacson (2007)
+  - trait: Rebellious and nonconformist, hostile to authority
+    tags:
+    - nonconformist
+    - independent
+    evidence: 'Isaacson: ''the most true legend is how rebellious and defiant of authority he was''; ''A
+      foolish faith in authority is the worst enemy of truth'''
+    source: Isaacson (2007)
+  - trait: Emotionally detached in personal relationships
+    tags:
+    - reserved
+    - aloof
+    evidence: Isaacson documents his 'appalling missteps as a father' and cold cohabitation terms with
+      his first wife; walled out those close to him
+    source: Isaacson (2007)
+  - trait: Absent-minded with a keen sense of humor
+    tags:
+    - absent-minded
+    - humorous
+    evidence: 'Isaacson: extreme absentmindedness, sense of humor, love of music'
+    source: Isaacson (2007)
+  - trait: Committed to intellectual freedom and pacifism
+    tags:
+    - principled
+    evidence: 'Isaacson: morality based on ''free minds, free spirits, and free individuals''; lifelong
+      (if complicated) pacifism'
+    source: Isaacson (2007)
+- name: Carl Sagan
+  temperament:
+  - trait: Insatiably curious with lifelong childlike wonder
+    tags:
+    - curious
+    evidence: Davidson traces his 'sense of wonder' to his father;  Sagan 'never lost his sense of childlike
+      wonder in the universe'
+    source: 'Davidson, Carl Sagan: A Life (1999); American Scientist'
+  - trait: Charismatic and a natural teacher/communicator
+    tags:
+    - charismatic
+    - eloquent
+    evidence: '''A natural teacher, he loved to explain things'';  charismatic public persona; Cosmos
+      reached ~500M viewers'
+    source: MIT (David Morrison); Poundstone (1999)
+  - trait: Fiercely ambitious and competitive
+    tags:
+    - ambitious
+    - competitive
+    evidence: 'Davidson: ''ferocious work ethic and a ruthless competitive streak''; ''a dedicated careerist
+      who planned every stage of his ascent'''
+    source: Davidson (1999); American Scientist
+  - trait: Skeptical and rational; committed debunker of pseudoscience
+    tags:
+    - skeptical
+    - rational
+    evidence: Promoted the 'Baloney Detection Kit'; popularized 'Extraordinary claims require extraordinary
+      evidence'
+    source: Wikipedia; Britannica; The Demon-Haunted World
+  - trait: Career-obsessed; at times arrogant and demanding privately
+    tags:
+    - driven
+    - difficult
+    evidence: Both first two wives said he gave too little time to family;  'arrogant and demanding in
+      his personal life'
+    source: Davidson (1999); Poundstone (1999); MIT
+- name: Sigmund Freud
+  temperament:
+  - trait: Extraordinarily disciplined and hardworking
+    tags:
+    - disciplined
+    - driven
+    evidence: Produced 24 volumes of writing;  rigorous daily clinical and writing schedule across decades
+    source: 'Gay, Freud: A Life for Our Time (1988)'
+  - trait: Ambitious; determined to found a lasting movement
+    tags:
+    - ambitious
+    evidence: Built and controlled the psychoanalytic movement; sought priority and intellectual legacy
+    source: Gay (1988)
+  - trait: Stubborn and intolerant of dissent; prone to breaks with disciples
+    tags:
+    - stubborn
+    - combative
+    evidence: Breaks with Jung (1913) and Adler; demanded loyalty within his inner circle
+    source: Gay (1988)
+  - trait: Stoic and courageous in the face of illness
+    tags:
+    - stoic
+    evidence: Endured 16 years and 30+ operations for oral cancer while working; called it 'my dear old
+      cancer'
+    source: Hektoen International; Gay (1988)
+  - trait: Rationalist; skeptical of religion, committed to facing hard truths
+    tags:
+    - rational
+    - skeptical
+    evidence: Avowed atheist; insisted on reality over consoling illusion (The Future of an Illusion)
+    source: Britannica; Gay (1988)

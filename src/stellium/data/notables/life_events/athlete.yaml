@@ -1,0 +1,603 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Billie Jean King
+  events:
+  - date: '1961'
+    precision: year
+    type: recognition
+    description: Won the Wimbledon women's doubles title with Karen Hantze (youngest pair to do so), age
+      17
+    significance: major
+    age_at_event: 17
+    source: Britannica; International Tennis Hall of Fame
+  - date: '1965-09-17'
+    precision: day
+    type: relationship
+    description: Married Larry King in Long Beach, California
+    significance: major
+    age_at_event: 21
+    source: Wikipedia 'Billie Jean King'; WMST/Fandom
+  - date: '1966'
+    precision: year
+    type: recognition
+    description: Won her first Wimbledon singles title; became world No. 1
+    significance: major
+    age_at_event: 22
+    source: Britannica; National Women's History Museum
+  - date: '1968'
+    precision: year
+    type: recognition
+    description: Won the Australian Open singles title
+    significance: moderate
+    age_at_event: 24
+    source: Britannica; International Tennis Hall of Fame
+  - date: 1970-10
+    precision: month
+    type: career
+    description: One of the 'Original 9' who launched the Virginia Slims women's professional circuit
+    significance: major
+    age_at_event: 26
+    source: International Tennis Hall of Fame; U.S. National Archives
+  - date: '1971-09-27'
+    precision: day
+    type: windfall
+    description: Became the first woman athlete to earn more than $100,000 in a season, reaching $117,000,
+      clinched by defeating Rosie Casals 7–5, 6–1 at the Virginia Slims Thunderbird Invitational in Phoenix
+    significance: major
+    age_at_event: 27
+    source: International Tennis Hall of Fame (tennisfame.com)
+  - date: '1972'
+    precision: year
+    type: recognition
+    description: Won the French Open singles title; named Sports Illustrated Sportsperson of the Year
+      (first woman)
+    significance: major
+    age_at_event: 28
+    source: Britannica; U.S. National Archives
+  - date: '1973-09-20'
+    precision: day
+    type: recognition
+    description: Defeated Bobby Riggs in the 'Battle of the Sexes' at the Houston Astrodome before ~90
+      million TV viewers
+    significance: major
+    age_at_event: 29
+    source: U.S. National Archives 'Looking Beyond the Battle of the Sexes'; Britannica
+  - date: '1973'
+    precision: year
+    type: career
+    description: Founded and became first president of the Women's Tennis Association (WTA)
+    significance: major
+    age_at_event: 29
+    source: Wikipedia; Britannica
+  - date: '1974'
+    precision: year
+    type: career
+    description: Co-founded the Women's Sports Foundation and womenSports magazine; World TeamTennis began
+      play
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Britannica; National Women's History Museum
+  - date: 1981-05
+    precision: month
+    type: legal
+    description: Publicly outed as gay via a palimony lawsuit by former assistant Marilyn Barnett; lost
+      endorsements
+    significance: major
+    age_at_event: 37
+    source: Biography.com; Britannica; National Women's History Museum
+  - date: '1984'
+    precision: year
+    type: career
+    description: Became major owner of World TeamTennis, having become the first female commissioner of
+      a pro sports league
+    significance: moderate
+    age_at_event: 40
+    source: Wikipedia; Britannica
+  - date: '1987'
+    precision: year
+    type: recognition
+    description: Inducted into the International Tennis Hall of Fame
+    significance: major
+    age_at_event: 43
+    source: International Tennis Hall of Fame; Britannica
+  - date: '1987'
+    precision: year
+    type: relationship
+    description: Divorced Larry King
+    significance: major
+    age_at_event: 43
+    source: Biography.com; Britannica
+  - date: '2018-10-18'
+    precision: day
+    type: relationship
+    description: Married longtime partner Ilana Kloss (officiated by David Dinkins)
+    significance: major
+    age_at_event: 74
+    source: Britannica (married Ilana Kloss, 18 October 2018)
+- name: Bruce Lee
+  events:
+  - date: '1959'
+    precision: year
+    type: relocation
+    description: Returned to the United States (Seattle) from Hong Kong as a young man
+    significance: major
+    age_at_event: 18
+    source: Biography.com; Encyclopedia.com
+  - date: 1961-03
+    precision: month
+    type: education
+    description: Enrolled at the University of Washington
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia 'Bruce Lee'
+  - date: '1964-08-02'
+    precision: day
+    type: recognition
+    description: Demonstrated at the Long Beach International Karate Championships; spotted (via Jay Sebring),
+      leading to The Green Hornet
+    significance: major
+    age_at_event: 23
+    source: World JKD Federation timeline; astro.com Astro-Databank
+  - date: '1964-08-17'
+    precision: day
+    type: relationship
+    description: Married Linda Emery in Seattle
+    significance: major
+    age_at_event: 23
+    source: brucelee.com; Republic World; Wikipedia
+  - date: '1965-02-01'
+    precision: day
+    type: childbirth
+    description: Son Brandon Lee born
+    significance: major
+    age_at_event: 24
+    source: brucelee.com; Republic World; World History Edu
+  - date: '1965-02-08'
+    precision: day
+    type: bereavement_parent
+    description: Father Lee Hoi Chuen died in Hong Kong
+    significance: major
+    age_at_event: 24
+    source: frozen brief; standard Bruce Lee chronologies
+  - date: '1966-09-09'
+    precision: day
+    type: recognition
+    description: The Green Hornet TV series premiered (Lee as Kato)
+    significance: major
+    age_at_event: 25
+    source: World JKD Federation timeline; Wikipedia
+  - date: '1967-02-05'
+    precision: day
+    type: career
+    description: Opened the Los Angeles (Chinatown) branch of the Jun Fan Gung Fu Institute
+    significance: moderate
+    age_at_event: 26
+    source: astro.com Astro-Databank; brucelee.com
+  - date: '1969-04-19'
+    precision: day
+    type: childbirth
+    description: Daughter Shannon Lee born
+    significance: major
+    age_at_event: 28
+    source: brucelee.com; Republic World; Wikipedia
+  - date: '1970'
+    precision: year
+    type: health_crisis
+    description: Suffered a serious back injury; ordered to months of bed rest
+    significance: major
+    age_at_event: 29
+    source: brucelee.com
+  - date: '1971'
+    precision: year
+    type: career
+    description: Starred in his first leading role, The Big Boss (filmed in Thailand), a Hong Kong box-office
+      hit
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Bruce Lee Foundation
+  - date: '1972'
+    precision: year
+    type: career
+    description: Starred in Fist of Fury and wrote/directed The Way of the Dragon
+    significance: major
+    age_at_event: 31
+    source: Wikipedia; Bruce Lee Foundation
+  - date: 1973-02
+    precision: month
+    type: career
+    description: Filming of Enter the Dragon began in Hong Kong (completed April 1973)
+    significance: major
+    age_at_event: 32
+    source: Wikipedia; Bruce Lee chronologies
+  - date: '1973-07-20'
+    precision: day
+    type: health_crisis
+    description: Died in Hong Kong, age 32, of cerebral edema (attributed to a reaction to a painkiller)
+    significance: major
+    age_at_event: 32
+    source: Wikipedia; History.com; Biography.com
+- name: Michael Jordan
+  events:
+  - date: '1982-03-29'
+    precision: day
+    type: recognition
+    description: Hit the game-winning jump shot for North Carolina in the NCAA championship game vs Georgetown;
+      Jordan later called it the major turning point of his career.
+    significance: major
+    age_at_event: 19
+    source: Wikipedia, Michael Jordan; NBA.com Legends profile
+  - date: '1984-06-19'
+    precision: day
+    type: career
+    description: Selected 3rd overall by the Chicago Bulls in the NBA draft.
+    significance: major
+    age_at_event: 21
+    source: Yahoo Sports Michael Jordan timeline; Basketball-Reference
+  - date: '1984-08-10'
+    precision: day
+    type: recognition
+    description: Won Olympic gold with the US team in Los Angeles, scoring 20 in the gold-medal game.
+    significance: moderate
+    age_at_event: 21
+    source: Yahoo Sports timeline
+  - date: '1989-09-02'
+    precision: day
+    type: relationship
+    description: Married Juanita Vanoy in Las Vegas.
+    significance: major
+    age_at_event: 26
+    source: ADB seed, corroborated by biographical timelines
+  - date: '1991-06-12'
+    precision: day
+    type: recognition
+    description: Won first NBA championship with the Bulls (first of six).
+    significance: major
+    age_at_event: 28
+    source: Wikipedia; Britannica
+  - date: '1993-08-03'
+    precision: day
+    type: bereavement_parent
+    description: Father James R. Jordan Sr. murdered; killed July 23, 1993, body found Aug 3, 1993, identified
+      Aug 13.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia James R. Jordan Sr.; NBC Chicago timeline
+  - date: '1993-10-06'
+    precision: day
+    type: career
+    description: Announced first retirement from the NBA, later playing minor-league baseball.
+    significance: major
+    age_at_event: 30
+    source: Yahoo Sports timeline
+  - date: '1995-03-18'
+    precision: day
+    type: career
+    description: Returned to the Bulls with a two-word statement, 'I'm back.'
+    significance: major
+    age_at_event: 32
+    source: Yahoo Sports timeline; Britannica
+  - date: '1997-06-11'
+    precision: day
+    type: recognition
+    description: 'The ''Flu Game'' (Game 5 of the NBA Finals at Utah''s Delta Center): Jordan scored 38
+      points (7 reb, 5 ast, 3 stl) in a 90-88 Bulls win while ill, hitting a go-ahead 3-pointer with ~25
+      seconds left; trainer Tim Grover later attributed the illness to food poisoning.'
+    significance: moderate
+    age_at_event: 34
+    source: NBA.com; Andscape
+  - date: '1999-01-13'
+    precision: day
+    type: career
+    description: Announced second retirement.
+    significance: moderate
+    age_at_event: 35
+    source: ADB seed; Wikipedia
+  - date: '2009-09-11'
+    precision: day
+    type: recognition
+    description: Inducted into the Naismith Memorial Basketball Hall of Fame.
+    significance: major
+    age_at_event: 46
+    source: Yahoo Sports timeline
+  - date: '2013-04-27'
+    precision: day
+    type: relationship
+    description: Married Yvette Prieto.
+    significance: moderate
+    age_at_event: 50
+    source: ADB seed
+- name: Muhammad Ali
+  events:
+  - date: 1960-09
+    precision: month
+    type: recognition
+    description: Won light-heavyweight gold medal at the Rome Olympics, age 18.
+    significance: major
+    age_at_event: 18
+    source: Players Bio; Biography.com
+  - date: '1960-10-29'
+    precision: day
+    type: career
+    description: Professional boxing debut, a six-round decision over Tunney Hunsaker.
+    significance: moderate
+    age_at_event: 18
+    source: Players Bio; ADB seed
+  - date: '1964-02-25'
+    precision: day
+    type: recognition
+    description: Beat Sonny Liston to become world heavyweight champion; changed name to Muhammad Ali
+      shortly after.
+    significance: major
+    age_at_event: 22
+    source: Wikipedia; Biography.com
+  - date: '1964-08-14'
+    precision: day
+    type: relationship
+    description: Married first wife Sonji Roi (divorced ~1965/1966).
+    significance: moderate
+    age_at_event: 22
+    source: ADB seed; Biography.com
+  - date: 1967-04
+    precision: month
+    type: legal
+    description: Refused induction into the US Army; stripped of title and boxing license, convicted of
+      draft evasion.
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; Biography.com
+  - date: '1967-08-18'
+    precision: day
+    type: relationship
+    description: Married second wife Belinda Boyd (later Khalilah Ali); divorced 1977.
+    significance: moderate
+    age_at_event: 25
+    source: Wikipedia Khalilah Ali
+  - date: 1971-06
+    precision: month
+    type: legal
+    description: US Supreme Court overturned his draft-evasion conviction.
+    significance: major
+    age_at_event: 29
+    source: Biography.com
+  - date: '1974-10-30'
+    precision: day
+    type: recognition
+    description: Beat George Foreman ('Rumble in the Jungle') to regain the heavyweight title.
+    significance: major
+    age_at_event: 32
+    source: Wikipedia
+  - date: '1975-10-01'
+    precision: day
+    type: recognition
+    description: Beat Joe Frazier in the 'Thrilla in Manila.'
+    significance: major
+    age_at_event: 33
+    source: ADB seed; Wikipedia
+  - date: '1977'
+    precision: year
+    type: relationship
+    description: Married third wife Veronica Porché (divorced 1986).
+    significance: moderate
+    age_at_event: 35
+    source: Biography.com; Wikipedia
+  - date: '1984'
+    precision: year
+    type: health_crisis
+    description: Diagnosed with Parkinson's syndrome.
+    significance: major
+    age_at_event: 42
+    source: ADB seed; Wikipedia
+  - date: '1986-11-19'
+    precision: day
+    type: relationship
+    description: Married fourth and final wife Yolanda 'Lonnie' Williams.
+    significance: moderate
+    age_at_event: 44
+    source: Wikipedia
+  - date: '1996-07-19'
+    precision: day
+    type: recognition
+    description: Lit the Olympic cauldron at the Atlanta Summer Games.
+    significance: major
+    age_at_event: 54
+    source: ADB seed; NPR/Eig
+  - date: '2016-06-03'
+    precision: day
+    type: bereavement_other
+    description: Died of septic shock after respiratory illness, age 74.
+    significance: major
+    age_at_event: 74
+    source: Wikipedia; Biography.com
+- name: Pelé
+  events:
+  - date: '1956-09-07'
+    precision: day
+    type: career
+    description: Scored his first professional goal on his league debut for Santos vs Corinthians.
+    significance: major
+    age_at_event: 15
+    source: CNN Pelé Fast Facts
+  - date: '1958-06-29'
+    precision: day
+    type: recognition
+    description: Won first World Cup with Brazil at age 17, the youngest World Cup winner.
+    significance: major
+    age_at_event: 17
+    source: Wikipedia; New World Encyclopedia
+  - date: '1962'
+    precision: year
+    type: recognition
+    description: Won second World Cup (Chile), though injured early in the tournament.
+    significance: major
+    age_at_event: 21
+    source: Wikipedia
+  - date: '1966-02-21'
+    precision: day
+    type: relationship
+    description: Married first wife Rosemeri dos Reis Cholbi.
+    significance: major
+    age_at_event: 25
+    source: Kiddle/Wikipedia; ADB seed
+  - date: '1969-11-19'
+    precision: day
+    type: recognition
+    description: Scored his 1,000th career goal, a national event in Brazil.
+    significance: major
+    age_at_event: 29
+    source: CNN Pelé Fast Facts
+  - date: '1970-06-21'
+    precision: day
+    type: recognition
+    description: Won third World Cup (Mexico); named player of the tournament.
+    significance: major
+    age_at_event: 29
+    source: StarsUnfolded; Wikipedia
+  - date: '1975'
+    precision: year
+    type: relocation
+    description: Came out of retirement to sign with the New York Cosmos (NASL), relocating to the US;
+      debut June 15, 1975.
+    significance: major
+    age_at_event: 34
+    source: EBSCO; New World Encyclopedia
+  - date: '1977-10-01'
+    precision: day
+    type: career
+    description: Played final match, an exhibition between Cosmos and Santos; played a half for each.
+    significance: major
+    age_at_event: 36
+    source: CNN; New World Encyclopedia
+  - date: '1982'
+    precision: year
+    type: relationship
+    description: Divorced Rosemeri (in the Dominican Republic).
+    significance: moderate
+    age_at_event: 41
+    source: Wikipedia; EBSCO
+  - date: 1994-04
+    precision: month
+    type: relationship
+    description: Married second wife, psychologist/gospel singer Assíria Lemos Seixas.
+    significance: moderate
+    age_at_event: 53
+    source: Kiddle/Wikipedia
+  - date: '1996-09-28'
+    precision: day
+    type: childbirth
+    description: Twins Joshua and Celeste born (via fertility treatment).
+    significance: moderate
+    age_at_event: 55
+    source: Kiddle/Wikipedia; ADB seed
+  - date: 2016-07
+    precision: month
+    type: relationship
+    description: Married third wife Marcia Aoki.
+    significance: moderate
+    age_at_event: 75
+    source: Kiddle/Wikipedia
+  - date: '2022-12-29'
+    precision: day
+    type: bereavement_other
+    description: Died in São Paulo of multiple organ failure related to colon cancer, age 82.
+    significance: major
+    age_at_event: 82
+    source: Kiddle/Wikipedia
+- name: Serena Williams
+  events:
+  - date: 1995-09
+    precision: month
+    type: career
+    description: Turned professional at 14, losing her debut at the Bell Challenge in Quebec City.
+    significance: major
+    age_at_event: 14
+    source: CNN/Al Jazeera timelines
+  - date: 1998-02
+    precision: month
+    type: windfall
+    description: Signed a five-year Puma deal worth a reported $12-13 million, officially announced February
+      1998 when she was ranked world No. 41.
+    significance: moderate
+    age_at_event: 16
+    source: Andscape ('The little-known story of Serena Williams' first endorsement deal'); Sportskeeda
+  - date: '1999-09-11'
+    precision: day
+    type: recognition
+    description: Won first Grand Slam singles title at the US Open, beating Martina Hingis.
+    significance: major
+    age_at_event: 17
+    source: Al Jazeera; Britannica
+  - date: '2002-07-08'
+    precision: day
+    type: recognition
+    description: Reached world No. 1 in singles for the first time.
+    significance: major
+    age_at_event: 20
+    source: ADB seed; WTA records
+  - date: '2002-10-29'
+    precision: day
+    type: bereavement_other
+    description: Parents Richard Williams and Oracene Price divorced.
+    significance: moderate
+    age_at_event: 21
+    source: ADB seed
+  - date: '2003-09-14'
+    precision: day
+    type: bereavement_other
+    description: Half-sister Yetunde Price shot and killed in Compton.
+    significance: major
+    age_at_event: 21
+    source: ADB seed; press reports
+  - date: 2011-02
+    precision: month
+    type: health_crisis
+    description: Suffered a pulmonary embolism (blood clot in lungs) and related complications.
+    significance: major
+    age_at_event: 29
+    source: ADB seed; Wikipedia
+  - date: '2016-12-10'
+    precision: day
+    type: relationship
+    description: Engaged to Reddit co-founder Alexis Ohanian.
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia; populartimelines
+  - date: '2017-01-28'
+    precision: day
+    type: recognition
+    description: Won 2017 Australian Open (23rd Grand Slam, Open-era record) while roughly eight weeks
+      pregnant.
+    significance: major
+    age_at_event: 35
+    source: Al Jazeera; Britannica
+  - date: '2017-09-01'
+    precision: day
+    type: childbirth
+    description: Gave birth to daughter Alexis Olympia Ohanian Jr. by emergency C-section, with severe
+      complications.
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Al Jazeera
+  - date: '2017-11-16'
+    precision: day
+    type: relationship
+    description: Married Alexis Ohanian in New Orleans.
+    significance: major
+    age_at_event: 36
+    source: Wikipedia; Britannica
+  - date: '2022-09-02'
+    precision: day
+    type: career
+    description: Played what she framed as her final tournament match / retirement (US Open).
+    significance: major
+    age_at_event: 40
+    source: Al Jazeera timeline
+  - date: 2023-08
+    precision: month
+    type: childbirth
+    description: Gave birth to second daughter, Adira River Ohanian.
+    significance: moderate
+    age_at_event: 41
+    source: Wikipedia; CNN Fast Facts

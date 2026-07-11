@@ -28,6 +28,9 @@
   - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
   verified: true
 
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate; AA. — "Source: birth certificate, Astro Databank." — https://www.astro.com/astro-databank/Jobs,_Steve
 - name: Elon Musk
   event_type: birth
   year: 1971
@@ -49,15 +52,18 @@
     Tesla, owner of X (Twitter). Co-founded PayPal, Neuralink, and OpenAI.
     Became world's richest person in 2021.
   astrological_notes: Sun 6 Cancer
-  data_quality: A
+  data_quality: B
   sources:
   - "Walter Isaacson, 'Elon Musk' (2023): '7:30 on the morning of June 28, 1971' — biography, NOT a birth certificate."
   verified: false
 
-  has_reliable_time: true
+  has_reliable_time: false
   verification_notes: >
-    Time provenance is a biography; keep at A, never AA. Isaacson doesn't cite
-    where the 07:30 came from.
+    Time provenance is an uncited biography quote — Isaacson gives '07:30' but
+    never says where it came from. Per A_Rating-Rodden_source_guide.md a
+    biography time is a B source to distrust when reputation is at stake, so the
+    prior 'A + has_reliable_time: true' contradicted our own rule: downgraded to
+    B and time flagged NOT reliable. Not usable as rectification ground truth.
 - name: Walt Disney
   event_type: birth
   year: 1901
@@ -84,6 +90,9 @@
   - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
   verified: true
 
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=memory rating=A: Kate decision - reject; no document to recover and the two memory times conflict by ~7 hours. Not corpus ground truth. — "No certificate exists (Illinois didn't mandate until 1916); Cook County found no BC in 2006. Competing 12:35 AM vs 7:30 AM." — https://www.astro.com/astro-databank/Disney,_Walt
+  has_reliable_time: false
 - name: Warren Buffett
   event_type: birth
   year: 1930
@@ -180,9 +189,6 @@
   - "AstroDataBank, Wozniak,_Steve: 09:45, 'LMR quotes announcement in CA magazine 7/1982 (same Contemporary American Horoscopes)', Rodden AA (accuracy: excellent)"
   verified: false
   has_reliable_time: true
-  verification_notes: >
-    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file
-    rounded time to 09:45; keep AA/reliable. High confidence. Caveat: the AA
-    rests on a 1982 printed birth announcement (Contemporary American
-    Horoscopes), not a hand-sighted certificate; a stricter "AA = sighted BC/BR"
-    rule would prefer A.
+  verification_notes: |
+    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file rounded time to 09:45; keep AA/reliable. High confidence. Caveat: the AA rests on a 1982 printed birth announcement (Contemporary American Horoscopes), not a hand-sighted certificate; a stricter "AA = sighted BC/BR" rule would prefer A.
+    [ADB-verified] verdict=accept bucket=document rating=AA: ADB classes as Quoted BC/BR, AA. Contemporaneous birth announcement; document-class. (Note-of-record is a magazine announcement, not the certificate directly.) — "LMR quotes announcement in CA magazine 7/1982. (Same in Contemporary American Horoscopes.)" — https://www.astro.com/astro-databank/Wozniak,_Steve

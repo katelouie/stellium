@@ -1,0 +1,194 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Frida Kahlo
+  temperament:
+  - trait: Vivacious / magnetic, with a love of drama and spectacle
+    tags:
+    - vivacious
+    - flamboyant
+    evidence: Herrera describes 'a woman of extreme magnetism and originality'  with a dramatic love of
+      spectacle  (e.g. arriving at her 1953 show by ambulance to a bed in the gallery)
+    source: 'Hayden Herrera, Frida: A Biography of Frida Kahlo (1983)'
+  - trait: Precocious and rebellious
+    tags:
+    - rebellious
+    - defiant
+    evidence: Herrera paints a 'precocious and rebellious child';  she reset her birth year to 1910 to
+      align with the Revolution
+    source: Hayden Herrera, Frida (1983)
+  - trait: Resilient in constant physical pain
+    tags:
+    - resilient
+    - stoic
+    evidence: Lived in lifelong pain after the accident yet her persona remained vibrant; self-portraits
+      read as symbols of resilience
+    source: Hayden Herrera, Frida (1983)
+  - trait: Politically passionate (committed communist)
+    tags:
+    - ideological
+    - passionate
+    evidence: Joined the Mexican Communist Party (1927); lifelong leftist, Mexican-nationalist convictions
+    source: Hayden Herrera, Frida (1983); Wikipedia
+  - trait: Sensual/fiery with bawdy humor
+    tags:
+    - sensual
+    - irreverent
+    evidence: Herrera gives 'intimate descriptions of Kahlo's sensuous and fiery nature';  bawdy language
+      in her letters
+    source: Hayden Herrera, Frida (1983)
+- name: Henri Matisse
+  temperament:
+  - trait: Methodical / disciplined, obsessively committed to his art
+    tags:
+    - disciplined
+    - driven
+    evidence: Spurling portrays a man 'so overwhelmingly obsessed and committed to being an artist'  that
+      it crowded out other parts of life
+    source: Hilary Spurling, Matisse the Master (2005)
+  - trait: Anxiety-prone / worked under nervous tension
+    tags:
+    - anxious
+    - high-strung
+    evidence: Eyewitnesses described him painting under 'extreme tension' — ''It's nerves'' — in 'the
+      atmosphere of an operating theater'
+    source: Hilary Spurling, Matisse the Master (2005), quoted in Commentary
+  - trait: Intensely private / reserved, bourgeois in habits
+    tags:
+    - reserved
+    - private
+    evidence: Spurling calls him 'an intensely private person' around whom inaccurate gossip had accumulated
+      until her research
+    source: 'Hilary Spurling, Matisse: The Life'
+  - trait: Stubborn 'northern' temperament
+    tags:
+    - stubborn
+    - tenacious
+    evidence: Spurling describes how his 'stubborn northern temperament' sustained him through artistic
+      and financial challenges
+    source: Hilary Spurling, The Unknown Matisse (1998)
+- name: Leonardo da Vinci
+  temperament:
+  - trait: Insatiably curious
+    tags:
+    - curious
+    - observant
+    evidence: Isaacson's central thesis; his notebooks are 'the greatest record of curiosity ever created'
+    source: Walter Isaacson, Leonardo da Vinci (2017)
+  - trait: Procrastinating / left many works unfinished
+    tags:
+    - procrastinating
+    - distractible
+    evidence: A chronic procrastinator; contracts were designed to prevent his delays;  abandoned works
+      such as the Sforza horse
+    source: Walter Isaacson, Leonardo da Vinci (2017)
+  - trait: Charming, physically graceful and beautiful
+    tags:
+    - charming
+    - graceful
+    evidence: Vasari's contemporary account praised his physical beauty, grace and charm
+    source: Giorgio Vasari, Lives of the Artists (1550/1568); Isaacson (2017)
+  - trait: Compassionate toward animals / vegetarian
+    tags:
+    - gentle
+    - empathetic
+    evidence: Widely noted vegetarianism; reputedly bought caged birds to free them
+    source: Walter Isaacson, Leonardo da Vinci (2017); Vasari
+- name: Pablo Picasso
+  temperament:
+  - trait: Charismatic / magnetic but mercurial
+    tags:
+    - charismatic
+    - mercurial
+    evidence: 'Richardson: ''tender and brutal, forthright and devious, charming and horrifying''; a man
+      of myriad contradictions'
+    source: John Richardson, A Life of Picasso (1991–2021)
+  - trait: Domineering / controlling, especially with women
+    tags:
+    - domineering
+    - controlling
+    evidence: Richardson notes 'misogynist machismo' and 'monstrous self-absorption'; women 'sacrificed
+      to feed his art'
+    source: John Richardson, A Life of Picasso
+  - trait: Superstitious
+    tags:
+    - superstitious
+    evidence: 'Richardson: his ''superstitious nature and fear of the power of evil should never be underestimated'''
+    source: John Richardson, A Life of Picasso
+  - trait: Obsessively driven / prolific
+    tags:
+    - driven
+    - obsessive
+    evidence: Richardson analyzes 'the traumas and obsessions that triggered his explosive genius';  a
+      'rage to master'
+    source: John Richardson, A Life of Picasso; National Geographic
+  - trait: Stubborn / self-absorbed
+    tags:
+    - stubborn
+    - egocentric
+    evidence: Described in Vol. 1 as 'stubborn, deeply superstitious, rather childish'
+    source: John Richardson, A Life of Picasso, Vol. 1
+- name: Salvador Dali
+  temperament:
+  - trait: Exhibitionist / showman
+    tags:
+    - exhibitionist
+    - attention-seeking
+    evidence: Eccentric public behavior often drew more attention than his art (lectured in a diving suit;  filled
+      a car with cauliflowers)
+    source: Wikipedia 'Salvador Dalí' summarizing standard biographies
+  - trait: Eccentric (cultivated 'madman' image)
+    tags:
+    - eccentric
+    evidence: Critics describe a 'carefully cultivated image of a madman';  contemporaries decried his
+      'clowneries'
+    source: George Orwell, 'Benefit of Clergy' (1944); Wikipedia
+  - trait: Avaricious for money ('Avida Dollars')
+    tags:
+    - avaricious
+    - commercial
+    evidence: In 1939 André Breton coined the anagram 'Avida Dollars' ('eager for dollars')  mocking Dalí's
+      commercialism,  in the same period Breton announced Dalí's expulsion from the Surrealist group
+    source: André Breton (1939), cited in Wikipedia 'Salvador Dalí'
+  - trait: Anxious / phobic
+    tags:
+    - anxious
+    - phobic
+    evidence: Lifelong phobias and obsessions (germs, grasshoppers) rooted in the 'dead brother' trauma
+    source: Ian Gibson, The Shameful Life of Salvador Dalí (1997)
+- name: Vincent van Gogh
+  temperament:
+  - trait: Intense / passionate
+    tags:
+    - intense
+    - passionate
+    evidence: Naifeh & Smith portray a relentlessly intense temperament; his letters reveal ardent emotion
+    source: 'Steven Naifeh & Gregory White Smith, Van Gogh: The Life (2011)'
+  - trait: Zealous / fanatical
+    tags:
+    - zealous
+    - fervent
+    evidence: Described as 'a victim of his own fanatic heart';  sowed his principles with 'manic, zealous
+      determination'
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  - trait: Difficult / quarrelsome, alienating
+    tags:
+    - quarrelsome
+    - difficult
+    evidence: A 'terribly difficult man' with a 'nearly intolerable temperament' who alienated nearly
+      everyone he engaged
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  - trait: Empathetic to the poor
+    tags:
+    - compassionate
+    - idealistic
+    evidence: Early evangelical mission among poverty-stricken miners and peasants; lifelong social-justice
+      convictions
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  - trait: Prone to melancholy / depression
+    tags:
+    - melancholic
+    - depressive
+    evidence: Recurrent rounds of depression, self-mortification and suicidal thoughts  documented
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'

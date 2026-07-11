@@ -69,6 +69,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Ono,_Yoko'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept_soft bucket=memory rating=A: ADB entry provided by Kate - A, from memory. Add to corpus as A-memory. — "Data source - From memory, Rodden Rating A (Collector - Rodden). Roger Elliott quotes her, client; Church of Light gives the same from Don Singleton, NY Daily News 11/22/71. 18 Feb 1933, 20:30, Tokyo." — https://www.astro.com/astro-databank/Ono,_Yoko
 - name: Paul McCartney
   event_type: birth
   year: 1942
@@ -91,6 +94,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/McCartney,_Paul'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Wife's (Linda's) memory, 2:00 PM; A-soft. ADB primary is 14:00. FLAG - biography (Sandford) gives 'shortly after two in the morning'; real AM/PM tension under the A. Do NOT use the 2 AM alternative (no source). — "Nalini Kanta Das (Tom Hopke) quotes Linda McCartney for the data of Paul (2:00 pm)... On 17 May 2018 Sy Scholfield reversed the order of the charts: 2pm is first because Linda McCartney is quoted... 2am is second because the biography gives no source." — https://www.astro.com/astro-databank/McCartney,_Paul
 - name: Wolfgang Mozart
   event_type: birth
   year: 1756
@@ -109,11 +115,14 @@
   - Child Prodigy
   notable_for: Austrian composer widely regarded as among the greatest in Western music history. Child prodigy who composed over 600 works including symphonies, operas, and chamber music.
   astrological_notes: Sun 7 Aquarius
-  data_quality: A
+  data_quality: AA
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus'
   verified: false
 
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous baptismal record (born 8 PM prior day); AA (hint said A). — "photo-copy of Mozart's baptismal certificate... 'natus pridie hora 8. vespertina' ['...Mozart had been born at 8:00 the night before.']" — https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus
 - name: Brad Pitt
   event_type: birth
   year: 1963
@@ -136,6 +145,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Pitt,_Brad'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Associate report from Pitt; A-soft (minor 6:31 vs 6:21 discrepancy noted). — "LMR quoted a trusted colleague from Pitt, for 6:31 AM. In June 2023, Sy Scholfield found Pitt's birth notice giving 6:21 AM..." — https://www.astro.com/astro-databank/Pitt,_Brad
 - name: Angelina Jolie
   event_type: birth
   year: 1975
@@ -158,6 +170,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Jolie,_Angelina'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate (numbered) viewed at records dept; AA. Gold standard. — "Marc Penfield quotes birth certificate #0190-046359, viewed at Norwalk Records Dept, California... Same data confirmed by Sue Jorgenson 7/2001." — https://www.astro.com/astro-databank/Jolie,_Angelina
 - name: Richard Burton
   event_type: birth
   year: 1925
@@ -208,9 +223,9 @@
   verified: true
 
   has_reliable_time: true
-  verification_notes: >
-    AA stands — genuine LA birth certificate at 9:30 AM (round, midwife-entered,
-    but authentic).
+  verification_notes: |
+    AA stands — genuine LA birth certificate at 9:30 AM (round, midwife-entered, but authentic).
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand from Bob Garner. Photo of B.C. in 'The Curious Death of Marilyn Monroe.'" — https://www.astro.com/astro-databank/Monroe,_Marilyn
 - name: Elizabeth Taylor
   event_type: birth
   year: 1932
@@ -236,6 +251,9 @@
   sources:
   - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: U.S. consular birth record; AA. — "Sy Scholfield provided U.S. Consular Report of Birth... stating 2:30 AM." — https://www.astro.com/astro-databank/Taylor,_Elizabeth
 - name: Beyoncé
   event_type: birth
   year: 1981
@@ -258,6 +276,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Beyoncé'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate published; AA. Chart-time 21:47 vs 9:04 PM discrepancy noted; minute is soft. — "In April 2025 Claire Nakti forwarded a screenshot... of Beyonce's birth certificate as published in the Cowboy Carter art book. Craft quotes her mother Tina Knowles' book 'Matriarch', pg. 149, 'Beyonce Giselle Knowles was born at 9:04 in the evening...'" — https://www.astro.com/astro-databank/Knowles,_Beyonc%C3%A9
 - name: Tom Hanks
   event_type: birth
   year: 1956
@@ -279,6 +300,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Hanks,_Tom'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand, LMR." — https://www.astro.com/astro-databank/Hanks,_Tom
 - name: Jay-Z
   event_type: birth
   year: 1969
@@ -371,6 +395,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Dr._Dre'
   - Birth certificate
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. Precise 10:56 traces to the certificate, not a rectification. — "PT quotes birth certificate in hand" — https://www.astro.com/astro-databank/Dr._Dre
 - name: Kurt Cobain
   event_type: birth
   year: 1967
@@ -393,6 +420,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Cobain,_Kurt'
   - BC/BR in hand
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: BC/BR in hand; AA. Note the entry ALSO records a rejected Germine rectification (7:26 AM) — accepted datum is the certificate. — "Craft quotes birth certificate shown in Kurt Cobain documentary 'Montage of Heck' (2015)." — https://www.astro.com/astro-databank/Cobain,_Kurt
 - name: Prince
   event_type: birth
   year: 1958
@@ -415,6 +445,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Prince_(musician)'
   - BC/BR in hand from Frank C. Clifford
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. Confirms the previously-secondhand 'from birth record.' — "B.C. in hand from Frank C. Clifford." — https://www.astro.com/astro-databank/Prince
 - name: Leslie Cheung
   event_type: birth
   year: 1956
@@ -625,7 +658,9 @@
   - 'Astro.com: https://www.astro.com/astro-databank/Khan,_Shah_Rukh'
   verified: false
   has_reliable_time: true
-  verification_notes: "astro.com rates A (from memory/person), not a certificate."
+  verification_notes: |
+    astro.com rates A (from memory/person), not a certificate.
+    [ADB-verified] verdict=accept bucket=memory rating=A: Self-report from memory; A-soft. Entertainer self-report — standard caution. — "Sy Scholfield quotes him answering... on Twitter: 'i think 6.25 am...thats the only time i came for work early...'" — https://www.astro.com/astro-databank/Khan,_Shah_Rukh
 - name: Aishwarya Rai
   event_type: birth
   year: 1973
@@ -736,6 +771,9 @@
   sources:
   - https://www.astro.com/astro-databank/Spielberg,_Steven
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. Place confirmed Cincinnati, Ohio (correct). — "B.C. in hand from Joan Negus from Linda Lineauveuer. (Same in Contemporary American Horoscopes.)" — https://www.astro.com/astro-databank/Spielberg,_Steven
 - name: Charlie Chaplin
   event_type: birth
   year: 1889
@@ -781,6 +819,9 @@
   sources:
   - https://www.astro.com/astro-databank/Williams,_Robin
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand from the Wilsons." — https://www.astro.com/astro-databank/Williams,_Robin
 - name: Lucille Ball
   event_type: birth
   year: 1911
@@ -802,6 +843,9 @@
   sources:
   - https://www.astro.com/astro-databank/Ball,_Lucille
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Quoted birth record; AA. Round 17:00 is the record. — "Biographer Kathy Brady quotes B.R." — https://www.astro.com/astro-databank/Ball,_Lucille
 - name: Audrey Hepburn
   event_type: birth
   year: 1929
@@ -823,6 +867,9 @@
   sources:
   - https://www.astro.com/astro-databank/Hepburn,_Audrey
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth record cited; AA. — "Luc de Marre quotes B.R. No.477." — https://www.astro.com/astro-databank/Hepburn,_Audrey
 - name: David Bowie
   event_type: birth
   year: 1947
@@ -844,3 +891,314 @@
   sources:
   - https://www.astro.com/astro-databank/Bowie,_David
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Parents' memory; A-soft. — "LMR quotes biographers Peter and Leni Gillman... gives 9:00 AM GMT, 'from his parents.'" — https://www.astro.com/astro-databank/Bowie,_David
+- name: Mac Miller
+  event_type: birth
+  year: 1992
+  month: 1
+  day: 19
+  hour: 8
+  minute: 46
+  latitude: 40.433
+  longitude: -80.0
+  location_name: Pittsburgh, Pennsylvania, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - rapper
+  - record producer
+  notable_for: American rapper, singer, and record producer.
+  astrological_notes: Sun 28 Capricorn
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Miller,_Mac
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth announcement / BC card on file at Astrodienst (BC/BR in hand).
+- name: Ariana Grande
+  event_type: birth
+  year: 1993
+  month: 6
+  day: 26
+  hour: 21
+  minute: 16
+  latitude: 26.367
+  longitude: -80.083
+  location_name: Boca Raton, Florida, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - singer
+  - actress
+  notable_for: American singer and actress; one of the best-selling music artists.
+  astrological_notes: Sun 5 Cancer
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Grande,_Ariana
+  verified: true
+  has_reliable_time: false
+  verification_notes: >
+    From memory (father on Twitter, 9:16 PM). DISPUTED: 9:16 PM vs 9:10 PM vs 12:34 also circulate; time not reliable.
+- name: Demi Lovato
+  event_type: birth
+  year: 1992
+  month: 8
+  day: 20
+  hour: 6
+  minute: 25
+  latitude: 35.083
+  longitude: -106.65
+  location_name: Albuquerque, New Mexico, USA
+  timezone: America/Denver
+  category: media
+  subcategories:
+  - singer
+  - actress
+  notable_for: American singer, songwriter, and actress.
+  astrological_notes: Sun 27 Leo
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Lovato,_Demi
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    From memory; Lovato stated 6:25 in a 2026 interview (originally a speculative 6 AM).
+- name: Britney Spears
+  event_type: birth
+  year: 1981
+  month: 12
+  day: 2
+  hour: 1
+  minute: 30
+  latitude: 31.25
+  longitude: -90.45
+  location_name: McComb, Mississippi, USA
+  timezone: America/Chicago
+  category: media
+  subcategories:
+  - singer
+  notable_for: American singer; pop icon of the late 1990s-2000s.
+  astrological_notes: Sun 10 Sagittarius
+  data_quality: A
+  sources:
+  - https://www.astro.com/astro-databank/Spears,_Britney
+  verified: true
+  has_reliable_time: false
+  verification_notes: >
+    From memory (mother via Equinox shop, 2000). DISPUTED: mother's later Instagram implies ~2:47 AM; time not reliable.
+- name: Danica McKellar
+  event_type: birth
+  year: 1975
+  month: 1
+  day: 3
+  hour: 18
+  minute: 29
+  latitude: 32.85
+  longitude: -117.267
+  location_name: La Jolla, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - actress
+  - mathematician
+  notable_for: American actress (The Wonder Years) and mathematics author.
+  astrological_notes: Sun 13 Capricorn
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/McKellar,_Danica
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (Craft).
+- name: Christina Hendricks
+  event_type: birth
+  year: 1975
+  month: 5
+  day: 3
+  hour: 8
+  minute: 12
+  latitude: 35.967
+  longitude: -83.917
+  location_name: Knoxville, Tennessee, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - actress
+  notable_for: American actress, known for Joan Holloway in 'Mad Men.'
+  astrological_notes: Sun 12 Taurus
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Hendricks,_Christina
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Verification of Birth Facts from Tennessee Vital Records (BC/BR in hand).
+- name: Grace Potter
+  event_type: birth
+  year: 1983
+  month: 6
+  day: 20
+  hour: 10
+  minute: 50
+  latitude: 43.933
+  longitude: -72.667
+  location_name: Randolph, Vermont, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - singer
+  - musician
+  notable_for: American singer and guitarist, of Grace Potter and the Nocturnals.
+  astrological_notes: Sun 28 Gemini
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Potter,_Grace
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (Vermont vital records). Note: Potter later said 'born at midnight' in an interview, conflicting with the 10:50 BC - the certificate is preferred.
+- name: Katy Perry
+  event_type: birth
+  year: 1984
+  month: 10
+  day: 25
+  hour: 7
+  minute: 58
+  latitude: 34.417
+  longitude: -119.7
+  location_name: Santa Barbara, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - singer
+  notable_for: American singer-songwriter with nine US number-one singles.
+  astrological_notes: Sun 2 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Perry,_Katy
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate #84-4156 in hand (Santa Barbara County).
+- name: Michael B. Jordan
+  event_type: birth
+  year: 1987
+  month: 2
+  day: 9
+  hour: 20
+  minute: 14
+  latitude: 33.783
+  longitude: -117.85
+  location_name: Orange, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - actor
+  - producer
+  notable_for: American actor and producer; Academy Award winner.
+  astrological_notes: Sun 20 Aquarius
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Jordan,_Michael_B.
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (Viktor E.).
+- name: JoJo
+  event_type: birth
+  year: 1990
+  month: 12
+  day: 20
+  hour: 10
+  minute: 41
+  latitude: 42.85
+  longitude: -72.567
+  location_name: Brattleboro, Vermont, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - singer
+  - songwriter
+  notable_for: American singer and songwriter.
+  astrological_notes: Sun 28 Sagittarius
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/JoJo
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand; also confirmed by her on Twitter (10:41 AM).
+- name: Jennifer Lawrence
+  event_type: birth
+  year: 1990
+  month: 8
+  day: 15
+  hour: 15
+  minute: 20
+  latitude: 38.25
+  longitude: -85.767
+  location_name: Louisville, Kentucky, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - actress
+  notable_for: American actress; Academy Award winner.
+  astrological_notes: Sun 22 Leo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Lawrence,_Jennifer
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (Viktor E.).
+- name: Jennette McCurdy
+  event_type: birth
+  year: 1992
+  month: 6
+  day: 26
+  hour: 8
+  minute: 18
+  latitude: 33.767
+  longitude: -118.183
+  location_name: Long Beach, California, USA
+  timezone: America/Los_Angeles
+  category: media
+  subcategories:
+  - actress
+  - author
+  notable_for: American writer and former actress; author of 'I'm Glad My Mom Died.'
+  astrological_notes: Sun 5 Cancer
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/McCurdy,_Jennette
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate #104-92-306977 in hand (Craft).
+- name: Syd
+  event_type: birth
+  year: 1982
+  month: 5
+  day: 29
+  hour: 3
+  minute: 25
+  latitude: 44.483
+  longitude: -73.217
+  location_name: Burlington, Vermont, USA
+  timezone: America/New_York
+  category: media
+  subcategories:
+  - singer
+  - record producer
+  notable_for: American singer, songwriter, and record producer (The Internet).
+  astrological_notes: Sun 7 Gemini
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Syd
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate copy in hand (Scholfield).

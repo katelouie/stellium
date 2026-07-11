@@ -1,0 +1,495 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Angelina Jolie
+  temperament:
+  - trait: Rebellious 'punk outsider' in youth
+    tags:
+    - rebellious
+    - impulsive
+    evidence: At Moreno High School she 'became a punk outsider, wearing all-black clothing, going out
+      moshing, and engaging in knife play with her live-in boyfriend'
+    source: 'Wikipedia ''Angelina Jolie''; Andrew Morton, ''Angelina: An Unauthorized Biography'' (2010)'
+  - trait: Intense; drawn to darkness
+    tags:
+    - intense
+    - melancholic
+    evidence: 'Her own words on self-harm: ''the ritual of having cut myself and feeling the pain… it
+      was somehow therapeutic to me''; ''I''ve been told a lot of times that I''m dark'''
+    source: Jolie, quoted in Wikipedia and Biography.com
+  - trait: Driven humanitarian
+    tags:
+    - driven
+    - generous
+    evidence: UNHCR fieldwork from 2001; later UNHCR Special Envoy; 'we all want justice and equality,
+      a chance for a life with meaning'
+    source: 'Wikipedia; Kathleen Tracy, ''Angelina Jolie: A Biography'' (2009)'
+  - trait: Resilient / self-transforming
+    tags:
+    - resilient
+    - determined
+    evidence: Morton frames her arc from 'wild excesses' to humanitarian work; 'I went through heavier,
+      darker times and I survived them'
+    source: Andrew Morton (2010); Jolie interviews
+- name: Audrey Hepburn
+  temperament:
+  - trait: Disciplined and dedicated, no ego
+    tags:
+    - disciplined
+    - perfectionist
+    evidence: 'Fred Zinnemann: ''I have never seen anyone more disciplined, more gracious or more dedicated
+      to her work than Audrey. There was no ego, no asking for extra favors'''
+    source: 'Fred Zinnemann autobiography (1992), re: ''The Nun''s Story'''
+  - trait: Insecure about looks and talent
+    tags:
+    - insecure
+    - self-critical
+    evidence: 'Son: ''grace, charm, and beauty were matched only by her insecurity about her appearance
+      and talent'''
+    source: Sean Hepburn Ferrer, 'Audrey Hepburn, An Elegant Spirit' (2003)
+  - trait: Humble and unpretentious
+    tags:
+    - humble
+    - reserved
+    evidence: '''nothing pretentious about her''; thought her own life too plain to warrant a memoir and
+      refused to write one'
+    source: Sean Hepburn Ferrer (2003)
+  - trait: Warm and home-loving / nurturing
+    tags:
+    - nurturing
+    - warm
+    evidence: '''Whenever she had to go to a dinner or a cocktail party, she would always say, Oh, if
+      only I could stay home and eat in the kitchen with you''; prioritized family over fame'
+    source: Sean Hepburn Ferrer (2003)
+- name: Beyoncé
+  temperament:
+  - trait: Uses alter ego 'Sasha Fierce' to overcome stage fright; private underneath
+    tags:
+    - private
+    - guarded
+    evidence: '''Sasha Fierce is the fun, more sensual, more aggressive, more outspoken and more glamorous
+      side that comes out when I''m working''; traces it to childhood stage fright'
+    source: Beyoncé, Oprah Winfrey Show (2008); Marie Claire (2008)
+  - trait: Fearless in performance
+    tags:
+    - charismatic
+    - ambitious
+    evidence: '''I have out-of-body experiences on stage. If I cut my leg, if I fall, I don''t even feel
+      it. I''m so fearless'''
+    source: Beyoncé, Marie Claire (2008)
+  - trait: Self-integrating / ambitious
+    tags:
+    - ambitious
+    - driven
+    evidence: 'By 2010: ''Sasha Fierce is done. I killed her… now I''m able to merge the two'''
+    source: Beyoncé (2010)
+  - trait: Disciplined work ethic
+    tags:
+    - disciplined
+    - perfectionist
+    evidence: Enforces at least one day off every seven during album promotion; perfectionism widely reported
+      by music journalists
+    source: Beyoncé via Oprah.com; journalistic consensus (down-flagged as not from a single named biography)
+- name: Brad Pitt
+  temperament:
+  - trait: Affable, ironic, self-mocking
+    tags:
+    - charismatic
+    - affable
+    evidence: Profiled as 'an affable, ironic gentleman who mocks himself about being single and the passing
+      years'
+    source: Celebre Magazine profile
+  - trait: Restless; seeks challenge, dislikes repetition
+    tags:
+    - restless
+    - driven
+    evidence: '''I like a challenge and get tired of always doing the same things… never to stop and continue
+      working with the same passion'''
+    source: Brad Pitt, Celebre Magazine
+  - trait: Laid-back with 'coiled' intensity beneath
+    tags:
+    - laid-back
+    - reserved
+    evidence: 'Critic: ''reined in, watchful and reactive, with hints of something tightly coiled and
+      dangerous just beneath the affable façade'''
+    source: Sight & Sound / BFI
+  - trait: Private; withdrew during fame, later got sober
+    tags:
+    - private
+    - reflective
+    evidence: Admitted heavy cannabis use in the late 1990s 'hiding out from the celebrity thing'; got
+      sober in 2016
+    source: Brad Pitt, Interview Magazine (Dec 2019); Wikipedia
+- name: David Bowie
+  temperament:
+  - trait: Reinventive 'chameleon of rock'
+    tags:
+    - reinventive
+    - creative
+    evidence: Widely dubbed the 'chameleon of rock' for constant reinvention across personas (Ziggy Stardust,
+      Aladdin Sane, Thin White Duke)
+    source: 'Wikipedia summary; David Buckley, ''Strange Fascination: David Bowie'''
+  - trait: Intellectually curious / eclectic
+    tags:
+    - curious
+    - eclectic
+    evidence: 'Buckley: ''outstanding ability to analyse and select ideas from outside the mainstream
+      — from art, literature, theatre and film — and to bring them inside'''
+    source: David Buckley, 'Strange Fascination'
+  - trait: Innovative and restless
+    tags:
+    - restless
+    - driven
+    evidence: 'BBC''s Will Gompertz likened him to Picasso: ''an innovative, visionary, restless artist
+      who synthesised complex avant garde concepts into beautifully coherent works'''
+    source: Will Gompertz, BBC
+  - trait: Charismatic persona-builder
+    tags:
+    - charismatic
+    - perfectionist
+    evidence: 'Buckley: the Ziggy Stardust era ''created perhaps the biggest cult in popular culture'''
+    source: David Buckley, 'Strange Fascination'
+- name: Dr. Dre
+  temperament:
+  - trait: Notorious studio perfectionist
+    tags:
+    - perfectionist
+    - meticulous
+    evidence: 'Rolling Stone calls him ''a notorious perfectionist''; Eminem: ''Time doesn''t exist with
+      Dr. Dre… he''s only thinking about whether something is ready'''
+    source: Rolling Stone; Eminem via Forbes (2018)
+  - trait: Reserved / quiet
+    tags:
+    - reserved
+    - private
+    evidence: 'Jimmy Iovine: ''Dre says about six words a day'''
+    source: Jimmy Iovine, Rolling Stone
+  - trait: Driven and decisive when convinced
+    tags:
+    - driven
+    - determined
+    evidence: 'Signed Eminem against everyone''s advice: ''My gut told me Eminem was the artist I''m supposed
+      to be working with'''
+    source: Dr. Dre, HBO 'The Defiant Ones' (2017)
+  - trait: Controlling standards / meticulous
+    tags:
+    - controlling
+    - meticulous
+    evidence: Applied 'the same meticulous attention to product testing as he did to his music' for Beats;
+      insists releases have unanimous sign-off
+    source: Forbes (2018); HipHopDX
+- name: Elizabeth Taylor
+  temperament:
+  - trait: Passionate, ruled by her passions
+    tags:
+    - passionate
+    - impulsive
+    evidence: 'Her own words: ''I''ve always admitted that I''m ruled by my passions'''
+    source: Elizabeth Taylor, 'Elizabeth Takes Off' (1988)
+  - trait: Fiercely loyal, resilient, compassionate
+    tags:
+    - loyal
+    - resilient
+    evidence: 'Spoto: ''compassionate, fiercely loyal, and resilient''; Brower: ''above all… a survivor'''
+    source: Donald Spoto, 'A Passion for Life' (1995); Kate Andersen Brower (2022)
+  - trait: Generous but self-absorbed / mercurial
+    tags:
+    - generous
+    - combative
+    evidence: 'Spoto: ''Outspoken, lusty, mercurial… generous and compassionate, also totally self-absorbed
+      and egocentric'''
+    source: Donald Spoto (1995)
+  - trait: Savvy businesswoman and humanitarian
+    tags:
+    - ambitious
+    - generous
+    evidence: First celebrity to lead the fight against HIV/AIDS; described as 'savvy businesswoman, compassionate
+      humanitarian'
+    source: Mark K. Updegrove, endorsing Brower (2022)
+- name: Kurt Cobain
+  temperament:
+  - trait: Shy and introverted, prodigiously gifted
+    tags:
+    - shy
+    - reserved
+    evidence: Cross's portrayal of 'a shy but prodigiously gifted child, in artistic as well as musical
+      terms'
+    source: Charles R. Cross, 'Heavier Than Heaven' (2001)
+  - trait: Deeply sensitive
+    tags:
+    - sensitive
+    - melancholic
+    evidence: 'Cross: ''sensitive to the needs and pains of others, at times overly so'''
+    source: Charles R. Cross (2001)
+  - trait: Insecure beneath a slacker-cool façade
+    tags:
+    - insecure
+    - self-critical
+    evidence: 'Cross: ''although his public persona was one of affected indifference and slacker-cool
+      bravado, in reality he cared desperately what others thought about him'''
+    source: Charles R. Cross (2001)
+  - trait: Rebellious / anti-establishment, ironic
+    tags:
+    - rebellious
+    - combative
+    evidence: '''Incesticide'' liner notes: ''If you''re a sexist, racist, homophobe, or basically an
+      asshole, don''t buy this CD… I hate you'''
+    source: Kurt Cobain, 'Incesticide' liner notes (1992)
+- name: Lucille Ball
+  temperament:
+  - trait: Perfectionist / control freak
+    tags:
+    - perfectionist
+    - controlling
+    evidence: 'Kanfer: ''the control freak whose comic alter ego thrived on chaos'''
+    source: Stefan Kanfer, 'Ball of Fire' (2003)
+  - trait: Insecure and anxious off-camera
+    tags:
+    - insecure
+    - melancholic
+    evidence: 'Kanfer ''portrays Lucille Ball as insatiably anxious and insecure''; associate Bernie Weitzman:
+      ''With all her talent, she didn''t really believe she had that much talent'''
+    source: Stefan Kanfer (2003); David Thomson review, New Republic
+  - trait: Tough and hard-driving
+    tags:
+    - tough
+    - determined
+    evidence: Even the mild Jack Benny privately called her 'tough, very tough'
+    source: quoted in Stefan Kanfer (2003)
+  - trait: Pioneering businesswoman (though ambivalent)
+    tags:
+    - ambitious
+    - determined
+    evidence: 'Co-founded Desilu, ''forging new paths for women in the boardroom''; but daughter Lucie:
+      ''Basically she was a performer, not a businesswoman. The trappings of power meant very little to
+      her'''
+    source: Stefan Kanfer (2003); Lucie Arnaz quoted therein
+- name: Marilyn Monroe
+  temperament:
+  - trait: Emotionally fragile and prone to anxiety/depression
+    tags:
+    - anxious
+    - fragile
+    evidence: Attested by directors and biographers; hospitalized for depression 1961
+    source: Wikipedia; Variety
+  - trait: Ambitious and hard-working as a young model/actress
+    tags:
+    - driven
+    - ambitious
+    evidence: Agency owner Emmeline Snively described her as one of the most driven models
+    source: Wikipedia (Snively)
+  - trait: Chronically unpunctual / unreliable on set
+    tags:
+    - unreliable
+    evidence: Documented by Billy Wilder and Variety columns during Some Like It Hot and Something's Got
+      to Give
+    source: Variety
+  - trait: Yearning for family/children after a neglected childhood
+    tags:
+    - sentimental
+    - insecure
+    evidence: Biographers note her preoccupation with motherhood; multiple miscarriages
+    source: Biography.com
+- name: Paul McCartney
+  temperament:
+  - trait: Diplomatic and charming, the group's smoother public face
+    tags:
+    - charming
+    - diplomatic
+    evidence: Widely noted by Beatles biographers and bandmates
+    source: Barry Miles, Many Years from Now
+  - trait: Driven, prolific and work-focused
+    tags:
+    - driven
+    - prolific
+    evidence: Continuous output across seven decades; self-described workaholic tendencies
+    source: Miles biography
+  - trait: Devoted family man and long marriages
+    tags:
+    - loyal
+    - devoted
+    evidence: 29-year marriage to Linda; publicly grieved for a year after her death
+    source: BBC interview 2019
+  - trait: Emotionally sensitive; channeled mother's death into music
+    tags:
+    - sentimental
+    evidence: Self-described 'Let It Be' as response to his mother's death
+    source: People interview
+- name: Prince
+  temperament:
+  - trait: Intensely private and secretive
+    tags:
+    - private
+    - guarded
+    evidence: Concealed his son's birth and death; refused to discuss children publicly
+    source: St. Paul Pioneer Press; Garcia memoir
+  - trait: Prolific, controlling perfectionist over his music
+    tags:
+    - prolific
+    - controlling
+    evidence: Played all instruments on debut; 39 albums plus a vault of unreleased work
+    source: Wikipedia; AllMusic
+  - trait: Flamboyant, boundary-pushing showman
+    tags:
+    - flamboyant
+    - provocative
+    evidence: Androgynous style and explicit lyrics noted by critics
+    source: Biography.com
+  - trait: Deeply spiritual (later a Jehovah's Witness)
+    tags:
+    - spiritual
+    evidence: Religious themes throughout catalogue; conversion curbed racier lyrics
+    source: CNN
+- name: Robin Williams
+  temperament:
+  - trait: Manically energetic, improvisational comic genius
+    tags:
+    - energetic
+    - improvisational
+    evidence: Universally attested by collaborators and critics
+    source: Oscars/press coverage
+  - trait: Privately depressive and anxious
+    tags:
+    - depressive
+    - anxious
+    evidence: 'Long struggle with depression; final-year terror and paranoia from LBD. Per Susan Schneider
+      Williams, ''The terrorist inside my husband''s brain,'' Neurology (2016): ''almost no neurons were
+      free of Lewy bodies throughout the entire brain and brainstem.'''
+    source: Neurology 2016 (Schneider Williams)
+  - trait: Warm, generous and empathetic
+    tags:
+    - warm
+    - generous
+    evidence: Extensive charity work; described by peers as deeply kind
+    source: Press obituaries
+  - trait: Prone to addiction (alcohol/cocaine, later relapse)
+    tags:
+    - addictive
+    evidence: Documented cocaine/alcohol use in late 1970s–80s; 2006 rehab
+    source: ADB seed; biographies
+- name: Shah Rukh Khan
+  temperament:
+  - trait: Self-reliant, driven by early adversity
+    tags:
+    - driven
+    - self-reliant
+    evidence: Parents' early deaths and financial strain intensified his ambition
+    source: Outlook India; Wikipedia
+  - trait: Witty, articulate public speaker
+    tags:
+    - witty
+    - articulate
+    evidence: Known for humor on Twitter and speeches at Yale/Oxford/TED
+    source: Press coverage
+  - trait: Risk-taking (chose anti-hero roles early)
+    tags:
+    - bold
+    - risk-taking
+    evidence: Played villains/obsessives in Baazigar, Darr, Anjaam against convention
+    source: Wikipedia; Outlook India
+  - trait: Entrepreneurial
+    tags:
+    - entrepreneurial
+    evidence: Built Red Chillies and KKR into major businesses without industry backing
+    source: Outlook India
+- name: Steven Spielberg
+  temperament:
+  - trait: Boundlessly imaginative visual storyteller
+    tags:
+    - imaginative
+    - visionary
+    evidence: Consistently credited as a pioneer of the modern blockbuster
+    source: Wikipedia; EBSCO
+  - trait: Marked by childhood insecurity from parents' divorce
+    tags:
+    - sensitive
+    evidence: Self-described the divorce as shaping recurring themes of family/childhood
+    source: NME
+  - trait: Prodigiously hardworking and prolific
+    tags:
+    - driven
+    - prolific
+    evidence: Highest-grossing director of all time; six-decade output
+    source: Wikipedia
+  - trait: Collaborative and loyal (long partnerships)
+    tags:
+    - loyal
+    - collaborative
+    evidence: Decades-long collaborations with John Williams and Tom Hanks
+    source: Wikipedia
+- name: Tom Hanks
+  temperament:
+  - trait: Affable, likeable 'everyman' persona
+    tags:
+    - affable
+    - genial
+    evidence: Consistent industry and public reputation as the 'nicest man in Hollywood'
+    source: Press coverage
+  - trait: Self-reflective about early immaturity
+    tags:
+    - reflective
+    evidence: Openly discussed marrying too young and the strain on his first family
+    source: The Issue Ten; interviews
+  - trait: Devoted, stable in his second marriage
+    tags:
+    - devoted
+    - loyal
+    evidence: Married to Rita Wilson since 1988; converted to her faith
+    source: Wikipedia
+  - trait: Diligent, versatile professional
+    tags:
+    - versatile
+    - diligent
+    evidence: Range from comedy to drama; two consecutive Best Actor Oscars
+    source: Wikipedia
+- name: Wolfgang Mozart
+  temperament:
+  - trait: Prodigious, effortless musical genius
+    tags:
+    - genius
+    - prolific
+    evidence: Child prodigy performing for royalty at age 5–6; 800+ works
+    source: Britannica; Wikipedia
+  - trait: Restless and resentful of subordinate court service
+    tags:
+    - restless
+    - independent
+    evidence: Chafed under Salzburg employment; sought better posts abroad
+    source: Wikipedia; Britannica
+  - trait: Socially playful, fond of ribald humor
+    tags:
+    - playful
+    - irreverent
+    evidence: Letters and the 'Musical Joke' reflect his humor
+    source: Spaethling, Mozart's Letters
+  - trait: Aspired above his station; financially imprudent
+    tags:
+    - extravagant
+    evidence: Britannica notes tastes 'extravagant' for his income; borrowed from Puchberg
+    source: Britannica; Classic FM
+- name: Yoko Ono
+  temperament:
+  - trait: Avant-garde, boundary-pushing conceptual artist
+    tags:
+    - avant-garde
+    - experimental
+    evidence: Pioneer of conceptual/performance art (Cut Piece, Grapefruit)
+    source: Wikipedia; Biography.com
+  - trait: Fiercely independent and career-focused
+    tags:
+    - independent
+    - driven
+    evidence: Declined to join Fluxus to stay independent; left most parenting to Cox
+    source: Wikipedia
+  - trait: Resilient amid public hostility
+    tags:
+    - resilient
+    evidence: Endured decades of blame for Beatles' breakup and personal losses
+    source: PEOPLE; press
+  - trait: Idealistic peace activist
+    tags:
+    - idealistic
+    - activist
+    evidence: Bed-ins and lifelong peace/humanitarian campaigns
+    source: Biography.com

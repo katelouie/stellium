@@ -1,0 +1,53 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: K.N. Rao
+  events:
+  - date: '1943'
+    precision: year
+    type: education
+    description: Introduced to astrology by his mother, K. Saraswati Devi, at age 12 (after a serious
+      bout of typhoid)
+    significance: major
+    age_at_event: 11
+    source: bvbdelhi.org 'About Mr. K.N. Rao'; Mystical Bee
+  - date: '1957'
+    precision: year
+    type: career
+    description: Joined the Indian Audit and Accounts Service (all-India competition); previously a lecturer
+      in English
+    significance: major
+    age_at_event: 25
+    source: AstroNidan; Mystical Bee
+  - date: '1982'
+    precision: year
+    type: spiritual
+    description: A yogi (Swami Moorkhanandji) prophesied he would be 'the architect of a great astrological
+      renaissance'
+    significance: moderate
+    age_at_event: 50
+    source: bvbdelhi.org 'About Mr. K.N. Rao'; astrojyoti.com
+  - date: '1987'
+    precision: year
+    type: career
+    description: Founded the Institute of Astrology at Bharatiya Vidya Bhavan, New Delhi
+    significance: major
+    age_at_event: 55
+    source: bvbdelhi.org; Mystical Bee
+  - date: 1990-11
+    precision: month
+    type: career
+    description: Retired from the Indian Audit and Accounts Service as Director General
+    significance: major
+    age_at_event: 59
+    source: Dharmapedia (Wikipedia-derived); AstroNidan; PeoplePill
+  - date: '1993'
+    precision: year
+    type: recognition
+    description: First US lecture tour; Chief Guest at the Second Conference of the American Council of
+      Vedic Astrology
+    significance: moderate
+    age_at_event: 61
+    source: Dharmapedia; Mystical Bee

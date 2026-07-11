@@ -36,6 +36,29 @@ configuration to an internal `ChartBuilder`; `.calculate()` → `CalculatedChart
 with return metadata (`return_jd`, `return_datetime`, `natal_longitude`,
 `return_number`).
 
+## Sect rectification (compare-hypothesis workbench)
+Source: `rectification/`. An honest, human-in-the-loop **sect** (day/night)
+analysis for charts whose birth *time* is uncertain. It does **not** invert time
+(the empirical study found minute-level rectification is an ill-posed inverse —
+see [specs/rectification/RECTIFICATION_REPORT.md](./specs/rectification/RECTIFICATION_REPORT.md)); it recovers
+the one recoverable bit — sect — at ~70% and lays out both hypotheses for
+adjudication. Public API:
+- **`analyze_sect(chart, *, events=None, temperament=None)`** → frozen
+  `SectAnalysis`: daylight prior, calibrated `p_day` (a **baked** 2-feature
+  logistic frozen from the 63-chart corpus fit — `model.BAKED_SECT_MODEL`), both
+  day/night `Hypothesis` structures (sect light / out-of-sect malefic / in-sect
+  benefic with dignity), Moon-band flag, event evidence (`hardship`/`fortune`
+  tallies + `firdaria_convergence`), soft temperament signals, `technique_votes()`.
+- **`convergence_matrix(chart, *, events=None)`** → frozen `ConvergenceMatrix`
+  (heavy, ~3–10 s): the two-lens Tebbs display — Lens A structural band (distinct
+  charts × solar-arc/transits/profection, from `timing.py`) + Lens B event-hook
+  histogram. Whisper-level, never summed; a display, not a verdict.
+- Events/temperament auto-resolve for notables via the biography API
+  (`chart.metadata["name"]`); pass explicitly for anyone, or `events=()` for a
+  geometry-only read. Daylight fraction is geometric (Sun declination × latitude),
+  so the fast path needs no sweep. Report sections: `with_sect_rectification()`,
+  `with_sect_convergence_matrix()` (see [PRESENTATION_INTERNALS](./PRESENTATION_INTERNALS.md)).
+
 ## Electional (time search)
 Source: `electional/` + `engines/search.py`. **`ElectionalSearch`** (exported)
 finds times satisfying conditions. Building blocks:

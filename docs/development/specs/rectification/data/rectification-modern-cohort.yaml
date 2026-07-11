@@ -1,0 +1,46 @@
+# Modern (post-1970) AA/A cohort — birth data only (no events).
+# Gathered to test whether the medicalized daytime birth-hour prior helps a
+# modern cohort. It does NOT (see RECTIFICATION_PHASE1_FINDINGS.md): the uniform
+# daylight prior stays best (70.6% on the 17 AA), which also serves as clean
+# out-of-sample validation that the daylight prior generalises beyond the 63.
+# Coordinates from AstroDataBank DMS. Source: docs/.../modern_cohort_raw.md.
+- name: Mac Miller
+  birth_data: {date: "1992-01-19", time: "08:46", timezone: "America/New_York", place: "Pittsburgh, Pennsylvania, USA", latitude: 40.433, longitude: -80.000, rodden_rating: "AA"}
+- name: Ariana Grande
+  birth_data: {date: "1993-06-26", time: "21:16", timezone: "America/New_York", place: "Boca Raton, Florida, USA", latitude: 26.367, longitude: -80.083, rodden_rating: "A"}
+- name: Demi Lovato
+  birth_data: {date: "1992-08-20", time: "06:25", timezone: "America/Denver", place: "Albuquerque, New Mexico, USA", latitude: 35.083, longitude: -106.650, rodden_rating: "A"}
+- name: Britney Spears
+  birth_data: {date: "1981-12-02", time: "01:30", timezone: "America/Chicago", place: "McComb, Mississippi, USA", latitude: 31.250, longitude: -90.450, rodden_rating: "A"}
+- name: Danica McKellar
+  birth_data: {date: "1975-01-03", time: "18:29", timezone: "America/Los_Angeles", place: "La Jolla, California, USA", latitude: 32.850, longitude: -117.267, rodden_rating: "AA"}
+- name: Christina Hendricks
+  birth_data: {date: "1975-05-03", time: "08:12", timezone: "America/New_York", place: "Knoxville, Tennessee, USA", latitude: 35.967, longitude: -83.917, rodden_rating: "AA"}
+- name: Jimmy Cochran
+  birth_data: {date: "1981-05-29", time: "15:20", timezone: "America/New_York", place: "Burlington, Vermont, USA", latitude: 44.483, longitude: -73.217, rodden_rating: "AA"}
+- name: Syd
+  birth_data: {date: "1982-05-29", time: "03:25", timezone: "America/New_York", place: "Burlington, Vermont, USA", latitude: 44.483, longitude: -73.217, rodden_rating: "AA"}
+- name: Grace Potter
+  birth_data: {date: "1983-06-20", time: "10:50", timezone: "America/New_York", place: "Randolph, Vermont, USA", latitude: 43.933, longitude: -72.667, rodden_rating: "AA"}
+- name: Katy Perry
+  birth_data: {date: "1984-10-25", time: "07:58", timezone: "America/Los_Angeles", place: "Santa Barbara, California, USA", latitude: 34.417, longitude: -119.700, rodden_rating: "AA"}
+- name: Sasha Cohen
+  birth_data: {date: "1984-10-26", time: "21:21", timezone: "America/Los_Angeles", place: "Los Angeles, California, USA", latitude: 34.050, longitude: -118.250, rodden_rating: "AA"}
+- name: Chris Brennan
+  birth_data: {date: "1984-11-01", time: "13:28", timezone: "America/Denver", place: "Aurora, Colorado, USA", latitude: 39.733, longitude: -104.833, rodden_rating: "AA"}
+- name: Stephen Miller
+  birth_data: {date: "1985-08-23", time: "16:53", timezone: "America/Los_Angeles", place: "Santa Monica, California, USA", latitude: 34.017, longitude: -118.483, rodden_rating: "AA"}
+- name: Mary Heitkamp
+  birth_data: {date: "1985-10-24", time: "21:30", timezone: "America/New_York", place: "Middlebury, Vermont, USA", latitude: 44.017, longitude: -73.167, rodden_rating: "AA"}
+- name: Michael B. Jordan
+  birth_data: {date: "1987-02-09", time: "20:14", timezone: "America/Los_Angeles", place: "Orange, California, USA", latitude: 33.783, longitude: -117.850, rodden_rating: "AA"}
+- name: JoJo
+  birth_data: {date: "1990-12-20", time: "10:41", timezone: "America/New_York", place: "Brattleboro, Vermont, USA", latitude: 42.850, longitude: -72.567, rodden_rating: "AA"}
+- name: Maria Quintanilla
+  birth_data: {date: "1990-12-11", time: "16:22", timezone: "America/Lima", place: "San Isidro, Peru", latitude: -12.117, longitude: -77.050, rodden_rating: "AA"}
+- name: Jennifer Lawrence
+  birth_data: {date: "1990-08-15", time: "15:20", timezone: "America/New_York", place: "Louisville, Kentucky, USA", latitude: 38.250, longitude: -85.767, rodden_rating: "AA"}
+- name: Jennette McCurdy
+  birth_data: {date: "1992-06-26", time: "08:18", timezone: "America/Los_Angeles", place: "Long Beach, California, USA", latitude: 33.767, longitude: -118.183, rodden_rating: "AA"}
+- name: Helena Woods
+  birth_data: {date: "1994-05-17", time: "18:32", timezone: "America/Los_Angeles", place: "Poway, California, USA", latitude: 32.967, longitude: -117.033, rodden_rating: "AA"}

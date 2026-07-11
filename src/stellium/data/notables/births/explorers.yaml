@@ -18,6 +18,9 @@
   sources:
   - https://www.astro.com/astro-databank/Earhart,_Amelia
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous family baby-book record; AA. — "Full data recorded in baby book published in 'Amelia, My Courageous Sister' (1987)... The document is on page 9. A copy of the book page is on file at Astrodatabank." — https://www.astro.com/astro-databank/Earhart,_Amelia
 - name: Neil Armstrong
   event_type: birth
   year: 1930
@@ -39,6 +42,9 @@
   sources:
   - https://www.astro.com/astro-databank/Armstrong,_Neil
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand plus corroborating family note; AA. — "LMR quotes B.C. in hand that gives Washington township, Auglaise Co. ... Sy Scholfield quotes a note from Armstrong's grandmother (who attended his birth)... Hansen states that the birth occurred at '12:31:30.'" — https://www.astro.com/astro-databank/Armstrong,_Neil
 - name: Yuri Gagarin
   event_type: birth
   year: 1934
@@ -102,3 +108,6 @@
   sources:
   - https://www.astro.com/astro-databank/Cousteau,_Jacques
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Gauquelin registry record; AA. 13:06 vs 1:15 PM is the LMT/Paris conversion; document-class. — "Gauquelin Vol. 3/444 (1:15 PM Paris time)" — https://www.astro.com/astro-databank/Cousteau,_Jacques

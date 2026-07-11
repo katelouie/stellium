@@ -1,0 +1,34 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: K.N. Rao
+  temperament:
+  - trait: Disciplined / research-oriented rationalist
+    tags:
+    - disciplined
+    - methodical
+    evidence: Amassed 'more than 50,000 horoscopes with ten important events of each individual noted...
+      the largest individual collection of horoscopes any astrologer perhaps has';  insists on manual
+      calculation and verification
+    source: Journal of Astrology profile (journalofastrology.com); AstroNidan
+  - trait: Non-commercial / principled (never charged fees)
+    tags:
+    - principled
+    - ascetic
+    evidence: Refused to become a professional astrologer or charge fees; taught in an honorary capacity
+    source: journalofastrology.com; bvbdelhi.org
+  - trait: Competitive / games-loving in youth
+    tags:
+    - competitive
+    - playful
+    evidence: Won brilliancy prizes in chess and two state championships in bridge; frequently referenced
+      games in his writing
+    source: bvbdelhi.org 'About Mr. K.N. Rao'
+  - trait: Combative / tenacious in defense of his cause
+    tags:
+    - tenacious
+    - combative
+    evidence: Despite severe diabetes and near-paralysis (past 70),  single-handedly prepared and fought
+      the Supreme Court defense of Vedic astrology as a UGC course
+    source: astrojyoti.com; Mystical Bee; lightonvedicastrology.com interview

@@ -16,12 +16,14 @@
   - activist
   notable_for: I Know Why the Caged Bird Sings and civil rights activism
   astrological_notes: Aries Sun - tests literary genius and resilience themes
-  data_quality: A
+  data_quality: AA
   sources:
   - "AstroDataBank: https://www.astro.com/astro-databank/Angelou,_Maya"
   verified: false
   has_reliable_time: true
-  verification_notes: "Replaces 'Stellium Test Suite' placeholder."
+  verification_notes: |
+    Replaces 'Stellium Test Suite' placeholder.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate via CAH; AA (hint said A, verified AA). — "AA: from birth certificate, as quoted in Contemporary American Horoscopes by Janice Mackey and Jessica Saunders (Astrolabe, 1990)." — https://www.astro.com/astro-databank/Angelou,_Maya
 - name: Carl Jung
   event_type: birth
   year: 1875
@@ -202,10 +204,13 @@
   - modernist
   notable_for: English writer and one of the foremost modernists of the twentieth century.
   astrological_notes: Sun 5 Aquarius
-  data_quality: A
+  data_quality: C
   sources:
   - https://www.astro.com/astro-databank/Woolf,_Virginia
   verified: true
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=biography rating=C: Unnamed recollection with a chart-flavored 'Gemini rising' tell; C. Birth notices confirm date, give no time. Hint claimed A/AA. — "Frances McEvoy quotes an English friend who grew up as a Bloomsbury child, who said that Woolf was born 'soon after noon and had Gemini rising.' As no name or direct source is given the data is rated C." — https://www.astro.com/astro-databank/Woolf,_Virginia
 - name: Ernest Hemingway
   event_type: birth
   year: 1899
@@ -227,6 +232,9 @@
   sources:
   - https://www.astro.com/astro-databank/Hemingway,_Ernest
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous family record (mother's scrapbook); AA (hint said A, verified AA/upgrade). — "Sy Scholfield submitted a photo of a page from Hemingway's mother's scrapbook... 'At 8 o'clock on the morning of July 21st. 1899 Ernest Miller Hemingway came to town...'" — https://www.astro.com/astro-databank/Hemingway,_Ernest
 - name: Gabriel García Márquez
   event_type: birth
   year: 1927
@@ -288,10 +296,13 @@
   - novelist
   notable_for: American poet, novelist, and short-story writer.
   astrological_notes: Sun 4 Scorpio
-  data_quality: AA
+  data_quality: A
   sources:
   - https://www.astro.com/astro-databank/Plath,_Sylvia
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Mother's memory; A-soft (hint said AA, verified A — MA certificates carried no time in 1932). — "R.H. Oliver quotes AA 10/1977, from her mother. (Massachusetts certificates did not record time before 1940.)" — https://www.astro.com/astro-databank/Plath,_Sylvia
 - name: Rumi
   event_type: birth
   year: 1207
@@ -379,10 +390,13 @@
   - mystery novelist
   notable_for: English crime novelist, short story writer, and playwright.
   astrological_notes: Sun 22 Virgo
-  data_quality: A
+  data_quality: AA
   sources:
   - https://www.astro.com/astro-databank/Christie,_Agatha
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous midwife's bill; AA (hint said A, verified AA). — "'a midwife named Mrs. Shelton-Price who according to her bill, charged one crown and two shillings to deliver Agatha Mary Clarissa Miller at 2:14 pm on Monday afternoon, September 15.' ...we consider this as quoted birth record, Rodden Rating AA." — https://www.astro.com/astro-databank/Christie,_Agatha
 - name: Jorge Luis Borges
   event_type: birth
   year: 1899
@@ -404,3 +418,6 @@
   sources:
   - https://www.astro.com/astro-databank/Borges,_Jorge_Luis
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand from Steinbrecher (3:30 AM Cordoba time)." — https://www.astro.com/astro-databank/Borges,_Jorge_Luis

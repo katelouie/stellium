@@ -46,6 +46,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
 - **Bi-, tri- and quad-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
 - **Sect-aware calculations** with proper day/night chart handling
+- **Birth-time rectification (sect)** — honest, human-in-the-loop recovery of day/night **sect** (~70%, cross-validated) via a compare-hypothesis workbench; deliberately does *not* fake minute-level time (it's an ill-posed inverse). [Guide](docs/astrology/RECTIFICATION.md)
 - **25+ Arabic Parts** with traditional formulas (see the [full list](docs/options_list.md))
 - **Essential & accidental dignity scoring** for both traditional and modern rulerships
 - **Fixed stars** — the four Royal Stars and beyond, by tier or by name (e.g. Regulus, Algol)
@@ -67,6 +68,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Localized reports** — render terminal, Markdown, HTML, and PDF reports in multiple languages (Simplified Chinese included) via `with_locale()`
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
+- **Notable life-event & temperament datasets** — taxonomy-tagged biographical timelines (888 dated events) and character descriptors for 60+ notables, honestly provenance-graded, via `get_notable_life_events()` / `get_notable_temperament()`
 
 **Vedic:**
 
@@ -575,6 +577,26 @@ chart = ChartBuilder.from_details(
 chart.draw("unknown_time.svg").save()  # Shows Moon's possible range
 ```
 
+### Birth-Time Rectification (Sect)
+
+Recover the one thing that *is* recoverable from an unknown birth time — **sect**
+(day vs night) — at ~70% accuracy (cross-validated). It's a single honest call, and
+an *indicator, not an oracle*: Stellium deliberately refuses to invent a
+minute-level time (the inverse is ill-posed). See the **[Rectification Guide](docs/astrology/RECTIFICATION.md)**
+for what it does, and — importantly — how *not* to use it.
+
+```python
+from stellium import ChartBuilder, analyze_sect
+
+chart = ChartBuilder.from_notable("Frida Kahlo").calculate()
+a = analyze_sect(chart)                       # events auto-looked-up for notables
+print(f"{a.p_day:.2f} → {a.leans}")           # 0.80 → day
+
+# Or as a report section (renders in every format):
+from stellium import ReportBuilder
+ReportBuilder().from_chart(chart).with_sect_rectification().render(format="markdown")
+```
+
 ### Data Export
 
 ```python
@@ -752,6 +774,7 @@ python examples/<name>_cookbook.py
 | **[VISUALIZATION.md](docs/VISUALIZATION.md)** | Complete chart drawing guide with fluent API reference |
 | **[REPORTS.md](docs/REPORTS.md)** | Report generation guide: sections, presets, PDF output |
 | **[CHART_TYPES.md](docs/CHART_TYPES.md)** | Chart types: natal, synastry, transit, composite, Davison |
+| **[astrology/RECTIFICATION.md](docs/astrology/RECTIFICATION.md)** | Birth-time rectification & sect recovery: what it is, how to use it, and how *not* to |
 
 ### Visual Galleries
 

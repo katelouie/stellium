@@ -1,0 +1,271 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Amelia Earhart
+  events:
+  - date: '1920-12-28'
+    precision: day
+    type: spiritual
+    description: Attended a Long Beach/Los Angeles air show with her father; a plane ride days later hooked
+      her on flying.
+    significance: major
+    age_at_event: 23
+    source: Character and Leadership; ourmental.health
+  - date: '1928-06-17'
+    precision: day
+    type: recognition
+    description: Became the first woman to cross the Atlantic by air, as a passenger aboard the Friendship
+      (landed June 18).
+    significance: major
+    age_at_event: 30
+    source: Biography.com; Wikipedia
+  - date: '1931-02-07'
+    precision: day
+    type: relationship
+    description: Married publisher George Palmer Putnam after refusing his proposals six times; called
+      it a 'partnership.'
+    significance: major
+    age_at_event: 33
+    source: PBS American Experience; Biography.com
+  - date: '1932-05-21'
+    precision: day
+    type: recognition
+    description: Became the first woman to fly solo nonstop across the Atlantic (took off May 20, landed
+      Ireland May 21); awarded the Distinguished Flying Cross.
+    significance: major
+    age_at_event: 34
+    source: PBS; Britannica
+  - date: '1932-08-25'
+    precision: day
+    type: recognition
+    description: Became the first woman to fly solo across the North American continent and back (Aug
+      24-25).
+    significance: moderate
+    age_at_event: 35
+    source: PBS American Experience
+  - date: '1935-01-12'
+    precision: day
+    type: recognition
+    description: First person to fly solo from Honolulu to Oakland (departed Jan 11, landed Jan 12).
+    significance: major
+    age_at_event: 37
+    source: Britannica; PBS
+  - date: '1937-06-01'
+    precision: day
+    type: career
+    description: Departed Miami with navigator Fred Noonan on the round-the-world flight attempt (earlier
+      Oakland start March 17 aborted).
+    significance: major
+    age_at_event: 39
+    source: Womens History Museum; Chronicles
+  - date: '1937-07-02'
+    precision: day
+    type: accident
+    description: Disappeared over the Pacific near Howland Island during the round-the-world attempt.
+    significance: major
+    age_at_event: 39
+    source: TIME; Wikipedia
+  - date: '1939-01-05'
+    precision: day
+    type: legal
+    description: Declared legally dead by a Los Angeles court.
+    significance: moderate
+    age_at_event: 41
+    source: PBS; TIME
+- name: Jacques Cousteau
+  events:
+  - date: '1930'
+    precision: year
+    type: education
+    description: Entered the École navale (French Naval Academy) at Brest; graduated as a gunnery officer.
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia; Britannica
+  - date: '1936'
+    precision: year
+    type: accident
+    description: Near-fatal automobile accident broke both arms and ended his naval-aviation career; rehabilitation
+      swimming led him to the sea.
+    significance: major
+    age_at_event: 25
+    source: ethw.org; famousscientists.org
+  - date: '1937-07-12'
+    precision: day
+    type: relationship
+    description: Married Simone Melchior, his business partner; they had two sons, Jean-Michel (1938)
+      and Philippe (1940).
+    significance: major
+    age_at_event: 27
+    source: Wikipedia
+  - date: '1943'
+    precision: year
+    type: career
+    description: With engineer Émile Gagnan, tested the first Aqua-Lung prototype, enabling extended free
+      diving.
+    significance: major
+    age_at_event: 32
+    source: Wikipedia; Britannica
+  - date: '1945'
+    precision: year
+    type: recognition
+    description: Awarded the Legion of Honour for French Resistance work during WWII.
+    significance: moderate
+    age_at_event: 35
+    source: ADB seed; ethw.org
+  - date: '1957'
+    precision: year
+    type: recognition
+    description: The Silent World (1956 film) won the Academy Award for Best Documentary; had won the
+      Palme d'Or in 1956.
+    significance: major
+    age_at_event: 46
+    source: ethw.org; Britannica
+  - date: '1968'
+    precision: year
+    type: career
+    description: Launched the TV series The Undersea World of Jacques Cousteau (ran to 1976), making him
+      a household name.
+    significance: major
+    age_at_event: 58
+    source: Britannica; Wikipedia
+  - date: '1979-06-28'
+    precision: day
+    type: bereavement_other
+    description: Son Philippe, his designated successor, died in a PBY Catalina flying-boat crash on the
+      Tagus near Lisbon.
+    significance: major
+    age_at_event: 69
+    source: Wikipedia; Biography.com
+  - date: '1985'
+    precision: year
+    type: recognition
+    description: Awarded the US Presidential Medal of Freedom.
+    significance: moderate
+    age_at_event: 75
+    source: ADB seed; Wikipedia
+  - date: '1990'
+    precision: year
+    type: bereavement_other
+    description: Wife Simone died of cancer at age 72.
+    significance: major
+    age_at_event: 79
+    source: EBSCO; Wikipedia
+  - date: '1992'
+    precision: year
+    type: relationship
+    description: Married second wife Francine Triplet.
+    significance: moderate
+    age_at_event: 82
+    source: ADB seed
+  - date: '1997-06-25'
+    precision: day
+    type: bereavement_other
+    description: Died in Paris, age 87.
+    significance: major
+    age_at_event: 87
+    source: Biography.com; Wikipedia
+- name: Neil Armstrong
+  events:
+  - date: '1946-08-05'
+    precision: day
+    type: recognition
+    description: Earned his student pilot's license on his 16th birthday, before he had a driver's license.
+    significance: moderate
+    age_at_event: 16
+    source: CNN Fast Facts; Biography.com
+  - date: '1951'
+    precision: year
+    type: career
+    description: Flew combat in the Korean War as a US Navy pilot (78 combat missions, 1951-1952).
+    significance: major
+    age_at_event: 21
+    source: Biography.com; Wikipedia
+  - date: '1956-01-28'
+    precision: day
+    type: relationship
+    description: Married Janet Shearon in Wilmette, Illinois.
+    significance: major
+    age_at_event: 25
+    source: Biography.com; CNN Fast Facts
+  - date: '1962-01-28'
+    precision: day
+    type: bereavement_other
+    description: Daughter Karen (b. 1959) died of an inoperable brain tumor, age 2 (on the Armstrongs'
+      sixth wedding anniversary).
+    significance: major
+    age_at_event: 31
+    source: Timepath; elivestory
+  - date: '1962-09-17'
+    precision: day
+    type: career
+    description: Selected for NASA's second astronaut group ('New Nine'), NASA's first civilian astronaut.
+    significance: major
+    age_at_event: 32
+    source: CNN Fast Facts; Wikipedia
+  - date: '1966-03-16'
+    precision: day
+    type: recognition
+    description: Commanded Gemini 8, performing the first docking of two spacecraft in orbit;  aborted
+      after a stuck thruster.
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Biography.com
+  - date: 1968-05
+    precision: month
+    type: accident
+    description: Ejected moments before his Lunar Landing Research Vehicle crashed during training.
+    significance: major
+    age_at_event: 37
+    source: Wikipedia; ADB seed
+  - date: '1969-07-16'
+    precision: day
+    type: career
+    description: Launched from Kennedy Space Center as commander of Apollo 11.
+    significance: major
+    age_at_event: 38
+    source: CNN Fast Facts; Wikipedia
+  - date: '1969-07-20'
+    precision: day
+    type: recognition
+    description: Became the first person to walk on the Moon,  stepping onto the surface at 10:56 PM EDT
+      July 20 (02:56 UTC July 21).
+    significance: major
+    age_at_event: 38
+    source: Wikipedia; officetimeline (time detail)
+  - date: '1969-08-13'
+    precision: day
+    type: recognition
+    description: Honored with a ticker-tape parade in New York City after the mission.
+    significance: moderate
+    age_at_event: 39
+    source: CNN Fast Facts; timeline-of-humanity
+  - date: '1971'
+    precision: year
+    type: career
+    description: Left NASA to become a professor of aerospace engineering at the University of Cincinnati.
+    significance: moderate
+    age_at_event: 40
+    source: Biography.com; Wikipedia
+  - date: '1994'
+    precision: year
+    type: relationship
+    description: Divorced Janet after 38 years; married Carol Held Knight in Ohio on June 12, 1994.
+    significance: major
+    age_at_event: 63
+    source: Wikipedia; CNN Fast Facts
+  - date: '2012-08-07'
+    precision: day
+    type: health_crisis
+    description: Underwent heart bypass surgery in Cincinnati.
+    significance: major
+    age_at_event: 82
+    source: Biography.com; ADB seed
+  - date: '2012-08-25'
+    precision: day
+    type: bereavement_other
+    description: Died of complications from the surgery, age 82.
+    significance: major
+    age_at_event: 82
+    source: Timepath; Biography.com

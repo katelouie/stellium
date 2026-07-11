@@ -20,9 +20,9 @@
   - "AstroDataBank: birth certificate in Einstein Archive, 'vormittag um elf ein halb Uhr' = 11:30 AM (note updated 28 Aug 2013)."
   verified: true
   has_reliable_time: true
-  verification_notes: >
-    Replaces the 'Stellium Test Suite' placeholder. Genuine birth certificate
-    confirms 1879-03-14, 11:30, Ulm. Upgrade C -> AA.
+  verification_notes: |
+    Replaces the 'Stellium Test Suite' placeholder. Genuine birth certificate confirms 1879-03-14, 11:30, Ulm. Upgrade C -> AA.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "Birth certificate in hand from Einstein Archive. It says '...vormittag um elf ein halb Uhr ein Kind männlichen Geschlechts geboren worden sei' (...before noon at eleven and a half a child of male sex was born)." — https://www.astro.com/astro-databank/Einstein,_Albert
 - name: Marie Curie
   event_type: birth
   year: 1867
@@ -214,6 +214,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Sagan,_Carl'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. DATA FIX: ADB place is New York, NY (not Brooklyn as roster hinted). — "B.C. in hand, LMR" — https://www.astro.com/astro-databank/Sagan,_Carl
 - name: Sigmund Freud
   event_type: birth
   year: 1856
@@ -232,16 +235,15 @@
   - Author
   notable_for: Austrian neurologist and founder of psychoanalysis. Developed theories of the unconscious mind, dream interpretation, and the structure of personality (id, ego, superego). His work profoundly influenced 20th century thought.
   astrological_notes: Sun 15 Taurus, Moon in Gemini
-  data_quality: A
+  data_quality: AA
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Freud,_Sigmund'
   - Ernest Jones, The Life and Works of Sigmund Freud (1953)
   verified: true
   has_reliable_time: true
-  verification_notes: >
-    18:30 is biographical (Ernest Jones), not certificate-based; and the local
-    register recorded a March date that Jones calls a clerical error for May 6.
-    Sound but not AA. Flag the March/May 6 date question.
+  verification_notes: |
+    18:30 is biographical (Ernest Jones), not certificate-based; and the local register recorded a March date that Jones calls a clerical error for May 6. Sound but not AA. Flag the March/May 6 date question.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous family record (father's hand); AA (hint said A, verified AA). March-6 conspiracy addressed and rejected by scholars in-note. — "Philip Lucas quotes a photo of a sheet of paper (the 'Gedenkblatt') inserted in a family bible, on which the data was written in the father's handwriting in Hebrew and German. Ernest Jones gives the same data..." — https://www.astro.com/astro-databank/Freud,_Sigmund
 - name: Charles Darwin
   event_type: birth
   year: 1809
@@ -328,6 +330,9 @@
   sources:
   - https://www.astro.com/astro-databank/Turing,_Alan
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Mother's memory; A-soft. — "Turing's mother gave 2:15 AM as his birthtime, so it has a Rodden rating of A (from memory)." — https://www.astro.com/astro-databank/Turing,_Alan
 - name: Rosalind Franklin
   event_type: birth
   year: 1920
@@ -392,14 +397,18 @@
   - Nobel laureate
   notable_for: American theoretical physicist known for his work in the path integral formulation of quantum mechanics, the theory of quantum electrodynamics, and the physics of the superfluidity of supercooled liquid helium.
   astrological_notes: Sun 19 Taurus
-  data_quality: AA
+  data_quality: C
   sources:
   - https://www.astro.com/astro-databank/Feynman,_Richard
   verified: true
-  has_reliable_time: true
+  has_reliable_time: false
   verification_notes: >
-    14:49 is oddly precise and widely repeated, but confirm the ADB
-    certificate basis before trusting the AA. Flagged, not downgraded.
+    NOT a certificate: the birth time was unknown and 14:49:20 EWT is an Isaac
+    Starkman RECTIFICATION (astrologically computed), which is Rodden C by
+    definition — the "oddly precise" 14:49 is the rectification signature, not a
+    record. The prior AA + has_reliable_time: true was a fake AA. Downgraded to C,
+    time NOT reliable. MUST be excluded from any rectification-validation corpus:
+    grading a rectifier against a rectified time is circular.
 - name: Rachel Carson
   event_type: birth
   year: 1907
@@ -417,10 +426,13 @@
   - Silent Spring
   notable_for: American marine biologist and conservationist whose book Silent Spring and other writings are credited with advancing the global environmental movement.
   astrological_notes: Sun 4 Gemini
-  data_quality: A
+  data_quality: C
   sources:
   - https://www.astro.com/astro-databank/Carson,_Rachel
   verified: true
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=unknown rating=C: No recorded minute (only 'P.M.'); rated C. Hinted 02:00 has no source. Hint claimed A. — "Sy Scholfield provided 'delayed birth registration' certificate, filed on 1 July 1941, stating time of birth as 'P.M.,' no specific hour/minutes given." — https://www.astro.com/astro-databank/Carson,_Rachel
 - name: Alexander Fleming
   event_type: birth
   year: 1881

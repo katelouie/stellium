@@ -1,0 +1,183 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Agatha Christie
+  temperament:
+  - trait: Intensely private; shunned publicity
+    tags:
+    - private
+    - reserved
+    evidence: Thompson calls her 'an entirely private person';  Library Journal notes she 'shunned publicity'
+    source: 'Laura Thompson, Agatha Christie: A Mysterious Life; Kirkus/Library Journal'
+  - trait: Highly imaginative
+    tags:
+    - imaginative
+    - curious
+    evidence: 'Thompson: her childhood home Ashfield was her ''imaginative plaything'';  an ''imaginative...
+      woman who loved life'''
+    source: Thompson; Library Journal (starred review)
+  - trait: Hardworking and prolific
+    tags:
+    - disciplined
+    - hardworking
+    evidence: 66 detective novels,  14 short-story collections, ~20 plays; wrote nearly every year
+    source: Thompson; Kirkus
+  - trait: Financially careful/thrifty; controlling of household money
+    tags:
+    - frugal
+    - practical
+    evidence: Kept 'a tight rein on the family finances', rooted in the family's decline after her father's
+      death
+    source: historic-uk.com; Myles Dungan
+  - trait: Emotionally sensitive; prone to breakdown under strain
+    tags:
+    - sensitive
+    - melancholic
+    evidence: 1926 nervous breakdown/fugue after her mother's death and husband's affair; recovered slowly
+    source: Lucy Worsley; Thompson
+- name: Ernest Hemingway
+  temperament:
+  - trait: Hypermasculine, competitive, pugnacious
+    tags:
+    - competitive
+    - combative
+    evidence: Cultivated 'macho swagger';  competed with peers at boxing, writing, seduction;  physically
+      assaulted critics
+    source: Biography.com; Meyers (1985)
+  - trait: Depressive with violent mood swings (probable bipolar tendency)
+    tags:
+    - melancholic
+    - volatile
+    evidence: 'Lifelong depression and insomnia;  Baker: the ''pendulum swung from megalomania to melancholy'';  strong
+      family pattern'
+    source: Meyers (1985); Martin (2006) psychological autopsy
+  - trait: Charismatic, generous, a magnetic raconteur
+    tags:
+    - charismatic
+    - generous
+    evidence: Handsome, charismatic; 'could be generous with money'; above all 'a man of action'
+    source: Meyers (1985); Publishers Weekly review of Meyers
+  - trait: Man of action drawn to danger and the outdoors
+    tags:
+    - adventurous
+    - restless
+    evidence: WWI, Spanish Civil War, big-game hunting in Africa, deep-sea fishing, boxing
+    source: Meyers (1985); Publishers Weekly
+  - trait: Braggart yet privately introverted and insecure
+    tags:
+    - insecure
+    - private
+    evidence: Benson describes him as introverted and private, masking his nature with braggadocio
+    source: Wikipedia (Benson, Hallengren); Meyers (1985)
+- name: Jorge Luis Borges
+  temperament:
+  - trait: Extreme shyness and social self-consciousness
+    tags:
+    - shy
+    - introverted
+    evidence: Biographer James Woodall notes public appearances that 'shyness still made a torture'; he
+      hid behind lecterns while a friend read his words aloud
+    source: James Woodall biography (via NYRB); The New Criterion profile
+  - trait: Studied modesty and self-effacement
+    tags:
+    - modest
+    - self-effacing
+    evidence: Repeatedly called himself first a reader, not a writer; critics describe a deliberate, lifelong
+      project of 'engaged modesty'
+    source: Tim Parks, New York Review of Books
+  - trait: Ironic, self-deprecating wit
+    tags:
+    - ironic
+    - witty
+    evidence: Dramatized his split public/private self in 'Borges and I'; told an interviewer of his public
+      persona, 'I am sick and tired of him'
+    source: The New Criterion; Borges, 'Borges and I'
+  - trait: Bookishness and vast erudition
+    tags:
+    - bookish
+    - intellectual
+    evidence: '''If I were asked to name the chief event in my life, I should say my father''s library''
+      (Autobiographical Essay)'
+    source: Borges, Autobiographical Essay; Poetry Foundation
+  - trait: Emotional and practical dependence on his mother
+    tags:
+    - dependent
+    - dutiful
+    evidence: Lived with his mother until her death at 99; Williamson documents his deference to her,
+      including over his romantic life
+    source: 'Edwin Williamson, Borges: A Life; Washington Post review'
+- name: Maya Angelou
+  temperament:
+  - trait: Resilience in the face of trauma
+    tags:
+    - resilient
+    - determined
+    evidence: 'Biographers and critics repeatedly frame her as a symbol of resilience; her own thesis:
+      ''we may encounter many defeats, but we must not be defeated'''
+    source: Gillespie; Angelou in George Plimpton interview (ZSR Library)
+  - trait: Commanding public presence and dignity
+    tags:
+    - dignified
+    - charismatic
+    evidence: James Baldwin praised the 'moving wonder' and 'luminous dignity' with which she confronted
+      her life
+    source: James Baldwin (Caged Bird jacket); Smithsonian
+  - trait: Warmth and generosity toward others
+    tags:
+    - warm
+    - generous
+    evidence: Toni Morrison recalled Angelou was the first person outside the family she called when her
+      son died
+    source: Hoffert (cited in Bartleby profile)
+  - trait: Assertive, unyielding on principle
+    tags:
+    - assertive
+    - principled
+    evidence: Contemporaries describe her as warm yet assertive, 'known for never backing down' on causes
+      she believed in
+    source: Truity personality profile; contemporaries
+  - trait: Adaptable and multilingual
+    tags:
+    - adaptable
+    - curious
+    evidence: Made a practice of learning the language of every country she visited, gaining proficiency
+      in French, Spanish, Italian, and Arabic
+    source: Wikipedia; The Famous People
+- name: Sylvia Plath
+  temperament:
+  - trait: Perfectionism and relentless drive to succeed
+    tags:
+    - perfectionist
+    - ambitious
+    evidence: Biographers describe an 'obsessive will to succeed—academically, socially, and creatively'
+      evident from her college journals
+    source: Encyclopedia.com; Annenberg Learner
+  - trait: Intense, volatile emotional temperament
+    tags:
+    - intense
+    - volatile
+    evidence: Anne Stevenson describes her as 'an intense, volatile character'; Cambridge friends found
+      her prone to angry outbursts and nervous aggression
+    source: Anne Stevenson, Bitter Fame; Encyclopedia.com
+  - trait: Lifelong predisposition to depression
+    tags:
+    - depressive
+    - melancholic
+    evidence: Documented severe depression, psychiatric hospitalization, and repeated suicide attempts
+      across two decades
+    source: Britannica; Heather Clark, Red Comet
+  - trait: Vivacious, voracious appetite for life
+    tags:
+    - vivacious
+    - energetic
+    evidence: Her journals reveal a 'voracious appetite for food and people and sex and travel' and a
+      'relentless drive for self-actualization'
+    source: Lit Hub, 'The Many Faces of Sylvia Plath'; Stevenson
+  - trait: Outwardly sociable, disciplined high-achiever
+    tags:
+    - outgoing
+    - disciplined
+    evidence: '''Tall, slim, and outgoing, Plath made friends easily and excelled'';  kept meticulous
+      writing schedules and goals'
+    source: Annenberg Learner; Diane Middlebrook, Her Husband (via Medium)

@@ -36,6 +36,14 @@ A complete map of Stellium's documentation. The **hub** for development is
 | [options_list.md](options_list.md) | Complete configuration reference |
 | [api/index.md](api/index.md) | API reference |
 
+## Astrology guides — `docs/astrology/`
+
+Practitioner-facing teaching guides: the astrology itself, not the API.
+
+| Doc | Purpose |
+|---|---|
+| [astrology/RECTIFICATION.md](astrology/RECTIFICATION.md) | Birth-time rectification & sect recovery — what it is, how to use `analyze_sect`, and how *not* to (the ill-posed-inverse guardrails) |
+
 ## Methodology & sources — `docs/methodology/`
 
 Scholarly provenance: what Stellium's traditional techniques implement and on
