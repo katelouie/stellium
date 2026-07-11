@@ -1,0 +1,121 @@
+// ============================================================================
+// palettes.typ — the VALUE layer of the Stellium PDF design system.
+//
+// One report architecture, five interchangeable themes. A theme is nothing but
+// data: 8 colour tokens + a display/body/mono font trio + a sign-tint palette +
+// a `laser` boolean. Layout, glyphs and components (components.typ) are shared
+// across every theme — nothing structural changes between them.
+//
+// Escalation ladder (see the mockup-to-typst skill): every theme difference here
+// is a scalar token or a boolean, never a structural skin. `laser` is the one
+// boolean branch — it flips discs/chips/badges from filled to 1.4pt outlines.
+// ============================================================================
+
+// --- Global constants: SHARED by every theme (not theme tokens) --------------
+
+// Aspect colour code — identical across aspectarian, aspect list, cross-chart
+// aspects, ZR events and midpoint trees, in all themes.
+#let aspect-colors = (
+  conjunction: rgb("#7a5c72"),
+  sextile: rgb("#3d7eb8"),
+  square: rgb("#c0392b"),
+  trine: rgb("#4a9b6e"),
+  opposition: rgb("#a33227"),
+)
+
+// Element / modality bar colours — semantic constants shared across colour
+// themes (laser mode overrides bars to muted grey in components.typ).
+#let element-colors = (
+  Fire: rgb("#C6612F"), Earth: rgb("#B0872F"),
+  Air: rgb("#9B8BC4"), Water: rgb("#5B9BB5"),
+)
+
+// Zodiac order — structural (theme-independent). Used to index a sign-tint
+// palette by sign name.
+#let sign-order = (
+  "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
+  "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces",
+)
+
+// --- Sign-tint palettes: one 12-colour ramp per wheel palette -----------------
+// The disc behind a planet glyph is tinted by the planet's sign.
+#let sign-palettes = (
+  rainbow: (
+    "#E8B4B8", "#E8C4B8", "#E8D8B8", "#E8E8B8", "#D8E8B8", "#C4E8B8",
+    "#B8E8C4", "#B8E8D8", "#B8D8E8", "#B8C4E8", "#C4B8E8", "#D8B8E8",
+  ),
+  sepia: (
+    "#eadfc8", "#e3d4ba", "#dccaad", "#d4bf9f", "#cdb592", "#c6aa84",
+    "#bfa077", "#b89569", "#b18b5c", "#a9804e", "#a27641", "#9b6b33",
+  ),
+  celestial: (
+    "#e3d6f5", "#dacbef", "#d0c0e8", "#c7b6e2", "#bdabdc", "#b4a0d5",
+    "#aa95cf", "#a18ac8", "#977fc2", "#8e75bc", "#846ab5", "#7b5faf",
+  ),
+  blues: (
+    "#d6e9fa", "#c7dcf0", "#b7d0e7", "#a8c3dd", "#99b7d3", "#8aaac9",
+    "#7a9ec0", "#6b91b6", "#5c85ac", "#4d78a2", "#3d6c99", "#2e5f8f",
+  ),
+  greyscale: (
+    "#ededed", "#e9e9e9", "#e5e5e5", "#e1e1e1", "#dddddd", "#d9d9d9",
+    "#d4d4d4", "#d0d0d0", "#cccccc", "#c8c8c8", "#c4c4c4", "#c0c0c0",
+  ),
+)
+
+// --- Themes: 8 tokens + fonts + sign palette + laser flag ---------------------
+// Colours are hex strings here; resolve-theme() lifts them to rgb() and attaches
+// the shared constants. Every theme declares the SAME keys (schema discipline):
+// a missing key in one theme is a bug, not a default to paper over.
+#let themes = (
+  house: (
+    bg: "#FAF8F6", ink: "#3A2233", accent: "#47283F", gold: "#B0872F",
+    muted: "#A08A72", rule: "#D8CBB6", hair: "#ECE4D6", panel: "#FFFFFF",
+    display: "Cormorant Garamond", body: "EB Garamond", mono: "IBM Plex Mono",
+    display-tracking: 0pt, display-weight: 600,
+    signs: "rainbow", laser: false, label: "House Style",
+  ),
+  sepia: (
+    bg: "#F2E8D5", ink: "#3A2A1A", accent: "#8B5A2B", gold: "#9B7343",
+    muted: "#9A7A52", rule: "#B8A07A", hair: "#DDCEB0", panel: "#FFFFFF",
+    display: "Newsreader", body: "EB Garamond", mono: "IBM Plex Mono",
+    display-tracking: 0pt, display-weight: 600,
+    signs: "sepia", laser: false, label: "Sepia",
+  ),
+  celestial: (
+    bg: "#17111F", ink: "#D9C9F2", accent: "#E8B44A", gold: "#E8B44A",
+    muted: "#8B7BB0", rule: "#E8B44A", hair: "#3A2A55", panel: "#1F1730",
+    display: "Cinzel", body: "Spectral", mono: "IBM Plex Mono",
+    display-tracking: 0.06em, display-weight: 600,
+    signs: "celestial", laser: false, label: "Celestial",
+  ),
+  blues: (
+    bg: "#0A2A44", ink: "#DCEFFF", accent: "#BFE3FF", gold: "#8FC3EE",
+    muted: "#7FB2D8", rule: "#BFE3FF", hair: "#123A5A", panel: "#10375A",
+    display: "Space Grotesk", body: "Space Grotesk", mono: "IBM Plex Mono",
+    display-tracking: 0pt, display-weight: 600,
+    signs: "blues", laser: false, label: "Blues",
+  ),
+  greyscale: (
+    bg: "#FFFFFF", ink: "#1B1B1B", accent: "#1B1B1B", gold: "#6A6A6A",
+    muted: "#8A8A8A", rule: "#1B1B1B", hair: "#DDD8CF", panel: "#FFFFFF",
+    display: "IBM Plex Serif", body: "IBM Plex Serif", mono: "IBM Plex Mono",
+    display-tracking: 0pt, display-weight: 600,
+    signs: "greyscale", laser: true, label: "Greyscale",
+  ),
+)
+
+// resolve-theme(name) -> a ready-to-use theme dict with rgb() colours, the
+// resolved sign-tint ramp, and the shared aspect colours attached.
+#let resolve-theme(name) = {
+  let t = themes.at(name, default: themes.house)
+  let color-keys = ("bg", "ink", "accent", "gold", "muted", "rule", "hair", "panel")
+  let out = (:)
+  for (k, v) in t {
+    out.insert(k, if color-keys.contains(k) { rgb(v) } else { v })
+  }
+  out.insert("sign-tints", sign-palettes.at(t.signs).map(rgb))
+  out.insert("aspect-colors", aspect-colors)
+  out.insert("element-colors", element-colors)
+  out.insert("sign-order", sign-order)
+  out
+}
