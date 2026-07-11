@@ -102,29 +102,43 @@ match a full `ChartBuilder…calculate()` at the same time to tolerance (angles 
 Moon < 0.01°; sect & house placements exact). This is the invariant everything
 rides on — and the Moon tolerance is what catches corrections (a).
 
-### 4.2 Sect is a **three-region** step function, not a binary split
+### 4.2 Sect is a multi-region step function — **compute it, don't assume it**
 
-Sweeping a candidate time across the local day, the Sun crosses the horizon
-**twice** (sunrise, sunset), so sect partitions the day into **three** intervals:
+Sect is simply **Sun above the horizon (day) or below it (night)** at the
+candidate time. Because the re-cast already places the fixed-longitude Sun into a
+per-candidate house, **sect falls out for free** — and correctly at any date and
+latitude. **Never hardcode the region structure or fixed boundary clock times;**
+derive `sect(t)` from the Sun's actual altitude.
+
+At **temperate latitudes** — where the whole corpus sits (max ~55°N, London) —
+the day sweep does cross the horizon twice, giving the intuitive three regions,
+but the boundaries are the *real* sunrise/sunset for that date + place and their
+widths swing hard with **season** (a 55°N summer "day" region is ~17 h; in winter
+it inverts):
 
 ```
-00:00 ──night── sunrise ──day── sunset ──night── 24:00
+00:00 ──night── sunrise ──day── sunset ──night── 24:00   (typical temperate case)
       (pre-dawn)         (daylight)       (post-dusk)
 ```
 
+But this is **not universal**: above the polar circle you get midnight sun (all
+24 h **day**, zero night regions) or polar night (all **night**), and the count
+of regions is 1, not 3. The corpus has no such cases, but the harness must be
+correct-by-construction rather than assume the temperate picture.
+
 Consequences the harness must honour from the start:
-- **"Night sect" is two disjoint intervals**, so the sect marginal is
-  `P(night) = P(pre-dawn) + P(post-dusk)` and `P(day) = P(daylight)` — never a
-  single midpoint split.
-- The candidate-time → sect map is a 3-region step; the two sunrise/sunset
-  boundaries are the first **regime edges** (they'll seed the regime-aware grid
-  in Phase 3).
-- **True-sect labeling** of each corpus person = Sun above/below the horizon at
-  the *true* time (which of the three regions it lands in), computed via the
-  re-cast — get this exactly right, it's the benchmark's ground truth.
-- The two firdaria orderings (day vs night) are unchanged; only the *time-region
-  → ordering* mapping is night/day/night. So the v0 classifier still compares two
-  hypotheses, but "night" is the hypothesis covering **both** night regions.
+- **The sect marginal sums cells by computed sect:** `P(night) = Σ (cells where
+  sect(t)=night)`, `P(day) = Σ (cells where sect(t)=day)` — *however many*
+  contiguous runs there are (usually two night + one day here; possibly one of
+  each at the extremes). Never a single midpoint split.
+- The sect **boundaries** (Sun-altitude zero-crossings) are date/latitude
+  dependent and become the first **regime edges** for the Phase-3 grid.
+- **True-sect labeling** of each corpus person = the re-cast's sect at the *true*
+  time. Get this exactly right — it is the benchmark's ground truth.
+- The two firdaria orderings (day vs night) are unchanged; only the *time →
+  ordering* mapping steps with sect. The v0 classifier still compares two
+  hypotheses; "night" is the one covering **all** night cells, whatever their
+  layout.
 
 ### 4.3 Benchmark driver (`harness.py`)
 

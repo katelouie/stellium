@@ -112,11 +112,13 @@ P(day) = Σ over the day-cells of the grid,   P(night) = Σ over the night-cells
 ```
 
 so one model yields both the robust binary answer *and* the fine posterior. Note
-the Sun crosses the horizon **twice** across a day, so the night-cells are **two
-disjoint intervals** (pre-dawn + post-dusk) and `P(night)` sums both — sect is a
-three-region step function of `t`, not a single midpoint split (build spec §4.2).
-Sect is still the safest thing to report because it is a *coarsening* of `t`
-(hard to overfit), which is why it is the natural **first deliverable** (§ spec).
+`P(night)` sums **all** night-cells — sect is whether the Sun is above/below the
+horizon, *computed* per candidate, so at temperate latitudes the night-cells are
+two disjoint runs (pre-dawn + post-dusk) while the widths and even the region
+count are season/latitude dependent (one region under polar day/night); never a
+fixed midpoint split (build spec §4.2). Sect is still the safest thing to report
+because it is a *coarsening* of `t` (hard to overfit), which is why it is the
+natural **first deliverable** (§ spec).
 
 ## 5. Evidence: hard-data, soft-data, and the information budget
 
