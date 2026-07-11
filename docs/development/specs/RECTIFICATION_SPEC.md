@@ -186,8 +186,15 @@ timed chart, `rectify()` can still *refine* around the known time.
 
 ## 8. Open questions
 
-- **Q1 — Package home:** a new top-level `stellium/rectification/`, or fold into
-  an existing subsystem? (Lean: new package; it orchestrates many engines.)
+- **Q1 — Package home:** ~~a new top-level `stellium/rectification/`, or fold into
+  an existing subsystem?~~ **Resolved (2026-07-11): standalone-first.** Build the
+  proving harness *outside* the package as a consumer of stellium's public API
+  (under `docs/development/specs/rectification/`), keep `src/stellium/` untouched
+  until the sect classifier proves signal on the 63-person benchmark, then
+  **promote** the proven core into `stellium/rectification/`. Building against the
+  public surface doubles as a test of whether that surface suffices; gaps found
+  become the promotion checklist. See the build spec:
+  [RECTIFICATION_PHASE0_SPEC.md](./RECTIFICATION_PHASE0_SPEC.md).
 - **Q2 — Resolution/regime cells:** uniform grid vs. regime-bounded cells. (Lean:
   regime-aware for the discrete techniques, fine grid for the sharp ones.)
 - **Q3 — Significator mapping:** fixed table vs. weighted-and-marginalised. (Lean:

@@ -67,8 +67,11 @@ migration plan, and acceptance criteria.
   (63 people + frozen birth data + ADB URLs). Result: **[specs/rectification-corpus-events.yaml](./specs/rectification-corpus-events.yaml)**
   — 63 people, **888 dated events** + tagged temperament, birth data authoritative
   from the DB (assembled by `assemble_corpus.py`). `apply_research_verdicts.py`
-  writes provenance verdicts back to the DB. Next: Phase 0 harness (blank times,
-  score the rectifier against truth). *Status: Exploration.*
+  writes provenance verdicts back to the DB. Build spec for the first milestone:
+  **[specs/RECTIFICATION_PHASE0_SPEC.md](./specs/RECTIFICATION_PHASE0_SPEC.md)**
+  — a standalone (outside the package) fast re-cast + benchmark harness + sect
+  classifier, proven on the 63 before any code is promoted into
+  `stellium/rectification/`. *Status: Exploration.*
 
 ## How these docs are scoped
 
