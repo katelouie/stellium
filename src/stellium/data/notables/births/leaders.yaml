@@ -769,3 +769,26 @@
   verification_notes: |
     Father's cited, sighted contemporary letter fixes 02:30 (family source) — upgrade B to A, reliable time. High confidence.
     [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous father's letter (OS date); AA (hint said A, verified AA). — "Prince Christian August writes from Stettin... May 2, 1729, that 'this morning at half past two o'clock' his wife was delivered of a Princess-daughter..." — https://www.astro.com/astro-databank/Catherine_the_Great
+- name: Stephen Miller
+  event_type: birth
+  year: 1985
+  month: 8
+  day: 23
+  hour: 16
+  minute: 53
+  latitude: 34.017
+  longitude: -118.483
+  location_name: Santa Monica, California, USA
+  timezone: America/Los_Angeles
+  category: leader
+  subcategories:
+  - political advisor
+  notable_for: American political advisor and White House official.
+  astrological_notes: Sun 0 Virgo
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Miller,_Stephen
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (Viktor E.).

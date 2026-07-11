@@ -151,3 +151,27 @@
   has_reliable_time: true
   verification_notes: |
     [ADB-verified] verdict=accept_soft bucket=memory rating=A: ADB entry provided by Kate - A, from memory. Add to corpus as A-memory. — "Data source - From memory, Rodden Rating A (Collector - Rodden). Filipe Ferreira quotes a letter from Rao to B.V. Raman in Rao's book 'Planets and Children' p.159 (1993). 12 Oct 1931, 07:54, Machilipatnam." — https://www.astro.com/astro-databank/Rao,_K.N.
+- name: Chris Brennan
+  event_type: birth
+  year: 1984
+  month: 11
+  day: 1
+  hour: 13
+  minute: 28
+  latitude: 39.733
+  longitude: -104.833
+  location_name: Aurora, Colorado, USA
+  timezone: America/Denver
+  category: astrologer
+  subcategories:
+  - astrologer
+  - author
+  notable_for: American astrologer, author, and host of The Astrology Podcast; specialist in Hellenistic astrology.
+  astrological_notes: Sun 9 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Brennan,_Chris
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Quoted birth certificate to ATR (BC/BR).

@@ -230,3 +230,26 @@
   has_reliable_time: true
   verification_notes: |
     [ADB-verified] verdict=accept bucket=document rating=AA: Quoted birth certificate; AA. Round-ish 11:45 is the record. — "D.C. Doane quotes B.C. in 'Progressions in Action.' (Same in Contemporary American Horoscopes and Gauquelin Book of Charts.)" — https://www.astro.com/astro-databank/King,_Billie_Jean
+- name: Sasha Cohen
+  event_type: birth
+  year: 1984
+  month: 10
+  day: 26
+  hour: 21
+  minute: 21
+  latitude: 34.05
+  longitude: -118.25
+  location_name: Los Angeles, California, USA
+  timezone: America/Los_Angeles
+  category: athlete
+  subcategories:
+  - figure skater
+  notable_for: American figure skater; Olympic silver medallist (2006).
+  astrological_notes: Sun 3 Scorpio
+  data_quality: AA
+  sources:
+  - https://www.astro.com/astro-databank/Cohen,_Sasha
+  verified: true
+  has_reliable_time: true
+  verification_notes: >
+    Birth certificate in hand (PT).
