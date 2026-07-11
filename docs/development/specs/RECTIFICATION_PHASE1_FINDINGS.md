@@ -126,3 +126,53 @@ modest sect *prior*; drop the benefic. The cheap event-character approach tops o
   A decisive sect read likely needs the chart itself (option A: the sharp,
   angle-tied techniques → full posterior, sect as the marginal), which is the
   larger build we deferred.
+
+---
+
+## Phase A — time-posterior + the daylight prior — **first GO**
+
+`posterior.py`, `profection.py`, `sect_classifier.py`, `run_sect_benchmark.py`.
+
+Built the technique-agnostic pipeline (candidate grid → per-candidate likelihood →
+posterior → sect marginal) and drove it with **annual profection** (year-lord
+depends on the rising sign → time-dependent, unlike firdaria). Then the control
+that reframed everything.
+
+**Profection is null (and harmful).** Rising-sign recovery is at chance (exact
+9.5% vs 8.3%; mean sign-distance 2.95 vs 3.0), and the profection posterior's sect
+marginal (65%) is *worse* than a uniform posterior. Coarse lord-matching carries
+no time signal — consistent with the firdaria null.
+
+**The control that mattered — the daylight prior.** A *uniform* posterior (zero
+technique signal) sets `p_day` = the **daylight fraction of the birth day**
+(longer day ⇒ more likely born by day = `P(day | date, lat)`). Alone it scores
+**68.3%, corr +0.40** — beating every event-based signal. The strongest sect
+predictor is a free geometric prior that uses no events at all.
+
+**But events add real independent value.** The malefic-of-sect signal is only
+mildly correlated with the daylight prior (+0.19), and its **partial correlation
+with sect controlling for daylight is +0.30** — genuinely independent evidence.
+Combining them (informed prior × event likelihood — the theory's exact structure)
+via a 2-feature logistic:
+
+| model | accuracy |
+|---|---|
+| majority baseline | 54.0% |
+| malefic-alone | 65.1% |
+| daylight-alone | 68.3% |
+| **daylight + malefic (LOO-CV)** | **69.8%**, CI [57.6%, 79.8%] |
+| daylight + malefic (in-sample) | 73.0% |
+
+**Pre-registered gate (LOO acc ≥ 65% AND CI-low > majority): GO.** Cross-validated,
+so not overfit; fitted weights daylight +0.80 / malefic +0.72 (both real).
+
+**Takeaways:**
+1. A calibrated **sect classifier at ~70% (LOO) exists** — daylight prior + the
+   malefic-of-sect event evidence. First result to clear the bar.
+2. Most of the strength is the *free geometric prior*; the event evidence adds a
+   real but modest independent boost. This is honest and defensible, not a
+   dramatic rectification win.
+3. **Profection (coarse timing) is null** — the remaining upside for *time* (not
+   just sect) is the **sharp** angle-tied techniques (directions to angles,
+   ZR-from-Fortune peaks), still untested. Those are the real rectification signal
+   if it exists; the pipeline (`posterior.py`) is built and ready to host them.
