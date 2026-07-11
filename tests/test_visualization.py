@@ -93,6 +93,8 @@ def mock_dwg():
     dwg.text = Mock(return_value=Mock())
     dwg.rect = Mock(return_value=Mock())
     dwg.image = Mock(return_value=Mock())
+    dwg.g = Mock(return_value=Mock())
+    dwg.tspan = Mock(return_value=Mock())
     return dwg
 
 
