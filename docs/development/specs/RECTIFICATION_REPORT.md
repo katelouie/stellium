@@ -209,6 +209,39 @@ Our null is therefore not a refutation of rectifiers; it is a **measurement of t
 gap** between blind significator-matching and judgment-selected convergence — and a
 demonstration that the gap is where all the work is being done.
 
+### Does convergence stack? A direct test
+
+Tebbs's rule predicts that combining independent techniques pushes the true time
+toward the top of the ranking. We tested it by measuring the **percentile rank of
+the true time** in each posterior (null = 50th; Tebbs's "2nd of 4" ≈ 75th):
+
+| posterior | percentile of the true time |
+|---|---|
+| directions alone | 55th |
+| profection alone | 59th |
+| **profection + directions** (blind z-sum) | **51st** |
+| + firdaria | 49th |
+| + firdaria + the LOO sect prior | 49th |
+
+A single technique places the truth at a faint ~57th percentile — a *whisper*
+above chance, not "just under winning." But **blind combination cancels it**:
+profection + directions lands at the 51st percentile, *worse than either alone*,
+and adding firdaria or the sect prior makes it worse still. The techniques share
+the angles (correlated structure) but their faint pulls point at *different* wrong
+places (decorrelated error), so z-summing adds noise faster than signal and the
+truth's rank regresses to the mean. (Weighting could recover the best single
+technique's 59th percentile, but cannot exceed the information present, which tops
+out at a whisper; the sect prior cannot narrow a set with no signal left to narrow.)
+
+**This closes the loop with Tebbs.** If blind convergence *cancels*, then expert
+convergence cannot be *combining* — it must be **selecting** the hooks where
+techniques happen to agree. We have thus empirically separated the two:
+**combination → chance; only human *selection* lifts the truth.** That selection is
+simultaneously the trained eye's real contribution *and* its irreducible
+unfalsifiability — selecting-on-agreement can surface a true time or manufacture a
+false one, and the method itself cannot tell which. The whole lift lives in the one
+step that is neither automatable nor falsifiable.
+
 ## 7. Confound & robustness checks
 
 The one positive event signal (malefic-of-sect) is the most bias-vulnerable, so it
