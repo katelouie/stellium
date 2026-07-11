@@ -242,6 +242,62 @@ unfalsifiability — selecting-on-agreement can surface a true time or manufactu
 false one, and the method itself cannot tell which. The whole lift lives in the one
 step that is neither automatable nor falsifiable.
 
+### The ML rematch — does a model find a combination we missed?
+
+The natural last objection: maybe the signal is *there* but tangled, and a flexible
+model would pull it out where our hand-built two-feature classifier could not. We
+tested it directly — the **compare-hypothesis** version, mechanised: for each
+person, encode the full contrastive (day-fit − night-fit) feature set a practitioner
+actually weighs when adjudicating sect by hand, then let a model combine them.
+
+Six day-positive features: the daylight prior, malefic-of-sect on *events*
+(validated), **malefic-of-sect on *temperament*** (a new feature — Mars-hot vs
+Saturn-cold character, the exact tie-breaker a practitioner uses on a person they
+*know*, never before encoded), sect-light temperament (Solar/Lunar), benefic-of-sect,
+and the firdaria event-timing signal. Two model families, each testing a distinct
+hypothesis: a regularised **logistic** ("is there a linear combination we missed?")
+and a shallow **decision tree** ("is there an *interaction / veto* we missed?" — a
+tree can encode the "one huge indicator overrides everything" rule as a top split).
+All leave-one-out (n = 63):
+
+| model (LOO) | accuracy |
+|---|---|
+| majority class | 54.0% |
+| logistic: daylight only | 68.3% |
+| **logistic: daylight + malefic (validated)** | **69.8%** |
+| logistic: + malefic-of-temperament (new) | 65.1% |
+| logistic: all 6 features | 66.7% |
+| decision tree (depth 3): all 6 features | 68.3% |
+
+**Nothing beat the two validated features.** Every richer model landed at or below
+69.8%. Three things are worth stating plainly:
+
+1. **The new malefic-of-temperament feature is dead null** — corr −0.02, partial
+   corr −0.04 after controlling for daylight + malefic. Adding it *lowered* LOO
+   (69.8 → 65.1): it contributed noise, not signal. This is the truth-resolution
+   ceiling made concrete. The *same doctrine* that adjudicates a known person's sect
+   at ~90% carries **zero** information when the "temperament" it reads is a keyword
+   tally over one-line biographical descriptors. The doctrine is not wrong; our
+   *measurement* of temperament is too coarse to tell "hot-tempered" from its
+   opposite. Rich first-hand truth resolves it; a biography tag cannot.
+2. **The tree confirms the diagnosis rather than beating it.** Free to build any
+   veto or interaction, it chose **daylight as its root split in 50 of 63 folds**
+   (malefic-of-events in the other 13) and ignored the interpretive features. Given
+   the exact structure the practitioner's override intuition describes — one big
+   indicator that trumps the rest — the model concluded the big indicator is the
+   *astronomy*. The geometric prior **is** the veto.
+3. **A model cannot manufacture signal thin truth does not contain.** With n = 63
+   and hundreds of possible interactions, the flexible models overfit and
+   generalised *worse* — the repeated signature of this whole study every time we
+   added features. ~70% is a wall, and the ML rematch shows it is a *truth-resolution*
+   wall, not a modelling one.
+
+The corollary is the constructive one: because the ceiling is truth resolution and
+not method, the way past it is not a better classifier but a **better-informed
+adjudicator** — a human with high-resolution truth, handed the contrastive structure
+to weigh. That is the design of the compare-hypothesis workbench, not an inference
+engine.
+
 ## 7. Confound & robustness checks
 
 The one positive event signal (malefic-of-sect) is the most bias-vulnerable, so it

@@ -96,3 +96,27 @@ def make_directions_scorer(
         return raw - null / N_PERMUTATIONS
 
     return score
+
+
+def event_hooks(person: CorpusPerson, chart: object) -> list[int]:
+    """Indices (into ``person.events``) with an apt directed hit near their age.
+
+    A hook = a directed planet→angle landing within ``ORB_YEARS`` of the event's
+    age, where that promissor naturally signifies the event's type.
+    """
+    hits = _directed_hits(chart)
+    by, bm, bd = (int(x) for x in person.birth_data.date.split("-"))
+    birth = date(by, bm, bd)
+    hooked: list[int] = []
+    for i, e in enumerate(person.events):
+        age = (e.representative_date - birth).days / 365.25
+        if age < 0:
+            continue
+        for hit_age, promissor in hits:
+            if (
+                abs(hit_age - age) < ORB_YEARS
+                and planet_significance(e.type, promissor) > 0
+            ):
+                hooked.append(i)
+                break
+    return hooked
