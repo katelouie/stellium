@@ -328,3 +328,31 @@ fraction already owns the person-to-person variation (date + latitude).
 daylight prior *alone* scores **70.6% on the 17 AA**, matching its ~68% on the
 historical set. The classifier generalises cleanly across eras. The birth-hour
 lever is now definitively closed.
+
+---
+
+## Selection-bias / confound check on the malefic signal — **robust**
+
+The corpus is famous + AA-recorded (Western, 19th–20th c., dramatic documented
+lives). The one *positive* event signal (malefic-of-sect, +0.35) is the finding
+most vulnerable to that. Tested the two concrete confounds — profession and sex:
+
+| malefic-sect correlation, controlling for | value |
+|---|---|
+| nothing (raw) | +0.346 |
+| gender | +0.349 (gender explains **0%** of sect variance) |
+| category | +0.355 |
+| category + gender | +0.361 (both explain **5%** of sect variance) |
+
+Completely stable (strengthens slightly). Women vs men are day-born at 52% vs 55%
+— sect is *birth time of day*, mechanistically independent of who you are, so
+neither profession nor sex *can* confound it. The "criminals are violent and
+happened to be day-born" artifact is ruled out.
+
+**What remains (untestable):** biographical-emphasis bias (biographers front-page
+violent events, under-report chronic decline) and whether the signal generalises
+beyond famous, well-documented lives. These can't be tested without a
+non-famous documented-event corpus, which is structurally impossible — validating
+rectification *requires* known-time + documented events = famous + AA + Western +
+recent. That is an inherent ceiling on the whole enterprise, not a fixable flaw.
+The ~70% classifier is validated **on this population**, not claimed for humanity.
