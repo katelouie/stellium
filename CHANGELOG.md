@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Redesigned chart angle labels (ASC/MC/DSC/IC)** — the abbreviation and degree are now a single inlaid label (bold abbreviation + lighter degree, e.g. `Asc 8°`) set into a notch in the axis line and rotated to run along it, rather than a glyph and degree floating beside a short line. The axis line now extends to the zodiac ring's outer edge. New per-theme angle-style knobs: `degree_color`, `label_size`, `label_gap` (notch half-width), `label_inset` (radial position), and `label_perp` (optical vertical centering).
 - **HTML reports now lay `side_by_side_tables` out truly side by side** — a responsive CSS flex row (wrapping to stacked columns on narrow viewports), matching the Rich terminal and Typst/PDF renderers. Previously HTML stacked them vertically. The `compound` section handler also now dispatches nested side-by-side tables in HTML. Linear-text formats (markdown, plain, prose) continue to stack, which is the honest rendering for those media.
 
 ### Added
