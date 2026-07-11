@@ -1,6 +1,6 @@
 # TODO
 
-*38 open tasks (synced from Obsidian)*
+*40 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -19,6 +19,7 @@
 - DX: surface silent None returns from component-dependent accessors
 - Evaluate component/analyzer support for non-ChartBuilder chart types
 - Fix aspect-pattern over-counting on conjunct points
+- Gauquelin sectors as an analysis primitive (gauquelin_sector) + Mars-effect study on notables DB
 - Implement Firdaria timing technique
 - Implement Vedic dignities engine (moolatrikona, Dig Bala, Navamsa)
 - Implement Vimshottari Dasha system
@@ -26,6 +27,7 @@
 - Integrate Simplified Chinese translation strings into main library and web
 - LMT (Local Mean Time) support for historical charts
 - Optimize 'stellium cache info' — get_stats() walks the whole cache dir (slow/hangs on large caches)
+- Structure-first section contract
 - Update ARCHITECTURE.md directory structure to match codebase
 - Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps
 - Update chart grid to accept arbitrary wheel-only charts
