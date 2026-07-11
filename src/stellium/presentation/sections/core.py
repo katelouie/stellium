@@ -309,11 +309,13 @@ class PlanetPositionSection:
 
         # Build headers based on options
         headers = ["Planet", "Position"]
+        house_headers: list[str] = []
 
         if self.include_house and systems_to_show:
             for system_name in systems_to_show:
                 abbrev = abbreviate_house_system(system_name)
                 headers.append(f"House ({abbrev})")
+                house_headers.append(abbrev)
 
         if self.include_speed:
             headers.append("Speed")
@@ -335,44 +337,63 @@ class PlanetPositionSection:
         # Sort positions consistently
         positions = sorted(positions, key=get_object_sort_key)
 
-        # Build rows
+        # Build the structured planet list ONCE (the single source of truth),
+        # then derive the string ``rows`` from it. Renderers that want structure
+        # (e.g. the Typst PDF design system) read ``planets``; the terminal /
+        # HTML / markdown renderers consume the derived ``rows``.
+        planets: list[dict[str, Any]] = []
         rows = []
         for pos in positions:
-            row = []
-            # Planet name with glyph
             display_name, glyph = get_object_display(pos.name)
-            if glyph:
-                row.append(f"{glyph} {display_name}")
-            else:
-                row.append(display_name)
-
-            # Position with sign glyph
             degree = int(pos.sign_degree)
             minute = int((pos.sign_degree % 1) * 60)
+            deg_str = f"{degree}°{minute:02d}'"
             sign_glyph = get_sign_glyph(pos.sign)
-            if sign_glyph:
-                row.append(f"{sign_glyph} {pos.sign} {degree}°{minute:02d}'")
-            else:
-                row.append(f"{pos.sign} {degree}°{minute:02d}'")
 
-            # House columns (one per system)
+            houses: list[str] = []
             if self.include_house and systems_to_show:
                 for system_name in systems_to_show:
                     try:
                         house_placements = chart.house_placements[system_name]
                         house = house_placements.get(pos.name, "—")
-                        row.append(str(house) if house else "—")
+                        houses.append(str(house) if house else "—")
                     except KeyError:
-                        row.append("—")
+                        houses.append("—")
 
-            # Speed and motion (if requested)
+            planets.append(
+                {
+                    "name": pos.name,  # canonical (glyph lookup)
+                    "label": display_name,  # display text
+                    "sign": pos.sign,
+                    "degree": deg_str,
+                    "houses": houses,
+                    "speed": f"{pos.speed_longitude:.3f}°",
+                    "retro": bool(pos.is_retrograde),
+                }
+            )
+
+            # Derived string row (unchanged output for the other renderers).
+            row = [f"{glyph} {display_name}" if glyph else display_name]
+            row.append(
+                f"{sign_glyph} {pos.sign} {deg_str}"
+                if sign_glyph
+                else f"{pos.sign} {deg_str}"
+            )
+            row.extend(houses)
             if self.include_speed:
                 row.append(f"{pos.speed_longitude:.4f}°/day")
                 row.append("Retrograde" if pos.is_retrograde else "Direct")
-
             rows.append(row)
 
-        result = {"type": "table", "headers": headers, "rows": rows}
+        result = {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+            # Structured payload for structure-aware renderers:
+            "planets": planets,
+            "house_headers": house_headers,
+            "show_speed": self.include_speed,
+        }
         if title:
             result["title"] = title
         return result
