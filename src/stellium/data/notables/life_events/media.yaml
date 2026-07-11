@@ -1,0 +1,1834 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Angelina Jolie
+  events:
+  - date: '1976'
+    precision: year
+    type: relationship
+    description: Parents Jon Voight and Marcheline Bertrand separated
+    significance: moderate
+    age_at_event: 1
+    source: Biography.com; Wikipedia
+  - date: '1996-03-28'
+    precision: day
+    type: relationship
+    description: Married Jonny Lee Miller
+    significance: major
+    age_at_event: 20
+    source: biographical record (Wikipedia 'Angelina Jolie')
+  - date: '2000-03-26'
+    precision: day
+    type: recognition
+    description: Won Best Supporting Actress Oscar for 'Girl, Interrupted'
+    significance: major
+    age_at_event: 24
+    source: Academy Awards record
+  - date: '2000-05-05'
+    precision: day
+    type: relationship
+    description: Married Billy Bob Thornton
+    significance: major
+    age_at_event: 24
+    source: Wikipedia 'Angelina Jolie'
+  - date: '2001'
+    precision: year
+    type: career
+    description: Named UNHCR Goodwill Ambassador
+    significance: major
+    age_at_event: 26
+    source: Wikipedia 'Angelina Jolie'
+  - date: 2002-03
+    precision: month
+    type: childbirth
+    description: Adopted son Maddox from Cambodia
+    significance: major
+    age_at_event: 26
+    source: Wikipedia 'Angelina Jolie'
+  - date: 2005-07
+    precision: month
+    type: childbirth
+    description: Adopted daughter Zahara from Ethiopia
+    significance: major
+    age_at_event: 30
+    source: Wikipedia 'Angelina Jolie'
+  - date: '2006-05-27'
+    precision: day
+    type: childbirth
+    description: Daughter Shiloh Nouvel born in Swakopmund, Namibia
+    significance: major
+    age_at_event: 30
+    source: IMDb; HELLO! (multiple sources concur on 27 May 2006)
+  - date: '2007-01-27'
+    precision: day
+    type: bereavement_parent
+    description: Mother Marcheline Bertrand died of ovarian cancer, aged 56
+    significance: major
+    age_at_event: 31
+    source: biographical record (People/AmoMama); Wikipedia
+  - date: 2007-03
+    precision: month
+    type: childbirth
+    description: Adopted son Pax Thien from Vietnam
+    significance: major
+    age_at_event: 31
+    source: Wikipedia 'Angelina Jolie'
+  - date: '2008-07-12'
+    precision: day
+    type: childbirth
+    description: Twins Knox Léon and Vivienne Marcheline born via C-section in Nice, France (Fondation
+      Lenval); Knox born at 6:27 p.m. per People
+    significance: major
+    age_at_event: 33
+    source: People via who2.com; HELLO!
+  - date: '2013-02-16'
+    precision: day
+    type: health_crisis
+    description: Preventive double mastectomy (BRCA1 carrier, ~87% breast-cancer risk); announced in NYT
+      op-ed 14 May 2013
+    significance: major
+    age_at_event: 37
+    source: ABC News; Wikipedia 'Angelina Jolie'
+  - date: '2014-08-23'
+    precision: day
+    type: relationship
+    description: Married Brad Pitt at Château Miraval, France (legally married 14 August 2014)
+    significance: major
+    age_at_event: 39
+    source: Hollywood Reporter; Wikipedia
+  - date: '2016-09-19'
+    precision: day
+    type: relationship
+    description: Filed for divorce from Brad Pitt, citing irreconcilable differences (separated 15 September)
+    significance: major
+    age_at_event: 41
+    source: Associated Press via Today.com; PBS
+- name: Audrey Hepburn
+  events:
+  - date: '1935'
+    precision: year
+    type: bereavement_parent
+    description: Father Joseph Ruston abandoned the family; parents divorced (a lasting emotional wound)
+    significance: major
+    age_at_event: 5
+    source: biographical record (Wikipedia); Sean Hepburn Ferrer (2003)
+  - date: '1948'
+    precision: year
+    type: relocation
+    description: Moved to London to study ballet and pursue performing
+    significance: moderate
+    age_at_event: 19
+    source: Wikipedia 'Audrey Hepburn'
+  - date: '1951-11-24'
+    precision: day
+    type: career
+    description: Opened on Broadway in 'Gigi' at the Fulton Theatre (cast by Colette)
+    significance: major
+    age_at_event: 22
+    source: Wikipedia; Britannica
+  - date: '1954-02-18'
+    precision: day
+    type: career
+    description: Opened on Broadway in 'Ondine' at the 46th Street Theatre
+    significance: moderate
+    age_at_event: 24
+    source: Wikipedia 'Audrey Hepburn'
+  - date: '1954-03-25'
+    precision: day
+    type: recognition
+    description: Won Best Actress Oscar for 'Roman Holiday' (1953 film) at the ceremony
+    significance: major
+    age_at_event: 24
+    source: Wikipedia; Academy Awards record
+  - date: '1954'
+    precision: year
+    type: recognition
+    description: Won Tony Award for Best Actress for 'Ondine', three days after the Oscar
+    significance: major
+    age_at_event: 24
+    source: Wikipedia 'Audrey Hepburn'
+  - date: '1954-09-25'
+    precision: day
+    type: relationship
+    description: Married Mel Ferrer in Bürgenstock, Switzerland
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; People
+  - date: '1960-07-17'
+    precision: day
+    type: childbirth
+    description: Son Sean Hepburn Ferrer born in Bürgenstock, Switzerland
+    significance: major
+    age_at_event: 31
+    source: Sean Ferrer's Hachette bio & People (17 July); Wikipedia gives 17 June — see notes
+  - date: '1961'
+    precision: year
+    type: career
+    description: Starred in 'Breakfast at Tiffany's'
+    significance: major
+    age_at_event: 31
+    source: biographical record (Wikipedia)
+  - date: '1968'
+    precision: year
+    type: relationship
+    description: Divorced Mel Ferrer after 14-year marriage
+    significance: major
+    age_at_event: 39
+    source: Wikipedia; People
+  - date: '1969-01-18'
+    precision: day
+    type: relationship
+    description: Married Italian psychiatrist Andrea Dotti in a civil ceremony in Switzerland
+    significance: major
+    age_at_event: 39
+    source: Wikipedia; People
+  - date: '1970-02-08'
+    precision: day
+    type: childbirth
+    description: Son Luca Dotti born in Switzerland
+    significance: major
+    age_at_event: 40
+    source: Wikipedia; People
+  - date: '1982'
+    precision: year
+    type: relationship
+    description: Divorced Andrea Dotti (began long-term relationship with Robert Wolders ~1980)
+    significance: moderate
+    age_at_event: 53
+    source: Wikipedia; People
+  - date: '1988'
+    precision: year
+    type: career
+    description: First UNICEF field mission (Ethiopia, orphanage in Mek'ele); appointed UNICEF Special
+      Ambassador 9 March 1988, then Goodwill Ambassador 1989
+    significance: major
+    age_at_event: 59
+    source: UNICEF / rareaudreyhepburn.com
+  - date: 1992-11
+    precision: month
+    type: health_crisis
+    description: Diagnosed with appendiceal cancer
+    significance: major
+    age_at_event: 63
+    source: biographical record (Wikipedia)
+  - date: '1993-01-20'
+    precision: day
+    type: health_crisis
+    description: Died in her sleep at her home in Tolochenaz, Switzerland, aged 63
+    significance: major
+    age_at_event: 63
+    source: Wikipedia 'Audrey Hepburn'
+- name: Beyoncé
+  events:
+  - date: '1990'
+    precision: year
+    type: career
+    description: Girl's Tyme (early incarnation of Destiny's Child) formed in Houston
+    significance: moderate
+    age_at_event: 8
+    source: Wikipedia 'Destiny's Child'; Britannica
+  - date: '1997'
+    precision: year
+    type: career
+    description: Destiny's Child on Columbia Records; debut single 'No, No, No' released 27 October 1997
+    significance: major
+    age_at_event: 16
+    source: Wikipedia 'Destiny's Child' (deal 1996; rollout 1997)
+  - date: '1999'
+    precision: year
+    type: career
+    description: Destiny's Child breakthrough album 'The Writing's on the Wall'
+    significance: major
+    age_at_event: 17
+    source: Wikipedia 'Destiny's Child'
+  - date: '2001'
+    precision: year
+    type: career
+    description: 'Destiny''s Child album ''Survivor'';  also TV film ''Carmen: A Hip Hopera'''
+    significance: moderate
+    age_at_event: 19
+    source: Wikipedia; Britannica
+  - date: '2003-06-24'
+    precision: day
+    type: career
+    description: Solo debut album 'Dangerously in Love' released
+    significance: major
+    age_at_event: 21
+    source: GRAMMY.com (24 June 2003; some sources cite 22 June)
+  - date: '2004-02-08'
+    precision: day
+    type: recognition
+    description: Won 5 Grammys at the 46th Annual Grammy Awards, tying the record for most by a woman
+      in one night
+    significance: major
+    age_at_event: 22
+    source: Wikipedia 'Dangerously in Love'; GRAMMY.com
+  - date: '2005-09-10'
+    precision: day
+    type: career
+    description: Destiny's Child final concert in Vancouver (disbandment announced 11 June 2005 in Barcelona;
+      formal disbandment 2006)
+    significance: major
+    age_at_event: 24
+    source: Wikipedia 'Destiny Fulfilled... and Lovin' It'; UPI
+  - date: '2006-09-04'
+    precision: day
+    type: career
+    description: Second solo album 'B'Day' released; also starred in film 'Dreamgirls' (2006)
+    significance: major
+    age_at_event: 25
+    source: biographical record (Wikipedia albums discography)
+  - date: '2008-04-04'
+    precision: day
+    type: relationship
+    description: Married Jay-Z (Shawn Carter) in a private ceremony
+    significance: major
+    age_at_event: 26
+    source: Guinness World Records
+  - date: '2008-11-18'
+    precision: day
+    type: career
+    description: Album 'I Am... Sasha Fierce' released ('Single Ladies')
+    significance: major
+    age_at_event: 27
+    source: biographical record (Wikipedia discography)
+  - date: '2012-01-07'
+    precision: day
+    type: childbirth
+    description: Daughter Blue Ivy Carter born
+    significance: major
+    age_at_event: 30
+    source: biographical record
+  - date: 2013-12
+    precision: month
+    type: career
+    description: Self-titled surprise visual album 'Beyoncé' released
+    significance: major
+    age_at_event: 32
+    source: Wikipedia albums discography
+  - date: '2016-04-23'
+    precision: day
+    type: career
+    description: Visual album 'Lemonade' released (HBO special); all 12 tracks charted on the Hot 100
+    significance: major
+    age_at_event: 34
+    source: Wikipedia singles discography
+  - date: '2017-06-13'
+    precision: day
+    type: childbirth
+    description: Twins Rumi and Sir Carter born via emergency C-section at UCLA Medical Center, Los Angeles
+      (Rumi at 5:13 a.m.)
+    significance: major
+    age_at_event: 35
+    source: E! News; Beyoncépedia
+  - date: '2022'
+    precision: year
+    type: career
+    description: Album 'Renaissance' released
+    significance: major
+    age_at_event: 40
+    source: Wikipedia
+  - date: '2023-02-05'
+    precision: day
+    type: recognition
+    description: Won 32nd Grammy (Best Dance/Electronic Album for 'Renaissance') at the 65th ceremony,
+      becoming the most-awarded artist in Grammy history (surpassing Georg Solti)
+    significance: major
+    age_at_event: 41
+    source: Deadline; Hollywood Reporter; GRAMMY.com
+  - date: '2024'
+    precision: year
+    type: career
+    description: Album 'Cowboy Carter' released
+    significance: major
+    age_at_event: 42
+    source: Wikipedia singles discography
+- name: Brad Pitt
+  events:
+  - date: '1986'
+    precision: year
+    type: relocation
+    description: Moved to Los Angeles to pursue acting
+    significance: moderate
+    age_at_event: 22
+    source: biographical record
+  - date: '1991'
+    precision: year
+    type: recognition
+    description: Breakthrough role in 'Thelma & Louise'
+    significance: major
+    age_at_event: 27
+    source: History.com; Wikipedia 'Brad Pitt'
+  - date: '1992'
+    precision: year
+    type: career
+    description: Starred in 'A River Runs Through It'
+    significance: moderate
+    age_at_event: 28
+    source: Wikipedia 'Brad Pitt'
+  - date: 1996-12
+    precision: month
+    type: relationship
+    description: Engaged to Gwyneth Paltrow
+    significance: moderate
+    age_at_event: 32
+    source: biographical record
+  - date: 1997-06
+    precision: month
+    type: relationship
+    description: Split from Gwyneth Paltrow
+    significance: moderate
+    age_at_event: 33
+    source: biographical record
+  - date: '1999'
+    precision: year
+    type: career
+    description: Starred in 'Fight Club'
+    significance: major
+    age_at_event: 35
+    source: Wikipedia 'Brad Pitt'
+  - date: '2000-07-29'
+    precision: day
+    type: relationship
+    description: Married Jennifer Aniston in Malibu
+    significance: major
+    age_at_event: 36
+    source: History.com; Wikipedia; ABC News
+  - date: '2001'
+    precision: year
+    type: career
+    description: Starred in 'Ocean's Eleven'
+    significance: moderate
+    age_at_event: 37
+    source: Wikipedia 'Brad Pitt'
+  - date: '2004'
+    precision: year
+    type: relationship
+    description: Met Angelina Jolie filming 'Mr. & Mrs. Smith'
+    significance: major
+    age_at_event: 40
+    source: Wikipedia; Hollywood Reporter
+  - date: 2005-01
+    precision: month
+    type: relationship
+    description: Announced separation from Jennifer Aniston (early January 2005)
+    significance: major
+    age_at_event: 41
+    source: Wikipedia; ABC News
+  - date: '2005-10-02'
+    precision: day
+    type: relationship
+    description: Divorce from Jennifer Aniston finalized by LA Superior Court
+    significance: major
+    age_at_event: 41
+    source: Wikipedia 'Brad Pitt'
+  - date: '2006-05-27'
+    precision: day
+    type: childbirth
+    description: Daughter Shiloh born in Swakopmund, Namibia
+    significance: major
+    age_at_event: 42
+    source: IMDb; HELLO!
+  - date: '2008-07-12'
+    precision: day
+    type: childbirth
+    description: Twins Knox and Vivienne born in Nice, France; Knox at 6:27 p.m. per People
+    significance: major
+    age_at_event: 44
+    source: People via who2.com
+  - date: '2014-08-23'
+    precision: day
+    type: relationship
+    description: Married Angelina Jolie at Château Miraval, France
+    significance: major
+    age_at_event: 50
+    source: Wikipedia; Hollywood Reporter
+  - date: '2016-09-19'
+    precision: day
+    type: relationship
+    description: Jolie filed for divorce
+    significance: major
+    age_at_event: 52
+    source: AP via Today.com; Wikipedia
+  - date: '2020-02-09'
+    precision: day
+    type: recognition
+    description: Won Best Supporting Actor Oscar for 'Once Upon a Time in Hollywood'
+    significance: major
+    age_at_event: 56
+    source: PBS; Academy Awards record
+- name: David Bowie
+  events:
+  - date: '1962'
+    precision: year
+    type: accident
+    description: Left eye injured in a schoolboy fight (permanent pupil dilation / anisocoria)
+    significance: moderate
+    age_at_event: 15
+    source: biographical record (widely reported)
+  - date: '1965'
+    precision: year
+    type: career
+    description: Changed stage name from David Jones to David Bowie (to avoid confusion with Davy Jones
+      of the Monkees)
+    significance: moderate
+    age_at_event: 18
+    source: Simple English Wikipedia; biographical record
+  - date: '1969-07-11'
+    precision: day
+    type: career
+    description: '''Space Oddity'' released as a single, five days ahead of the Apollo 11 launch; first
+      UK top-five hit'
+    significance: major
+    age_at_event: 22
+    source: Wikipedia 'David Bowie'
+  - date: 1969-08
+    precision: month
+    type: bereavement_parent
+    description: Father Haywood Stenton ('John') Jones died in early August 1969, shortly after the single
+      release of 'Space Oddity'
+    significance: major
+    age_at_event: 22
+    source: Wikipedia 'Personal life of David Bowie'
+  - date: '1970-03-20'
+    precision: day
+    type: relationship
+    description: Married Angela (Angie) Barnett in Bromley, London
+    significance: major
+    age_at_event: 23
+    source: Wikipedia 'Personal life of David Bowie'
+  - date: '1971-05-30'
+    precision: day
+    type: childbirth
+    description: Son Duncan Zowie Haywood Jones born (Bowie wrote 'Kooks' for him)
+    significance: major
+    age_at_event: 24
+    source: Wikipedia; Biography.com
+  - date: '1972'
+    precision: year
+    type: recognition
+    description: Commercial breakthrough with the Ziggy Stardust persona and album
+    significance: major
+    age_at_event: 25
+    source: Wikipedia 'David Bowie'
+  - date: '1980-02-08'
+    precision: day
+    type: relationship
+    description: Divorced Angie Bowie; David received custody of Duncan
+    significance: major
+    age_at_event: 33
+    source: Wikipedia 'Personal life of David Bowie'
+  - date: '1983'
+    precision: year
+    type: career
+    description: Album 'Let's Dance', his greatest commercial success
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'David Bowie'
+  - date: '1992-04-24'
+    precision: day
+    type: relationship
+    description: Married Iman in a private ceremony in Lausanne (church solemnization in Florence, 6 June
+      1992)
+    significance: major
+    age_at_event: 45
+    source: Biography.com; Wikipedia
+  - date: '2000-08-15'
+    precision: day
+    type: childbirth
+    description: Daughter Alexandria 'Lexi' Zahra Jones born
+    significance: major
+    age_at_event: 53
+    source: biographical record (Blinkist/HELLO!)
+  - date: '2004-06-25'
+    precision: day
+    type: health_crisis
+    description: Emergency angioplasty in Hamburg after an acutely blocked coronary artery during the
+      Hurricane Festival, Scheeßel, Germany
+    significance: major
+    age_at_event: 57
+    source: Wikipedia 'David Bowie'
+  - date: '2016-01-08'
+    precision: day
+    type: career
+    description: Final album 'Blackstar' released on his 69th birthday
+    significance: major
+    age_at_event: 69
+    source: Wikipedia 'Blackstar'
+  - date: '2016-01-10'
+    precision: day
+    type: health_crisis
+    description: Died of liver cancer at his home in New York City, two days after 'Blackstar' release,
+      following an 18-month private battle
+    significance: major
+    age_at_event: 69
+    source: Wikipedia 'Death of David Bowie'
+- name: Dr. Dre
+  events:
+  - date: '1984'
+    precision: year
+    type: career
+    description: Began his career as a member of the World Class Wreckin' Cru
+    significance: moderate
+    age_at_event: 18
+    source: Wikipedia 'Dr. Dre'
+  - date: '1987'
+    precision: year
+    type: career
+    description: Co-founded N.W.A with Eazy-E, Ice Cube and Arabian Prince
+    significance: major
+    age_at_event: 22
+    source: Wikipedia 'Dr. Dre'
+  - date: '1988'
+    precision: year
+    type: career
+    description: N.W.A album 'Straight Outta Compton' (RIAA release 25 January 1989)
+    significance: major
+    age_at_event: 23
+    source: Wikipedia; Britannica (1988 vs 25 Jan 1989 flagged)
+  - date: '1991'
+    precision: year
+    type: career
+    description: Left N.W.A; co-founded Death Row Records with Suge Knight (also The D.O.C. and Dick Griffey)
+    significance: major
+    age_at_event: 26
+    source: Wikipedia 'Death Row Records'
+  - date: 1992-04
+    precision: month
+    type: accident
+    description: Shot four times in the leg after a dispute with his engineer
+    significance: moderate
+    age_at_event: 27
+    source: Wikipedia 'Dr. Dre'
+  - date: '1992-12-15'
+    precision: day
+    type: career
+    description: Debut solo album 'The Chronic' released; introduced the G-funk sound and Snoop Dogg
+    significance: major
+    age_at_event: 27
+    source: Wikipedia 'The Chronic'; AllMusic; GRAMMY.com
+  - date: '1996-05-25'
+    precision: day
+    type: relationship
+    description: Married Nicole Threatt
+    significance: moderate
+    age_at_event: 31
+    source: Wikipedia 'Dr. Dre'
+  - date: '1996'
+    precision: year
+    type: career
+    description: Left Death Row and founded Aftermath Entertainment
+    significance: major
+    age_at_event: 31
+    source: Britannica; Biography.com
+  - date: '1998'
+    precision: year
+    type: career
+    description: Signed Eminem to Aftermath, against advice from those around him
+    significance: major
+    age_at_event: 33
+    source: Biography.com; HBO 'The Defiant Ones'
+  - date: '1999-11-16'
+    precision: day
+    type: career
+    description: Second solo album '2001' released; debuted at No. 2 on the Billboard 200 (~516,000 first-week
+      sales)
+    significance: major
+    age_at_event: 34
+    source: AllMusic; Wikipedia discography
+  - date: '2008-08-23'
+    precision: day
+    type: bereavement_other
+    description: Son Andre Young Jr. died of a heroin/morphine overdose at his mother's Woodland Hills
+      home, aged 20
+    significance: major
+    age_at_event: 43
+    source: Wikipedia 'Dr. Dre'; The Guardian; Grunge
+  - date: '2014-05-28'
+    precision: day
+    type: windfall
+    description: Apple confirmed its $3 billion acquisition of Beats (co-founded with Jimmy Iovine 2006/2008),
+      making Dre among the richest figures in music
+    significance: major
+    age_at_event: 49
+    source: Celebrity Net Worth; Biography.com
+  - date: '2015'
+    precision: year
+    type: career
+    description: Album 'Compton' released (his first in 16 years)
+    significance: major
+    age_at_event: 50
+    source: biographical record
+- name: Elizabeth Taylor
+  events:
+  - date: '1939'
+    precision: year
+    type: relocation
+    description: American family relocated from England to Los Angeles around the outbreak of WWII
+    significance: major
+    age_at_event: 7
+    source: Donald Spoto, 'A Passion for Life' (1995)
+  - date: '1942'
+    precision: year
+    type: career
+    description: Film debut in 'There's One Born Every Minute'
+    significance: moderate
+    age_at_event: 10
+    source: biographical record
+  - date: '1944'
+    precision: year
+    type: recognition
+    description: Star-making role in 'National Velvet' (a fall from a horse during filming caused a lifelong
+      back injury)
+    significance: major
+    age_at_event: 12
+    source: Wikipedia 'National Velvet'; Britannica
+  - date: '1950-05-06'
+    precision: day
+    type: relationship
+    description: Married Conrad 'Nicky' Hilton Jr. at the Church of the Good Shepherd, Beverly Hills (MGM-staged)
+    significance: major
+    age_at_event: 18
+    source: Wikipedia 'Elizabeth Taylor'
+  - date: '1951-01-29'
+    precision: day
+    type: relationship
+    description: Divorce from Hilton granted on grounds of mental cruelty, eight months after the wedding
+    significance: moderate
+    age_at_event: 18
+    source: Wikipedia 'Elizabeth Taylor'
+  - date: '1952-02-21'
+    precision: day
+    type: relationship
+    description: Married Michael Wilding at Caxton Hall, London
+    significance: major
+    age_at_event: 19
+    source: Wikipedia 'Elizabeth Taylor'
+  - date: '1957-02-02'
+    precision: day
+    type: relationship
+    description: Married producer Mike Todd in Acapulco, Mexico
+    significance: major
+    age_at_event: 24
+    source: Parade; Wikipedia
+  - date: '1958-03-22'
+    precision: day
+    type: bereavement_other
+    description: Husband Mike Todd killed in a private plane crash ('The Lucky Liz')
+    significance: major
+    age_at_event: 26
+    source: Parade; biographical record
+  - date: '1959-05-12'
+    precision: day
+    type: relationship
+    description: Married Eddie Fisher (amid a major public scandal)
+    significance: major
+    age_at_event: 27
+    source: biographical record; Today.com
+  - date: 1961-03
+    precision: month
+    type: health_crisis
+    description: Developed near-fatal pneumonia requiring a tracheotomy
+    significance: major
+    age_at_event: 29
+    source: Wikipedia 'Elizabeth Taylor'
+  - date: '1961-04-17'
+    precision: day
+    type: recognition
+    description: Won Best Actress Oscar for 'BUtterfield 8' at the ceremony
+    significance: major
+    age_at_event: 29
+    source: Academy Awards record
+  - date: '1962'
+    precision: year
+    type: relationship
+    description: Met Richard Burton filming 'Cleopatra'
+    significance: major
+    age_at_event: 30
+    source: Today.com; Wikipedia
+  - date: '1964-03-15'
+    precision: day
+    type: relationship
+    description: Married Richard Burton (first marriage), in Montreal
+    significance: major
+    age_at_event: 32
+    source: biographical record; Today.com
+  - date: '1967'
+    precision: year
+    type: recognition
+    description: Won second Best Actress Oscar for 'Who's Afraid of Virginia Woolf?'
+    significance: major
+    age_at_event: 35
+    source: biographical record
+  - date: '1974'
+    precision: year
+    type: relationship
+    description: Divorced Richard Burton (first divorce)
+    significance: moderate
+    age_at_event: 42
+    source: Yahoo/biographical record
+  - date: '1975-10-10'
+    precision: day
+    type: relationship
+    description: Remarried Richard Burton
+    significance: major
+    age_at_event: 43
+    source: biographical record
+  - date: '1976-12-04'
+    precision: day
+    type: relationship
+    description: Married John Warner (after second Burton divorce earlier in 1976)
+    significance: major
+    age_at_event: 44
+    source: Wikipedia 'Elizabeth Taylor'
+  - date: '1982-11-05'
+    precision: day
+    type: relationship
+    description: Divorced John Warner
+    significance: moderate
+    age_at_event: 50
+    source: Wikipedia 'Elizabeth Taylor'
+  - date: 1985-09
+    precision: month
+    type: career
+    description: amfAR formed; Taylor became its Founding National Chairman, a landmark in celebrity AIDS
+      activism
+    significance: major
+    age_at_event: 53
+    source: amfAR.org
+  - date: '1991-10-06'
+    precision: day
+    type: relationship
+    description: Married Larry Fortensky at Michael Jackson's Neverland Ranch
+    significance: major
+    age_at_event: 59
+    source: elizabethtaylor.com; Today.com
+  - date: '1996'
+    precision: year
+    type: relationship
+    description: Divorced Larry Fortensky (8th marriage, 7th husband)
+    significance: moderate
+    age_at_event: 64
+    source: Today.com; biographical record
+  - date: 1997-02
+    precision: month
+    type: health_crisis
+    description: Underwent surgery to remove a benign brain tumor
+    significance: major
+    age_at_event: 64
+    source: biographical record
+  - date: '2000'
+    precision: year
+    type: recognition
+    description: Made a Dame (DBE) by Queen Elizabeth II
+    significance: major
+    age_at_event: 67
+    source: Britannica; Biography.com
+  - date: '2011-03-23'
+    precision: day
+    type: health_crisis
+    description: Died of congestive heart failure in Los Angeles, aged 79
+    significance: major
+    age_at_event: 79
+    source: Britannica; Biography.com
+- name: Kurt Cobain
+  events:
+  - date: '1976'
+    precision: year
+    type: bereavement_parent
+    description: Parents divorced when he was 9; a defining trauma that recurs in his songwriting and
+      suicide note
+    significance: major
+    age_at_event: 9
+    source: Charles R. Cross, 'Heavier Than Heaven' (2001)
+  - date: '1987'
+    precision: year
+    type: career
+    description: Formed Nirvana (with Krist Novoselic)
+    significance: major
+    age_at_event: 20
+    source: biographical record; Wikipedia
+  - date: '1989'
+    precision: year
+    type: career
+    description: Debut album 'Bleach' released (Sub Pop)
+    significance: moderate
+    age_at_event: 22
+    source: biographical record
+  - date: '1990-01-12'
+    precision: day
+    type: relationship
+    description: Met Courtney Love (ADB date; other accounts date the meeting to 1990 or 1991)
+    significance: moderate
+    age_at_event: 22
+    source: ADB paste (per task brief); meeting date disputed
+  - date: '1991-09-24'
+    precision: day
+    type: career
+    description: '''Nevermind'' released; ''Smells Like Teen Spirit'' propelled it to global success'
+    significance: major
+    age_at_event: 24
+    source: biographical record; Wikipedia
+  - date: '1992-02-24'
+    precision: day
+    type: relationship
+    description: Married Courtney Love in Waikiki, Hawaii
+    significance: major
+    age_at_event: 25
+    source: biographical record
+  - date: '1992-08-18'
+    precision: day
+    type: childbirth
+    description: Daughter Frances Bean Cobain born
+    significance: major
+    age_at_event: 25
+    source: HistoryLink.org; Wikipedia
+  - date: '1993'
+    precision: year
+    type: career
+    description: Album 'In Utero' released
+    significance: major
+    age_at_event: 26
+    source: biographical record
+  - date: '1994-03-04'
+    precision: day
+    type: health_crisis
+    description: Overdose of Rohypnol and alcohol at the Westin Excelsior, Rome; hospitalized in a coma
+      (later described by Love as a suicide attempt)
+    significance: major
+    age_at_event: 27
+    source: Wikipedia 'Suicide of Kurt Cobain'
+  - date: '1994-04-05'
+    precision: day
+    type: health_crisis
+    description: Died by suicide (self-inflicted shotgun wound) at his Seattle home; coroner's estimated
+      date of death 5 April; body found 8 April 1994
+    significance: major
+    age_at_event: 27
+    source: Wikipedia; HistoryLink.org; CBS News
+- name: Lucille Ball
+  events:
+  - date: '1915'
+    precision: year
+    type: bereavement_parent
+    description: Father Henry Ball died when she was 3
+    significance: major
+    age_at_event: 3
+    source: biographical record; Stefan Kanfer (2003)
+  - date: '1940-11-30'
+    precision: day
+    type: relationship
+    description: Married (eloped with) Desi Arnaz, after meeting on 'Too Many Girls'
+    significance: major
+    age_at_event: 29
+    source: Wikipedia 'Lucille Ball'; HELLO!
+  - date: '1950'
+    precision: year
+    type: career
+    description: Co-founded Desilu Productions with Desi Arnaz
+    significance: major
+    age_at_event: 38
+    source: HELLO!; Wikipedia
+  - date: '1951-07-17'
+    precision: day
+    type: childbirth
+    description: Daughter Lucie Désirée Arnaz born, six weeks before 'I Love Lucy' filming began
+    significance: major
+    age_at_event: 39
+    source: Wikipedia 'Lucille Ball'; The List; Yahoo
+  - date: '1951-10-15'
+    precision: day
+    type: career
+    description: '''I Love Lucy'' premiered on CBS'
+    significance: major
+    age_at_event: 40
+    source: Wikipedia 'Lucille Ball'
+  - date: '1953-01-19'
+    precision: day
+    type: childbirth
+    description: Son Desi Arnaz Jr. born by planned C-section, coordinated with the show's Little Ricky
+      storyline
+    significance: major
+    age_at_event: 41
+    source: Wikipedia; Yahoo; The List
+  - date: '1957-05-06'
+    precision: day
+    type: career
+    description: '''I Love Lucy'' final regular episode aired (ran 15 Oct 1951 - 6 May 1957)'
+    significance: major
+    age_at_event: 45
+    source: Wikipedia 'Lucille Ball'
+  - date: '1960-05-04'
+    precision: day
+    type: relationship
+    description: Divorced Desi Arnaz
+    significance: major
+    age_at_event: 48
+    source: biographical record
+  - date: '1961-11-19'
+    precision: day
+    type: relationship
+    description: Married comedian Gary Morton
+    significance: major
+    age_at_event: 50
+    source: biographical record
+  - date: '1962'
+    precision: year
+    type: career
+    description: Became head of Desilu (first woman to run a major TV studio); 'The Lucy Show' began
+    significance: major
+    age_at_event: 50
+    source: Wikipedia 'Lucille Ball'
+  - date: '1989-04-18'
+    precision: day
+    type: health_crisis
+    description: Underwent heart / aortic aneurysm surgery
+    significance: major
+    age_at_event: 77
+    source: biographical record
+  - date: '1989-04-26'
+    precision: day
+    type: health_crisis
+    description: Died of a ruptured aortic aneurysm in Los Angeles, aged 77
+    significance: major
+    age_at_event: 77
+    source: biographical record
+- name: Marilyn Monroe
+  events:
+  - date: '1937'
+    precision: year
+    type: other
+    description: Experienced childhood sexual abuse while in foster care, recorded soberly as a dated
+      life event.
+    significance: major
+    age_at_event: 11
+    source: Marilyn Monroe biographies (Spoto; Banner)
+  - date: '1942-06-19'
+    precision: day
+    type: relationship
+    description: Married first husband James Dougherty at age 16.
+    significance: major
+    age_at_event: 16
+    source: Britannica; Wikipedia
+  - date: 1945-08
+    precision: month
+    type: career
+    description: Signed with the Blue Book Model Agency, launching her modeling career.
+    significance: moderate
+    age_at_event: 19
+    source: Wikipedia (citing Snively/Spoto)
+  - date: 1946-08
+    precision: month
+    type: career
+    description: Signed her first six-month studio contract with 20th Century-Fox; chose stage name Marilyn
+      Monroe.
+    significance: major
+    age_at_event: 20
+    source: Wikipedia; Bonhams contract lot
+  - date: 1946-09
+    precision: month
+    type: relationship
+    description: Divorced James Dougherty.
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia
+  - date: '1953'
+    precision: year
+    type: recognition
+    description: Breakthrough films Niagara and Gentlemen Prefer Blondes established her as a major star.
+    significance: major
+    age_at_event: 27
+    source: Britannica
+  - date: '1954-01-14'
+    precision: day
+    type: relationship
+    description: Married baseball star Joe DiMaggio.
+    significance: major
+    age_at_event: 27
+    source: ADB seed; corroborated by Britannica
+  - date: '1954-10-05'
+    precision: day
+    type: relationship
+    description: Divorced Joe DiMaggio after nine months.
+    significance: major
+    age_at_event: 28
+    source: ADB seed; corroborated widely
+  - date: '1955'
+    precision: year
+    type: career
+    description: Founded Marilyn Monroe Productions.
+    significance: moderate
+    age_at_event: 29
+    source: Monroe biographies
+  - date: '1956-06-29'
+    precision: day
+    type: relationship
+    description: Married playwright Arthur Miller.
+    significance: major
+    age_at_event: 30
+    source: ADB seed; Britannica
+  - date: '1959'
+    precision: year
+    type: recognition
+    description: Starred in Some Like It Hot, winning the Golden Globe for Best Actress in a Comedy.
+    significance: major
+    age_at_event: 33
+    source: Biography.com; Variety
+  - date: '1961-01-20'
+    precision: day
+    type: relationship
+    description: Divorced Arthur Miller (date chosen to coincide with JFK's inauguration).
+    significance: major
+    age_at_event: 34
+    source: Biography.com
+  - date: '1962-06-08'
+    precision: day
+    type: career
+    description: Fired by 20th Century-Fox from Something's Got to Give after repeated absences.
+    significance: major
+    age_at_event: 36
+    source: Biography.com; Wikipedia
+  - date: '1962-08-05'
+    precision: day
+    type: health_crisis
+    description: Died of barbiturate overdose at her Brentwood home, aged 36; ruled probable suicide.
+    significance: major
+    age_at_event: 36
+    source: Britannica; Biography.com
+- name: Paul McCartney
+  events:
+  - date: '1956-10-31'
+    precision: day
+    type: bereavement_parent
+    description: Mother Mary McCartney died of an embolism following breast cancer surgery, aged 47; Paul
+      was 14.
+    significance: major
+    age_at_event: 14
+    source: Beatles Bible; Find a Grave
+  - date: '1957-07-06'
+    precision: day
+    type: other
+    description: Met John Lennon at the Woolton church fete, leading to their songwriting partnership.
+    significance: major
+    age_at_event: 15
+    source: ADB seed; Beatles history
+  - date: '1962'
+    precision: year
+    type: career
+    description: The Beatles signed by EMI (Parlophone); recording career begins.
+    significance: major
+    age_at_event: 20
+    source: ADB seed
+  - date: '1969-03-12'
+    precision: day
+    type: relationship
+    description: Married Linda Eastman at Marylebone Register Office, London.
+    significance: major
+    age_at_event: 26
+    source: Beatles Bible; Wikipedia
+  - date: '1969-08-28'
+    precision: day
+    type: childbirth
+    description: Daughter Mary McCartney born.
+    significance: moderate
+    age_at_event: 27
+    source: Wikipedia
+  - date: '1970'
+    precision: year
+    type: career
+    description: The Beatles broke up; released debut solo album McCartney.
+    significance: major
+    age_at_event: 27
+    source: ADB seed; Wikipedia
+  - date: '1971-09-13'
+    precision: day
+    type: childbirth
+    description: Daughter Stella McCartney born (emergency C-section).
+    significance: moderate
+    age_at_event: 29
+    source: Wikipedia; HollywoodLife
+  - date: '1977-09-12'
+    precision: day
+    type: childbirth
+    description: Son James McCartney born.
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia
+  - date: '1997-03-11'
+    precision: day
+    type: recognition
+    description: Knighted by Queen Elizabeth II.
+    significance: major
+    age_at_event: 54
+    source: ADB seed
+  - date: '1998-04-17'
+    precision: day
+    type: bereavement_other
+    description: Wife Linda McCartney died of breast cancer, aged 56.
+    significance: major
+    age_at_event: 55
+    source: ADB seed; Wikipedia
+  - date: '2002-06-11'
+    precision: day
+    type: relationship
+    description: Married Heather Mills at Castle Leslie, Ireland.
+    significance: major
+    age_at_event: 59
+    source: ADB seed; Wikipedia
+  - date: '2003-10-28'
+    precision: day
+    type: childbirth
+    description: Daughter Beatrice Milly McCartney born.
+    significance: moderate
+    age_at_event: 61
+    source: Wikipedia
+  - date: '2011-10-09'
+    precision: day
+    type: relationship
+    description: Married Nancy Shevell at Marylebone Town Hall.
+    significance: major
+    age_at_event: 69
+    source: ADB seed; Wikipedia
+- name: Prince
+  events:
+  - date: '1978-04-07'
+    precision: day
+    type: career
+    description: Released debut album For You; at 19 the youngest producer in Warner Bros. history at
+      the time.
+    significance: major
+    age_at_event: 19
+    source: Wikipedia; CNN
+  - date: '1982'
+    precision: year
+    type: recognition
+    description: Album 1999, his first Top 10 album, brought mainstream breakthrough.
+    significance: major
+    age_at_event: 24
+    source: Grammy.com; Wikipedia
+  - date: '1984'
+    precision: year
+    type: recognition
+    description: Purple Rain film and album released; the album spent 24 consecutive weeks at No. 1 on
+      the Billboard 200 (August 4, 1984 to January 18, 1985).
+    significance: major
+    age_at_event: 26
+    source: Wikipedia; Grammy.com
+  - date: '1985'
+    precision: year
+    type: recognition
+    description: Won the Academy Award for Best Original Song Score for Purple Rain (27th ceremony).
+    significance: major
+    age_at_event: 26
+    source: Wikipedia; Grammy.com
+  - date: '1993'
+    precision: year
+    type: career
+    description: Changed his name to an unpronounceable 'Love Symbol' amid Warner Bros. dispute.
+    significance: moderate
+    age_at_event: 35
+    source: ADB seed; Wikipedia
+  - date: '1996-02-14'
+    precision: day
+    type: relationship
+    description: Married dancer Mayte Garcia at Park Avenue United Methodist Church, Minneapolis.
+    significance: major
+    age_at_event: 37
+    source: American Songwriter; Wikipedia
+  - date: '1996-10-23'
+    precision: day
+    type: bereavement_other
+    description: Infant son Amiir (born 16 Oct 1996) died of Pfeiffer syndrome type 2 at about six days
+      old.
+    significance: major
+    age_at_event: 38
+    source: Find a Grave; Billboard (Garcia memoir)
+  - date: '2000'
+    precision: year
+    type: relationship
+    description: Divorced Mayte Garcia; resumed the name Prince in May 2000.
+    significance: major
+    age_at_event: 41
+    source: ADB seed; Wikipedia
+  - date: '2001-12-31'
+    precision: day
+    type: relationship
+    description: Married Manuela Testolini.
+    significance: major
+    age_at_event: 43
+    source: ADB seed
+  - date: '2004-03-15'
+    precision: day
+    type: recognition
+    description: Inducted into the Rock and Roll Hall of Fame.
+    significance: major
+    age_at_event: 45
+    source: ADB seed
+  - date: '2007-02-04'
+    precision: day
+    type: recognition
+    description: Performed the Super Bowl XLI halftime show in the rain, later called one of the best
+      ever.
+    significance: moderate
+    age_at_event: 48
+    source: CNN
+  - date: '2016-04-21'
+    precision: day
+    type: health_crisis
+    description: Died of an accidental fentanyl overdose at Paisley Park, aged 57.
+    significance: major
+    age_at_event: 57
+    source: CNN; Wikipedia
+- name: Robin Williams
+  events:
+  - date: '1978'
+    precision: year
+    type: relocation
+    description: Moved to Los Angeles; married Valerie Velardi; cast as Mork in Mork & Mindy (premiered
+      14 Sept 1978).
+    significance: major
+    age_at_event: 27
+    source: ADB seed
+  - date: '1982'
+    precision: year
+    type: bereavement_other
+    description: Close friend John Belushi died of an overdose, prompting Williams to quit drugs.
+    significance: moderate
+    age_at_event: 30
+    source: ADB seed; biographies
+  - date: '1983'
+    precision: year
+    type: childbirth
+    description: Son Zachary (Zak) born to Williams and Valerie Velardi.
+    significance: moderate
+    age_at_event: 32
+    source: Biographies
+  - date: '1989-04-01'
+    precision: day
+    type: relationship
+    description: Divorced Valerie Velardi.
+    significance: major
+    age_at_event: 37
+    source: ADB seed
+  - date: '1989-04-30'
+    precision: day
+    type: relationship
+    description: Married Marsha Garces, his son's former nanny.
+    significance: major
+    age_at_event: 37
+    source: ADB seed
+  - date: '1989-10-18'
+    precision: day
+    type: bereavement_parent
+    description: Father Robert Williams died.
+    significance: major
+    age_at_event: 38
+    source: ADB seed
+  - date: '1991-11-25'
+    precision: day
+    type: childbirth
+    description: Son Cody Alan Williams born to Williams and Marsha Garces.
+    significance: moderate
+    age_at_event: 40
+    source: ADB seed
+  - date: '1998-03-23'
+    precision: day
+    type: recognition
+    description: Won Best Supporting Actor Oscar for Good Will Hunting at the 70th ceremony.
+    significance: major
+    age_at_event: 46
+    source: Oscars.org; Fandom
+  - date: '2008-03-21'
+    precision: day
+    type: relationship
+    description: Marsha Garces filed for divorce.
+    significance: major
+    age_at_event: 56
+    source: ADB seed
+  - date: 2009-03
+    precision: month
+    type: health_crisis
+    description: Diagnosed with aortic valve problem; underwent heart surgery.
+    significance: major
+    age_at_event: 57
+    source: ADB seed
+  - date: '2011'
+    precision: year
+    type: relationship
+    description: Married Susan Schneider.
+    significance: major
+    age_at_event: 60
+    source: All That's Interesting; CNN
+  - date: '2014-08-11'
+    precision: day
+    type: health_crisis
+    description: Died by suicide at his California home; autopsy revealed diffuse Lewy body dementia.
+    significance: major
+    age_at_event: 63
+    source: CNN; Neurology (Schneider Williams)
+- name: Shah Rukh Khan
+  events:
+  - date: '1981'
+    precision: year
+    type: bereavement_parent
+    description: Father Meer Taj Mohammed Khan died of cancer; SRK was 15.
+    significance: major
+    age_at_event: 15
+    source: Wikipedia; Britannica
+  - date: '1989'
+    precision: year
+    type: career
+    description: Television debut in the series Fauji (aired 1989), his first work to broadcast.
+    significance: major
+    age_at_event: 23
+    source: Wikipedia; Britannica
+  - date: '1991'
+    precision: year
+    type: bereavement_parent
+    description: Mother Lateef Fatima died of complications of diabetes.
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; Britannica
+  - date: '1991-10-25'
+    precision: day
+    type: relationship
+    description: Married Gauri Chibber in a traditional Hindu ceremony after a six-year courtship; relocated
+      to Mumbai.
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; ADB seed
+  - date: '1992'
+    precision: year
+    type: career
+    description: Film debut in Deewana, winning the Filmfare Best Male Debut award.
+    significance: major
+    age_at_event: 26
+    source: Wikipedia; Britannica
+  - date: '1995'
+    precision: year
+    type: recognition
+    description: Starred in Dilwale Dulhania Le Jayenge, cementing superstardom (longest-running Indian
+      film).
+    significance: major
+    age_at_event: 29
+    source: Wikipedia
+  - date: '1997'
+    precision: year
+    type: childbirth
+    description: Son Aryan Khan born.
+    significance: moderate
+    age_at_event: 31
+    source: Wikipedia
+  - date: '2000'
+    precision: year
+    type: childbirth
+    description: Daughter Suhana Khan born.
+    significance: moderate
+    age_at_event: 34
+    source: Wikipedia
+  - date: 2001-12
+    precision: month
+    type: accident
+    description: Suffered a spine injury filming an action sequence, causing chronic pain.
+    significance: moderate
+    age_at_event: 36
+    source: ADB seed; Wikipedia
+  - date: '2002'
+    precision: year
+    type: career
+    description: Founded Red Chillies Entertainment with wife Gauri Khan.
+    significance: major
+    age_at_event: 36
+    source: Wikipedia (Red Chillies)
+  - date: '2008'
+    precision: year
+    type: windfall
+    description: Acquired the IPL cricket franchise Kolkata Knight Riders for US$75.09 million.
+    significance: major
+    age_at_event: 42
+    source: Wikipedia (KKR)
+  - date: '2013'
+    precision: year
+    type: childbirth
+    description: Third child AbRam born via surrogacy.
+    significance: moderate
+    age_at_event: 47
+    source: Wikipedia
+- name: Steven Spielberg
+  events:
+  - date: '1966'
+    precision: year
+    type: bereavement_other
+    description: Parents separated/divorced while he was in high school — a formative emotional event
+      he later cited as inspiration for E.T.
+    significance: major
+    age_at_event: 19
+    source: NME (TCM Festival talk)
+  - date: '1975'
+    precision: year
+    type: recognition
+    description: Directed Jaws; it became the first film to earn $100 million in US theatrical rentals,
+      hitting the mark within its first 59 days per Guinness World Records.
+    significance: major
+    age_at_event: 28
+    source: Wikipedia; Guinness World Records
+  - date: '1982'
+    precision: year
+    type: career
+    description: Released E.T. the Extra-Terrestrial and founded Amblin Entertainment.
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Biography.com
+  - date: '1985-06-13'
+    precision: day
+    type: childbirth
+    description: Son Max Spielberg born (with Amy Irving).
+    significance: moderate
+    age_at_event: 38
+    source: Parade
+  - date: '1985-11-27'
+    precision: day
+    type: relationship
+    description: Married actress Amy Irving.
+    significance: major
+    age_at_event: 38
+    source: ADB seed
+  - date: '1989'
+    precision: year
+    type: relationship
+    description: Divorced Amy Irving; she received an estimated $100 million settlement after a judge
+      vacated a prenuptial agreement that had been written on a napkin.
+    significance: major
+    age_at_event: 42
+    source: The List; Wikipedia
+  - date: '1991-10-12'
+    precision: day
+    type: relationship
+    description: Married actress Kate Capshaw (converted to Judaism before marriage).
+    significance: major
+    age_at_event: 44
+    source: ADB seed; HELLO!
+  - date: '1994-03-21'
+    precision: day
+    type: recognition
+    description: Won his first Academy Awards (Best Director and Best Picture) for Schindler's List.
+    significance: major
+    age_at_event: 47
+    source: ADB seed; Wikipedia
+  - date: '1994'
+    precision: year
+    type: career
+    description: Co-founded DreamWorks SKG with Jeffrey Katzenberg and David Geffen.
+    significance: major
+    age_at_event: 47
+    source: Wikipedia; Biography.com
+  - date: '1999-03-21'
+    precision: day
+    type: recognition
+    description: Won Best Director Oscar for Saving Private Ryan.
+    significance: major
+    age_at_event: 52
+    source: ADB seed
+  - date: '2000-02-07'
+    precision: day
+    type: health_crisis
+    description: Underwent kidney surgery.
+    significance: moderate
+    age_at_event: 53
+    source: ADB seed
+  - date: '2001-01-29'
+    precision: day
+    type: recognition
+    description: Received an honorary knighthood (KBE).
+    significance: major
+    age_at_event: 54
+    source: ADB seed; Wikipedia
+- name: Tom Hanks
+  events:
+  - date: '1977-11-24'
+    precision: day
+    type: childbirth
+    description: Son Colin Hanks born (to Samantha Lewes).
+    significance: moderate
+    age_at_event: 21
+    source: ADB seed; Yahoo
+  - date: 1978-01
+    precision: month
+    type: relationship
+    description: Married first wife Samantha Lewes (Susan Dillingham).
+    significance: major
+    age_at_event: 21
+    source: Wikipedia; Yahoo
+  - date: '1982-05-17'
+    precision: day
+    type: childbirth
+    description: Daughter Elizabeth (E.A.) Hanks born.
+    significance: moderate
+    age_at_event: 25
+    source: ADB seed; Yahoo
+  - date: '1984'
+    precision: year
+    type: recognition
+    description: Breakthrough lead role in the hit comedy Splash.
+    significance: major
+    age_at_event: 27
+    source: Wikipedia; Smooth Radio
+  - date: '1987'
+    precision: year
+    type: relationship
+    description: Divorced Samantha Lewes.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia
+  - date: '1988'
+    precision: year
+    type: recognition
+    description: Starred in Big, earning his first Best Actor Oscar nomination and confirming his stardom.
+    significance: major
+    age_at_event: 31
+    source: Wikipedia
+  - date: '1988-04-30'
+    precision: day
+    type: relationship
+    description: Married actress Rita Wilson (converted to Greek Orthodoxy before marriage).
+    significance: major
+    age_at_event: 31
+    source: ADB seed; Smooth Radio
+  - date: '1990-08-04'
+    precision: day
+    type: childbirth
+    description: Son Chester (Chet) Hanks born.
+    significance: moderate
+    age_at_event: 34
+    source: ADB seed
+  - date: '1994-03-21'
+    precision: day
+    type: recognition
+    description: Won Best Actor Oscar for Philadelphia.
+    significance: major
+    age_at_event: 37
+    source: ADB seed
+  - date: '1995-03-27'
+    precision: day
+    type: recognition
+    description: Won a second consecutive Best Actor Oscar for Forrest Gump.
+    significance: major
+    age_at_event: 38
+    source: ADB seed
+  - date: '1995-12-26'
+    precision: day
+    type: childbirth
+    description: Son Truman Hanks born.
+    significance: moderate
+    age_at_event: 39
+    source: ADB seed
+  - date: '2016'
+    precision: year
+    type: recognition
+    description: Awarded the Presidential Medal of Freedom and the French Legion of Honour.
+    significance: major
+    age_at_event: 60
+    source: ADB seed
+  - date: '2020-03-12'
+    precision: day
+    type: health_crisis
+    description: Announced he and Rita Wilson had tested positive for COVID-19 (among first celebrities
+      to disclose).
+    significance: moderate
+    age_at_event: 63
+    source: ADB seed
+- name: Wolfgang Mozart
+  events:
+  - date: '1762-01-06'
+    precision: day
+    type: relocation
+    description: Family began its European concert tours displaying the child prodigy.
+    significance: major
+    age_at_event: 5
+    source: ADB seed; biographies
+  - date: '1767'
+    precision: year
+    type: health_crisis
+    description: Contracted smallpox during the family's travels and recovered.
+    significance: moderate
+    age_at_event: 11
+    source: ADB seed
+  - date: '1769'
+    precision: year
+    type: career
+    description: Appointed honorary (unpaid) Konzertmeister at the Salzburg court, aged 13.
+    significance: moderate
+    age_at_event: 13
+    source: Britannica
+  - date: '1777-09-23'
+    precision: day
+    type: relocation
+    description: Left Salzburg with his mother on a job-seeking tour to Mannheim and Paris.
+    significance: major
+    age_at_event: 21
+    source: Salzburg Mozarteum; biographies
+  - date: '1778-07-03'
+    precision: day
+    type: bereavement_parent
+    description: Mother Anna Maria Mozart died in Paris after a brief illness, aged 57.
+    significance: major
+    age_at_event: 22
+    source: Salzburg Mozarteum Foundation; Wikipedia
+  - date: '1782-07-16'
+    precision: day
+    type: career
+    description: Premiere of the opera Die Entführung aus dem Serail in Vienna.
+    significance: major
+    age_at_event: 26
+    source: Wikipedia
+  - date: '1782-08-04'
+    precision: day
+    type: relationship
+    description: Married Constanze Weber in Vienna.
+    significance: major
+    age_at_event: 26
+    source: ADB seed; Wikipedia
+  - date: '1783-08-19'
+    precision: day
+    type: bereavement_other
+    description: First child Raimund Leopold (born 17 June 1783) died aged about two months.
+    significance: moderate
+    age_at_event: 27
+    source: Cambridge Mozart Encyclopedia via Wikipedia
+  - date: '1786-05-01'
+    precision: day
+    type: career
+    description: Premiere of Le nozze di Figaro in Vienna.
+    significance: major
+    age_at_event: 30
+    source: ADB seed; Wikipedia
+  - date: '1787-05-28'
+    precision: day
+    type: bereavement_parent
+    description: Father Leopold Mozart died in Salzburg; Wolfgang inherited ~1000 gulden.
+    significance: major
+    age_at_event: 31
+    source: Britannica; Classic FM
+  - date: '1787-10-29'
+    precision: day
+    type: career
+    description: Premiere of Don Giovanni in Prague, a triumphant success.
+    significance: major
+    age_at_event: 31
+    source: Wikipedia; Britannica
+  - date: 1787-12
+    precision: month
+    type: career
+    description: Appointed chamber composer to Emperor Joseph II (part-time, 800 florins/year).
+    significance: moderate
+    age_at_event: 31
+    source: Wikipedia
+  - date: '1790-01-26'
+    precision: day
+    type: career
+    description: Premiere of Così fan tutte in Vienna.
+    significance: major
+    age_at_event: 33
+    source: ADB seed; Wikipedia
+  - date: '1791-07-26'
+    precision: day
+    type: childbirth
+    description: Son Franz Xaver Wolfgang Mozart born (survived to adulthood).
+    significance: moderate
+    age_at_event: 35
+    source: Cambridge Mozart Encyclopedia via Wikipedia
+  - date: '1791-09-30'
+    precision: day
+    type: career
+    description: Premiere of Die Zauberflöte in Vienna; Mozart conducted.
+    significance: major
+    age_at_event: 35
+    source: Wikipedia
+  - date: '1791-12-05'
+    precision: day
+    type: health_crisis
+    description: Died in Vienna, aged 35, after a short illness.
+    significance: major
+    age_at_event: 35
+    source: Britannica; Wikipedia
+- name: Yoko Ono
+  events:
+  - date: '1956'
+    precision: year
+    type: relationship
+    description: Married first husband, composer Toshi Ichiyanagi, after eloping; family cut her off financially.
+    significance: major
+    age_at_event: 23
+    source: Wikipedia; PEOPLE/Yahoo
+  - date: '1962-11-28'
+    precision: day
+    type: relationship
+    description: Married second husband Anthony Cox (annulled 1 March 1963, then remarried).
+    significance: moderate
+    age_at_event: 29
+    source: Wikipedia (Anthony Cox)
+  - date: '1963-08-08'
+    precision: day
+    type: childbirth
+    description: Daughter Kyoko Chan Cox born.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia
+  - date: 1966-11
+    precision: month
+    type: other
+    description: First met John Lennon at her Indica Gallery exhibition in London (9 Nov 1966).
+    significance: major
+    age_at_event: 33
+    source: Biography.com; Wikipedia
+  - date: '1969-03-20'
+    precision: day
+    type: relationship
+    description: Married John Lennon in Gibraltar.
+    significance: major
+    age_at_event: 36
+    source: ADB seed; Wikipedia
+  - date: '1969'
+    precision: year
+    type: other
+    description: Staged the 'Bed-ins for Peace' with Lennon (Amsterdam and Montreal).
+    significance: moderate
+    age_at_event: 36
+    source: Biography.com
+  - date: '1971'
+    precision: year
+    type: bereavement_other
+    description: Lost custody of Kyoko; ex-husband Cox disappeared with the child, hiding her for decades.
+    significance: major
+    age_at_event: 38
+    source: Wikipedia; PEOPLE
+  - date: '1975-10-09'
+    precision: day
+    type: childbirth
+    description: Son Sean Ono Lennon born (on John Lennon's 35th birthday).
+    significance: major
+    age_at_event: 42
+    source: ADB seed; Wikipedia
+  - date: '1980-12-08'
+    precision: day
+    type: bereavement_other
+    description: Husband John Lennon assassinated outside their New York apartment.
+    significance: major
+    age_at_event: 47
+    source: ADB seed; Wikipedia
+  - date: '1989'
+    precision: year
+    type: recognition
+    description: Whitney Museum retrospective of her work.
+    significance: moderate
+    age_at_event: 56
+    source: ADB seed
+  - date: '1998'
+    precision: year
+    type: other
+    description: Reunited with her daughter Kyoko after nearly 27 years of estrangement.
+    significance: major
+    age_at_event: 65
+    source: PEOPLE; Wikipedia

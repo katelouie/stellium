@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Notable biographical datasets — life events & temperament** — a curated, taxonomy-tagged corpus of dated life events (888 across 63 notables) and temperament descriptors, gathered from biographies + AstroDataBank via research and kept **separate from birth data** because of its lower provenance grade. Public API: `get_notable_life_events(name | Native) -> tuple[LifeEvent, ...]` and `get_notable_temperament(name | Native) -> tuple[Temperament, ...]` (both accept a name or anything with a `.name`). Life events are ~Rodden-B (secondary-sourced, **not** certificate-verified) and carry an honest `precision` (day/month/year) with a `representative_date` helper; temperament is **soft/interpretive** and its getter emits a `DataQualityWarning` on access. Data lives under `data/notables/life_events/` and `data/notables/temperament/` (name-keyed, per-category, with grade headers); the notable registry now scopes its own loading to `births/` + `events/` so it ignores these. `from stellium import LifeEvent, Temperament, get_notable_life_events, get_notable_temperament`.
+
 ## [0.20.0] - 2026-07-10
 
 ### Added

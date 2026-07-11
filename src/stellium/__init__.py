@@ -63,7 +63,13 @@ from stellium.core.registry import (
 from stellium.core.synthesis import SynthesisBuilder, SynthesisChart
 
 # === Data (Notable Births) ===
-from stellium.data import get_notable_registry
+from stellium.data import (
+    LifeEvent,
+    Temperament,
+    get_notable_life_events,
+    get_notable_registry,
+    get_notable_temperament,
+)
 
 # === Electional Astrology (Time Search) ===
 from stellium.electional import ElectionalSearch
@@ -137,6 +143,10 @@ __all__ = [
     "ReportBuilder",
     # Data
     "get_notable_registry",
+    "get_notable_life_events",
+    "get_notable_temperament",
+    "LifeEvent",
+    "Temperament",
     # Submodules (for from stellium.engines import ...)
     "engines",
     "components",

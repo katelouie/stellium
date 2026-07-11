@@ -7,7 +7,15 @@ Provides:
 - Package data access
 """
 
-# Import paths module directly (no circular dependencies)
+# Biographical datasets (no circular deps — only stellium.exceptions + yaml).
+from stellium.data.biography import (
+    LifeEvent,
+    Temperament,
+    get_notable_life_events,
+    get_notable_temperament,
+)
+
+# Paths module (no circular dependencies).
 from stellium.data.paths import (
     get_ephe_dir,
     get_user_data_dir,
@@ -39,6 +47,11 @@ __all__ = [
     # Notables
     "NotableRegistry",
     "get_notable_registry",
+    # Biographical datasets
+    "LifeEvent",
+    "Temperament",
+    "get_notable_life_events",
+    "get_notable_temperament",
     # Paths
     "get_ephe_dir",
     "get_user_data_dir",

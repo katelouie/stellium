@@ -1,0 +1,60 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Steve Jobs
+  temperament:
+  - trait: Charismatic 'reality distortion field'
+    tags:
+    - charismatic
+    - persuasive
+    evidence: 'Colleague Andy Hertzfeld: ''a confounding mélange of charismatic rhetorical style, indomitable
+      will, and eagerness to bend any fact'''
+    source: Walter Isaacson, Steve Jobs
+  - trait: Perfectionist obsessed with design/simplicity
+    tags:
+    - perfectionist
+    - exacting
+    evidence: Isaacson documents obsession that even unseen parts be perfect; ingrained by father Paul
+    source: Walter Isaacson, Steve Jobs
+  - trait: Volatile, abrasive, binary thinking
+    tags:
+    - volatile
+    - harsh
+    evidence: 'Isaacson: hero/''shithead'' dichotomy; ''often tightly coiled and impatient'';  berated
+      colleagues'
+    source: Walter Isaacson, Steve Jobs (via High Conflict Institute)
+  - trait: Prone to denial / willful blindness
+    tags:
+    - stubborn
+    - avoidant
+    evidence: Isaacson argues denial delayed cancer treatment and drove paternity denial
+    source: Walter Isaacson, Steve Jobs (via Shortform)
+- name: Steve Wozniak
+  temperament:
+  - trait: Playful prankster / joker
+    tags:
+    - playful
+    - mischievous
+    evidence: 'Self-described: ''I was a deliberate prankster because I was too shy to talk to people'';
+      Zaltair hoax'
+    source: iWoz; Fierce Network interview
+  - trait: Shy / introverted
+    tags:
+    - shy
+    - introverted
+    evidence: 'iWoz: ''my natural shyness just made me bottom out in sixth grade''; too shy to present
+      at Homebrew'
+    source: iWoz; Knowledge at Wharton
+  - trait: Engineering obsessiveness for its own sake
+    tags:
+    - obsessive
+    - craftsman
+    evidence: Designed Apple I hardware, board and OS single-handedly; wanted to stay a hands-on engineer
+    source: Wikipedia; Knowledge at Wharton
+  - trait: Generosity / indifference to wealth
+    tags:
+    - generous
+    - idealistic
+    evidence: Sold ~$10M of pre-IPO stock to early employees ('Woz Plan'); 'I didn't ever want to be rich'
+    source: TIME (Luckerson); iWoz

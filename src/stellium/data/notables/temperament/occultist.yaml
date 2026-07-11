@@ -1,0 +1,66 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Osho Rajneesh
+  temperament:
+  - trait: Charismatic, spellbinding orator
+    tags:
+    - charismatic
+    - eloquent
+    evidence: Renowned debater and lecturer drawing tens of thousands
+    source: Wikipedia; Osho Lucknow
+  - trait: Rebellious and provocative from youth
+    tags:
+    - rebellious
+    - provocative
+    evidence: Challenged religious/social orthodoxy; nicknamed 'sex guru' after 1968 lectures
+    source: thefamouspeople; New World Encyclopedia
+  - trait: Iconoclastic toward organized religion
+    tags:
+    - iconoclastic
+    evidence: Criticized all organized religion and Gandhi publicly
+    source: Wikipedia
+  - trait: Materially indulgent (amassed 93 Rolls-Royces)
+    tags:
+    - indulgent
+    evidence: 'Per Wikipedia: ''He also gained public notoriety for amassing a large collection of Rolls-Royce
+      cars, eventually numbering 93 vehicles.'''
+    source: Wikipedia
+- name: Swami Vivekananda
+  temperament:
+  - trait: Energetic, restless, mischievous as a child
+    tags:
+    - restless
+    - energetic
+    evidence: After his outbursts his mother Bhuvaneshwari Devi would sigh, 'I prayed to Shiva for a son,
+      and He has sent me one of His demons!'
+    source: Eastern and Western Disciples, The Life of Swami Vivekananda (ramakrishnavivekananda.info)
+  - trait: Charismatic orator with commanding presence
+    tags:
+    - charismatic
+    - eloquent
+    evidence: The New York Critique wrote of the 1893 address, 'He is an orator by divine right'; the
+      New York Herald called him 'undoubtedly the greatest figure in the Parliament of Religions'
+    source: Contemporary press accounts (New York Critique; New York Herald), 1893
+  - trait: Ascetic and disciplined; prized self-control and brahmacharya
+    tags:
+    - ascetic
+    - disciplined
+    evidence: 'Nikhilananda: worked hard, prized ascetic disciplines; credited brahmacharya as source
+      of his physical/mental stamina'
+    source: 'Nikhilananda, Swami Vivekananda: A Biography; Teachings and philosophy (Wikipedia)'
+  - trait: Fearless; preached strength and courage
+    tags:
+    - fearless
+    - combative
+    evidence: Recurring exhortation 'Arise, awake, and stop not till the goal is reached'; urged fearlessness
+      on his countrymen
+    source: The Complete Works of Swami Vivekananda; Sanatan Hindu Dharma
+  - trait: Intellectually voracious and curious
+    tags:
+    - curious
+    - intellectual
+    evidence: Avid reader across philosophy, religion, history; only student to gain first-division marks
+      in the Presidency College entrance exam
+    source: Wikipedia (Vivekananda)

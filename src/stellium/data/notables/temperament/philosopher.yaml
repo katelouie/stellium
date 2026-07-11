@@ -1,0 +1,97 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Hannah Arendt
+  temperament:
+  - trait: Passionate, intense, capable of great fervor
+    tags:
+    - passionate
+    - intense
+    evidence: 'Laqueur: possessed ''erudition, imagination, passion''; would defend positions ''with equal
+      fervor'''
+    source: Walter Laqueur review of Young-Bruehl, Commentary
+  - trait: Fiercely independent and unpredictable
+    tags:
+    - independent
+    - combative
+    evidence: Young-Bruehl; noted for exaggeration and provocation, 'inspired passionate responses in
+      others'
+    source: Young-Bruehl (1982); Laqueur, Commentary
+  - trait: Personally charismatic and seductive in company
+    tags:
+    - charismatic
+    evidence: Kristeva noted her 'womanly seductiveness'; Kazin recalled being charmed 'by no means unerotically';
+      McCarthy on her femininity
+    source: LA Review of Books (on Young-Bruehl and Hill biographies)
+  - trait: Loyal in friendship; capable of deep emotional attachment
+    tags:
+    - loyal
+    evidence: Young-Bruehl documents lifelong devotion to Jaspers and Blücher and a deep circle of émigré
+      friends
+    source: Young-Bruehl (1982); Laqueur, Commentary
+- name: Jean-Paul Sartre
+  temperament:
+  - trait: Supremely self-confident, certain of his intellectual value
+    tags:
+    - ambitious
+    - confident
+    evidence: 'Biographers (incl. Beauvoir) depict a man ''obsessed with his own intellect''; Hayman quotes
+      him: ''I want to be the one who knows the most things'''
+    source: 'Hayman, Writing Against: A Biography of Sartre (1986); Tameri Existential Primer'
+  - trait: Restless and prolific; poured energy into work, often left unfinished
+    tags:
+    - restless
+    - energetic
+    evidence: Hayman notes ambitions 'unbounded'; tended to leave projects unfinished; enormous output
+      across genres
+    source: Hayman (1986); Stanford Encyclopedia of Philosophy
+  - trait: Combative and politically engaged
+    tags:
+    - combative
+    - engaged
+    evidence: Founded Les Temps Modernes, mobilized political protest; refused the Nobel to avoid institutional
+      co-optation
+    source: Stanford Encyclopedia of Philosophy
+  - trait: Generous with money and time to friends
+    tags:
+    - generous
+    evidence: Widely attested; gave away much of his income; described by contemporaries as open-handed
+    source: 'Cohen-Solal, Sartre: A Life (1985)'
+  - trait: Exhibitionistic, sociable, drawn to attention
+    tags:
+    - gregarious
+    evidence: 'Hayman: ''strong streak of exhibitionism''; sought public platforms throughout life'
+    source: Hayman (1986)
+- name: Simone de Beauvoir
+  temperament:
+  - trait: Intensely disciplined and hardworking as a writer
+    tags:
+    - disciplined
+    - ambitious
+    evidence: Prolific output across fiction, philosophy, memoir; taught philosophy 1931-1943 while writing
+    source: EBSCO (The Prime of Life); Biography.com
+  - trait: Fiercely independent; rejected marriage and conventional roles
+    tags:
+    - independent
+    evidence: Rejected Sartre's marriage proposal; defined an unconventional partnership; wrote of her
+      'intoxicating' freedom
+    source: EBSCO; Biography.com
+  - trait: Intellectually curious and self-analytical
+    tags:
+    - curious
+    - introspective
+    evidence: Her autobiographies constitute sustained self-examination; crisis of faith and atheism at
+      14
+    source: Biography.com; EBSCO
+  - trait: Politically engaged, especially over Algeria
+    tags:
+    - engaged
+    evidence: Deep distress over French atrocities in Algeria; supported anti-colonial and feminist causes
+    source: Goodreads (Force of Circumstance); Biography.com
+  - trait: Reserved/discreet about her inner life in public
+    tags:
+    - private
+    - reserved
+    evidence: Warned readers she would 'leave in obscurity' much; fuller self emerges in her fiction
+    source: EBSCO (The Prime of Life)

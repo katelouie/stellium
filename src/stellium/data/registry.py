@@ -73,8 +73,14 @@ class NotableRegistry:
             # No notable data found - this is OK for minimal installs
             return
 
-        # Load all YAML files from births/ and events/ subdirectories
-        for yaml_file in data_dir.rglob("*.yaml"):
+        # Load YAML files from births/ and events/ ONLY. Other subdirectories
+        # (life_events/, temperament/) are biographical datasets with their own
+        # schema + loaders (stellium.data.biography), not Notable birth/event
+        # records — scanning them here would emit a warning per entry.
+        yaml_files = sorted((data_dir / "births").glob("*.yaml")) + sorted(
+            (data_dir / "events").glob("*.yaml")
+        )
+        for yaml_file in yaml_files:
             try:
                 with open(yaml_file) as f:
                     entries = yaml.safe_load(f) or []

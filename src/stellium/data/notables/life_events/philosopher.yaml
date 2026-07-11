@@ -1,0 +1,307 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Hannah Arendt
+  events:
+  - date: '1913-10-30'
+    precision: day
+    type: bereavement_parent
+    description: Father Paul Arendt died of syphilis; she was 7
+    significance: major
+    age_at_event: 7
+    source: Young-Bruehl (1982); Wikipedia
+  - date: '1924'
+    precision: year
+    type: education
+    description: Began studying under Heidegger at Marburg (winter semester 1924)
+    significance: major
+    age_at_event: 18
+    source: Stanford Encyclopedia of Philosophy; Young-Bruehl (1982)
+  - date: '1929'
+    precision: year
+    type: education
+    description: Completed doctorate under Karl Jaspers (dissertation 'Der Liebesbegriff bei Augustin'),
+      published 1929
+    significance: major
+    age_at_event: 22
+    source: Stanford Encyclopedia of Philosophy; Young-Bruehl (1982)
+  - date: '1929'
+    precision: year
+    type: relationship
+    description: First marriage, to Günther Stern (Anders)
+    significance: moderate
+    age_at_event: 22
+    source: Wikipedia; Young-Bruehl (1982)
+  - date: 1933-07
+    precision: month
+    type: legal
+    description: Arrested by Gestapo in Berlin, briefly imprisoned (~8 days), then fled Germany to Paris
+    significance: major
+    age_at_event: 26
+    source: Young-Bruehl (1982); German Resistance Memorial Center
+  - date: '1940-01-16'
+    precision: day
+    type: relationship
+    description: Married Heinrich Blücher (second marriage)
+    significance: moderate
+    age_at_event: 33
+    source: Jewish Women's Archive; Springer chronology
+  - date: 1940-05
+    precision: month
+    type: legal
+    description: Interned as 'enemy alien' at Camp Gurs, France; escaped in the chaos after France's capitulation
+    significance: major
+    age_at_event: 33
+    source: Wikipedia; We Refugees Archive
+  - date: 1941-05
+    precision: month
+    type: relocation
+    description: Emigrated to the United States, arriving New York
+    significance: major
+    age_at_event: 34
+    source: Jewish Women's Archive; NYRB (Samantha Power)
+  - date: '1951-12-10'
+    precision: day
+    type: other
+    description: Became a naturalized US citizen
+    significance: moderate
+    age_at_event: 45
+    source: Wikipedia; We Refugees Archive
+  - date: '1951'
+    precision: year
+    type: career
+    description: Published 'The Origins of Totalitarianism'
+    significance: major
+    age_at_event: 45
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1958'
+    precision: year
+    type: career
+    description: Published 'The Human Condition'
+    significance: major
+    age_at_event: 51
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1961'
+    precision: year
+    type: career
+    description: Covered the Eichmann trial in Jerusalem for The New Yorker
+    significance: major
+    age_at_event: 54
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1963'
+    precision: year
+    type: career
+    description: Published 'Eichmann in Jerusalem' (the 'banality of evil'; major controversy)
+    significance: major
+    age_at_event: 56
+    source: Stanford Encyclopedia of Philosophy; IEP
+  - date: '1970-10-31'
+    precision: day
+    type: bereavement_other
+    description: Husband Heinrich Blücher died of a heart attack
+    significance: major
+    age_at_event: 64
+    source: Grokipedia; New World Encyclopedia
+  - date: '1975-12-04'
+    precision: day
+    type: health_crisis
+    description: Died of a heart attack in New York City
+    significance: major
+    age_at_event: 69
+    source: Jewish Women's Archive; Wikipedia
+- name: Jean-Paul Sartre
+  events:
+  - date: '1906'
+    precision: year
+    type: bereavement_parent
+    description: Father Jean-Baptiste Sartre died when Sartre was an infant
+    significance: major
+    age_at_event: 1
+    source: Tameri Existential Primer; Stanford Encyclopedia of Philosophy
+  - date: '1924'
+    precision: year
+    type: education
+    description: Entered the École Normale Supérieure
+    significance: moderate
+    age_at_event: 19
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1929'
+    precision: year
+    type: relationship
+    description: Met Simone de Beauvoir; began lifelong (non-marital) relationship
+    significance: major
+    age_at_event: 24
+    source: Stanford Encyclopedia of Philosophy; Biography.com
+  - date: '1929'
+    precision: year
+    type: recognition
+    description: Passed the agrégation in philosophy, placing first
+    significance: major
+    age_at_event: 24
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1931'
+    precision: year
+    type: career
+    description: Began teaching career (Le Havre)
+    significance: moderate
+    age_at_event: 26
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1933'
+    precision: year
+    type: relocation
+    description: Studied in Berlin (1933-34), immersing in Husserl's phenomenology
+    significance: moderate
+    age_at_event: 28
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1938'
+    precision: year
+    type: career
+    description: Published 'Nausea' (La Nausée)
+    significance: major
+    age_at_event: 33
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1939'
+    precision: year
+    type: other
+    description: Mobilized/drafted into the French army
+    significance: moderate
+    age_at_event: 34
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1940-06-21'
+    precision: day
+    type: legal
+    description: Captured by German forces (on his 35th birthday)
+    significance: major
+    age_at_event: 35
+    source: Stanford Encyclopedia of Philosophy; standard biographies
+  - date: 1941-03
+    precision: month
+    type: legal
+    description: Released from POW camp and returned to Paris
+    significance: moderate
+    age_at_event: 35
+    source: 'Standard biographies (Cohen-Solal, Sartre: A Life, 1985)'
+  - date: '1943'
+    precision: year
+    type: career
+    description: Published 'Being and Nothingness'
+    significance: major
+    age_at_event: 38
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1944'
+    precision: year
+    type: career
+    description: Play 'No Exit' (Huis Clos) premiered
+    significance: moderate
+    age_at_event: 39
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1945'
+    precision: year
+    type: career
+    description: Founded Les Temps Modernes; delivered 'Existentialism Is a Humanism' lecture
+    significance: major
+    age_at_event: 40
+    source: Stanford Encyclopedia of Philosophy
+  - date: 1964-10
+    precision: month
+    type: recognition
+    description: Awarded and refused the Nobel Prize in Literature
+    significance: major
+    age_at_event: 59
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1980-04-15'
+    precision: day
+    type: health_crisis
+    description: Died of pulmonary edema in Paris; enormous public funeral
+    significance: major
+    age_at_event: 74
+    source: Stanford Encyclopedia of Philosophy
+- name: Simone de Beauvoir
+  events:
+  - date: '1929'
+    precision: year
+    type: relationship
+    description: Met Jean-Paul Sartre; began lifelong partnership
+    significance: major
+    age_at_event: 21
+    source: Biography.com; Penguin (The Prime of Life)
+  - date: '1929'
+    precision: year
+    type: recognition
+    description: 'Passed the agrégation in philosophy: at twenty-one, the youngest candidate to pass and
+      the eighth woman ever to do so, finishing second to Sartre'
+    significance: major
+    age_at_event: 21
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1931'
+    precision: year
+    type: career
+    description: Began teaching (Marseille, then Rouen)
+    significance: moderate
+    age_at_event: 23
+    source: EBSCO (The Prime of Life); Biography.com
+  - date: '1947'
+    precision: year
+    type: relationship
+    description: Began affair with American novelist Nelson Algren during US trip
+    significance: moderate
+    age_at_event: 39
+    source: 'Deirdre Bair, Simone de Beauvoir: A Biography (1990)'
+  - date: '1949'
+    precision: year
+    type: career
+    description: Published 'The Second Sex' (Le Deuxième Sexe), landmark feminist work
+    significance: major
+    age_at_event: 41
+    source: Biography.com
+  - date: '1954'
+    precision: year
+    type: recognition
+    description: Published 'The Mandarins'; won the Prix Goncourt
+    significance: major
+    age_at_event: 46
+    source: Biography.com
+  - date: '1958'
+    precision: year
+    type: career
+    description: Published memoir 'Memoirs of a Dutiful Daughter'
+    significance: moderate
+    age_at_event: 50
+    source: Biography.com; contemporarythinkers.org
+  - date: '1960'
+    precision: year
+    type: career
+    description: Published 'The Prime of Life' (La Force de l'âge)
+    significance: moderate
+    age_at_event: 52
+    source: Penguin; EBSCO; contemporarythinkers.org
+  - date: '1963'
+    precision: year
+    type: bereavement_parent
+    description: Mother Françoise de Beauvoir died (basis for 'A Very Easy Death')
+    significance: major
+    age_at_event: 55
+    source: contemporarythinkers.org (Une mort très douce, 1964)
+  - date: '1980-04-15'
+    precision: day
+    type: bereavement_other
+    description: Lifelong partner Sartre died
+    significance: major
+    age_at_event: 72
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1981'
+    precision: year
+    type: career
+    description: 'Published ''Adieux: A Farewell to Sartre'' (La Cérémonie des adieux)'
+    significance: moderate
+    age_at_event: 73
+    source: Stanford Encyclopedia of Philosophy
+  - date: '1986-04-14'
+    precision: day
+    type: health_crisis
+    description: Died of pneumonia in Paris; buried with Sartre at Montparnasse
+    significance: major
+    age_at_event: 78
+    source: Biography.com

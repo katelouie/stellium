@@ -1,0 +1,34 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Ted Bundy
+  temperament:
+  - trait: Superficial charm / social chameleon
+    tags:
+    - charming
+    - manipulative
+    evidence: Co-worker/biographer Ann Rule found him 'kind, solicitous, and empathetic'; forensic psychiatrist
+      Art Norman noted his 'elasticity'
+    source: Ann Rule, The Stranger Beside Me; Psychology Today
+  - trait: Narcissism / need for admiration
+    tags:
+    - narcissistic
+    - grandiose
+    evidence: Refused an insanity defense out of pride ('I know I'm not crazy');  ~95% of surveyed psychologists
+      rated NPD traits
+    source: Enneagram Blueprint (Bundy quotes); University of Kentucky study, via Edubirdie
+  - trait: Manipulative intelligence / deceit
+    tags:
+    - deceptive
+    - calculating
+    evidence: Used fake casts/crutches and police impersonation to lure victims; 'I was able to fool people
+      easily'
+    source: Wikipedia; Conversations with a Killer tapes
+  - trait: Cold detachment / lack of remorse
+    tags:
+    - callous
+    - detached
+    evidence: Self-described 'the most cold-hearted son of a b---- you will ever meet';  consistent with
+      psychopathy checklist
+    source: verbatim Bundy quote; forensic analyses

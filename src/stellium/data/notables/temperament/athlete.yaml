@@ -1,0 +1,182 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Billie Jean King
+  temperament:
+  - trait: Fiercely competitive / relentless drive
+    tags:
+    - competitive
+    - driven
+    evidence: Reviewers of her memoir cite 'King's drive to overcome any obstacle'  and her 'entrepreneurial,
+      relentless spirit'
+    source: 'Billie Jean King, All In: An Autobiography (2021); San Diego Union-Tribune review'
+  - trait: Driven activist (from age 12)
+    tags:
+    - activist
+    - principled
+    evidence: 'Self-described age-12 epiphany at an all-white club: vowed to ''champion equality the rest
+      of my life'''
+    source: Billie Jean King, All In (2021); Time interview
+  - trait: Outspoken
+    tags:
+    - outspoken
+    - bold
+    evidence: Became 'an outspoken activist against gender inequality'; lobbied for the ERA and Title
+      IX
+    source: Kirkus review of All In (2021)
+  - trait: Charismatic leader / astute tactician
+    tags:
+    - charismatic
+    - strategic
+    evidence: Described as 'a celebrated battler and astute tactician both on court and off'; founder
+      of WTA and the Women's Sports Foundation
+    source: Irish Times review of All In (2021)
+- name: Bruce Lee
+  temperament:
+  - trait: Intensely disciplined / workaholic
+    tags:
+    - disciplined
+    - driven
+    evidence: Polly calls him 'a notorious perfectionist... a workaholic who couldn't let go'
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Perfectionist / craving to be the best
+    tags:
+    - perfectionist
+    - ambitious
+    evidence: 'Polly: his rivalry ''drove Bruce crazy ''cause he was a perfectionist and he always wanted
+      to be the best'''
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Charismatic
+    tags:
+    - charismatic
+    evidence: Described as 'the most charismatic martial artist ever';  commanded any room
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Fiery / hot-tempered, especially in youth
+    tags:
+    - hot-tempered
+    - combative
+    evidence: 'Polly: a ''genuine delinquent''  who loved street brawling; nicknamed ''Little Dragon''
+      for his fiery, hyperactive temper'
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Philosophical
+    tags:
+    - philosophical
+    - reflective
+    evidence: Developed the 'be water' philosophy and Jeet Kune Do's individualist ethos
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+- name: Michael Jordan
+  temperament:
+  - trait: Ferocious, all-consuming will to win
+    tags:
+    - competitive
+    - driven
+    evidence: Self-described ('My mentality was to go and win at all cost') and corroborated by teammates/reporters
+      in The Last Dance
+    source: Andscape; Jordan quotes in The Last Dance
+  - trait: Uses perceived slights as fuel; manufactures rivalries
+    tags:
+    - combative
+    - vindictive
+    evidence: 'Documented invention of the LaBradford Smith slight; reporter Michael Wilbon: he wanted
+      to ''humiliate you'''
+    source: Character and Leadership; Salesman on Fire analysis
+  - trait: Demanding, confrontational team leader
+    tags:
+    - intense
+    - exacting
+    evidence: Teammates (Pippen, Kerr) describe practices as demanding; he ridiculed teammates to raise
+      standards
+    source: The Last Dance; sportpersonalities analysis
+  - trait: Relentless work ethic; played through illness
+    tags:
+    - disciplined
+    - resilient
+    evidence: 1997 'Flu Game' (38 points while ill); rarely missed games
+    source: Basketball Mindset Training; multiple biographies
+- name: Muhammad Ali
+  temperament:
+  - trait: Brash, boastful self-confidence
+    tags:
+    - confident
+    - self-promoting
+    evidence: Self-described from age 12 ('I'm going to be the greatest'); biographer Jonathan Eig documents
+      lifelong self-belief
+    source: 'NPR interview with Jonathan Eig, Ali: A Life'
+  - trait: Charismatic, magnetic presence
+    tags:
+    - charismatic
+    - extroverted
+    evidence: 'Eig: ''Everybody just loved being in his presence… impossible to be in a bad mood when
+      you were in the room with Ali'''
+    source: NPR interview with Jonathan Eig
+  - trait: Principled and defiant (draft refusal)
+    tags:
+    - principled
+    - defiant
+    evidence: Refused Vietnam draft at cost of his title; 'I ain't got to be what nobody else want me
+      to be'
+    source: 'Eig, Ali: A Life; Muhammad Ali Center core principles'
+  - trait: Cruel streak / cutting taunts
+    tags:
+    - combative
+    - cruel
+    evidence: 'Eig: ''up rose the cruel Ali… who flared in anger''; publicly humiliated opponents and
+      friends'
+    source: 'NPR review of Eig, Ali: A Life'
+- name: Pelé
+  temperament:
+  - trait: Humility / down-to-earth
+    tags:
+    - humble
+    - grounded
+    evidence: Self-described distinction between 'Edson' (private, normal man) and 'Pelé' (the idol);
+      EBSCO calls him 'gracious and accommodating'
+    source: Wikipedia (Pelé quote); EBSCO Research Starters
+  - trait: Sportsmanship and grace
+    tags:
+    - gracious
+    - sporting
+    evidence: '1970 jersey-exchange with Bobby Moore; NYT: ''No gloating and no fist-pumping'''
+    source: New York Times, via Wikipedia
+  - trait: Joyful warmth connecting with people
+    tags:
+    - warm
+    - charismatic
+    evidence: 'His ghostwriter Brian Winter: ''authentic joy in connecting with people… special magic
+      and charisma'''
+    source: Americas Quarterly (Brian Winter)
+  - trait: Improvisational genius on the pitch
+    tags:
+    - creative
+    - instinctive
+    evidence: 'Teammate Carlos Alberto Torres: ''His great secret was improvisation'''
+    source: via Wikipedia
+- name: Serena Williams
+  temperament:
+  - trait: Fierce competitiveness / fighter
+    tags:
+    - competitive
+    - combative
+    evidence: 'Self-described ''savage fighter''; father Richard: ''so mentally tough she don''t believe
+      she can lose'''
+    source: Globe and Mail (Richard Williams); Serena self-description
+  - trait: Mental toughness / resilience
+    tags:
+    - resilient
+    - tough
+    evidence: 'Self-described greatest strength: ''My game is my mental toughness… to be able to come
+      back when I''m down'''
+    source: The Guardian; Forbes (MasterClass)
+  - trait: Fiery on-court temper
+    tags:
+    - volatile
+    - intense
+    evidence: 2009 US Open lineswoman threat (record $82,500 fine); 2018 US Open final outburst
+    source: ESPN; CBS News/AP
+  - trait: Confidence / self-belief
+    tags:
+    - confident
+    - self-assured
+    evidence: '''You have to believe in yourself when no one else does'''
+    source: GQ Sports, via Forbes

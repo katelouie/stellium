@@ -1,0 +1,684 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Frida Kahlo
+  events:
+  - date: '1913'
+    precision: year
+    type: health_crisis
+    description: Contracted polio, aged six, and was bedridden for several months, leaving her right leg
+      withered
+    significance: major
+    age_at_event: 6
+    source: 'V. Budrys, ''Neurological Deficits in the Life and Works of Frida Kahlo,'' European Neurology
+      (Karger): ''Frida Kahlo caught polio in 1913, aged six, and had to spend several months in bed.'''
+  - date: '1922'
+    precision: year
+    type: education
+    description: Entered the National Preparatory School (Escuela Nacional Preparatoria), Mexico City
+    significance: moderate
+    age_at_event: 15
+    source: Britannica; Writers Theatre timeline
+  - date: '1925-09-17'
+    precision: day
+    type: accident
+    description: Near-fatal bus/streetcar collision; an iron handrail impaled her pelvis, fracturing spine,
+      pelvis and leg
+    significance: major
+    age_at_event: 18
+    source: Biography.com 'How a Horrific Bus Accident Changed Frida Kahlo's Life'; Britannica
+  - date: 1928-06
+    precision: month
+    type: relationship
+    description: Introduced to (re-met) Diego Rivera at a party; began a relationship
+    significance: major
+    age_at_event: 20
+    source: Writers Theatre timeline; Biography.com
+  - date: '1929-08-21'
+    precision: day
+    type: relationship
+    description: Married Diego Rivera
+    significance: major
+    age_at_event: 22
+    source: Writers Theatre timeline; Mental Floss
+  - date: 1930-11
+    precision: month
+    type: relocation
+    description: Moved with Rivera to San Francisco
+    significance: moderate
+    age_at_event: 23
+    source: Writers Theatre timeline
+  - date: 1932-04
+    precision: month
+    type: relocation
+    description: Moved to Detroit; Rivera painting murals for the Detroit Institute of Arts
+    significance: moderate
+    age_at_event: 24
+    source: Writers Theatre timeline
+  - date: '1932'
+    precision: year
+    type: health_crisis
+    description: Suffered a miscarriage in Detroit and was hospitalized (inspired 'Henry Ford Hospital')
+    significance: major
+    age_at_event: 25
+    source: Biography.com; Writers Theatre timeline
+  - date: '1932'
+    precision: year
+    type: bereavement_parent
+    description: Her mother, Matilde Calderón, died from surgery complications
+    significance: major
+    age_at_event: 25
+    source: Writers Theatre timeline
+  - date: 1937-01
+    precision: month
+    type: other
+    description: Leon Trotsky arrived and lived at La Casa Azul for two years; she and Trotsky had a brief
+      affair
+    significance: moderate
+    age_at_event: 29
+    source: Writers Theatre timeline; Britannica
+  - date: '1938'
+    precision: year
+    type: recognition
+    description: First solo exhibition, at the Julien Levy Gallery, New York
+    significance: major
+    age_at_event: 31
+    source: Wikipedia 'Frida Kahlo'; Writers Theatre timeline
+  - date: 1939-03
+    precision: month
+    type: recognition
+    description: Traveled to Paris; the Louvre acquired her painting The Frame, the first work by a 20th-century
+      Mexican artist in its collection
+    significance: major
+    age_at_event: 31
+    source: Writers Theatre timeline; Wikipedia
+  - date: 1939-11
+    precision: month
+    type: relationship
+    description: Divorced Diego Rivera
+    significance: major
+    age_at_event: 32
+    source: Writers Theatre timeline; Britannica
+  - date: '1940-12-08'
+    precision: day
+    type: relationship
+    description: Remarried Diego Rivera in a civil ceremony in San Francisco
+    significance: major
+    age_at_event: 33
+    source: Writers Theatre timeline
+  - date: 1941-04
+    precision: month
+    type: bereavement_parent
+    description: Her father, Guillermo Kahlo, died of a heart attack
+    significance: major
+    age_at_event: 33
+    source: Writers Theatre timeline
+  - date: '1943'
+    precision: year
+    type: career
+    description: Began teaching at La Esmeralda art school, Mexico City
+    significance: moderate
+    age_at_event: 35
+    source: Writers Theatre timeline; Britannica
+  - date: '1953'
+    precision: year
+    type: recognition
+    description: First solo exhibition in Mexico (Galería de Arte Contemporáneo); attended in a bed due
+      to illness
+    significance: major
+    age_at_event: 45
+    source: Britannica; Biography.com
+  - date: '1953'
+    precision: year
+    type: health_crisis
+    description: Right leg amputated below the knee due to gangrene
+    significance: major
+    age_at_event: 46
+    source: Biography.com; Britannica
+  - date: '1954-07-13'
+    precision: day
+    type: health_crisis
+    description: Died at La Casa Azul, aged 47, of pulmonary embolism (probable suicide by overdose suspected)
+    significance: major
+    age_at_event: 47
+    source: Biography.com; Wikipedia
+- name: Henri Matisse
+  events:
+  - date: '1887'
+    precision: year
+    type: education
+    description: Went to Paris to study law; later worked as a court administrator in Le Cateau
+    significance: moderate
+    age_at_event: 17
+    source: Sue Young Histories; henrimatisse.org
+  - date: '1889'
+    precision: year
+    type: spiritual
+    description: Discovered painting during convalescence from appendicitis when his mother gave him paints;
+      decided to become an artist
+    significance: major
+    age_at_event: 19
+    source: henrimatisse.org; Galerie-Institut biography
+  - date: '1891'
+    precision: year
+    type: relocation
+    description: Returned to Paris to study art at the Académie Julian; later joined Gustave Moreau's
+      studio
+    significance: major
+    age_at_event: 21
+    source: Wikipedia 'Henri Matisse'
+  - date: '1894'
+    precision: year
+    type: childbirth
+    description: Daughter Marguerite born to model Caroline Joblau
+    significance: moderate
+    age_at_event: 24
+    source: Wikipedia 'Henri Matisse'
+  - date: '1898-01-08'
+    precision: day
+    type: relationship
+    description: Married Amélie Noellie Parayre
+    significance: major
+    age_at_event: 28
+    source: frozen brief (8 January 1898); Wikipedia (marriage 1898)
+  - date: '1898'
+    precision: year
+    type: bereavement_other
+    description: Death of his teacher and mentor Gustave Moreau
+    significance: moderate
+    age_at_event: 28
+    source: Wikipedia 'Henri Matisse'
+  - date: '1899'
+    precision: year
+    type: childbirth
+    description: Son Jean Matisse born
+    significance: moderate
+    age_at_event: 29
+    source: Wikipedia 'Henri Matisse'
+  - date: '1900'
+    precision: year
+    type: childbirth
+    description: Son Pierre Matisse born
+    significance: moderate
+    age_at_event: 30
+    source: Wikipedia; ImpressionistArts timeline
+  - date: '1905'
+    precision: year
+    type: recognition
+    description: Fauvism debuts at the Salon d'Automne; recognized as leader of the Fauves ('les fauves')
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; henrimatisse.org
+  - date: 1941-01
+    precision: month
+    type: health_crisis
+    description: Emergency surgery in Lyon for duodenal cancer; long convalescence began his cut-out period
+    significance: major
+    age_at_event: 71
+    source: Galerie-Institut biography; Matisse Experts
+  - date: 1951-06
+    precision: month
+    type: career
+    description: Completed and inaugurated the Chapelle du Rosaire de Vence (the Matisse Chapel), near
+      Nice
+    significance: major
+    age_at_event: 81
+    source: Galerie-Institut biography; henrimatisse.org
+  - date: '1952'
+    precision: year
+    type: career
+    description: Established the Matisse Museum in his birthplace, Le Cateau-Cambrésis
+    significance: moderate
+    age_at_event: 82
+    source: Wikipedia; Daily Art Fixx
+  - date: '1954-11-03'
+    precision: day
+    type: health_crisis
+    description: Died of a heart attack in Nice, age 84
+    significance: major
+    age_at_event: 84
+    source: Wikipedia; ImpressionistArts timeline
+- name: Leonardo da Vinci
+  events:
+  - date: '1472'
+    precision: year
+    type: career
+    description: Qualified as a master in the Guild of St Luke (painters' guild of Florence)
+    significance: major
+    age_at_event: 20
+    source: Wikipedia 'Leonardo da Vinci'; Britannica
+  - date: '1473-08-05'
+    precision: day
+    type: career
+    description: Drew the Arno valley landscape — his earliest known dated work, inscribed '5 August 1473'
+    significance: moderate
+    age_at_event: 21
+    source: Wikipedia; DiscoveringDaVinci timeline
+  - date: '1476-04-09'
+    precision: day
+    type: legal
+    description: Charged (with three other young men) with sodomy; case dismissed 16 June 1476 for lack
+      of evidence
+    significance: major
+    age_at_event: 23
+    source: Wikipedia 'Leonardo da Vinci'; Prezi timeline citing court records
+  - date: '1482'
+    precision: year
+    type: relocation
+    description: Entered the service of Ludovico Sforza, Duke of Milan; began ~17 years at the Milanese
+      court
+    significance: major
+    age_at_event: 30
+    source: Britannica; Wikipedia
+  - date: '1495'
+    precision: year
+    type: career
+    description: Began The Last Supper at Santa Maria delle Grazie, Milan (completed ~1498)
+    significance: major
+    age_at_event: 43
+    source: Britannica; Wikipedia
+  - date: '1499'
+    precision: year
+    type: relocation
+    description: Ludovico Sforza fell from power; Leonardo left Milan (fled via Venice)
+    significance: major
+    age_at_event: 47
+    source: Wikipedia; Britannica
+  - date: '1500'
+    precision: year
+    type: relocation
+    description: Returned to Florence, hosted by the Servite monks at Santissima Annunziata
+    significance: moderate
+    age_at_event: 48
+    source: leonardoda-vinci.org biography; Wikipedia
+  - date: '1502'
+    precision: year
+    type: career
+    description: Entered service of Cesare Borgia as military architect and engineer
+    significance: major
+    age_at_event: 50
+    source: leonardoda-vinci.org; Wikipedia
+  - date: '1503'
+    precision: year
+    type: career
+    description: Began the Mona Lisa (c. 1503)
+    significance: major
+    age_at_event: 51
+    source: Britannica; Timetoast timeline
+  - date: '1507'
+    precision: year
+    type: career
+    description: Appointed painter and engineer to Louis XII of France
+    significance: moderate
+    age_at_event: 55
+    source: Prezi timeline; Wikipedia
+  - date: '1513'
+    precision: year
+    type: relocation
+    description: Moved to Rome under the patronage of the Medici / Pope Leo X (1513–1516)
+    significance: moderate
+    age_at_event: 61
+    source: frozen brief; Wikipedia
+  - date: '1516'
+    precision: year
+    type: relocation
+    description: Moved to France at the invitation of King Francis I; settled at Clos Lucé, Amboise
+    significance: major
+    age_at_event: 64
+    source: Wikipedia; Britannica
+  - date: '1519-05-02'
+    precision: day
+    type: health_crisis
+    description: Died at Clos Lucé, Amboise, France, age 67
+    significance: major
+    age_at_event: 67
+    source: Wikipedia; Britannica; leonardoda-vinci.org
+- name: Pablo Picasso
+  events:
+  - date: '1895-01-10'
+    precision: day
+    type: bereavement_other
+    description: His younger sister Conchita (Concepción) died of diphtheria
+    significance: major
+    age_at_event: 13
+    source: frozen brief; Museo Picasso Málaga chronology
+  - date: '1896'
+    precision: year
+    type: education
+    description: Entered formal art training / prepared for the academies (frozen brief cites Academy
+      San Fernando, Madrid, Oct 1896)
+    significance: moderate
+    age_at_event: 14
+    source: frozen brief; Musée Picasso Paris timeline
+  - date: '1901'
+    precision: year
+    type: bereavement_other
+    description: Close friend Carles Casagemas committed suicide, helping trigger Picasso's Blue Period
+    significance: major
+    age_at_event: 19
+    source: The Art Story; Musée Picasso Paris
+  - date: '1901'
+    precision: year
+    type: career
+    description: Established his first Paris studio; Blue Period begins (1901–04)
+    significance: major
+    age_at_event: 19
+    source: Frist Art Museum chronology
+  - date: '1907'
+    precision: year
+    type: career
+    description: Painted Les Demoiselles d'Avignon, the proto-Cubist breakthrough
+    significance: major
+    age_at_event: 25
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1918-07-12'
+    precision: day
+    type: relationship
+    description: Married Olga Khokhlova at the Russian Orthodox Cathedral, Rue Daru, Paris
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'Olga Khokhlova'; Museo Picasso Málaga
+  - date: '1921-02-04'
+    precision: day
+    type: childbirth
+    description: Son Paulo (Paul Joseph) Picasso born
+    significance: major
+    age_at_event: 39
+    source: Wikipedia 'Pablo Picasso' and 'Olga Khokhlova'
+  - date: '1927'
+    precision: year
+    type: relationship
+    description: Met 17-year-old Marie-Thérèse Walter; began a secret affair
+    significance: major
+    age_at_event: 45
+    source: Frist Art Museum chronology; Wikipedia
+  - date: '1935-09-05'
+    precision: day
+    type: childbirth
+    description: Daughter Maya (Maria de la Concepción) born to Marie-Thérèse Walter
+    significance: major
+    age_at_event: 53
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1935'
+    precision: year
+    type: relationship
+    description: Separated from Olga (who refused divorce); they remained legally married until her death
+      in 1955
+    significance: moderate
+    age_at_event: 53
+    source: Britannica; Wikipedia
+  - date: '1937'
+    precision: year
+    type: career
+    description: Painted Guernica for the Spanish Pavilion at the Paris International Exposition
+    significance: major
+    age_at_event: 55
+    source: Wikipedia; Musée Picasso Paris
+  - date: '1939'
+    precision: year
+    type: bereavement_parent
+    description: His mother, María Picasso y López, died in Barcelona
+    significance: major
+    age_at_event: 57
+    source: Frist Art Museum chronology; Musée Picasso Paris timeline
+  - date: '1944-10-05'
+    precision: day
+    type: other
+    description: Publicly disclosed that he had joined the French Communist Party
+    significance: moderate
+    age_at_event: 62
+    source: frozen brief; standard Picasso chronologies
+  - date: '1947-05-15'
+    precision: day
+    type: childbirth
+    description: Son Claude Ruiz Picasso born to Françoise Gilot
+    significance: major
+    age_at_event: 65
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1949-04-19'
+    precision: day
+    type: childbirth
+    description: Daughter Paloma Picasso born to Françoise Gilot
+    significance: major
+    age_at_event: 67
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1961-03-02'
+    precision: day
+    type: relationship
+    description: Married Jacqueline Roque (after Olga's death in 1955)
+    significance: major
+    age_at_event: 79
+    source: frozen brief; Frist Art Museum chronology
+  - date: '1973-04-08'
+    precision: day
+    type: health_crisis
+    description: Died at Mougins, France, age 91
+    significance: major
+    age_at_event: 91
+    source: Wikipedia 'Pablo Picasso'
+- name: Salvador Dali
+  events:
+  - date: '1918'
+    precision: year
+    type: recognition
+    description: First public exhibition, at the Municipal Theatre in Figueres, age 14
+    significance: moderate
+    age_at_event: 14
+    source: New World Encyclopedia; thedali.org timeline
+  - date: 1921-02
+    precision: month
+    type: bereavement_parent
+    description: His mother, Felipa, died of breast cancer (Dalí was 16)
+    significance: major
+    age_at_event: 16
+    source: Wikipedia 'Salvador Dalí'; dalipaintings.com
+  - date: '1922'
+    precision: year
+    type: education
+    description: Moved to the Residencia de Estudiantes, Madrid; studied at the Real Academia de San Fernando;
+      befriended Lorca and Buñuel
+    significance: major
+    age_at_event: 18
+    source: Wikipedia; dali-gallery.com
+  - date: '1926'
+    precision: year
+    type: education
+    description: Expelled from the Real Academia de San Fernando shortly before final exams; made first
+      visit to Paris and met Picasso
+    significance: major
+    age_at_event: 22
+    source: Wikipedia 'Salvador Dalí'; Biography.com
+  - date: '1929'
+    precision: year
+    type: recognition
+    description: Premiere of Un Chien Andalou (with Buñuel); first Paris solo exhibition at the Goemans
+      Gallery
+    significance: major
+    age_at_event: 25
+    source: dali-gallery.com; Fundació Gala-Salvador Dalí
+  - date: 1929-08
+    precision: month
+    type: relationship
+    description: Met Gala (Elena Diakonova) when she visited Cadaqués; began lifelong relationship
+    significance: major
+    age_at_event: 25
+    source: Wikipedia 'Gala Dalí'; Dalí Universe
+  - date: '1929-12-28'
+    precision: day
+    type: bereavement_other
+    description: Violently thrown out of the family home by his father and disinherited
+    significance: moderate
+    age_at_event: 25
+    source: Wikipedia 'Salvador Dalí' (biography summaries)
+  - date: '1934-01-30'
+    precision: day
+    type: relationship
+    description: Married Gala in a civil ceremony (Paris)
+    significance: major
+    age_at_event: 29
+    source: dali-gallery.com timeline (30 January 1934)
+  - date: '1934'
+    precision: year
+    type: legal
+    description: Subjected to a 'trial' and formally expelled from the Surrealist group
+    significance: moderate
+    age_at_event: 30
+    source: Wikipedia 'Salvador Dalí'; Biography.com
+  - date: '1934'
+    precision: year
+    type: relocation
+    description: First trip to New York with Gala; great success at the Julien Levy Gallery
+    significance: moderate
+    age_at_event: 30
+    source: dali-gallery.com; Wikipedia
+  - date: '1936'
+    precision: year
+    type: recognition
+    description: Featured on the cover of Time magazine
+    significance: major
+    age_at_event: 32
+    source: Fundació Gala-Salvador Dalí timeline; Dalí Universe
+  - date: '1940'
+    precision: year
+    type: relocation
+    description: Fled to the United States (lived there ~8 years during WWII)
+    significance: major
+    age_at_event: 36
+    source: thedali.org timeline
+  - date: '1974'
+    precision: year
+    type: career
+    description: Teatro-Museo Dalí officially opened in Figueres
+    significance: major
+    age_at_event: 70
+    source: thedali.org; Wikipedia
+  - date: '1982'
+    precision: year
+    type: bereavement_other
+    description: Death of his wife Gala; sent him into deep depression
+    significance: major
+    age_at_event: 78
+    source: Biography.com; artelino.com
+  - date: '1984'
+    precision: year
+    type: accident
+    description: Severely burned in a bedroom fire at Púbol castle; thereafter used a wheelchair
+    significance: major
+    age_at_event: 80
+    source: Wikipedia; Biography.com
+  - date: '1989-01-23'
+    precision: day
+    type: health_crisis
+    description: Died of heart failure in Figueres, age 84
+    significance: major
+    age_at_event: 84
+    source: Wikipedia; thedali.org
+- name: Vincent van Gogh
+  events:
+  - date: 1869-07
+    precision: month
+    type: career
+    description: Began work at the art dealer Goupil & Cie (The Hague branch)
+    significance: moderate
+    age_at_event: 16
+    source: ImpressionistArts timeline; vincentvangogh.org
+  - date: 1878-12
+    precision: month
+    type: spiritual
+    description: Went to the Borinage coal-mining district (Belgium) to work as a lay preacher among miners
+    significance: major
+    age_at_event: 25
+    source: vincentvangoghcafe.com; New World Encyclopedia
+  - date: '1880'
+    precision: year
+    type: career
+    description: Decided to become an artist (age 27); began study, supported financially by brother Theo
+    significance: major
+    age_at_event: 27
+    source: National Gallery of Art; Wikipedia
+  - date: 1885-03
+    precision: month
+    type: bereavement_parent
+    description: His father, Theodorus van Gogh, died
+    significance: major
+    age_at_event: 31
+    source: ImpressionistArts timeline (father d. 1885); Wikipedia
+  - date: 1885-04
+    precision: month
+    type: career
+    description: Painted The Potato Eaters, his major early Dutch-period work
+    significance: moderate
+    age_at_event: 32
+    source: ImpressionistArts timeline; Wikipedia
+  - date: 1886-02
+    precision: month
+    type: relocation
+    description: Moved to Paris to live with Theo; encountered the Impressionists (arrived 27 Feb 1886)
+    significance: major
+    age_at_event: 32
+    source: vincentvangoghcafe.com; ImpressionistArts
+  - date: '1888-02-19'
+    precision: day
+    type: relocation
+    description: Left Paris for Arles in Provence (departed 19 Feb 1888)
+    significance: major
+    age_at_event: 34
+    source: vincentvangoghcafe.com; Wikipedia
+  - date: '1888-10-23'
+    precision: day
+    type: other
+    description: Paul Gauguin arrived in Arles to live and work with him at the Yellow House
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia 'The Starry Night' (Gauguin lived with him from 23 October 1888)
+  - date: '1888-12-23'
+    precision: day
+    type: health_crisis
+    description: Cut off part of his left ear following a breakdown/quarrel with Gauguin
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Van Gogh Museum; ImpressionistArts
+  - date: '1888-12-25'
+    precision: day
+    type: other
+    description: Gauguin left Arles; the two never saw each other again
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia 'The Starry Night' (Gauguin to 25 December)
+  - date: '1889-05-08'
+    precision: day
+    type: health_crisis
+    description: Voluntarily admitted himself to the Saint-Paul-de-Mausole asylum at Saint-Rémy-de-Provence
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'Monastery of Saint-Paul de Mausole'; Van Gogh Museum
+  - date: 1889-06
+    precision: month
+    type: career
+    description: Painted The Starry Night from his asylum room (c. 18 June 1889)
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'The Starry Night'
+  - date: 1890-05
+    precision: month
+    type: relocation
+    description: Left the Saint-Rémy asylum and moved to Auvers-sur-Oise under Dr Paul Gachet's care
+    significance: major
+    age_at_event: 37
+    source: Van Gogh Museum; ImpressionistArts; Wikipedia
+  - date: '1890-07-27'
+    precision: day
+    type: health_crisis
+    description: Shot himself in a wheatfield at Auvers-sur-Oise
+    significance: major
+    age_at_event: 37
+    source: ImpressionistArts; Wikipedia
+  - date: '1890-07-29'
+    precision: day
+    type: health_crisis
+    description: Died at Auvers-sur-Oise, aged 37, two days after the shooting
+    significance: major
+    age_at_event: 37
+    source: Wikipedia; ImpressionistArts

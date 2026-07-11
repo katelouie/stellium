@@ -1,0 +1,37 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Frank Lloyd Wright
+  temperament:
+  - trait: Honestly arrogant / supremely self-confident
+    tags:
+    - arrogant
+    - self-assured
+    evidence: 'His own credo, recorded by Secrest: ''Early in life I had to choose between honest arrogance
+      and hypocritical humility. I chose honest arrogance and have seen no occasion to change.''  Testified
+      under oath as ''the world''s greatest living architect.'''
+    source: 'Meryle Secrest, Frank Lloyd Wright: A Biography (1992); The Art Story'
+  - trait: Charismatic (charisma that could veer into manipulation)
+    tags:
+    - charismatic
+    evidence: Taliesin Fellowship apprentices described his magnetic, guru-like authority
+    source: Aeon Essays 'Frank Lloyd Wright as a mirror of the American condition'
+  - trait: Egocentric / prone to self-mythologizing and untruth
+    tags:
+    - egocentric
+    - mendacious
+    evidence: Biographers spent effort debunking his lies, e.g. the fabricated nursery-engravings myth
+    source: 'Brendan Gill, Many Masks: A Life of Frank Lloyd Wright (1987); Common Edge'
+  - trait: Financially reckless / spendthrift
+    tags:
+    - extravagant
+    - improvident
+    evidence: Chronically short of funds; expensive tastes dogged him all his life
+    source: Ada Louise Huxtable, Frank Lloyd Wright (2004); Psychology Today
+  - trait: Risk-taking / defiant of convention
+    tags:
+    - defiant
+    - unconventional
+    evidence: Lived 'on the edge'; survived scandal, divorce, bankruptcy and social ostracism
+    source: Ada Louise Huxtable, Frank Lloyd Wright (2004)

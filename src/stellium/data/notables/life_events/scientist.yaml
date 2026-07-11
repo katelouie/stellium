@@ -1,0 +1,522 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Alan Turing
+  events:
+  - date: '1926'
+    precision: year
+    type: education
+    description: Entered Sherborne School
+    significance: moderate
+    age_at_event: 13
+    source: 'Hodges, Alan Turing: The Enigma (1983)'
+  - date: 1930-02
+    precision: month
+    type: bereavement_other
+    description: Close friend Christopher Morcom died (formative bereavement)
+    significance: major
+    age_at_event: 17
+    source: Hodges (1983); Stanford Encyclopedia of Philosophy
+  - date: '1931'
+    precision: year
+    type: education
+    description: Entered King's College, Cambridge
+    significance: moderate
+    age_at_event: 18
+    source: Hodges (1983)
+  - date: '1935'
+    precision: year
+    type: recognition
+    description: Elected a Fellow of King's College, Cambridge
+    significance: moderate
+    age_at_event: 22
+    source: Hodges (1983)
+  - date: '1936'
+    precision: year
+    type: career
+    description: Published 'On Computable Numbers' (introduced the Turing machine)
+    significance: major
+    age_at_event: 24
+    source: Hodges (1983); Stanford Encyclopedia of Philosophy
+  - date: '1938'
+    precision: year
+    type: education
+    description: Completed PhD at Princeton University
+    significance: moderate
+    age_at_event: 25
+    source: Hodges (1983)
+  - date: 1939-09
+    precision: month
+    type: career
+    description: Joined the Government Code and Cypher School at Bletchley Park (Enigma codebreaking)
+    significance: major
+    age_at_event: 27
+    source: Hodges (1983)
+  - date: '1941'
+    precision: year
+    type: relationship
+    description: Briefly engaged to Joan Clarke
+    significance: moderate
+    age_at_event: 28
+    source: Hodges (1983); Slate
+  - date: '1946'
+    precision: year
+    type: recognition
+    description: Appointed OBE for wartime services
+    significance: moderate
+    age_at_event: 33
+    source: Hodges (1983)
+  - date: '1950'
+    precision: year
+    type: career
+    description: Published 'Computing Machinery and Intelligence' (the Turing Test)
+    significance: major
+    age_at_event: 37
+    source: Hodges (1983); Stanford Encyclopedia of Philosophy
+  - date: '1952-03-31'
+    precision: day
+    type: legal
+    description: Convicted of gross indecency; accepted hormone treatment (chemical castration) as alternative
+      to prison
+    significance: major
+    age_at_event: 39
+    source: Wikipedia (Turing); Hodges (1983)
+  - date: '1954-06-07'
+    precision: day
+    type: health_crisis
+    description: Died of cyanide poisoning at Wilmslow; inquest ruled suicide (see notes for dispute)
+    significance: major
+    age_at_event: 41
+    source: Wikipedia; Hodges (1983)
+  - date: '2013-12-24'
+    precision: day
+    type: recognition
+    description: Granted a posthumous royal pardon by Queen Elizabeth II
+    significance: moderate
+    age_at_event: null
+    source: Wikipedia (Turing)
+- name: Albert Einstein
+  events:
+  - date: '1880'
+    precision: year
+    type: relocation
+    description: Family moved to Munich
+    significance: minor
+    age_at_event: 1
+    source: 'Isaacson, Einstein: His Life and Universe (2007)'
+  - date: '1894'
+    precision: year
+    type: relocation
+    description: Family moved to Italy (Milan/Pavia); Einstein soon followed
+    significance: moderate
+    age_at_event: 15
+    source: Isaacson (2007)
+  - date: '1896'
+    precision: year
+    type: education
+    description: Renounced German (Württemberg) citizenship; entered ETH Zurich
+    significance: moderate
+    age_at_event: 17
+    source: Isaacson (2007)
+  - date: '1900'
+    precision: year
+    type: education
+    description: Graduated from ETH Zurich
+    significance: moderate
+    age_at_event: 21
+    source: Isaacson (2007)
+  - date: 1901-02
+    precision: month
+    type: other
+    description: Became a Swiss citizen
+    significance: moderate
+    age_at_event: 21
+    source: Isaacson (2007)
+  - date: 1902-01
+    precision: month
+    type: childbirth
+    description: Illegitimate daughter Lieserl born (fate unknown)
+    significance: moderate
+    age_at_event: 22
+    source: Isaacson (2007)
+  - date: '1902'
+    precision: year
+    type: career
+    description: Took job at the Swiss Patent Office, Bern
+    significance: moderate
+    age_at_event: 23
+    source: Isaacson (2007); Grokipedia
+  - date: 1902-10
+    precision: month
+    type: bereavement_parent
+    description: Father Hermann Einstein died
+    significance: major
+    age_at_event: 23
+    source: Isaacson (2007)
+  - date: '1903-01-06'
+    precision: day
+    type: relationship
+    description: Married Mileva Marić
+    significance: major
+    age_at_event: 23
+    source: Isaacson (2007)
+  - date: '1904-05-14'
+    precision: day
+    type: childbirth
+    description: Son Hans Albert Einstein born
+    significance: moderate
+    age_at_event: 25
+    source: Isaacson (2007)
+  - date: '1905-03-18'
+    precision: day
+    type: career
+    description: Light-quantum (photoelectric effect) paper received by Annalen der Physik (manuscript
+      dated 17 March)
+    significance: major
+    age_at_event: 25
+    source: arXiv physics/0701240; Annus Mirabilis papers
+  - date: '1905-06-30'
+    precision: day
+    type: career
+    description: Special relativity paper ('On the Electrodynamics of Moving Bodies') received; published
+      26 September 1905
+    significance: major
+    age_at_event: 26
+    source: Encyclopedia MDPI; arXiv
+  - date: '1905-09-27'
+    precision: day
+    type: career
+    description: E=mc² paper received by Annalen der Physik; published 21 November 1905
+    significance: major
+    age_at_event: 26
+    source: Grokipedia (Annus Mirabilis); arXiv
+  - date: '1905'
+    precision: year
+    type: education
+    description: Awarded PhD by University of Zurich
+    significance: moderate
+    age_at_event: 26
+    source: Isaacson (2007)
+  - date: '1910-07-28'
+    precision: day
+    type: childbirth
+    description: Son Eduard Einstein born
+    significance: moderate
+    age_at_event: 31
+    source: Isaacson (2007)
+  - date: '1914'
+    precision: year
+    type: relocation
+    description: Moved to Berlin; separated from Mileva
+    significance: moderate
+    age_at_event: 35
+    source: Isaacson (2007)
+  - date: '1915-11-25'
+    precision: day
+    type: career
+    description: Presented the field equations of general relativity to the Prussian Academy
+    significance: major
+    age_at_event: 36
+    source: Isaacson (2007)
+  - date: '1919-02-14'
+    precision: day
+    type: relationship
+    description: Divorced Mileva Marić
+    significance: moderate
+    age_at_event: 39
+    source: Isaacson (2007)
+  - date: '1919-06-02'
+    precision: day
+    type: relationship
+    description: Married cousin Elsa Löwenthal
+    significance: moderate
+    age_at_event: 40
+    source: Isaacson (2007)
+  - date: '1919-11-06'
+    precision: day
+    type: recognition
+    description: Eclipse confirmation of general relativity announced in London; made him world-famous
+      overnight
+    significance: major
+    age_at_event: 40
+    source: Isaacson (2007)
+  - date: 1922-11
+    precision: month
+    type: recognition
+    description: Awarded the Nobel Prize in Physics (for 1921), announced November 1922
+    significance: major
+    age_at_event: 43
+    source: Isaacson (2007)
+  - date: 1933-10
+    precision: month
+    type: relocation
+    description: Emigrated to the US (Princeton), fleeing Nazi Germany
+    significance: major
+    age_at_event: 54
+    source: Isaacson (2007)
+  - date: '1936-12-20'
+    precision: day
+    type: bereavement_other
+    description: Second wife Elsa died
+    significance: major
+    age_at_event: 57
+    source: Isaacson (2007)
+  - date: '1939-08-02'
+    precision: day
+    type: other
+    description: Signed the letter to President Roosevelt warning about atomic weapons
+    significance: major
+    age_at_event: 60
+    source: Isaacson (2007)
+  - date: '1948-08-04'
+    precision: day
+    type: bereavement_other
+    description: Ex-wife Mileva Marić died
+    significance: moderate
+    age_at_event: 69
+    source: Isaacson (2007)
+  - date: '1952'
+    precision: year
+    type: recognition
+    description: Offered and declined the presidency of Israel
+    significance: moderate
+    age_at_event: 73
+    source: Isaacson (2007)
+  - date: '1955-04-18'
+    precision: day
+    type: health_crisis
+    description: Died of an abdominal aortic aneurysm in Princeton
+    significance: major
+    age_at_event: 76
+    source: Isaacson (2007)
+- name: Carl Sagan
+  events:
+  - date: '1939'
+    precision: year
+    type: other
+    description: Visited the 1939 New York World's Fair (formative childhood memory)
+    significance: moderate
+    age_at_event: 4
+    source: 'Davidson, Carl Sagan: A Life (1999); Wikipedia'
+  - date: '1954'
+    precision: year
+    type: education
+    description: Earned AB from University of Chicago (BS 1955)
+    significance: moderate
+    age_at_event: 19
+    source: Encyclopedia.com; Wikipedia
+  - date: '1957-06-16'
+    precision: day
+    type: relationship
+    description: Married biologist Lynn Margulis (Alexander)
+    significance: major
+    age_at_event: 22
+    source: MyHeritage; Encyclopedia.com
+  - date: '1959'
+    precision: year
+    type: childbirth
+    description: Son Dorion Sagan born
+    significance: moderate
+    age_at_event: 24
+    source: Wikipedia; Encyclopedia.com
+  - date: '1960'
+    precision: year
+    type: education
+    description: Earned PhD in astronomy from University of Chicago
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; Britannica
+  - date: '1965'
+    precision: year
+    type: relationship
+    description: Divorced Lynn Margulis
+    significance: moderate
+    age_at_event: 30
+    source: Wikipedia; strictlyweddings
+  - date: '1968-04-06'
+    precision: day
+    type: relationship
+    description: Married artist Linda Salzman
+    significance: moderate
+    age_at_event: 33
+    source: thefamouspeople.com; MyHeritage
+  - date: '1970'
+    precision: year
+    type: childbirth
+    description: Son Nick Sagan born
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia
+  - date: '1977'
+    precision: year
+    type: career
+    description: Voyager Golden Record produced (Sagan chaired the committee)
+    significance: moderate
+    age_at_event: 42
+    source: Wikipedia
+  - date: '1978'
+    precision: year
+    type: recognition
+    description: '''The Dragons of Eden'' won the Pulitzer Prize for General Nonfiction'
+    significance: major
+    age_at_event: 43
+    source: Wikipedia
+  - date: '1980'
+    precision: year
+    type: career
+    description: '''Cosmos: A Personal Voyage'' TV series aired'
+    significance: major
+    age_at_event: 45
+    source: Wikipedia
+  - date: '1981'
+    precision: year
+    type: relationship
+    description: Divorced Linda Salzman
+    significance: moderate
+    age_at_event: 46
+    source: Wikipedia; strictlyweddings
+  - date: '1981-06-01'
+    precision: day
+    type: relationship
+    description: Married author Ann Druyan
+    significance: major
+    age_at_event: 46
+    source: MyHeritage
+  - date: '1985'
+    precision: year
+    type: career
+    description: Published the novel 'Contact'
+    significance: moderate
+    age_at_event: 50
+    source: Encyclopedia.com; Wikipedia
+  - date: '1994'
+    precision: year
+    type: health_crisis
+    description: Diagnosed with myelodysplasia
+    significance: major
+    age_at_event: 59
+    source: Wikipedia
+  - date: '1996-12-20'
+    precision: day
+    type: health_crisis
+    description: Died of pneumonia (complication of myelodysplasia) in Seattle, aged 62
+    significance: major
+    age_at_event: 62
+    source: Wikipedia; Encyclopedia.com
+- name: Sigmund Freud
+  events:
+  - date: '1856-05-13'
+    precision: day
+    type: spiritual
+    description: Circumcised eight days after birth per Jewish tradition
+    significance: minor
+    age_at_event: 0
+    source: Standard biographical record (Jewish custom)
+  - date: '1860'
+    precision: year
+    type: relocation
+    description: Family moved to Vienna
+    significance: moderate
+    age_at_event: 4
+    source: 'Britannica; Gay, Freud: A Life for Our Time (1988)'
+  - date: '1873'
+    precision: year
+    type: education
+    description: Entered the University of Vienna
+    significance: moderate
+    age_at_event: 17
+    source: Gay (1988)
+  - date: '1881'
+    precision: year
+    type: education
+    description: Awarded MD from the University of Vienna
+    significance: moderate
+    age_at_event: 25
+    source: Gay (1988)
+  - date: '1882'
+    precision: year
+    type: relationship
+    description: Engaged to Martha Bernays
+    significance: moderate
+    age_at_event: 26
+    source: Gay (1988)
+  - date: '1885'
+    precision: year
+    type: education
+    description: Studied with Charcot in Paris (1885-86)
+    significance: major
+    age_at_event: 29
+    source: Gay (1988)
+  - date: 1886-04
+    precision: month
+    type: career
+    description: Opened private practice in Vienna (around Easter/April 1886)
+    significance: major
+    age_at_event: 29
+    source: Gay (1988)
+  - date: '1886-09-14'
+    precision: day
+    type: relationship
+    description: Married Martha Bernays
+    significance: major
+    age_at_event: 30
+    source: Gay (1988)
+  - date: '1895-12-03'
+    precision: day
+    type: childbirth
+    description: Daughter Anna Freud born
+    significance: moderate
+    age_at_event: 39
+    source: Gay (1988)
+  - date: '1896'
+    precision: year
+    type: bereavement_parent
+    description: Father Jacob Freud died (major stimulus for his self-analysis)
+    significance: major
+    age_at_event: 40
+    source: Gay (1988)
+  - date: 1899-11
+    precision: month
+    type: career
+    description: '''The Interpretation of Dreams'' published (post-dated 1900)'
+    significance: major
+    age_at_event: 43
+    source: Britannica; Gay (1988)
+  - date: '1907'
+    precision: year
+    type: relationship
+    description: Met Carl Jung (beginning of close collaboration)
+    significance: moderate
+    age_at_event: 50
+    source: Gay (1988)
+  - date: '1913'
+    precision: year
+    type: relationship
+    description: Broke with Jung
+    significance: moderate
+    age_at_event: 56
+    source: Gay (1988)
+  - date: '1923'
+    precision: year
+    type: health_crisis
+    description: Diagnosed with oral/jaw cancer; over 30 operations followed
+    significance: major
+    age_at_event: 66
+    source: Britannica; Hektoen International
+  - date: 1938-06
+    precision: month
+    type: relocation
+    description: Fled Vienna to London after the Anschluss
+    significance: major
+    age_at_event: 82
+    source: Gay (1988); Wikipedia
+  - date: '1939-09-23'
+    precision: day
+    type: health_crisis
+    description: Died in London; physician-assisted death — Dr. Max Schur administered morphine at Freud's
+      explicit request (see notes)
+    significance: major
+    age_at_event: 83
+    source: Schur; Jones; Wikipedia; Harvard Medicine Magazine

@@ -1,0 +1,1204 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Barack Obama
+  events:
+  - date: '1963'
+    precision: year
+    type: bereavement_other
+    description: Father Barack Obama Sr. left the family; parents divorced 1964
+    significance: major
+    age_at_event: 2
+    source: 'Miller Center, ''Barack Obama: Life Before the Presidency'''
+  - date: '1971'
+    precision: year
+    type: relocation
+    description: Returned to Hawaii from Indonesia to live with maternal grandparents; enrolled at Punahou
+      School
+    significance: moderate
+    age_at_event: 10
+    source: EBSCO Research Starters, 'Barack Obama'; CBS News (2007)
+  - date: '1983'
+    precision: year
+    type: education
+    description: Graduated from Columbia University (political science)
+    significance: moderate
+    age_at_event: 22
+    source: US House of Representatives History, Art & Archives, 'OBAMA, Barack'
+  - date: 1990-02
+    precision: month
+    type: recognition
+    description: Elected first Black president of the Harvard Law Review
+    significance: major
+    age_at_event: 28
+    source: Biography.com, 'Barack Obama'
+  - date: '1991'
+    precision: year
+    type: education
+    description: Graduated Harvard Law School, J.D. magna cum laude
+    significance: moderate
+    age_at_event: 29
+    source: Wikipedia, 'Barack Obama'; US House Archives
+  - date: '1992-10-03'
+    precision: day
+    type: relationship
+    description: Married Michelle Robinson at Trinity United Church of Christ, Chicago
+    significance: major
+    age_at_event: 31
+    source: Biography.com, 'Barack Obama'; Wikipedia
+  - date: '1995-11-07'
+    precision: day
+    type: bereavement_parent
+    description: Mother Ann Dunham died of ovarian/uterine cancer in Honolulu, age 52
+    significance: major
+    age_at_event: 34
+    source: Britannica, 'Stanley Ann Dunham'; NPR
+  - date: '1996'
+    precision: year
+    type: career
+    description: Elected to the Illinois State Senate, 13th district (took office January 1997)
+    significance: major
+    age_at_event: 35
+    source: Obama Presidential Library; Wikipedia
+  - date: '1998-07-04'
+    precision: day
+    type: childbirth
+    description: Daughter Malia Ann born
+    significance: major
+    age_at_event: 36
+    source: ObamaInfo/amarkfoundation archive
+  - date: '2000'
+    precision: year
+    type: career
+    description: Lost Democratic US House primary to incumbent Bobby Rush by more than 2-to-1 (career
+      setback)
+    significance: moderate
+    age_at_event: 38
+    source: Obama Presidential Library; Britannica 'Life Before the Presidency'
+  - date: '2001-06-10'
+    precision: day
+    type: childbirth
+    description: Daughter Natasha ('Sasha') born
+    significance: major
+    age_at_event: 39
+    source: ObamaInfo/amarkfoundation archive
+  - date: '2004-07-27'
+    precision: day
+    type: recognition
+    description: Delivered keynote address at Democratic National Convention, Boston
+    significance: major
+    age_at_event: 42
+    source: Wikipedia, 'Barack Obama 2008 primary campaign'
+  - date: '2004-11-02'
+    precision: day
+    type: career
+    description: Elected to the US Senate from Illinois
+    significance: major
+    age_at_event: 43
+    source: US House Archives, 'OBAMA, Barack'
+  - date: '2007-01-16'
+    precision: day
+    type: career
+    description: Announced formation of presidential exploratory committee via web video
+    significance: major
+    age_at_event: 45
+    source: NPR (Jan 16 2007); CBS News; STLPR
+  - date: '2008-08-27'
+    precision: day
+    type: career
+    description: Formally received Democratic presidential nomination by acclamation (roll call, Denver)
+    significance: major
+    age_at_event: 47
+    source: Wikipedia, '2008 Democratic National Convention'
+  - date: '2008-08-28'
+    precision: day
+    type: career
+    description: Delivered nomination acceptance speech at Invesco Field, Denver
+    significance: major
+    age_at_event: 47
+    source: Miller Center; NPR transcript
+  - date: '2008-11-02'
+    precision: day
+    type: bereavement_other
+    description: Grandmother Madelyn Dunham died, two days before the election
+    significance: major
+    age_at_event: 47
+    source: Ann Dunham (Simple Wikipedia); NY Post
+  - date: '2008-11-04'
+    precision: day
+    type: career
+    description: Elected 44th President of the United States, defeating John McCain
+    significance: major
+    age_at_event: 47
+    source: US House Archives, 'OBAMA, Barack'
+  - date: '2009-01-20'
+    precision: day
+    type: career
+    description: Inaugurated as President
+    significance: major
+    age_at_event: 47
+    source: US House Archives, 'OBAMA, Barack'
+  - date: '2009-10-09'
+    precision: day
+    type: recognition
+    description: Nobel Peace Prize announced by Norwegian Nobel Committee
+    significance: major
+    age_at_event: 48
+    source: NobelPrize.org press release; Wikipedia '2009 Nobel Peace Prize'
+  - date: '2009-12-10'
+    precision: day
+    type: recognition
+    description: Accepted Nobel Peace Prize at ceremony in Oslo
+    significance: moderate
+    age_at_event: 48
+    source: Obama Presidential Library; NobelPrize.org
+  - date: '2012-11-06'
+    precision: day
+    type: career
+    description: Re-elected President, defeating Mitt Romney
+    significance: major
+    age_at_event: 51
+    source: US House Archives, 'OBAMA, Barack'
+  - date: '2017-01-20'
+    precision: day
+    type: career
+    description: Left office at end of second term
+    significance: major
+    age_at_event: 55
+    source: US House Archives, 'OBAMA, Barack'
+- name: Catherine the Great
+  events:
+  - date: '1744-02-03'
+    precision: day
+    type: relocation
+    description: Arrived at the Winter Palace, St Petersburg (OS), as prospective bride for the future
+      Peter III
+    significance: major
+    age_at_event: 14
+    source: World History Encyclopedia timeline; corroborated in Massie (2011)
+  - date: '1744-06-28'
+    precision: day
+    type: spiritual
+    description: Received into the Russian Orthodox Church (OS), taking the name Yekaterina (Catherine)
+      Alekseyevna
+    significance: major
+    age_at_event: 15
+    source: Wikipedia; World History Encyclopedia timeline
+  - date: '1745-08-21'
+    precision: day
+    type: relationship
+    description: Married the future Peter III (21 Aug 1745 OS / 1 Sep 1745 NS), St Petersburg
+    significance: major
+    age_at_event: 16
+    source: Britannica, 'Peter III'; Encyclopedia.com
+  - date: '1754-09-20'
+    precision: day
+    type: childbirth
+    description: Son Paul (Pavel Petrovich, future Paul I) born (20 Sep 1754 OS / 1 Oct 1754 NS)
+    significance: major
+    age_at_event: 25
+    source: Encyclopedia.com, 'Catherine II the Great'
+  - date: '1761-12-25'
+    precision: day
+    type: other
+    description: Empress Elizabeth died; husband became Emperor Peter III, Catherine empress consort (25
+      Dec 1761 OS / 5 Jan 1762 NS)
+    significance: major
+    age_at_event: 32
+    source: Wikipedia, 'Catherine the Great'; Britannica
+  - date: '1762-06-28'
+    precision: day
+    type: career
+    description: Coup d'etat overthrew Peter III; Catherine proclaimed empress and autocrat (28 Jun 1762
+      OS / 9 Jul 1762 NS)
+    significance: major
+    age_at_event: 33
+    source: Britannica; Wikipedia; Simon Dixon 'Catherine the Great' (2009) ch.5
+  - date: '1762-07-06'
+    precision: day
+    type: other
+    description: Peter III died at Ropsha (6 Jul 1762 OS / 17 Jul 1762 NS). DISPUTED whether murdered
+      on Catherine's orders — see notes
+    significance: major
+    age_at_event: 33
+    source: Simon Dixon, 'Catherine the Great' (2009) ch.5; Britannica 'Peter III'
+  - date: '1762-09-22'
+    precision: day
+    type: career
+    description: Coronation at the Assumption Cathedral, Moscow (22 Sep 1762 OS)
+    significance: major
+    age_at_event: 33
+    source: Wikipedia; World History Encyclopedia; erenow (Dixon text)
+  - date: '1773'
+    precision: year
+    type: other
+    description: Pugachev's Rebellion began (1773–1775), a major Cossack/peasant uprising
+    significance: major
+    age_at_event: 44
+    source: Wikipedia, 'Peter III of Russia'; Encyclopedia.com
+  - date: '1783'
+    precision: year
+    type: other
+    description: Annexation of Crimea
+    significance: major
+    age_at_event: 54
+    source: 'Encyclopedia.com, ''Catherine II the Great'' (timeline entry: ''annexation of the Crimea
+      (1783)'')'
+  - date: '1796-11-17'
+    precision: day
+    type: health_crisis
+    description: Died of a stroke/apoplexy (6 Nov 1796 OS / 17 Nov 1796 NS), Winter Palace, St Petersburg
+    significance: major
+    age_at_event: 67
+    source: Britannica; Encyclopedia.com; Simon Dixon (2009)
+- name: Indira Gandhi
+  events:
+  - date: '1942-03-26'
+    precision: day
+    type: relationship
+    description: Married Feroze Gandhi at Anand Bhavan, Allahabad
+    significance: major
+    age_at_event: 24
+    source: indiragandhi.in timeline; The Wire; globalsecurity.org
+  - date: 1942-08
+    precision: month
+    type: legal
+    description: Arrested and jailed during the Quit India Movement
+    significance: major
+    age_at_event: 24
+    source: Wikipedia, 'Feroze Gandhi'; pmindia.gov.in
+  - date: '1944-08-20'
+    precision: day
+    type: childbirth
+    description: Son Rajiv Gandhi born
+    significance: major
+    age_at_event: 26
+    source: Wikipedia, 'Indira Gandhi'
+  - date: '1946-12-14'
+    precision: day
+    type: childbirth
+    description: Son Sanjay Gandhi born
+    significance: major
+    age_at_event: 29
+    source: Biographical record (Indira/Feroze Gandhi)
+  - date: '1960-09-08'
+    precision: day
+    type: relationship
+    description: Husband Feroze Gandhi died of a heart attack in Delhi
+    significance: major
+    age_at_event: 42
+    source: Wikipedia, 'Feroze Gandhi'; The Wire
+  - date: '1964-05-27'
+    precision: day
+    type: bereavement_parent
+    description: Father Jawaharlal Nehru (PM of India) died
+    significance: major
+    age_at_event: 46
+    source: Wikipedia, 'Indira Gandhi'
+  - date: '1966-01-24'
+    precision: day
+    type: career
+    description: Sworn in as Prime Minister of India (elected by Congress party 19 Jan; office 24 Jan)
+    significance: major
+    age_at_event: 48
+    source: Wikipedia 'First Indira Gandhi ministry'; Sunday Guardian; Biography.com
+  - date: '1975-06-25'
+    precision: day
+    type: career
+    description: Declared the state of Emergency
+    significance: major
+    age_at_event: 57
+    source: Biography.com, '7 Facts About Indira Gandhi'
+  - date: 1977-03
+    precision: month
+    type: career
+    description: Lost power in the general election; Congress swept from office
+    significance: major
+    age_at_event: 59
+    source: History.com / Britannica, 'Indira Gandhi'
+  - date: '1980-01-14'
+    precision: day
+    type: career
+    description: Returned as Prime Minister (sworn in for fourth time)
+    significance: major
+    age_at_event: 62
+    source: indiragandhi.in timeline; pmindia.gov.in
+  - date: '1980-06-23'
+    precision: day
+    type: bereavement_other
+    description: Son Sanjay Gandhi killed in a plane crash
+    significance: major
+    age_at_event: 62
+    source: indiragandhi.in timeline
+  - date: 1984-06
+    precision: month
+    type: other
+    description: Ordered Operation Blue Star at the Golden Temple, Amritsar
+    significance: major
+    age_at_event: 66
+    source: History.com; Britannica, 'Indira Gandhi'
+  - date: '1984-10-31'
+    precision: day
+    type: other
+    description: Assassinated by her Sikh bodyguards in New Delhi
+    significance: major
+    age_at_event: 66
+    source: Wikipedia, 'Indira Gandhi'
+- name: Jacqueline Kennedy Onassis
+  events:
+  - date: '1953-09-12'
+    precision: day
+    type: relationship
+    description: Married Senator John F. Kennedy in Newport, Rhode Island
+    significance: major
+    age_at_event: 24
+    source: Britannica, 'Jacqueline Kennedy Onassis'; Legacy obituary
+  - date: 1956-08
+    precision: month
+    type: bereavement_other
+    description: Stillborn daughter (Arabella) in August 1956
+    significance: major
+    age_at_event: 27
+    source: 'Britannica (family plot record: ''Arabella Kennedy, died 1956''); Simple Wikipedia'
+  - date: '1957-08-03'
+    precision: day
+    type: bereavement_parent
+    description: Father John Vernou Bouvier III died
+    significance: major
+    age_at_event: 28
+    source: JFK Library / Bouvier family records
+  - date: '1957-11-27'
+    precision: day
+    type: childbirth
+    description: Daughter Caroline born
+    significance: major
+    age_at_event: 28
+    source: Britannica, 'Jacqueline Kennedy Onassis'
+  - date: '1960-11-25'
+    precision: day
+    type: childbirth
+    description: Son John F. Kennedy Jr. born
+    significance: major
+    age_at_event: 31
+    source: Britannica; JFK Library
+  - date: '1961-01-20'
+    precision: day
+    type: other
+    description: JFK inaugurated President; she became First Lady
+    significance: major
+    age_at_event: 31
+    source: Wikipedia, 'Jacqueline Kennedy Onassis'
+  - date: '1963-08-07'
+    precision: day
+    type: childbirth
+    description: Son Patrick Bouvier Kennedy born prematurely
+    significance: major
+    age_at_event: 34
+    source: JFK Library; Wikipedia
+  - date: '1963-08-09'
+    precision: day
+    type: bereavement_other
+    description: Son Patrick Bouvier Kennedy died two days after birth
+    significance: major
+    age_at_event: 34
+    source: JFK Library; Wikipedia
+  - date: '1963-11-22'
+    precision: day
+    type: bereavement_other
+    description: Husband JFK assassinated in Dallas; she was present in the car
+    significance: major
+    age_at_event: 34
+    source: Legacy obituary; Britannica
+  - date: '1968-10-20'
+    precision: day
+    type: relationship
+    description: Married Greek shipping magnate Aristotle Onassis on Skorpios
+    significance: major
+    age_at_event: 39
+    source: Wikipedia; Washington Post (2018); Britannica
+  - date: '1975-03-15'
+    precision: day
+    type: relationship
+    description: Second husband Aristotle Onassis died of respiratory failure in Paris
+    significance: major
+    age_at_event: 45
+    source: Wikipedia, 'Jacqueline Kennedy Onassis'
+  - date: 1975-09
+    precision: month
+    type: career
+    description: Began work as an editor at Viking Press, New York
+    significance: moderate
+    age_at_event: 46
+    source: Biography.com; Britannica
+  - date: '1978'
+    precision: year
+    type: career
+    description: Moved to Doubleday as editor (later senior editor; full editor 1982)
+    significance: moderate
+    age_at_event: 49
+    source: Biography.com; Legacy obituary
+  - date: 1994-01
+    precision: month
+    type: health_crisis
+    description: Diagnosed with non-Hodgkin's lymphoma; began chemotherapy January 1994
+    significance: major
+    age_at_event: 64
+    source: Simple Wikipedia, 'Jacqueline Kennedy Onassis'
+  - date: '1994-05-19'
+    precision: day
+    type: health_crisis
+    description: Died of non-Hodgkin's lymphoma at her Manhattan apartment, age 64
+    significance: major
+    age_at_event: 64
+    source: Biography.com; Legacy obituary; Britannica
+- name: John F. Kennedy
+  events:
+  - date: '1943-08-02'
+    precision: day
+    type: accident
+    description: PT-109 rammed and sunk by Japanese destroyer in Blackett Strait; JFK led survivors to
+      safety (near-death war event)
+    significance: major
+    age_at_event: 26
+    source: JFK Library, 'John F. Kennedy and PT-109'; HistoryNet
+  - date: '1944-08-12'
+    precision: day
+    type: bereavement_other
+    description: Older brother Joseph P. Kennedy Jr. killed in action (Operation Aphrodite, England)
+    significance: major
+    age_at_event: 27
+    source: Wikipedia, 'Joseph P. Kennedy Jr.'; JFK Library; PBS
+  - date: '1946-11-05'
+    precision: day
+    type: career
+    description: Elected to the US House of Representatives (Massachusetts 11th district)
+    significance: major
+    age_at_event: 29
+    source: PBS, 'Generations of the Kennedy Family'; JFK Library
+  - date: '1953-09-12'
+    precision: day
+    type: relationship
+    description: Married Jacqueline Bouvier in Newport, Rhode Island
+    significance: major
+    age_at_event: 36
+    source: Britannica; Legacy obituary
+  - date: '1954-10-21'
+    precision: day
+    type: health_crisis
+    description: Underwent lumbosacral spinal fusion (Hospital for Special Surgery, NY, admitted 10 Oct);
+      a post-op staphylococcal infection put him in a coma and he was given last rites
+    significance: major
+    age_at_event: 37
+    source: 'Robert Dallek, ''An Unfinished Life: John F. Kennedy 1917–1963'' (2003) and ''The Medical
+      Ordeals of JFK'' (The Atlantic, Dec 2002); CNN (22 Nov 2017): ''the family called a priest to administer
+      last rites'''
+  - date: '1957-05-06'
+    precision: day
+    type: recognition
+    description: Awarded the Pulitzer Prize for Biography for 'Profiles in Courage'
+    significance: major
+    age_at_event: 39
+    source: JFK Presidential Library artifact record (MO 76.860); Richard Howe; Medium/Esposito
+  - date: '1957-11-27'
+    precision: day
+    type: childbirth
+    description: Daughter Caroline born
+    significance: major
+    age_at_event: 40
+    source: Britannica
+  - date: '1960-11-08'
+    precision: day
+    type: career
+    description: Elected 35th President of the United States
+    significance: major
+    age_at_event: 43
+    source: JFK Library; standard record
+  - date: '1960-11-25'
+    precision: day
+    type: childbirth
+    description: Son John F. Kennedy Jr. born
+    significance: major
+    age_at_event: 43
+    source: Britannica; JFK Library
+  - date: '1961-01-20'
+    precision: day
+    type: career
+    description: Inaugurated as President
+    significance: major
+    age_at_event: 43
+    source: JFK Library
+  - date: 1961-04
+    precision: month
+    type: other
+    description: Bay of Pigs invasion (failed)
+    significance: major
+    age_at_event: 43
+    source: JFK Library; standard historical record
+  - date: 1962-10
+    precision: month
+    type: other
+    description: Cuban Missile Crisis
+    significance: major
+    age_at_event: 45
+    source: JFK Library; standard historical record
+  - date: '1963-08-07'
+    precision: day
+    type: childbirth
+    description: Son Patrick Bouvier Kennedy born prematurely
+    significance: major
+    age_at_event: 46
+    source: JFK Library
+  - date: '1963-08-09'
+    precision: day
+    type: bereavement_other
+    description: Son Patrick died two days after birth
+    significance: major
+    age_at_event: 46
+    source: JFK Library
+  - date: '1963-11-22'
+    precision: day
+    type: other
+    description: Assassinated in Dallas, Texas
+    significance: major
+    age_at_event: 46
+    source: Legacy obituary; JFK Library
+- name: Margaret Thatcher
+  events:
+  - date: '1947'
+    precision: year
+    type: education
+    description: Graduated from Oxford (Somerville College, chemistry); began work as a research chemist
+    significance: moderate
+    age_at_event: 21
+    source: Wikipedia, 'Margaret Thatcher'; History.com
+  - date: '1950'
+    precision: year
+    type: career
+    description: Lost first Dartford parliamentary bid (contested again and lost 1951)
+    significance: moderate
+    age_at_event: 24
+    source: Wikipedia, 'Margaret Thatcher'
+  - date: '1951-12-13'
+    precision: day
+    type: relationship
+    description: Married Denis Thatcher at Wesley's Chapel, City Road, London
+    significance: major
+    age_at_event: 26
+    source: Wikipedia/Denis Thatcher; Churchill Archives Centre
+  - date: '1953-08-15'
+    precision: day
+    type: childbirth
+    description: Twins Mark and Carol born (Queen Charlotte's Hospital, six weeks premature by caesarean);
+      qualified as a barrister the same year
+    significance: major
+    age_at_event: 27
+    source: Wikipedia/Carol Thatcher ('born 15 August 1953'); Wikipedia/Margaret Thatcher
+  - date: '1959-10-08'
+    precision: day
+    type: career
+    description: Elected MP for Finchley
+    significance: major
+    age_at_event: 34
+    source: History.com; Wikipedia, 'Margaret Thatcher'
+  - date: '1970-06-22'
+    precision: day
+    type: career
+    description: Appointed Secretary of State for Education and Science under Edward Heath
+    significance: major
+    age_at_event: 44
+    source: History.com; Wikipedia
+  - date: '1975-02-11'
+    precision: day
+    type: career
+    description: Elected leader of the Conservative Party (first woman to lead it)
+    significance: major
+    age_at_event: 49
+    source: History.com; Wikipedia
+  - date: '1979-05-04'
+    precision: day
+    type: career
+    description: Became Prime Minister (sworn in day after the 3 May general election win)
+    significance: major
+    age_at_event: 53
+    source: History.com, 'Margaret Thatcher resigns'
+  - date: 1982-04
+    precision: month
+    type: other
+    description: Falklands War (April–June 1982)
+    significance: major
+    age_at_event: 56
+    source: Wikipedia, 'Margaret Thatcher'
+  - date: '1983'
+    precision: year
+    type: career
+    description: Re-elected in landslide following Falklands victory
+    significance: major
+    age_at_event: 57
+    source: Wikipedia, 'Margaret Thatcher'
+  - date: '1984-10-12'
+    precision: day
+    type: accident
+    description: Survived the Provisional IRA Brighton hotel bombing (assassination attempt)
+    significance: major
+    age_at_event: 59
+    source: Wikipedia, 'Margaret Thatcher'
+  - date: '1987'
+    precision: year
+    type: career
+    description: Re-elected to a third term
+    significance: major
+    age_at_event: 61
+    source: Wikipedia, 'Margaret Thatcher'
+  - date: '1990-11-22'
+    precision: day
+    type: career
+    description: Announced her resignation after failing to win the leadership ballot outright
+    significance: major
+    age_at_event: 65
+    source: Wikipedia 'Resignation of Margaret Thatcher'; History.com
+  - date: '1990-11-28'
+    precision: day
+    type: career
+    description: Left office as Prime Minister; succeeded by John Major
+    significance: major
+    age_at_event: 65
+    source: Museum of the PM; legallegacy; Wikipedia
+  - date: '2003-06-26'
+    precision: day
+    type: relationship
+    description: Husband Denis Thatcher died, aged 88
+    significance: major
+    age_at_event: 77
+    source: Wikipedia, 'Margaret Thatcher' ('On 26 June 2003, Thatcher's husband, Sir Denis, died aged
+      88')
+  - date: '2013-04-08'
+    precision: day
+    type: health_crisis
+    description: Died of a stroke in London, age 87
+    significance: major
+    age_at_event: 87
+    source: History.com, 'Margaret Thatcher resigns'
+- name: Prince Philip
+  events:
+  - date: '1922'
+    precision: year
+    type: relocation
+    description: Family exiled from Greece amid the Greco-Turkish War; infant Philip evacuated (reportedly
+      carried in a fruit crate)
+    significance: major
+    age_at_event: 1
+    source: Wikipedia, 'Prince Philip, Duke of Edinburgh'
+  - date: '1947-02-28'
+    precision: day
+    type: other
+    description: Naturalised as a British subject, renouncing Greek/Danish titles and taking surname Mountbatten
+    significance: major
+    age_at_event: 25
+    source: The Court Jeweller (London Gazette record, 18 Mar 1947); Wikipedia; CNN Fast Facts
+  - date: '1947-07-10'
+    precision: day
+    type: relationship
+    description: Engagement to Princess Elizabeth announced (see notes on 9 vs 10 July conflict)
+    significance: major
+    age_at_event: 26
+    source: CNN/WRAL Fast Facts and Biography.com (10 July); Wikipedia gives 9 July
+  - date: '1947-11-20'
+    precision: day
+    type: relationship
+    description: Married Princess Elizabeth at Westminster Abbey; created Duke of Edinburgh that morning
+    significance: major
+    age_at_event: 26
+    source: Wikipedia, 'Wedding of Princess Elizabeth and Philip Mountbatten'
+  - date: '1948-11-14'
+    precision: day
+    type: childbirth
+    description: Son Charles born
+    significance: major
+    age_at_event: 27
+    source: Wikipedia; CNN Fast Facts
+  - date: '1950-08-15'
+    precision: day
+    type: childbirth
+    description: Daughter Anne born
+    significance: major
+    age_at_event: 29
+    source: Wikipedia; CNN Fast Facts
+  - date: '1952-02-06'
+    precision: day
+    type: other
+    description: Wife acceded to the throne as Queen Elizabeth II; his active naval career ended
+    significance: major
+    age_at_event: 30
+    source: Biography.com; CNN Fast Facts
+  - date: '1960-02-19'
+    precision: day
+    type: childbirth
+    description: Son Andrew born
+    significance: major
+    age_at_event: 38
+    source: Wikipedia, 'Prince Philip'; standard royal record
+  - date: '1964-03-10'
+    precision: day
+    type: childbirth
+    description: Son Edward born
+    significance: major
+    age_at_event: 42
+    source: Wikipedia, 'Prince Philip'; standard royal record
+  - date: '2017-08-02'
+    precision: day
+    type: career
+    description: Carried out his last solo public engagement (Royal Marines parade, Buckingham Palace)
+      before retiring from public duties
+    significance: major
+    age_at_event: 96
+    source: Reuters via NBC News (2 Aug 2017); ABC News — his last of ~22,219 solo engagements
+  - date: '2019-01-17'
+    precision: day
+    type: accident
+    description: Involved in a car crash near Sandringham; unhurt (surrendered driving licence Feb 2019)
+    significance: moderate
+    age_at_event: 97
+    source: CNN Prince Philip Fast Facts
+  - date: '2021-03-03'
+    precision: day
+    type: health_crisis
+    description: Underwent a successful procedure for a pre-existing heart condition at St Bartholomew's
+      Hospital, London (discharged 16 March)
+    significance: major
+    age_at_event: 99
+    source: Buckingham Palace via ABC News/Medscape (4 Mar 2021)
+  - date: '2021-04-09'
+    precision: day
+    type: health_crisis
+    description: Died at Windsor Castle, age 99
+    significance: major
+    age_at_event: 99
+    source: Wikipedia, 'Prince Philip, Duke of Edinburgh'
+- name: Prince William
+  events:
+  - date: '1997-08-31'
+    precision: day
+    type: bereavement_parent
+    description: Mother Diana, Princess of Wales, died in a Paris car crash
+    significance: major
+    age_at_event: 15
+    source: Wikipedia, 'William, Prince of Wales'
+  - date: '2000'
+    precision: year
+    type: education
+    description: Graduated Eton College; began a gap year (Chile, dairy farm, Africa) 2000–01
+    significance: moderate
+    age_at_event: 18
+    source: Britannica, 'William, prince of Wales'; CNN Fast Facts
+  - date: '2001'
+    precision: year
+    type: education
+    description: Enrolled at the University of St Andrews (met Catherine Middleton there)
+    significance: moderate
+    age_at_event: 19
+    source: Britannica; CNN Fast Facts
+  - date: '2005-06-23'
+    precision: day
+    type: education
+    description: Graduated from St Andrews with an MA (Hons) 2:1 in geography (ceremony attended by the
+      Queen and Prince Charles)
+    significance: moderate
+    age_at_event: 22
+    source: 'NBC News (11 Jun 2005), Clarence House: ''William got an upper second class honors'';  Press
+      Democrat (24 Jun 2005)'
+  - date: '2006-12-15'
+    precision: day
+    type: career
+    description: Commissioned as an Army officer at Sandhurst; joined the Household Cavalry (Blues and
+      Royals)
+    significance: major
+    age_at_event: 24
+    source: CNN Fast Facts; BBC News (15 Dec 2006); britroyals
+  - date: '2010-11-16'
+    precision: day
+    type: relationship
+    description: Engagement to Catherine Middleton announced by Clarence House (engaged in Kenya, October
+      2010)
+    significance: major
+    age_at_event: 28
+    source: Debretts; Unofficial Royalty; CNN
+  - date: '2011-04-29'
+    precision: day
+    type: relationship
+    description: Married Catherine Middleton at Westminster Abbey; created Duke of Cambridge
+    significance: major
+    age_at_event: 28
+    source: Britannica, 'British Royal Wedding of 2011'; Debretts
+  - date: '2013-07-22'
+    precision: day
+    type: childbirth
+    description: Son Prince George born at St Mary's Hospital, London
+    significance: major
+    age_at_event: 31
+    source: Royalfamilies Wiki; Britannica
+  - date: '2015-05-02'
+    precision: day
+    type: childbirth
+    description: Daughter Princess Charlotte born
+    significance: major
+    age_at_event: 32
+    source: Britannica; Royalfamilies Wiki
+  - date: '2018-04-23'
+    precision: day
+    type: childbirth
+    description: Son Prince Louis born
+    significance: major
+    age_at_event: 35
+    source: Britannica; Royalfamilies Wiki
+  - date: '2022-09-08'
+    precision: day
+    type: bereavement_other
+    description: Grandmother Queen Elizabeth II died; William became heir apparent, Duke of Cornwall
+    significance: major
+    age_at_event: 40
+    source: Unofficial Royalty; Debretts
+  - date: '2022-09-09'
+    precision: day
+    type: career
+    description: Created Prince of Wales by King Charles III
+    significance: major
+    age_at_event: 40
+    source: Debretts; Unofficial Royalty
+- name: Princess of Wales Diana
+  events:
+  - date: '1969'
+    precision: year
+    type: bereavement_other
+    description: Parents (Earl and Countess Spencer) separated/divorced
+    significance: major
+    age_at_event: 8
+    source: 'Andrew Morton, ''Diana: Her True Story'' (1992); Tina Brown, ''The Diana Chronicles'' (2007)'
+  - date: 1977-11
+    precision: month
+    type: relationship
+    description: First met Prince Charles in a ploughed field near Nobottle Wood, Althorp, while Charles
+      dated her sister Sarah
+    significance: moderate
+    age_at_event: 16
+    source: 'Andrew Morton, ''Diana: Her True Story'' (1992), quoted in Newsweek/Parade; Wikipedia'
+  - date: '1979-07-01'
+    precision: day
+    type: windfall
+    description: Turned 18 / reached majority (accessed a trust)
+    significance: minor
+    age_at_event: 18
+    source: Biographical record (Morton; Bedell Smith)
+  - date: '1981-02-24'
+    precision: day
+    type: relationship
+    description: Engagement to Prince Charles announced (Charles proposed 3 February 1981)
+    significance: major
+    age_at_event: 19
+    source: Wikipedia, 'Wedding of Prince Charles and Lady Diana Spencer'
+  - date: '1981-07-29'
+    precision: day
+    type: relationship
+    description: Married Prince Charles at St Paul's Cathedral
+    significance: major
+    age_at_event: 20
+    source: Wikipedia, 'Wedding of Prince Charles and Lady Diana Spencer'
+  - date: '1982-06-21'
+    precision: day
+    type: childbirth
+    description: Son Prince William born
+    significance: major
+    age_at_event: 20
+    source: Britannica; standard record
+  - date: '1984-09-15'
+    precision: day
+    type: childbirth
+    description: Son Prince Harry born
+    significance: major
+    age_at_event: 23
+    source: Standard royal record
+  - date: 1992-06
+    precision: month
+    type: other
+    description: 'Andrew Morton''s ''Diana: Her True Story'' published, exposing the state of her marriage'
+    significance: major
+    age_at_event: 30
+    source: Unofficial Royalty (annus horribilis); Smithsonian
+  - date: '1992-12-09'
+    precision: day
+    type: relationship
+    description: Separation from Prince Charles announced by PM John Major to Parliament
+    significance: major
+    age_at_event: 31
+    source: Unofficial Royalty; Smithsonian; Wikipedia
+  - date: '1995-11-20'
+    precision: day
+    type: recognition
+    description: BBC Panorama interview with Martin Bashir aired ('three of us in this marriage')
+    significance: major
+    age_at_event: 34
+    source: Wikipedia, 'An Interview with HRH The Princess of Wales'; TODAY; AOL
+  - date: '1996-08-28'
+    precision: day
+    type: relationship
+    description: Divorce from Prince Charles finalised
+    significance: major
+    age_at_event: 35
+    source: AOL/Vanity Fair; standard record
+  - date: '1997-08-31'
+    precision: day
+    type: accident
+    description: Died in a car crash in Paris, age 36
+    significance: major
+    age_at_event: 36
+    source: Wikipedia; standard news of record
+- name: Queen Elizabeth II
+  events:
+  - date: '1936-12-11'
+    precision: day
+    type: other
+    description: Edward VIII abdicated; father became George VI; Elizabeth became heir presumptive
+    significance: major
+    age_at_event: 10
+    source: britainforevents; standard record
+  - date: '1945-05-08'
+    precision: day
+    type: other
+    description: VE Day — went out incognito into the London crowds with Margaret
+    significance: moderate
+    age_at_event: 19
+    source: 'The Queen to Godfrey Talbot (1985, 40th VE Day anniversary); Margaret Rhodes; Smithsonian
+      Magazine (8 May 2015): she recalled ''we were terrified of being recognized'''
+  - date: '1947-07-09'
+    precision: day
+    type: relationship
+    description: Engagement to Philip Mountbatten announced
+    significance: major
+    age_at_event: 21
+    source: Wikipedia, 'Wedding of Princess Elizabeth and Philip Mountbatten'
+  - date: '1947-11-20'
+    precision: day
+    type: relationship
+    description: Married Philip Mountbatten at Westminster Abbey
+    significance: major
+    age_at_event: 21
+    source: Wikipedia, 'Wedding of Princess Elizabeth and Philip Mountbatten'
+  - date: '1948-11-14'
+    precision: day
+    type: childbirth
+    description: Son Charles born
+    significance: major
+    age_at_event: 22
+    source: Wikipedia; standard record
+  - date: '1950-08-15'
+    precision: day
+    type: childbirth
+    description: Daughter Anne born
+    significance: major
+    age_at_event: 24
+    source: Wikipedia; standard record
+  - date: '1952-02-06'
+    precision: day
+    type: career
+    description: Father George VI died; she acceded to the throne (in Kenya at the time)
+    significance: major
+    age_at_event: 25
+    source: Biography.com; britainforevents
+  - date: '1953-06-02'
+    precision: day
+    type: career
+    description: Coronation at Westminster Abbey (televised to ~20 million+ viewers)
+    significance: major
+    age_at_event: 27
+    source: Wikipedia, 'Prince Philip'; standard record
+  - date: '1960-02-19'
+    precision: day
+    type: childbirth
+    description: Son Andrew born
+    significance: major
+    age_at_event: 33
+    source: Standard royal record
+  - date: '1964-03-10'
+    precision: day
+    type: childbirth
+    description: Son Edward born
+    significance: major
+    age_at_event: 37
+    source: Standard royal record
+  - date: '1992-11-20'
+    precision: day
+    type: other
+    description: Windsor Castle fire (part of her 'annus horribilis'; three children's marriages collapsed
+      that year)
+    significance: major
+    age_at_event: 66
+    source: Wikipedia, '1992 Windsor Castle fire'; History.com; Time
+  - date: '1997-08-31'
+    precision: day
+    type: bereavement_other
+    description: Diana, Princess of Wales died; the monarchy faced a crisis of public mood
+    significance: major
+    age_at_event: 71
+    source: Standard news of record
+  - date: '2002-02-09'
+    precision: day
+    type: bereavement_other
+    description: Sister Princess Margaret died
+    significance: major
+    age_at_event: 75
+    source: Standard royal record
+  - date: '2002-03-30'
+    precision: day
+    type: bereavement_parent
+    description: Mother Queen Elizabeth The Queen Mother died
+    significance: major
+    age_at_event: 75
+    source: Standard royal record
+  - date: '2015-09-09'
+    precision: day
+    type: recognition
+    description: Became the longest-reigning British monarch, surpassing Queen Victoria
+    significance: major
+    age_at_event: 89
+    source: Standard record; royal historians
+  - date: '2021-04-09'
+    precision: day
+    type: relationship
+    description: Husband Prince Philip died at Windsor, age 99
+    significance: major
+    age_at_event: 94
+    source: Wikipedia, 'Prince Philip, Duke of Edinburgh'
+  - date: '2022-09-08'
+    precision: day
+    type: health_crisis
+    description: Died at Balmoral Castle, age 96
+    significance: major
+    age_at_event: 96
+    source: Unofficial Royalty; standard news of record
+- name: Queen of the United Kingdom Victoria
+  events:
+  - date: 1820-01
+    precision: month
+    type: bereavement_parent
+    description: Father Prince Edward, Duke of Kent, died of pneumonia at Sidmouth (23 January 1820),
+      when Victoria was 8 months old
+    significance: major
+    age_at_event: 0
+    source: Royal Central; Wikipedia 'Queen Victoria'
+  - date: '1837-06-20'
+    precision: day
+    type: career
+    description: Acceded to the throne on death of William IV; held first Privy Council that day
+    significance: major
+    age_at_event: 18
+    source: royal.uk; Grokipedia (accession)
+  - date: '1838-06-28'
+    precision: day
+    type: recognition
+    description: Coronation at Westminster Abbey
+    significance: major
+    age_at_event: 19
+    source: Wikipedia 'Coronation of Queen Victoria'; Westminster Abbey
+  - date: '1839-10-15'
+    precision: day
+    type: relationship
+    description: Proposed to Prince Albert at Windsor, five days after his arrival (royal tradition required
+      the reigning monarch to propose)
+    significance: major
+    age_at_event: 20
+    source: royal.uk (Victoria's journal); Wikipedia
+  - date: '1840-02-10'
+    precision: day
+    type: relationship
+    description: Married Prince Albert of Saxe-Coburg and Gotha at Chapel Royal, St James's Palace
+    significance: major
+    age_at_event: 20
+    source: Wikipedia 'Queen Victoria'; royal.uk
+  - date: '1840-06-10'
+    precision: day
+    type: accident
+    description: 'First assassination attempt: Edward Oxford fired twice at Victoria and Albert on Constitution
+      Hill; the first of seven attempts on her life (1840-1882)'
+    significance: moderate
+    age_at_event: 21
+    source: Wikipedia; Historic UK
+  - date: '1840-11-21'
+    precision: day
+    type: childbirth
+    description: Daughter Victoria ('Vicky'), Princess Royal, born (first of nine children)
+    significance: major
+    age_at_event: 21
+    source: royal.uk
+  - date: '1841-11-09'
+    precision: day
+    type: childbirth
+    description: Son Albert Edward (future Edward VII) born
+    significance: major
+    age_at_event: 22
+    source: royal.uk; Britannica
+  - date: '1843'
+    precision: year
+    type: childbirth
+    description: Daughter Alice born
+    significance: moderate
+    age_at_event: 24
+    source: Britannica; royal.uk
+  - date: '1844'
+    precision: year
+    type: childbirth
+    description: Son Alfred born
+    significance: moderate
+    age_at_event: 25
+    source: Britannica
+  - date: '1857'
+    precision: year
+    type: childbirth
+    description: Daughter Beatrice, ninth and last child, born
+    significance: moderate
+    age_at_event: 38
+    source: Britannica; royal.uk
+  - date: '1861-03-16'
+    precision: day
+    type: bereavement_parent
+    description: Mother the Duchess of Kent died
+    significance: major
+    age_at_event: 41
+    source: Royal Central; Wikipedia
+  - date: '1861-12-14'
+    precision: day
+    type: bereavement_other
+    description: Prince Albert died of typhoid at Windsor; began decades of deep mourning, wore black
+      for the rest of her reign
+    significance: major
+    age_at_event: 42
+    source: royal.uk; Wikipedia
+  - date: '1876-05-01'
+    precision: day
+    type: recognition
+    description: Adopted the additional title of Empress of India (Royal Titles Act)
+    significance: major
+    age_at_event: 56
+    source: European Royal History; royal.uk; Wikipedia
+  - date: '1887-06-21'
+    precision: day
+    type: recognition
+    description: Golden Jubilee Thanksgiving Service at Westminster Abbey (celebrations 20-21 June), first
+      major public appearance since Albert's death
+    significance: major
+    age_at_event: 68
+    source: Canadian Encyclopedia; Wikipedia 'Golden Jubilee of Queen Victoria'
+  - date: '1897-06-22'
+    precision: day
+    type: recognition
+    description: Diamond Jubilee, 60th anniversary of accession; first British monarch to reach this milestone
+    significance: major
+    age_at_event: 78
+    source: Wikipedia 'Diamond Jubilee of Queen Victoria'
+  - date: '1901-01-22'
+    precision: day
+    type: health_crisis
+    description: Died at Osborne House, Isle of Wight, aged 81; last British monarch of the House of Hanover
+    significance: major
+    age_at_event: 81
+    source: Britannica; Wikipedia

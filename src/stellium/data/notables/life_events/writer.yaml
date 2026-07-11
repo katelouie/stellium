@@ -1,0 +1,514 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Agatha Christie
+  events:
+  - date: 1901-11
+    precision: month
+    type: bereavement_parent
+    description: Father Frederick Miller died (she was 11)
+    significance: major
+    age_at_event: 11
+    source: historic-uk.com; Myles Dungan
+  - date: '1914-12-24'
+    precision: day
+    type: relationship
+    description: Married Archibald 'Archie' Christie on Christmas Eve
+    significance: major
+    age_at_event: 24
+    source: Wikipedia; Biography.com
+  - date: '1919-08-05'
+    precision: day
+    type: childbirth
+    description: Daughter Rosalind born
+    significance: moderate
+    age_at_event: 28
+    source: historic-uk.com; Biography.com
+  - date: '1920'
+    precision: year
+    type: career
+    description: Published 'The Mysterious Affair at Styles' (introduced Hercule Poirot)
+    significance: major
+    age_at_event: 29
+    source: Wikipedia; Kirkus
+  - date: 1926-04
+    precision: month
+    type: bereavement_parent
+    description: Mother Clara died of bronchitis
+    significance: major
+    age_at_event: 35
+    source: historic-uk.com; faefyxcollington.com
+  - date: '1926-12-03'
+    precision: day
+    type: other
+    description: Vanished from home in Sunningdale, beginning the famous 11-day disappearance; found at
+      a Harrogate hotel 14 December
+    significance: major
+    age_at_event: 36
+    source: Wikipedia; National Archives (UK); Biography.com
+  - date: '1928'
+    precision: year
+    type: relationship
+    description: Divorced Archie Christie
+    significance: major
+    age_at_event: 37
+    source: Wikipedia; Myles Dungan; Biography.com
+  - date: '1930-09-11'
+    precision: day
+    type: relationship
+    description: Married archaeologist Max Mallowan
+    significance: major
+    age_at_event: 39
+    source: Wikipedia; Biography.com
+  - date: '1934'
+    precision: year
+    type: career
+    description: Published 'Murder on the Orient Express'
+    significance: moderate
+    age_at_event: 43
+    source: Wikipedia
+  - date: '1939'
+    precision: year
+    type: career
+    description: Published 'And Then There Were None'
+    significance: major
+    age_at_event: 48
+    source: Wikipedia
+  - date: '1952'
+    precision: year
+    type: career
+    description: '''The Mousetrap'' opened in London (world''s longest-running play)'
+    significance: moderate
+    age_at_event: 61
+    source: Wikipedia
+  - date: '1956'
+    precision: year
+    type: recognition
+    description: Appointed CBE
+    significance: moderate
+    age_at_event: 65
+    source: Wikipedia
+  - date: '1971'
+    precision: year
+    type: recognition
+    description: Made a Dame (DBE)
+    significance: moderate
+    age_at_event: 80
+    source: Wikipedia
+  - date: '1976-01-12'
+    precision: day
+    type: health_crisis
+    description: Died at Wallingford, aged 85
+    significance: major
+    age_at_event: 85
+    source: Wikipedia
+- name: Ernest Hemingway
+  events:
+  - date: '1918-07-08'
+    precision: day
+    type: accident
+    description: Wounded by shrapnel on the Italian front in WWI (formative)
+    significance: major
+    age_at_event: 18
+    source: Wikipedia; Meyers, Hemingway (1985)
+  - date: '1921-09-03'
+    precision: day
+    type: relationship
+    description: Married Hadley Richardson in Horton Bay, Michigan
+    significance: major
+    age_at_event: 22
+    source: Wikipedia (Hadley Richardson); PBS; JFK Library
+  - date: '1921-12-22'
+    precision: day
+    type: relocation
+    description: Moved to Paris with Hadley; sailed 8 December, arrived Paris 22 December 1921
+    significance: major
+    age_at_event: 22
+    source: JFK Library Hemingway Collection; PBS; Grokipedia (Hadley Richardson)
+  - date: '1923-10-10'
+    precision: day
+    type: childbirth
+    description: Son John 'Bumby' Hadley Nicanor born in Toronto
+    significance: moderate
+    age_at_event: 24
+    source: Wikipedia; PBS
+  - date: '1926'
+    precision: year
+    type: career
+    description: Published 'The Sun Also Rises'
+    significance: major
+    age_at_event: 27
+    source: Wikipedia
+  - date: '1927'
+    precision: year
+    type: relationship
+    description: Divorced Hadley; married Pauline Pfeiffer
+    significance: moderate
+    age_at_event: 27
+    source: Wikipedia; PBS
+  - date: '1928'
+    precision: year
+    type: relocation
+    description: Moved to Key West, Florida
+    significance: moderate
+    age_at_event: 28
+    source: Wikipedia
+  - date: '1928-12-06'
+    precision: day
+    type: bereavement_parent
+    description: Father Clarence Hemingway died by suicide (shot himself)
+    significance: major
+    age_at_event: 29
+    source: Wikipedia; Meyers (1985)
+  - date: '1929'
+    precision: year
+    type: career
+    description: Published 'A Farewell to Arms'
+    significance: major
+    age_at_event: 29
+    source: Wikipedia
+  - date: '1937'
+    precision: year
+    type: career
+    description: Covered the Spanish Civil War as a correspondent
+    significance: moderate
+    age_at_event: 37
+    source: Wikipedia
+  - date: '1940'
+    precision: year
+    type: career
+    description: Published 'For Whom the Bell Tolls'; divorced Pauline and married Martha Gellhorn
+    significance: major
+    age_at_event: 41
+    source: Wikipedia
+  - date: '1946'
+    precision: year
+    type: relationship
+    description: Married Mary Welsh (fourth wife)
+    significance: moderate
+    age_at_event: 46
+    source: Wikipedia
+  - date: '1952'
+    precision: year
+    type: career
+    description: Published 'The Old Man and the Sea'
+    significance: major
+    age_at_event: 52
+    source: Wikipedia
+  - date: '1953'
+    precision: year
+    type: recognition
+    description: Won the Pulitzer Prize for Fiction
+    significance: major
+    age_at_event: 53
+    source: Wikipedia
+  - date: '1954-01-23'
+    precision: day
+    type: accident
+    description: Survived two near-fatal plane crashes in Africa on consecutive days (23-24 January 1954)
+    significance: major
+    age_at_event: 54
+    source: Wikipedia; Biography.com
+  - date: '1954'
+    precision: year
+    type: recognition
+    description: Awarded the Nobel Prize in Literature
+    significance: major
+    age_at_event: 55
+    source: Wikipedia
+  - date: '1960'
+    precision: year
+    type: health_crisis
+    description: Underwent electroshock (ECT) treatments at the Mayo Clinic (1960-61)
+    significance: major
+    age_at_event: 61
+    source: Wikipedia; Meyers (1985)
+  - date: '1961-07-02'
+    precision: day
+    type: health_crisis
+    description: Died by suicide (shotgun) at Ketchum, Idaho
+    significance: major
+    age_at_event: 61
+    source: Wikipedia; Biography.com
+- name: Jorge Luis Borges
+  events:
+  - date: '1914'
+    precision: year
+    type: relocation
+    description: Family moved to Geneva, Switzerland; attended Collège de Genève through WWI
+    significance: major
+    age_at_event: 14
+    source: Wikipedia; Britannica
+  - date: '1919'
+    precision: year
+    type: relocation
+    description: Left Geneva for Spain; joined the avant-garde Ultraist literary movement
+    significance: moderate
+    age_at_event: 19
+    source: Britannica; New World Encyclopedia
+  - date: '1921'
+    precision: year
+    type: relocation
+    description: Returned to Buenos Aires; began publishing poems and essays
+    significance: moderate
+    age_at_event: 21
+    source: Wikipedia
+  - date: '1938'
+    precision: year
+    type: bereavement_parent
+    description: Father Jorge Guillermo Borges died (some sources give 14 Feb 1938)
+    significance: major
+    age_at_event: 38
+    source: Encyclopedia.com; Shipwreck Library timeline
+  - date: '1938-12-24'
+    precision: day
+    type: accident
+    description: Severe head wound on Christmas Eve; the wound became infected and he developed near-fatal
+      septicemia. Per Britannica, the injury and subsequent blood poisoning 'left him near death, bereft
+      of speech, and fearing for his sanity'; he based his 1944 story 'El Sur' on the event, which preceded
+      his turn to the fictions that made him famous.
+    significance: major
+    age_at_event: 39
+    source: Britannica; Borges autobiographical essay quoted in SciELO
+  - date: '1944'
+    precision: year
+    type: career
+    description: Published Ficciones, the collection on which his fame chiefly rests
+    significance: major
+    age_at_event: 44
+    source: Encyclopedia.com; Britannica
+  - date: '1955'
+    precision: year
+    type: career
+    description: Appointed director of the National Library of Argentina in the same period he became
+      effectively blind — 'God, who with such splendid irony / granted me books and blindness at one touch'
+      (Poem of the Gifts)
+    significance: major
+    age_at_event: 55
+    source: Wikipedia; Lapham's Quarterly; Borges, 'Poem of the Gifts'
+  - date: 1961-05
+    precision: month
+    type: recognition
+    description: Awarded the first Prix International (Premio Internacional de Editores), May 1961, by
+      six publishers (Seix Barral, Gallimard, Einaudi, Grove, Weidenfeld & Nicolson, Rowohlt); the vote
+      deadlocked and was split with Samuel Beckett, bringing Borges international fame
+    significance: major
+    age_at_event: 61
+    source: Borges Center (Univ. of Pittsburgh); Wikipedia; culturedallroundman (Prix International 1961)
+  - date: '1967'
+    precision: year
+    type: relationship
+    description: First marriage, to Elsa Astete Millán (registered 4 Aug 1967 per di Giovanni; divorced
+      1970)
+    significance: moderate
+    age_at_event: 67
+    source: Borges Center; Norman Thomas di Giovanni, Georgie and Elsa
+  - date: '1975'
+    precision: year
+    type: bereavement_parent
+    description: Mother Leonor Acevedo died, aged 99; she had been his secretary and companion since his
+      blindness
+    significance: major
+    age_at_event: 75
+    source: Wikipedia; Shipwreck Library timeline
+  - date: '1986-06-14'
+    precision: day
+    type: health_crisis
+    description: Died of liver cancer in Geneva; had married María Kodama by proxy in April 1986
+    significance: major
+    age_at_event: 86
+    source: Wikipedia; NNDB
+- name: Maya Angelou
+  events:
+  - date: '1931'
+    precision: year
+    type: relocation
+    description: After her parents' separation, she and her brother Bailey were sent to their paternal
+      grandmother in Stamps, Arkansas
+    significance: major
+    age_at_event: 3
+    source: Wikipedia; British Online Archives
+  - date: '1935'
+    precision: year
+    type: other
+    description: As an eight-year-old child she was the victim of sexual abuse by her mother's boyfriend
+      (Mr. Freeman) during a stay in St. Louis
+    significance: major
+    age_at_event: 8
+    source: Britannica; Wikipedia
+  - date: '1936'
+    precision: year
+    type: health_crisis
+    description: 'Became mute for roughly 5½ years after the abuse and the killing of the abuser. Angelou:
+      ''I was a mute from the time I was seven and a half until I was almost 13. I didn''t speak. I had
+      voice, but I refused to use it.'''
+    significance: major
+    age_at_event: 8
+    source: Maya Angelou, Academy of Achievement interview; Wikipedia
+  - date: '1945-09-08'
+    precision: day
+    type: childbirth
+    description: 'Gave birth to her only child, son Clyde ''Guy'' Johnson, in San Francisco. Per his obituary:
+      ''Mr. GUY JOHNSON was born on September 8, 1945, in San Francisco, California, the only child of
+      Dr. Maya Angelou.'''
+    significance: major
+    age_at_event: 17
+    source: Guy Johnson obituary (San Francisco Chronicle/Legacy.com); Encyclopedia.com (Women in World
+      History)
+  - date: '1951'
+    precision: year
+    type: relationship
+    description: First marriage, to Tosh Angelos, a Greek-American electrician and former sailor (divorced
+      c. 1954)
+    significance: moderate
+    age_at_event: 23
+    source: Wikipedia; Marcia Ann Gillespie biography
+  - date: '1954'
+    precision: year
+    type: career
+    description: Toured Europe with the opera Porgy and Bess (1954–55), launching her performing career
+    significance: moderate
+    age_at_event: 26
+    source: Wikipedia
+  - date: '1960'
+    precision: year
+    type: career
+    description: Named northern coordinator of the Southern Christian Leadership Conference (SCLC) at
+      Martin Luther King Jr.'s request
+    significance: moderate
+    age_at_event: 32
+    source: Wikipedia; Biography.com
+  - date: '1965'
+    precision: year
+    type: bereavement_other
+    description: Returned to the US (Feb 1965) to help Malcolm X build the Organization of Afro-American
+      Unity; devastated by his assassination on 21 Feb 1965, weeks after her return
+    significance: major
+    age_at_event: 36
+    source: The Conversation; Journal of Global History (Cambridge); Wikipedia
+  - date: '1968-04-04'
+    precision: day
+    type: bereavement_other
+    description: MLK assassinated on her 40th birthday; thereafter she stopped celebrating her birthday,
+      sending flowers to Coretta Scott King instead
+    significance: major
+    age_at_event: 40
+    source: Wikipedia; Gillespie
+  - date: '1969'
+    precision: year
+    type: recognition
+    description: Published I Know Why the Caged Bird Sings, which brought her international acclaim and
+      was the first nonfiction bestseller by a Black woman
+    significance: major
+    age_at_event: 41
+    source: Wikipedia; Smithsonian; ZSR Library (Wake Forest)
+  - date: '1993-01-20'
+    precision: day
+    type: recognition
+    description: Recited 'On the Pulse of Morning' at Bill Clinton's first inauguration — first inaugural
+      poet since Robert Frost (1961)
+    significance: major
+    age_at_event: 64
+    source: Obama White House archive (Clinton Library caption); Wikipedia
+  - date: '2014-05-28'
+    precision: day
+    type: health_crisis
+    description: Died at her home in Winston-Salem, North Carolina, aged 86
+    significance: major
+    age_at_event: 86
+    source: Wikipedia; SparkNotes
+- name: Sylvia Plath
+  events:
+  - date: '1940-11-05'
+    precision: day
+    type: bereavement_parent
+    description: Father Otto Plath died of complications following the amputation of a foot due to untreated
+      diabetes, days after her 8th birthday — a defining, lifelong influence on her work
+    significance: major
+    age_at_event: 8
+    source: Wikipedia; Smith College Libraries
+  - date: '1950'
+    precision: year
+    type: education
+    description: Entered Smith College on a scholarship
+    significance: moderate
+    age_at_event: 17
+    source: Smith College Libraries; Poets.org
+  - date: '1953'
+    precision: month
+    type: career
+    description: Guest editor at Mademoiselle magazine in New York (summer 1953)
+    significance: moderate
+    age_at_event: 20
+    source: Smith College Libraries; Encyclopedia.com
+  - date: '1953-08-24'
+    precision: day
+    type: health_crisis
+    description: First suicide attempt (overdose of sleeping pills, hiding in the basement crawlspace);
+      the experience that later informed The Bell Jar. Followed by hospitalization and electroconvulsive
+      therapy
+    significance: major
+    age_at_event: 20
+    source: Wikipedia; Heather Clark, Red Comet (Wiley excerpt)
+  - date: '1955'
+    precision: year
+    type: education
+    description: Graduated Smith summa cum laude; won a Fulbright Fellowship to Newnham College, Cambridge
+    significance: major
+    age_at_event: 22
+    source: Wikipedia; Smith College Libraries
+  - date: '1956-02-25'
+    precision: day
+    type: relationship
+    description: Met poet Ted Hughes at the launch party for St. Botolph's Review in Cambridge
+    significance: major
+    age_at_event: 23
+    source: History.com; Wikipedia
+  - date: '1956-06-16'
+    precision: day
+    type: relationship
+    description: Married Ted Hughes at St George the Martyr, Holborn, London, on Bloomsday
+    significance: major
+    age_at_event: 23
+    source: Wikipedia; Smith College Libraries
+  - date: '1960-04-01'
+    precision: day
+    type: childbirth
+    description: Daughter Frieda born
+    significance: major
+    age_at_event: 27
+    source: Medium (Counter Arts); corroborates ADB seed listing
+  - date: '1962-01-17'
+    precision: day
+    type: childbirth
+    description: Son Nicholas born
+    significance: major
+    age_at_event: 29
+    source: Wikipedia; corroborates ADB seed listing
+  - date: '1962'
+    precision: year
+    type: relationship
+    description: Separated from Hughes after his affair with Assia Wevill (decisive break dated to July/September
+      1962 by some sources)
+    significance: major
+    age_at_event: 29
+    source: Britannica; Wikipedia
+  - date: '1963-01-14'
+    precision: day
+    type: career
+    description: 'The Bell Jar published in London by William Heinemann under the pseudonym Victoria Lucas,
+      in an initial run of only 2,000 copies. Per the National Library of Scotland: ''The Bell Jar by
+      Victoria Lucas was published on January 14th, 1963.'''
+    significance: major
+    age_at_event: 30
+    source: National Library of Scotland; americanliterature.com
+  - date: '1963-02-11'
+    precision: day
+    type: health_crisis
+    description: Died by suicide (carbon monoxide poisoning) at her London flat at 23 Fitzroy Road, aged
+      30
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Britannica

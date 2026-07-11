@@ -1,0 +1,92 @@
+# Notable temperament dataset — subjective character descriptors per native.
+# PROVENANCE: SOFT / INTERPRETIVE. Distilled from biographies; not measurements.
+# The API (get_notable_temperament) emits a DataQualityWarning on access. Keyed by name.
+
+- name: Amelia Earhart
+  temperament:
+  - trait: Courage / coolness under pressure
+    tags:
+    - courageous
+    - composed
+    evidence: 'Wikipedia: ''coolness under pressure, courage'';  flew through storms and icing on the
+      1932 solo crossing'
+    source: Wikipedia; Character and Leadership
+  - trait: Fierce independence / feminism
+    tags:
+    - independent
+    - principled
+    evidence: Retained her maiden name; called her marriage a partnership 'with dual control';  championed
+      women pilots
+    source: Christian Science Monitor; National Geographic
+  - trait: Shy-but-willful; publicity-savvy self-possession
+    tags:
+    - reserved
+    - determined
+    evidence: '''Gracious and somewhat shy on the outside, willful and independent on the inside'';  carefully
+      managed her image'
+    source: National Geographic (In Praise of Difficult Women)
+  - trait: Persistence / goal-orientation
+    tags:
+    - driven
+    - ambitious
+    evidence: Set seven women's speed/distance records 1930-1935;  described as goal-oriented and persistent
+    source: Wikipedia; PBS American Experience
+- name: Jacques Cousteau
+  temperament:
+  - trait: Insatiable curiosity
+    tags:
+    - curious
+    - exploratory
+    evidence: 'Self-described: explorers are driven by ''a single-minded, insatiable, and even jubilant
+      need to know'''
+    source: Cousteau, The Human, the Orchid, and the Octopus; The Daily Beast
+  - trait: Showman / self-promoter
+    tags:
+    - showman
+    - self-promoting
+    evidence: 'Wikipedia: called himself an ''oceanographic technician'' but was ''in reality a sophisticated
+      showman''; Becoming Cousteau calls him a ''born showman'''
+    source: Wikipedia; Becoming Cousteau (dir. Liz Garbus)
+  - trait: Charismatic leader / TV personality
+    tags:
+    - charismatic
+    - commanding
+    evidence: The Undersea World made him one of the most familiar faces on the planet; Cousteau Society
+      cites his charismatic personality
+    source: The Daily Beast; The Cousteau Society
+  - trait: Restless, driven adventurer with evolving eco-passion
+    tags:
+    - restless
+    - passionate
+    evidence: 'Biographer Brad Matsen portrays a restless inventor/adventurer; Cousteau: curiosity ''began
+      to turn us into environmentalists'''
+    source: 'Brad Matsen, Jacques Cousteau: The Sea King; The Daily Beast'
+- name: Neil Armstrong
+  temperament:
+  - trait: Modest / self-effacing
+    tags:
+    - modest
+    - humble
+    evidence: 'Biographer James Hansen: ''mild and modest personality'';  when asked if he was someone
+      to know, replied ''Probably not'''
+    source: James Hansen, First Man; Space.com (Hansen op-ed)
+  - trait: Reticent / intensely private introvert
+    tags:
+    - private
+    - introverted
+    evidence: 'Hansen: his ''reticence was simply part and parcel of his personality''; Collins said he
+      was ''unwilling'' to reveal inner thoughts'
+    source: James Hansen, First Man; NBC News
+  - trait: Calm under pressure / cool detachment
+    tags:
+    - composed
+    - unflappable
+    evidence: 'Flight director Chris Kraft: ''Calm, quiet and absolute confidence… the Lindbergh type.
+      He had no ego'';  landed Eagle with fuel nearly exhausted'
+    source: Chris Kraft, via HowStuffWorks/New Yorker
+  - trait: Methodical, detail-driven engineer
+    tags:
+    - analytical
+    - meticulous
+    evidence: As a boy kept a notebook logging model-plane flights;  self-described 'nerdy engineer'
+    source: James Hansen, First Man; NBC News

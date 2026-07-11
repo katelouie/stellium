@@ -1,0 +1,182 @@
+# Notable life-events dataset — dated biographical events per native.
+# PROVENANCE: gathered from biographies + AstroDataBank via research; sourced but
+# NOT individually certificate-verified. Treat as Rodden ~B (secondary) grade, and
+# honour each event's `precision` (day/month/year). Keyed by name (join to births/).
+
+- name: Osho Rajneesh
+  events:
+  - date: '1953-03-21'
+    precision: day
+    type: spiritual
+    description: Claimed to become spiritually enlightened under a tree in Bhanvartal garden, Jabalpur,
+      aged 21 (self-reported).
+    significance: major
+    age_at_event: 21
+    source: Wikipedia; Britannica
+  - date: '1958'
+    precision: year
+    type: career
+    description: Appointed lecturer (later professor) of philosophy at Jabalpur University, teaching until
+      1966.
+    significance: major
+    age_at_event: 26
+    source: Wikipedia; New World Encyclopedia
+  - date: '1966'
+    precision: year
+    type: career
+    description: Resigned his university post to become a full-time spiritual teacher and travel India.
+    significance: major
+    age_at_event: 34
+    source: Wikipedia; Britannica
+  - date: '1971'
+    precision: year
+    type: spiritual
+    description: Adopted the title Bhagwan Shree Rajneesh.
+    significance: moderate
+    age_at_event: 39
+    source: New World Encyclopedia; thefamouspeople
+  - date: '1974'
+    precision: year
+    type: relocation
+    description: Established his ashram in Koregaon Park, Pune.
+    significance: major
+    age_at_event: 42
+    source: Wikipedia
+  - date: '1981'
+    precision: year
+    type: relocation
+    description: Moved to the United States and founded the Rajneeshpuram commune in Oregon.
+    significance: major
+    age_at_event: 49
+    source: Wikipedia; Britannica
+  - date: '1985-10-28'
+    precision: day
+    type: legal
+    description: Arrested in Charlotte, North Carolina, allegedly fleeing the collapsing commune.
+    significance: major
+    age_at_event: 53
+    source: ADB seed; Osho News
+  - date: 1985-11
+    precision: month
+    type: legal
+    description: Entered an Alford plea to two immigration felony counts (Nov 14, 1985); given a 5-year
+      suspended sentence, fined $400,000, and immediately deported from the US.
+    significance: major
+    age_at_event: 53
+    source: Britannica; Wikipedia
+  - date: '1986'
+    precision: year
+    type: relocation
+    description: After a world tour on which 21 countries refused him entry (per Britannica), returned
+      to India (Mumbai, July 1986).
+    significance: major
+    age_at_event: 54
+    source: Britannica; Wikipedia
+  - date: 1987-01
+    precision: month
+    type: relocation
+    description: Returned to the Pune ashram (renamed Rajneeshdham) to resume discourses.
+    significance: moderate
+    age_at_event: 55
+    source: Wikipedia
+  - date: '1989'
+    precision: year
+    type: spiritual
+    description: Dropped the name 'Bhagwan' and took the name Osho.
+    significance: moderate
+    age_at_event: 57
+    source: Wikipedia; Britannica
+  - date: '1990-01-19'
+    precision: day
+    type: health_crisis
+    description: Died of heart failure at the Pune ashram, aged 58.
+    significance: major
+    age_at_event: 58
+    source: Wikipedia; Britannica
+- name: Swami Vivekananda
+  events:
+  - date: 1881-11
+    precision: month
+    type: spiritual
+    description: First met Ramakrishna at Dakshineswar Kali Temple; became devoted disciple
+    significance: major
+    age_at_event: 18
+    source: Britannica; Ramakrishna Mission accounts (November 1881)
+  - date: '1884'
+    precision: year
+    type: bereavement_parent
+    description: Father Vishwanath Datta died; family plunged into poverty
+    significance: major
+    age_at_event: 21
+    source: Learn Religions; belurmath.org
+  - date: '1886-08-16'
+    precision: day
+    type: bereavement_other
+    description: Guru Ramakrishna died of throat cancer
+    significance: major
+    age_at_event: 23
+    source: Britannica; Ramakrishna Mission
+  - date: '1886'
+    precision: year
+    type: spiritual
+    description: Took monastic vows; founded Baranagar Math with brother disciples
+    significance: major
+    age_at_event: 23
+    source: Wikipedia (Vivekananda); Ramakrishna Mission
+  - date: '1888'
+    precision: year
+    type: relocation
+    description: Began years as a wandering monk (parivrajaka) across India (1888-1893)
+    significance: moderate
+    age_at_event: 25
+    source: Learn Religions; belurmath.org
+  - date: '1893-09-11'
+    precision: day
+    type: recognition
+    description: Delivered 'Sisters and Brothers of America' address at World's Parliament of Religions,
+      Chicago
+    significance: major
+    age_at_event: 30
+    source: Art Institute of Chicago; Belur Math
+  - date: '1897-01-15'
+    precision: day
+    type: relocation
+    description: Returned to India, arriving Colombo, Ceylon
+    significance: moderate
+    age_at_event: 34
+    source: Wikipedia (Vivekananda)
+  - date: '1897-05-01'
+    precision: day
+    type: career
+    description: Founded the Ramakrishna Mission in Calcutta
+    significance: major
+    age_at_event: 34
+    source: belurmath.org; Wikipedia (Ramakrishna Mission)
+  - date: '1898-12-09'
+    precision: day
+    type: career
+    description: Consecrated Belur Math by installing Ramakrishna's relics
+    significance: major
+    age_at_event: 35
+    source: Wikipedia (Belur Math); Vedanta Society
+  - date: 1899-06
+    precision: month
+    type: relocation
+    description: Departed for second trip to the West
+    significance: moderate
+    age_at_event: 36
+    source: Wikipedia (Vivekananda); belurmath.org
+  - date: '1900-12-09'
+    precision: day
+    type: relocation
+    description: Returned to Calcutta from second Western tour
+    significance: moderate
+    age_at_event: 37
+    source: Wikipedia (Vivekananda)
+  - date: '1902-07-04'
+    precision: day
+    type: health_crisis
+    description: Died at Belur Math, aged 39 (reported brain blood-vessel rupture)
+    significance: major
+    age_at_event: 39
+    source: Wikipedia (Vivekananda); belurmath.org
