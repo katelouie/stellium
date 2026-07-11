@@ -215,3 +215,34 @@ Neither is a timing technique. **Minute-level time rectification is not achievab
 with this automated approach; the deliverable is the ~70% sect classifier** (to be
 strengthened by an external birth-hour prior — research pending). This is the
 central, rigorously-established result of the investigation.
+
+---
+
+## Temperament / personality — **null for sect** (`probe_temperament_sect.py`)
+
+Tested the soft channel now that full charts are available. Sect-light doctrine:
+Sun-led (Solar) character → day, Moon-led (Lunar) → night; Solar/Lunar keywords a
+priori.
+
+| | value |
+|---|---|
+| corr(temperament, sect) | +0.03 (null) |
+| corr(temperament, malefic) | −0.03 (independent, but of noise) |
+| **partial corr(temperament, sect \| daylight, malefic)** | **+0.11** (n.s. at n=63) |
+| LOO: daylight+malefic | 69.8% |
+| LOO: daylight+malefic+**temperament** | **68.3%** (no gain — slightly worse) |
+
+Temperament is null and adds nothing (it slightly *hurts* LOO). This also settles
+the chart-contextualised version without building it: "does temperament match the
+chart's sect-role assignment" decomposes into the **sect light** (Solar/Lunar —
+just tested null) and the **benefic of sect** (Jovial/Venusian — = the null
+benefic-events probe). Both building blocks are null.
+
+**Why temperament fails where malefic-of-sect works:** the malefic signal rides a
+*specific, clean* axis — the *character of misfortune* (violent/Mars vs
+chronic/Saturn) maps directly onto the out-of-sect-malefic doctrine. General
+temperament is swamped by the far larger non-sect determinants (Sun sign, Moon
+sign, dominant planet, Ascendant); the sect overlay is too faint to detect against
+that. Fittingly, sect shows up in the **character of harm**, not in general
+personality — consistent with the tradition emphasising sect most for the
+malefics' operation.

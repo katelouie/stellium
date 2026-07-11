@@ -39,9 +39,9 @@ class SectModel:
     """Standardised 2-feature logistic model."""
 
     bias: float
-    weights: tuple[float, float]
-    mean: tuple[float, float]
-    std: tuple[float, float]
+    weights: tuple[float, ...]
+    mean: tuple[float, ...]
+    std: tuple[float, ...]
 
     def p_day(self, feats: tuple[float, float]) -> float:
         z = self.bias
@@ -81,4 +81,4 @@ def fit(
         b -= lr * gb / n
         for j in range(k):
             w[j] -= lr * (gw[j] / n + l2 * w[j] / n)
-    return SectModel(bias=b, weights=(w[0], w[1]), mean=mean, std=std)
+    return SectModel(bias=b, weights=tuple(w), mean=mean, std=std)
