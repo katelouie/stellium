@@ -77,7 +77,12 @@ migration plan, and acceptance criteria.
   corr +0.35), benefic = null. Phase A
   ([RECTIFICATION_PHASEA_SPEC.md](./specs/RECTIFICATION_PHASEA_SPEC.md)) builds the
   full time-posterior from time-dependent techniques (profection → directions),
-  reading sect as the marginal. *Status: Exploration.*
+  reading sect as the marginal. **Final write-up:
+  [RECTIFICATION_REPORT.md](./specs/RECTIFICATION_REPORT.md)** — timing techniques
+  null and minute-level time unrecoverable; only sect is recoverable (~70%,
+  cross-validated + out-of-sample) via a geometric daylight prior + the
+  malefic-contrary-to-sect doctrine; framed as an ill-posed inverse where the prior
+  dominates. *Status: Exploration — concluded.*
 
 ## How these docs are scoped
 
