@@ -7,7 +7,7 @@
 | **Owner** | Kate |
 | **Type** | Implementation spec (SDD) |
 | **Parent** | [RECTIFICATION_SPEC.md](./RECTIFICATION_SPEC.md) · [RECTIFICATION_THEORY.md](./RECTIFICATION_THEORY.md) |
-| **Corpus** | [rectification-corpus-events.yaml](./rectification-corpus-events.yaml) (63 people, 888 events) |
+| **Corpus** | [data/rectification-corpus-events.yaml](./data/rectification-corpus-events.yaml) (63 people, 888 events) |
 
 ---
 

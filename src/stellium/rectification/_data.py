@@ -1,7 +1,7 @@
 """Internal reference tables for sect analysis — significators + coarse dignity.
 
 Kept private to the subsystem: these are the expert-prior tables the empirical
-rectification study used (see ``docs/development/specs/RECTIFICATION_REPORT.md``),
+rectification study used (see ``docs/development/specs/rectification/RECTIFICATION_REPORT.md``),
 not general-purpose package data. The seven traditional planets only.
 """
 

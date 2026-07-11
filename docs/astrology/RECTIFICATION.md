@@ -43,7 +43,7 @@ right ages.
 corpus of AA-rated (certificate-verified) birth times with documented life events,
 pre-registered gates, leave-one-out cross-validation, permutation nulls, confound
 controls, and an out-of-sample holdout. The full write-up is in
-[`RECTIFICATION_REPORT.md`](../development/specs/RECTIFICATION_REPORT.md). The short
+[`RECTIFICATION_REPORT.md`](../development/specs/rectification/RECTIFICATION_REPORT.md). The short
 version:
 
 > The map from **birth time → chart → life** is many-to-one. Two different birth
@@ -273,7 +273,7 @@ traits = get_notable_temperament("Frida Kahlo")     # soft/interpretive (warns o
 
 ## Further reading
 
-- **[The full empirical study](../development/specs/RECTIFICATION_REPORT.md)** — the
+- **[The full empirical study](../development/specs/rectification/RECTIFICATION_REPORT.md)** — the
   corpus, methodology, the ill-posed-inverse framing, the convergence test, the
   confound checks, and the one traditional doctrine that survived.
 - **[CHART_TYPES.md](../CHART_TYPES.md)** — where sect, directions, profections, and

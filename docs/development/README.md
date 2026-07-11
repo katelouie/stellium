@@ -32,57 +32,24 @@ spokes hold the technical detail.
 
 ## Design specs
 
-Spec-Driven Development (SDD) design docs for planned work live in
-[`specs/`](./specs/). Unlike the reference pages above (which describe the code
-as it *is*), specs describe a change *before* it's built — motivation, design,
-migration plan, and acceptance criteria.
+Spec-Driven Development (SDD) design docs live in [`specs/`](./specs/) — see
+**[specs/README.md](./specs/README.md)** for the index. Unlike the reference pages
+above (which describe the code as it *is*), specs describe a change *before* it's
+built — motivation, design, migration plan, and acceptance criteria.
 
-- **[specs/STRUCTURED_LOGGING_SPEC.md](./specs/STRUCTURED_LOGGING_SPEC.md)** —
-  replace bare `print()` in the package with stdlib `warnings`/`logging` (and
-  `click.echo`/Rich for the CLI), plus a lint guard. *Status: Implemented.*
-- **[specs/HELLENISTIC_PERIODS_SPEC.md](./specs/HELLENISTIC_PERIODS_SPEC.md)** —
-  a canonical `core/planetary_years.py` primitive (least/mean/greater/greatest +
-  Firdaria), ZR refactored onto it, and a new Firdaria time-lord engine. *Status:
-  Draft.*
-- **[specs/LENGTH_OF_LIFE_SPEC.md](./specs/LENGTH_OF_LIFE_SPEC.md)** — the
-  classical length-of-life technique (hyleg → alcocoden → years-table, Lilly
-  default) plus reusable almuten-of-a-degree and hyleg primitives. *Status:
-  Draft.*
-- **[specs/RECTIFICATION_THEORY.md](./specs/RECTIFICATION_THEORY.md)** &
-  **[specs/RECTIFICATION_SPEC.md](./specs/RECTIFICATION_SPEC.md)** — computational
-  birth-time rectification: a hierarchical Bayesian grid posterior over birth time
-  with the astrology engine as an exact forward model, sect read off as a marginal,
-  the likelihood calibrated on the AA-notables corpus. Theory doc explains the
-  model; spec doc has the data models, API, and phased plan (companion research
-  prompt: [specs/rectification-corpus-research-prompt.md](./specs/rectification-corpus-research-prompt.md)
-  — a single-pass *verify-then-gather* prompt that provenance-checks every
-  candidate from primary sources before it can enter the corpus, and returns its
-  rejections so they back-correct our notables DB; roster:
-  [specs/rectification-corpus-candidates.md](./specs/rectification-corpus-candidates.md)).
-  Phase 1 produced a **63-person provenance-verified corpus**; Phase 2 gathered
-  their events + temperament via
-  [specs/rectification-events-research-prompt.md](./specs/rectification-events-research-prompt.md)
-  over the
-  [specs/rectification-events-worklist.md](./specs/rectification-events-worklist.md)
-  (63 people + frozen birth data + ADB URLs). Result: **[specs/rectification-corpus-events.yaml](./specs/rectification-corpus-events.yaml)**
-  — 63 people, **888 dated events** + tagged temperament, birth data authoritative
-  from the DB (assembled by `assemble_corpus.py`). `apply_research_verdicts.py`
-  writes provenance verdicts back to the DB. Build spec for the first milestone:
-  **[specs/RECTIFICATION_PHASE0_SPEC.md](./specs/RECTIFICATION_PHASE0_SPEC.md)**
-  — a standalone (outside the package) fast re-cast + benchmark harness + sect
-  classifier, proven on the 63 before any code is promoted into
-  `stellium/rectification/`. Phase-1 findings
-  ([RECTIFICATION_PHASE1_FINDINGS.md](./specs/RECTIFICATION_PHASE1_FINDINGS.md)):
-  firdaria = null, malefic-of-sect character = a real but modest sect prior (65%,
-  corr +0.35), benefic = null. Phase A
-  ([RECTIFICATION_PHASEA_SPEC.md](./specs/RECTIFICATION_PHASEA_SPEC.md)) builds the
-  full time-posterior from time-dependent techniques (profection → directions),
-  reading sect as the marginal. **Final write-up:
-  [RECTIFICATION_REPORT.md](./specs/RECTIFICATION_REPORT.md)** — timing techniques
-  null and minute-level time unrecoverable; only sect is recoverable (~70%,
-  cross-validated + out-of-sample) via a geometric daylight prior + the
-  malefic-contrary-to-sect doctrine; framed as an ill-posed inverse where the prior
-  dominates. *Status: Exploration — concluded.*
+- **Active:** [specs/STRUCTURED_LOGGING_SPEC.md](./specs/STRUCTURED_LOGGING_SPEC.md)
+  — migrate the library's remaining bare `print()`s to stdlib `logging`/`warnings`
+  (infrastructure landed; migration in progress).
+- **Completed** (`specs/archive/`): Hellenistic periods (`core/planetary_years.py`
+  + Firdaria engine) and length of life (hyleg → alcocoden years-table) — both
+  shipped; specs kept for history.
+- **Rectification** (`specs/rectification/`): the full computational birth-time
+  rectification arc — theory, phased specs, the 63-person verified corpus + events,
+  and the concluded empirical study. See
+  **[specs/rectification/README.md](./specs/rectification/README.md)**; the capstone
+  is [RECTIFICATION_REPORT.md](./specs/rectification/RECTIFICATION_REPORT.md). The
+  validated result (sect recovery) shipped as the `stellium.rectification` subsystem
+  — see [SUBSYSTEMS.md](./SUBSYSTEMS.md).
 
 ## How these docs are scoped
 

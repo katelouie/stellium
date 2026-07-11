@@ -31,9 +31,11 @@ from pathlib import Path
 import yaml
 
 DEFAULT_DATA_DIR = (
-    Path(__file__).resolve().parents[3] / "src" / "stellium" / "data" / "notables"
+    Path(__file__).resolve().parents[5] / "src" / "stellium" / "data" / "notables"
 )
-DEFAULT_OUT = Path(__file__).resolve().parent / "rectification-corpus-events.yaml"
+DEFAULT_OUT = (
+    Path(__file__).resolve().parent.parent / "data" / "rectification-corpus-events.yaml"
+)
 
 # Explicit batch-name -> DB-name aliases for variants that reorder tokens, add a
 # middle name, or reword — cases fuzzy matching can't resolve safely. Extend as

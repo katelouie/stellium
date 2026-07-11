@@ -6,7 +6,7 @@ with the validated daylight × malefic classifier, and returns a renderer-neutra
 :class:`SectAnalysis`. It is an *indicator, not an oracle*: sect is only ~70%
 recoverable from biography-thin data (the ceiling is truth resolution, not method),
 so the result is built to be adjudicated by a human with real knowledge, not trusted
-blindly. See ``docs/development/specs/RECTIFICATION_REPORT.md``.
+blindly. See ``docs/development/specs/rectification/RECTIFICATION_REPORT.md``.
 
 Events/temperament are looked up automatically for notables (by ``chart.metadata``
 name) and can be supplied explicitly for anyone.

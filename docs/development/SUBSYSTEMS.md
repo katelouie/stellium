@@ -40,7 +40,7 @@ with return metadata (`return_jd`, `return_datetime`, `natal_longitude`,
 Source: `rectification/`. An honest, human-in-the-loop **sect** (day/night)
 analysis for charts whose birth *time* is uncertain. It does **not** invert time
 (the empirical study found minute-level rectification is an ill-posed inverse —
-see [specs/RECTIFICATION_REPORT.md](./specs/RECTIFICATION_REPORT.md)); it recovers
+see [specs/rectification/RECTIFICATION_REPORT.md](./specs/rectification/RECTIFICATION_REPORT.md)); it recovers
 the one recoverable bit — sect — at ~70% and lays out both hypotheses for
 adjudication. Public API:
 - **`analyze_sect(chart, *, events=None, temperament=None)`** → frozen

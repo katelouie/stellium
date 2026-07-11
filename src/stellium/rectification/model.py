@@ -3,7 +3,7 @@
 A two-feature logistic regression (logit of the daylight prior, malefic-of-sect
 event score), **frozen** from the fit on the 63-chart validated corpus so it needs
 no research data at runtime. LOO-CV 70%, out-of-sample 70.6% — see
-``docs/development/specs/RECTIFICATION_REPORT.md``. This is the only sect signal
+``docs/development/specs/rectification/RECTIFICATION_REPORT.md``. This is the only sect signal
 that survived cross-validation; treat its output as an *indicator, not an oracle*.
 """
 

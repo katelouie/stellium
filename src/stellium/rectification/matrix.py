@@ -9,7 +9,7 @@ One candidate-time sweep feeds two lenses:
 
 Every timing score is whisper-level and never summed; the matrix is a *display* for
 human adjudication. Heavy (~10 s: a 96-candidate sweep with directions per
-candidate). See ``docs/development/specs/RECTIFICATION_REPORT.md``.
+candidate). See ``docs/development/specs/rectification/RECTIFICATION_REPORT.md``.
 """
 
 from __future__ import annotations

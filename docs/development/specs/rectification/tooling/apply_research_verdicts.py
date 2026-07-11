@@ -80,9 +80,9 @@ except ImportError:  # pragma: no cover
     )
 
 # Default: the packaged notables dir, resolved relative to this script's home
-# (docs/development/specs/ -> ../../../src/stellium/data/notables).
+# (docs/development/specs/rectification/tooling/ -> repo-root/src/stellium/data/notables).
 DEFAULT_DATA_DIR = (
-    Path(__file__).resolve().parents[3] / "src" / "stellium" / "data" / "notables"
+    Path(__file__).resolve().parents[5] / "src" / "stellium" / "data" / "notables"
 )
 
 VALID_VERDICTS = {"accept", "accept_soft", "reject", "needs_manual_review"}

@@ -13,7 +13,7 @@ Public API::
     a = analyze_sect(chart, events=...)  # anyone: supply LifeEvents
     print(a.p_day, a.leans)
 
-Full write-up: ``docs/development/specs/RECTIFICATION_REPORT.md``.
+Full write-up: ``docs/development/specs/rectification/RECTIFICATION_REPORT.md``.
 """
 
 from stellium.rectification.analysis import (
