@@ -1,0 +1,2811 @@
+# Rectification corpus — assembled by assemble_corpus.py.
+# birth_data is authoritative from the verified notables DB; events +
+# temperament come from the Phase-2 research batches.
+- name: Amelia Earhart
+  birth_data:
+    date: '1897-07-24'
+    time: '23:30'
+    timezone: America/Chicago
+    place: Atchison, Kansas
+    latitude: 39.5458
+    longitude: -95.3326
+    rodden_rating: AA
+  events:
+  - date: '1920-12-28'
+    precision: day
+    type: spiritual
+    description: Attended a Long Beach/Los Angeles air show with her father; a plane ride days later hooked
+      her on flying.
+    significance: major
+    age_at_event: 23
+    source: Character and Leadership; ourmental.health
+  - date: '1928-06-17'
+    precision: day
+    type: recognition
+    description: Became the first woman to cross the Atlantic by air, as a passenger aboard the Friendship
+      (landed June 18).
+    significance: major
+    age_at_event: 30
+    source: Biography.com; Wikipedia
+  - date: '1931-02-07'
+    precision: day
+    type: relationship
+    description: Married publisher George Palmer Putnam after refusing his proposals six times; called
+      it a 'partnership.'
+    significance: major
+    age_at_event: 33
+    source: PBS American Experience; Biography.com
+  - date: '1932-05-21'
+    precision: day
+    type: recognition
+    description: Became the first woman to fly solo nonstop across the Atlantic (took off May 20, landed
+      Ireland May 21); awarded the Distinguished Flying Cross.
+    significance: major
+    age_at_event: 34
+    source: PBS; Britannica
+  - date: '1932-08-25'
+    precision: day
+    type: recognition
+    description: Became the first woman to fly solo across the North American continent and back (Aug
+      24-25).
+    significance: moderate
+    age_at_event: 35
+    source: PBS American Experience
+  - date: '1935-01-12'
+    precision: day
+    type: recognition
+    description: First person to fly solo from Honolulu to Oakland (departed Jan 11, landed Jan 12).
+    significance: major
+    age_at_event: 37
+    source: Britannica; PBS
+  - date: '1937-06-01'
+    precision: day
+    type: career
+    description: Departed Miami with navigator Fred Noonan on the round-the-world flight attempt (earlier
+      Oakland start March 17 aborted).
+    significance: major
+    age_at_event: 39
+    source: Womens History Museum; Chronicles
+  - date: '1937-07-02'
+    precision: day
+    type: accident
+    description: Disappeared over the Pacific near Howland Island during the round-the-world attempt.
+    significance: major
+    age_at_event: 39
+    source: TIME; Wikipedia
+  - date: '1939-01-05'
+    precision: day
+    type: legal
+    description: Declared legally dead by a Los Angeles court.
+    significance: moderate
+    age_at_event: 41
+    source: PBS; TIME
+  temperament:
+  - trait: Courage / coolness under pressure
+    tags:
+    - courageous
+    - composed
+    evidence: 'Wikipedia: ''coolness under pressure, courage'';  flew through storms and icing on the
+      1932 solo crossing'
+    source: Wikipedia; Character and Leadership
+  - trait: Fierce independence / feminism
+    tags:
+    - independent
+    - principled
+    evidence: Retained her maiden name; called her marriage a partnership 'with dual control';  championed
+      women pilots
+    source: Christian Science Monitor; National Geographic
+  - trait: Shy-but-willful; publicity-savvy self-possession
+    tags:
+    - reserved
+    - determined
+    evidence: '''Gracious and somewhat shy on the outside, willful and independent on the inside'';  carefully
+      managed her image'
+    source: National Geographic (In Praise of Difficult Women)
+  - trait: Persistence / goal-orientation
+    tags:
+    - driven
+    - ambitious
+    evidence: Set seven women's speed/distance records 1930-1935;  described as goal-oriented and persistent
+    source: Wikipedia; PBS American Experience
+  notes: 9 events (fewest of the ten but all sharply dateable and spanning youth to legal death). 1935
+    passenger vs solo distinctions verified.
+- name: Billie Jean King
+  birth_data:
+    date: '1943-11-22'
+    time: '11:45'
+    timezone: America/Los_Angeles
+    place: Long Beach, California
+    latitude: 33.7701
+    longitude: -118.191
+    rodden_rating: AA
+  events:
+  - date: '1961'
+    precision: year
+    type: recognition
+    description: Won the Wimbledon women's doubles title with Karen Hantze (youngest pair to do so), age
+      17
+    significance: major
+    age_at_event: 17
+    source: Britannica; International Tennis Hall of Fame
+  - date: '1965-09-17'
+    precision: day
+    type: relationship
+    description: Married Larry King in Long Beach, California
+    significance: major
+    age_at_event: 21
+    source: Wikipedia 'Billie Jean King'; WMST/Fandom
+  - date: '1966'
+    precision: year
+    type: recognition
+    description: Won her first Wimbledon singles title; became world No. 1
+    significance: major
+    age_at_event: 22
+    source: Britannica; National Women's History Museum
+  - date: '1968'
+    precision: year
+    type: recognition
+    description: Won the Australian Open singles title
+    significance: moderate
+    age_at_event: 24
+    source: Britannica; International Tennis Hall of Fame
+  - date: 1970-10
+    precision: month
+    type: career
+    description: One of the 'Original 9' who launched the Virginia Slims women's professional circuit
+    significance: major
+    age_at_event: 26
+    source: International Tennis Hall of Fame; U.S. National Archives
+  - date: '1971-09-27'
+    precision: day
+    type: windfall
+    description: Became the first woman athlete to earn more than $100,000 in a season, reaching $117,000,
+      clinched by defeating Rosie Casals 7–5, 6–1 at the Virginia Slims Thunderbird Invitational in Phoenix
+    significance: major
+    age_at_event: 27
+    source: International Tennis Hall of Fame (tennisfame.com)
+  - date: '1972'
+    precision: year
+    type: recognition
+    description: Won the French Open singles title; named Sports Illustrated Sportsperson of the Year
+      (first woman)
+    significance: major
+    age_at_event: 28
+    source: Britannica; U.S. National Archives
+  - date: '1973-09-20'
+    precision: day
+    type: recognition
+    description: Defeated Bobby Riggs in the 'Battle of the Sexes' at the Houston Astrodome before ~90
+      million TV viewers
+    significance: major
+    age_at_event: 29
+    source: U.S. National Archives 'Looking Beyond the Battle of the Sexes'; Britannica
+  - date: '1973'
+    precision: year
+    type: career
+    description: Founded and became first president of the Women's Tennis Association (WTA)
+    significance: major
+    age_at_event: 29
+    source: Wikipedia; Britannica
+  - date: '1974'
+    precision: year
+    type: career
+    description: Co-founded the Women's Sports Foundation and womenSports magazine; World TeamTennis began
+      play
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Britannica; National Women's History Museum
+  - date: 1981-05
+    precision: month
+    type: legal
+    description: Publicly outed as gay via a palimony lawsuit by former assistant Marilyn Barnett; lost
+      endorsements
+    significance: major
+    age_at_event: 37
+    source: Biography.com; Britannica; National Women's History Museum
+  - date: '1984'
+    precision: year
+    type: career
+    description: Became major owner of World TeamTennis, having become the first female commissioner of
+      a pro sports league
+    significance: moderate
+    age_at_event: 40
+    source: Wikipedia; Britannica
+  - date: '1987'
+    precision: year
+    type: recognition
+    description: Inducted into the International Tennis Hall of Fame
+    significance: major
+    age_at_event: 43
+    source: International Tennis Hall of Fame; Britannica
+  - date: '1987'
+    precision: year
+    type: relationship
+    description: Divorced Larry King
+    significance: major
+    age_at_event: 43
+    source: Biography.com; Britannica
+  - date: '2018-10-18'
+    precision: day
+    type: relationship
+    description: Married longtime partner Ilana Kloss (officiated by David Dinkins)
+    significance: major
+    age_at_event: 74
+    source: Britannica (married Ilana Kloss, 18 October 2018)
+  temperament:
+  - trait: Fiercely competitive / relentless drive
+    tags:
+    - competitive
+    - driven
+    evidence: Reviewers of her memoir cite 'King's drive to overcome any obstacle'  and her 'entrepreneurial,
+      relentless spirit'
+    source: 'Billie Jean King, All In: An Autobiography (2021); San Diego Union-Tribune review'
+  - trait: Driven activist (from age 12)
+    tags:
+    - activist
+    - principled
+    evidence: 'Self-described age-12 epiphany at an all-white club: vowed to ''champion equality the rest
+      of my life'''
+    source: Billie Jean King, All In (2021); Time interview
+  - trait: Outspoken
+    tags:
+    - outspoken
+    - bold
+    evidence: Became 'an outspoken activist against gender inequality'; lobbied for the ERA and Title
+      IX
+    source: Kirkus review of All In (2021)
+  - trait: Charismatic leader / astute tactician
+    tags:
+    - charismatic
+    - strategic
+    evidence: Described as 'a celebrated battler and astute tactician both on court and off'; founder
+      of WTA and the Women's Sports Foundation
+    source: Irish Times review of All In (2021)
+  notes: Battle of the Sexes date confirmed 20 September 1973. WTT founded 1973, began play 1974; womenSports
+    magazine and Women's Sports Foundation both 1974. Knee operation Jan 1976 (per frozen brief) not independently
+    re-verified here and omitted. Marriage to Ilana Kloss 18 Oct 2018 confirmed. 15 dated events.
+- name: Bruce Lee
+  birth_data:
+    date: '1940-11-27'
+    time: 07:12
+    timezone: America/Los_Angeles
+    place: San Francisco, California, USA
+    latitude: 37.7749
+    longitude: -122.4194
+    rodden_rating: AA
+  events:
+  - date: '1959'
+    precision: year
+    type: relocation
+    description: Returned to the United States (Seattle) from Hong Kong as a young man
+    significance: major
+    age_at_event: 18
+    source: Biography.com; Encyclopedia.com
+  - date: 1961-03
+    precision: month
+    type: education
+    description: Enrolled at the University of Washington
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia 'Bruce Lee'
+  - date: '1964-08-02'
+    precision: day
+    type: recognition
+    description: Demonstrated at the Long Beach International Karate Championships; spotted (via Jay Sebring),
+      leading to The Green Hornet
+    significance: major
+    age_at_event: 23
+    source: World JKD Federation timeline; astro.com Astro-Databank
+  - date: '1964-08-17'
+    precision: day
+    type: relationship
+    description: Married Linda Emery in Seattle
+    significance: major
+    age_at_event: 23
+    source: brucelee.com; Republic World; Wikipedia
+  - date: '1965-02-01'
+    precision: day
+    type: childbirth
+    description: Son Brandon Lee born
+    significance: major
+    age_at_event: 24
+    source: brucelee.com; Republic World; World History Edu
+  - date: '1965-02-08'
+    precision: day
+    type: bereavement_parent
+    description: Father Lee Hoi Chuen died in Hong Kong
+    significance: major
+    age_at_event: 24
+    source: frozen brief; standard Bruce Lee chronologies
+  - date: '1966-09-09'
+    precision: day
+    type: recognition
+    description: The Green Hornet TV series premiered (Lee as Kato)
+    significance: major
+    age_at_event: 25
+    source: World JKD Federation timeline; Wikipedia
+  - date: '1967-02-05'
+    precision: day
+    type: career
+    description: Opened the Los Angeles (Chinatown) branch of the Jun Fan Gung Fu Institute
+    significance: moderate
+    age_at_event: 26
+    source: astro.com Astro-Databank; brucelee.com
+  - date: '1969-04-19'
+    precision: day
+    type: childbirth
+    description: Daughter Shannon Lee born
+    significance: major
+    age_at_event: 28
+    source: brucelee.com; Republic World; Wikipedia
+  - date: '1970'
+    precision: year
+    type: health_crisis
+    description: Suffered a serious back injury; ordered to months of bed rest
+    significance: major
+    age_at_event: 29
+    source: brucelee.com
+  - date: '1971'
+    precision: year
+    type: career
+    description: Starred in his first leading role, The Big Boss (filmed in Thailand), a Hong Kong box-office
+      hit
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Bruce Lee Foundation
+  - date: '1972'
+    precision: year
+    type: career
+    description: Starred in Fist of Fury and wrote/directed The Way of the Dragon
+    significance: major
+    age_at_event: 31
+    source: Wikipedia; Bruce Lee Foundation
+  - date: 1973-02
+    precision: month
+    type: career
+    description: Filming of Enter the Dragon began in Hong Kong (completed April 1973)
+    significance: major
+    age_at_event: 32
+    source: Wikipedia; Bruce Lee chronologies
+  - date: '1973-07-20'
+    precision: day
+    type: health_crisis
+    description: Died in Hong Kong, age 32, of cerebral edema (attributed to a reaction to a painkiller)
+    significance: major
+    age_at_event: 32
+    source: Wikipedia; History.com; Biography.com
+  temperament:
+  - trait: Intensely disciplined / workaholic
+    tags:
+    - disciplined
+    - driven
+    evidence: Polly calls him 'a notorious perfectionist... a workaholic who couldn't let go'
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Perfectionist / craving to be the best
+    tags:
+    - perfectionist
+    - ambitious
+    evidence: 'Polly: his rivalry ''drove Bruce crazy ''cause he was a perfectionist and he always wanted
+      to be the best'''
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Charismatic
+    tags:
+    - charismatic
+    evidence: Described as 'the most charismatic martial artist ever';  commanded any room
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Fiery / hot-tempered, especially in youth
+    tags:
+    - hot-tempered
+    - combative
+    evidence: 'Polly: a ''genuine delinquent''  who loved street brawling; nicknamed ''Little Dragon''
+      for his fiery, hyperactive temper'
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  - trait: Philosophical
+    tags:
+    - philosophical
+    - reflective
+    evidence: Developed the 'be water' philosophy and Jeet Kune Do's individualist ethos
+    source: 'Matthew Polly, Bruce Lee: A Life (2018)'
+  notes: 'SON BRANDON DEATH YEAR: Brandon Lee died 31 March 1993 (NOT 1992 as the ADB paste says) — confirmed
+    by Wikipedia, Biography.com, History.com. DAUGHTER SPELLING: Shannon (not ''Shannen'') — confirmed
+    by brucelee.com and Wikipedia. Marriage 17 Aug 1964 Seattle; Brandon b. 1 Feb 1965; Shannon b. 19
+    April 1969 — all confirmed. Father''s death 8 Feb 1965 (frozen brief, consistent with chronologies).
+    LA Jun Fan institute opened 5 Feb 1967 (Astro-Databank). He lost the ''Kung Fu'' TV role to David
+    Carradine ~1971 (well attested but not separately dated here). 14 dated events.'
+- name: Frank Lloyd Wright
+  birth_data:
+    date: '1867-06-08'
+    time: '17:00'
+    timezone: America/Chicago
+    place: Richland Center, Wisconsin
+    latitude: 43.3355
+    longitude: -90.3854
+    rodden_rating: A
+  events:
+  - date: 1889-06
+    precision: month
+    type: relationship
+    description: Married first wife Catherine 'Kitty' Lee Tobin in Chicago; they would have six children
+    significance: major
+    age_at_event: 22
+    source: 'Meryle Secrest, Frank Lloyd Wright: A Biography (Univ. of Chicago Press, 1992); Wikipedia
+      ''Frank Lloyd Wright'''
+  - date: '1893'
+    precision: year
+    type: career
+    description: Opened his own independent architectural practice in Chicago after leaving Adler & Sullivan
+    significance: major
+    age_at_event: 26
+    source: Frank Lloyd Wright Foundation biography
+  - date: '1909'
+    precision: year
+    type: relocation
+    description: Abandoned his family and practice and eloped to Europe with Mamah Borthwick Cheney
+    significance: major
+    age_at_event: 42
+    source: PBS Ken Burns 'Frank Lloyd Wright'; History.com
+  - date: '1911'
+    precision: year
+    type: relocation
+    description: Built Taliesin near Spring Green, Wisconsin as home and studio with Mamah
+    significance: major
+    age_at_event: 44
+    source: Frank Lloyd Wright Foundation; Keiran Murphy research
+  - date: '1914-08-15'
+    precision: day
+    type: bereavement_other
+    description: Servant Julian Carlton set fire to Taliesin and murdered seven, including Mamah Borthwick
+      and her two children, while Wright was in Chicago
+    significance: major
+    age_at_event: 47
+    source: History.com 'The Massacre at Frank Lloyd Wright's Love Cottage'; Crime Museum
+  - date: '1923-09-01'
+    precision: day
+    type: other
+    description: His Imperial Hotel in Tokyo survived the Great Kanto earthquake, enhancing his reputation
+    significance: moderate
+    age_at_event: 56
+    source: Milwaukee Art Museum biography; PBS
+  - date: 1923-11
+    precision: month
+    type: relationship
+    description: Married second wife Miriam Noel (after Kitty granted divorce in 1922)
+    significance: major
+    age_at_event: 56
+    source: Wikipedia 'Frank Lloyd Wright'
+  - date: '1925-04-20'
+    precision: day
+    type: financial_loss
+    description: Second major fire (electrical) destroyed the living quarters of Taliesin
+    significance: moderate
+    age_at_event: 57
+    source: Guggenheim archives; 'Tweedland' citing biographers
+  - date: '1925-12-02'
+    precision: day
+    type: childbirth
+    description: Daughter Iovanna born to Wright and Olgivanna Lazovich
+    significance: moderate
+    age_at_event: 58
+    source: '''Tweedland'' citing biographers'
+  - date: '1928-08-25'
+    precision: day
+    type: relationship
+    description: Married third wife Olga (Olgivanna) Lazovich at Rancho Santa Fe, California
+    significance: major
+    age_at_event: 61
+    source: Smithsonian Magazine; Guggenheim archives
+  - date: '1932'
+    precision: year
+    type: career
+    description: Founded the Taliesin Fellowship apprenticeship program and published An Autobiography
+    significance: major
+    age_at_event: 65
+    source: Frank Lloyd Wright Foundation
+  - date: '1935'
+    precision: year
+    type: career
+    description: Designed Fallingwater (Kaufmann Residence), Bear Run, PA (built 1936–37)
+    significance: major
+    age_at_event: 68
+    source: Frank Lloyd Wright Foundation; Smithsonian
+  - date: 1943-06
+    precision: month
+    type: career
+    description: Received the commission for the Solomon R. Guggenheim Museum
+    significance: major
+    age_at_event: 76
+    source: Frank Lloyd Wright Foundation
+  - date: '1959-04-09'
+    precision: day
+    type: health_crisis
+    description: Died in Phoenix, Arizona, age 91, six months before the Guggenheim opened
+    significance: major
+    age_at_event: 91
+    source: Britannica; Biography.com
+  temperament:
+  - trait: Honestly arrogant / supremely self-confident
+    tags:
+    - arrogant
+    - self-assured
+    evidence: 'His own credo, recorded by Secrest: ''Early in life I had to choose between honest arrogance
+      and hypocritical humility. I chose honest arrogance and have seen no occasion to change.''  Testified
+      under oath as ''the world''s greatest living architect.'''
+    source: 'Meryle Secrest, Frank Lloyd Wright: A Biography (1992); The Art Story'
+  - trait: Charismatic (charisma that could veer into manipulation)
+    tags:
+    - charismatic
+    evidence: Taliesin Fellowship apprentices described his magnetic, guru-like authority
+    source: Aeon Essays 'Frank Lloyd Wright as a mirror of the American condition'
+  - trait: Egocentric / prone to self-mythologizing and untruth
+    tags:
+    - egocentric
+    - mendacious
+    evidence: Biographers spent effort debunking his lies, e.g. the fabricated nursery-engravings myth
+    source: 'Brendan Gill, Many Masks: A Life of Frank Lloyd Wright (1987); Common Edge'
+  - trait: Financially reckless / spendthrift
+    tags:
+    - extravagant
+    - improvident
+    evidence: Chronically short of funds; expensive tastes dogged him all his life
+    source: Ada Louise Huxtable, Frank Lloyd Wright (2004); Psychology Today
+  - trait: Risk-taking / defiant of convention
+    tags:
+    - defiant
+    - unconventional
+    evidence: Lived 'on the edge'; survived scandal, divorce, bankruptcy and social ostracism
+    source: Ada Louise Huxtable, Frank Lloyd Wright (2004)
+  notes: Wright claimed an 1869 birth year but records confirm 1867. Taliesin massacre date 15 August
+    1914 (History.com, Crime Museum). Marriage months to Noel (Nov 1923) and Olgivanna (25 Aug 1928) well
+    attested. 14 dated events.
+- name: Frida Kahlo
+  birth_data:
+    date: '1907-07-06'
+    time: 08:30
+    timezone: America/Mexico_City
+    place: Coyoacán, Mexico
+    latitude: 19.3467
+    longitude: -99.1618
+    rodden_rating: AA
+  events:
+  - date: '1913'
+    precision: year
+    type: health_crisis
+    description: Contracted polio, aged six, and was bedridden for several months, leaving her right leg
+      withered
+    significance: major
+    age_at_event: 6
+    source: 'V. Budrys, ''Neurological Deficits in the Life and Works of Frida Kahlo,'' European Neurology
+      (Karger): ''Frida Kahlo caught polio in 1913, aged six, and had to spend several months in bed.'''
+  - date: '1922'
+    precision: year
+    type: education
+    description: Entered the National Preparatory School (Escuela Nacional Preparatoria), Mexico City
+    significance: moderate
+    age_at_event: 15
+    source: Britannica; Writers Theatre timeline
+  - date: '1925-09-17'
+    precision: day
+    type: accident
+    description: Near-fatal bus/streetcar collision; an iron handrail impaled her pelvis, fracturing spine,
+      pelvis and leg
+    significance: major
+    age_at_event: 18
+    source: Biography.com 'How a Horrific Bus Accident Changed Frida Kahlo's Life'; Britannica
+  - date: 1928-06
+    precision: month
+    type: relationship
+    description: Introduced to (re-met) Diego Rivera at a party; began a relationship
+    significance: major
+    age_at_event: 20
+    source: Writers Theatre timeline; Biography.com
+  - date: '1929-08-21'
+    precision: day
+    type: relationship
+    description: Married Diego Rivera
+    significance: major
+    age_at_event: 22
+    source: Writers Theatre timeline; Mental Floss
+  - date: 1930-11
+    precision: month
+    type: relocation
+    description: Moved with Rivera to San Francisco
+    significance: moderate
+    age_at_event: 23
+    source: Writers Theatre timeline
+  - date: 1932-04
+    precision: month
+    type: relocation
+    description: Moved to Detroit; Rivera painting murals for the Detroit Institute of Arts
+    significance: moderate
+    age_at_event: 24
+    source: Writers Theatre timeline
+  - date: '1932'
+    precision: year
+    type: health_crisis
+    description: Suffered a miscarriage in Detroit and was hospitalized (inspired 'Henry Ford Hospital')
+    significance: major
+    age_at_event: 25
+    source: Biography.com; Writers Theatre timeline
+  - date: '1932'
+    precision: year
+    type: bereavement_parent
+    description: Her mother, Matilde Calderón, died from surgery complications
+    significance: major
+    age_at_event: 25
+    source: Writers Theatre timeline
+  - date: 1937-01
+    precision: month
+    type: other
+    description: Leon Trotsky arrived and lived at La Casa Azul for two years; she and Trotsky had a brief
+      affair
+    significance: moderate
+    age_at_event: 29
+    source: Writers Theatre timeline; Britannica
+  - date: '1938'
+    precision: year
+    type: recognition
+    description: First solo exhibition, at the Julien Levy Gallery, New York
+    significance: major
+    age_at_event: 31
+    source: Wikipedia 'Frida Kahlo'; Writers Theatre timeline
+  - date: 1939-03
+    precision: month
+    type: recognition
+    description: Traveled to Paris; the Louvre acquired her painting The Frame, the first work by a 20th-century
+      Mexican artist in its collection
+    significance: major
+    age_at_event: 31
+    source: Writers Theatre timeline; Wikipedia
+  - date: 1939-11
+    precision: month
+    type: relationship
+    description: Divorced Diego Rivera
+    significance: major
+    age_at_event: 32
+    source: Writers Theatre timeline; Britannica
+  - date: '1940-12-08'
+    precision: day
+    type: relationship
+    description: Remarried Diego Rivera in a civil ceremony in San Francisco
+    significance: major
+    age_at_event: 33
+    source: Writers Theatre timeline
+  - date: 1941-04
+    precision: month
+    type: bereavement_parent
+    description: Her father, Guillermo Kahlo, died of a heart attack
+    significance: major
+    age_at_event: 33
+    source: Writers Theatre timeline
+  - date: '1943'
+    precision: year
+    type: career
+    description: Began teaching at La Esmeralda art school, Mexico City
+    significance: moderate
+    age_at_event: 35
+    source: Writers Theatre timeline; Britannica
+  - date: '1953'
+    precision: year
+    type: recognition
+    description: First solo exhibition in Mexico (Galería de Arte Contemporáneo); attended in a bed due
+      to illness
+    significance: major
+    age_at_event: 45
+    source: Britannica; Biography.com
+  - date: '1953'
+    precision: year
+    type: health_crisis
+    description: Right leg amputated below the knee due to gangrene
+    significance: major
+    age_at_event: 46
+    source: Biography.com; Britannica
+  - date: '1954-07-13'
+    precision: day
+    type: health_crisis
+    description: Died at La Casa Azul, aged 47, of pulmonary embolism (probable suicide by overdose suspected)
+    significance: major
+    age_at_event: 47
+    source: Biography.com; Wikipedia
+  temperament:
+  - trait: Vivacious / magnetic, with a love of drama and spectacle
+    tags:
+    - vivacious
+    - flamboyant
+    evidence: Herrera describes 'a woman of extreme magnetism and originality'  with a dramatic love of
+      spectacle  (e.g. arriving at her 1953 show by ambulance to a bed in the gallery)
+    source: 'Hayden Herrera, Frida: A Biography of Frida Kahlo (1983)'
+  - trait: Precocious and rebellious
+    tags:
+    - rebellious
+    - defiant
+    evidence: Herrera paints a 'precocious and rebellious child';  she reset her birth year to 1910 to
+      align with the Revolution
+    source: Hayden Herrera, Frida (1983)
+  - trait: Resilient in constant physical pain
+    tags:
+    - resilient
+    - stoic
+    evidence: Lived in lifelong pain after the accident yet her persona remained vibrant; self-portraits
+      read as symbols of resilience
+    source: Hayden Herrera, Frida (1983)
+  - trait: Politically passionate (committed communist)
+    tags:
+    - ideological
+    - passionate
+    evidence: Joined the Mexican Communist Party (1927); lifelong leftist, Mexican-nationalist convictions
+    source: Hayden Herrera, Frida (1983); Wikipedia
+  - trait: Sensual/fiery with bawdy humor
+    tags:
+    - sensual
+    - irreverent
+    evidence: Herrera gives 'intimate descriptions of Kahlo's sensuous and fiery nature';  bawdy language
+      in her letters
+    source: Hayden Herrera, Frida (1983)
+  notes: Divorce 1939 (Nov) and remarriage 8 Dec 1940 well corroborated. Mother died 1932, father April
+    1941. Birth name sometimes given 'Frieda.' Death officially pulmonary embolism; suicide suspected
+    but unconfirmed. 18 dated events.
+- name: Henri Matisse
+  birth_data:
+    date: '1869-12-31'
+    time: '20:00'
+    timezone: Europe/Paris
+    place: Le Cateau, France
+    latitude: 50.0914
+    longitude: 3.5405
+    rodden_rating: AA
+  events:
+  - date: '1887'
+    precision: year
+    type: education
+    description: Went to Paris to study law; later worked as a court administrator in Le Cateau
+    significance: moderate
+    age_at_event: 17
+    source: Sue Young Histories; henrimatisse.org
+  - date: '1889'
+    precision: year
+    type: spiritual
+    description: Discovered painting during convalescence from appendicitis when his mother gave him paints;
+      decided to become an artist
+    significance: major
+    age_at_event: 19
+    source: henrimatisse.org; Galerie-Institut biography
+  - date: '1891'
+    precision: year
+    type: relocation
+    description: Returned to Paris to study art at the Académie Julian; later joined Gustave Moreau's
+      studio
+    significance: major
+    age_at_event: 21
+    source: Wikipedia 'Henri Matisse'
+  - date: '1894'
+    precision: year
+    type: childbirth
+    description: Daughter Marguerite born to model Caroline Joblau
+    significance: moderate
+    age_at_event: 24
+    source: Wikipedia 'Henri Matisse'
+  - date: '1898-01-08'
+    precision: day
+    type: relationship
+    description: Married Amélie Noellie Parayre
+    significance: major
+    age_at_event: 28
+    source: frozen brief (8 January 1898); Wikipedia (marriage 1898)
+  - date: '1898'
+    precision: year
+    type: bereavement_other
+    description: Death of his teacher and mentor Gustave Moreau
+    significance: moderate
+    age_at_event: 28
+    source: Wikipedia 'Henri Matisse'
+  - date: '1899'
+    precision: year
+    type: childbirth
+    description: Son Jean Matisse born
+    significance: moderate
+    age_at_event: 29
+    source: Wikipedia 'Henri Matisse'
+  - date: '1900'
+    precision: year
+    type: childbirth
+    description: Son Pierre Matisse born
+    significance: moderate
+    age_at_event: 30
+    source: Wikipedia; ImpressionistArts timeline
+  - date: '1905'
+    precision: year
+    type: recognition
+    description: Fauvism debuts at the Salon d'Automne; recognized as leader of the Fauves ('les fauves')
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; henrimatisse.org
+  - date: 1941-01
+    precision: month
+    type: health_crisis
+    description: Emergency surgery in Lyon for duodenal cancer; long convalescence began his cut-out period
+    significance: major
+    age_at_event: 71
+    source: Galerie-Institut biography; Matisse Experts
+  - date: 1951-06
+    precision: month
+    type: career
+    description: Completed and inaugurated the Chapelle du Rosaire de Vence (the Matisse Chapel), near
+      Nice
+    significance: major
+    age_at_event: 81
+    source: Galerie-Institut biography; henrimatisse.org
+  - date: '1952'
+    precision: year
+    type: career
+    description: Established the Matisse Museum in his birthplace, Le Cateau-Cambrésis
+    significance: moderate
+    age_at_event: 82
+    source: Wikipedia; Daily Art Fixx
+  - date: '1954-11-03'
+    precision: day
+    type: health_crisis
+    description: Died of a heart attack in Nice, age 84
+    significance: major
+    age_at_event: 84
+    source: Wikipedia; ImpressionistArts timeline
+  temperament:
+  - trait: Methodical / disciplined, obsessively committed to his art
+    tags:
+    - disciplined
+    - driven
+    evidence: Spurling portrays a man 'so overwhelmingly obsessed and committed to being an artist'  that
+      it crowded out other parts of life
+    source: Hilary Spurling, Matisse the Master (2005)
+  - trait: Anxiety-prone / worked under nervous tension
+    tags:
+    - anxious
+    - high-strung
+    evidence: Eyewitnesses described him painting under 'extreme tension' — ''It's nerves'' — in 'the
+      atmosphere of an operating theater'
+    source: Hilary Spurling, Matisse the Master (2005), quoted in Commentary
+  - trait: Intensely private / reserved, bourgeois in habits
+    tags:
+    - reserved
+    - private
+    evidence: Spurling calls him 'an intensely private person' around whom inaccurate gossip had accumulated
+      until her research
+    source: 'Hilary Spurling, Matisse: The Life'
+  - trait: Stubborn 'northern' temperament
+    tags:
+    - stubborn
+    - tenacious
+    evidence: Spurling describes how his 'stubborn northern temperament' sustained him through artistic
+      and financial challenges
+    source: Hilary Spurling, The Unknown Matisse (1998)
+  notes: 'CHAPEL LOCATION: Vence (near Nice), NOT Venice — the frozen brief''s flag is correct; sources
+    confirm Chapelle du Rosaire de Vence, inaugurated June 1951. Marriage 8 January 1898 per frozen brief;
+    most sources give only ''1898'' and one erroneously ''1899.'' Sons: Jean b. 1899, Pierre b. 1900.
+    Amélie sought separation ~1939 (well attested she was estranged; later worked for the Résistance and
+    was jailed). 13 dated events.'
+- name: Jacques Cousteau
+  birth_data:
+    date: '1910-06-11'
+    time: '13:06'
+    timezone: Europe/Paris
+    place: Saint-André-de-Cubzac, France
+    latitude: 44.9954
+    longitude: -0.4441
+    rodden_rating: AA
+  events:
+  - date: '1930'
+    precision: year
+    type: education
+    description: Entered the École navale (French Naval Academy) at Brest; graduated as a gunnery officer.
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia; Britannica
+  - date: '1936'
+    precision: year
+    type: accident
+    description: Near-fatal automobile accident broke both arms and ended his naval-aviation career; rehabilitation
+      swimming led him to the sea.
+    significance: major
+    age_at_event: 25
+    source: ethw.org; famousscientists.org
+  - date: '1937-07-12'
+    precision: day
+    type: relationship
+    description: Married Simone Melchior, his business partner; they had two sons, Jean-Michel (1938)
+      and Philippe (1940).
+    significance: major
+    age_at_event: 27
+    source: Wikipedia
+  - date: '1943'
+    precision: year
+    type: career
+    description: With engineer Émile Gagnan, tested the first Aqua-Lung prototype, enabling extended free
+      diving.
+    significance: major
+    age_at_event: 32
+    source: Wikipedia; Britannica
+  - date: '1945'
+    precision: year
+    type: recognition
+    description: Awarded the Legion of Honour for French Resistance work during WWII.
+    significance: moderate
+    age_at_event: 35
+    source: ADB seed; ethw.org
+  - date: '1957'
+    precision: year
+    type: recognition
+    description: The Silent World (1956 film) won the Academy Award for Best Documentary; had won the
+      Palme d'Or in 1956.
+    significance: major
+    age_at_event: 46
+    source: ethw.org; Britannica
+  - date: '1968'
+    precision: year
+    type: career
+    description: Launched the TV series The Undersea World of Jacques Cousteau (ran to 1976), making him
+      a household name.
+    significance: major
+    age_at_event: 58
+    source: Britannica; Wikipedia
+  - date: '1979-06-28'
+    precision: day
+    type: bereavement_other
+    description: Son Philippe, his designated successor, died in a PBY Catalina flying-boat crash on the
+      Tagus near Lisbon.
+    significance: major
+    age_at_event: 69
+    source: Wikipedia; Biography.com
+  - date: '1985'
+    precision: year
+    type: recognition
+    description: Awarded the US Presidential Medal of Freedom.
+    significance: moderate
+    age_at_event: 75
+    source: ADB seed; Wikipedia
+  - date: '1990'
+    precision: year
+    type: bereavement_other
+    description: Wife Simone died of cancer at age 72.
+    significance: major
+    age_at_event: 79
+    source: EBSCO; Wikipedia
+  - date: '1992'
+    precision: year
+    type: relationship
+    description: Married second wife Francine Triplet.
+    significance: moderate
+    age_at_event: 82
+    source: ADB seed
+  - date: '1997-06-25'
+    precision: day
+    type: bereavement_other
+    description: Died in Paris, age 87.
+    significance: major
+    age_at_event: 87
+    source: Biography.com; Wikipedia
+  temperament:
+  - trait: Insatiable curiosity
+    tags:
+    - curious
+    - exploratory
+    evidence: 'Self-described: explorers are driven by ''a single-minded, insatiable, and even jubilant
+      need to know'''
+    source: Cousteau, The Human, the Orchid, and the Octopus; The Daily Beast
+  - trait: Showman / self-promoter
+    tags:
+    - showman
+    - self-promoting
+    evidence: 'Wikipedia: called himself an ''oceanographic technician'' but was ''in reality a sophisticated
+      showman''; Becoming Cousteau calls him a ''born showman'''
+    source: Wikipedia; Becoming Cousteau (dir. Liz Garbus)
+  - trait: Charismatic leader / TV personality
+    tags:
+    - charismatic
+    - commanding
+    evidence: The Undersea World made him one of the most familiar faces on the planet; Cousteau Society
+      cites his charismatic personality
+    source: The Daily Beast; The Cousteau Society
+  - trait: Restless, driven adventurer with evolving eco-passion
+    tags:
+    - restless
+    - passionate
+    evidence: 'Biographer Brad Matsen portrays a restless inventor/adventurer; Cousteau: curiosity ''began
+      to turn us into environmentalists'''
+    source: 'Brad Matsen, Jacques Cousteau: The Sea King; The Daily Beast'
+  notes: 12 events. Silent World Oscar corrected to 1957 (film 1956) — ADB seed's '1952' is erroneous;
+    flagged. Car accident dated 1936 (some sources say 1933) — flagged.
+- name: K.N. Rao
+  birth_data:
+    date: '1931-10-12'
+    time: 07:54
+    timezone: Asia/Kolkata
+    place: Machilipatnam, India
+    latitude: 16.1833
+    longitude: 81.1333
+    rodden_rating: A
+  events:
+  - date: '1943'
+    precision: year
+    type: education
+    description: Introduced to astrology by his mother, K. Saraswati Devi, at age 12 (after a serious
+      bout of typhoid)
+    significance: major
+    age_at_event: 11
+    source: bvbdelhi.org 'About Mr. K.N. Rao'; Mystical Bee
+  - date: '1957'
+    precision: year
+    type: career
+    description: Joined the Indian Audit and Accounts Service (all-India competition); previously a lecturer
+      in English
+    significance: major
+    age_at_event: 25
+    source: AstroNidan; Mystical Bee
+  - date: '1982'
+    precision: year
+    type: spiritual
+    description: A yogi (Swami Moorkhanandji) prophesied he would be 'the architect of a great astrological
+      renaissance'
+    significance: moderate
+    age_at_event: 50
+    source: bvbdelhi.org 'About Mr. K.N. Rao'; astrojyoti.com
+  - date: '1987'
+    precision: year
+    type: career
+    description: Founded the Institute of Astrology at Bharatiya Vidya Bhavan, New Delhi
+    significance: major
+    age_at_event: 55
+    source: bvbdelhi.org; Mystical Bee
+  - date: 1990-11
+    precision: month
+    type: career
+    description: Retired from the Indian Audit and Accounts Service as Director General
+    significance: major
+    age_at_event: 59
+    source: Dharmapedia (Wikipedia-derived); AstroNidan; PeoplePill
+  - date: '1993'
+    precision: year
+    type: recognition
+    description: First US lecture tour; Chief Guest at the Second Conference of the American Council of
+      Vedic Astrology
+    significance: moderate
+    age_at_event: 61
+    source: Dharmapedia; Mystical Bee
+  temperament:
+  - trait: Disciplined / research-oriented rationalist
+    tags:
+    - disciplined
+    - methodical
+    evidence: Amassed 'more than 50,000 horoscopes with ten important events of each individual noted...
+      the largest individual collection of horoscopes any astrologer perhaps has';  insists on manual
+      calculation and verification
+    source: Journal of Astrology profile (journalofastrology.com); AstroNidan
+  - trait: Non-commercial / principled (never charged fees)
+    tags:
+    - principled
+    - ascetic
+    evidence: Refused to become a professional astrologer or charge fees; taught in an honorary capacity
+    source: journalofastrology.com; bvbdelhi.org
+  - trait: Competitive / games-loving in youth
+    tags:
+    - competitive
+    - playful
+    evidence: Won brilliancy prizes in chess and two state championships in bridge; frequently referenced
+      games in his writing
+    source: bvbdelhi.org 'About Mr. K.N. Rao'
+  - trait: Combative / tenacious in defense of his cause
+    tags:
+    - tenacious
+    - combative
+    evidence: Despite severe diabetes and near-paralysis (past 70),  single-handedly prepared and fought
+      the Supreme Court defense of Vedic astrology as a UGC course
+    source: astrojyoti.com; Mystical Bee; lightonvedicastrology.com interview
+  notes: 'THIN RECORD — private individual. Reliable dated milestones limited to: birth (12 Oct 1931),
+    astrology initiation (1943), joining IAAS (1957), Institute founding (1987), retirement (Nov 1990),
+    first US tour (1993). DEATH: the frozen brief asks to verify a reported 2024 death. This COULD NOT
+    be confirmed and appears CONTRADICTED — Mystical Bee''s biography states that ''as of 2025, he serves
+    as the chief editor of the... Journal of Astrology''  and ''continues to guide [the Bharatiya Vidya
+    Bhavan course] as an advisor and senior teacher'';  The Wire''s 2026 astrologer listing and Zee News
+    (2025) treat him as active; Wikidata records no death date; no obituary was found in mainstream Indian
+    press. RECOMMENDATION: do NOT enter a death date. Only 6 sharply dated events — the expected floor
+    for a private figure.'
+- name: Leonardo da Vinci
+  birth_data:
+    date: '1452-04-23'
+    time: '21:40'
+    timezone: Europe/Rome
+    place: Vinci, Italy
+    latitude: 43.7833
+    longitude: 10.9167
+    rodden_rating: AA
+  events:
+  - date: '1472'
+    precision: year
+    type: career
+    description: Qualified as a master in the Guild of St Luke (painters' guild of Florence)
+    significance: major
+    age_at_event: 20
+    source: Wikipedia 'Leonardo da Vinci'; Britannica
+  - date: '1473-08-05'
+    precision: day
+    type: career
+    description: Drew the Arno valley landscape — his earliest known dated work, inscribed '5 August 1473'
+    significance: moderate
+    age_at_event: 21
+    source: Wikipedia; DiscoveringDaVinci timeline
+  - date: '1476-04-09'
+    precision: day
+    type: legal
+    description: Charged (with three other young men) with sodomy; case dismissed 16 June 1476 for lack
+      of evidence
+    significance: major
+    age_at_event: 23
+    source: Wikipedia 'Leonardo da Vinci'; Prezi timeline citing court records
+  - date: '1482'
+    precision: year
+    type: relocation
+    description: Entered the service of Ludovico Sforza, Duke of Milan; began ~17 years at the Milanese
+      court
+    significance: major
+    age_at_event: 30
+    source: Britannica; Wikipedia
+  - date: '1495'
+    precision: year
+    type: career
+    description: Began The Last Supper at Santa Maria delle Grazie, Milan (completed ~1498)
+    significance: major
+    age_at_event: 43
+    source: Britannica; Wikipedia
+  - date: '1499'
+    precision: year
+    type: relocation
+    description: Ludovico Sforza fell from power; Leonardo left Milan (fled via Venice)
+    significance: major
+    age_at_event: 47
+    source: Wikipedia; Britannica
+  - date: '1500'
+    precision: year
+    type: relocation
+    description: Returned to Florence, hosted by the Servite monks at Santissima Annunziata
+    significance: moderate
+    age_at_event: 48
+    source: leonardoda-vinci.org biography; Wikipedia
+  - date: '1502'
+    precision: year
+    type: career
+    description: Entered service of Cesare Borgia as military architect and engineer
+    significance: major
+    age_at_event: 50
+    source: leonardoda-vinci.org; Wikipedia
+  - date: '1503'
+    precision: year
+    type: career
+    description: Began the Mona Lisa (c. 1503)
+    significance: major
+    age_at_event: 51
+    source: Britannica; Timetoast timeline
+  - date: '1507'
+    precision: year
+    type: career
+    description: Appointed painter and engineer to Louis XII of France
+    significance: moderate
+    age_at_event: 55
+    source: Prezi timeline; Wikipedia
+  - date: '1513'
+    precision: year
+    type: relocation
+    description: Moved to Rome under the patronage of the Medici / Pope Leo X (1513–1516)
+    significance: moderate
+    age_at_event: 61
+    source: frozen brief; Wikipedia
+  - date: '1516'
+    precision: year
+    type: relocation
+    description: Moved to France at the invitation of King Francis I; settled at Clos Lucé, Amboise
+    significance: major
+    age_at_event: 64
+    source: Wikipedia; Britannica
+  - date: '1519-05-02'
+    precision: day
+    type: health_crisis
+    description: Died at Clos Lucé, Amboise, France, age 67
+    significance: major
+    age_at_event: 67
+    source: Wikipedia; Britannica; leonardoda-vinci.org
+  temperament:
+  - trait: Insatiably curious
+    tags:
+    - curious
+    - observant
+    evidence: Isaacson's central thesis; his notebooks are 'the greatest record of curiosity ever created'
+    source: Walter Isaacson, Leonardo da Vinci (2017)
+  - trait: Procrastinating / left many works unfinished
+    tags:
+    - procrastinating
+    - distractible
+    evidence: A chronic procrastinator; contracts were designed to prevent his delays;  abandoned works
+      such as the Sforza horse
+    source: Walter Isaacson, Leonardo da Vinci (2017)
+  - trait: Charming, physically graceful and beautiful
+    tags:
+    - charming
+    - graceful
+    evidence: Vasari's contemporary account praised his physical beauty, grace and charm
+    source: Giorgio Vasari, Lives of the Artists (1550/1568); Isaacson (2017)
+  - trait: Compassionate toward animals / vegetarian
+    tags:
+    - gentle
+    - empathetic
+    evidence: Widely noted vegetarianism; reputedly bought caged birds to free them
+    source: Walter Isaacson, Leonardo da Vinci (2017); Vasari
+  notes: 'PRE-MODERN DATING: most dates are year-precision only. Two day-precise anchors: Arno drawing
+    5 Aug 1473 and sodomy charge 9 April 1476 (dismissed 16 June 1476). Historical birth 15 April 1452
+    (Britannica/Wikipedia) is Old Style/Julian; the frozen chart''s 23 April with a specific time is a
+    rectified/speculative construction — noted as such. The Gregorian calendar was not adopted until 1582,
+    so all these dates are Old Style (Julian). 12 dated events; precision genuinely limited by the pre-modern
+    record.'
+- name: Michael Jordan
+  birth_data:
+    date: '1963-02-17'
+    time: '13:40'
+    timezone: America/New_York
+    place: Brooklyn, New York, USA
+    latitude: 40.6782
+    longitude: -73.9442
+    rodden_rating: AA
+  events:
+  - date: '1982-03-29'
+    precision: day
+    type: recognition
+    description: Hit the game-winning jump shot for North Carolina in the NCAA championship game vs Georgetown;
+      Jordan later called it the major turning point of his career.
+    significance: major
+    age_at_event: 19
+    source: Wikipedia, Michael Jordan; NBA.com Legends profile
+  - date: '1984-06-19'
+    precision: day
+    type: career
+    description: Selected 3rd overall by the Chicago Bulls in the NBA draft.
+    significance: major
+    age_at_event: 21
+    source: Yahoo Sports Michael Jordan timeline; Basketball-Reference
+  - date: '1984-08-10'
+    precision: day
+    type: recognition
+    description: Won Olympic gold with the US team in Los Angeles, scoring 20 in the gold-medal game.
+    significance: moderate
+    age_at_event: 21
+    source: Yahoo Sports timeline
+  - date: '1989-09-02'
+    precision: day
+    type: relationship
+    description: Married Juanita Vanoy in Las Vegas.
+    significance: major
+    age_at_event: 26
+    source: ADB seed, corroborated by biographical timelines
+  - date: '1991-06-12'
+    precision: day
+    type: recognition
+    description: Won first NBA championship with the Bulls (first of six).
+    significance: major
+    age_at_event: 28
+    source: Wikipedia; Britannica
+  - date: '1993-08-03'
+    precision: day
+    type: bereavement_parent
+    description: Father James R. Jordan Sr. murdered; killed July 23, 1993, body found Aug 3, 1993, identified
+      Aug 13.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia James R. Jordan Sr.; NBC Chicago timeline
+  - date: '1993-10-06'
+    precision: day
+    type: career
+    description: Announced first retirement from the NBA, later playing minor-league baseball.
+    significance: major
+    age_at_event: 30
+    source: Yahoo Sports timeline
+  - date: '1995-03-18'
+    precision: day
+    type: career
+    description: Returned to the Bulls with a two-word statement, 'I'm back.'
+    significance: major
+    age_at_event: 32
+    source: Yahoo Sports timeline; Britannica
+  - date: '1997-06-11'
+    precision: day
+    type: recognition
+    description: 'The ''Flu Game'' (Game 5 of the NBA Finals at Utah''s Delta Center): Jordan scored 38
+      points (7 reb, 5 ast, 3 stl) in a 90-88 Bulls win while ill, hitting a go-ahead 3-pointer with ~25
+      seconds left; trainer Tim Grover later attributed the illness to food poisoning.'
+    significance: moderate
+    age_at_event: 34
+    source: NBA.com; Andscape
+  - date: '1999-01-13'
+    precision: day
+    type: career
+    description: Announced second retirement.
+    significance: moderate
+    age_at_event: 35
+    source: ADB seed; Wikipedia
+  - date: '2009-09-11'
+    precision: day
+    type: recognition
+    description: Inducted into the Naismith Memorial Basketball Hall of Fame.
+    significance: major
+    age_at_event: 46
+    source: Yahoo Sports timeline
+  - date: '2013-04-27'
+    precision: day
+    type: relationship
+    description: Married Yvette Prieto.
+    significance: moderate
+    age_at_event: 50
+    source: ADB seed
+  temperament:
+  - trait: Ferocious, all-consuming will to win
+    tags:
+    - competitive
+    - driven
+    evidence: Self-described ('My mentality was to go and win at all cost') and corroborated by teammates/reporters
+      in The Last Dance
+    source: Andscape; Jordan quotes in The Last Dance
+  - trait: Uses perceived slights as fuel; manufactures rivalries
+    tags:
+    - combative
+    - vindictive
+    evidence: 'Documented invention of the LaBradford Smith slight; reporter Michael Wilbon: he wanted
+      to ''humiliate you'''
+    source: Character and Leadership; Salesman on Fire analysis
+  - trait: Demanding, confrontational team leader
+    tags:
+    - intense
+    - exacting
+    evidence: Teammates (Pippen, Kerr) describe practices as demanding; he ridiculed teammates to raise
+      standards
+    source: The Last Dance; sportpersonalities analysis
+  - trait: Relentless work ethic; played through illness
+    tags:
+    - disciplined
+    - resilient
+    evidence: 1997 'Flu Game' (38 points while ill); rarely missed games
+    source: Basketball Mindset Training; multiple biographies
+  notes: 'Father''s death: killed July 23, 1993; body found Aug 3; identified Aug 13 — conflict flagged.
+    12 events across life stages and types.'
+- name: Muhammad Ali
+  birth_data:
+    date: '1942-01-17'
+    time: '18:35'
+    timezone: America/Kentucky/Louisville
+    place: Louisville, Kentucky, USA
+    latitude: 38.2527
+    longitude: -85.7585
+    rodden_rating: AA
+  events:
+  - date: 1960-09
+    precision: month
+    type: recognition
+    description: Won light-heavyweight gold medal at the Rome Olympics, age 18.
+    significance: major
+    age_at_event: 18
+    source: Players Bio; Biography.com
+  - date: '1960-10-29'
+    precision: day
+    type: career
+    description: Professional boxing debut, a six-round decision over Tunney Hunsaker.
+    significance: moderate
+    age_at_event: 18
+    source: Players Bio; ADB seed
+  - date: '1964-02-25'
+    precision: day
+    type: recognition
+    description: Beat Sonny Liston to become world heavyweight champion; changed name to Muhammad Ali
+      shortly after.
+    significance: major
+    age_at_event: 22
+    source: Wikipedia; Biography.com
+  - date: '1964-08-14'
+    precision: day
+    type: relationship
+    description: Married first wife Sonji Roi (divorced ~1965/1966).
+    significance: moderate
+    age_at_event: 22
+    source: ADB seed; Biography.com
+  - date: 1967-04
+    precision: month
+    type: legal
+    description: Refused induction into the US Army; stripped of title and boxing license, convicted of
+      draft evasion.
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; Biography.com
+  - date: '1967-08-18'
+    precision: day
+    type: relationship
+    description: Married second wife Belinda Boyd (later Khalilah Ali); divorced 1977.
+    significance: moderate
+    age_at_event: 25
+    source: Wikipedia Khalilah Ali
+  - date: 1971-06
+    precision: month
+    type: legal
+    description: US Supreme Court overturned his draft-evasion conviction.
+    significance: major
+    age_at_event: 29
+    source: Biography.com
+  - date: '1974-10-30'
+    precision: day
+    type: recognition
+    description: Beat George Foreman ('Rumble in the Jungle') to regain the heavyweight title.
+    significance: major
+    age_at_event: 32
+    source: Wikipedia
+  - date: '1975-10-01'
+    precision: day
+    type: recognition
+    description: Beat Joe Frazier in the 'Thrilla in Manila.'
+    significance: major
+    age_at_event: 33
+    source: ADB seed; Wikipedia
+  - date: '1977'
+    precision: year
+    type: relationship
+    description: Married third wife Veronica Porché (divorced 1986).
+    significance: moderate
+    age_at_event: 35
+    source: Biography.com; Wikipedia
+  - date: '1984'
+    precision: year
+    type: health_crisis
+    description: Diagnosed with Parkinson's syndrome.
+    significance: major
+    age_at_event: 42
+    source: ADB seed; Wikipedia
+  - date: '1986-11-19'
+    precision: day
+    type: relationship
+    description: Married fourth and final wife Yolanda 'Lonnie' Williams.
+    significance: moderate
+    age_at_event: 44
+    source: Wikipedia
+  - date: '1996-07-19'
+    precision: day
+    type: recognition
+    description: Lit the Olympic cauldron at the Atlanta Summer Games.
+    significance: major
+    age_at_event: 54
+    source: ADB seed; NPR/Eig
+  - date: '2016-06-03'
+    precision: day
+    type: bereavement_other
+    description: Died of septic shock after respiratory illness, age 74.
+    significance: major
+    age_at_event: 74
+    source: Wikipedia; Biography.com
+  temperament:
+  - trait: Brash, boastful self-confidence
+    tags:
+    - confident
+    - self-promoting
+    evidence: Self-described from age 12 ('I'm going to be the greatest'); biographer Jonathan Eig documents
+      lifelong self-belief
+    source: 'NPR interview with Jonathan Eig, Ali: A Life'
+  - trait: Charismatic, magnetic presence
+    tags:
+    - charismatic
+    - extroverted
+    evidence: 'Eig: ''Everybody just loved being in his presence… impossible to be in a bad mood when
+      you were in the room with Ali'''
+    source: NPR interview with Jonathan Eig
+  - trait: Principled and defiant (draft refusal)
+    tags:
+    - principled
+    - defiant
+    evidence: Refused Vietnam draft at cost of his title; 'I ain't got to be what nobody else want me
+      to be'
+    source: 'Eig, Ali: A Life; Muhammad Ali Center core principles'
+  - trait: Cruel streak / cutting taunts
+    tags:
+    - combative
+    - cruel
+    evidence: 'Eig: ''up rose the cruel Ali… who flared in anger''; publicly humiliated opponents and
+      friends'
+    source: 'NPR review of Eig, Ali: A Life'
+  notes: 'Wife sequence verified: Sonji Roi (1964-66), Belinda/Khalilah (1967-77), Veronica Porché (1977-86),
+    Lonnie (1986-2016). Belinda marriage date Aug 18, 1967 per Wikipedia.  14 events.'
+- name: Neil Armstrong
+  birth_data:
+    date: '1930-08-05'
+    time: 00:31
+    timezone: America/New_York
+    place: Wapakoneta, Ohio
+    latitude: 40.5678
+    longitude: -84.1936
+    rodden_rating: AA
+  events:
+  - date: '1946-08-05'
+    precision: day
+    type: recognition
+    description: Earned his student pilot's license on his 16th birthday, before he had a driver's license.
+    significance: moderate
+    age_at_event: 16
+    source: CNN Fast Facts; Biography.com
+  - date: '1951'
+    precision: year
+    type: career
+    description: Flew combat in the Korean War as a US Navy pilot (78 combat missions, 1951-1952).
+    significance: major
+    age_at_event: 21
+    source: Biography.com; Wikipedia
+  - date: '1956-01-28'
+    precision: day
+    type: relationship
+    description: Married Janet Shearon in Wilmette, Illinois.
+    significance: major
+    age_at_event: 25
+    source: Biography.com; CNN Fast Facts
+  - date: '1962-01-28'
+    precision: day
+    type: bereavement_other
+    description: Daughter Karen (b. 1959) died of an inoperable brain tumor, age 2 (on the Armstrongs'
+      sixth wedding anniversary).
+    significance: major
+    age_at_event: 31
+    source: Timepath; elivestory
+  - date: '1962-09-17'
+    precision: day
+    type: career
+    description: Selected for NASA's second astronaut group ('New Nine'), NASA's first civilian astronaut.
+    significance: major
+    age_at_event: 32
+    source: CNN Fast Facts; Wikipedia
+  - date: '1966-03-16'
+    precision: day
+    type: recognition
+    description: Commanded Gemini 8, performing the first docking of two spacecraft in orbit;  aborted
+      after a stuck thruster.
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Biography.com
+  - date: 1968-05
+    precision: month
+    type: accident
+    description: Ejected moments before his Lunar Landing Research Vehicle crashed during training.
+    significance: major
+    age_at_event: 37
+    source: Wikipedia; ADB seed
+  - date: '1969-07-16'
+    precision: day
+    type: career
+    description: Launched from Kennedy Space Center as commander of Apollo 11.
+    significance: major
+    age_at_event: 38
+    source: CNN Fast Facts; Wikipedia
+  - date: '1969-07-20'
+    precision: day
+    type: recognition
+    description: Became the first person to walk on the Moon,  stepping onto the surface at 10:56 PM EDT
+      July 20 (02:56 UTC July 21).
+    significance: major
+    age_at_event: 38
+    source: Wikipedia; officetimeline (time detail)
+  - date: '1969-08-13'
+    precision: day
+    type: recognition
+    description: Honored with a ticker-tape parade in New York City after the mission.
+    significance: moderate
+    age_at_event: 39
+    source: CNN Fast Facts; timeline-of-humanity
+  - date: '1971'
+    precision: year
+    type: career
+    description: Left NASA to become a professor of aerospace engineering at the University of Cincinnati.
+    significance: moderate
+    age_at_event: 40
+    source: Biography.com; Wikipedia
+  - date: '1994'
+    precision: year
+    type: relationship
+    description: Divorced Janet after 38 years; married Carol Held Knight in Ohio on June 12, 1994.
+    significance: major
+    age_at_event: 63
+    source: Wikipedia; CNN Fast Facts
+  - date: '2012-08-07'
+    precision: day
+    type: health_crisis
+    description: Underwent heart bypass surgery in Cincinnati.
+    significance: major
+    age_at_event: 82
+    source: Biography.com; ADB seed
+  - date: '2012-08-25'
+    precision: day
+    type: bereavement_other
+    description: Died of complications from the surgery, age 82.
+    significance: major
+    age_at_event: 82
+    source: Timepath; Biography.com
+  temperament:
+  - trait: Modest / self-effacing
+    tags:
+    - modest
+    - humble
+    evidence: 'Biographer James Hansen: ''mild and modest personality'';  when asked if he was someone
+      to know, replied ''Probably not'''
+    source: James Hansen, First Man; Space.com (Hansen op-ed)
+  - trait: Reticent / intensely private introvert
+    tags:
+    - private
+    - introverted
+    evidence: 'Hansen: his ''reticence was simply part and parcel of his personality''; Collins said he
+      was ''unwilling'' to reveal inner thoughts'
+    source: James Hansen, First Man; NBC News
+  - trait: Calm under pressure / cool detachment
+    tags:
+    - composed
+    - unflappable
+    evidence: 'Flight director Chris Kraft: ''Calm, quiet and absolute confidence… the Lindbergh type.
+      He had no ego'';  landed Eagle with fuel nearly exhausted'
+    source: Chris Kraft, via HowStuffWorks/New Yorker
+  - trait: Methodical, detail-driven engineer
+    tags:
+    - analytical
+    - meticulous
+    evidence: As a boy kept a notebook logging model-plane flights;  self-described 'nerdy engineer'
+    source: James Hansen, First Man; NBC News
+  notes: 'Moon-step time reconciled: 10:56 PM EDT July 20, 1969 = 02:56 UTC July 21 (ADB AM listing is
+    the UTC value). Eagle fuel at touchdown: post-mission analysis showed ~45 seconds remaining; Mission
+    Control''s real-time reading of ~17 seconds was distorted by fuel-tank sloshing (NASA/Lunar and Planetary
+    Institute). 14 events.'
+- name: Pablo Picasso
+  birth_data:
+    date: '1881-10-25'
+    time: '23:15'
+    timezone: Europe/Madrid
+    place: Málaga, Spain
+    latitude: 36.7213
+    longitude: -4.4213
+    rodden_rating: AA
+  events:
+  - date: '1895-01-10'
+    precision: day
+    type: bereavement_other
+    description: His younger sister Conchita (Concepción) died of diphtheria
+    significance: major
+    age_at_event: 13
+    source: frozen brief; Museo Picasso Málaga chronology
+  - date: '1896'
+    precision: year
+    type: education
+    description: Entered formal art training / prepared for the academies (frozen brief cites Academy
+      San Fernando, Madrid, Oct 1896)
+    significance: moderate
+    age_at_event: 14
+    source: frozen brief; Musée Picasso Paris timeline
+  - date: '1901'
+    precision: year
+    type: bereavement_other
+    description: Close friend Carles Casagemas committed suicide, helping trigger Picasso's Blue Period
+    significance: major
+    age_at_event: 19
+    source: The Art Story; Musée Picasso Paris
+  - date: '1901'
+    precision: year
+    type: career
+    description: Established his first Paris studio; Blue Period begins (1901–04)
+    significance: major
+    age_at_event: 19
+    source: Frist Art Museum chronology
+  - date: '1907'
+    precision: year
+    type: career
+    description: Painted Les Demoiselles d'Avignon, the proto-Cubist breakthrough
+    significance: major
+    age_at_event: 25
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1918-07-12'
+    precision: day
+    type: relationship
+    description: Married Olga Khokhlova at the Russian Orthodox Cathedral, Rue Daru, Paris
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'Olga Khokhlova'; Museo Picasso Málaga
+  - date: '1921-02-04'
+    precision: day
+    type: childbirth
+    description: Son Paulo (Paul Joseph) Picasso born
+    significance: major
+    age_at_event: 39
+    source: Wikipedia 'Pablo Picasso' and 'Olga Khokhlova'
+  - date: '1927'
+    precision: year
+    type: relationship
+    description: Met 17-year-old Marie-Thérèse Walter; began a secret affair
+    significance: major
+    age_at_event: 45
+    source: Frist Art Museum chronology; Wikipedia
+  - date: '1935-09-05'
+    precision: day
+    type: childbirth
+    description: Daughter Maya (Maria de la Concepción) born to Marie-Thérèse Walter
+    significance: major
+    age_at_event: 53
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1935'
+    precision: year
+    type: relationship
+    description: Separated from Olga (who refused divorce); they remained legally married until her death
+      in 1955
+    significance: moderate
+    age_at_event: 53
+    source: Britannica; Wikipedia
+  - date: '1937'
+    precision: year
+    type: career
+    description: Painted Guernica for the Spanish Pavilion at the Paris International Exposition
+    significance: major
+    age_at_event: 55
+    source: Wikipedia; Musée Picasso Paris
+  - date: '1939'
+    precision: year
+    type: bereavement_parent
+    description: His mother, María Picasso y López, died in Barcelona
+    significance: major
+    age_at_event: 57
+    source: Frist Art Museum chronology; Musée Picasso Paris timeline
+  - date: '1944-10-05'
+    precision: day
+    type: other
+    description: Publicly disclosed that he had joined the French Communist Party
+    significance: moderate
+    age_at_event: 62
+    source: frozen brief; standard Picasso chronologies
+  - date: '1947-05-15'
+    precision: day
+    type: childbirth
+    description: Son Claude Ruiz Picasso born to Françoise Gilot
+    significance: major
+    age_at_event: 65
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1949-04-19'
+    precision: day
+    type: childbirth
+    description: Daughter Paloma Picasso born to Françoise Gilot
+    significance: major
+    age_at_event: 67
+    source: Wikipedia 'Pablo Picasso'
+  - date: '1961-03-02'
+    precision: day
+    type: relationship
+    description: Married Jacqueline Roque (after Olga's death in 1955)
+    significance: major
+    age_at_event: 79
+    source: frozen brief; Frist Art Museum chronology
+  - date: '1973-04-08'
+    precision: day
+    type: health_crisis
+    description: Died at Mougins, France, age 91
+    significance: major
+    age_at_event: 91
+    source: Wikipedia 'Pablo Picasso'
+  temperament:
+  - trait: Charismatic / magnetic but mercurial
+    tags:
+    - charismatic
+    - mercurial
+    evidence: 'Richardson: ''tender and brutal, forthright and devious, charming and horrifying''; a man
+      of myriad contradictions'
+    source: John Richardson, A Life of Picasso (1991–2021)
+  - trait: Domineering / controlling, especially with women
+    tags:
+    - domineering
+    - controlling
+    evidence: Richardson notes 'misogynist machismo' and 'monstrous self-absorption'; women 'sacrificed
+      to feed his art'
+    source: John Richardson, A Life of Picasso
+  - trait: Superstitious
+    tags:
+    - superstitious
+    evidence: 'Richardson: his ''superstitious nature and fear of the power of evil should never be underestimated'''
+    source: John Richardson, A Life of Picasso
+  - trait: Obsessively driven / prolific
+    tags:
+    - driven
+    - obsessive
+    evidence: Richardson analyzes 'the traumas and obsessions that triggered his explosive genius';  a
+      'rage to master'
+    source: John Richardson, A Life of Picasso; National Geographic
+  - trait: Stubborn / self-absorbed
+    tags:
+    - stubborn
+    - egocentric
+    evidence: Described in Vol. 1 as 'stubborn, deeply superstitious, rather childish'
+    source: John Richardson, A Life of Picasso, Vol. 1
+  notes: 'Dense, well-dated record. Sister Conchita d. 10 Jan 1895; Paulo b. 4 Feb 1921; Maya b. 5 Sept
+    1935; Claude b. 15 May 1947; Paloma b. 19 April 1949; married Jacqueline 2 March 1961 — all confirmed.
+    CONFLICT: the frozen brief lists ''mother died 13 January 1938,'' but the well-documented date is
+    1939 (Frist Art Museum and Musée Picasso Paris both place María''s death in 1939). Recommend 1939.
+    17 dated events.'
+- name: Pelé
+  birth_data:
+    date: '1940-10-21'
+    time: 03:00
+    timezone: America/Sao_Paulo
+    place: Três Corações (Minas Gerais), Brazil
+    latitude: -21.7149
+    longitude: -45.2533
+    rodden_rating: AA
+  events:
+  - date: '1956-09-07'
+    precision: day
+    type: career
+    description: Scored his first professional goal on his league debut for Santos vs Corinthians.
+    significance: major
+    age_at_event: 15
+    source: CNN Pelé Fast Facts
+  - date: '1958-06-29'
+    precision: day
+    type: recognition
+    description: Won first World Cup with Brazil at age 17, the youngest World Cup winner.
+    significance: major
+    age_at_event: 17
+    source: Wikipedia; New World Encyclopedia
+  - date: '1962'
+    precision: year
+    type: recognition
+    description: Won second World Cup (Chile), though injured early in the tournament.
+    significance: major
+    age_at_event: 21
+    source: Wikipedia
+  - date: '1966-02-21'
+    precision: day
+    type: relationship
+    description: Married first wife Rosemeri dos Reis Cholbi.
+    significance: major
+    age_at_event: 25
+    source: Kiddle/Wikipedia; ADB seed
+  - date: '1969-11-19'
+    precision: day
+    type: recognition
+    description: Scored his 1,000th career goal, a national event in Brazil.
+    significance: major
+    age_at_event: 29
+    source: CNN Pelé Fast Facts
+  - date: '1970-06-21'
+    precision: day
+    type: recognition
+    description: Won third World Cup (Mexico); named player of the tournament.
+    significance: major
+    age_at_event: 29
+    source: StarsUnfolded; Wikipedia
+  - date: '1975'
+    precision: year
+    type: relocation
+    description: Came out of retirement to sign with the New York Cosmos (NASL), relocating to the US;
+      debut June 15, 1975.
+    significance: major
+    age_at_event: 34
+    source: EBSCO; New World Encyclopedia
+  - date: '1977-10-01'
+    precision: day
+    type: career
+    description: Played final match, an exhibition between Cosmos and Santos; played a half for each.
+    significance: major
+    age_at_event: 36
+    source: CNN; New World Encyclopedia
+  - date: '1982'
+    precision: year
+    type: relationship
+    description: Divorced Rosemeri (in the Dominican Republic).
+    significance: moderate
+    age_at_event: 41
+    source: Wikipedia; EBSCO
+  - date: 1994-04
+    precision: month
+    type: relationship
+    description: Married second wife, psychologist/gospel singer Assíria Lemos Seixas.
+    significance: moderate
+    age_at_event: 53
+    source: Kiddle/Wikipedia
+  - date: '1996-09-28'
+    precision: day
+    type: childbirth
+    description: Twins Joshua and Celeste born (via fertility treatment).
+    significance: moderate
+    age_at_event: 55
+    source: Kiddle/Wikipedia; ADB seed
+  - date: 2016-07
+    precision: month
+    type: relationship
+    description: Married third wife Marcia Aoki.
+    significance: moderate
+    age_at_event: 75
+    source: Kiddle/Wikipedia
+  - date: '2022-12-29'
+    precision: day
+    type: bereavement_other
+    description: Died in São Paulo of multiple organ failure related to colon cancer, age 82.
+    significance: major
+    age_at_event: 82
+    source: Kiddle/Wikipedia
+  temperament:
+  - trait: Humility / down-to-earth
+    tags:
+    - humble
+    - grounded
+    evidence: Self-described distinction between 'Edson' (private, normal man) and 'Pelé' (the idol);
+      EBSCO calls him 'gracious and accommodating'
+    source: Wikipedia (Pelé quote); EBSCO Research Starters
+  - trait: Sportsmanship and grace
+    tags:
+    - gracious
+    - sporting
+    evidence: '1970 jersey-exchange with Bobby Moore; NYT: ''No gloating and no fist-pumping'''
+    source: New York Times, via Wikipedia
+  - trait: Joyful warmth connecting with people
+    tags:
+    - warm
+    - charismatic
+    evidence: 'His ghostwriter Brian Winter: ''authentic joy in connecting with people… special magic
+      and charisma'''
+    source: Americas Quarterly (Brian Winter)
+  - trait: Improvisational genius on the pitch
+    tags:
+    - creative
+    - instinctive
+    evidence: 'Teammate Carlos Alberto Torres: ''His great secret was improvisation'''
+    source: via Wikipedia
+  notes: First-marriage date given as 21 February 1966 (Wikipedia/Kiddle); some sources list only '1966'
+    — flagged. Divorce commonly dated 1982 though separation began ~1978 — flagged. 13 events.
+- name: Salvador Dali
+  birth_data:
+    date: '1904-05-11'
+    time: 08:45
+    timezone: Europe/Madrid
+    place: Figueres, Spain
+    latitude: 42.2667
+    longitude: 2.9617
+    rodden_rating: AA
+  events:
+  - date: '1918'
+    precision: year
+    type: recognition
+    description: First public exhibition, at the Municipal Theatre in Figueres, age 14
+    significance: moderate
+    age_at_event: 14
+    source: New World Encyclopedia; thedali.org timeline
+  - date: 1921-02
+    precision: month
+    type: bereavement_parent
+    description: His mother, Felipa, died of breast cancer (Dalí was 16)
+    significance: major
+    age_at_event: 16
+    source: Wikipedia 'Salvador Dalí'; dalipaintings.com
+  - date: '1922'
+    precision: year
+    type: education
+    description: Moved to the Residencia de Estudiantes, Madrid; studied at the Real Academia de San Fernando;
+      befriended Lorca and Buñuel
+    significance: major
+    age_at_event: 18
+    source: Wikipedia; dali-gallery.com
+  - date: '1926'
+    precision: year
+    type: education
+    description: Expelled from the Real Academia de San Fernando shortly before final exams; made first
+      visit to Paris and met Picasso
+    significance: major
+    age_at_event: 22
+    source: Wikipedia 'Salvador Dalí'; Biography.com
+  - date: '1929'
+    precision: year
+    type: recognition
+    description: Premiere of Un Chien Andalou (with Buñuel); first Paris solo exhibition at the Goemans
+      Gallery
+    significance: major
+    age_at_event: 25
+    source: dali-gallery.com; Fundació Gala-Salvador Dalí
+  - date: 1929-08
+    precision: month
+    type: relationship
+    description: Met Gala (Elena Diakonova) when she visited Cadaqués; began lifelong relationship
+    significance: major
+    age_at_event: 25
+    source: Wikipedia 'Gala Dalí'; Dalí Universe
+  - date: '1929-12-28'
+    precision: day
+    type: bereavement_other
+    description: Violently thrown out of the family home by his father and disinherited
+    significance: moderate
+    age_at_event: 25
+    source: Wikipedia 'Salvador Dalí' (biography summaries)
+  - date: '1934-01-30'
+    precision: day
+    type: relationship
+    description: Married Gala in a civil ceremony (Paris)
+    significance: major
+    age_at_event: 29
+    source: dali-gallery.com timeline (30 January 1934)
+  - date: '1934'
+    precision: year
+    type: legal
+    description: Subjected to a 'trial' and formally expelled from the Surrealist group
+    significance: moderate
+    age_at_event: 30
+    source: Wikipedia 'Salvador Dalí'; Biography.com
+  - date: '1934'
+    precision: year
+    type: relocation
+    description: First trip to New York with Gala; great success at the Julien Levy Gallery
+    significance: moderate
+    age_at_event: 30
+    source: dali-gallery.com; Wikipedia
+  - date: '1936'
+    precision: year
+    type: recognition
+    description: Featured on the cover of Time magazine
+    significance: major
+    age_at_event: 32
+    source: Fundació Gala-Salvador Dalí timeline; Dalí Universe
+  - date: '1940'
+    precision: year
+    type: relocation
+    description: Fled to the United States (lived there ~8 years during WWII)
+    significance: major
+    age_at_event: 36
+    source: thedali.org timeline
+  - date: '1974'
+    precision: year
+    type: career
+    description: Teatro-Museo Dalí officially opened in Figueres
+    significance: major
+    age_at_event: 70
+    source: thedali.org; Wikipedia
+  - date: '1982'
+    precision: year
+    type: bereavement_other
+    description: Death of his wife Gala; sent him into deep depression
+    significance: major
+    age_at_event: 78
+    source: Biography.com; artelino.com
+  - date: '1984'
+    precision: year
+    type: accident
+    description: Severely burned in a bedroom fire at Púbol castle; thereafter used a wheelchair
+    significance: major
+    age_at_event: 80
+    source: Wikipedia; Biography.com
+  - date: '1989-01-23'
+    precision: day
+    type: health_crisis
+    description: Died of heart failure in Figueres, age 84
+    significance: major
+    age_at_event: 84
+    source: Wikipedia; thedali.org
+  temperament:
+  - trait: Exhibitionist / showman
+    tags:
+    - exhibitionist
+    - attention-seeking
+    evidence: Eccentric public behavior often drew more attention than his art (lectured in a diving suit;  filled
+      a car with cauliflowers)
+    source: Wikipedia 'Salvador Dalí' summarizing standard biographies
+  - trait: Eccentric (cultivated 'madman' image)
+    tags:
+    - eccentric
+    evidence: Critics describe a 'carefully cultivated image of a madman';  contemporaries decried his
+      'clowneries'
+    source: George Orwell, 'Benefit of Clergy' (1944); Wikipedia
+  - trait: Avaricious for money ('Avida Dollars')
+    tags:
+    - avaricious
+    - commercial
+    evidence: In 1939 André Breton coined the anagram 'Avida Dollars' ('eager for dollars')  mocking Dalí's
+      commercialism,  in the same period Breton announced Dalí's expulsion from the Surrealist group
+    source: André Breton (1939), cited in Wikipedia 'Salvador Dalí'
+  - trait: Anxious / phobic
+    tags:
+    - anxious
+    - phobic
+    evidence: Lifelong phobias and obsessions (germs, grasshoppers) rooted in the 'dead brother' trauma
+    source: Ian Gibson, The Shameful Life of Salvador Dalí (1997)
+  notes: 'Marriage to Gala: dali-gallery.com gives a civil ceremony on 30 January 1934; other sources
+    say only ''1934''; a Catholic remarriage followed in 1958. Mother died Feb 1921 (frozen brief says
+    ''1920 age 16''; sources consistently say 1921, age 16). CONFLICT: the frozen brief''s ''expelled
+    from academy 1924 and again 1926'' conflates a 1923 suspension / 1924 imprisonment (Girona) with the
+    single definitive 1926 expulsion — flagged. 15 dated events.'
+- name: Serena Williams
+  birth_data:
+    date: '1981-09-26'
+    time: '20:28'
+    timezone: America/Detroit
+    place: Saginaw, Michigan, USA
+    latitude: 43.4195
+    longitude: -83.9508
+    rodden_rating: AA
+  events:
+  - date: 1995-09
+    precision: month
+    type: career
+    description: Turned professional at 14, losing her debut at the Bell Challenge in Quebec City.
+    significance: major
+    age_at_event: 14
+    source: CNN/Al Jazeera timelines
+  - date: 1998-02
+    precision: month
+    type: windfall
+    description: Signed a five-year Puma deal worth a reported $12-13 million, officially announced February
+      1998 when she was ranked world No. 41.
+    significance: moderate
+    age_at_event: 16
+    source: Andscape ('The little-known story of Serena Williams' first endorsement deal'); Sportskeeda
+  - date: '1999-09-11'
+    precision: day
+    type: recognition
+    description: Won first Grand Slam singles title at the US Open, beating Martina Hingis.
+    significance: major
+    age_at_event: 17
+    source: Al Jazeera; Britannica
+  - date: '2002-07-08'
+    precision: day
+    type: recognition
+    description: Reached world No. 1 in singles for the first time.
+    significance: major
+    age_at_event: 20
+    source: ADB seed; WTA records
+  - date: '2002-10-29'
+    precision: day
+    type: bereavement_other
+    description: Parents Richard Williams and Oracene Price divorced.
+    significance: moderate
+    age_at_event: 21
+    source: ADB seed
+  - date: '2003-09-14'
+    precision: day
+    type: bereavement_other
+    description: Half-sister Yetunde Price shot and killed in Compton.
+    significance: major
+    age_at_event: 21
+    source: ADB seed; press reports
+  - date: 2011-02
+    precision: month
+    type: health_crisis
+    description: Suffered a pulmonary embolism (blood clot in lungs) and related complications.
+    significance: major
+    age_at_event: 29
+    source: ADB seed; Wikipedia
+  - date: '2016-12-10'
+    precision: day
+    type: relationship
+    description: Engaged to Reddit co-founder Alexis Ohanian.
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia; populartimelines
+  - date: '2017-01-28'
+    precision: day
+    type: recognition
+    description: Won 2017 Australian Open (23rd Grand Slam, Open-era record) while roughly eight weeks
+      pregnant.
+    significance: major
+    age_at_event: 35
+    source: Al Jazeera; Britannica
+  - date: '2017-09-01'
+    precision: day
+    type: childbirth
+    description: Gave birth to daughter Alexis Olympia Ohanian Jr. by emergency C-section, with severe
+      complications.
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Al Jazeera
+  - date: '2017-11-16'
+    precision: day
+    type: relationship
+    description: Married Alexis Ohanian in New Orleans.
+    significance: major
+    age_at_event: 36
+    source: Wikipedia; Britannica
+  - date: '2022-09-02'
+    precision: day
+    type: career
+    description: Played what she framed as her final tournament match / retirement (US Open).
+    significance: major
+    age_at_event: 40
+    source: Al Jazeera timeline
+  - date: 2023-08
+    precision: month
+    type: childbirth
+    description: Gave birth to second daughter, Adira River Ohanian.
+    significance: moderate
+    age_at_event: 41
+    source: Wikipedia; CNN Fast Facts
+  temperament:
+  - trait: Fierce competitiveness / fighter
+    tags:
+    - competitive
+    - combative
+    evidence: 'Self-described ''savage fighter''; father Richard: ''so mentally tough she don''t believe
+      she can lose'''
+    source: Globe and Mail (Richard Williams); Serena self-description
+  - trait: Mental toughness / resilience
+    tags:
+    - resilient
+    - tough
+    evidence: 'Self-described greatest strength: ''My game is my mental toughness… to be able to come
+      back when I''m down'''
+    source: The Guardian; Forbes (MasterClass)
+  - trait: Fiery on-court temper
+    tags:
+    - volatile
+    - intense
+    evidence: 2009 US Open lineswoman threat (record $82,500 fine); 2018 US Open final outburst
+    source: ESPN; CBS News/AP
+  - trait: Confidence / self-belief
+    tags:
+    - confident
+    - self-assured
+    evidence: '''You have to believe in yourself when no one else does'''
+    source: GQ Sports, via Forbes
+  notes: Ohanian engagement dated Dec 10, 2016 (Wikipedia) though ADB seed says Dec 29, 2016 — flagged
+    (Dec 10 preferred per most sources). Puma deal confirmed as officially announced Feb 1998 (five years,
+    ~$12-13M) — earlier ADB vs. Britannica 'post-1999' conflict resolved to 1998. 13 events.
+- name: Steve Jobs
+  birth_data:
+    date: '1955-02-24'
+    time: '19:15'
+    timezone: America/Los_Angeles
+    place: San Francisco, California, USA
+    latitude: 37.7749
+    longitude: -122.4194
+    rodden_rating: AA
+  events:
+  - date: '1974'
+    precision: year
+    type: spiritual
+    description: Traveled to India seeking spiritual enlightenment; returned drawn to Zen Buddhism.
+    significance: moderate
+    age_at_event: 19
+    source: Biography.com; New World Encyclopedia
+  - date: '1976'
+    precision: year
+    type: career
+    description: Co-founded Apple Computer with Steve Wozniak (and Ronald Wayne) in his family's garage.
+    significance: major
+    age_at_event: 21
+    source: Wikipedia; Biography.com
+  - date: '1978-05-17'
+    precision: day
+    type: childbirth
+    description: Daughter Lisa Brennan-Jobs born to Chrisann Brennan; Jobs initially denied paternity.
+    significance: moderate
+    age_at_event: 23
+    source: Wikipedia Lisa Brennan-Jobs; Biography.com
+  - date: '1985-09-17'
+    precision: day
+    type: career
+    description: Resigned/forced out of Apple after a board power struggle; founded NeXT the same year.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; allaboutstevejobs timeline
+  - date: '1986-02-03'
+    precision: day
+    type: career
+    description: Finalized purchase of the computer graphics division of Lucasfilm, paying George Lucas
+      $5M for technology rights plus $5M startup capital (~$10M total) for a 70% stake; incorporated it
+      as Pixar.
+    significance: major
+    age_at_event: 30
+    source: Fortune; MSN
+  - date: '1991-03-18'
+    precision: day
+    type: relationship
+    description: Married Laurene Powell in a Buddhist ceremony at Yosemite.
+    significance: major
+    age_at_event: 36
+    source: Wikipedia; Biography.com
+  - date: '1993-03-05'
+    precision: day
+    type: bereavement_parent
+    description: Adoptive father Paul Jobs died.
+    significance: moderate
+    age_at_event: 38
+    source: Wikipedia
+  - date: '1997'
+    precision: year
+    type: career
+    description: Returned to Apple (which bought NeXT) as interim CEO.
+    significance: major
+    age_at_event: 42
+    source: Wikipedia; biographyonline
+  - date: 2003-10
+    precision: month
+    type: health_crisis
+    description: Diagnosed with a pancreatic neuroendocrine tumor.
+    significance: major
+    age_at_event: 48
+    source: CNN Fast Facts; New World Encyclopedia
+  - date: '2004-07-31'
+    precision: day
+    type: health_crisis
+    description: Underwent surgery to remove the pancreatic tumor.
+    significance: major
+    age_at_event: 49
+    source: CNN Fast Facts; ADB seed
+  - date: '2009'
+    precision: year
+    type: health_crisis
+    description: Underwent a liver transplant.
+    significance: major
+    age_at_event: 54
+    source: Wikipedia; Biography Wiki
+  - date: '2011-08-24'
+    precision: day
+    type: career
+    description: Resigned as CEO of Apple, recommending Tim Cook.
+    significance: major
+    age_at_event: 56
+    source: Wikipedia
+  - date: '2011-10-05'
+    precision: day
+    type: bereavement_other
+    description: Died at home in Palo Alto from complications of his pancreatic tumor, age 56.
+    significance: major
+    age_at_event: 56
+    source: Wikipedia
+  temperament:
+  - trait: Charismatic 'reality distortion field'
+    tags:
+    - charismatic
+    - persuasive
+    evidence: 'Colleague Andy Hertzfeld: ''a confounding mélange of charismatic rhetorical style, indomitable
+      will, and eagerness to bend any fact'''
+    source: Walter Isaacson, Steve Jobs
+  - trait: Perfectionist obsessed with design/simplicity
+    tags:
+    - perfectionist
+    - exacting
+    evidence: Isaacson documents obsession that even unseen parts be perfect; ingrained by father Paul
+    source: Walter Isaacson, Steve Jobs
+  - trait: Volatile, abrasive, binary thinking
+    tags:
+    - volatile
+    - harsh
+    evidence: 'Isaacson: hero/''shithead'' dichotomy; ''often tightly coiled and impatient'';  berated
+      colleagues'
+    source: Walter Isaacson, Steve Jobs (via High Conflict Institute)
+  - trait: Prone to denial / willful blindness
+    tags:
+    - stubborn
+    - avoidant
+    evidence: Isaacson argues denial delayed cancer treatment and drove paternity denial
+    source: Walter Isaacson, Steve Jobs (via Shortform)
+  notes: 13 events across life stages. iPod (2001)/iPhone (2007) available as recognition events if more
+    career milestones needed.
+- name: Steve Wozniak
+  birth_data:
+    date: '1950-08-11'
+    time: 09:45
+    timezone: America/Los_Angeles
+    place: San Jose, California, USA
+    latitude: 37.3333
+    longitude: -121.9
+    rodden_rating: AA
+  events:
+  - date: '1971'
+    precision: year
+    type: education
+    description: Enrolled at UC Berkeley (Electrical Engineering / Computer Sciences).
+    significance: moderate
+    age_at_event: 20
+    source: Wikipedia; ADB seed
+  - date: '1976-01-11'
+    precision: day
+    type: relationship
+    description: Married first wife Alice Robertson (divorced 1980).
+    significance: moderate
+    age_at_event: 25
+    source: EBSCO; encyclopedia.com
+  - date: '1976-04-01'
+    precision: day
+    type: career
+    description: Co-founded Apple Computer with Steve Jobs; designed the Apple I and later the Apple II.
+    significance: major
+    age_at_event: 25
+    source: Wikipedia; FSU wiki
+  - date: '1980-12-12'
+    precision: day
+    type: windfall
+    description: Apple's IPO (shares priced at $22, market cap ~$1.8B) made Wozniak's ~7.9% stake (≈4
+      million shares) worth about $116 million on paper.
+    significance: major
+    age_at_event: 30
+    source: Mac History; Celebrity Net Worth
+  - date: '1981'
+    precision: year
+    type: windfall
+    description: 'Executed the ''Woz Plan'': sold/gave roughly $10 million of his own pre-IPO shares to
+      ~40-80 overlooked early employees at $5/share — a move Jobs declined to match. Wozniak: ''I gave
+      away a lot of my stock to almost everybody in the company.'''
+    significance: moderate
+    age_at_event: 30
+    source: Business Insider/Apple Wiki; Wozniak's own account
+  - date: '1981-02-07'
+    precision: day
+    type: accident
+    description: Crashed the Beechcraft Bonanza he was piloting on takeoff from Scotts Valley; suffered
+      head injuries and five weeks of anterograde amnesia.
+    significance: major
+    age_at_event: 30
+    source: Wikipedia; Cult of Mac
+  - date: '1981-06-14'
+    precision: day
+    type: relationship
+    description: Married second wife Candice (Candi) Clark (divorced 1987).
+    significance: moderate
+    age_at_event: 30
+    source: encyclopedia.com; Wikipedia
+  - date: 1982-05
+    precision: month
+    type: career
+    description: Founded UNUSON and staged the first US Festival, blending music and technology (a second
+      followed in 1983); both lost money.
+    significance: moderate
+    age_at_event: 31
+    source: populartimelines; EBSCO
+  - date: '1985'
+    precision: year
+    type: career
+    description: Permanently left day-to-day work at Apple and founded CL 9 (later made the first programmable
+      universal remote).
+    significance: major
+    age_at_event: 34
+    source: Wikipedia; ADB seed
+  - date: '1986'
+    precision: year
+    type: education
+    description: Completed his UC Berkeley degree (enrolled as 'Rocky Raccoon Clark').
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia; ADB seed
+  - date: '1990'
+    precision: year
+    type: relationship
+    description: Married third wife Suzanne Mulkern.
+    significance: moderate
+    age_at_event: 39
+    source: encyclopedia.com; ADB seed
+  - date: '1994'
+    precision: year
+    type: career
+    description: Began teaching computer classes to grade-school students.
+    significance: moderate
+    age_at_event: 43
+    source: ADB seed; EBSCO
+  temperament:
+  - trait: Playful prankster / joker
+    tags:
+    - playful
+    - mischievous
+    evidence: 'Self-described: ''I was a deliberate prankster because I was too shy to talk to people'';
+      Zaltair hoax'
+    source: iWoz; Fierce Network interview
+  - trait: Shy / introverted
+    tags:
+    - shy
+    - introverted
+    evidence: 'iWoz: ''my natural shyness just made me bottom out in sixth grade''; too shy to present
+      at Homebrew'
+    source: iWoz; Knowledge at Wharton
+  - trait: Engineering obsessiveness for its own sake
+    tags:
+    - obsessive
+    - craftsman
+    evidence: Designed Apple I hardware, board and OS single-handedly; wanted to stay a hands-on engineer
+    source: Wikipedia; Knowledge at Wharton
+  - trait: Generosity / indifference to wealth
+    tags:
+    - generous
+    - idealistic
+    evidence: Sold ~$10M of pre-IPO stock to early employees ('Woz Plan'); 'I didn't ever want to be rich'
+    source: TIME (Luckerson); iWoz
+  notes: 12 events. Fourth marriage to Janet Hill (2008) available if needed. Plane-crash date Feb 7,
+    1981 verified (some outlets erroneously say Feb 5).
+- name: Ted Bundy
+  birth_data:
+    date: '1946-11-24'
+    time: '22:35'
+    timezone: America/New_York
+    place: Burlington, Vermont, USA
+    latitude: 44.4759
+    longitude: -73.2121
+    rodden_rating: AA
+  events:
+  - date: '1972'
+    precision: year
+    type: education
+    description: Graduated 'with distinction' with a psychology degree from the University of Washington
+      (born Theodore Robert Cowell).
+    significance: moderate
+    age_at_event: 25
+    source: Biography.com; Wikipedia
+  - date: 1973-09
+    precision: month
+    type: education
+    description: Entered University of Puget Sound Law School (later transferred to University of Utah).
+    significance: moderate
+    age_at_event: 26
+    source: Deseret News timeline; allthatsinteresting
+  - date: 1974-01
+    precision: month
+    type: other
+    description: 'Pattern onset: abruptly cut off girlfriend Diane Edwards; first confirmed attacks in
+      the Seattle area began; first confirmed killing Feb 1974.'
+    significance: major
+    age_at_event: 27
+    source: Wikipedia; refinery29 timeline
+  - date: '1975-08-16'
+    precision: day
+    type: legal
+    description: First arrest, pulled over in a Salt Lake City suburb; police found handcuffs, a ski mask
+      and other suspicious items.
+    significance: major
+    age_at_event: 28
+    source: Crime+Investigation (Deseret dates it Aug 18 — flagged)
+  - date: '1976-03-01'
+    precision: day
+    type: legal
+    description: Convicted of the aggravated kidnapping of Carol DaRonch in Utah; sentenced 1-15 years.
+    significance: major
+    age_at_event: 29
+    source: Deseret News timeline; Biography.com
+  - date: '1977-06-07'
+    precision: day
+    type: legal
+    description: 'First escape: jumped from a second-story window of the Pitkin County Courthouse in Aspen;
+      recaptured after six days.'
+    significance: major
+    age_at_event: 30
+    source: ABC News; Biography.com
+  - date: '1977-12-30'
+    precision: day
+    type: legal
+    description: 'Second escape: crawled through a ceiling opening at the Glenwood Springs jail and fled
+      to Florida.'
+    significance: major
+    age_at_event: 31
+    source: ABC News; Gnech & Associates
+  - date: '1978-01-15'
+    precision: day
+    type: legal
+    description: Chi Omega sorority attacks at Florida State University; killed Margaret Bowman and Lisa
+      Levy and injured two others.
+    significance: major
+    age_at_event: 31
+    source: ABC News timeline
+  - date: '1978-02-09'
+    precision: day
+    type: legal
+    description: Kidnapped and murdered 12-year-old Kimberly Leach in Lake City, Florida.
+    significance: major
+    age_at_event: 31
+    source: ABC News timeline
+  - date: '1978-02-15'
+    precision: day
+    type: legal
+    description: Captured for the final time in Pensacola, Florida, driving a stolen VW.
+    significance: major
+    age_at_event: 31
+    source: ABC News; Crime+Investigation
+  - date: 1980-02
+    precision: month
+    type: relationship
+    description: Married Carole Ann Boone in a surprise courtroom ceremony during the Leach murder trial.
+    significance: moderate
+    age_at_event: 33
+    source: Deseret News timeline (Feb 9, 1980); Britannica (dates it Oct 9, 1980 — flagged)
+  - date: '1980'
+    precision: year
+    type: legal
+    description: Convictions and death sentences finalized (Chi Omega verdict July 1979; Leach sentence
+      Feb 1980).
+    significance: major
+    age_at_event: 33
+    source: Deseret News; Britannica
+  - date: 1981-10
+    precision: month
+    type: childbirth
+    description: Daughter born to Carole Ann Boone (reportedly via prison conjugal visits).
+    significance: moderate
+    age_at_event: 34
+    source: Britannica; ADB seed
+  - date: '1989-01-24'
+    precision: day
+    type: legal
+    description: Executed in the electric chair at Florida State Prison, age 42.
+    significance: major
+    age_at_event: 42
+    source: Deseret News; Britannica
+  temperament:
+  - trait: Superficial charm / social chameleon
+    tags:
+    - charming
+    - manipulative
+    evidence: Co-worker/biographer Ann Rule found him 'kind, solicitous, and empathetic'; forensic psychiatrist
+      Art Norman noted his 'elasticity'
+    source: Ann Rule, The Stranger Beside Me; Psychology Today
+  - trait: Narcissism / need for admiration
+    tags:
+    - narcissistic
+    - grandiose
+    evidence: Refused an insanity defense out of pride ('I know I'm not crazy');  ~95% of surveyed psychologists
+      rated NPD traits
+    source: Enneagram Blueprint (Bundy quotes); University of Kentucky study, via Edubirdie
+  - trait: Manipulative intelligence / deceit
+    tags:
+    - deceptive
+    - calculating
+    evidence: Used fake casts/crutches and police impersonation to lure victims; 'I was able to fool people
+      easily'
+    source: Wikipedia; Conversations with a Killer tapes
+  - trait: Cold detachment / lack of remorse
+    tags:
+    - callous
+    - detached
+    evidence: Self-described 'the most cold-hearted son of a b---- you will ever meet';  consistent with
+      psychopathy checklist
+    source: verbatim Bundy quote; forensic analyses
+  notes: 'Homicides compressed to high-signal turning points per instructions. First-arrest date conflict:
+    Aug 16 vs Aug 18, 1975 — flagged. Boone marriage: Feb 1980 during Leach trial per Deseret timeline
+    vs Britannica''s Oct 9, 1980 — flagged. 14 events including non-homicide milestones (education, escapes,
+    1980 marriage, 1981 childbirth).'
+- name: Vincent van Gogh
+  birth_data:
+    date: '1853-03-30'
+    time: '11:00'
+    timezone: Europe/Amsterdam
+    place: Groot-Zundert, Netherlands
+    latitude: 51.5057
+    longitude: 4.6463
+    rodden_rating: AA
+  events:
+  - date: 1869-07
+    precision: month
+    type: career
+    description: Began work at the art dealer Goupil & Cie (The Hague branch)
+    significance: moderate
+    age_at_event: 16
+    source: ImpressionistArts timeline; vincentvangogh.org
+  - date: 1878-12
+    precision: month
+    type: spiritual
+    description: Went to the Borinage coal-mining district (Belgium) to work as a lay preacher among miners
+    significance: major
+    age_at_event: 25
+    source: vincentvangoghcafe.com; New World Encyclopedia
+  - date: '1880'
+    precision: year
+    type: career
+    description: Decided to become an artist (age 27); began study, supported financially by brother Theo
+    significance: major
+    age_at_event: 27
+    source: National Gallery of Art; Wikipedia
+  - date: 1885-03
+    precision: month
+    type: bereavement_parent
+    description: His father, Theodorus van Gogh, died
+    significance: major
+    age_at_event: 31
+    source: ImpressionistArts timeline (father d. 1885); Wikipedia
+  - date: 1885-04
+    precision: month
+    type: career
+    description: Painted The Potato Eaters, his major early Dutch-period work
+    significance: moderate
+    age_at_event: 32
+    source: ImpressionistArts timeline; Wikipedia
+  - date: 1886-02
+    precision: month
+    type: relocation
+    description: Moved to Paris to live with Theo; encountered the Impressionists (arrived 27 Feb 1886)
+    significance: major
+    age_at_event: 32
+    source: vincentvangoghcafe.com; ImpressionistArts
+  - date: '1888-02-19'
+    precision: day
+    type: relocation
+    description: Left Paris for Arles in Provence (departed 19 Feb 1888)
+    significance: major
+    age_at_event: 34
+    source: vincentvangoghcafe.com; Wikipedia
+  - date: '1888-10-23'
+    precision: day
+    type: other
+    description: Paul Gauguin arrived in Arles to live and work with him at the Yellow House
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia 'The Starry Night' (Gauguin lived with him from 23 October 1888)
+  - date: '1888-12-23'
+    precision: day
+    type: health_crisis
+    description: Cut off part of his left ear following a breakdown/quarrel with Gauguin
+    significance: major
+    age_at_event: 35
+    source: Wikipedia; Van Gogh Museum; ImpressionistArts
+  - date: '1888-12-25'
+    precision: day
+    type: other
+    description: Gauguin left Arles; the two never saw each other again
+    significance: moderate
+    age_at_event: 35
+    source: Wikipedia 'The Starry Night' (Gauguin to 25 December)
+  - date: '1889-05-08'
+    precision: day
+    type: health_crisis
+    description: Voluntarily admitted himself to the Saint-Paul-de-Mausole asylum at Saint-Rémy-de-Provence
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'Monastery of Saint-Paul de Mausole'; Van Gogh Museum
+  - date: 1889-06
+    precision: month
+    type: career
+    description: Painted The Starry Night from his asylum room (c. 18 June 1889)
+    significance: major
+    age_at_event: 36
+    source: Wikipedia 'The Starry Night'
+  - date: 1890-05
+    precision: month
+    type: relocation
+    description: Left the Saint-Rémy asylum and moved to Auvers-sur-Oise under Dr Paul Gachet's care
+    significance: major
+    age_at_event: 37
+    source: Van Gogh Museum; ImpressionistArts; Wikipedia
+  - date: '1890-07-27'
+    precision: day
+    type: health_crisis
+    description: Shot himself in a wheatfield at Auvers-sur-Oise
+    significance: major
+    age_at_event: 37
+    source: ImpressionistArts; Wikipedia
+  - date: '1890-07-29'
+    precision: day
+    type: health_crisis
+    description: Died at Auvers-sur-Oise, aged 37, two days after the shooting
+    significance: major
+    age_at_event: 37
+    source: Wikipedia; ImpressionistArts
+  temperament:
+  - trait: Intense / passionate
+    tags:
+    - intense
+    - passionate
+    evidence: Naifeh & Smith portray a relentlessly intense temperament; his letters reveal ardent emotion
+    source: 'Steven Naifeh & Gregory White Smith, Van Gogh: The Life (2011)'
+  - trait: Zealous / fanatical
+    tags:
+    - zealous
+    - fervent
+    evidence: Described as 'a victim of his own fanatic heart';  sowed his principles with 'manic, zealous
+      determination'
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  - trait: Difficult / quarrelsome, alienating
+    tags:
+    - quarrelsome
+    - difficult
+    evidence: A 'terribly difficult man' with a 'nearly intolerable temperament' who alienated nearly
+      everyone he engaged
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  - trait: Empathetic to the poor
+    tags:
+    - compassionate
+    - idealistic
+    evidence: Early evangelical mission among poverty-stricken miners and peasants; lifelong social-justice
+      convictions
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  - trait: Prone to melancholy / depression
+    tags:
+    - melancholic
+    - depressive
+    evidence: Recurrent rounds of depression, self-mortification and suicidal thoughts  documented
+    source: 'Naifeh & Smith, Van Gogh: The Life (2011)'
+  notes: 'ASYLUM CHRONOLOGY CORRECTED: the frozen brief''s ADB paste (''asylum near Paris 25 January 1890''
+    and ''14 October 1889 went mad'') is WRONG. Verified: ear cut 23 Dec 1888 (Arles); hospitalized in
+    Arles late Dec 1888–spring 1889; VOLUNTARILY admitted to Saint-Paul-de-Mausole at Saint-Rémy on 8
+    May 1889 (not 1890); stayed ~1 year; left for Auvers-sur-Oise May 1890; shot himself 27 July 1890;
+    died 29 July 1890. Multiple authorities (Van Gogh Museum, Wikipedia) confirm 8 May 1889. Father Theodorus
+    died 1885. 15 dated events.'
