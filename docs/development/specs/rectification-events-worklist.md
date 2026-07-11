@@ -4,6 +4,8 @@ For each person below: the frozen birth data + AstroDataBank URL, then a code bl
 
 ---
 
+# ===== BATCH 1 (people 1–10) =====
+
 ## 1. Frank Lloyd Wright — A
 
 - **Birth:** 1867-06-08 17:00 · Richland Center, Wisconsin
@@ -133,6 +135,8 @@ Paste the AstroDataBank page here:
 ```
 
 ---
+
+# ===== BATCH 2 (people 11–20) =====
 
 ## 11. Michael Jordan — AA
 
@@ -264,6 +268,8 @@ Paste the AstroDataBank page here:
 
 ---
 
+# ===== BATCH 3 (people 21–30) =====
+
 ## 21. Barack Obama — AA
 
 - **Birth:** 1961-08-04 19:24 · Honolulu, Hawaii, USA
@@ -393,6 +399,8 @@ Paste the AstroDataBank page here:
 ```
 
 ---
+
+# ===== BATCH 4 (people 31–40) =====
 
 ## 31. Queen of the United Kingdom Victoria — AA
 
@@ -524,6 +532,8 @@ Paste the AstroDataBank page here:
 
 ---
 
+# ===== BATCH 5 (people 41–50) =====
+
 ## 41. Marilyn Monroe — AA
 
 - **Birth:** 1926-06-01 09:30 · Los Angeles, California, USA
@@ -654,6 +664,8 @@ Paste the AstroDataBank page here:
 
 ---
 
+# ===== BATCH 6 (people 51–60) =====
+
 ## 51. Swami Vivekananda — AA
 
 - **Birth:** 1863-01-12 06:33 · Kolkata, India
@@ -783,6 +795,8 @@ Paste the AstroDataBank page here:
 ```
 
 ---
+
+# ===== BATCH 7 (people 61–63) =====
 
 ## 61. Jorge Luis Borges — AA
 
