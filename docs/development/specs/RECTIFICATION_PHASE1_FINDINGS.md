@@ -307,7 +307,24 @@ daylight fraction already captures the date/latitude effect; the hourly curve is
 broad (peak:trough ~1.9:1) and applied identically to all, so it shifts P(day)
 ~monotonically (absorbed by the logistic) rather than adding discrimination.
 
-**Caveat — the modern curve is untested:** only 4/63 births are post-1970, so this
-is a verdict on the *spontaneous* curve for the historical bulk. Whether the
-*medicalized daytime* curve helps a modern cohort is open, pending a set of
-post-1970 AA births (machinery in `birth_hours.py` is ready for it).
+**Modern cohort test (resolves the caveat).** Added 20 post-1970 AA/A births
+(`rectification-modern-cohort.yaml`) to test the *medicalized daytime* curve on
+the era it's meant for. It still doesn't help:
+
+| prior | modern AA (n=17) acc | corr |
+|---|---|---|
+| **uniform daylight** | **70.6%** | +0.251 |
+| modern daytime | 64.7% | +0.245 |
+| spontaneous | 47.1% | +0.245 |
+
+The modern prior shifts every `P(day)` up ~0.08 (a near-uniform monotonic shift),
+so the correlation barely moves (0.245–0.251) — it only slides the 0.5 threshold
+and mis-flips borderline night births to day. **The lesson: a better *prior*
+(marginal P(day)) is not a better *classifier* (discrimination).** The birth-hour
+curve improves calibration of the average but adds no ranking signal; the daylight
+fraction already owns the person-to-person variation (date + latitude).
+
+**Bonus — out-of-sample validation.** These 20 were never in the 63, yet the
+daylight prior *alone* scores **70.6% on the 17 AA**, matching its ~68% on the
+historical set. The classifier generalises cleanly across eras. The birth-hour
+lever is now definitively closed.
