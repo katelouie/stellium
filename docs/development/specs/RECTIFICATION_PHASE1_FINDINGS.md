@@ -93,9 +93,36 @@ character of misfortune, **not** via the firdaria time-lord sequence. Modest
 (65%), needs development, and the keyword lists carry some researcher DOF (set a
 priori, but worth a holdout).
 
-**Recommended next step:** add the **symmetric benefic-of-sect mirror** — Jupiter
-is benefic *of sect* by day, Venus by night, so Jupiter-flavoured good fortune →
-day, Venus-flavoured → night. Combining the malefic (misfortune) and benefic
-(fortune) channels uses more of each life, should shrink the 14 keyword-silent
-undecideds, and — if the effect is real — sharpen the signal. Optionally weight by
-the malefics'/benefics' time-independent **sign dignity**.
+### Phase 1C — benefic-of-sect mirror + combination — **benefic is NULL**
+
+`sect_signals.py`, `probe_sect_combined.py`. Symmetric hypothesis: Jupiter is
+benefic *of sect* by day, Venus by night → Jupiter-flavoured fortune → day,
+Venus-flavoured → night.
+
+| signal | accuracy | corr(score, day) |
+|---|---|---|
+| malefic-only | 65.1% | **+0.346** |
+| benefic-only | 52.4% | **+0.021** (null) |
+| combined | 52.4% | +0.169 (diluted) |
+
+The benefic mirror carries **no signal**, and combining it *dilutes* the malefic
+(+0.35 → +0.17). Diagnosis: **fortune-character is domain-linked, not sect-linked**
+— artists accumulate Venus-flavoured fortune (art/exhibitions), scientists and
+politicians Jupiter-flavoured (awards/office), independent of sect — so the
+benefic channel injects profession noise. Misfortune-character (sudden/violent vs
+slow/chronic) is far more universal, which is why the malefic side works and the
+benefic doesn't.
+
+**Conclusion:** keep **malefic-only** (corr +0.346, p ≈ 0.005) as a real but
+modest sect *prior*; drop the benefic. The cheap event-character approach tops out
+≈ 65% — useful as one evidence stream, not a decisive classifier.
+
+## Where things stand (post-B)
+
+- Two mechanisms tried from events alone: firdaria timing = **null**;
+  malefic-of-sect character = **real but modest** (65%, p≈0.005, doesn't clear the
+  strict gate); benefic-of-sect = **null** (domain confound).
+- Events *do* carry sect signal, but weakly and only through misfortune character.
+  A decisive sect read likely needs the chart itself (option A: the sharp,
+  angle-tied techniques → full posterior, sect as the marginal), which is the
+  larger build we deferred.
