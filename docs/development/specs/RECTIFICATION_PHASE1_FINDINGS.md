@@ -63,3 +63,39 @@ the pre-registered proving experiment: does the approach beat chance?
 
 The machinery (loader, harness, significators, benchmark, contrastive report) is
 built, tested, and reusable for whichever direction we take.
+
+---
+
+## Phase 1B — malefic-contrary-to-sect probe (option B) — **SIGNAL**
+
+`probe_malefic_sect.py`. Doctrine: the malefic *out of sect* is the sharper
+destroyer — **Mars out of sect by day, Saturn out of sect by night** — so a life's
+misfortunes should carry the flavour of its contrary-sect malefic. Prediction:
+Mars-flavoured hardship → **day**, Saturn-flavoured → **night**. Nearly chart-free
+(reads the *character* of the misfortunes via a priori Mars/Saturn keyword lists),
+and a completely different mechanism from firdaria.
+
+| metric | value |
+|---|---|
+| accuracy | **65.1%** (41/63) |
+| decided-only (drop 14 keyword-silent ties) | 65.3% (32/49) |
+| **corr(mars−saturn, day)** | **+0.346** — ≈ 2.9 SE from 0, **p ≈ 0.005** |
+| 95% CI | [52.8%, 75.7%] (lower bound just under the 54% majority) |
+| confusion | both diagonals dominant (day 22/12, night 10/19) |
+
+**Pre-registered gate: still NO-GO** (CI-low 52.8% < majority 54%) — but this is a
+*genuine, directionally-correct effect*, not the firdaria null. The extremes are
+convincing: strongest-Saturn lives (Ted Bundy, Hannah Arendt, Ali, Obama) classify
+night; strongest-Mars (Hemingway, Frida Kahlo, JFK, van Gogh, Plath) classify day.
+
+**Interpretation:** events *do* carry sect information — via the malefic-of-sect
+character of misfortune, **not** via the firdaria time-lord sequence. Modest
+(65%), needs development, and the keyword lists carry some researcher DOF (set a
+priori, but worth a holdout).
+
+**Recommended next step:** add the **symmetric benefic-of-sect mirror** — Jupiter
+is benefic *of sect* by day, Venus by night, so Jupiter-flavoured good fortune →
+day, Venus-flavoured → night. Combining the malefic (misfortune) and benefic
+(fortune) channels uses more of each life, should shrink the 14 keyword-silent
+undecideds, and — if the effect is real — sharpen the signal. Optionally weight by
+the malefics'/benefics' time-independent **sign dignity**.
