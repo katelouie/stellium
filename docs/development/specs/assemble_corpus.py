@@ -35,6 +35,17 @@ DEFAULT_DATA_DIR = (
 )
 DEFAULT_OUT = Path(__file__).resolve().parent / "rectification-corpus-events.yaml"
 
+# Explicit batch-name -> DB-name aliases for variants that reorder tokens, add a
+# middle name, or reword — cases fuzzy matching can't resolve safely. Extend as
+# new batches surface new spellings; better an explicit map than a wrong guess.
+ALIASES = {
+    "Prince Philip, Duke of Edinburgh": "Prince Philip",
+    "Diana, Princess of Wales": "Princess of Wales Diana",
+    "Queen Victoria": "Queen of the United Kingdom Victoria",
+    "Wolfgang Amadeus Mozart": "Wolfgang Mozart",
+    "Osho (Rajneesh)": "Osho Rajneesh",
+}
+
 
 def norm(s: object) -> str:
     return unicodedata.normalize("NFC", str(s)).strip()
@@ -87,6 +98,8 @@ def match(raw: str, by_norm: dict, by_fold: dict):
     """(canonical_name, birth_data, how) or (None, None, None)."""
     if norm(raw) in by_norm:
         return (*by_norm[norm(raw)], "exact")
+    if raw in ALIASES and norm(ALIASES[raw]) in by_norm:
+        return (*by_norm[norm(ALIASES[raw])], "alias")
     if norm(strip_paren(raw)) in by_norm:
         return (*by_norm[norm(strip_paren(raw))], "paren-stripped")
     if fold(strip_paren(raw)) in by_fold:
