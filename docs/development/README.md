@@ -59,7 +59,13 @@ migration plan, and acceptance criteria.
   candidate from primary sources before it can enter the corpus, and returns its
   rejections so they back-correct our notables DB; roster:
   [specs/rectification-corpus-candidates.md](./specs/rectification-corpus-candidates.md)).
-  *Status: Exploration.*
+  Phase 1 produced a **63-person provenance-verified corpus**; Phase 2 gathers
+  their events + temperament via
+  [specs/rectification-events-research-prompt.md](./specs/rectification-events-research-prompt.md)
+  over the
+  [specs/rectification-events-worklist.md](./specs/rectification-events-worklist.md)
+  (63 people + frozen birth data + ADB URLs). `apply_research_verdicts.py`
+  writes verdicts back to the DB. *Status: Exploration.*
 
 ## How these docs are scoped
 
