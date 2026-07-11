@@ -70,26 +70,63 @@ docs/development/specs/rectification/
 
 ## 4. Phase 0 — the harness
 
-### 4.1 Fast angle-only re-cast (`recast.py`)
+### 4.1 Fast re-cast — angles per candidate, **Moon per candidate**, slow bodies once
 
-The core speed trick from theory §2: **planets are ~fixed across a birth-day, so
-compute them once; only the angles move.**
+The speed trick from theory §2 — compute the day's bodies once, sweep only the
+angles — but with **two corrections that are load-bearing, not niceties:**
 
-- `recast(date, lat, lon, tz, times) -> list[AngleSet]` where each `AngleSet`
-  has ASC, MC, the house cusps, and the derived **sect** (Sun above/below the
-  horizon). Planets are computed **once** for the day; per candidate time we
-  recompute only the angles/cusps (cheap sidereal-time trig via the house
-  engine) and re-place the fixed planets into the new houses.
-- Implemented **on the public API**: one ephemeris pass for planetary longitudes;
-  per-candidate house/angle computation via the house-system engine. Where the
-  public surface makes this awkward, note it (promotion checklist).
+**(a) The Moon is not fixed.** It moves ~12–15°/day (~0.5°/hr) — an order of
+magnitude more than any other body across a birth-day (inner planets ≤ ~1°/day,
+outers < 0.1°). So the split is **slow bodies once, Moon per candidate**:
+- Compute Sun + planets **once** for the day (their ≤1°/day drift is negligible).
+- Recompute (or interpolate) the **Moon** at each candidate time. Baseline:
+  one Moon ephemeris call per candidate (still ~1/15th of a full recompute).
+  Optional optimization: sample the Moon at a handful of points and
+  cubic-interpolate (its motion is smooth) — decide by profiling, not up front.
+- This is not optional cleanliness: the Moon feeds Moon-significator techniques,
+  the **progressed Moon**, and the **Lot of Fortune/Spirit** = `Asc ± (Moon −
+  Sun)`, which therefore moves with *both* the fast Asc **and** the drifting Moon.
+
+**(b) Everything else is angle-only.** Per candidate, recompute ASC/MC/cusps
+(cheap sidereal-time trig via the house engine) and re-place the fixed slow
+bodies + the freshly-computed Moon into the new houses.
+
+- `recast(date, lat, lon, tz, times) -> list[AngleSet]`; each `AngleSet` has
+  ASC, MC, cusps, the **Moon** at that time, the recomputed **Lots**, and the
+  derived **sect** (§4.2). Built **on the public API**; surface gaps → promotion
+  checklist.
 
 **Correctness test (blocking):** for a spread of times on several corpus births,
-the re-cast's ASC/MC/cusps/sect/house-placements match a full
-`ChartBuilder…calculate()` at the same time to tolerance (angles < 0.01°, sect &
-house placements exact). This is the invariant everything else rides on.
+the re-cast's ASC/MC/cusps, **Moon longitude**, Lots, sect, and house placements
+match a full `ChartBuilder…calculate()` at the same time to tolerance (angles &
+Moon < 0.01°; sect & house placements exact). This is the invariant everything
+rides on — and the Moon tolerance is what catches corrections (a).
 
-### 4.2 Benchmark driver (`harness.py`)
+### 4.2 Sect is a **three-region** step function, not a binary split
+
+Sweeping a candidate time across the local day, the Sun crosses the horizon
+**twice** (sunrise, sunset), so sect partitions the day into **three** intervals:
+
+```
+00:00 ──night── sunrise ──day── sunset ──night── 24:00
+      (pre-dawn)         (daylight)       (post-dusk)
+```
+
+Consequences the harness must honour from the start:
+- **"Night sect" is two disjoint intervals**, so the sect marginal is
+  `P(night) = P(pre-dawn) + P(post-dusk)` and `P(day) = P(daylight)` — never a
+  single midpoint split.
+- The candidate-time → sect map is a 3-region step; the two sunrise/sunset
+  boundaries are the first **regime edges** (they'll seed the regime-aware grid
+  in Phase 3).
+- **True-sect labeling** of each corpus person = Sun above/below the horizon at
+  the *true* time (which of the three regions it lands in), computed via the
+  re-cast — get this exactly right, it's the benchmark's ground truth.
+- The two firdaria orderings (day vs night) are unchanged; only the *time-region
+  → ordering* mapping is night/day/night. So the v0 classifier still compares two
+  hypotheses, but "night" is the hypothesis covering **both** night regions.
+
+### 4.3 Benchmark driver (`harness.py`)
 
 - **Load** the corpus YAML → for each person: `birth_data` (truth), `events`,
   `temperament`. Compute the **true sect** and true time from `birth_data`.

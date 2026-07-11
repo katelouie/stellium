@@ -33,10 +33,12 @@ barely move across a birth-day. Two consequences drive the entire design:
    Stellium computes *exactly* what every timing technique says — there is
    nothing to *learn* about the map `t → activations`; it is astrology's math.
 
-A third, practical fact: over a birth-day the planets are ~fixed, so a candidate
-sweep does **not** need a full ephemeris recompute per candidate — compute
-planets once and **re-cast only the angles** (cheap trig from sidereal time +
-latitude).
+A third, practical fact: over a birth-day the **slow** bodies are ~fixed, so a
+candidate sweep does **not** need a full ephemeris recompute per candidate —
+compute them once and **re-cast only the angles** (cheap trig from sidereal time
++ latitude). The **Moon is the exception** (~0.5°/hr ≈ 13°/day) and must be
+recomputed or interpolated per candidate; it feeds the Moon significators and the
+sect-dependent **Lot of Fortune/Spirit**. (Build detail: build spec §4.1.)
 
 ## 3. The model
 
@@ -109,9 +111,12 @@ the **marginal** of the same posterior,
 P(day) = Σ over the day-cells of the grid,   P(night) = Σ over the night-cells,
 ```
 
-so one model yields both the robust binary answer *and* the fine posterior. Sect
-is the safest thing to report because it is a *coarsening* of `t` (hard to
-overfit), which is why it is the natural **first deliverable** (§ spec).
+so one model yields both the robust binary answer *and* the fine posterior. Note
+the Sun crosses the horizon **twice** across a day, so the night-cells are **two
+disjoint intervals** (pre-dawn + post-dusk) and `P(night)` sums both — sect is a
+three-region step function of `t`, not a single midpoint split (build spec §4.2).
+Sect is still the safest thing to report because it is a *coarsening* of `t`
+(hard to overfit), which is why it is the natural **first deliverable** (§ spec).
 
 ## 5. Evidence: hard-data, soft-data, and the information budget
 
