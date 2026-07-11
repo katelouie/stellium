@@ -246,3 +246,44 @@ sign, dominant planet, Ascendant); the sect overlay is too faint to detect again
 that. Fittingly, sect shows up in the **character of harm**, not in general
 personality — consistent with the tradition emphasising sect most for the
 malefics' operation.
+
+---
+
+## Natal dignities / placements — **null for sect** (`probe_dignity_sect.py`)
+
+Tested planetary sign-dignities two ways: (1) a **diurnal-vs-nocturnal dignity
+balance** (new channel), and (2) **dignity-weighting the malefic** (enrich what
+works — scale hardship by the natal condition of Mars vs Saturn).
+
+| model | LOO-CV |
+|---|---|
+| daylight + malefic | 69.8% |
+| daylight + malefic + dignity-balance | 68.3% (worse) |
+| daylight + malefic(dignity-weighted) | 65.1% (worse) |
+
+Both fail. The dignity-balance's in-sample partial corr looks sizable (−0.32) but
+**does not survive LOO** — textbook noise-as-signal, and a reminder of why every
+signal is cross-validated. Expected: sect is a horizon fact, ~orthogonal to which
+signs the planets occupy. Dignity-weighting the malefic *degrades* it — natal
+malefic condition is noise for the misfortune-character signal.
+
+## Signals tested — the full map
+
+| channel | signal | result |
+|---|---|---|
+| geometry | daylight fraction (prior) | **+0.40 — works (68%)** |
+| event character | malefic-of-sect (misfortune flavour) | **+0.35 — works, independent (→70%)** |
+| event character | benefic-of-sect (fortune flavour) | null (domain confound) |
+| timing | firdaria time-lord × significators | null |
+| timing | annual profection (rising-sign lords) | null |
+| timing | primary directions to angles | null (sect *and* time) |
+| temperament | sect-light (Solar/Lunar) | null |
+| natal dignity | diurnal/nocturnal balance; dignity-weighted malefic | null |
+
+**Bottom line.** Feature space for an *automated, corpus-scale* rectifier is
+thoroughly explored. Only **daylight prior × malefic-of-sect** survives (LOO
+69.8%, GO). Minute-level **time** is null across every timing technique. The lone
+remaining lever with real upside is an **external birth-hour prior** (research
+pending) to sharpen the daylight term. Further feature-hunting on n=63 has
+negative expected value (multiple-comparisons risk — the dignity −0.32 that
+vanished under LOO is the warning).
