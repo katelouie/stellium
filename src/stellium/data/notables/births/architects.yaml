@@ -14,14 +14,14 @@
   - architect
   notable_for: American architect, interior designer, writer, and educator.
   astrological_notes: Sun 17 Gemini
-  data_quality: AA
+  data_quality: A
   sources:
   - https://www.astro.com/astro-databank/Wright,_Frank_Lloyd
   verified: true
   has_reliable_time: true
-  verification_notes: >
-    Verify 17:00 against ADB note. Birth YEAR is 1867 (records); Wright vainly
-    claimed 1869 — flag if you surface birth years.
+  verification_notes: |
+    Verify 17:00 against ADB note. Birth YEAR is 1867 (records); Wright vainly claimed 1869 — flag if you surface birth years.
+    [ADB-verified] verdict=accept bucket=memory rating=A: Wife's memory report; A-soft (hint said AA, verified A). — "From McEvoy: 'His third wife Olga Milanov gave that time to Collice Portnoff, head of the English Department and my mentor in college...'" — https://www.astro.com/astro-databank/Wright,_Frank_Lloyd
 - name: Zaha Hadid
   event_type: birth
   year: 1950

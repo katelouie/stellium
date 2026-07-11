@@ -15,19 +15,22 @@
   timezone: Europe/Paris
   category: astrologer
   subcategories:
-    - Humanistic Astrologer
-    - Composer
-    - Philosopher
+  - Humanistic Astrologer
+  - Composer
+  - Philosopher
   notable_for: >-
     French-American astrologer, one of the most influential of the 20th century.
     Pioneered humanistic and transpersonal astrology. Author of "The Astrology of
     Personality" (1936). Also a composer, painter, and poet.
   astrological_notes: Sun 2 Aries
-  data_quality: AA
+  data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Rudhyar,_Dane"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Rudhyar,_Dane"
   verified: true
 
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=rectified rating=A: Hinted 00:42 is his own rectification. NOTE - the 1:00 AM certificate is a real record; consider re-entering as a DOCUMENT candidate at 1:00 AM in a future pass. The 00:42 fails. — "Leyla Rael quotes him, rectified by him to 0:42 a.m. from a given time of midnight to 1:00 AM. ...Didier Geslain archive holds the birth certificate, which gives a time of 1:00 am." — https://www.astro.com/astro-databank/Rudhyar,_Dane
 - name: William Lilly
   event_type: birth
   year: 1602
@@ -41,9 +44,9 @@
   timezone: Europe/London
   category: astrologer
   subcategories:
-    - Traditional Astrologer
-    - Author
-    - Horary Master
+  - Traditional Astrologer
+  - Author
+  - Horary Master
   notable_for: >-
     British astrologer and author, the most famous astrologer of the 17th century.
     Author of "Christian Astrology" (1647), the first major astrological textbook
@@ -51,9 +54,12 @@
   astrological_notes: Sun 19 Taurus, Moon 14 Capricorn, Asc Pisces
   data_quality: A
   sources:
-    - "AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William"
-    - "Gadbury's Collection of Nativities (1661)"
+  - "AstroDatabank: https://www.astro.com/astro-databank/Lilly,_William"
+  - "Gadbury's Collection of Nativities (1661)"
   verified: true
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=rectified rating=A: Rectified by the astrologer himself; cannot validate a rectifier. — "Martin Harvey in Nativitas I quotes Lilly's letter to... Elias Ashmole. Lilly's correspondence indicates that the time may have been rectified by him; he is content with the time as he refers to directions of the map." — https://www.astro.com/astro-databank/Lilly,_William
 - name: Evangeline Adams
   event_type: birth
   year: 1868
@@ -114,10 +120,13 @@
   - author
   notable_for: Indian Vedic astrologer and author
   astrological_notes: Leo Sun, Aquarius Moon
-  data_quality: AA
+  data_quality: DD
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Raman,_Bangalore_Venkata'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=rectified rating=DD: Self-rectified (multiple times); a rectified time cannot validate a rectifier. Feynman-class. Hint claimed AA. — "Steinbrecher quotes a letter from him with a time of 7:42:44 PM IST. (Church of Light has 7:35 PM from him; Astrology Magazine 1/1962 gives 7:15 PM; Considerations Vol XIV No.2 gives 7:46 PM in an obit; apparently he rectified his chart several times over the years.)" — https://www.astro.com/astro-databank/Raman,_Bangalore_Venkata
 - name: K.N. Rao
   event_type: birth
   year: 1931

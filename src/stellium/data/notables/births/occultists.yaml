@@ -180,15 +180,14 @@
   - monk
   notable_for: Indian Hindu monk and philosopher
   astrological_notes: Capricorn Sun, Sagittarius Moon
-  data_quality: A
+  data_quality: AA
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/swami-vivekananda-horoscope'
   verified: false
   has_reliable_time: true
-  verification_notes: >
-    ADB's AA rests on a 1908 Modern Astrology second-hand quote. Displayed
-    06:33 conflicts with 06:45 and 06:49 (Nikhilananda). Sunrise-ish and
-    genuinely transmitted, but flag the 6:33/6:45/6:49 spread.
+  verification_notes: |
+    ADB's AA rests on a 1908 Modern Astrology second-hand quote. Displayed 06:33 conflicts with 06:45 and 06:49 (Nikhilananda). Sunrise-ish and genuinely transmitted, but flag the 6:33/6:45/6:49 spread.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Quoted birth record; AA (hint said A, verified AA). Chart uses 6:33 — minute soft. — "Modern Astrology 11/1908, data from F.C. Dutt in Calcutta who quotes B.R. ... 'born at 6:49, a few minutes after sunrise, on Monday, January 12, 1863.'" — https://www.astro.com/astro-databank/Vivekananda,_Swami
 - name: Paramahansa Yogananda
   event_type: birth
   year: 1893
@@ -206,10 +205,13 @@
   - guru
   notable_for: Indian monk and yogi who introduced Kriya Yoga to the West
   astrological_notes: Capricorn Sun, Leo Moon
-  data_quality: AA
+  data_quality: C
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Yogananda,_Paramahansa'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=biography rating=C: Institutional/ashram quote, no record; ADB flags accuracy in question (C). Hint claimed AA/A. — "Data source: Accuracy in question. Rodden Rating C. Mercury Hour, 7/1976, quotes his ashram, the Self Realization Institute." — https://www.astro.com/astro-databank/Yogananda,_Paramahansa
 - name: Jiddu Krishnamurti
   event_type: birth
   year: 1895
@@ -227,10 +229,13 @@
   - speaker
   notable_for: Indian philosopher and speaker
   astrological_notes: Taurus Sun, Sagittarius Moon
-  data_quality: AA
+  data_quality: B
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Krishnamurti,_Jiddu'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=biography rating=B: Biography (no cited record); rated B, hint claimed AA. Soft data only. — "Marcello Borges quotes Evelyne Blau 'Krishnamurti, 100 Years'... 'the assisting midwife called... "Sirsodayam!"... that is the precise moment of birth...' (00:30 AM Madras time)" — https://www.astro.com/astro-databank/Krishnamurti,_Jiddu
 - name: Sri Aurobindo
   event_type: birth
   year: 1872
@@ -296,10 +301,13 @@
   - mystic
   notable_for: Indian yogi and author
   astrological_notes: Virgo Sun, Aquarius Moon
-  data_quality: AA
+  data_quality: X
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Vasudev,_Jaggi'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=unknown rating=X: ADB carries NO birth time; hinted 23:54 is a third-party artifact. Hard reject as unknown. — "Date of Birth: 3 September 1957 – unknown time (?) ... Birth data source (Rodden Rating): Wikipedia, (XX)." — https://www.astro.com/astro-databank/Vasudev,_Jaggi
 - name: Osho Rajneesh
   event_type: birth
   year: 1931
@@ -317,10 +325,13 @@
   - mystic
   notable_for: Indian spiritual leader
   astrological_notes: Sagittarius Sun, Leo Moon
-  data_quality: AA
+  data_quality: A
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Rajneesh,_Bhagwan_Shree'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Mother's memory; A-soft (hint said AA, verified A). — "Steinbrecher quotes correspondence with the Ashram, 5:13 pm, data from his mom's memory." — https://www.astro.com/astro-databank/Osho
 - name: Chinmayananda Saraswati
   event_type: birth
   year: 1916
@@ -337,7 +348,10 @@
   - spiritual teacher
   notable_for: Indian spiritual leader and teacher
   astrological_notes: Taurus Sun
-  data_quality: A
+  data_quality: X
   sources:
   - 'AstroSage: https://celebrity.astrosage.com/chinmayananda-birth-chart.asp'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=unknown rating=X: No record to verify (not merely inaccessible — no ADB entry exists). Hinted 19:10 unverified. Dropped from review to reject/unknown per Kate. — "No AstroDataBank entry exists; no birth-time record locatable anywhere. Only AstroSage/Wikipedia with no documented time."

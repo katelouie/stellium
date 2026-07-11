@@ -32,8 +32,11 @@ WHAT IT WRITES  (only the fields below; everything else is left verbatim)
     accept / accept_soft -> has_reliable_time: true   (+ data_quality if a
                             verified rating is given)
     reject               -> has_reliable_time: false  (+ data_quality if given)
-    needs_manual_review  -> NO rating/flag change (it is a hold queue, never an
-                            acceptance); only a PENDING note is recorded.
+    needs_manual_review  -> data_quality kept, but any prior has_reliable_time
+                            is CLEARED (a held time cannot keep claiming
+                            reliability -> reads "unverified/pending" until you
+                            adjudicate); a PENDING note is recorded. Never
+                            auto-enters the corpus.
     verification_notes   -> your existing note is preserved; a deterministic
                             "[ADB-verified] ..." block is appended (and replaced
                             in place on re-runs, so the script is idempotent).
@@ -235,14 +238,28 @@ def apply_record(entry: Any, rec: dict[str, Any], *, filename: str) -> list[Chan
                 )
             )
             entry["data_quality"] = rating
-    else:  # needs_manual_review — hold queue, do not touch ratings
+    else:  # needs_manual_review — hold queue. Leave data_quality, but a held
+        # time cannot keep claiming reliability: clear any prior flag so the
+        # entry reads "unverified/pending" until adjudicated (never trusted).
+        if "has_reliable_time" in entry:
+            changes.append(
+                Change(
+                    filename,
+                    name,
+                    "has_reliable_time",
+                    entry["has_reliable_time"],
+                    "<cleared: pending review>",
+                    "set",
+                )
+            )
+            del entry["has_reliable_time"]
         changes.append(
             Change(
                 filename,
                 name,
                 "",
                 None,
-                "held for manual review (ratings untouched)",
+                "held for manual review (data_quality kept, reliability -> pending)",
                 "skip",
             )
         )

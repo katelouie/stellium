@@ -28,6 +28,9 @@
   - "AstroDatabank: https://www.astro.com/astro-databank/Jobs,_Steve"
   verified: true
 
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate; AA. — "Source: birth certificate, Astro Databank." — https://www.astro.com/astro-databank/Jobs,_Steve
 - name: Elon Musk
   event_type: birth
   year: 1971
@@ -87,6 +90,8 @@
   - "AstroDatabank: https://www.astro.com/astro-databank/Disney,_Walt"
   verified: true
 
+  verification_notes: |
+    [ADB-verified] verdict=needs_manual_review bucket=memory rating=A: ADB is A/memory (not the hinted AA). No certificate exists (Illinois didn't mandate until 1916); competing 12:35 AM vs 7:30 AM. KATE DECISION - either reject (no document) or accept-soft as A/memory-with-conflict at 00:35. My lean - reject, since there's no record to recover. — "Marion March quotes Disney studio. ...Lyndoe in American Astrology May 1967 implies that the time came from him. (CL gives 7:30 AM CST... stating that the data came from his daughter... Cook County Vital Statistics Office was unable to find a copy of the birth certificate in fall 2006.)" — https://www.astro.com/astro-databank/Disney,_Walt
 - name: Warren Buffett
   event_type: birth
   year: 1930
@@ -183,9 +188,6 @@
   - "AstroDataBank, Wozniak,_Steve: 09:45, 'LMR quotes announcement in CA magazine 7/1982 (same Contemporary American Horoscopes)', Rodden AA (accuracy: excellent)"
   verified: false
   has_reliable_time: true
-  verification_notes: >
-    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file
-    rounded time to 09:45; keep AA/reliable. High confidence. Caveat: the AA
-    rests on a 1982 printed birth announcement (Contemporary American
-    Horoscopes), not a hand-sighted certificate; a stricter "AA = sighted BC/BR"
-    rule would prefer A.
+  verification_notes: |
+    astro.com shows precise 09:45 (not a round hour) at AA — correct the on-file rounded time to 09:45; keep AA/reliable. High confidence. Caveat: the AA rests on a 1982 printed birth announcement (Contemporary American Horoscopes), not a hand-sighted certificate; a stricter "AA = sighted BC/BR" rule would prefer A.
+    [ADB-verified] verdict=accept bucket=document rating=AA: ADB classes as Quoted BC/BR, AA. Contemporaneous birth announcement; document-class. (Note-of-record is a magazine announcement, not the certificate directly.) — "LMR quotes announcement in CA magazine 7/1982. (Same in Contemporary American Horoscopes.)" — https://www.astro.com/astro-databank/Wozniak,_Steve

@@ -99,6 +99,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Obama,_Barack'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Copy of birth certificate; AA. — "In June 2008 PT changed the Rodden Rating to AA. A time of 7:24 PM is given on a copy of his birth certificate... a Los Angeles Times blog reports that Ben LaBolt... confirmed 'that that is Obama's birth certificate.'" — https://www.astro.com/astro-databank/Obama,_Barack
 - name: Michelle Obama
   event_type: birth
   year: 1964
@@ -146,6 +149,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/William,_Prince_of_Wales'
   - The London Gazette, 21 June 1982, p. 8215
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth record in hand; AA (also London Gazette 21 June 1982). — "B.R. in hand from the Wilsons." — https://www.astro.com/astro-databank/Windsor,_William
 - name: Kate Middleton
   event_type: birth
   year: 1982
@@ -191,6 +197,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom'
   - The Times [London], 22 April 1926, p. 14
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous official bulletin; AA. — "Fagan quotes official announcement AA 3/1976. Sy Scholfield quotes... The Times, 22 April 1926: '...gave birth to a daughter at No. 17, Bruton-street at 2.40 yesterday morning.'" — https://www.astro.com/astro-databank/Elizabeth_II,_Queen_of_the_United_Kingdom
 - name: Queen of the United Kingdom Victoria
   event_type: birth
   year: 1819
@@ -214,6 +223,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Victoria,_Queen_of_the_United_Kingdom'
   - The London Gazette, 26 May 1819
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous official record; AA. — "Letter in hand from the Curator of the Court Dress Collection, Kensington Palace, Steinbrecher... Sy Scholfield quotes... 'London Gazette, Kensington-Palace, May 24,' The Times, 26 May 1819." — https://www.astro.com/astro-databank/Victoria,_Queen_of_the_United_Kingdom
 - name: Princess of Wales Diana
   event_type: birth
   year: 1961
@@ -236,6 +248,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Diana,_Princess_of_Wales'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Mother's memory (7:45 PM), corrected from an earlier 2:00 PM press figure; A-soft. — "...corrected to 7.45 pm and confirmed in a letter to Charles Harvey from the Queen's assistant press secretary as being from Diana's mother." — https://www.astro.com/astro-databank/Diana,_Princess_of_Wales
 - name: Nelson Mandela
   event_type: birth
   year: 1918
@@ -299,6 +314,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Kennedy,_John_F.'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Mother's memory; A-soft. — "Garth Allen quotes his mom in American Astrology 5/60." — https://www.astro.com/astro-databank/Kennedy,_John_F.
 - name: Prince Philip
   event_type: birth
   year: 1921
@@ -319,9 +337,9 @@
   sources:
   - "Wikipedia (Prince Philip; Mon Repos, Corfu): born 10 June 1921 at the Mon Repos villa, Corfu. Coordinates: Wikidata Q824940, Mon Repos villa = 39 deg 36'23\"N, 19 deg 55'34\"E (= 39.6064, 19.9261). Time: 2021 birth certificate registered by priest Spiridon Tryfonas (Mail on Sunday) states born 'at 10am' (Julian 28 May 1921 = 10 June 1921 Gregorian)"
   verified: false
-  verification_notes: >
+  verification_notes: |
     Birthplace (Mon Repos villa) confirmed; coordinates corrected ~250m to the Wikidata villa point; 10:00 AA stands on the 2021 sighted certificate — time unchanged. High confidence.
-  has_reliable_time: true
+    [ADB-verified] verdict=needs_manual_review bucket=document rating=AA: Two DOCUMENTARY times disagree - published BC + father's record both say 10:00 AM, but the 1972 official bulletin says 9:46 PM (plus a Starkman rectification to 09:51 floating). KATE DECISION - the 10 AM has the stronger documentary claim (BC + father); decide whether to accept AA at 10:00 or hold on the bulletin conflict. — "British Astrological Association quotes official bulletin, 11/1972 with a time of 21:46 (9:46 pm)... Charles Harvey wrote, 'June 10, 1921, 10:00 AM was recorded by his father, King Andrew'... Chris Mitchell pointed, on 12 April 2021, to the birth certificate published in an English newspaper. 'oron 10 πμ stands for hour 10 proi = before noon'" — https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh
 - name: Jacqueline Kennedy Onassis
   event_type: birth
   year: 1929
@@ -344,6 +362,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Onassis,_Jacqueline_Kennedy'
   - Southampton Hospital records
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Her own memory via friends; A-soft. The 5:00 PM 'baby monitor' sheet is explicitly NOT established as birth time (monitoring-start, per Scholfield); 2:30 PM stands. — "Frances McEvoy quotes her to mutual friends, data not released until after her death." — https://www.astro.com/astro-databank/Onassis,_Jacqueline_Kennedy
 - name: Dalai Lama XIV
   event_type: birth
   year: 1935
@@ -360,14 +381,14 @@
   - spiritual leader
   notable_for: Tibetan spiritual leader and Nobel Peace Prize laureate
   astrological_notes: Cancer Sun, Leo Moon
-  data_quality: A
+  data_quality: C
   sources:
   - 'Astro.com: https://astro.com/samples/sp_dlama_e.htm'
   verified: false
   has_reliable_time: false
-  verification_notes: >
-    astro.com rates A, not AA. Time is contested (sunrise ~04:38 traditional,
-    but sources scatter 04:30 -> 11:45 AM LMT). Treat time as unreliable.
+  verification_notes: |
+    astro.com rates A, not AA. Time is contested (sunrise ~04:38 traditional, but sources scatter 04:30 -> 11:45 AM LMT). Treat time as unreliable.
+    [ADB-verified] verdict=reject bucket=rectified rating=C: Headline 4:38 is a RECTIFICATION (ADB data source line says so); C. Documentary sources give only wide ranges ('between 5:30 and 6:30', 'before sunrise', 'sunrise', 'middle of the night', 'shortly before noon'). Hint claimed A. Feynman-class. — "Data source: Rectified from approx. time. Rodden Rating C. [Jhampa Shaneman] replied, 'Rectified to 4:38 am; Tengstar, Tibet.'" — https://www.astro.com/astro-databank/Dalai_Lama_XIV
 - name: Fidel Castro
   event_type: birth
   year: 1926
@@ -504,10 +525,13 @@
   - politician
   notable_for: Egyptian politician and president
   astrological_notes: Capricorn Sun
-  data_quality: AA
+  data_quality: DD
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Nasser,_Gamal_Abdel'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=unknown rating=DD: Dirty data — speculative/contradictory times, no record. Hint claimed AA. — "Smollin in AA 11/58 spec 'sunrise.' PC quotes Drew for 11:00 AM, stating that 'Sybil Leek gave 4:00 AM while another chart placed his ASC in Taurus.'" — https://www.astro.com/astro-databank/Nasser,_Gamal_Abdel
 - name: Wangari Maathai
   event_type: birth
   year: 1940
@@ -547,10 +571,13 @@
   - activist
   notable_for: Guatemalan human rights activist, Nobel Peace Prize laureate
   astrological_notes: Capricorn Sun, Capricorn Moon
-  data_quality: A
+  data_quality: B
   sources:
   - 'Astro-Seek: https://www.astro-seek.com/birth-chart/rigoberta-menchu-horoscope'
   verified: false
+  has_reliable_time: false
+  verification_notes: |
+    [ADB-verified] verdict=reject bucket=biography rating=B: Autobiography, no birth record; date itself disputed. Soft personality data only. — "Sy Scholfield quotes... 'Crossing Borders' (Verso, 1998), p.74: '...When he insisted that I was born at eight o'clock in the morning on 4 January, the officials said that no Menchu Tum was born on that date...'" — https://www.astro.com/astro-databank/Mench%C3%BA,_Rigoberta
 - name: Benazir Bhutto
   event_type: birth
   year: 1953
@@ -592,10 +619,13 @@
   - politician
   notable_for: Indian politician and prime minister
   astrological_notes: Scorpio Sun, Sagittarius Moon
-  data_quality: AA
+  data_quality: A
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Gandhi,_Indira'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Associate (private secretary) report; A-soft. Competing times exist (11:39 PM, 3:40 PM) — minute soft. — "Robert Jansky quotes her private secretary, '41 Ghatis 52 Phals and 23 Viphas = 11:11:14 PM IST.'" — https://www.astro.com/astro-databank/Gandhi,_Indira
 - name: Margaret Thatcher
   event_type: birth
   year: 1925
@@ -612,10 +642,13 @@
   - UK Prime Minister
   notable_for: British stateswoman who was Prime Minister of the United Kingdom from 1979 to 1990 and Leader of the Conservative Party from 1975 to 1990.
   astrological_notes: Sun 19 Libra
-  data_quality: AA
+  data_quality: A
   sources:
   - https://www.astro.com/astro-databank/Thatcher,_Margaret
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Associate's memory; A-soft — NOT the AA the roster hinted. Round 09:00 is a memory report, caught by the round-hour-AA rule. — "Charles Harvey quotes Thatcher's private secretary" — https://www.astro.com/astro-databank/Thatcher,_Margaret
 - name: Angela Merkel
   event_type: birth
   year: 1954
@@ -726,11 +759,12 @@
   - Russian Empress
   notable_for: Empress of Russia who came to power following a coup d'état that she organised against her husband, Peter III.
   astrological_notes: Sun 11 Taurus
-  data_quality: A
+  data_quality: AA
   sources:
   - "AstroDataBank, Catherine_the_Great,_Empress: Sy Scholfield quoting Katharine S. Anthony, Memoirs of Catherine the Great (Tudor, 1935), p.71 — Prince Christian August's contemporary letter from Stettin, 2 May 1729: 'this morning at half past two o'clock'"
   verified: false
   calendar: gregorian
   has_reliable_time: true
-  verification_notes: >
+  verification_notes: |
     Father's cited, sighted contemporary letter fixes 02:30 (family source) — upgrade B to A, reliable time. High confidence.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous father's letter (OS date); AA (hint said A, verified AA). — "Prince Christian August writes from Stettin... May 2, 1729, that 'this morning at half past two o'clock' his wife was delivered of a Princess-daughter..." — https://www.astro.com/astro-databank/Catherine_the_Great

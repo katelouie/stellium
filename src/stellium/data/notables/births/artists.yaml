@@ -15,14 +15,14 @@
   - surrealist
   notable_for: Iconic self-portraits and Mexican folk art
   astrological_notes: Cancer Sun with Leo Rising - tests artistic creativity and emotional intensity
-  data_quality: A
+  data_quality: AA
   sources:
   - "AstroDataBank: https://www.astro.com/astro-databank/Kahlo,_Frida"
   verified: false
   has_reliable_time: true
-  verification_notes: >
-    Replaces 'Stellium Test Suite' placeholder. Note Kahlo publicly claimed
-    1910; documented birth year is 1907.
+  verification_notes: |
+    Replaces 'Stellium Test Suite' placeholder. Note Kahlo publicly claimed 1910; documented birth year is 1907.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth registry entry in hand; AA document. — "LMR quotes Hayden Herrera in her biography 'Frida,' where she pictures her B.C. Later, Sy Scholfield provided birth registry entry from Distrito Federal archives, and upgraded the rating to AA (BC/BR in hand)." — https://www.astro.com/astro-databank/Kahlo,_Frida
 - name: Pablo Picasso
   event_type: birth
   year: 1881
@@ -41,14 +41,14 @@
   - cubist
   notable_for: Co-founder of Cubism, revolutionary modern artist
   astrological_notes: Scorpio Sun - tests artistic revolution and creative transformation
-  data_quality: A
+  data_quality: AA
   sources:
   - "AstroDataBank: https://www.astro.com/astro-databank/Picasso,_Pablo"
   verified: false
   has_reliable_time: true
-  verification_notes: >
-    Replaces 'Stellium Test Suite' placeholder. 23:15 well attested (thought
-    stillborn at birth).
+  verification_notes: |
+    Replaces 'Stellium Test Suite' placeholder. 23:15 well attested (thought stillborn at birth).
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA (hint said A, verified AA). — "B.C. in hand from Filipe Ferreira ('a las once y cuarto de la noche.')" — https://www.astro.com/astro-databank/Picasso,_Pablo
 - name: Georgia O'Keeffe
   event_type: birth
   year: 1887
@@ -112,10 +112,13 @@
   - Post-Impressionist
   notable_for: Dutch Post-Impressionist painter, one of the most famous and influential figures in Western art history. Created over 2,100 artworks including "The Starry Night" and "Sunflowers."
   astrological_notes: Sun 9 Aries
-  data_quality: A
+  data_quality: AA
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Van_Gogh,_Vincent'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA (hint said A, verified AA/document). — "B.C. in hand from Steinbrecher. Same in Gauquelin Vol. 4/1444." — https://www.astro.com/astro-databank/Van_Gogh,_Vincent
 - name: Leonardo da Vinci
   event_type: birth
   year: 1452
@@ -145,6 +148,9 @@
   verified: true
   calendar: julian_original
   time_system: florentine
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous family diary (grandfather's record); AA. Minute is a Florentine-time conversion, treat as soft. — "LMR quotes 'Leonardo da Vinci,' Reynal & Co., which cites a family diary, 'A grandson of mine was born April 15, Saturday, three hours into the night.'" — https://www.astro.com/astro-databank/Da_Vinci,_Leonardo
 - name: Wassily Kandinsky
   event_type: birth
   year: 1866
@@ -213,6 +219,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Dali,_Salvador'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "Birth certificate in hand from Juan Trigo. Same in autobiography 'The Unspeakable Confessions of Salvador Dali'..." — https://www.astro.com/astro-databank/Dali,_Salvador
 - name: Andy Warhol
   event_type: birth
   year: 1928
@@ -264,10 +273,10 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Matisse,_Henri'
   - Birth certificate in Didier Geslain archive, 'sculpteurs' pdf file, p. 78
   verified: false
-  verification_notes: >
-    VERIFIED, no change (audit trail): the round-hour 20:00 survived scrutiny --
-    it rests on the French etat-civil birth certificate (Didier Geslain archive
-    'sculpteurs' p.78; Gauquelin Vol 4/742 marked 'recorded'). AA stands.
+  verification_notes: |
+    VERIFIED, no change (audit trail): the round-hour 20:00 survived scrutiny -- it rests on the French etat-civil birth certificate (Didier Geslain archive 'sculpteurs' p.78; Gauquelin Vol 4/742 marked 'recorded'). AA stands.
+    [ADB-verified] verdict=accept bucket=document rating=AA: Archived birth certificate; AA. — "Birth certificate in Didier Geslain archive, 'sculpteurs' pdf file, p. 78. Same data: 'Constellations 77' quotes Gauquelin Vol 4/742 'L'Influence Des Astres,' 'recorded.'" — https://www.astro.com/astro-databank/Matisse,_Henri
+  has_reliable_time: true
 - name: Diego Rivera
   event_type: birth
   year: 1886

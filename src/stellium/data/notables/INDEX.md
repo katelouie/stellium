@@ -17,7 +17,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 ### Architect (3)
 
 - **Frank Lloyd Wright** (1867) (architect)
-  - 1867-06-08 17:00 · Richland Center, Wisconsin [America/Chicago] · rating AA · time reliable
+  - 1867-06-08 17:00 · Richland Center, Wisconsin [America/Chicago] · rating A · time reliable
 - **I.M. Pei** (1917) (architect, Louvre Pyramid)
   - 1917-04-26 12:00 · Guangzhou, China [Asia/Shanghai] · rating X · time NOT reliable (noon placeholder)
 - **Zaha Hadid** (1950) (architect, first woman Pritzker Prize)
@@ -34,23 +34,23 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Diego Rivera** (1886) (painter, muralist)
   - 1886-12-08 19:30 · Guanajuato, Mexico [America/Mexico_City] · rating DD · time reliability unverified
 - **Frida Kahlo** (1907) (painter, surrealist)
-  - 1907-07-06 08:30 · Coyoacán, Mexico [America/Mexico_City] · rating A · time reliable
+  - 1907-07-06 08:30 · Coyoacán, Mexico [America/Mexico_City] · rating AA · time reliable
 - **Georgia O'Keeffe** (1887) (Painter, Modernist)
   - 1887-11-15 06:30 · Sun Prairie, Wisconsin, USA [America/Chicago] · rating C · time reliability unverified
 - **Henri Matisse** (1869) (Painter, Sculptor, Lithographer)
-  - 1869-12-31 20:00 · Le Cateau, France [Europe/Paris] · rating AA · time reliability unverified
+  - 1869-12-31 20:00 · Le Cateau, France [Europe/Paris] · rating AA · time reliable
 - **Leonardo da Vinci** (1452) (Painter, Sculptor, Engineer, Inventor, Scientist, Mathematician)
-  - 1452-04-23 21:40 · Vinci, Italy [Europe/Rome] · rating AA · time reliability unverified
+  - 1452-04-23 21:40 · Vinci, Italy [Europe/Rome] · rating AA · time reliable
 - **Michelangelo** (1475) (Sculptor, Painter, Architect, Poet)
   - 1475-03-06 01:45 · Caprese Michelangelo, Italy [Europe/Rome] · rating B · time reliability unverified
 - **Pablo Picasso** (1881) (painter, sculptor, cubist)
-  - 1881-10-25 23:15 · Málaga, Spain [Europe/Madrid] · rating A · time reliable
+  - 1881-10-25 23:15 · Málaga, Spain [Europe/Madrid] · rating AA · time reliable
 - **Pamela Colman Smith** (1878) (illustrator, commercial artist)
   - 1878-02-16 12:00 · Heston Middlesex, England [Europe/London] · rating X · time NOT reliable (noon placeholder)
 - **Salvador Dali** (1904) (Painter, Surrealist, Sculptor)
-  - 1904-05-11 08:45 · Figueres, Spain [Europe/Madrid] · rating AA · time reliability unverified
+  - 1904-05-11 08:45 · Figueres, Spain [Europe/Madrid] · rating AA · time reliable
 - **Vincent van Gogh** (1853) (Painter, Post-Impressionist)
-  - 1853-03-30 11:00 · Groot-Zundert, Netherlands [Europe/Amsterdam] · rating A · time reliability unverified
+  - 1853-03-30 11:00 · Groot-Zundert, Netherlands [Europe/Amsterdam] · rating AA · time reliable
 - **Wassily Kandinsky** (1866) (Painter, Expressionist, Abstract Art Pioneer)
   - 1866-12-16 06:00 · Moscow, Russia [Europe/Moscow] · rating C · time reliability unverified
 
@@ -59,22 +59,22 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Alan Leo** (1860) (theosophist, author, publisher)
   - 1860-08-07 05:49 · Westminster, England [Europe/London] · rating B · time reliability unverified
 - **B.V. Raman** (1912) (Vedic astrologer, author)
-  - 1912-08-08 19:43 · Bangalore, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1912-08-08 19:43 · Bangalore, India [Asia/Kolkata] · rating DD · time NOT reliable
 - **Dane Rudhyar** (1895) (Humanistic Astrologer, Composer, Philosopher)
-  - 1895-03-23 00:42 · Paris, France [Europe/Paris] · rating AA · time reliability unverified
+  - 1895-03-23 00:42 · Paris, France [Europe/Paris] · rating A · time NOT reliable
 - **Evangeline Adams** (1868) (Astrologer)
   - 1868-02-08 08:30 · Jersey City, New Jersey [America/New_York] · rating DD · time reliability unverified
 - **K.N. Rao** (1931) (Vedic astrologer, author)
   - 1931-10-12 07:54 · Machilipatnam, India [Asia/Kolkata] · rating AA · time reliability unverified
 - **William Lilly** (1602) (Traditional Astrologer, Author, Horary Master)
-  - 1602-05-01 02:00 · Diseworth, Leicestershire, England [Europe/London] · rating A · time reliability unverified
+  - 1602-05-01 02:00 · Diseworth, Leicestershire, England [Europe/London] · rating A · time NOT reliable
 
 ### Athlete (10)
 
 - **Billie Jean King** (1943) (tennis, equality advocate)
-  - 1943-11-22 11:45 · Long Beach, California [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1943-11-22 11:45 · Long Beach, California [America/Los_Angeles] · rating AA · time reliable
 - **Bruce Lee** (1940) (Martial Artist, Actor, Philosopher)
-  - 1940-11-27 07:12 · San Francisco, California, USA [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1940-11-27 07:12 · San Francisco, California, USA [America/Los_Angeles] · rating AA · time reliable
 - **Jackie Robinson** (1919) (baseball, broke color barrier)
   - 1919-01-31 18:30 · Cairo, Georgia [America/New_York] · rating B · time reliability unverified
 - **Joe DiMaggio** (1914) (baseball player)
@@ -82,11 +82,11 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Michael Jordan** (1963) (Basketball Player, Businessman, Cultural Icon)
   - 1963-02-17 13:40 · Brooklyn, New York, USA [America/New_York] · rating AA · time reliability unverified
 - **Muhammad Ali** (1942) (Boxer, Activist, Humanitarian)
-  - 1942-01-17 18:35 · Louisville, Kentucky, USA [America/Kentucky/Louisville] · rating AA · time reliability unverified
+  - 1942-01-17 18:35 · Louisville, Kentucky, USA [America/Kentucky/Louisville] · rating AA · time reliable
 - **Pelé** (1940) (Soccer Player)
   - 1940-10-21 03:00 · Três Corações (Minas Gerais), Brazil [America/Sao_Paulo] · rating AA · time reliable
 - **Serena Williams** (1981) (Tennis Player, Entrepreneur, Activist)
-  - 1981-09-26 20:28 · Saginaw, Michigan, USA [America/Detroit] · rating AA · time reliability unverified
+  - 1981-09-26 20:28 · Saginaw, Michigan, USA [America/Detroit] · rating AA · time reliable
 - **Simone Biles** (1997) (gymnast)
   - 1997-03-14 00:30 · Columbus, Ohio [America/New_York] · rating C · time reliability unverified
 - **Usain Bolt** (1986) (Track and Field)
@@ -101,7 +101,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Elon Musk** (1971) (Entrepreneur, Engineer, Investor)
   - 1971-06-28 07:30 · Pretoria, South Africa [Africa/Johannesburg] · rating B · time NOT reliable
 - **Steve Jobs** (1955) (Entrepreneur, Inventor, Visionary)
-  - 1955-02-24 19:15 · San Francisco, California, USA [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1955-02-24 19:15 · San Francisco, California, USA [America/Los_Angeles] · rating AA · time reliable
 - **Steve Wozniak** (1950) (inventor, engineer)
   - 1950-08-11 09:45 · San Jose, California, USA [America/Los_Angeles] · rating AA · time reliable
 - **Walt Disney** (1901) (Animator, Filmmaker, Theme Park Creator)
@@ -116,18 +116,18 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Bonnie Parker** (1910) (murderer)
   - 1910-10-01 12:00 · Rowena, Texas, USA [America/Chicago] · rating X · time NOT reliable (noon placeholder)
 - **Ted Bundy** (1946) (Serial Killer)
-  - 1946-11-24 22:35 · Burlington, Vermont, USA [America/New_York] · rating AA · time reliability unverified
+  - 1946-11-24 22:35 · Burlington, Vermont, USA [America/New_York] · rating AA · time reliable
 
 ### Explorer (5)
 
 - **Amelia Earhart** (1897) (aviator)
-  - 1897-07-24 23:30 · Atchison, Kansas [America/Chicago] · rating AA · time reliability unverified
+  - 1897-07-24 23:30 · Atchison, Kansas [America/Chicago] · rating AA · time reliable
 - **Edmund Hillary** (1919) (Everest climber)
   - 1919-07-20 16:00 · Auckland, New Zealand [Pacific/Auckland] · rating C · time reliability unverified
 - **Jacques Cousteau** (1910) (oceanographer, explorer)
-  - 1910-06-11 13:06 · Saint-André-de-Cubzac, France [Europe/Paris] · rating AA · time reliability unverified
+  - 1910-06-11 13:06 · Saint-André-de-Cubzac, France [Europe/Paris] · rating AA · time reliable
 - **Neil Armstrong** (1930) (astronaut, first on Moon)
-  - 1930-08-05 00:31 · Wapakoneta, Ohio [America/New_York] · rating AA · time reliability unverified
+  - 1930-08-05 00:31 · Wapakoneta, Ohio [America/New_York] · rating AA · time reliable
 - **Yuri Gagarin** (1934) (first human in space)
   - 1934-03-09 00:00 · Klushino, Russia [Europe/Moscow] · rating X · time NOT reliable
 
@@ -140,35 +140,35 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Aung San Suu Kyi** (1945) (Myanmar, Nobel laureate)
   - 1945-06-19 12:00 · Rangoon (Yangon), Burma [Asia/Yangon] · rating X · time NOT reliable (noon placeholder)
 - **Barack Obama** (1961) (U.S. President, Lawyer, Author)
-  - 1961-08-04 19:24 · Honolulu, Hawaii, USA [Pacific/Honolulu] · rating AA · time reliability unverified
+  - 1961-08-04 19:24 · Honolulu, Hawaii, USA [Pacific/Honolulu] · rating AA · time reliable
 - **Benazir Bhutto** (1953) (politician)
   - 1953-06-21 19:21 · Karachi, Pakistan [Asia/Karachi] · rating DD · time NOT reliable
 - **Catherine the Great** (1729) (Russian Empress)
-  - 1729-05-02 02:30 · Szczecin, Poland [Europe/Warsaw] · rating A · time reliable
+  - 1729-05-02 02:30 · Szczecin, Poland [Europe/Warsaw] · rating AA · time reliable
 - **Che Guevara** (1928) (revolutionary)
   - 1928-05-14 03:05 · Rosario, Argentina [America/Argentina/Cordoba] · rating DD · time NOT reliable
 - **Dalai Lama XIV** (1935) (spiritual leader)
-  - 1935-07-06 04:38 · Taktser, China [Asia/Urumqi] · rating A · time NOT reliable
+  - 1935-07-06 04:38 · Taktser, China [Asia/Urumqi] · rating C · time NOT reliable
 - **Eva Perón** (1919) (Argentine first lady, icon)
   - 1919-05-07 05:14 · Los Toldos, Buenos Aires Province, Argentina [America/Argentina/Buenos_Aires] · rating B · time NOT reliable
 - **Fidel Castro** (1926) (revolutionary)
   - 1926-08-13 02:00 · Birán, Cuba [America/Havana] · rating DD · time NOT reliable
 - **Gamal Abdel Nasser** (1918) (politician)
-  - 1918-01-15 04:28 · Alexandria, Egypt [Africa/Cairo] · rating AA · time reliability unverified
+  - 1918-01-15 04:28 · Alexandria, Egypt [Africa/Cairo] · rating DD · time NOT reliable
 - **Golda Meir** (1898) (Israeli Prime Minister)
   - 1898-05-03 12:00 · Kiev, Ukraine [Europe/Kyiv] · rating AA · time NOT reliable (noon placeholder)
 - **Hugo Chávez** (1954) (politician)
   - 1954-07-28 04:00 · Sabaneta, Venezuela [America/Caracas] · rating DD · time NOT reliable
 - **Indira Gandhi** (1917) (politician)
-  - 1917-11-19 23:11 · Allahabad, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1917-11-19 23:11 · Allahabad, India [Asia/Kolkata] · rating A · time reliable
 - **Jacqueline Kennedy Onassis** (1929) (first lady, editor)
-  - 1929-07-28 14:30 · Southampton, New York, USA [America/New_York] · rating A · time reliability unverified
+  - 1929-07-28 14:30 · Southampton, New York, USA [America/New_York] · rating A · time reliable
 - **John F. Kennedy** (1917) (U.S. President, author)
-  - 1917-05-29 15:00 · Brookline, Massachusetts, USA [America/New_York] · rating A · time reliability unverified
+  - 1917-05-29 15:00 · Brookline, Massachusetts, USA [America/New_York] · rating A · time reliable
 - **Kate Middleton** (1982) (Princess of Wales, Royal, Philanthropist)
   - 1982-01-09 19:00 · Reading, Berkshire, England [Europe/London] · rating C · time reliability unverified
 - **Margaret Thatcher** (1925) (UK Prime Minister)
-  - 1925-10-13 09:00 · Grantham, England [Europe/London] · rating AA · time reliability unverified
+  - 1925-10-13 09:00 · Grantham, England [Europe/London] · rating A · time reliable
 - **Martin Luther King Jr.** (1929) (civil_rights, minister, activist)
   - 1929-01-15 12:00 · Atlanta, Georgia, USA [America/New_York] · rating C · time NOT reliable (noon placeholder)
 - **Michelle Obama** (1964) (First Lady, Lawyer, Author)
@@ -180,17 +180,17 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Patrice Lumumba** (1925) (politician)
   - 1925-07-02 12:00 · Onalua, Congo [Africa/Kinshasa] · rating X · time NOT reliable (noon placeholder)
 - **Prince Philip** (1921) (royal family)
-  - 1921-06-10 10:00 · Mon Repos, Corfu, Greece [Europe/Athens] · rating AA · time reliable
+  - 1921-06-10 10:00 · Mon Repos, Corfu, Greece [Europe/Athens] · rating AA · time reliability unverified
 - **Prince William** (1982) (Prince of Wales, Royal, Philanthropist)
-  - 1982-06-21 21:03 · Paddington, London, England [Europe/London] · rating AA · time reliability unverified
+  - 1982-06-21 21:03 · Paddington, London, England [Europe/London] · rating AA · time reliable
 - **Princess of Wales Diana** (1961) (Princess, Royal, Humanitarian)
-  - 1961-07-01 19:45 · Sandringham, Norfolk, England [Europe/London] · rating A · time reliability unverified
+  - 1961-07-01 19:45 · Sandringham, Norfolk, England [Europe/London] · rating A · time reliable
 - **Queen Elizabeth II** (1926) (Queen, Head of State, Monarch)
-  - 1926-04-21 02:40 · Mayfair, London, England [Europe/London] · rating AA · time reliability unverified
+  - 1926-04-21 02:40 · Mayfair, London, England [Europe/London] · rating AA · time reliable
 - **Queen of the United Kingdom Victoria** (1819) (Queen, Empress, Monarch)
-  - 1819-05-24 04:15 · Kensington Palace, London, England [Europe/London] · rating AA · time reliability unverified
+  - 1819-05-24 04:15 · Kensington Palace, London, England [Europe/London] · rating AA · time reliable
 - **Rigoberta Menchú** (1959) (activist)
-  - 1959-01-09 08:00 · Chimel, Guatemala [America/Guatemala] · rating A · time reliability unverified
+  - 1959-01-09 08:00 · Chimel, Guatemala [America/Guatemala] · rating B · time NOT reliable
 - **Thomas Sankara** (1949) (revolutionary)
   - 1949-12-21 11:50 · Yako, Burkina Faso [Africa/Ouagadougou] · rating X · time NOT reliable
 - **Wangari Maathai** (1940) (activist, environmentalist)
@@ -207,25 +207,25 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Alfred Hitchcock** (1899) (film director)
   - 1899-08-13 00:00 · London, England [Europe/London] · rating X · time NOT reliable
 - **Angelina Jolie** (1975) (Actor, Filmmaker, Humanitarian)
-  - 1975-06-04 09:09 · Los Angeles, California, USA [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1975-06-04 09:09 · Los Angeles, California, USA [America/Los_Angeles] · rating AA · time reliable
 - **Anita Mui** (1963) (singer, actress)
   - 1963-10-10 08:35 · Hong Kong [Asia/Hong_Kong] · rating X · time NOT reliable
 - **Audrey Hepburn** (1929) (actress, humanitarian)
-  - 1929-05-04 03:00 · Ixelles, Belgium [Europe/Brussels] · rating AA · time reliability unverified
+  - 1929-05-04 03:00 · Ixelles, Belgium [Europe/Brussels] · rating AA · time reliable
 - **Beyoncé** (1981) (Singer, Songwriter, Dancer)
-  - 1981-09-04 21:47 · Houston, Texas [America/Chicago] · rating AA · time reliability unverified
+  - 1981-09-04 21:47 · Houston, Texas [America/Chicago] · rating AA · time reliable
 - **Brad Pitt** (1963) (Actor, Producer, Film Star)
-  - 1963-12-18 06:31 · Shawnee, Oklahoma, USA [America/Chicago] · rating A · time reliability unverified
+  - 1963-12-18 06:31 · Shawnee, Oklahoma, USA [America/Chicago] · rating A · time reliable
 - **Charlie Chaplin** (1889) (actor, filmmaker, comedian)
   - 1889-04-16 20:00 · London, England [Europe/London] · rating X · time NOT reliable
 - **Chow Yun-fat** (1955) (actor)
   - 1955-05-18 12:00 · Hong Kong [Asia/Hong_Kong] · rating X · time NOT reliable (noon placeholder)
 - **David Bowie** (1947) (musician, actor)
-  - 1947-01-08 09:00 · London, England [Europe/London] · rating A · time reliability unverified
+  - 1947-01-08 09:00 · London, England [Europe/London] · rating A · time reliable
 - **Dr. Dre** (1965) (rapper, producer)
-  - 1965-02-18 10:56 · Los Angeles, California, USA [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1965-02-18 10:56 · Los Angeles, California, USA [America/Los_Angeles] · rating AA · time reliable
 - **Elizabeth Taylor** (1932) (Actress, Humanitarian, Film Star)
-  - 1932-02-27 02:30 · London, England [Europe/London] · rating AA · time reliability unverified
+  - 1932-02-27 02:30 · London, England [Europe/London] · rating AA · time reliable
 - **Eminem** (1972) (rapper, songwriter)
   - 1972-10-17 12:00 · Saint Joseph, Missouri, USA [America/Chicago] · rating X · time NOT reliable (noon placeholder)
 - **Faye Wong** (1969) (singer, actress)
@@ -235,11 +235,11 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **John Lennon** (1940) (Singer, Songwriter, Peace Activist)
   - 1940-10-09 18:30 · Liverpool, England [Europe/London] · rating DD · time reliability unverified
 - **Kurt Cobain** (1967) (musician, singer)
-  - 1967-02-20 19:38 · Aberdeen, Washington, USA [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1967-02-20 19:38 · Aberdeen, Washington, USA [America/Los_Angeles] · rating AA · time reliable
 - **Leslie Cheung** (1956) (singer, actor)
   - 1956-09-12 18:15 · Hong Kong [Asia/Hong_Kong] · rating X · time NOT reliable
 - **Lucille Ball** (1911) (comedian, TV pioneer)
-  - 1911-08-06 17:00 · Jamestown, New York [America/New_York] · rating AA · time reliability unverified
+  - 1911-08-06 17:00 · Jamestown, New York [America/New_York] · rating AA · time reliable
 - **Mariah Carey** (1969) (singer, songwriter)
   - 1969-03-27 07:27 · Huntington, New York, USA [America/New_York] · rating B · time reliability unverified
 - **Marilyn Monroe** (1926) (Actress, Model, Singer)
@@ -249,13 +249,13 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Oprah Winfrey** (1954) (television, entrepreneur, philanthropist)
   - 1954-01-29 04:30 · Kosciusko, Mississippi, USA [America/Chicago] · rating C · time reliability unverified
 - **Paul McCartney** (1942) (Singer, Songwriter, Multi-instrumentalist)
-  - 1942-06-18 14:00 · Liverpool, England [Europe/London] · rating A · time reliability unverified
+  - 1942-06-18 14:00 · Liverpool, England [Europe/London] · rating A · time reliable
 - **Prince** (1958) (musician, singer)
-  - 1958-06-07 18:17 · Minneapolis, Minnesota, USA [America/Chicago] · rating AA · time reliability unverified
+  - 1958-06-07 18:17 · Minneapolis, Minnesota, USA [America/Chicago] · rating AA · time reliable
 - **Richard Burton** (1925) (Actor, Stage Actor, Film Star)
   - 1925-11-10 15:00 · Pontrhydyfen, Wales [Europe/London] · rating DD · time reliability unverified
 - **Robin Williams** (1951) (actor, comedian)
-  - 1951-07-21 13:34 · Chicago, Illinois [America/Chicago] · rating AA · time reliability unverified
+  - 1951-07-21 13:34 · Chicago, Illinois [America/Chicago] · rating AA · time reliable
 - **Ryuichi Sakamoto** (1952) (composer, musician)
   - 1952-01-17 12:00 · Tokyo, Japan [Asia/Tokyo] · rating X · time NOT reliable (noon placeholder)
 - **Selena Quintanilla** (1971) (singer, Tejano musician)
@@ -263,13 +263,13 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Shah Rukh Khan** (1965) (actor)
   - 1965-11-02 06:25 · Delhi, India [Asia/Kolkata] · rating A · time reliable
 - **Steven Spielberg** (1946) (film director)
-  - 1946-12-18 18:16 · Cincinnati, Ohio [America/New_York] · rating AA · time reliability unverified
+  - 1946-12-18 18:16 · Cincinnati, Ohio [America/New_York] · rating AA · time reliable
 - **Teresa Teng** (1953) (singer)
   - 1953-01-29 05:00 · Taipei, Taiwan [Asia/Taipei] · rating C · time NOT reliable
 - **Tom Hanks** (1956) (Actor, Film Producer)
-  - 1956-07-09 11:17 · Concord, California [America/Los_Angeles] · rating AA · time reliability unverified
+  - 1956-07-09 11:17 · Concord, California [America/Los_Angeles] · rating AA · time reliable
 - **Wolfgang Mozart** (1756) (Composer, Pianist, Child Prodigy)
-  - 1756-01-27 20:00 · Salzburg, Austria [Europe/Vienna] · rating A · time reliability unverified
+  - 1756-01-27 20:00 · Salzburg, Austria [Europe/Vienna] · rating AA · time reliable
 - **Wong Kar-wai** (1958) (filmmaker)
   - 1958-07-17 12:00 · Shanghai, China [Asia/Shanghai] · rating X · time NOT reliable (noon placeholder)
 - **Yoko Ono** (1933) (Conceptual Artist, Musician, Peace Activist)
@@ -282,55 +282,55 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Arthur Edward Waite** (1857) (mystic, author)
   - 1857-10-02 13:00 · Brooklyn, New York, USA [America/New_York] · rating B · time reliability unverified
 - **Chinmayananda Saraswati** (1916) (spiritual teacher)
-  - 1916-05-08 19:10 · Ernakulam, India [Asia/Kolkata] · rating A · time reliability unverified
+  - 1916-05-08 19:10 · Ernakulam, India [Asia/Kolkata] · rating X · time NOT reliable
 - **Edgar Cayce** (1877) (Mystic, Psychic)
   - 1877-03-18 15:20 · Hopkinsville, Kentucky [America/Chicago] · rating C · time reliability unverified
 - **Helena Blavatsky** (1831) (Spiritualist, Mystic)
   - 1831-08-12 02:17 · Ekaterinoslav, Ukraine [Europe/Kyiv] · rating C · time NOT reliable
 - **Jiddu Krishnamurti** (1895) (philosopher, speaker)
-  - 1895-05-12 00:30 · Madanapalle, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1895-05-12 00:30 · Madanapalle, India [Asia/Kolkata] · rating B · time NOT reliable
 - **Nostradamus** (1503) (Astrologer, Physician, Seer)
   - 1503-12-14 12:00 · Saint-Remy-de-Provence, France [Europe/Paris] · rating C · time NOT reliable (noon placeholder)
 - **Osho Rajneesh** (1931) (guru, mystic)
-  - 1931-12-11 17:13 · Kuchwada, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1931-12-11 17:13 · Kuchwada, India [Asia/Kolkata] · rating A · time reliable
 - **Paramahansa Yogananda** (1893) (yogi, guru)
-  - 1893-01-05 20:38 · Gorakhpur, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1893-01-05 20:38 · Gorakhpur, India [Asia/Kolkata] · rating C · time NOT reliable
 - **Ramana Maharshi** (1879) (mystic, philosopher)
   - 1879-12-30 01:00 · Madurai, India [Asia/Kolkata] · rating B · time reliability unverified
 - **Sadhguru** (1957) (yogi, mystic)
-  - 1957-09-03 23:54 · Mysore, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1957-09-03 23:54 · Mysore, India [Asia/Kolkata] · rating X · time NOT reliable
 - **Sri Aurobindo** (1872) (philosopher, yogi)
   - 1872-08-15 05:00 · Kolkata, India [Asia/Kolkata] · rating B · time NOT reliable
 - **Sri Ramakrishna** (1836) (mystic, spiritual teacher)
   - 1836-02-18 05:00 · Kamarpukur, India [Asia/Kolkata] · rating B · time NOT reliable
 - **Swami Vivekananda** (1863) (philosopher, monk)
-  - 1863-01-12 06:33 · Kolkata, India [Asia/Kolkata] · rating A · time reliable
+  - 1863-01-12 06:33 · Kolkata, India [Asia/Kolkata] · rating AA · time reliable
 - **Thich Nhat Hanh** (1926) (Zen master, peace activist)
   - 1926-10-11 12:00 · Tha Tien, Vietnam [Asia/Ho_Chi_Minh] · rating X · time NOT reliable (noon placeholder)
 
 ### Philosopher (4)
 
 - **Friedrich Nietzsche** (1844) (philosopher)
-  - 1844-10-15 10:00 · Röcken, Germany [Europe/Berlin] · rating AA · time reliability unverified
+  - 1844-10-15 10:00 · Röcken, Germany [Europe/Berlin] · rating B · time NOT reliable
 - **Hannah Arendt** (1906) (political theorist)
-  - 1906-10-14 21:15 · Hannover, Germany [Europe/Berlin] · rating AA · time reliability unverified
+  - 1906-10-14 21:15 · Hannover, Germany [Europe/Berlin] · rating AA · time reliable
 - **Jean-Paul Sartre** (1905) (existentialist)
-  - 1905-06-21 18:45 · Paris, France [Europe/Paris] · rating AA · time reliability unverified
+  - 1905-06-21 18:45 · Paris, France [Europe/Paris] · rating AA · time reliable
 - **Simone de Beauvoir** (1908) (existentialist, feminist)
-  - 1908-01-09 04:30 · Paris, France [Europe/Paris] · rating AA · time reliability unverified
+  - 1908-01-09 04:30 · Paris, France [Europe/Paris] · rating AA · time reliable
 
 ### Scientist (20)
 
 - **Ada Lovelace** (1815) (mathematician, computer pioneer)
   - 1815-12-10 13:00 · London, England [Europe/London] · rating B · time reliability unverified
 - **Alan Turing** (1912) (mathematician, computer scientist, cryptanalyst)
-  - 1912-06-23 02:15 · London, England [Europe/London] · rating A · time reliability unverified
+  - 1912-06-23 02:15 · London, England [Europe/London] · rating A · time reliable
 - **Albert Einstein** (1879) (physicist, theorist)
   - 1879-03-14 11:30 · Ulm, Germany [Europe/Berlin] · rating AA · time reliable
 - **Alexander Fleming** (1881) (penicillin discoverer)
   - 1881-08-06 02:00 · Darvel, Scotland [Europe/London] · rating B · time reliable
 - **Carl Sagan** (1934) (Astronomer, Astrophysicist, Author)
-  - 1934-11-09 17:05 · Brooklyn, New York, USA [America/New_York] · rating AA · time reliability unverified
+  - 1934-11-09 17:05 · Brooklyn, New York, USA [America/New_York] · rating AA · time reliable
 - **Charles Darwin** (1809) (Naturalist, Biologist)
   - 1809-02-12 03:00 · Shrewsbury, England [Europe/London] · rating DD · time reliability unverified
 - **Galileo Galilei** (1564) (Astronomer, Physicist, Mathematician)
@@ -348,13 +348,13 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Nikola Tesla** (1856) (inventor, electrical_engineer)
   - 1856-07-10 00:00 · Smiljan, Croatia [Europe/Zagreb] · rating C · time NOT reliable
 - **Rachel Carson** (1907) (marine biologist, Silent Spring)
-  - 1907-05-27 02:00 · Springdale, Pennsylvania [America/New_York] · rating A · time reliability unverified
+  - 1907-05-27 02:00 · Springdale, Pennsylvania [America/New_York] · rating C · time NOT reliable
 - **Richard Feynman** (1918) (physicist, Nobel laureate)
   - 1918-05-11 14:49 · New York, New York [America/New_York] · rating C · time NOT reliable
 - **Rosalind Franklin** (1920) (crystallographer, DNA structure)
   - 1920-07-25 12:00 · London, England [Europe/London] · rating X · time NOT reliable (noon placeholder)
 - **Sigmund Freud** (1856) (Psychologist, Neurologist, Author)
-  - 1856-05-06 18:30 · Freiberg, Moravia (now Czech Republic) [Europe/Prague] · rating A · time reliable
+  - 1856-05-06 18:30 · Freiberg, Moravia (now Czech Republic) [Europe/Prague] · rating AA · time reliable
 - **Stephen Hawking** (1942) (Physicist)
   - 1942-01-08 12:00 · Oxford, England [Europe/London] · rating X · time NOT reliable (noon placeholder)
 - **Thomas Edison** (1847) (Inventor, Businessman, Engineer)
@@ -365,7 +365,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 ### Writer (18)
 
 - **Agatha Christie** (1890) (mystery novelist)
-  - 1890-09-15 14:14 · Torquay, England [Europe/London] · rating A · time reliability unverified
+  - 1890-09-15 14:14 · Torquay, England [Europe/London] · rating AA · time reliable
 - **Amrita Pritam** (1919) (poet, novelist)
   - 1919-08-31 00:00 · Gujranwala, Pakistan [Asia/Karachi] · rating X · time NOT reliable
 - **Arthur Miller** (1915) (playwright, writer)
@@ -373,7 +373,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Carl Jung** (1875) (Psychiatrist, Author, Astrologer)
   - 1875-07-26 19:24 · Kesswil, Switzerland [Europe/Zurich] · rating C · time reliable
 - **Ernest Hemingway** (1899) (novelist, journalist)
-  - 1899-07-21 08:00 · Oak Park, Illinois [America/Chicago] · rating AA · time reliability unverified
+  - 1899-07-21 08:00 · Oak Park, Illinois [America/Chicago] · rating AA · time reliable
 - **Franz Kafka** (1883) (novelist)
   - 1883-07-03 07:00 · Prague, Czech Republic [Europe/Prague] · rating DD · time NOT reliable
 - **Fyodor Dostoevsky** (1821) (Novelist, Philosopher, Essayist)
@@ -383,21 +383,21 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Jane Austen** (1775) (Novelist)
   - 1775-12-16 23:45 · Steventon, England [Europe/London] · rating C · time reliability unverified
 - **Jorge Luis Borges** (1899) (writer, poet)
-  - 1899-08-24 03:30 · Buenos Aires, Argentina [America/Argentina/Buenos_Aires] · rating AA · time reliability unverified
+  - 1899-08-24 03:30 · Buenos Aires, Argentina [America/Argentina/Buenos_Aires] · rating AA · time reliable
 - **Maya Angelou** (1928) (poet, author, activist)
-  - 1928-04-04 14:10 · St. Louis, Missouri, USA [America/Chicago] · rating A · time reliable
+  - 1928-04-04 14:10 · St. Louis, Missouri, USA [America/Chicago] · rating AA · time reliable
 - **Oscar Wilde** (1854) (playwright, wit)
   - 1854-10-16 03:00 · Dublin, Ireland [Europe/Dublin] · rating X · time NOT reliable
 - **Rumi** (1207) (Sufi poet)
   - 1207-09-30 12:00 · Balkh, Afghanistan [Asia/Kabul] · rating X · time NOT reliable (noon placeholder)
 - **Sylvia Plath** (1932) (poet, novelist)
-  - 1932-10-27 14:10 · Jamaica Plain, Massachusetts [America/New_York] · rating AA · time reliability unverified
+  - 1932-10-27 14:10 · Jamaica Plain, Massachusetts [America/New_York] · rating A · time reliable
 - **Terry Pratchett** (1948) (novelist, humorist)
   - 1948-04-28 12:00 · Beaconsfield, England [Europe/London] · rating X · time NOT reliable (noon placeholder)
 - **Toni Morrison** (1931) (novelist, Nobel laureate)
   - 1931-02-18 11:00 · Lorain, Ohio [America/New_York] · rating X · time NOT reliable
 - **Virginia Woolf** (1882) (novelist, modernist)
-  - 1882-01-25 12:15 · London, England [Europe/London] · rating A · time reliability unverified
+  - 1882-01-25 12:15 · London, England [Europe/London] · rating C · time NOT reliable
 - **William Shakespeare** (1564) (Playwright, Poet, Actor)
   - 1564-04-23 08:30 · Stratford-Upon-Avon, England [Europe/London] · rating XX · time NOT reliable
 

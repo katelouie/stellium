@@ -91,6 +91,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/McCartney,_Paul'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Wife's (Linda's) memory, 2:00 PM; A-soft. ADB primary is 14:00. FLAG - biography (Sandford) gives 'shortly after two in the morning'; real AM/PM tension under the A. Do NOT use the 2 AM alternative (no source). — "Nalini Kanta Das (Tom Hopke) quotes Linda McCartney for the data of Paul (2:00 pm)... On 17 May 2018 Sy Scholfield reversed the order of the charts: 2pm is first because Linda McCartney is quoted... 2am is second because the biography gives no source." — https://www.astro.com/astro-databank/McCartney,_Paul
 - name: Wolfgang Mozart
   event_type: birth
   year: 1756
@@ -109,11 +112,14 @@
   - Child Prodigy
   notable_for: Austrian composer widely regarded as among the greatest in Western music history. Child prodigy who composed over 600 works including symphonies, operas, and chamber music.
   astrological_notes: Sun 7 Aquarius
-  data_quality: A
+  data_quality: AA
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus'
   verified: false
 
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Contemporaneous baptismal record (born 8 PM prior day); AA (hint said A). — "photo-copy of Mozart's baptismal certificate... 'natus pridie hora 8. vespertina' ['...Mozart had been born at 8:00 the night before.']" — https://www.astro.com/astro-databank/Mozart,_Wolfgang_Amadeus
 - name: Brad Pitt
   event_type: birth
   year: 1963
@@ -136,6 +142,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Pitt,_Brad'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Associate report from Pitt; A-soft (minor 6:31 vs 6:21 discrepancy noted). — "LMR quoted a trusted colleague from Pitt, for 6:31 AM. In June 2023, Sy Scholfield found Pitt's birth notice giving 6:21 AM..." — https://www.astro.com/astro-databank/Pitt,_Brad
 - name: Angelina Jolie
   event_type: birth
   year: 1975
@@ -158,6 +167,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Jolie,_Angelina'
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate (numbered) viewed at records dept; AA. Gold standard. — "Marc Penfield quotes birth certificate #0190-046359, viewed at Norwalk Records Dept, California... Same data confirmed by Sue Jorgenson 7/2001." — https://www.astro.com/astro-databank/Jolie,_Angelina
 - name: Richard Burton
   event_type: birth
   year: 1925
@@ -208,9 +220,9 @@
   verified: true
 
   has_reliable_time: true
-  verification_notes: >
-    AA stands — genuine LA birth certificate at 9:30 AM (round, midwife-entered,
-    but authentic).
+  verification_notes: |
+    AA stands — genuine LA birth certificate at 9:30 AM (round, midwife-entered, but authentic).
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand from Bob Garner. Photo of B.C. in 'The Curious Death of Marilyn Monroe.'" — https://www.astro.com/astro-databank/Monroe,_Marilyn
 - name: Elizabeth Taylor
   event_type: birth
   year: 1932
@@ -236,6 +248,9 @@
   sources:
   - "AstroDatabank: https://www.astro.com/astro-databank/Taylor,_Elizabeth"
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: U.S. consular birth record; AA. — "Sy Scholfield provided U.S. Consular Report of Birth... stating 2:30 AM." — https://www.astro.com/astro-databank/Taylor,_Elizabeth
 - name: Beyoncé
   event_type: birth
   year: 1981
@@ -258,6 +273,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Beyoncé'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate published; AA. Chart-time 21:47 vs 9:04 PM discrepancy noted; minute is soft. — "In April 2025 Claire Nakti forwarded a screenshot... of Beyonce's birth certificate as published in the Cowboy Carter art book. Craft quotes her mother Tina Knowles' book 'Matriarch', pg. 149, 'Beyonce Giselle Knowles was born at 9:04 in the evening...'" — https://www.astro.com/astro-databank/Knowles,_Beyonc%C3%A9
 - name: Tom Hanks
   event_type: birth
   year: 1956
@@ -279,6 +297,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Hanks,_Tom'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand, LMR." — https://www.astro.com/astro-databank/Hanks,_Tom
 - name: Jay-Z
   event_type: birth
   year: 1969
@@ -371,6 +392,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Dr._Dre'
   - Birth certificate
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. Precise 10:56 traces to the certificate, not a rectification. — "PT quotes birth certificate in hand" — https://www.astro.com/astro-databank/Dr._Dre
 - name: Kurt Cobain
   event_type: birth
   year: 1967
@@ -393,6 +417,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Cobain,_Kurt'
   - BC/BR in hand
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: BC/BR in hand; AA. Note the entry ALSO records a rejected Germine rectification (7:26 AM) — accepted datum is the certificate. — "Craft quotes birth certificate shown in Kurt Cobain documentary 'Montage of Heck' (2015)." — https://www.astro.com/astro-databank/Cobain,_Kurt
 - name: Prince
   event_type: birth
   year: 1958
@@ -415,6 +442,9 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Prince_(musician)'
   - BC/BR in hand from Frank C. Clifford
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. Confirms the previously-secondhand 'from birth record.' — "B.C. in hand from Frank C. Clifford." — https://www.astro.com/astro-databank/Prince
 - name: Leslie Cheung
   event_type: birth
   year: 1956
@@ -625,7 +655,9 @@
   - 'Astro.com: https://www.astro.com/astro-databank/Khan,_Shah_Rukh'
   verified: false
   has_reliable_time: true
-  verification_notes: "astro.com rates A (from memory/person), not a certificate."
+  verification_notes: |
+    astro.com rates A (from memory/person), not a certificate.
+    [ADB-verified] verdict=accept bucket=memory rating=A: Self-report from memory; A-soft. Entertainer self-report — standard caution. — "Sy Scholfield quotes him answering... on Twitter: 'i think 6.25 am...thats the only time i came for work early...'" — https://www.astro.com/astro-databank/Khan,_Shah_Rukh
 - name: Aishwarya Rai
   event_type: birth
   year: 1973
@@ -736,6 +768,9 @@
   sources:
   - https://www.astro.com/astro-databank/Spielberg,_Steven
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. Place confirmed Cincinnati, Ohio (correct). — "B.C. in hand from Joan Negus from Linda Lineauveuer. (Same in Contemporary American Horoscopes.)" — https://www.astro.com/astro-databank/Spielberg,_Steven
 - name: Charlie Chaplin
   event_type: birth
   year: 1889
@@ -781,6 +816,9 @@
   sources:
   - https://www.astro.com/astro-databank/Williams,_Robin
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth certificate in hand; AA. — "B.C. in hand from the Wilsons." — https://www.astro.com/astro-databank/Williams,_Robin
 - name: Lucille Ball
   event_type: birth
   year: 1911
@@ -802,6 +840,9 @@
   sources:
   - https://www.astro.com/astro-databank/Ball,_Lucille
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Quoted birth record; AA. Round 17:00 is the record. — "Biographer Kathy Brady quotes B.R." — https://www.astro.com/astro-databank/Ball,_Lucille
 - name: Audrey Hepburn
   event_type: birth
   year: 1929
@@ -823,6 +864,9 @@
   sources:
   - https://www.astro.com/astro-databank/Hepburn,_Audrey
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=document rating=AA: Birth record cited; AA. — "Luc de Marre quotes B.R. No.477." — https://www.astro.com/astro-databank/Hepburn,_Audrey
 - name: David Bowie
   event_type: birth
   year: 1947
@@ -844,3 +888,6 @@
   sources:
   - https://www.astro.com/astro-databank/Bowie,_David
   verified: true
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept bucket=memory rating=A: Parents' memory; A-soft. — "LMR quotes biographers Peter and Leni Gillman... gives 9:00 AM GMT, 'from his parents.'" — https://www.astro.com/astro-databank/Bowie,_David
