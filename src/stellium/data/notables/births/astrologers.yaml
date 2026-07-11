@@ -144,7 +144,10 @@
   - author
   notable_for: Indian Vedic astrologer and teacher
   astrological_notes: Libra Sun, Scorpio Ascendant
-  data_quality: AA
+  data_quality: A
   sources:
   - 'Astro.com: https://www.astro.com/astro-databank/Rao,_K.N.'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept_soft bucket=memory rating=A: ADB entry provided by Kate - A, from memory. Add to corpus as A-memory. — "Data source - From memory, Rodden Rating A (Collector - Rodden). Filipe Ferreira quotes a letter from Rao to B.V. Raman in Rao's book 'Planets and Children' p.159 (1993). 12 Oct 1931, 07:54, Machilipatnam." — https://www.astro.com/astro-databank/Rao,_K.N.

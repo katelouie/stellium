@@ -91,7 +91,8 @@
   verified: true
 
   verification_notes: |
-    [ADB-verified] verdict=needs_manual_review bucket=memory rating=A: ADB is A/memory (not the hinted AA). No certificate exists (Illinois didn't mandate until 1916); competing 12:35 AM vs 7:30 AM. KATE DECISION - either reject (no document) or accept-soft as A/memory-with-conflict at 00:35. My lean - reject, since there's no record to recover. — "Marion March quotes Disney studio. ...Lyndoe in American Astrology May 1967 implies that the time came from him. (CL gives 7:30 AM CST... stating that the data came from his daughter... Cook County Vital Statistics Office was unable to find a copy of the birth certificate in fall 2006.)" — https://www.astro.com/astro-databank/Disney,_Walt
+    [ADB-verified] verdict=reject bucket=memory rating=A: Kate decision - reject; no document to recover and the two memory times conflict by ~7 hours. Not corpus ground truth. — "No certificate exists (Illinois didn't mandate until 1916); Cook County found no BC in 2006. Competing 12:35 AM vs 7:30 AM." — https://www.astro.com/astro-databank/Disney,_Walt
+  has_reliable_time: false
 - name: Warren Buffett
   event_type: birth
   year: 1930

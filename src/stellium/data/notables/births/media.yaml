@@ -69,6 +69,9 @@
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Ono,_Yoko'
   verified: false
+  has_reliable_time: true
+  verification_notes: |
+    [ADB-verified] verdict=accept_soft bucket=memory rating=A: ADB entry provided by Kate - A, from memory. Add to corpus as A-memory. — "Data source - From memory, Rodden Rating A (Collector - Rodden). Roger Elliott quotes her, client; Church of Light gives the same from Don Singleton, NY Daily News 11/22/71. 18 Feb 1933, 20:30, Tokyo." — https://www.astro.com/astro-databank/Ono,_Yoko
 - name: Paul McCartney
   event_type: birth
   year: 1942

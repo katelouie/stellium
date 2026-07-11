@@ -65,7 +65,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Evangeline Adams** (1868) (Astrologer)
   - 1868-02-08 08:30 · Jersey City, New Jersey [America/New_York] · rating DD · time reliability unverified
 - **K.N. Rao** (1931) (Vedic astrologer, author)
-  - 1931-10-12 07:54 · Machilipatnam, India [Asia/Kolkata] · rating AA · time reliability unverified
+  - 1931-10-12 07:54 · Machilipatnam, India [Asia/Kolkata] · rating A · time reliable
 - **William Lilly** (1602) (Traditional Astrologer, Author, Horary Master)
   - 1602-05-01 02:00 · Diseworth, Leicestershire, England [Europe/London] · rating A · time NOT reliable
 
@@ -80,7 +80,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Joe DiMaggio** (1914) (baseball player)
   - 1914-11-25 07:00 · Martinez, California, USA [America/Los_Angeles] · rating C · time reliability unverified
 - **Michael Jordan** (1963) (Basketball Player, Businessman, Cultural Icon)
-  - 1963-02-17 13:40 · Brooklyn, New York, USA [America/New_York] · rating AA · time reliability unverified
+  - 1963-02-17 13:40 · Brooklyn, New York, USA [America/New_York] · rating AA · time reliable
 - **Muhammad Ali** (1942) (Boxer, Activist, Humanitarian)
   - 1942-01-17 18:35 · Louisville, Kentucky, USA [America/Kentucky/Louisville] · rating AA · time reliable
 - **Pelé** (1940) (Soccer Player)
@@ -105,7 +105,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Steve Wozniak** (1950) (inventor, engineer)
   - 1950-08-11 09:45 · San Jose, California, USA [America/Los_Angeles] · rating AA · time reliable
 - **Walt Disney** (1901) (Animator, Filmmaker, Theme Park Creator)
-  - 1901-12-05 00:35 · Chicago, Illinois, USA [America/Chicago] · rating A · time reliability unverified
+  - 1901-12-05 00:35 · Chicago, Illinois, USA [America/Chicago] · rating A · time NOT reliable
 - **Warren Buffett** (1930) (Investor, Philanthropist)
   - 1930-08-30 15:00 · Omaha, Nebraska [America/Chicago] · rating C · time NOT reliable
 
@@ -180,7 +180,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Patrice Lumumba** (1925) (politician)
   - 1925-07-02 12:00 · Onalua, Congo [Africa/Kinshasa] · rating X · time NOT reliable (noon placeholder)
 - **Prince Philip** (1921) (royal family)
-  - 1921-06-10 10:00 · Mon Repos, Corfu, Greece [Europe/Athens] · rating AA · time reliability unverified
+  - 1921-06-10 10:00 · Mon Repos, Corfu, Greece [Europe/Athens] · rating AA · time reliable
 - **Prince William** (1982) (Prince of Wales, Royal, Philanthropist)
   - 1982-06-21 21:03 · Paddington, London, England [Europe/London] · rating AA · time reliable
 - **Princess of Wales Diana** (1961) (Princess, Royal, Humanitarian)
@@ -273,7 +273,7 @@ For the rectification corpus, use entries that are `AA`/`A` **and** either *time
 - **Wong Kar-wai** (1958) (filmmaker)
   - 1958-07-17 12:00 · Shanghai, China [Asia/Shanghai] · rating X · time NOT reliable (noon placeholder)
 - **Yoko Ono** (1933) (Conceptual Artist, Musician, Peace Activist)
-  - 1933-02-18 20:30 · Tokyo, Japan [Asia/Tokyo] · rating A · time reliability unverified
+  - 1933-02-18 20:30 · Tokyo, Japan [Asia/Tokyo] · rating A · time reliable
 
 ### Occultist (15)
 

@@ -72,7 +72,8 @@
   - 'AstroDatabank: https://www.astro.com/astro-databank/Jordan,_Michael'
   verified: true
   verification_notes: |
-    [ADB-verified] verdict=needs_manual_review bucket=document rating=AA: ADB lists AA on an auctioned-BC COPY giving 13:40 — this likely deserves promotion to accept. Held only because (a) auctioned-BC authenticity and (b) Jordan's own contradictory self-reports (12:50 AM). KATE DECISION - if satisfied the BC copy on file is genuine, promote to accept AA at 13:40. — "On 5 August 2013, a forum user pointed to the birth certificate sold at an auction. A copy is on file, the birth time is 1:40 PM (13:40). (Previously... In February 2002, Susan Miller met Jordan and asked his time of birth; he said 12:50 AM... He said, 'a few moments into February 17!')" — https://www.astro.com/astro-databank/Jordan,_Michael
+    [ADB-verified] verdict=accept bucket=document rating=AA: Kate decision - BC copy accepted as genuine; AA at 13:40 over Jordan's contradictory 12:50 AM self-report. — "Birth certificate sold at auction; a copy is on file, birth time 1:40 PM (13:40)." — https://www.astro.com/astro-databank/Jordan,_Michael
+  has_reliable_time: true
 - name: Serena Williams
   event_type: birth
   year: 1981

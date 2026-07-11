@@ -339,7 +339,8 @@
   verified: false
   verification_notes: |
     Birthplace (Mon Repos villa) confirmed; coordinates corrected ~250m to the Wikidata villa point; 10:00 AA stands on the 2021 sighted certificate — time unchanged. High confidence.
-    [ADB-verified] verdict=needs_manual_review bucket=document rating=AA: Two DOCUMENTARY times disagree - published BC + father's record both say 10:00 AM, but the 1972 official bulletin says 9:46 PM (plus a Starkman rectification to 09:51 floating). KATE DECISION - the 10 AM has the stronger documentary claim (BC + father); decide whether to accept AA at 10:00 or hold on the bulletin conflict. — "British Astrological Association quotes official bulletin, 11/1972 with a time of 21:46 (9:46 pm)... Charles Harvey wrote, 'June 10, 1921, 10:00 AM was recorded by his father, King Andrew'... Chris Mitchell pointed, on 12 April 2021, to the birth certificate published in an English newspaper. 'oron 10 πμ stands for hour 10 proi = before noon'" — https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh
+    [ADB-verified] verdict=accept bucket=document rating=AA: Kate decision - 10:00 AM has the stronger documentary claim (BC + father's record) over the 1972 bulletin's 9:46 PM. — "Birth certificate published in an English newspaper; father King Andrew also recorded 10:00 AM." — https://www.astro.com/astro-databank/Philip,_Duke_of_Edinburgh
+  has_reliable_time: true
 - name: Jacqueline Kennedy Onassis
   event_type: birth
   year: 1929
