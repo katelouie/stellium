@@ -176,3 +176,42 @@ so not overfit; fitted weights daylight +0.80 / malefic +0.72 (both real).
    just sect) is the **sharp** angle-tied techniques (directions to angles,
    ZR-from-Fortune peaks), still untested. Those are the real rectification signal
    if it exists; the pipeline (`posterior.py`) is built and ready to host them.
+
+---
+
+## Phase A2 — primary directions (the sharp technique) — **null for time**
+
+`directions.py`, `run_directions_benchmark.py`. For each candidate time, direct the
+seven planets to the four angles (`DirectionsEngine`) — hits land at ages that move
+strongly with birth time — and score whether directed hits whose promissor
+signifies an event fall near that event's age (de-confounded).
+
+| metric | directions | chance |
+|---|---|---|
+| **time** median \|Δ\| (MAP vs truth) | 406 min | ~360 min |
+| mean posterior mass ±90 min of truth | 0.138 | 0.125 |
+| mean posterior mass ±180 min of truth | 0.258 | 0.25 |
+| sect marginal | 68.3% | (= daylight leaking through) |
+
+**Directions does not localize time** — mass-near-truth is at chance and median
+error is *worse* than chance. Best-case retest (day-precision events only, tight
+0.5-yr orb): median \|Δ\| 320 min, mass ±90 min 0.132 — still chance. The sect 68%
+is just the daylight fraction showing through a near-uniform posterior, redundant
+with the classifier.
+
+## Verdict on the timing-technique family (firdaria + profection + directions)
+
+**All three are null.** Automated rectification by "sweep the birth time, match
+events to timing-technique activations via a significator table" **does not carry
+signal** — coarse or sharp. Expert rectification works because a human *selects*
+meaningful event↔direction correspondences with judgment; the blind, all-events,
+significator-table version loses exactly that.
+
+**What actually works, and all that works:**
+1. the **daylight-fraction geometric prior** (68%, no events), and
+2. the **malefic-of-sect event character** (adds independent value → **70% LOO**).
+
+Neither is a timing technique. **Minute-level time rectification is not achievable
+with this automated approach; the deliverable is the ~70% sect classifier** (to be
+strengthened by an external birth-hour prior — research pending). This is the
+central, rigorously-established result of the investigation.
