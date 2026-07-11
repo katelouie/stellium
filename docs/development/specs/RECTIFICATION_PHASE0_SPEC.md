@@ -70,37 +70,35 @@ docs/development/specs/rectification/
 
 ## 4. Phase 0 — the harness
 
-### 4.1 Fast re-cast — angles per candidate, **Moon per candidate**, slow bodies once
+### 4.1 Candidate evaluation — **full recompute first, re-cast only if profiling demands**
 
-The speed trick from theory §2 — compute the day's bodies once, sweep only the
-angles — but with **two corrections that are load-bearing, not niceties:**
+**Baseline (v0): a full `ChartBuilder…calculate()` per candidate.** Dead simple,
+obviously correct, and — the key point — **automatically correct on the two
+things the hand-rolled re-cast would have to handle by hand:** the Moon's
+~13°/day motion and the per-candidate sect both come straight from a real
+calculation. Build this, then **profile it on the 63** (a ~360-cell grid × 63
+people ≈ 23k calcs; if that's a minute or two for a one-off benchmark, we're
+done and the re-cast is never written).
 
-**(a) The Moon is not fixed.** It moves ~12–15°/day (~0.5°/hr) — an order of
-magnitude more than any other body across a birth-day (inner planets ≤ ~1°/day,
-outers < 0.1°). So the split is **slow bodies once, Moon per candidate**:
-- Compute Sun + planets **once** for the day (their ≤1°/day drift is negligible).
-- Recompute (or interpolate) the **Moon** at each candidate time. Baseline:
-  one Moon ephemeris call per candidate (still ~1/15th of a full recompute).
-  Optional optimization: sample the Moon at a handful of points and
-  cubic-interpolate (its motion is smooth) — decide by profiling, not up front.
-- This is not optional cleanliness: the Moon feeds Moon-significator techniques,
-  the **progressed Moon**, and the **Lot of Fortune/Spirit** = `Asc ± (Moon −
-  Sun)`, which therefore moves with *both* the fast Asc **and** the drifting Moon.
+`evaluate(date, lat, lon, tz, times) -> list[CandidateChart]` — each candidate a
+fully-calculated chart (angles, Moon, Lots, sect, house placements). Built on the
+public API; surface gaps → promotion checklist.
 
-**(b) Everything else is angle-only.** Per candidate, recompute ASC/MC/cusps
-(cheap sidereal-time trig via the house engine) and re-place the fixed slow
-bodies + the freshly-computed Moon into the new houses.
+**Optimization (profile-gated): the angle-only re-cast.** *Only if the benchmark
+is too slow.* The speed trick from theory §2 — compute the day's **slow** bodies
+once, sweep only the angles — with the one correction that makes it correct:
+- **The Moon is not fixed** (~12–15°/day, an order of magnitude over any other
+  body). So: slow bodies once; **Moon recomputed per candidate**; angles/cusps
+  recomputed per candidate; re-place all bodies. The Moon feeds Moon
+  significators, the progressed Moon, and the **Lot of Fortune/Spirit** = `Asc ±
+  (Moon − Sun)` (moves with both the fast Asc and the drifting Moon).
+- **Blocking correctness test** *(applies when/if the re-cast is built):* re-cast
+  == full `.calculate()` to tolerance (angles & **Moon** < 0.01°; sect & house
+  placements exact) across a spread of times on several corpus births. The Moon
+  tolerance is what would catch a regression to a naive all-fixed shortcut.
 
-- `recast(date, lat, lon, tz, times) -> list[AngleSet]`; each `AngleSet` has
-  ASC, MC, cusps, the **Moon** at that time, the recomputed **Lots**, and the
-  derived **sect** (§4.2). Built **on the public API**; surface gaps → promotion
-  checklist.
-
-**Correctness test (blocking):** for a spread of times on several corpus births,
-the re-cast's ASC/MC/cusps, **Moon longitude**, Lots, sect, and house placements
-match a full `ChartBuilder…calculate()` at the same time to tolerance (angles &
-Moon < 0.01°; sect & house placements exact). This is the invariant everything
-rides on — and the Moon tolerance is what catches corrections (a).
+Deferring the re-cast doesn't just save effort — it sidesteps the Moon-motion and
+3-region-sect bug classes entirely until a profile forces the optimization.
 
 ### 4.2 Sect is a multi-region step function — **compute it, don't assume it**
 
@@ -213,27 +211,32 @@ promotion is a move, not a rewrite. Loader maps the corpus YAML
 
 ## 8. Testing
 
-- **`test_recast.py`** — re-cast == full calculation to tolerance (§4.1). Blocking.
 - **`test_sect.py`** — determinism (same input → same P), and a sanity case:
   feeding a known-time person's real events makes the classifier favour the true
   sect. Run standalone, not in the package suite.
+- **`test_recast.py`** — *only if the re-cast optimization is built:* re-cast ==
+  full calculation to tolerance (§4.1). Blocking for that optimization.
 
 ## 9. Build order
 
 1. `models.py` + corpus loader (+ a couple of load tests).
-2. `recast.py` + `test_recast.py` — **stop here until the re-cast is proven**; it's
-   the foundation.
+2. `harness.py` — **full recompute per candidate** (§4.1) + the run-across-
+   candidates driver. Simple and correct; no re-cast yet.
 3. `significators.py` (table from theory §6).
 4. `sect.py` — classifier + contrastive report.
-5. `run_benchmark.py` — accuracy + CI over the 63.
+5. `run_benchmark.py` — accuracy + CI over the 63; **profile the run**.
 6. Read the number. **Go** (promote per §2) / **no-go** (rethink the signal).
+7. *Only if step 5 was too slow:* add the angle-only re-cast (`recast.py` +
+   `test_recast.py`) as a drop-in acceleration behind the same interface.
 
 ## 10. Acceptance criteria
 
-- [ ] Fast re-cast verified against full calculation to tolerance.
-- [ ] Harness blanks a corpus time, runs a scorer across candidates, and scores
-      sect accuracy over the 63.
+- [ ] Harness blanks a corpus time, runs a scorer across candidates (full
+      recompute), and scores sect accuracy over the 63.
 - [ ] `classify_sect` + a contrastive day/night report.
-- [ ] Benchmark report: accuracy + 95% CI + confusion, vs. both baselines.
+- [ ] Benchmark report: accuracy + 95% CI + confusion, vs. both baselines, **plus
+      a profile** (wall-clock; is the re-cast optimization warranted?).
 - [ ] A written go/no-go call against §6, and — if go — the promotion checklist
-      of public-API gaps found while building the re-cast.
+      of public-API gaps found.
+- [ ] *(Only if profiling warranted it)* fast re-cast verified against full
+      calculation to tolerance.
