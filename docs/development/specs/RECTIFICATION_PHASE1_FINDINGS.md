@@ -282,8 +282,32 @@ malefic condition is noise for the misfortune-character signal.
 
 **Bottom line.** Feature space for an *automated, corpus-scale* rectifier is
 thoroughly explored. Only **daylight prior × malefic-of-sect** survives (LOO
-69.8%, GO). Minute-level **time** is null across every timing technique. The lone
-remaining lever with real upside is an **external birth-hour prior** (research
-pending) to sharpen the daylight term. Further feature-hunting on n=63 has
-negative expected value (multiple-comparisons risk — the dignity −0.32 that
-vanished under LOO is the warning).
+69.8%, GO). Minute-level **time** is null across every timing technique. Further
+feature-hunting on n=63 has negative expected value (multiple-comparisons risk —
+the dignity −0.32 that vanished under LOO is the warning).
+
+---
+
+## External birth-hour prior — **no improvement (historical cohort)** (`birth_hours.py`)
+
+Replaced the uniform-birth-time assumption with an external, cited hourly
+distribution (`birth_times_research.md`; population vital-stats, no chart samples).
+Distribution A `spontaneous_prewar` (nocturnal, peak 04:00) as primary, an
+era-aware blend toward the modern daytime curve for later births.
+
+| prior (+ malefic) | LOO-CV |
+|---|---|
+| uniform daylight | **69.8%** |
+| spontaneous_prewar | 66.7% |
+| era-blend | 68.3% |
+
+corr(prior, sect): uniform 0.398, spontaneous 0.408, era-blend 0.399. The birth-hour
+prior **does not improve** sect prediction — equal-or-worse in LOO. Reason: the
+daylight fraction already captures the date/latitude effect; the hourly curve is
+broad (peak:trough ~1.9:1) and applied identically to all, so it shifts P(day)
+~monotonically (absorbed by the logistic) rather than adding discrimination.
+
+**Caveat — the modern curve is untested:** only 4/63 births are post-1970, so this
+is a verdict on the *spontaneous* curve for the historical bulk. Whether the
+*medicalized daytime* curve helps a modern cohort is open, pending a set of
+post-1970 AA births (machinery in `birth_hours.py` is ready for it).
