@@ -64,6 +64,9 @@ from .misc import (
 # Visualization sections
 from .profection_visualization import ProfectionVisualizationSection
 
+# Sect rectification sections
+from .rectification import SectConvergenceMatrixSection, SectRectificationSection
+
 # Timing technique sections
 from .timing import (
     ProfectionSection,
@@ -115,6 +118,8 @@ __all__ = [
     # Miscellaneous sections
     "AntisciaSection",
     "ArabicPartsSection",
+    "SectRectificationSection",
+    "SectConvergenceMatrixSection",
     "CacheInfoSection",
     "DeclinationAspectSection",
     "DeclinationSection",

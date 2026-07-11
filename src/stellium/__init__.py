@@ -106,6 +106,9 @@ from stellium.planner import PlannerBuilder
 # === Presentation (Reports) ===
 from stellium.presentation import ReportBuilder
 
+# === Sect Rectification (compare-hypothesis workbench) ===
+from stellium.rectification import SectAnalysis, analyze_sect, convergence_matrix
+
 # === Returns (Solar, Lunar, Planetary) ===
 from stellium.returns import ReturnBuilder
 
@@ -168,6 +171,10 @@ __all__ = [
     "SynthesisChart",
     # Returns
     "ReturnBuilder",
+    # Sect rectification
+    "analyze_sect",
+    "SectAnalysis",
+    "convergence_matrix",
     # Profections
     "ProfectionEngine",
     "ProfectionResult",

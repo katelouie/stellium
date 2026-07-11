@@ -24,6 +24,7 @@ Accepts `CalculatedChart`, `Comparison`, or `MultiChart` and adapts output.
 - Dignities: `with_dignities(essential="both|traditional|modern|none", ...)`, `with_dispositors(...)`, `with_fixed_stars(...)`.
 - Points: `with_arabic_parts(...)`, `with_declinations()`, `with_moon_phase()`.
 - Timing: `with_profections(...)`, `with_profections_wheel(...)`, `with_zodiacal_releasing(...)`, `with_zr_visualization(...)`.
+- Sect rectification: `with_sect_rectification(events=, temperament=)` (fast, validated compare-hypothesis section — anchor + day/night structures + evidence); `with_sect_convergence_matrix(events=)` (heavy ~3–10 s two-lens time matrix, exploratory). Events/temperament auto-looked-up for notables (by `chart.metadata["name"]`) via the biography API; pass `events=()` for a geometry-only analysis. Backed by `stellium.rectification` (see [SUBSYSTEMS](./SUBSYSTEMS.md)).
 - Transit calendar: `with_stations(end, ...)`, `with_ingresses(end, ...)`, `with_eclipses(end, ...)`.
 - Meta/custom: `with_chart_image(path=None)`, `with_title(title)`, `with_section(custom_section)`.
 
@@ -77,7 +78,8 @@ zr_visualization). Examples: `ChartOverviewSection`, `PlanetPositionSection`,
 `AspectSection`, `AspectPatternSection`, `DignitySection`, `DispositorSection`,
 `MidpointSection`, `ProfectionSection`, `ZodiacalReleasingSection`,
 `StationSection`, `IngressSection`, `EclipseSection`, `MoonPhaseSection`,
-`ArabicPartsSection`, `FixedStarsSection`.
+`ArabicPartsSection`, `FixedStarsSection`, `SectRectificationSection`,
+`SectConvergenceMatrixSection` (in `sections/rectification.py`).
 
 Shared helpers in `sections/_utils.py`: `get_object_display`, `get_sign_glyph`,
 `get_aspect_display`, `get_object_sort_key`, `get_aspect_sort_key`,
@@ -99,6 +101,13 @@ Shared helpers in `sections/_utils.py`: `get_object_display`, `get_sign_glyph`,
 ---
 
 ## Gotchas
+- **`side_by_side_tables` is medium-dependent.** True horizontal layout only in
+  Rich terminal (`rich.columns.Columns`), Typst/PDF (`#grid`), and HTML (CSS flex,
+  responsive). Markdown / plain / prose **stack vertically** — the honest rendering
+  for linear-text formats. Nested inside `compound`, side-by-side is dispatched by
+  the HTML and prose renderers; markdown/plain/rich compound handlers stack or fall
+  through. For a *row-by-row* comparison prefer a single multi-column `"table"` — it
+  renders identically everywhere.
 - Sections that need a component/analyzer (patterns, dignities, fixed stars,
   Arabic Parts, midpoints, ZR) **degrade gracefully** with a setup hint if the
   required `add_component`/`add_analyzer` wasn't called on the chart.
