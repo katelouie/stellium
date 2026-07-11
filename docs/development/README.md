@@ -71,7 +71,13 @@ migration plan, and acceptance criteria.
   **[specs/RECTIFICATION_PHASE0_SPEC.md](./specs/RECTIFICATION_PHASE0_SPEC.md)**
   — a standalone (outside the package) fast re-cast + benchmark harness + sect
   classifier, proven on the 63 before any code is promoted into
-  `stellium/rectification/`. *Status: Exploration.*
+  `stellium/rectification/`. Phase-1 findings
+  ([RECTIFICATION_PHASE1_FINDINGS.md](./specs/RECTIFICATION_PHASE1_FINDINGS.md)):
+  firdaria = null, malefic-of-sect character = a real but modest sect prior (65%,
+  corr +0.35), benefic = null. Phase A
+  ([RECTIFICATION_PHASEA_SPEC.md](./specs/RECTIFICATION_PHASEA_SPEC.md)) builds the
+  full time-posterior from time-dependent techniques (profection → directions),
+  reading sect as the marginal. *Status: Exploration.*
 
 ## How these docs are scoped
 
