@@ -314,13 +314,14 @@ class DispositorSection:
     ) -> tuple[str, dict[str, Any]] | None:
         """Build the dispositor graph section.
 
-        Always emits a structured, laid-out ``graph`` payload (nodes + edges +
-        ranks) that structure-aware renderers (the Typst PDF) draw natively —
-        portable, themeable and glyph-correct, with no graphviz dependency. When
-        graphviz *is* available, also attaches a rendered SVG for the other
-        renderers (HTML embeds it).
+        Emits a structured, laid-out ``graph`` payload (nodes + edges + ranks)
+        that the Typst PDF draws natively, plus an svgwrite-rendered SVG (same
+        layout) for the other renderers (HTML embeds it). No graphviz dependency.
         """
-        from stellium.engines.dispositors import dispositor_graph_data
+        from stellium.engines.dispositors import (
+            dispositor_graph_data,
+            render_dispositor_svg,
+        )
 
         graphs = []
         if planetary:
@@ -335,27 +336,10 @@ class DispositorSection:
             return None
 
         sub: dict[str, Any] = {"type": "svg", "graph": {"graphs": graphs}}
-
-        import shutil
-
-        if shutil.which("dot"):
-            try:
-                from stellium.engines.dispositors import (
-                    render_both_dispositors,
-                    render_dispositor_graph,
-                )
-
-                if planetary and house:
-                    dot = render_both_dispositors(planetary, house)
-                elif planetary:
-                    dot = render_dispositor_graph(
-                        planetary, title="Planetary Dispositors"
-                    )
-                else:
-                    dot = render_dispositor_graph(house, title="House Dispositors")
-                sub["content"] = dot.pipe(format="svg").decode("utf-8")
-            except Exception:
-                pass
+        try:
+            sub["content"] = render_dispositor_svg(graphs)
+        except Exception:
+            pass
 
         return ("Dispositor Graph", sub)
 

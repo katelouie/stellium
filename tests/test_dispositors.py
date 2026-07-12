@@ -6,8 +6,8 @@ from stellium import ChartBuilder
 from stellium.engines.dispositors import (
     DispositorEngine,
     DispositorResult,
-    render_both_dispositors,
-    render_dispositor_graph,
+    dispositor_graph_data,
+    render_dispositor_svg,
 )
 
 
@@ -287,50 +287,36 @@ class TestEdgeCases:
 class TestGraphvizRendering:
     """Test graphviz rendering functions."""
 
-    def test_render_planetary_graph(self, einstein_chart):
-        """Should render planetary dispositor graph."""
-        pytest.importorskip("graphviz")
-
+    def test_graph_data_layout(self, einstein_chart):
+        """dispositor_graph_data lays out nodes with ranks + columns."""
         engine = DispositorEngine(einstein_chart)
-        result = engine.planetary()
+        data = dispositor_graph_data(engine.planetary())
 
-        graph = render_dispositor_graph(result, use_glyphs=True)
+        assert data["nodes"] and data["edges"]
+        # every node has the fields the renderers need
+        for n in data["nodes"]:
+            assert {"id", "label", "glyph", "rank", "col", "ncols", "final"} <= set(n)
+        # ranks span from 0 (sink) to max_rank
+        ranks = {n["rank"] for n in data["nodes"]}
+        assert 0 in ranks
+        assert max(ranks) == data["max_rank"]
 
-        # Should have a graphviz.Digraph
-        assert graph is not None
-        assert hasattr(graph, "render")
-
-    def test_render_house_graph(self, einstein_chart):
-        """Should render house dispositor graph."""
-        pytest.importorskip("graphviz")
-
+    def test_render_svg_planetary(self, einstein_chart):
+        """render_dispositor_svg produces an SVG string (no graphviz)."""
         engine = DispositorEngine(einstein_chart)
-        result = engine.house_based()
+        graphs = [{"title": "Planetary", **dispositor_graph_data(engine.planetary())}]
+        svg = render_dispositor_svg(graphs)
+        assert svg.lstrip().startswith("<") and "<circle" in svg and "svg" in svg
 
-        graph = render_dispositor_graph(result, use_glyphs=False)
-
-        assert graph is not None
-
-    def test_render_both_dispositors(self, einstein_chart):
-        """Should render both graphs as subgraphs."""
-        pytest.importorskip("graphviz")
-
+    def test_render_svg_both(self, einstein_chart):
+        """Both graphs render side by side in one SVG."""
         engine = DispositorEngine(einstein_chart)
-        planetary = engine.planetary()
-        house = engine.house_based()
-
-        graph = render_both_dispositors(planetary, house)
-
-        assert graph is not None
-        # Should contain subgraph clusters
-        source = graph.source
-        assert "cluster_planetary" in source
-        assert "cluster_house" in source
-
-    def test_graphviz_import_error(self, einstein_chart):
-        """Should raise ImportError with helpful message if graphviz not installed."""
-        # This test would require mocking the import, skip for now
-        pass
+        graphs = [
+            {"title": "Planetary", **dispositor_graph_data(engine.planetary())},
+            {"title": "House", **dispositor_graph_data(engine.house_based())},
+        ]
+        svg = render_dispositor_svg(graphs)
+        assert svg.count("PLANETARY") == 1 and svg.count("HOUSE") == 1
 
 
 # =============================================================================

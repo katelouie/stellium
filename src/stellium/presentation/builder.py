@@ -1295,11 +1295,14 @@ class ReportBuilder:
             ...     .render())
 
         Note:
-            For graphical output (SVG), use the DispositorEngine directly:
-                from stellium.engines.dispositors import DispositorEngine, render_both_dispositors
+            For standalone graph output (SVG), use the DispositorEngine directly:
+                from stellium.engines.dispositors import (
+                    DispositorEngine, dispositor_graph_data, render_dispositor_svg,
+                )
                 engine = DispositorEngine(chart)
-                graph = render_both_dispositors(engine.planetary(), engine.house_based())
-                graph.render("dispositors", format="svg")
+                graphs = [{"title": "Planetary",
+                           **dispositor_graph_data(engine.planetary())}]
+                render_dispositor_svg(graphs, "dispositors.svg")
         """
         self._sections.append(
             DispositorSection(
