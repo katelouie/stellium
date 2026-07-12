@@ -13,7 +13,12 @@ from stellium.core.models import (
 )
 from stellium.utils.cache import cached
 
-# Swiss Ephemeris house system codes
+# Swiss Ephemeris house system codes.
+# NOTE: the Gauquelin division (swe code "G") is intentionally omitted. It is a
+# 36-sector *statistical-research* instrument (the Mars-effect "plus zones"), not a
+# 12-cusp house-placement system, so it never fit the HouseCusps model. If wanted
+# for Gauquelin/Mars-effect studies over a dataset, add it as an analysis primitive
+# (e.g. a gauquelin_sector() function) rather than a house system. See CHANGELOG.
 HOUSE_SYSTEM_CODES = {
     "Alcabitius": b"B",
     "APC": b"Y",
@@ -22,7 +27,6 @@ HOUSE_SYSTEM_CODES = {
     "Equal": b"A",
     "Equal (MC)": b"D",
     "Equal (Vertex)": b"E",
-    "Gauquelin": b"G",
     "Horizontal": b"H",
     "Koch": b"K",
     "Krusinski": b"U",
@@ -293,14 +297,6 @@ class EqualVertexHouses(SwissHouseSystemBase):
     @property
     def system_name(self) -> str:
         return "Equal (Vertex)"
-
-
-class GauquelinHouses(SwissHouseSystemBase):
-    """Gauquelin house system engine."""
-
-    @property
-    def system_name(self) -> str:
-        return "Gauquelin"
 
 
 class HorizontalHouses(SwissHouseSystemBase):

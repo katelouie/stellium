@@ -38,7 +38,7 @@ Base `SwissHouseSystemBase` (cached `swe.houses_ex`). Concrete:
 `PlacidusHouses` (default), `WholeSignHouses`, `KochHouses`, `EqualHouses`,
 `PorphyryHouses`, `RegiomontanusHouses`, `CampanusHouses`, `EqualMCHouses`,
 `VehlowEqualHouses`, `AlcabitiusHouses`, `TopocentricHouses`, `MorinusHouses`,
-`EqualVertexHouses`, `GauquelinHouses`, `HorizontalHouses`, `KrusinskiHouses`,
+`EqualVertexHouses`, `HorizontalHouses`, `KrusinskiHouses`,
 `AxialRotationHouses`, `APCHouses`. `calculate_house_data` returns
 `(HouseCusps, [angles])` where angles are ASC, MC, DSC, IC, Vertex.
 

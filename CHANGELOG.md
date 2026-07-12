@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+
+- **`GauquelinHouses` house system** — removed. It never actually worked: Swiss Ephemeris returns 36 Gauquelin sectors, but the `HouseCusps` model requires exactly 12 cusps, so selecting it raised `ValueError` (the test suite skipped it to dodge the crash). Gauquelin sectors are a *statistical-research* instrument (the Mars-effect "plus zones"), not a 12-cusp house-placement system, so they were miscategorized in the house-system registry. If wanted for Gauquelin/Mars-effect studies over a dataset, the right shape is an **analysis primitive** (a `gauquelin_sector()`-style function usable in batch/pandas work), not a house system — a planned follow-up. House-system count: 18 → 17.
+
 ### Changed
 
 - **PDF rendering is now data-driven** — `ReportBuilder`'s PDF path serialises the report (chart + section data) to a JSON contract that the bundled Typst design system renders, replacing the previous renderer that built Typst markup as Python strings. Visual concerns (colour, type, layout) live entirely in the `.typ` design system; the Python side only supplies structured data and the chosen theme. The report wheel is drawn with its header/info-box stripped and a transparent background, themed to match the PDF, so it composites cleanly onto the page.
+- **Redesigned chart angle labels (ASC/MC/DSC/IC)** — the abbreviation and degree are now a single inlaid label (bold abbreviation + lighter degree, e.g. `Asc 8°`) set into a notch in the axis line and rotated to run along it, rather than a glyph and degree floating beside a short line. The axis line now extends to the zodiac ring's outer edge. New per-theme angle-style knobs: `degree_color`, `label_size`, `label_gap` (notch half-width), `label_inset` (radial position), and `label_perp` (optical vertical centering).
 - **HTML reports now lay `side_by_side_tables` out truly side by side** — a responsive CSS flex row (wrapping to stacked columns on narrow viewports), matching the Rich terminal and Typst/PDF renderers. Previously HTML stacked them vertically. The `compound` section handler also now dispatches nested side-by-side tables in HTML. Linear-text formats (markdown, plain, prose) continue to stack, which is the honest rendering for those media.
 
 ### Added

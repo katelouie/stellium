@@ -2,6 +2,7 @@
 Angle layers - ASC, MC, DSC, IC angle rendering.
 """
 
+import math
 from typing import Any
 
 import svgwrite
@@ -81,11 +82,31 @@ class AngleLayer:
             ring_inner_key, renderer.radii.get("aspect_ring_inner")
         )
 
+        cx = renderer.x_offset + renderer.center
+        cy = renderer.y_offset + renderer.center
+
+        # Inlaid angle-label styling (falls back to the theme's angle colours).
+        abbr_color = style.get("glyph_color", "#2b2b2b")
+        degree_color = style.get("degree_color", style.get("line_color", "#555555"))
+        label_size = style.get("label_size", style.get("degree_size", "11px"))
+        half_gap = style.get("label_gap", 22)  # half the notch width along the line
+        label_inset = style.get("label_inset", 16)  # how far into the zodiac band
+        # Optical centering: nudge the label along its own up/down axis (perpendicular
+        # to the line) so the axis bisects the text vertically. Positive = "down" in
+        # the text's own frame (away from the reading side).
+        label_perp = style.get("label_perp", 2.5)
+        font_family = renderer.style["font_family_text"]
+
+        # Extend the axis line out to the zodiac ring's outer edge (single wheel).
+        zodiac_outer = renderer.radii.get("zodiac_ring_outer")
+        line_outer = (
+            zodiac_outer if (self.wheel_index == 0 and zodiac_outer) else ring_outer
+        )
+
         for angle in angles:
             if angle.name not in ANGLE_GLYPHS:
                 continue
 
-            # Draw angle line (ASC/MC axis is the strongest)
             is_axis = angle.name in ("ASC", "MC")
             line_width = style["line_width"] if is_axis else style["line_width"] * 0.7
             line_color = (
@@ -94,79 +115,88 @@ class AngleLayer:
                 else renderer.style["houses"]["line_color"]
             )
 
-            if angle.name in ("ASC", "MC", "DSC", "IC"):
-                # Line spans from ring_outer to ring_inner
-                x1, y1 = renderer.polar_to_cartesian(angle.longitude, ring_outer)
-                x2, y2 = renderer.polar_to_cartesian(angle.longitude, ring_inner)
+            if angle.name not in ("ASC", "MC", "DSC", "IC"):
+                # Non-axis points (e.g. Vertex): a simple centred glyph, no line.
+                gx, gy = renderer.polar_to_cartesian(angle.longitude, ring_outer - 10)
+                dwg.add(
+                    dwg.text(
+                        ANGLE_GLYPHS[angle.name],
+                        insert=(gx, gy),
+                        text_anchor="middle",
+                        dominant_baseline="central",
+                        font_size=style["glyph_size"],
+                        fill=style["glyph_color"],
+                        font_family=font_family,
+                        font_weight="bold",
+                    )
+                )
+                continue
+
+            # The inlaid label sits in the zodiac band, near its inner edge.
+            label_radius = ring_outer + label_inset
+            lx, ly = renderer.polar_to_cartesian(angle.longitude, label_radius)
+
+            # Axis line drawn in two pieces, leaving a notch around the label.
+            if line_outer > label_radius + half_gap:
+                xo1, yo1 = renderer.polar_to_cartesian(angle.longitude, line_outer)
+                xo2, yo2 = renderer.polar_to_cartesian(
+                    angle.longitude, label_radius + half_gap
+                )
                 dwg.add(
                     dwg.line(
-                        start=(x1, y1),
-                        end=(x2, y2),
+                        start=(xo1, yo1),
+                        end=(xo2, yo2),
+                        stroke=line_color,
+                        stroke_width=line_width,
+                    )
+                )
+            if label_radius - half_gap > ring_inner:
+                xi1, yi1 = renderer.polar_to_cartesian(
+                    angle.longitude, label_radius - half_gap
+                )
+                xi2, yi2 = renderer.polar_to_cartesian(angle.longitude, ring_inner)
+                dwg.add(
+                    dwg.line(
+                        start=(xi1, yi1),
+                        end=(xi2, yi2),
                         stroke=line_color,
                         stroke_width=line_width,
                     )
                 )
 
-            # Draw angle glyph - positioned just inside the ring outer edge
-            glyph_radius = ring_outer - 10
-            x_glyph, y_glyph = renderer.polar_to_cartesian(
-                angle.longitude, glyph_radius
+            # Rotate the label along the axis, flipped to stay upright/readable.
+            rot = math.degrees(math.atan2(ly - cy, lx - cx))
+            if rot > 90 or rot < -90:
+                rot += 180
+
+            deg_int = int(angle.longitude % 30)
+            grp = dwg.g(transform=f"rotate({rot:.2f},{lx:.2f},{ly:.2f})")
+            txt = dwg.text(
+                "",
+                insert=(lx, ly + label_perp),
+                text_anchor="middle",
+                dominant_baseline="central",
+                font_family=font_family,
+                font_size=label_size,
             )
-
-            # Apply directional offset based on angle name
-            # Glyph goes one direction, degree text goes the opposite
-            offset = 8  # pixels to nudge
-            degree_offset = 10  # pixels to nudge degree text (opposite direction)
-
-            x_degree, y_degree = x_glyph, y_glyph  # Start at same position
-
-            if angle.name == "ASC":  # 9 o'clock - glyph up, degree down
-                y_glyph -= offset
-                y_degree += degree_offset
-            elif angle.name == "MC":  # 12 o'clock - glyph right, degree left
-                x_glyph += offset
-                x_degree -= degree_offset
-            elif angle.name == "DSC":  # 3 o'clock - glyph down, degree up
-                y_glyph += offset
-                y_degree -= degree_offset
-            elif angle.name == "IC":  # 6 o'clock - glyph left, degree right
-                x_glyph -= offset
-                x_degree += degree_offset
-
-            # Draw the angle label (ASC, MC, etc.)
-            dwg.add(
-                dwg.text(
-                    ANGLE_GLYPHS[angle.name],
-                    insert=(x_glyph, y_glyph),
-                    text_anchor="middle",
-                    dominant_baseline="central",
-                    font_size=style["glyph_size"],
-                    fill=style["glyph_color"],
-                    font_family=renderer.style["font_family_text"],
-                    font_weight="bold",
+            txt.add(
+                dwg.tspan(
+                    f"{ANGLE_GLYPHS[angle.name]} ",
+                    **{
+                        "font-weight": "bold",
+                        "fill": abbr_color,
+                        "letter-spacing": "0.5",
+                    },
                 )
             )
-
-            # Draw the degree text (e.g., "15°32'")
-            degree_in_sign = angle.longitude % 30
-            deg_int = int(degree_in_sign)
-            min_int = int((degree_in_sign % 1) * 60)
-            degree_str = f"{deg_int}°{min_int:02d}'"
-
-            # Use smaller font for degree text
-            degree_font_size = style.get("degree_size", "10px")
-
-            dwg.add(
-                dwg.text(
-                    degree_str,
-                    insert=(x_degree, y_degree),
-                    text_anchor="middle",
-                    dominant_baseline="central",
-                    font_size=degree_font_size,
-                    fill=style["glyph_color"],
-                    font_family=renderer.style["font_family_text"],
+            txt.add(
+                dwg.tspan(
+                    f"{deg_int}°",
+                    **{"font-weight": "normal", "fill": degree_color},
                 )
             )
+            grp.add(txt)
+            dwg.add(grp)
 
 
 class OuterAngleLayer:
