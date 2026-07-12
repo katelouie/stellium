@@ -27,7 +27,7 @@
 )
 
 #set text(
-  font: (c.theme.body, "Noto Sans Symbols 2"),
+  font: (c.theme.body, "Noto Sans Symbols", "Noto Sans Symbols 2"),
   size: 11pt,
   fill: c.theme.ink,
 )

@@ -562,6 +562,13 @@ def render_dispositor_graph(
     # Create digraph with Stellium styling
     dot = graphviz.Digraph(comment=title or f"{result.mode.title()} Dispositors")
 
+    # Planetary glyph nodes must render in a symbol font that actually has the
+    # astrology glyphs. Crimson Pro has none; "Noto Sans Symbols 2" is missing
+    # the classic planets (☿♀♃♄ at U+263F–2644) — those live in "Noto Sans
+    # Symbols" (no 2). graphviz has no cross-font fallback, so pick the right one.
+    glyph_mode = result.mode == "planetary" and use_glyphs
+    node_fontname = "Noto Sans Symbols" if glyph_mode else "Crimson Pro"
+
     # Stellium palette (matching PDF/chart styling)
     dot.attr(bgcolor="#F5F0E6")  # Cream background
     dot.attr(
@@ -570,7 +577,7 @@ def render_dispositor_graph(
         style="filled",
         fillcolor="#E8E0D4",  # Warm beige nodes
         color="#8B7355",  # Warm brown border
-        fontname="Crimson Pro",
+        fontname=node_fontname,
         fontsize="14",
         penwidth="1.5",
     )
@@ -586,9 +593,9 @@ def render_dispositor_graph(
 
     # Helper to get node label
     def get_label(node: str) -> str:
-        if result.mode == "planetary" and use_glyphs:
+        if glyph_mode:
             if node in CELESTIAL_REGISTRY:
-                return CELESTIAL_REGISTRY[node].glyph
+                return CELESTIAL_REGISTRY[node].glyph or node
         elif result.mode == "house":
             # For houses, just use the number
             return node

@@ -84,6 +84,24 @@ def _theme_dir() -> str:
     return os.path.join(os.path.dirname(__file__), "typst_theme")
 
 
+def _font_paths() -> list[str]:
+    """Bundled font directories, so the PDF (and embedded SVGs) render astro
+    glyphs from packaged fonts rather than relying on whatever the host has.
+
+    Typst still searches system fonts too (ignore_system_fonts stays False), so
+    the display/body faces resolve; these just guarantee the symbol coverage.
+    """
+    repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+    base = os.path.join(repo, "assets", "fonts")
+    dirs = [
+        base,
+        os.path.join(base, "Cinzel_Decorative"),
+        os.path.join(base, "Crimson_Pro"),
+        os.path.join(base, "Crimson_Pro", "static"),
+    ]
+    return [d for d in dirs if os.path.isdir(d)]
+
+
 # ---------------------------------------------------------------------------
 # meta (title page) derivation
 # ---------------------------------------------------------------------------
@@ -494,6 +512,7 @@ def render_pdf(
         pdf_bytes = _typst.compile(
             os.path.join(tmp, "report.typ"),
             root=tmp,
+            font_paths=_font_paths(),
             sys_inputs={"theme": theme, "data": "data.json"},
         )
     return pdf_bytes

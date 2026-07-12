@@ -8,7 +8,9 @@
 // presentation concern and lives here, theme-independent.
 // ============================================================================
 
-#let symbol-font = "Noto Sans Symbols 2"
+// Noto Sans Symbols carries the classic planets/signs/aspects (U+2600–26FF);
+// Noto Sans Symbols 2 backs it for supplementary-plane glyphs (e.g. Vertex).
+#let symbol-font = ("Noto Sans Symbols", "Noto Sans Symbols 2")
 
 // Render an already-chosen glyph character in the symbol font, text-presentation.
 #let glyph(ch, size: 1em, fill: none) = {
