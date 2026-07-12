@@ -1914,8 +1914,11 @@ class ReportBuilder:
         if show is None:
             show = format in terminal_formats
 
-        # Resolve chart image path (auto-generate if requested)
-        chart_svg_path = self._resolve_chart_image_path(file)
+        # Resolve chart image path (auto-generate if requested). For PDF, theme
+        # the wheel to match the report theme.
+        chart_svg_path = self._resolve_chart_image_path(
+            file, theme if format == "pdf" else None
+        )
 
         # Resolve title (use instance var or generate default)
         title = self._title
@@ -2000,7 +2003,9 @@ class ReportBuilder:
         chart_svg_path = self._resolve_chart_image_path(None)
         return self._to_string(section_data, format, chart_svg_path)
 
-    def _resolve_chart_image_path(self, output_file: str | None) -> str | None:
+    def _resolve_chart_image_path(
+        self, output_file: str | None, theme: str | None = None
+    ) -> str | None:
         """
         Resolve the chart image path for rendering.
 
@@ -2038,13 +2043,23 @@ class ReportBuilder:
             # duplicate it. Strip the header (which also lets the wheel centre in
             # its square SVG) and the info corner (which otherwise reveals the
             # native info once the header is off), leaving a clean wheel + moon.
-            (
+            draw = (
                 self._chart.draw(svg_path)
                 .preset_standard()
                 .without_header()
                 .without_chart_info()
-                .save()
             )
+            # For themed PDFs, coordinate the wheel with the report theme so it
+            # doesn't read as a light wheel dropped onto a dark page.
+            if theme is not None:
+                from stellium.presentation.typst_render import THEME_WHEEL
+
+                viz_theme, zodiac_palette = THEME_WHEEL.get(theme, (None, None))
+                if viz_theme is not None:
+                    draw = draw.with_theme(viz_theme).with_zodiac_palette(
+                        zodiac_palette
+                    )
+            draw.save()
             return svg_path
 
         return None

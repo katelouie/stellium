@@ -38,6 +38,47 @@ _TEMPLATE_FILES = (
     "report.typ",
 )
 
+# Per-theme wheel styling: (visualization theme, zodiac palette). Keeps the
+# embedded chart wheel visually coherent with the PDF theme.
+THEME_WHEEL = {
+    "house": ("classic", "rainbow"),
+    "sepia": ("classic", "rainbow_sepia"),
+    "celestial": ("celestial", "rainbow_celestial"),
+    "blues": ("midnight", "rainbow_midnight"),
+    "greyscale": ("classic", "rainbow"),
+}
+
+# Per-theme moon-phase illustration colours (lit = illuminated limb, shadow =
+# dark limb). Light themes: light lit on a dark shadow; dark themes: light lit on
+# a near-black shadow, with a theme accent border.
+MOON_STYLES = {
+    "house": {
+        "lit_color": "#F2ECE0",
+        "shadow_color": "#3A2233",
+        "border_color": "#A08A72",
+    },
+    "sepia": {
+        "lit_color": "#F6EEDD",
+        "shadow_color": "#3A2A1A",
+        "border_color": "#9A7A52",
+    },
+    "celestial": {
+        "lit_color": "#E9DEFA",
+        "shadow_color": "#100B1A",
+        "border_color": "#E8B44A",
+    },
+    "blues": {
+        "lit_color": "#DCEFFF",
+        "shadow_color": "#06182A",
+        "border_color": "#7FB2D8",
+    },
+    "greyscale": {
+        "lit_color": "#FFFFFF",
+        "shadow_color": "#1B1B1B",
+        "border_color": "#1B1B1B",
+    },
+}
+
 
 def _theme_dir() -> str:
     return os.path.join(os.path.dirname(__file__), "typst_theme")
@@ -417,7 +458,12 @@ def render_pdf(
                 try:
                     from stellium.visualization import moon_phase_svg
 
-                    moon_phase_svg(chart, os.path.join(tmp, "moon.svg"), size=200)
+                    moon_phase_svg(
+                        chart,
+                        os.path.join(tmp, "moon.svg"),
+                        size=200,
+                        style=MOON_STYLES.get(theme),
+                    )
                     sec["moon_svg"] = "moon.svg"
                 except Exception:  # never let a drawing failure break the PDF
                     pass
