@@ -11,14 +11,14 @@
 // --- title page -------------------------------------------------------------
 #let render-title(c, meta) = {
   (c.title-block)(meta)
-  v(10pt)
+  v(6pt)
   if meta.at("chart_svg", default: none) != none {
     align(center)[#image(meta.chart_svg, width: 66%)]
-    v(8pt)
+    v(5pt)
   }
   if meta.at("cards", default: ()).len() > 0 {
     (c.cards-row)(meta.cards, compact: true)
-    v(8pt)
+    v(5pt)
   }
   if meta.at("metadata", default: ()).len() > 0 {
     (c.metadata-line)(meta.metadata)

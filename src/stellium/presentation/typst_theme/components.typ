@@ -141,13 +141,13 @@
   let stat-card(label, value, sub, compact: false) = {
     block(
       width: 100%, radius: 8pt, stroke: 1pt + hair,
-      inset: (x: 14pt, y: if compact { 8pt } else { 10pt }),
+      inset: (x: 14pt, y: if compact { 6pt } else { 10pt }),
     )[
-      #lbl(label, size: if compact { 7.5pt } else { 8pt })
-      #v(if compact { 2pt } else { 3pt })
-      #disp(value, size: if compact { 19pt } else { 22pt }, fill: ink)
-      #v(1pt)
-      #text(font: body, size: if compact { 9.5pt } else { 10pt }, fill: muted)[#sub]
+      #lbl(label, size: if compact { 7pt } else { 8pt })
+      #v(if compact { 1pt } else { 3pt })
+      #disp(value, size: if compact { 18pt } else { 22pt }, fill: ink)
+      #v(if compact { 0pt } else { 1pt })
+      #text(font: body, size: if compact { 9pt } else { 10pt }, fill: muted)[#sub]
     ]
   }
   let cards-row(cards, compact: false) = grid(
@@ -520,20 +520,20 @@
     #glyph("\u{2605}", size: 10pt, fill: gold)
   ]
   let metadata-line(items) = align(center)[
-    #text(font: body, size: 11pt, tracking: 0.18em, fill: gold)[
-      #upper(items.join("  \u{00B7}  "))
+    #text(font: body, size: 9.5pt, tracking: 0.12em, fill: gold)[
+      #upper(items.join(" \u{00B7} "))
     ]
   ]
   let title-block(meta) = align(center)[
-    #disp("Stellium", size: 15pt, fill: accent, tracking: 0.3em)
-    #v(5pt)
+    #disp("Stellium", size: 14pt, fill: accent, tracking: 0.3em)
+    #v(4pt)
     #star-ornament()
-    #v(8pt)
-    #lbl(meta.kicker, size: 9.5pt, fill: muted, tracking: 0.22em)
-    #v(5pt)
-    #disp(meta.name, size: 33pt, fill: accent)
-    #v(2pt)
-    #text(font: body, size: 12pt, style: "italic", fill: muted)[#meta.subtitle]
+    #v(6pt)
+    #lbl(meta.kicker, size: 9pt, fill: muted, tracking: 0.22em)
+    #v(4pt)
+    #disp(meta.name, size: 32pt, fill: accent)
+    #v(0pt)
+    #text(font: body, size: 11.5pt, style: "italic", fill: muted)[#meta.subtitle]
   ]
 
   // return the vocabulary
