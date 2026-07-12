@@ -129,30 +129,39 @@ def _year_at_a_glance(almanac: YearAlmanac) -> dict[str, Any]:
             }
         )
 
-    if almanac.transits:
-        sections.append(
-            {
-                "kind": "table",
-                "title": "Transits that shape the year",
-                "headers": ["Date", "Transit", "Aspect", "Natal"],
-                "rows": [
-                    [
-                        _fmt_date(t.exact.date()),
-                        t.transit_planet,
-                        t.aspect_name,
-                        t.natal_planet,
-                    ]
-                    for t in almanac.transits
-                ],
-            }
-        )
-
     return {
         "kind": "compound",
         "title": "The Year at a Glance",
         "descriptor": f"{almanac.start:%B %Y} – {almanac.end:%B %Y}",
         "new_page": True,
         "sections": sections,
+    }
+
+
+def _year_transits(almanac: YearAlmanac) -> dict[str, Any] | None:
+    """The slow transits, on their own page.
+
+    Long enough (a couple of dozen exact hits) that tacking it onto the dashboard
+    just orphans its heading at the foot of the page.
+    """
+    if not almanac.transits:
+        return None
+
+    return {
+        "kind": "table",
+        "title": "Transits That Shape the Year",
+        "descriptor": "The slow movers, and when they land",
+        "new_page": True,
+        "headers": ["Date", "Transit", "Aspect", "Natal"],
+        "rows": [
+            [
+                _fmt_date(t.exact.date()),
+                t.transit_planet,
+                t.aspect_name,
+                t.natal_planet,
+            ]
+            for t in almanac.transits
+        ],
     }
 
 
@@ -526,6 +535,11 @@ def build_planner_data(
     start, end = almanac.start, almanac.end
 
     front: list[dict[str, Any]] = [_year_at_a_glance(almanac)]
+
+    transits_page = _year_transits(almanac)
+    if transits_page:
+        front.append(transits_page)
+
     front.append(_year_overview(start, end, marks, first_weekday))
 
     # The natal chart as a *lookup*, not a portrait: the positions table leads,

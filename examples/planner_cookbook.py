@@ -1,12 +1,26 @@
 """
 Planner Cookbook - Recipes for creating personalized astrological planners.
 
-The PlannerBuilder generates beautiful PDF planners with:
-- Front matter: natal chart, progressed chart, solar return, profections, graphic ephemeris
-- Monthly calendar grids with all events
-- Weekly detail pages with daily transit listings
+A planner is an instrument you consult, not a report you read once. So its front
+matter is a *reference section* — the things the daily pages send you to look up:
 
-All charts use the rainbow zodiac palette by default.
+- The Year at a Glance: Lord of the Year, eclipses placed in YOUR houses,
+  retrograde windows, and the slow transits that shape the year
+- A year overview: twelve mini-months with eclipse and station days marked
+- Your natal chart as a lookup table (plus the wheel)
+- The year's transit map, solar return, and profections
+- The progressed Moon's dated aspects to your natal planets
+- Zodiacal releasing, scoped to this year
+- A glyph legend for reading the daily pages
+
+Then: monthly calendar grids, and weekly pages with room to write.
+
+The front matter is curated by default, so a bare planner is already useful.
+Drop any page with the matching `.without_*()` call.
+
+Planners are rendered by the bundled Typst design system, so they take a theme:
+"house" (default), "sepia", "celestial", "blues", or "greyscale". Reach for
+"greyscale" if you're printing at home — it swaps ink fills for outlines.
 """
 
 from pathlib import Path
@@ -70,9 +84,11 @@ def full_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .year(2026)
         .timezone("America/Los_Angeles")
-        # Front matter
+        .page_size("letter")
+        .theme("house")  # the default; try "celestial" or "greyscale"
+        # Front matter (all on by default — listed here to show what you get)
         .with_natal_chart()
         .with_progressed_chart()
         .with_solar_return()
@@ -196,7 +212,9 @@ def printable_planner():
     """
     Create a planner optimized for printing and binding.
 
-    Uses US Letter size with extra margin for hole punching or binding.
+    Uses US Letter size with extra margin for hole punching or binding, and the
+    greyscale theme so a home laser printer doesn't drink a cartridge of ink —
+    discs and badges become outlines, and the chart wheel goes grey.
     """
     native = Native(
         datetime_input="1990-05-15 14:30",
@@ -208,7 +226,8 @@ def printable_planner():
         .year(2025)
         .timezone("America/New_York")
         .page_size("letter")  # US Letter (8.5" x 11")
-        .binding_margin(0.25)  # Extra 0.25" on inner edge
+        .binding_margin(0.25)  # Extra 0.25" on the inner (bound) edge
+        .theme("greyscale")  # laser-printer safe
         .with_natal_chart()
         .with_solar_return()
         .include_natal_transits()
@@ -229,19 +248,27 @@ def minimal_planner():
     Create a minimal planner with just Moon phases and VOC.
 
     Good for quick reference or people new to astrology.
+
+    The front matter is curated ON by default — a planner should be useful out of
+    the box — so a minimal one is built by opting *out* with `.without_*()`.
     """
     native = Native(
         datetime_input="1990-05-15 14:30",
         location_input="San Francisco, CA",
     )
 
-    # Disable front matter by not calling with_* methods
-    # The builder defaults have these enabled, so we need to explicitly disable
     planner = (
         PlannerBuilder.for_native(native)
         .year(2025)
         .timezone("America/Los_Angeles")
-        # Just Moon info - no front matter charts requested
+        # Strip the reference pages back to nothing
+        .without_natal_chart()
+        .without_progressed_chart()
+        .without_solar_return()
+        .without_profections()
+        .without_zr_timeline()
+        .without_graphic_ephemeris()
+        # Just Moon info on the daily pages
         .include_moon_phases()
         .include_voc(mode="traditional")
         .include_ingresses(["Moon"])  # Only Moon sign changes
@@ -249,6 +276,36 @@ def minimal_planner():
     )
 
     print(f"Minimal planner: {len(planner):,} bytes")
+
+
+# =============================================================================
+# THEMES
+# =============================================================================
+
+
+def themed_planners():
+    """
+    Render the same planner in each of the five design-system themes.
+
+    A theme is pure data — colour tokens, a font trio, a sign palette — so the
+    chart wheels, aspect colours and table shading all stay coordinated with the
+    page. "greyscale" is laser-printer safe: outlines instead of ink fills.
+    """
+    native = Native(
+        datetime_input="1990-05-15 14:30",
+        location_input="San Francisco, CA",
+    )
+
+    for theme in ("house", "sepia", "celestial", "blues", "greyscale"):
+        planner = (
+            PlannerBuilder.for_native(native)
+            .year(2026)
+            .timezone("America/Los_Angeles")
+            .page_size("letter")
+            .theme(theme)
+            .generate(get_output_path(f"themed_{theme}_planner.pdf"))
+        )
+        print(f"  {theme:10} {len(planner):,} bytes")
 
 
 # =============================================================================
@@ -322,7 +379,8 @@ if __name__ == "__main__":
     print(f"Output directory: {OUTPUT_DIR}")
     print()
 
-    # Uncomment the examples you want to run:
+    # Uncomment the examples you want to run. Only full_planner() runs by
+    # default — each planner takes ~20s, and this cookbook is a CI smoke test.
 
     # basic_planner()
     full_planner()
@@ -333,6 +391,7 @@ if __name__ == "__main__":
     # minimal_planner()
     # modern_voc_planner()
     # notable_planner()
+    # themed_planners()  # all five themes, ~2 minutes
 
     print()
     print(f"Done! Check the generated PDF files in {OUTPUT_DIR}")
