@@ -11,14 +11,14 @@
 // --- title page -------------------------------------------------------------
 #let render-title(c, meta) = {
   (c.title-block)(meta)
-  v(14pt)
+  v(10pt)
   if meta.at("chart_svg", default: none) != none {
-    align(center)[#image(meta.chart_svg, width: 60%)]
-    v(10pt)
+    align(center)[#image(meta.chart_svg, width: 66%)]
+    v(8pt)
   }
   if meta.at("cards", default: ()).len() > 0 {
-    (c.cards-row)(meta.cards)
-    v(10pt)
+    (c.cards-row)(meta.cards, compact: true)
+    v(8pt)
   }
   if meta.at("metadata", default: ()).len() > 0 {
     (c.metadata-line)(meta.metadata)
@@ -110,6 +110,8 @@
     (c.aspect-list)(sec.aspects)
   } else if kind == "dispositor_graph" {
     (c.dispositor-graph)(sec.graphs)
+  } else if kind == "text_columns" {
+    (c.text-columns)(sec.columns)
   } else if kind == "svg" {
     if sec.at("svg_file", default: none) != none {
       align(center)[#image(sec.svg_file, width: 92%)]

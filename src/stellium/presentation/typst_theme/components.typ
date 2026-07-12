@@ -137,22 +137,23 @@
     ]
   }
 
-  // --- stat card (snapshot) ---------------------------------------------------
-  let stat-card(label, value, sub) = {
+  // --- stat card (snapshot). compact = the tighter title-page variant. --------
+  let stat-card(label, value, sub, compact: false) = {
     block(
-      width: 100%, radius: 8pt, stroke: 1pt + hair, inset: (x: 14pt, y: 10pt),
+      width: 100%, radius: 8pt, stroke: 1pt + hair,
+      inset: (x: 14pt, y: if compact { 8pt } else { 10pt }),
     )[
-      #lbl(label, size: 8pt)
-      #v(3pt)
-      #disp(value, size: 22pt, fill: ink)
+      #lbl(label, size: if compact { 7.5pt } else { 8pt })
+      #v(if compact { 2pt } else { 3pt })
+      #disp(value, size: if compact { 19pt } else { 22pt }, fill: ink)
       #v(1pt)
-      #text(font: body, size: 10pt, fill: muted)[#sub]
+      #text(font: body, size: if compact { 9.5pt } else { 10pt }, fill: muted)[#sub]
     ]
   }
-  let cards-row(cards) = grid(
+  let cards-row(cards, compact: false) = grid(
     columns: cards.map(_ => 1fr),
     column-gutter: 12pt,
-    ..cards.map(c => stat-card(c.label, c.value, c.at("sub", default: ""))),
+    ..cards.map(c => stat-card(c.label, c.value, c.at("sub", default: ""), compact: compact)),
   )
 
   // --- key/value grid (chart overview) ---------------------------------------
@@ -486,6 +487,21 @@
     ]),
   )
 
+  // --- text columns: N titled prose blocks side by side ----------------------
+  let text-columns(columns) = grid(
+    columns: (1fr,) * columns.len(),
+    column-gutter: 22pt,
+    ..columns.map(col => [
+      #(if col.at("title", default: "") != "" [
+        #text(font: display, weight: t.display-weight, size: 11pt, tracking: 0.14em, fill: accent)[#upper(col.title)]
+        #v(3pt)
+        #hairline(w: 100%, stroke-w: 0.5pt, color: hair)
+        #v(8pt)
+      ])
+      #text(font: body, size: 10.5pt, fill: ink)[#col.text]
+    ]),
+  )
+
   // --- sub-block: a titled sub-unit inside a compound section ----------------
   let sub-block(title, body-content) = [
     #(if title != "" [
@@ -509,15 +525,15 @@
     ]
   ]
   let title-block(meta) = align(center)[
-    #disp("Stellium", size: 16pt, fill: accent, tracking: 0.3em)
-    #v(6pt)
+    #disp("Stellium", size: 15pt, fill: accent, tracking: 0.3em)
+    #v(5pt)
     #star-ornament()
-    #v(10pt)
-    #lbl(meta.kicker, size: 10pt, fill: muted, tracking: 0.22em)
-    #v(6pt)
-    #disp(meta.name, size: 37pt, fill: accent)
-    #v(4pt)
-    #text(font: body, size: 13pt, style: "italic", fill: muted)[#meta.subtitle]
+    #v(8pt)
+    #lbl(meta.kicker, size: 9.5pt, fill: muted, tracking: 0.22em)
+    #v(5pt)
+    #disp(meta.name, size: 33pt, fill: accent)
+    #v(2pt)
+    #text(font: body, size: 12pt, style: "italic", fill: muted)[#meta.subtitle]
   ]
 
   // return the vocabulary
@@ -532,6 +548,7 @@
     side-by-side: side-by-side, sub-block: sub-block,
     aspectarian: aspectarian, aspect-legend: aspect-legend,
     aspect-list: aspect-list, dispositor-graph: dispositor-graph,
+    text-columns: text-columns,
     star-ornament: star-ornament, metadata-line: metadata-line,
     title-block: title-block,
   )

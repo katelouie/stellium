@@ -427,7 +427,29 @@ def _map_section(name: str, d: dict[str, Any], chart: Any) -> dict | None:
         rich = _moon_phase(name, d)
         if rich:
             return rich
+    if lname.startswith("dispositor") and d.get("type") == "compound":
+        return _dispositor_section(name, d)
     return _generic(name, d)
+
+
+def _dispositor_section(name: str, d: dict[str, Any]) -> dict:
+    """Graph on top, then the planetary + house text blocks side by side."""
+    out_subs: list[dict] = []
+    text_cols: list[dict] = []
+    for sub_name, sub_d in d.get("sections", []):
+        if sub_d.get("graph"):
+            mapped = _generic(sub_name, sub_d)
+            if mapped:
+                out_subs.append(mapped)
+        elif sub_d.get("type") == "text":
+            text_cols.append({"title": sub_name, "text": str(sub_d.get("text", ""))})
+        else:
+            mapped = _generic(sub_name, sub_d)
+            if mapped:
+                out_subs.append(mapped)
+    if text_cols:
+        out_subs.append({"kind": "text_columns", "columns": text_cols})
+    return {"kind": "compound", "title": name, "sections": out_subs}
 
 
 def build_report_data(
