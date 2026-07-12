@@ -350,7 +350,33 @@ class AspectSection:
 
             rows.append(row)
 
-        return {"type": "table", "headers": headers, "rows": rows}
+        # Structured payload for structure-aware renderers (e.g. the Typst
+        # aspectarian matrix): the ordered body roster + the aspect pairs.
+        body_objs: dict[str, Any] = {}
+        for aspect in aspects:
+            body_objs[aspect.object1.name] = aspect.object1
+            body_objs[aspect.object2.name] = aspect.object2
+        bodies = [o.name for o in sorted(body_objs.values(), key=get_object_sort_key)]
+        pairs = [
+            {
+                "p1": aspect.object1.name,
+                "p2": aspect.object2.name,
+                "aspect": aspect.aspect_name,
+                "orb": f"{aspect.orb:.2f}°",
+                "applying": (
+                    None if aspect.is_applying is None else bool(aspect.is_applying)
+                ),
+            }
+            for aspect in aspects
+        ]
+
+        return {
+            "type": "table",
+            "headers": headers,
+            "rows": rows,
+            "bodies": bodies,
+            "aspect_pairs": pairs,
+        }
 
     def _generate_single_chart_with_aspectarian(
         self, chart: CalculatedChart
@@ -374,11 +400,22 @@ class AspectSection:
                 theme=self.aspectarian_theme,
             )
 
-            # Return compound section with SVG first, then table
+            # Return compound section with SVG first, then table. The
+            # aspectarian sub also carries a structured payload (bodies + aspect
+            # pairs) so structure-aware renderers can build a native matrix
+            # instead of embedding the SVG; SVG renderers ignore the extra key.
+            aspectarian_sub = {
+                "type": "svg",
+                "content": svg_string,
+                "aspectarian": {
+                    "bodies": table_data.get("bodies", []),
+                    "cells": table_data.get("aspect_pairs", []),
+                },
+            }
             return {
                 "type": "compound",
                 "sections": [
-                    ("Aspectarian", {"type": "svg", "content": svg_string}),
+                    ("Aspectarian", aspectarian_sub),
                     ("Aspect List", table_data),
                 ],
             }

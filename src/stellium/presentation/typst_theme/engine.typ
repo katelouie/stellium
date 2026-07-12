@@ -87,6 +87,14 @@
     )
   } else if kind == "table" {
     (c.generic-table)(sec.headers, sec.rows)
+  } else if kind == "aspectarian" {
+    stack(
+      spacing: 14pt,
+      (c.aspectarian)(sec.bodies, sec.cells),
+      (c.aspect-legend)(),
+    )
+  } else if kind == "aspect_list" {
+    (c.aspect-list)(sec.aspects)
   } else if kind == "side_by_side" {
     (c.side-by-side)(sec.tables)
   } else if kind == "compound" {

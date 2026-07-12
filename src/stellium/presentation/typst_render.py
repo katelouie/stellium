@@ -274,6 +274,18 @@ def _moon_phase(name: str, d: dict[str, Any]) -> dict | None:
 
 def _generic(name: str, d: dict[str, Any]) -> dict | None:
     """Map a generic section dict to a themed engine section."""
+    # Structured aspectarian (carried on the "svg" aspectarian subsection).
+    ac = d.get("aspectarian")
+    if ac and ac.get("bodies"):
+        return {
+            "kind": "aspectarian",
+            "title": name,
+            "bodies": ac["bodies"],
+            "cells": ac.get("cells", []),
+        }
+    # Structured aspect list (the "Aspect List" subsection carries aspect_pairs).
+    if d.get("aspect_pairs") is not None:
+        return {"kind": "aspect_list", "title": name, "aspects": d["aspect_pairs"]}
     typ = d.get("type")
     if typ == "table":
         return {

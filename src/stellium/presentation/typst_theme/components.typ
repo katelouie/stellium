@@ -110,7 +110,7 @@
   // Wrapped in a full-width rounded panel (radius 12, 1px hair border).
   let section(title, body-content, descriptor: none) = {
     block(
-      width: 100%, breakable: false,
+      width: 100%, breakable: true,
       fill: panel, radius: 12pt,
       stroke: 1pt + hair,
       inset: (x: 18pt, y: 16pt),
@@ -260,7 +260,100 @@
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
-      ..rows.map(r => r.map(cell => text(font: body, size: 10.5pt, fill: ink)[#cell])).flatten(),
+      ..rows.map(r => r.map(cell => text(font: (body, symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
+    )
+  }
+
+  // --- aspectarian: lower-triangular aspect matrix ---------------------------
+  // bodies: ordered canonical names. cells: (p1, p2, aspect) dicts.
+  let aspectarian(bodies, cells) = {
+    let n = bodies.len()
+    if n == 0 { return [] }
+    // aspect lookup keyed by hi_lo body indices
+    let amap = (:)
+    for cel in cells {
+      let i = bodies.position(x => x == cel.p1)
+      let j = bodies.position(x => x == cel.p2)
+      if i != none and j != none and i != j {
+        let hi = calc.max(i, j)
+        let lo = calc.min(i, j)
+        amap.insert(str(hi) + "_" + str(lo), cel.aspect)
+      }
+    }
+    let cs = 21pt
+    let cell(i, j) = {
+      if j == i {
+        let g = planet-glyph-of(bodies.at(i))
+        box(width: cs, height: cs, radius: 3pt, fill: hair.lighten(35%))[
+          #align(center + horizon)[#(
+            if g != none { glyph(g, size: 11pt, fill: ink) } else {
+              text(font: body, size: 7pt, fill: ink)[#bodies.at(i)]
+            }
+          )]
+        ]
+      } else if j < i {
+        let asp = amap.at(str(i) + "_" + str(j), default: none)
+        box(width: cs, height: cs, stroke: 0.5pt + hair)[
+          #align(center + horizon)[#(if asp != none { aspect-mark(asp, size: 11pt) })]
+        ]
+      } else {
+        box(width: cs, height: cs)
+      }
+    }
+    let items = ()
+    for i in range(n) {
+      for j in range(n) {
+        items.push(cell(i, j))
+      }
+    }
+    grid(columns: (cs,) * n, ..items)
+  }
+
+  // --- aspect colour-code legend ---------------------------------------------
+  let aspect-legend() = {
+    let items = (
+      ("Conjunction", "Conj"), ("Sextile", "Sextile"), ("Square", "Square"),
+      ("Trine", "Trine"), ("Opposition", "Opp"),
+    )
+    grid(
+      columns: items.len() * (auto,),
+      column-gutter: 16pt,
+      ..items.map(it => box[
+        #aspect-mark(it.at(0), size: 11pt) #h(3pt) #text(font: body, size: 9pt, fill: muted)[#it.at(1)]
+      ]),
+    )
+  }
+
+  // --- aspect list: structured rows with design-system glyphs ----------------
+  let aspect-list(aspects) = {
+    let planet-cell(nm) = {
+      let g = planet-glyph-of(nm)
+      box[#(if g != none { glyph(g, size: 11pt, fill: ink) }) #text(font: body, size: 10.5pt, fill: ink)[ #nm]]
+    }
+    let applying-cell(ap) = {
+      if ap == true { text(font: body, size: 10pt, fill: muted)[Applying] }
+      else if ap == false { text(font: body, size: 10pt, fill: muted)[Separating] }
+      else { text(font: body, size: 10pt, fill: muted)[—] }
+    }
+    table(
+      columns: (1.4fr, 1fr, 1.4fr, auto, auto),
+      stroke: none,
+      inset: (x: 6pt, y: 6pt),
+      align: (col, row) => if col >= 3 { right + horizon } else { left + horizon },
+      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
+      table.header(
+        lbl("Planet 1", size: 7.5pt), lbl("Aspect", size: 7.5pt),
+        lbl("Planet 2", size: 7.5pt),
+        align(right)[#lbl("Orb", size: 7.5pt)],
+        align(right)[#lbl("Applying", size: 7.5pt)],
+      ),
+      ..aspects.map(a => (
+        planet-cell(a.p1),
+        box[#aspect-mark(a.aspect, size: 11pt) #text(font: body, size: 10.5pt, fill: ink)[ #a.aspect]],
+        planet-cell(a.p2),
+        mono(a.at("orb", default: ""), size: 9.5pt, fill: muted),
+        applying-cell(a.at("applying", default: none)),
+      )).flatten(),
     )
   }
 
@@ -318,6 +411,8 @@
     kv-grid: kv-grid, bar-row: bar-row, moon-phase: moon-phase,
     planet-table: planet-table, generic-table: generic-table,
     side-by-side: side-by-side, sub-block: sub-block,
+    aspectarian: aspectarian, aspect-legend: aspect-legend,
+    aspect-list: aspect-list,
     star-ornament: star-ornament, metadata-line: metadata-line,
     title-block: title-block,
   )
