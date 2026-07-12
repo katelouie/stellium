@@ -269,10 +269,15 @@
   // (good for wide tables); false leaves it natural width, centred in the panel.
   let generic-table(headers, rows, full-width: true) = {
     let ncol = headers.len()
-    let col-spec = if full-width and ncol > 1 {
+    // Column sizing: narrow tables get a flexible first column so they fill the
+    // panel; wide tables (>=4 cols, often with a long text column) share the
+    // width equally so no column collapses to zero and the table can't overflow.
+    let col-spec = if not full-width or ncol <= 1 {
+      (auto,) * ncol
+    } else if ncol <= 3 {
       (1fr,) + (auto,) * (ncol - 1)
     } else {
-      (auto,) * ncol
+      (1fr,) * ncol
     }
     let tbl = table(
       columns: col-spec,
@@ -281,7 +286,7 @@
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
-      ..rows.map(r => r.map(cell => text(font: (body, symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
+      ..rows.map(r => r.map(cell => text(font: (body, ..symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
     )
     if full-width { tbl } else { align(center)[#tbl] }
   }

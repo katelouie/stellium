@@ -1,6 +1,6 @@
 # TODO
 
-*41 open tasks (synced from Obsidian)*
+*43 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -18,6 +18,7 @@
 - BaZi: Clashes, combinations, and penalties
 - Build plugin ecosystem architecture (Phase 3 of VISION)
 - DX: surface silent None returns from component-dependent accessors
+- Dispositor graph in PDF: fix residual glyph tofu + make themeable. (1) A few planet glyphs (e.g. Mercury U+263F) still tofu in the embedded graphviz SVG when rendered inside the full report, though the SAME glyphs render fine in the main PDF (Typst-native) and when the dispositor SVG is compiled bare. Diagnosis: a Typst quirk resolving certain glyph codepoints from an embedded <text> SVG inside a multi-font document — NOT a font-coverage issue (bundled Noto Sans Symbols has them). Options: rasterize the dispositor to PNG at generation (graphviz cairo bakes glyphs, Typst embeds pixels, no font resolution) OR redraw the graph natively in the Typst design system. (2) Themeable (#10): render_dispositor_graph hardcodes a cream/beige/gold palette (bgcolor #F5F0E6 etc.) so it clashes on the dark Celestial/Blues PDF themes — parametrize colors or draw in-PDF. The in-PDF redraw would solve both at once but needs graph layout. File: src/stellium/engines/dispositors.py render_dispositor_graph.
 - Evaluate component/analyzer support for non-ChartBuilder chart types
 - Fix aspect-pattern over-counting on conjunct points
 - Gauquelin sectors as an analysis primitive (gauquelin_sector) + Mars-effect study on notables DB
@@ -38,6 +39,7 @@
 ## Low
 
 - AI tool definitions for LLM function-calling integration
+- Add OFL license file for bundled Noto fonts. assets/fonts/ now bundles NotoSansSymbols-Regular + NotoSansSymbols2-Regular (Open Font License). Add the OFL.txt / license text alongside them for compliance. Also decide whether to keep or remove the extra untracked Noto weight variants + variable font Kate dropped in (only the two Regulars are used/committed).
 - Astrological weather API (daily dignities, VOC Moon, planetary hours)
 - Build research platform (hypothesis testing, batch analysis)
 - Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
