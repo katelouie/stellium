@@ -1,0 +1,721 @@
+"""Year-level astrological aggregation — the planner's almanac.
+
+``events.py`` answers *what happens today*: one dated line per event, feeding the
+monthly and weekly pages. This module answers the questions those lines provoke.
+
+When a daily page says ``Moon □ natal Mercury``, the reader needs somewhere to
+look up *where natal Mercury is*. When it marks an eclipse, they want to know
+*which of my houses it fell in*. A planner is an instrument you consult, so the
+front matter is a reference section, and these are its contents: who rules the
+year, when the retrogrades actually run, where the eclipses land, where the
+progressed Moon is walking.
+
+Those are year-scoped facts rather than daily events, so they are aggregated
+here. Everything is computed from the engines directly (stations, eclipses,
+longitude crossings, profections, releasing) rather than by re-parsing the
+human-readable strings in ``DailyEvent`` — the almanac is structured data.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import date, datetime, timedelta
+
+import pytz
+
+from stellium.core.models import CalculatedChart
+
+# Aspects the almanac reports, by exact angle.
+ASPECT_NAMES: dict[int, str] = {
+    0: "Conjunction",
+    60: "Sextile",
+    90: "Square",
+    120: "Trine",
+    180: "Opposition",
+}
+
+# The slow movers whose transits define a year's shape. Faster bodies produce
+# too many hits to be a useful year-level summary (they belong on the daily pages).
+YEAR_DEFINING_PLANETS: list[str] = [
+    "Jupiter",
+    "Saturn",
+    "Uranus",
+    "Neptune",
+    "Pluto",
+]
+
+RETROGRADE_PLANETS: list[str] = [
+    "Mercury",
+    "Venus",
+    "Mars",
+    "Jupiter",
+    "Saturn",
+    "Uranus",
+    "Neptune",
+    "Pluto",
+]
+
+# A retrograde can straddle the year boundary, so stations are searched over a
+# padded window and the resulting periods are clipped back to the year.
+_STATION_PAD_DAYS = 220
+
+
+@dataclass(frozen=True)
+class TransitHit:
+    """One exact transit aspect from a moving body to a fixed natal point.
+
+    This is the structured primitive behind both the daily transit lines and the
+    year's transit summary, so the underlying search runs once.
+
+    Attributes:
+        exact: Local datetime the aspect is exact
+        transit_planet: The moving body
+        natal_planet: The natal point being aspected
+        aspect_angle: Exact angle of the aspect (0, 60, 90, 120, 180)
+        aspect_name: Human-readable aspect name
+    """
+
+    exact: datetime
+    transit_planet: str
+    natal_planet: str
+    aspect_angle: int
+    aspect_name: str
+
+
+@dataclass(frozen=True)
+class EclipseEntry:
+    """An eclipse, placed in the native's own houses.
+
+    The house is what makes an eclipse legible to the person holding the planner —
+    "a solar eclipse in your 7th" means something a bare date does not.
+    """
+
+    date: date
+    eclipse_type: str  # "solar" | "lunar"
+    detail: str  # e.g. "total", "partial", "annular"
+    sign: str
+    degree: float
+    natal_house: int | None
+
+
+@dataclass(frozen=True)
+class RetrogradePeriod:
+    """A retrograde window, clipped to the planner's year.
+
+    ``station_retrograde`` / ``station_direct`` are None when the corresponding
+    station falls outside the searched window (i.e. the period runs past the edge
+    of the year).
+    """
+
+    planet: str
+    station_retrograde: date | None
+    station_direct: date | None
+    starts_before_year: bool
+    ends_after_year: bool
+
+
+@dataclass(frozen=True)
+class ProgressedMoonAspect:
+    """An exact aspect from the progressed Moon to a natal planet."""
+
+    date: date
+    natal_planet: str
+    aspect_angle: int
+    aspect_name: str
+
+
+@dataclass(frozen=True)
+class ProgressedMoon:
+    """The progressed Moon's walk through the planner's year.
+
+    Secondary progression advances one day per year of life, so the progressed
+    Moon covers only ~13° in a year — roughly half a sign. It changes sign at most
+    once per year, and often not at all. Its dated aspects to natal planets are
+    therefore the payload: a handful of real, placeable events.
+    """
+
+    start_sign: str
+    start_degree: float
+    end_sign: str
+    end_degree: float
+    natal_house: int | None
+    ingress_date: date | None
+    ingress_sign: str | None
+    aspects: tuple[ProgressedMoonAspect, ...]
+
+
+@dataclass(frozen=True)
+class ZRYearPeriod:
+    """A zodiacal-releasing period overlapping the planner's year."""
+
+    level: int
+    sign: str
+    ruler: str
+    start: date
+    end: date
+    is_peak: bool
+    is_loosing_bond: bool
+
+
+@dataclass(frozen=True)
+class YearAlmanac:
+    """Everything the planner's reference pages need about a single year."""
+
+    start: date
+    end: date
+
+    # Who rules the year
+    age: int
+    profected_house: int
+    profected_sign: str
+    lord_of_year: str
+    lord_natal_sign: str | None
+    lord_natal_house: int | None
+
+    solar_return: datetime | None
+
+    eclipses: tuple[EclipseEntry, ...]
+    retrogrades: tuple[RetrogradePeriod, ...]
+    progressed_moon: ProgressedMoon | None
+    transits: tuple[TransitHit, ...]
+    zr_periods: tuple[ZRYearPeriod, ...]
+
+
+# ---------------------------------------------------------------------------
+# helpers
+# ---------------------------------------------------------------------------
+
+
+def house_for_longitude(chart: CalculatedChart, longitude: float) -> int | None:
+    """Which of the chart's houses a given ecliptic longitude falls in.
+
+    ``CalculatedChart.get_house()`` resolves houses for *named* objects only; the
+    almanac needs to place arbitrary points (eclipse degrees, the progressed Moon).
+
+    Args:
+        chart: The natal chart supplying the house cusps
+        longitude: Ecliptic longitude in degrees
+
+    Returns:
+        House number 1-12, or None if the chart has no houses
+    """
+    try:
+        houses = chart.get_houses()
+    except Exception:
+        return None
+    if houses is None:
+        return None
+
+    lon = longitude % 360
+    for house in range(1, 13):
+        start = houses.get_cusp(house) % 360
+        end = houses.get_cusp(1 if house == 12 else house + 1) % 360
+        # A house spans start -> end going forward through the zodiac, and may
+        # wrap past 0° Aries.
+        span = (end - start) % 360
+        offset = (lon - start) % 360
+        if span == 0:
+            continue
+        if offset < span:
+            return house
+    return None
+
+
+def _natal_datetime(chart: CalculatedChart) -> datetime:
+    """The chart's birth datetime, preferring local time over UTC."""
+    return chart.datetime.local_datetime or chart.datetime.utc_datetime
+
+
+def _sign_of(longitude: float) -> str:
+    from stellium.engines.search import _get_sign_from_longitude
+
+    return _get_sign_from_longitude(longitude % 360)
+
+
+def _degree_in_sign(longitude: float) -> float:
+    return (longitude % 360) % 30
+
+
+def _to_local_date(dt: datetime, tz: pytz.BaseTzInfo) -> date:
+    if dt.tzinfo is None:
+        dt = pytz.utc.localize(dt)
+    return dt.astimezone(tz).date()
+
+
+# ---------------------------------------------------------------------------
+# the shared transit primitive
+# ---------------------------------------------------------------------------
+
+
+def find_natal_transits(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+    timezone: str,
+    transit_planets: list[str] | None = None,
+    aspects: list[int] | None = None,
+) -> list[TransitHit]:
+    """Find every exact transit aspect to natal planets in a date range.
+
+    This is the single search behind both the daily transit lines and the year's
+    transit summary — callers should run it once and share the result.
+
+    Args:
+        natal_chart: The natal chart whose planets are being transited
+        start: First date of the range
+        end: Last date of the range
+        timezone: IANA timezone for the returned exact times
+        transit_planets: Moving bodies to search (default: the year-defining planets)
+        aspects: Aspect angles to search (default: the major Ptolemaic set)
+
+    Returns:
+        Exact transit hits, sorted by time
+    """
+    from stellium.engines.search import find_all_longitude_crossings
+
+    if transit_planets is None:
+        transit_planets = list(YEAR_DEFINING_PLANETS)
+    if aspects is None:
+        aspects = [0, 60, 90, 120, 180]
+
+    tz = pytz.timezone(timezone)
+    start_dt = datetime.combine(start, datetime.min.time())
+    end_dt = datetime.combine(end, datetime.max.time())
+
+    hits: list[TransitHit] = []
+    for transit_planet in transit_planets:
+        for natal_obj in natal_chart.get_planets():
+            natal_lon = natal_obj.longitude
+
+            for angle in aspects:
+                if angle == 0:
+                    targets = [natal_lon]
+                elif angle == 180:
+                    targets = [(natal_lon + 180) % 360]
+                else:
+                    targets = [
+                        (natal_lon + angle) % 360,
+                        (natal_lon - angle) % 360,
+                    ]
+
+                for target in targets:
+                    try:
+                        crossings = find_all_longitude_crossings(
+                            transit_planet, target, start_dt, end_dt
+                        )
+                    except Exception:
+                        continue
+
+                    for crossing in crossings:
+                        exact_utc = _jd_to_utc(crossing.julian_day)
+                        hits.append(
+                            TransitHit(
+                                exact=exact_utc.astimezone(tz),
+                                transit_planet=transit_planet,
+                                natal_planet=natal_obj.name,
+                                aspect_angle=angle,
+                                aspect_name=ASPECT_NAMES.get(angle, f"{angle}°"),
+                            )
+                        )
+
+    hits.sort(key=lambda h: h.exact)
+    return hits
+
+
+def _jd_to_utc(julian_day: float) -> datetime:
+    from stellium.engines.search import _julian_day_to_datetime
+
+    dt = _julian_day_to_datetime(julian_day)
+    if dt.tzinfo is None:
+        dt = pytz.utc.localize(dt)
+    return dt
+
+
+# ---------------------------------------------------------------------------
+# the pieces
+# ---------------------------------------------------------------------------
+
+
+def find_eclipses(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+    timezone: str,
+) -> list[EclipseEntry]:
+    """The year's eclipses, each placed in the native's houses."""
+    from stellium.engines.search import find_all_eclipses
+
+    tz = pytz.timezone(timezone)
+    entries: list[EclipseEntry] = []
+
+    try:
+        eclipses = find_all_eclipses(
+            datetime.combine(start, datetime.min.time()),
+            datetime.combine(end, datetime.max.time()),
+        )
+    except Exception:
+        return entries
+
+    for eclipse in eclipses:
+        # A solar eclipse happens at the Sun/Moon conjunction; a lunar one is read
+        # at the Moon's own degree.
+        kind = "solar" if eclipse.eclipse_type.startswith("solar") else "lunar"
+        longitude = eclipse.sun_longitude if kind == "solar" else eclipse.moon_longitude
+
+        entries.append(
+            EclipseEntry(
+                date=_to_local_date(eclipse.datetime_utc, tz),
+                eclipse_type=kind,
+                detail=getattr(eclipse, "classification", ""),
+                sign=eclipse.sign,
+                degree=_degree_in_sign(longitude),
+                natal_house=house_for_longitude(natal_chart, longitude),
+            )
+        )
+
+    entries.sort(key=lambda e: e.date)
+    return entries
+
+
+def find_retrogrades(
+    start: date,
+    end: date,
+    timezone: str,
+    planets: list[str] | None = None,
+) -> list[RetrogradePeriod]:
+    """The retrograde windows overlapping the year.
+
+    Stations are searched over a padded window so that a retrograde straddling
+    January 1st or December 31st is still reported, flagged as running past the
+    edge of the year rather than silently truncated.
+    """
+    from stellium.engines.search import find_all_stations
+
+    if planets is None:
+        planets = list(RETROGRADE_PLANETS)
+
+    tz = pytz.timezone(timezone)
+    search_start = datetime.combine(
+        start - timedelta(days=_STATION_PAD_DAYS), datetime.min.time()
+    )
+    search_end = datetime.combine(
+        end + timedelta(days=_STATION_PAD_DAYS), datetime.max.time()
+    )
+
+    periods: list[RetrogradePeriod] = []
+
+    for planet in planets:
+        try:
+            stations = sorted(
+                find_all_stations(planet, search_start, search_end),
+                key=lambda s: s.julian_day,
+            )
+        except Exception:
+            continue
+
+        # Pair each retrograde station with the next direct station.
+        pending_rx: date | None = None
+        for station in stations:
+            when = _to_local_date(_jd_to_utc(station.julian_day), tz)
+
+            if station.station_type == "retrograde":
+                pending_rx = when
+                continue
+
+            # A direct station closes an open retrograde. If we never saw its
+            # retrograde station, the period began before the searched window.
+            rx_date = pending_rx
+            pending_rx = None
+            if _overlaps(rx_date, when, start, end):
+                periods.append(
+                    RetrogradePeriod(
+                        planet=planet,
+                        station_retrograde=rx_date,
+                        station_direct=when,
+                        starts_before_year=rx_date is not None and rx_date < start,
+                        ends_after_year=when > end,
+                    )
+                )
+
+        # A retrograde still open at the end of the search window.
+        if pending_rx is not None and _overlaps(pending_rx, None, start, end):
+            periods.append(
+                RetrogradePeriod(
+                    planet=planet,
+                    station_retrograde=pending_rx,
+                    station_direct=None,
+                    starts_before_year=pending_rx < start,
+                    ends_after_year=True,
+                )
+            )
+
+    periods.sort(key=lambda p: (p.station_retrograde or start, p.planet))
+    return periods
+
+
+def _overlaps(
+    period_start: date | None,
+    period_end: date | None,
+    start: date,
+    end: date,
+) -> bool:
+    """Whether a (possibly open-ended) period intersects the year."""
+    if period_start is not None and period_start > end:
+        return False
+    if period_end is not None and period_end < start:
+        return False
+    return True
+
+
+def find_progressed_moon(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+) -> ProgressedMoon | None:
+    """The progressed Moon's path through the year, with its natal aspects.
+
+    Secondary progression maps one day of life to one year, so the progressed Moon
+    advances only ~13° across a whole year and is always direct (the Moon never
+    retrogrades). That monotonic motion means sign ingresses and exact aspects can
+    be found by sampling and interpolating, without a bracketing search.
+    """
+    from stellium.engines.search import (
+        SWISS_EPHEMERIS_IDS,
+        _datetime_to_julian_day,
+        _get_position_and_speed,
+    )
+    from stellium.utils.progressions import calculate_progressed_datetime
+
+    natal_dt = _natal_datetime(natal_chart)
+    moon_id = SWISS_EPHEMERIS_IDS["Moon"]
+
+    def progressed_longitude(on: date) -> float | None:
+        try:
+            prog_dt = calculate_progressed_datetime(
+                natal_dt, datetime.combine(on, datetime.min.time()), "secondary"
+            )
+            jd = _datetime_to_julian_day(prog_dt)
+            longitude, _speed = _get_position_and_speed(moon_id, jd)
+            return longitude % 360
+        except Exception:
+            return None
+
+    # Daily samples: the progressed Moon moves ~0.036°/day, so a day's resolution
+    # is far finer than the ~1° precision a planner date needs.
+    samples: list[tuple[date, float]] = []
+    cursor = start
+    while cursor <= end:
+        longitude = progressed_longitude(cursor)
+        if longitude is not None:
+            samples.append((cursor, longitude))
+        cursor += timedelta(days=1)
+
+    if len(samples) < 2:
+        return None
+
+    first_date, first_lon = samples[0]
+    last_date, last_lon = samples[-1]
+
+    # Sign ingress: the progressed Moon covers ~13°/year, so it crosses at most one
+    # sign boundary — but check every step rather than assuming.
+    ingress_date: date | None = None
+    ingress_sign: str | None = None
+    for (_prev_date, prev_lon), (this_date, this_lon) in zip(
+        samples, samples[1:], strict=False
+    ):
+        if _sign_of(prev_lon) != _sign_of(this_lon):
+            ingress_date = this_date
+            ingress_sign = _sign_of(this_lon)
+            break
+
+    # Exact aspects to natal planets, found by watching the aspect's angular
+    # separation cross zero between consecutive samples.
+    aspects: list[ProgressedMoonAspect] = []
+    for natal_obj in natal_chart.get_planets():
+        for angle, name in ASPECT_NAMES.items():
+            for (_prev_date, prev_lon), (this_date, this_lon) in zip(
+                samples, samples[1:], strict=False
+            ):
+                prev_sep = _signed_aspect_error(prev_lon, natal_obj.longitude, angle)
+                this_sep = _signed_aspect_error(this_lon, natal_obj.longitude, angle)
+                # A sign change across a small step means the aspect went exact.
+                if prev_sep == 0 or (
+                    prev_sep < 0 < this_sep or this_sep < 0 < prev_sep
+                ):
+                    if abs(prev_sep) > 1 or abs(this_sep) > 1:
+                        continue  # a wraparound, not a crossing
+                    aspects.append(
+                        ProgressedMoonAspect(
+                            date=this_date,
+                            natal_planet=natal_obj.name,
+                            aspect_angle=angle,
+                            aspect_name=name,
+                        )
+                    )
+
+    aspects.sort(key=lambda a: a.date)
+
+    return ProgressedMoon(
+        start_sign=_sign_of(first_lon),
+        start_degree=_degree_in_sign(first_lon),
+        end_sign=_sign_of(last_lon),
+        end_degree=_degree_in_sign(last_lon),
+        natal_house=house_for_longitude(natal_chart, last_lon),
+        ingress_date=ingress_date,
+        ingress_sign=ingress_sign,
+        aspects=tuple(aspects),
+    )
+
+
+def _signed_aspect_error(moving: float, fixed: float, angle: int) -> float:
+    """How far a moving body is from exact aspect, signed, in degrees (-180, 180].
+
+    Zero means the aspect is exact. The sign flips as the body passes exactness,
+    which is what makes crossings detectable between samples.
+    """
+    separation = (moving - fixed) % 360
+    # An aspect can form on either side of the natal point; take the nearer.
+    candidates = [(separation - angle), (separation - (360 - angle))]
+    best = min(candidates, key=lambda d: abs(_wrap180(d)))
+    return _wrap180(best)
+
+
+def _wrap180(degrees: float) -> float:
+    wrapped = (degrees + 180) % 360 - 180
+    return wrapped
+
+
+def find_zr_year(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+    lot: str = "Part of Fortune",
+) -> list[ZRYearPeriod]:
+    """Zodiacal-releasing periods (L1 and L2) overlapping the planner's year.
+
+    A planner covers one year, so the lifetime view is the wrong scope — what
+    matters is which period the native is *in*, and whether a peak or a loosing of
+    the bond lands inside these twelve months.
+
+    Requires a chart built with ``ZodiacalReleasingAnalyzer`` for this lot (the
+    timeline lives in chart metadata). Returns an empty list if it is absent —
+    that is a legitimate "not requested", not an error to swallow.
+    """
+    timelines = natal_chart.metadata.get("zodiacal_releasing")
+    if not timelines or lot not in timelines:
+        return []
+    timeline = timelines[lot]
+
+    found: list[ZRYearPeriod] = []
+    for level in (1, 2):
+        for period in timeline.periods.get(level, []):
+            p_start = (
+                period.start.date()
+                if isinstance(period.start, datetime)
+                else period.start
+            )
+            p_end = (
+                period.end.date() if isinstance(period.end, datetime) else period.end
+            )
+            if p_end < start or p_start > end:
+                continue
+            found.append(
+                ZRYearPeriod(
+                    level=level,
+                    sign=period.sign,
+                    ruler=period.ruler,
+                    start=p_start,
+                    end=p_end,
+                    is_peak=bool(period.is_peak),
+                    is_loosing_bond=bool(period.is_loosing_bond),
+                )
+            )
+
+    found.sort(key=lambda p: (p.level, p.start))
+    return found
+
+
+# ---------------------------------------------------------------------------
+# the aggregate
+# ---------------------------------------------------------------------------
+
+
+def build_year_almanac(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+    timezone: str,
+    lot: str = "Part of Fortune",
+    transits: list[TransitHit] | None = None,
+) -> YearAlmanac:
+    """Aggregate a year into the planner's reference structures.
+
+    Args:
+        natal_chart: The native's natal chart
+        start: First day of the planner's range
+        end: Last day of the planner's range
+        timezone: IANA timezone the planner is written in
+        lot: Lot to release from for the ZR section
+        transits: Pre-computed transit hits. The daily event collector runs the
+            same search, so pass its result here rather than searching twice.
+
+    Returns:
+        The year's almanac
+    """
+    if transits is None:
+        transits = find_natal_transits(natal_chart, start, end, timezone)
+
+    # Who rules the year. Profections advance one sign per year of life, so the
+    # profection is taken at the start of the planner's range.
+    age = _age_on(natal_chart, start)
+    profection = natal_chart.profection(age=age, include_monthly=False)
+
+    lord = profection.ruler
+    lord_obj = natal_chart.get_object(lord)
+
+    solar_return = _solar_return_datetime(natal_chart, start, timezone)
+
+    return YearAlmanac(
+        start=start,
+        end=end,
+        age=age,
+        profected_house=profection.profected_house,
+        profected_sign=profection.profected_sign,
+        lord_of_year=lord,
+        lord_natal_sign=lord_obj.sign if lord_obj else None,
+        lord_natal_house=natal_chart.get_house(lord) if lord_obj else None,
+        solar_return=solar_return,
+        eclipses=tuple(find_eclipses(natal_chart, start, end, timezone)),
+        retrogrades=tuple(find_retrogrades(start, end, timezone)),
+        progressed_moon=find_progressed_moon(natal_chart, start, end),
+        transits=tuple(transits),
+        zr_periods=tuple(find_zr_year(natal_chart, start, end, lot=lot)),
+    )
+
+
+def _age_on(natal_chart: CalculatedChart, on: date) -> int:
+    """The native's age (completed years) on a given date."""
+    birth = _natal_datetime(natal_chart).date()
+    age = on.year - birth.year
+    if (on.month, on.day) < (birth.month, birth.day):
+        age -= 1
+    return max(age, 0)
+
+
+def _solar_return_datetime(
+    natal_chart: CalculatedChart,
+    start: date,
+    timezone: str,
+) -> datetime | None:
+    """The solar return falling in the planner's year, if it can be computed."""
+    from stellium.returns import ReturnBuilder
+
+    try:
+        chart = ReturnBuilder.solar(natal_chart, year=start.year).calculate()
+    except Exception:
+        return None
+
+    try:
+        return _natal_datetime(chart)
+    except Exception:
+        return None
