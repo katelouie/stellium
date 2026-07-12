@@ -93,6 +93,7 @@ where = ["src"]
     "geocode_cache.json",
     "fonts/*.ttf",
     "fonts/*.otf",
+    "fonts/LICENSE-FONTS.txt",
 ]
 
 # Tool configurations

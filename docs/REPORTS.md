@@ -1207,7 +1207,14 @@ chart = (
 
 ### PDF fonts look wrong
 
-The Typst renderer uses Cinzel Decorative and Crimson Pro fonts. These are included in `assets/fonts/`. If fonts don't render correctly, ensure the font files are present.
+The Typst renderer bundles its complete font stack — the display/body/mono faces
+each theme uses (Cinzel, Cormorant Garamond, EB Garamond, Newsreader, Spectral,
+Space Grotesk, IBM Plex Serif/Mono) plus the `Noto Sans Symbols` glyph fonts —
+inside the package at `stellium/data/fonts/` (all SIL Open Font License; see
+`LICENSE-FONTS.txt` there). They ship in the wheel and are passed to the Typst
+compile automatically, so PDFs render identically on any machine with no host
+fonts required. If glyphs still look wrong, confirm the package data installed
+(`pip install --force-reinstall stellium`).
 
 ---
 
