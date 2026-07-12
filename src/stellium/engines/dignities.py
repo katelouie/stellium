@@ -130,9 +130,9 @@ DIGNITIES = {
         "exaltation_degree": None,
         "traditional": {
             "ruler": "Sun",
-            "exaltation": "None",
+            "exaltation": None,
             "detriment": "Saturn",
-            "fall": "None",
+            "fall": None,
         },
         "modern": {
             "ruler": "Sun",
@@ -214,7 +214,7 @@ DIGNITIES = {
         "exaltation_degree": None,
         "traditional": {
             "ruler": "Mars",
-            "exaltation": "None",
+            "exaltation": None,
             "detriment": "Venus",
             "fall": "Moon",
         },
@@ -305,9 +305,9 @@ DIGNITIES = {
         "exaltation_degree": None,
         "traditional": {
             "ruler": "Saturn",
-            "exaltation": "None",
+            "exaltation": None,
             "detriment": "Sun",
-            "fall": "None",
+            "fall": None,
         },
         "modern": {
             "ruler": "Uranus",
@@ -569,6 +569,11 @@ class TraditionalDignityCalculator:
             "score": score,
             "details": details,
             "is_peregrine": is_peregrine,
+            "reception_potential": reception_potential,
+            # Misspelled since this method was written. The docstring, the local
+            # variable and _check_reception_potential() all say "reception", so
+            # anyone following the docs got nothing back. Kept as an alias so an
+            # existing caller reading the typo'd key does not break.
             "receiption_potential": reception_potential,
             "interpretation": self._interpret_score(score, dignities),
         }

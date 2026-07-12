@@ -5,12 +5,14 @@ These engines are responsible for finding angular relationships (aspects)
 between celestial objects. They follow the `AspectEngine` protocol.
 """
 
+import warnings
 from itertools import combinations
 
 from stellium.core.config import AspectConfig
 from stellium.core.models import Aspect, CelestialPosition, ObjectType
 from stellium.core.protocols import OrbEngine
 from stellium.core.registry import get_aspect_by_alias, get_aspect_info
+from stellium.exceptions import ConfigurationWarning
 
 # --- Helper Functions (Shared Logic) ---
 
@@ -172,6 +174,21 @@ class ModernAspectEngine:
 
                 if not aspect_info:
                     # Skip unknown aspects
+                    continue
+
+                if aspect_info.category == "Declination":
+                    # A parallel is a relationship between DECLINATIONS, not
+                    # longitudes. It only sits in ASPECT_REGISTRY at 0°/180° by
+                    # analogy with conjunction and opposition, so computing it here
+                    # would silently measure the wrong thing — an opposition would
+                    # be reported as a contraparallel. Use DeclinationAspectEngine.
+                    warnings.warn(
+                        f"{aspect_name!r} is a declination aspect and cannot be "
+                        f"computed from ecliptic longitude; it is being skipped. "
+                        f"Use ChartBuilder.with_declination_aspects() instead.",
+                        ConfigurationWarning,
+                        stacklevel=2,
+                    )
                     continue
 
                 aspect_angle = aspect_info.angle
@@ -369,6 +386,18 @@ class CrossChartAspectEngine:
 
                     if not aspect_info:
                         # Skip unknown aspects
+                        continue
+
+                    if aspect_info.category == "Declination":
+                        # See the note in ModernAspectEngine: declination aspects
+                        # are not a function of ecliptic longitude.
+                        warnings.warn(
+                            f"{aspect_name!r} is a declination aspect and cannot be "
+                            f"computed from ecliptic longitude; it is being skipped. "
+                            f"Use ChartBuilder.with_declination_aspects() instead.",
+                            ConfigurationWarning,
+                            stacklevel=2,
+                        )
                         continue
 
                     aspect_angle = aspect_info.angle

@@ -1180,9 +1180,9 @@ class ChartCondition:
 def _lord(value: Any) -> str | None:
     """Normalise a ruler name out of the dignity tables.
 
-    `DIGNITIES` records the absence of an exaltation lord as the literal *string*
-    ``"None"`` (Aquarius, Leo, Gemini, Scorpio, Sagittarius), so a bare truthiness
-    check happily prints "None" as if it were a planet.
+    DIGNITIES used to record an absent exaltation lord as the literal *string*
+    ``"None"``, which printed as though it were a planet. That is fixed at the
+    source now; this stays as a cheap guard against any table growing the wart back.
     """
     if value is None:
         return None

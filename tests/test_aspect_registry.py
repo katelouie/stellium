@@ -364,3 +364,88 @@ class TestAspectRegistryViews:
         assert get_aspect_info("Parallel").glyph == "∥"
         assert get_aspect_info("Contraparallel").glyph == "⋕"
         assert get_aspect_info("Conjunction").glyph == "☌"
+
+
+class TestDeclinationAspectsAreNotEclipticAspects:
+    """Declination aspects must never be computed from ecliptic longitude.
+
+    Parallel and Contraparallel live in ASPECT_REGISTRY at 0° and 180° purely by
+    analogy with Conjunction and Opposition. An ecliptic engine that trusts that
+    angle measures the wrong thing entirely: it will report an *opposition* as a
+    contraparallel, because the two longitudes happen to be 180° apart.
+    """
+
+    def test_ecliptic_engine_refuses_declination_aspects(self):
+        import warnings
+
+        from stellium import ChartBuilder, Native
+        from stellium.core.config import AspectConfig
+        from stellium.engines.aspects import ModernAspectEngine
+
+        native = Native("1990-05-15 14:30", "San Francisco, CA")
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            chart = (
+                ChartBuilder.from_native(native)
+                .with_aspects(
+                    ModernAspectEngine(
+                        AspectConfig(aspects=["Parallel", "Contraparallel"])
+                    )
+                )
+                .calculate()
+            )
+
+        # Nothing fabricated from longitude...
+        assert len(chart.aspects) == 0
+        # ...and the user is told why, and what to use instead.
+        messages = " ".join(str(w.message) for w in caught)
+        assert "declination aspect" in messages
+        assert "with_declination_aspects" in messages
+
+    def test_real_ecliptic_aspects_still_compute(self):
+        from stellium import ChartBuilder, Native
+        from stellium.core.config import AspectConfig
+        from stellium.engines.aspects import ModernAspectEngine
+
+        native = Native("1990-05-15 14:30", "San Francisco, CA")
+        chart = (
+            ChartBuilder.from_native(native)
+            .with_aspects(ModernAspectEngine(AspectConfig(aspects=["Conjunction"])))
+            .calculate()
+        )
+        assert len(chart.aspects) > 0
+        assert all(a.aspect_name == "Conjunction" for a in chart.aspects)
+
+
+class TestDignityTablesUseRealNone:
+    """DIGNITIES stored "no exaltation lord" as the literal string "None"."""
+
+    def test_absent_lords_are_none_not_the_string(self):
+        from stellium.engines.dignities import DIGNITIES
+
+        # No planet is exalted in Leo, Scorpio or Aquarius; none falls in Leo,
+        # Taurus or Aquarius.
+        assert DIGNITIES["Leo"]["traditional"]["exaltation"] is None
+        assert DIGNITIES["Aquarius"]["traditional"]["exaltation"] is None
+        assert DIGNITIES["Scorpio"]["traditional"]["exaltation"] is None
+
+        for sign, data in DIGNITIES.items():
+            for system in ("traditional", "modern"):
+                for key in ("ruler", "exaltation", "detriment", "fall"):
+                    assert data[system].get(key) != "None", f"{sign}.{system}.{key}"
+
+    def test_reception_potential_key_is_spelled_correctly(self):
+        """The docstring, the local var and the method all say "reception"."""
+        from stellium import ChartBuilder, Native
+        from stellium.engines.dignities import TraditionalDignityCalculator
+
+        chart = ChartBuilder.from_native(
+            Native("1990-05-15 14:30", "San Francisco, CA")
+        ).calculate()
+        result = TraditionalDignityCalculator().calculate_dignities(
+            chart.get_object("Sun"), sect="day"
+        )
+        assert "reception_potential" in result
+        # The historical typo is kept as an alias so existing callers keep working.
+        assert result["receiption_potential"] == result["reception_potential"]
