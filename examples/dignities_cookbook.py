@@ -49,7 +49,8 @@ from stellium.engines.dignities import (
 )
 from stellium.engines.dispositors import (
     DispositorEngine,
-    render_dispositor_graph,
+    dispositor_graph_data,
+    render_dispositor_svg,
 )
 
 SCRIPT_DIR = Path(__file__).parent
@@ -602,60 +603,35 @@ def example_12_house_dispositors():
             print(f"  House {mr.node1} <-> House {mr.node2}{planet_info}")
 
 
-def example_13_dispositor_graphviz():
+def example_13_dispositor_graph():
     """
-    Example 13: Dispositor Graph Visualization (Graphviz SVG)
+    Example 13: Dispositor Graph Visualization (SVG)
 
-    Render dispositor graphs as SVG using Graphviz. The visualization
-    uses Stellium's visual palette:
-        - Gold nodes for final dispositors (self-disposing)
-        - Purple-tinted nodes for mutual receptions
-        - Bidirectional arrows for mutual reception edges
-        - Gold self-loops for self-disposing planets
-
-    Requires the `graphviz` Python package and the Graphviz binary.
+    Render the planetary + house dispositor graphs to a single SVG with the
+    built-in svgwrite renderer (no graphviz dependency). The layered layout
+    puts the "leaf" bodies at the top flowing down to the final dispositor,
+    using Stellium's visual palette:
+        - Gold nodes for final dispositors
+        - Bidirectional arrows for mutual-reception edges
     """
     print_header("Example 13: Dispositor Graph Visualization")
-
-    try:
-        import graphviz as _gv  # noqa: F401
-    except ImportError:
-        print("Graphviz Python package not installed — skipping visualization.")
-        print("Install with: pip install graphviz")
-        return
-
-    import shutil
-
-    if not shutil.which("dot"):
-        print("Graphviz binary (dot) not found on PATH — skipping visualization.")
-        print(
-            "Install with: brew install graphviz (macOS) or apt install graphviz (Linux)"
-        )
-        return
 
     chart = ChartBuilder.from_notable("Albert Einstein").calculate()
     engine = DispositorEngine(chart)
 
-    # Planetary dispositors
     planetary = engine.planetary()
-    dot = render_dispositor_graph(
-        planetary,
-        use_glyphs=True,
-        title="Einstein — Planetary Dispositors",
-    )
-    output_path = OUTPUT_DIR / "einstein_planetary_dispositors"
-    dot.render(str(output_path), format="svg", cleanup=True)
-    print(f"Saved: {output_path}.svg")
-
-    # House dispositors
     house = engine.house_based()
-    dot = render_dispositor_graph(
-        house,
-        title="Einstein — House Dispositors",
-    )
-    output_path = OUTPUT_DIR / "einstein_house_dispositors"
-    dot.render(str(output_path), format="svg", cleanup=True)
-    print(f"Saved: {output_path}.svg")
+
+    graphs = [
+        {
+            "title": "Einstein — Planetary Dispositors",
+            **dispositor_graph_data(planetary),
+        },
+        {"title": "Einstein — House Dispositors", **dispositor_graph_data(house)},
+    ]
+    output_path = OUTPUT_DIR / "einstein_dispositors.svg"
+    render_dispositor_svg(graphs, str(output_path))
+    print(f"Saved: {output_path}")
 
     print(f"\nPlanetary final dispositor: {planetary.final_dispositor}")
     print(f"House final dispositor: {house.final_dispositor}")
@@ -731,7 +707,7 @@ if __name__ == "__main__":
     # Part 4: Dispositor Graphs
     example_11_planetary_dispositors()
     example_12_house_dispositors()
-    example_13_dispositor_graphviz()
+    example_13_dispositor_graph()
 
     # Part 5: Reports
     example_14_dignity_report()
