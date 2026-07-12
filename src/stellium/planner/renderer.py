@@ -1,1106 +1,380 @@
-"""
-PlannerRenderer - Generate beautiful PDF planners using Typst.
+"""Render a planner to PDF via the bundled Typst design system.
 
-This module handles:
-- Generating front matter (charts, ZR timeline, graphic ephemeris)
-- Rendering daily pages with events
-- Typst compilation to PDF
+The planner used to build its Typst as Python f-strings with a hardcoded purple
+palette. It now does what the report does: serialise to a JSON contract and let
+the design system (``presentation/typst_theme/``) decide how it looks. Colour,
+type and layout live in the ``.typ`` files; Python supplies structured data and a
+theme name.
+
+That buys the planner all five themes, the bundled font stack (so a plain
+``pip install`` renders identical PDFs — the old renderer pointed at repo-root
+fonts that never shipped in the wheel), and the shared glyph/component vocabulary.
 """
 
 from __future__ import annotations
 
+import json
 import os
+import shutil
 import tempfile
 from dataclasses import dataclass
 from datetime import date
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    from stellium.planner.builder import PlannerConfig
+from stellium.planner.almanac import build_year_almanac, find_natal_transits
+from stellium.planner.contract import build_planner_data
+from stellium.planner.events import DailyEventCollector
 
-# Check if typst is available
 try:
-    import typst as typst_lib
+    import typst as _typst
+except ImportError:  # pragma: no cover - typst is a hard dependency in practice
+    _typst = None
 
-    TYPST_AVAILABLE = True
-except ImportError:
-    TYPST_AVAILABLE = False
+# The planner's Typst entry point plus everything it imports.
+_TEMPLATE_FILES = (
+    "palettes.typ",
+    "glyphs.typ",
+    "components.typ",
+    "engine.typ",
+    "planner_components.typ",
+    "planner.typ",
+)
 
 
 @dataclass
-class ChartPaths:
-    """Paths to generated chart SVG files."""
+class _Svgs:
+    """SVG markup for the front matter's chart slots."""
 
     natal: str | None = None
-    progressed: str | None = None
+    ephemeris: str | None = None
     solar_return: str | None = None
-    graphic_ephemeris: str | None = None
-    zr_overview: str | None = None
-    zr_timeline: str | None = None
-    profection_wheel: str | None = None
-    profection_table: str | None = None
+    profections: str | None = None
+    zr: str | None = None
+
+    def as_dict(self) -> dict[str, str]:
+        slots = {
+            "natal": self.natal,
+            "ephemeris": self.ephemeris,
+            "solar_return": self.solar_return,
+            "profections": self.profections,
+            "zr": self.zr,
+        }
+        return {key: value for key, value in slots.items() if value}
 
 
 class PlannerRenderer:
-    """
-    Renders PDF planners using Typst typesetting.
+    """Turns a PlannerConfig into PDF bytes."""
 
-    Generates:
-    - Title page with planner info
-    - Front matter section with charts
-    - Month overview pages
-    - Daily pages with transit events
-    """
+    def __init__(self, config) -> None:
+        self.config = config
 
-    def __init__(self, config: PlannerConfig) -> None:
-        """
-        Initialize renderer with configuration.
+    # -- lifecycle ----------------------------------------------------------
 
-        Args:
-            config: PlannerConfig from PlannerBuilder
-        """
-        if not TYPST_AVAILABLE:
-            raise ImportError(
+    def render(self) -> bytes:
+        """Build the planner and compile it to PDF bytes."""
+        if _typst is None:
+            raise RuntimeError(
                 "Typst library not available. Install with: pip install typst"
             )
 
-        self.config = config
-        self._temp_dir: str | None = None
-        self._chart_paths = ChartPaths()
+        theme = getattr(self.config, "theme", "house")
+        start, end = self._date_range()
 
-    def render(self) -> bytes:
-        """
-        Render the complete planner to PDF.
+        # One chart, built once, carrying everything downstream needs. The old
+        # renderer built the natal chart three separate times.
+        natal_chart = self._build_natal_chart()
 
-        Returns:
-            PDF as bytes
-        """
-
-        # Create temp directory for chart files
-        self._temp_dir = tempfile.mkdtemp(prefix="stellium_planner_")
-
-        try:
-            # Generate charts
-            self._generate_charts()
-
-            # Collect events
-            events_by_date = self._collect_events()
-
-            # Generate Typst document
-            typst_content = self._generate_typst_document(events_by_date)
-
-            # Write to temp file and compile
-            typst_path = os.path.join(self._temp_dir, "planner.typ")
-            with open(typst_path, "w", encoding="utf-8") as f:
-                f.write(typst_content)
-
-            # Get font directories
-            font_dirs = self._get_font_dirs()
-
-            # Compile to PDF. Use the temp directory as the Typst project
-            # root — every file referenced by the document (charts, SVGs) is
-            # generated inside _temp_dir, and this avoids platform-specific
-            # issues with root="/" on Windows where the temp dir may live on
-            # a different drive than the POSIX root.
-            pdf_bytes = typst_lib.compile(
-                typst_path,
-                root=self._temp_dir,
-                font_paths=font_dirs,
-            )
-
-            return pdf_bytes
-
-        finally:
-            # Clean up temp files
-            self._cleanup_temp_files()
-
-    def _get_font_dirs(self) -> list[str]:
-        """Get font directories for Typst compilation."""
-        base_font_dir = os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "assets",
-            "fonts",
+        # One transit search, shared by the daily pages and the year's summary.
+        transits = find_natal_transits(
+            natal_chart,
+            start,
+            end,
+            self.config.timezone,
+            transit_planets=self.config.natal_transit_planets,
         )
+
+        events_by_date = self._collect_events(natal_chart, start, end)
+        almanac = build_year_almanac(
+            natal_chart,
+            start,
+            end,
+            self.config.timezone,
+            lot=self.config.zr_lot,
+            transits=transits,
+        )
+
+        svgs = self._generate_svgs(natal_chart, theme, start)
+
+        data = build_planner_data(
+            natal_chart,
+            almanac,
+            events_by_date,
+            name=self._name(natal_chart),
+            theme=theme,
+            page_size=self.config.page_size,
+            binding_margin=self.config.binding_margin,
+            week_starts_on=self.config.week_starts_on,
+            svgs=svgs.as_dict(),
+            transit_planets=self._legend_planets(),
+        )
+
+        return self._compile(data, theme)
+
+    # -- inputs -------------------------------------------------------------
+
+    def _date_range(self) -> tuple[date, date]:
+        if self.config.start_date and self.config.end_date:
+            return self.config.start_date, self.config.end_date
+        year = self.config.year or date.today().year
+        return date(year, 1, 1), date(year, 12, 31)
+
+    def _name(self, natal_chart) -> str:
+        name = natal_chart.metadata.get("name")
+        if name:
+            return str(name)
+        native_name = getattr(self.config.native, "name", None)
+        return str(native_name) if native_name else "Astrological Planner"
+
+    def _legend_planets(self) -> list[str]:
+        """Everything that can appear on a daily page, so the key covers it."""
         return [
-            base_font_dir,
-            os.path.join(base_font_dir, "Cinzel_Decorative"),
-            os.path.join(base_font_dir, "Crimson_Pro"),
-            os.path.join(base_font_dir, "Crimson_Pro", "static"),
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
         ]
 
-    def _cleanup_temp_files(self) -> None:
-        """Clean up temporary files."""
-        import shutil
-
-        if self._temp_dir and os.path.exists(self._temp_dir):
-            shutil.rmtree(self._temp_dir)
-
-    def _generate_charts(self) -> None:
-        """Generate chart SVG files for front matter."""
-        from stellium.core.builder import ChartBuilder
-
-        # Generate natal chart
-        natal_chart = ChartBuilder.from_native(self.config.native).calculate()
-
-        if self.config.include_natal_chart:
-            natal_path = os.path.join(self._temp_dir, "natal.svg")
-            natal_chart.draw(natal_path).with_zodiac_palette("rainbow").save()
-            self._chart_paths.natal = natal_path
-
-        # Generate progressed chart
-        if self.config.include_progressed_chart:
-            from stellium.core.multichart import MultiChartBuilder
-
-            # Calculate age at start of planner
-            birth_date = self.config.native.datetime.local_datetime.date()
-            planner_start = self.config.start_date
-            age = planner_start.year - birth_date.year
-            if (planner_start.month, planner_start.day) < (
-                birth_date.month,
-                birth_date.day,
-            ):
-                age -= 1
-
-            try:
-                mc = MultiChartBuilder.progression(natal_chart, age=age).calculate()
-                progressed_path = os.path.join(self._temp_dir, "progressed.svg")
-                mc.draw(progressed_path).with_zodiac_palette("rainbow").save()
-                self._chart_paths.progressed = progressed_path
-            except Exception:
-                pass  # Skip if progression fails
-
-        # Generate solar return
-        if self.config.include_solar_return:
-            from stellium.returns import ReturnBuilder
-
-            try:
-                sr_year = self.config.year or self.config.start_date.year
-                sr_chart = ReturnBuilder.solar(natal_chart, sr_year).calculate()
-                sr_path = os.path.join(self._temp_dir, "solar_return.svg")
-                sr_chart.draw(sr_path).with_zodiac_palette("rainbow").save()
-                self._chart_paths.solar_return = sr_path
-            except Exception:
-                pass
-
-        # Generate graphic ephemeris with natal chart overlay
-        if self.config.include_graphic_ephemeris:
-            from stellium.visualization import GraphicEphemeris
-
-            try:
-                start_str = self.config.start_date.isoformat()
-                end_str = self.config.end_date.isoformat()
-                eph = GraphicEphemeris(
-                    start_date=start_str,
-                    end_date=end_str,
-                    harmonic=self.config.graphic_ephemeris_harmonic,
-                    natal_chart=natal_chart,  # Include natal positions for transit aspects
-                )
-                eph_path = os.path.join(self._temp_dir, "ephemeris.svg")
-                eph.draw(eph_path)
-                self._chart_paths.graphic_ephemeris = eph_path
-            except Exception:
-                pass
-
-        # Generate ZR visualization
-        if self.config.include_zr_timeline:
-            self._generate_zr_charts(natal_chart)
-
-        # Generate profection wheel visualization
-        if self.config.include_profections:
-            self._generate_profection_charts(natal_chart)
-
-    def _generate_zr_charts(self, natal_chart) -> None:
-        """Generate Zodiacal Releasing visualization SVGs."""
+    def _build_natal_chart(self):
+        """The natal chart, with the analyzers the front matter needs."""
         from stellium.core.builder import ChartBuilder
         from stellium.engines.releasing import ZodiacalReleasingAnalyzer
-        from stellium.presentation.sections.zr_visualization import (
-            ZRVisualizationSection,
-        )
 
-        try:
-            # Re-calculate chart with ZR analyzer if not present
-            if "zodiacal_releasing" not in natal_chart.metadata:
-                natal_chart = (
-                    ChartBuilder.from_native(self.config.native)
-                    .add_analyzer(ZodiacalReleasingAnalyzer([self.config.zr_lot]))
-                    .calculate()
-                )
-
-            # Generate overview SVG
-            overview_section = ZRVisualizationSection(
-                lot=self.config.zr_lot,
-                year=self.config.year or self.config.start_date.year,
-                output="overview",
+        builder = ChartBuilder.from_native(self.config.native)
+        if self.config.include_zr_timeline:
+            # ZR lives in analyzer metadata; without this the timeline is absent.
+            builder = builder.add_analyzer(
+                ZodiacalReleasingAnalyzer([self.config.zr_lot])
             )
-            overview_data = overview_section.generate_data(natal_chart)
-            if overview_data.get("type") == "svg":
-                overview_path = os.path.join(self._temp_dir, "zr_overview.svg")
-                with open(overview_path, "w", encoding="utf-8") as f:
-                    f.write(overview_data["content"])
-                self._chart_paths.zr_overview = overview_path
+        return builder.calculate()
 
-            # Generate timeline SVG
-            timeline_section = ZRVisualizationSection(
-                lot=self.config.zr_lot,
-                year=self.config.year or self.config.start_date.year,
-                levels=(1, 2, 3),
-                output="timeline",
-            )
-            timeline_data = timeline_section.generate_data(natal_chart)
-            if timeline_data.get("type") == "svg":
-                timeline_path = os.path.join(self._temp_dir, "zr_timeline.svg")
-                with open(timeline_path, "w", encoding="utf-8") as f:
-                    f.write(timeline_data["content"])
-                self._chart_paths.zr_timeline = timeline_path
-
-        except Exception:
-            pass  # Skip if ZR generation fails
-
-    def _generate_profection_charts(self, natal_chart) -> None:
-        """Generate profection wheel visualization SVGs."""
-        from stellium.presentation.sections.profection_visualization import (
-            ProfectionVisualizationSection,
-        )
-
-        try:
-            # Calculate age at planner start
-            birth_date = self.config.native.datetime.local_datetime.date()
-            planner_start = self.config.start_date
-            age = planner_start.year - birth_date.year
-            if (planner_start.month, planner_start.day) < (
-                birth_date.month,
-                birth_date.day,
-            ):
-                age -= 1
-
-            # Generate wheel SVG
-            wheel_section = ProfectionVisualizationSection(
-                age=age,
-                compare_ages=[age, age + 1],
-                show_wheel=True,
-                show_table=False,
-            )
-            wheel_data = wheel_section.generate_data(natal_chart)
-
-            # Handle compound or direct SVG response
-            if wheel_data.get("type") == "compound":
-                for name, subdata in wheel_data.get("sections", []):
-                    if "Wheel" in name and subdata.get("type") == "svg":
-                        wheel_path = os.path.join(
-                            self._temp_dir, "profection_wheel.svg"
-                        )
-                        with open(wheel_path, "w", encoding="utf-8") as f:
-                            f.write(subdata["content"])
-                        self._chart_paths.profection_wheel = wheel_path
-                        break
-            elif wheel_data.get("type") == "svg":
-                wheel_path = os.path.join(self._temp_dir, "profection_wheel.svg")
-                with open(wheel_path, "w", encoding="utf-8") as f:
-                    f.write(wheel_data["content"])
-                self._chart_paths.profection_wheel = wheel_path
-
-            # Generate table SVG
-            table_section = ProfectionVisualizationSection(
-                age=age,
-                compare_ages=[age, age + 1],
-                show_wheel=False,
-                show_table=True,
-            )
-            table_data = table_section.generate_data(natal_chart)
-
-            # Handle compound or direct SVG response
-            if table_data.get("type") == "compound":
-                for name, subdata in table_data.get("sections", []):
-                    if "Details" in name and subdata.get("type") == "svg":
-                        table_path = os.path.join(
-                            self._temp_dir, "profection_table.svg"
-                        )
-                        with open(table_path, "w", encoding="utf-8") as f:
-                            f.write(subdata["content"])
-                        self._chart_paths.profection_table = table_path
-                        break
-            elif table_data.get("type") == "svg":
-                table_path = os.path.join(self._temp_dir, "profection_table.svg")
-                with open(table_path, "w", encoding="utf-8") as f:
-                    f.write(table_data["content"])
-                self._chart_paths.profection_table = table_path
-
-        except Exception:
-            pass  # Skip if profection generation fails
-
-    def _collect_events(self) -> dict[date, list]:
-        """Collect all events for the planner period."""
-        from stellium.core.builder import ChartBuilder
-        from stellium.planner.events import DailyEventCollector
-
-        natal_chart = ChartBuilder.from_native(self.config.native).calculate()
-
+    def _collect_events(self, natal_chart, start: date, end: date) -> dict[date, list]:
         collector = DailyEventCollector(
             natal_chart=natal_chart,
-            start=self.config.start_date,
-            end=self.config.end_date,
+            start=start,
+            end=end,
             timezone=self.config.timezone,
         )
-
         collector.collect_all(
-            natal_transits=self.config.natal_transit_planets is not None
-            or self.config.include_mundane_transits,
             transit_planets=self.config.natal_transit_planets,
-            ingresses=self.config.ingress_planets is not None,
             ingress_planets=self.config.ingress_planets,
-            stations=self.config.station_planets is not None,
             station_planets=self.config.station_planets,
             moon_phases=self.config.include_moon_phases,
             voc=self.config.include_voc,
             voc_mode=self.config.voc_mode,
-            eclipses=True,
         )
 
-        return collector._events_by_date
+        events: dict[date, list] = {}
+        for event in collector.get_all_events():
+            events.setdefault(event.time.date(), []).append(event)
+        return events
 
-    def _generate_typst_document(self, events_by_date: dict[date, list]) -> str:
-        """Generate complete Typst document."""
-        parts = []
+    # -- drawings -----------------------------------------------------------
 
-        # Document preamble
-        parts.append(self._get_preamble())
+    def _themed(self, draw, theme: str):
+        """Apply the report's themed-wheel treatment.
 
-        # Title page
-        parts.append(self._render_title_page())
+        The old planner embedded wheels with their own headers, info corners and
+        opaque white backgrounds, then framed them in a hardcoded gold box. Here
+        they get stripped and composited onto the themed panel, exactly as the
+        report's wheels are.
+        """
+        from stellium.presentation.typst_render import THEME_WHEEL
 
-        # Front matter
-        parts.append(self._render_front_matter())
+        # The moon-phase corner is a portrait flourish; in a planner the Moon's
+        # phase is already on every daily page where it actually matters.
+        draw = (
+            draw.without_header()
+            .without_chart_info()
+            .without_moon_phase()
+            .with_transparent_background()
+        )
 
-        # Monthly pages
-        parts.append(self._render_monthly_pages(events_by_date))
+        viz_theme, zodiac_palette, aspect_palette = THEME_WHEEL.get(
+            theme, (None, None, None)
+        )
+        if viz_theme is not None:
+            draw = draw.with_theme(viz_theme).with_zodiac_palette(zodiac_palette)
+            if aspect_palette is not None:
+                draw = draw.with_aspect_palette(aspect_palette)
+        return draw
 
-        return "\n".join(parts)
+    def _generate_svgs(self, natal_chart, theme: str, start: date) -> _Svgs:
+        svgs = _Svgs()
 
-    def _get_preamble(self) -> str:
-        """Get Typst document preamble with styling."""
-        paper_name = {
-            "a4": "a4",
-            "a5": "a5",
-            "letter": "us-letter",
-            "half-letter": "a5",  # Use A5 as closest standard size
-        }.get(self.config.page_size, "a4")
-        page_setup = f'paper: "{paper_name}"'
+        if self.config.include_natal_chart:
+            svgs.natal = self._safe_svg(
+                lambda: self._wheel_svg(natal_chart, theme),
+                "natal chart",
+            )
 
-        binding = self.config.binding_margin
+        if self.config.include_solar_return:
+            svgs.solar_return = self._safe_svg(
+                lambda: self._solar_return_svg(natal_chart, theme, start),
+                "solar return",
+            )
 
-        return f"""// Stellium Astrological Planner
-// Generated with Typst
-
-// ============================================================================
-// COLOR PALETTE - Warm mystical purple theme
-// ============================================================================
-#let primary = rgb("#4a3353")
-#let secondary = rgb("#6b4d6e")
-#let accent = rgb("#8e6b8a")
-#let gold = rgb("#b8953d")
-#let cream = rgb("#faf8f5")
-#let text-dark = rgb("#2d2330")
-
-// ============================================================================
-// PAGE SETUP
-// ============================================================================
-#set page(
-  {page_setup},
-  margin: (top: 0.6in, bottom: 0.6in, left: {0.7 + binding}in, right: 0.7in),
-  fill: cream,
-  header: context {{
-    if counter(page).get().first() > 2 [
-      #set text(font: "Cinzel Decorative", size: 7pt, fill: accent, tracking: 0.5pt)
-      #h(1fr)
-      Astrological Planner
-      #h(1fr)
-    ]
-  }},
-  footer: context {{
-    set text(size: 7pt, fill: accent)
-    h(1fr)
-    counter(page).display("1")
-    h(1fr)
-  }},
-)
-
-// ============================================================================
-// TYPOGRAPHY
-// ============================================================================
-#set text(
-  font: ("Crimson Pro", "Noto Sans Symbols 2", "Noto Sans Symbols", "Georgia", "serif"),
-  size: 9pt,
-  fill: text-dark,
-)
-
-#set par(justify: true, leading: 0.7em)
-
-// Heading styles
-#show heading.where(level: 1): it => {{
-  set text(font: "Cinzel Decorative", size: 22pt, weight: "regular", fill: primary, tracking: 1.5pt)
-  set par(justify: false)
-  align(center)[#it.body]
-  v(0.4em)
-}}
-
-#show heading.where(level: 2): it => {{
-  v(0.8em)
-  block(
-    width: 100%,
-    fill: primary,
-    inset: (x: 10pt, y: 6pt),
-    radius: 2pt,
-  )[
-    #set text(font: "Cinzel Decorative", size: 9pt, weight: "regular", fill: white, tracking: 0.5pt)
-    #sym.star.stroked #it.body
-  ]
-  v(0.4em)
-}}
-
-#show heading.where(level: 3): it => {{
-  set text(font: "Cinzel Decorative", size: 9pt, weight: "regular", fill: secondary)
-  v(0.3em)
-  it.body
-  v(0.2em)
-}}
-
-// ============================================================================
-// HELPER FUNCTIONS
-// ============================================================================
-#let star-divider = {{
-  set align(center)
-  v(0.1in)
-  box(width: 60%)[
-    #grid(
-      columns: (1fr, auto, 1fr),
-      align: (right, center, left),
-      column-gutter: 8pt,
-      line(length: 100%, stroke: 0.6pt + gold),
-      text(fill: gold, size: 8pt)[#sym.star.stroked],
-      line(length: 100%, stroke: 0.6pt + gold),
-    )
-  ]
-  v(0.1in)
-}}
-
-#let day-header(day-name, date-str, moon-info) = {{
-  block(
-    width: 100%,
-    fill: primary,
-    inset: (x: 8pt, y: 5pt),
-    radius: 2pt,
-  )[
-    #set text(fill: white, size: 8pt)
-    #text(font: "Cinzel Decorative", weight: "regular")[#day-name, #date-str]
-    #h(1fr)
-    #text(fill: cream.lighten(20%), size: 7pt)[#moon-info]
-  ]
-}}
-
-#let event-row(time-str, event-text) = {{
-  grid(
-    columns: (50pt, 1fr),
-    gutter: 6pt,
-    text(fill: secondary, size: 8pt)[#time-str],
-    text(size: 8pt)[#event-text],
-  )
-}}
-"""
-
-    def _render_title_page(self) -> str:
-        """Render the title page."""
-        native = self.config.native
-        name = getattr(native, "name", "Personal") or "Personal"
-
-        year_str = ""
-        if self.config.year:
-            year_str = str(self.config.year)
-        else:
-            year_str = f"{self.config.start_date} - {self.config.end_date}"
-
-        return f"""
-// ============================================================================
-// TITLE PAGE
-// ============================================================================
-#v(1.5in)
-#star-divider
-
-= Astrological Planner
-
-#star-divider
-#v(0.3in)
-
-#align(center)[
-  #text(font: "Cinzel Decorative", size: 14pt, fill: secondary)[
-    {self._escape(name)}
-  ]
-  #v(0.2in)
-  #text(size: 11pt, fill: accent)[
-    {year_str}
-  ]
-]
-
-#v(1fr)
-
-#align(center)[
-  #text(font: "Cinzel Decorative", size: 8pt, fill: accent, style: "italic")[
-    Generated with Stellium
-  ]
-]
-
-#pagebreak()
-"""
-
-    def _render_front_matter(self) -> str:
-        """Render front matter pages with charts."""
-        parts = []
-
-        parts.append("""
-// ============================================================================
-// FRONT MATTER
-// ============================================================================
-""")
-
-        # Natal chart
-        if self._chart_paths.natal:
-            parts.append(f"""
-== Natal Chart
-
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.natal)}", width: 85%)
-  )
-]
-
-#pagebreak()
-""")
-
-        # Progressed chart
-        if self._chart_paths.progressed:
-            parts.append(f"""
-== Progressed Chart
-
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.progressed)}", width: 85%)
-  )
-]
-
-#pagebreak()
-""")
-
-        # Solar Return
-        if self._chart_paths.solar_return:
-            year = self.config.year or self.config.start_date.year
-            parts.append(f"""
-== Solar Return {year}
-
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.solar_return)}", width: 85%)
-  )
-]
-
-#pagebreak()
-""")
-
-        # Profections
         if self.config.include_profections:
-            parts.append(self._render_profections())
+            svgs.profections = self._safe_svg(
+                lambda: self._section_svg("profections", natal_chart),
+                "profections",
+            )
 
-        # Zodiacal Releasing
-        if self._chart_paths.zr_overview:
-            lot_name = self.config.zr_lot.replace("Part of ", "")
-            parts.append(f"""
-== Zodiacal Releasing Overview
+        if self.config.include_zr_timeline:
+            svgs.zr = self._safe_svg(
+                lambda: self._section_svg("zr", natal_chart),
+                "zodiacal releasing",
+            )
 
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.zr_overview)}", width: 95%)
-  )
-]
+        if self.config.include_graphic_ephemeris:
+            svgs.ephemeris = self._safe_svg(
+                lambda: self._ephemeris_svg(natal_chart, start),
+                "graphic ephemeris",
+            )
 
-#pagebreak()
-""")
+        return svgs
 
-        if self._chart_paths.zr_timeline:
-            lot_name = self.config.zr_lot.replace("Part of ", "")
-            parts.append(f"""
-== Zodiacal Releasing from {lot_name}
+    def _safe_svg(self, make, what: str) -> str | None:
+        """A drawing that fails must not take the whole planner down with it.
 
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.zr_timeline)}", width: 95%)
-  )
-]
-
-#pagebreak()
-""")
-
-        # Graphic Ephemeris
-        if self._chart_paths.graphic_ephemeris:
-            parts.append(f"""
-== Graphic Ephemeris
-
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.graphic_ephemeris)}", width: 95%)
-  )
-]
-
-#pagebreak()
-""")
-
-        return "\n".join(parts)
-
-    def _render_profections(self) -> str:
-        """Render profection information with wheel visualization."""
-        parts = []
-
-        # If we have the wheel visualization, use it
-        if self._chart_paths.profection_wheel:
-            parts.append(f"""
-== Annual Profections
-
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.profection_wheel)}", width: 95%)
-  )
-]
-""")
-
-        # If we have the table visualization, add it
-        if self._chart_paths.profection_table:
-            parts.append(f"""
-#v(0.3in)
-
-#align(center)[
-  #box(
-    stroke: 1pt + gold,
-    radius: 4pt,
-    clip: true,
-    inset: 8pt,
-    fill: white,
-    image("{os.path.basename(self._chart_paths.profection_table)}", width: 95%)
-  )
-]
-""")
-
-        # If we have visualizations, add explanation and page break
-        if parts:
-            parts.append("""
-#v(0.3in)
-
-#text(size: 8pt, fill: accent)[
-  Annual profections advance the Ascendant one sign per year of life.
-  The planet ruling that sign becomes the Lord of the Year,
-  indicating themes and areas of focus for this annual period.
-  The wheel shows ages 0-95 spiraling through the 12 houses.
-]
-
-#pagebreak()
-""")
-            return "\n".join(parts)
-
-        # Fallback to text-only version if visualizations aren't available
-        from stellium.core.builder import ChartBuilder
-        from stellium.engines.profections import ProfectionEngine
-
-        natal_chart = ChartBuilder.from_native(self.config.native).calculate()
-        engine = ProfectionEngine(natal_chart)
-
-        # Calculate age at planner start
-        birth_date = self.config.native.datetime.local_datetime.date()
-        planner_start = self.config.start_date
-        age = planner_start.year - birth_date.year
-        if (planner_start.month, planner_start.day) < (
-            birth_date.month,
-            birth_date.day,
-        ):
-            age -= 1
+        It must not fail *silently* either — a missing page should say so.
+        """
+        import warnings
 
         try:
-            result = engine.annual(age)
-            profected_sign = result.profected_sign
-            lord = result.ruler
-        except Exception:
-            profected_sign = "Unknown"
-            lord = "Unknown"
+            return make()
+        except Exception as exc:
+            warnings.warn(
+                f"Planner: could not draw the {what} page ({exc}); skipping it.",
+                RuntimeWarning,
+                stacklevel=2,
+            )
+            return None
 
-        return f"""
-== Annual Profection
+    def _wheel_svg(self, chart, theme: str) -> str:
+        import tempfile as _tf
 
-#block(
-  fill: rgb("#f9f6f7"),
-  inset: 12pt,
-  radius: 4pt,
-  width: 100%,
-)[
-  #grid(
-    columns: (120pt, 1fr),
-    gutter: 8pt,
-    row-gutter: 10pt,
-    [#text(fill: secondary, weight: "semibold")[Age:]], [{age}],
-    [#text(fill: secondary, weight: "semibold")[Profected Sign:]], [{profected_sign}],
-    [#text(fill: secondary, weight: "semibold")[Lord of the Year:]], [{lord}],
-  )
-]
+        with _tf.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "wheel.svg")
+            self._themed(chart.draw(path).preset_standard(), theme).save()
+            with open(path, encoding="utf-8") as fh:
+                return fh.read()
 
-#v(0.5em)
-#text(size: 8pt, fill: accent)[
-  The Lord of the Year indicates themes and areas of focus for this annual period.
-  Transits to and from {lord} may be especially significant.
-]
+    def _solar_return_svg(self, natal_chart, theme: str, start: date) -> str:
+        from stellium.returns import ReturnBuilder
 
-#pagebreak()
-"""
+        chart = ReturnBuilder.solar(natal_chart, year=start.year).calculate()
+        return self._wheel_svg(chart, theme)
 
-    def _render_monthly_pages(self, events_by_date: dict[date, list]) -> str:
-        """Render month calendar grids and weekly detail pages."""
-        parts = []
-
-        parts.append("""
-// ============================================================================
-// CALENDAR PAGES
-// ============================================================================
-""")
-
-        # Process each month in the range
-        current_month_start = self.config.start_date.replace(day=1)
-
-        while current_month_start <= self.config.end_date:
-            # Month calendar grid
-            parts.append(
-                self._render_month_calendar(current_month_start, events_by_date)
+    def _section_svg(self, which: str, natal_chart) -> str:
+        """Reuse the presentation layer's visualization sections for SVG markup."""
+        if which == "zr":
+            from stellium.presentation.sections.zr_visualization import (
+                ZRVisualizationSection,
             )
 
-            # Weekly detail pages for this month
-            parts.append(self._render_month_weeks(current_month_start, events_by_date))
-
-            # Move to next month
-            if current_month_start.month == 12:
-                current_month_start = current_month_start.replace(
-                    year=current_month_start.year + 1, month=1
-                )
-            else:
-                current_month_start = current_month_start.replace(
-                    month=current_month_start.month + 1
-                )
-
-        return "\n".join(parts)
-
-    def _get_week_start_day(self) -> int:
-        """Get Python calendar firstweekday from config."""
-        # Python calendar: 0=Monday, 6=Sunday
-        return 6 if self.config.week_starts_on == "sunday" else 0
-
-    def _get_day_headers(self) -> list[str]:
-        """Get day header names based on week start."""
-        if self.config.week_starts_on == "sunday":
-            return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+            section = ZRVisualizationSection(lot=self.config.zr_lot)
         else:
-            return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-
-    def _render_month_calendar(
-        self, month_start: date, events_by_date: dict[date, list]
-    ) -> str:
-        """Render a full-page month calendar grid with all events."""
-        import calendar
-
-        month_name = month_start.strftime("%B %Y")
-        cal = calendar.Calendar(firstweekday=self._get_week_start_day())
-
-        # Get all days in month (including padding from prev/next months)
-        month_days = list(cal.itermonthdates(month_start.year, month_start.month))
-
-        # Build week rows
-        weeks = []
-        for i in range(0, len(month_days), 7):
-            week = month_days[i : i + 7]
-            weeks.append(week)
-
-        num_weeks = len(weeks)
-        day_headers = self._get_day_headers()
-
-        # Build day cells with full event listings
-        day_cells = []
-        for week in weeks:
-            for day in week:
-                is_current_month = day.month == month_start.month
-                events = events_by_date.get(day, []) if is_current_month else []
-
-                # Build cell content with ALL events (single column, may clip)
-                if is_current_month:
-                    # Format each event line
-                    event_lines = []
-                    for evt in events:
-                        time_str = evt.time.strftime("%I:%M").lstrip("0")
-                        am_pm = evt.time.strftime("%p").lower()[0]  # 'a' or 'p'
-                        event_lines.append(
-                            f"#text(size: 5.5pt, fill: secondary)[{time_str}{am_pm}] "
-                            f"#text(size: 5.5pt)[{self._escape(evt.symbol)}]"
-                        )
-
-                    # Single column for month grid (space is limited)
-                    events_display = (
-                        " #linebreak() ".join(event_lines) if event_lines else ""
-                    )
-
-                    # Day number prominent at top, events below
-                    cell = f"""table.cell(
-      fill: cream,
-      inset: 4pt,
-    )[
-      #align(left)[
-        #text(size: 11pt, weight: "bold", fill: primary)[{day.day}]
-      ]
-      #v(2pt)
-      {events_display}
-    ]"""
-                else:
-                    # Gray out days from other months
-                    cell = f"""table.cell(
-      fill: rgb("#f5f3f0"),
-      inset: 4pt,
-    )[
-      #align(left)[
-        #text(size: 11pt, fill: accent)[{day.day}]
-      ]
-    ]"""
-
-                day_cells.append(cell)
-
-        rows_str = ",\n  ".join(day_cells)
-
-        # Build header row with correct day order
-        header_cells = ",\n  ".join(
-            f'table.cell(fill: primary, inset: 6pt)[#align(center)[#text(fill: white, size: 8pt, weight: "bold")[{d}]]]'
-            for d in day_headers
-        )
-
-        return f"""
-#pagebreak()
-
-// Month: {month_name}
-#block(height: 100%)[
-  #align(center)[
-    #text(font: "Cinzel Decorative", size: 18pt, fill: primary, tracking: 1pt)[{month_name}]
-  ]
-  #v(0.12in)
-
-  // Full-page calendar grid
-  #block(
-    width: 100%,
-    height: 1fr,
-    radius: 6pt,
-    clip: true,
-    stroke: 1pt + primary,
-  )[
-    #table(
-      columns: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-      rows: (auto, 1fr, 1fr, 1fr, 1fr, 1fr, {"1fr, " if num_weeks > 5 else ""}),
-      stroke: 0.5pt + accent,
-      align: left + top,
-
-      // Header row
-      {header_cells},
-
-      // Day cells
-      {rows_str}
-    )
-  ]
-]
-"""
-
-    def _render_month_weeks(
-        self, month_start: date, events_by_date: dict[date, list]
-    ) -> str:
-        """Render weekly detail pages for a month."""
-        import calendar
-
-        parts = []
-        cal = calendar.Calendar(firstweekday=self._get_week_start_day())
-
-        # Get weeks that contain days from this month
-        month_days = list(cal.itermonthdates(month_start.year, month_start.month))
-
-        for i in range(0, len(month_days), 7):
-            week = month_days[i : i + 7]
-
-            # Only render week if it contains days from this month
-            if any(d.month == month_start.month for d in week):
-                parts.append(self._render_week_page(week, month_start, events_by_date))
-
-        return "\n".join(parts)
-
-    def _render_week_page(
-        self, week: list[date], month_start: date, events_by_date: dict[date, list]
-    ) -> str:
-        """Render a single week as a full page with 7 day boxes."""
-        # Week date range for header
-        week_start = week[0]
-        week_end = week[-1]
-        week_header = (
-            f"{week_start.strftime('%b %d')} - {week_end.strftime('%b %d, %Y')}"
-        )
-
-        # Build day boxes
-        day_boxes = []
-        for day in week:
-            is_current_month = day.month == month_start.month
-            events = events_by_date.get(day, [])
-
-            # Day header
-            day_name = day.strftime("%A")
-            day_num = day.day
-
-            # Format events - single column, tight spacing
-            event_lines = []
-            for event in events:
-                time_str = event.time.strftime("%I:%M%p").lower().lstrip("0")
-                event_lines.append(
-                    f"#text(fill: secondary, size: 6pt)[{time_str}] #text(size: 6pt)[{self._escape(event.description)}]"
-                )
-
-            if event_lines:
-                # Use tight spacing - set leading to minimal and join with linebreaks
-                events_str = "#set par(leading: 0.3em)\n    " + " #linebreak() ".join(
-                    event_lines
-                )
-            else:
-                events_str = (
-                    '#text(fill: accent, size: 6pt, style: "italic")[No events]'
-                )
-
-            if is_current_month:
-                fill_color = "cream"
-                text_color = "text-dark"
-            else:
-                fill_color = 'rgb("#f0ede8")'
-                text_color = "accent"
-
-            day_boxes.append(f"""  box(
-    width: 100%,
-    height: 100%,
-    stroke: 0.5pt + accent,
-    radius: 2pt,
-    fill: {fill_color},
-    inset: 5pt,
-    clip: true,
-  )[
-    #grid(
-      columns: (1fr, auto),
-      [#text(font: "Cinzel Decorative", size: 8pt, fill: {text_color})[{day_name}]],
-      [#text(size: 12pt, weight: "bold", fill: {text_color})[{day_num}]],
-    )
-    #line(length: 100%, stroke: 0.3pt + accent)
-    #v(2pt)
-    {events_str}
-  ],""")
-
-        days_content = "\n".join(day_boxes)
-
-        return f"""
-#pagebreak()
-
-// Week: {week_header}
-#align(center)[
-  #text(font: "Cinzel Decorative", size: 11pt, fill: secondary)[{week_header}]
-]
-#v(0.05in)
-
-#block(height: 1fr)[
-#grid(
-  columns: (1fr,),
-  rows: (1fr, 1fr, 1fr, 1fr, 1fr, 1fr, 1fr),
-  row-gutter: 3pt,
-{days_content}
-)
-]
-"""
-
-    def _render_day(self, day: date, events: list) -> str:
-        """Render a single day entry (legacy - kept for reference)."""
-        day_name = day.strftime("%A")
-        date_str = day.strftime("%B %d")
-
-        # Get moon info (simplified for now)
-        moon_info = ""  # TODO: Add moon sign/phase
-
-        # Format events
-        event_rows = []
-        for event in events:
-            time_str = event.time.strftime("%I:%M %p").lstrip("0")
-            event_rows.append(
-                f'  #event-row("{time_str}", "{self._escape(event.description)}")'
+            from stellium.presentation.sections.profection_visualization import (
+                ProfectionVisualizationSection,
             )
 
-        events_content = (
-            "\n".join(event_rows)
-            if event_rows
-            else "  #text(fill: accent, size: 7pt)[No major transits]"
+            section = ProfectionVisualizationSection()
+
+        svg = self._first_svg(section.generate_data(natal_chart))
+        if not svg:
+            raise ValueError(f"the {which} section produced no SVG")
+        return svg
+
+    def _first_svg(self, payload) -> str | None:
+        """Pull SVG markup out of a section payload.
+
+        These sections return either a bare ``{"type": "svg", "content": ...}`` or a
+        compound of ``(name, payload)`` pairs, so walk whichever arrived.
+        """
+        if isinstance(payload, dict):
+            if payload.get("type") == "svg" and payload.get("content"):
+                return payload["content"]
+            for _name, sub in payload.get("sections", []):
+                found = self._first_svg(sub)
+                if found:
+                    return found
+        return None
+
+    def _ephemeris_svg(self, natal_chart, start: date) -> str:
+        from stellium.visualization.ephemeris import GraphicEphemeris
+
+        harmonic = self.config.graphic_ephemeris_harmonic
+        if harmonic not in (360, 90, 45):
+            harmonic = 90
+
+        ephemeris = GraphicEphemeris(
+            start_date=date(start.year, 1, 1),
+            end_date=date(start.year, 12, 31),
+            harmonic=harmonic,
+            natal_chart=natal_chart,
         )
 
-        return f"""
-#day-header("{day_name}", "{date_str}", "{moon_info}")
-#v(3pt)
-{events_content}
-#v(6pt)
-"""
+        with tempfile.TemporaryDirectory() as tmp:
+            path = os.path.join(tmp, "ephemeris.svg")
+            ephemeris.draw(path).save()
+            with open(path, encoding="utf-8") as fh:
+                return fh.read()
 
-    def _escape(self, text: str) -> str:
-        """Escape text for Typst."""
-        if not text:
-            return ""
-        # Escape special Typst characters
-        text = text.replace("\\", "\\\\")
-        text = text.replace("#", "\\#")
-        text = text.replace("$", "\\$")
-        text = text.replace("@", "\\@")
-        text = text.replace("<", "\\<")
-        text = text.replace(">", "\\>")
-        text = text.replace("[", "\\[")
-        text = text.replace("]", "\\]")
-        text = text.replace("{", "\\{")
-        text = text.replace("}", "\\}")
-        text = text.replace("_", "\\_")
-        text = text.replace("*", "\\*")
-        text = text.replace('"', '\\"')
-        return text
+    # -- compile ------------------------------------------------------------
+
+    def _compile(self, data: dict, theme: str) -> bytes:
+        from stellium.presentation.typst_render import THEMES, _font_paths, _theme_dir
+
+        if theme not in THEMES:
+            raise ValueError(
+                f"Unknown theme {theme!r}. Choose from: {', '.join(THEMES)}"
+            )
+
+        with tempfile.TemporaryDirectory(prefix="stellium_planner_") as tmp:
+            for filename in _TEMPLATE_FILES:
+                shutil.copy2(
+                    os.path.join(_theme_dir(), filename), os.path.join(tmp, filename)
+                )
+
+            # Materialise embedded SVGs so Typst can image() them.
+            self._materialize_svgs(data.get("front", []), tmp)
+
+            with open(os.path.join(tmp, "data.json"), "w", encoding="utf-8") as fh:
+                json.dump(data, fh, ensure_ascii=False)
+
+            return _typst.compile(
+                os.path.join(tmp, "planner.typ"),
+                root=tmp,
+                font_paths=_font_paths(),
+                sys_inputs={"theme": theme, "data": "data.json"},
+            )
+
+    def _materialize_svgs(
+        self, sections: list[dict], tmp: str, seq: list[int] | None = None
+    ) -> None:
+        if seq is None:
+            seq = [0]
+        for section in sections:
+            if section.get("kind") == "svg" and section.get("svg_content"):
+                seq[0] += 1
+                filename = f"embed_{seq[0]}.svg"
+                with open(os.path.join(tmp, filename), "w", encoding="utf-8") as fh:
+                    fh.write(section["svg_content"])
+                section["svg_file"] = filename
+                del section["svg_content"]
+            self._materialize_svgs(section.get("sections", []), tmp, seq)
