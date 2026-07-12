@@ -1,6 +1,6 @@
 # TODO
 
-*44 open tasks (synced from Obsidian)*
+*45 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -44,6 +44,7 @@
 - Astrological weather API (daily dignities, VOC Moon, planetary hours)
 - Build research platform (hypothesis testing, batch analysis)
 - Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
+- Greyscale PDF theme: fully grey the embedded chart wheel. The wheel now uses the grey zodiac + greyscale aspect palettes, but retrograde planet markers still render red because the greyscale PDF maps to the 'classic' visualization theme (which colours retrograde). Options: add a monochrome/greyscale ChartTheme to the viz layer, or override the retrograde/planet-glyph colours to grey when rendering the greyscale PDF wheel. Small viz-layer follow-up.
 - Hygiea silently absent from CalculationConfig.comprehensive()
 - Reconcile Carl Jung notable record (time + data quality)
 - Refactor SectionData to sealed dataclass hierarchy
