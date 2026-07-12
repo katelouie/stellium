@@ -354,6 +354,94 @@
     )
   }
 
+  // --- dispositor graph: native layered node-and-arrow diagram ---------------
+  // Drawn from structured layout data (no graphviz / no external Typst package),
+  // so it's portable, themed, and glyph-correct. positions are plain pt floats.
+  let one-graph(g, gw) = {
+    let R = 15.0
+    let gap = 56.0
+    let maxr = g.at("max_rank")
+    let H = 2.0 * R + 16.0 + maxr * gap
+    let edge-c = muted
+    let nmap = (:)
+    for n in g.nodes { nmap.insert(n.id, n) }
+    let posof(n) = {
+      let x = if n.ncols <= 1 { gw / 2.0 } else { gw * (n.col + 0.5) / n.ncols }
+      let y = R + 8.0 + (maxr - n.rank) * gap
+      (x, y)
+    }
+    let arrowhead(ex, ey, ux, uy, col) = {
+      let px = -uy
+      let py = ux
+      place(polygon(
+        fill: col,
+        (ex * 1pt, ey * 1pt),
+        ((ex - ux * 8.0 + px * 4.0) * 1pt, (ey - uy * 8.0 + py * 4.0) * 1pt),
+        ((ex - ux * 8.0 - px * 4.0) * 1pt, (ey - uy * 8.0 - py * 4.0) * 1pt),
+      ))
+    }
+    box(width: gw * 1pt, height: H * 1pt)[
+      // edges (behind nodes)
+      #for e in g.edges {
+        let a = nmap.at(e.at("from"))
+        let b = nmap.at(e.at("to"))
+        let (ax, ay) = posof(a)
+        let (bx, by) = posof(b)
+        let dx = bx - ax
+        let dy = by - ay
+        let L = calc.max(calc.sqrt(dx * dx + dy * dy), 0.001)
+        let ux = dx / L
+        let uy = dy / L
+        let sx = ax + ux * R
+        let sy = ay + uy * R
+        let ex = bx - ux * R
+        let ey = by - uy * R
+        let ec = if e.mutual { accent } else { edge-c }
+        place(line(
+          start: (sx * 1pt, sy * 1pt),
+          end: (ex * 1pt, ey * 1pt),
+          stroke: 1pt + ec,
+        ))
+        arrowhead(ex, ey, ux, uy, ec)
+        if e.mutual { arrowhead(sx, sy, -ux, -uy, ec) }
+      }
+      // nodes
+      #for n in g.nodes {
+        let (x, y) = posof(n)
+        let fill-c = if n.final { gold } else if laser { panel } else { hair.lighten(20%) }
+        let txt-c = if n.final and not laser { bg } else { ink }
+        place(
+          dx: (x - R) * 1pt,
+          dy: (y - R) * 1pt,
+          box(
+            width: 2.0 * R * 1pt, height: 2.0 * R * 1pt, radius: 50%,
+            fill: fill-c, stroke: 0.8pt + (if n.final { gold.darken(15%) } else { rule }),
+          )[#align(center + horizon)[#(
+              if n.glyph != "" { glyph(n.glyph, size: 13pt, fill: txt-c) } else {
+                text(font: body, size: 10pt, fill: txt-c)[#n.label]
+              }
+            )]],
+        )
+      }
+    ]
+  }
+
+  let dispositor-graph(graphs) = {
+    let n = graphs.len()
+    let gw = if n >= 2 { 190.0 } else { 300.0 }
+    grid(
+      columns: (1fr,) * n,
+      column-gutter: 16pt,
+      ..graphs.map(g => block(
+        stroke: 1pt + hair, radius: 8pt, inset: 10pt, width: 100%,
+      )[
+        #align(center)[#text(font: display, weight: t.display-weight, size: 10pt, tracking: 0.14em, fill: accent)[#upper(g.title)]]
+        #v(10pt)
+        #align(center)[#one-graph(g, gw)]
+      ]),
+    )
+  }
+
   // --- aspect list: structured rows with design-system glyphs ----------------
   let aspect-list(aspects) = {
     let planet-cell(gch, lbl-txt) = {
@@ -441,7 +529,7 @@
     planet-table: planet-table, generic-table: generic-table,
     side-by-side: side-by-side, sub-block: sub-block,
     aspectarian: aspectarian, aspect-legend: aspect-legend,
-    aspect-list: aspect-list,
+    aspect-list: aspect-list, dispositor-graph: dispositor-graph,
     star-ornament: star-ornament, metadata-line: metadata-line,
     title-block: title-block,
   )

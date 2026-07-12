@@ -537,6 +537,118 @@ class DispositorEngine:
 # =============================================================================
 
 
+def dispositor_graph_data(result: "DispositorResult") -> dict:
+    """Structured, laid-out dispositor graph for native (non-graphviz) drawing.
+
+    The graph is a functional DAG (each node points to its single ruler, chains
+    converging on the final dispositor / mutual-reception cycle), so a clean
+    layered layout is just a BFS: rank = number of steps from the sink. Returns
+    nodes (with display name, glyph, rank, column) + edges + max_rank, ready for
+    a renderer to place circles by (col, rank) and draw arrows between them.
+
+    Portable and themeable: no graphviz, no fonts baked into an SVG.
+    """
+    from collections import deque
+
+    from stellium.core.registry import CELESTIAL_REGISTRY
+
+    node_ids: list[str] = []
+    fwd: dict[str, str] = {}
+    rev: dict[str, list[str]] = {}
+    for e in result.edges:
+        for n in (e.source, e.target):
+            if n not in node_ids:
+                node_ids.append(n)
+        fwd[e.source] = e.target
+        rev.setdefault(e.target, []).append(e.source)
+    if not node_ids:
+        return {"nodes": [], "edges": [], "max_rank": 0}
+
+    # Sink = final dispositor / mutual-reception nodes (everything flows here).
+    sink: set[str] = set()
+    fd = result.final_dispositor
+    if fd:
+        sink.update(fd if isinstance(fd, tuple) else (fd,))
+    for mr in result.mutual_receptions:
+        sink.add(mr.node1)
+        sink.add(mr.node2)
+    sink &= set(node_ids)
+    if not sink:
+        sink = {n for n in node_ids if fwd.get(n) in (None, n)} or {node_ids[0]}
+
+    # rank = distance from the sink, following dependents (reverse edges) outward.
+    rank: dict[str, int] = dict.fromkeys(sink, 0)
+    q = deque(sink)
+    while q:
+        n = q.popleft()
+        for dep in rev.get(n, []):
+            if dep not in rank:
+                rank[dep] = rank[n] + 1
+                q.append(dep)
+    # Disconnected nodes: follow their forward chain to something ranked.
+    for n in node_ids:
+        if n not in rank:
+            chain: list[str] = []
+            cur: str | None = n
+            guard = 0
+            while (
+                cur is not None and cur not in rank and cur not in chain and guard < 100
+            ):
+                chain.append(cur)
+                cur = fwd.get(cur)
+                guard += 1
+            base = rank.get(cur, 0)
+            for i, m in enumerate(reversed(chain)):
+                rank[m] = base + i + 1
+
+    max_rank = max(rank.values())
+    by_rank: dict[int, list[str]] = {}
+    for n in node_ids:
+        by_rank.setdefault(rank[n], []).append(n)
+
+    mutual_nodes: set[str] = set()
+    for mr in result.mutual_receptions:
+        mutual_nodes.add(mr.node1)
+        mutual_nodes.add(mr.node2)
+
+    is_house = result.mode == "house"
+    nodes = []
+    for n in node_ids:
+        r = rank[n]
+        row = by_rank[r]
+        if is_house or n not in CELESTIAL_REGISTRY:
+            label, glyph = str(n), ""
+        else:
+            reg = CELESTIAL_REGISTRY[n]
+            label, glyph = reg.display_name, (reg.glyph or "")
+        nodes.append(
+            {
+                "id": n,
+                "label": label,
+                "glyph": glyph,
+                "rank": r,
+                "col": row.index(n),
+                "ncols": len(row),
+                "final": n in sink,
+                "mutual": n in mutual_nodes,
+            }
+        )
+
+    mr_pairs = {tuple(sorted((m.node1, m.node2))) for m in result.mutual_receptions}
+    seen_mr: set = set()
+    edges = []
+    for e in result.edges:
+        key = tuple(sorted((e.source, e.target)))
+        mutual = key in mr_pairs
+        if mutual:
+            if key in seen_mr:
+                continue
+            seen_mr.add(key)
+        edges.append({"from": e.source, "to": e.target, "mutual": mutual})
+
+    return {"nodes": nodes, "edges": edges, "max_rank": max_rank}
+
+
 def render_dispositor_graph(
     result: DispositorResult,
     *,

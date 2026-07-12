@@ -312,31 +312,52 @@ class DispositorSection:
         planetary: "DispositorResult | None",
         house: "DispositorResult | None",
     ) -> tuple[str, dict[str, Any]] | None:
-        """Try to render dispositor graph as SVG. Returns None if graphviz unavailable."""
+        """Build the dispositor graph section.
+
+        Always emits a structured, laid-out ``graph`` payload (nodes + edges +
+        ranks) that structure-aware renderers (the Typst PDF) draw natively —
+        portable, themeable and glyph-correct, with no graphviz dependency. When
+        graphviz *is* available, also attaches a rendered SVG for the other
+        renderers (HTML embeds it).
+        """
+        from stellium.engines.dispositors import dispositor_graph_data
+
+        graphs = []
+        if planetary:
+            graphs.append(
+                {"title": "Planetary Dispositors", **dispositor_graph_data(planetary)}
+            )
+        if house:
+            graphs.append(
+                {"title": "House Dispositors", **dispositor_graph_data(house)}
+            )
+        if not graphs:
+            return None
+
+        sub: dict[str, Any] = {"type": "svg", "graph": {"graphs": graphs}}
+
         import shutil
 
-        if not shutil.which("dot"):
-            return None
+        if shutil.which("dot"):
+            try:
+                from stellium.engines.dispositors import (
+                    render_both_dispositors,
+                    render_dispositor_graph,
+                )
 
-        try:
-            from stellium.engines.dispositors import (
-                render_both_dispositors,
-                render_dispositor_graph,
-            )
+                if planetary and house:
+                    dot = render_both_dispositors(planetary, house)
+                elif planetary:
+                    dot = render_dispositor_graph(
+                        planetary, title="Planetary Dispositors"
+                    )
+                else:
+                    dot = render_dispositor_graph(house, title="House Dispositors")
+                sub["content"] = dot.pipe(format="svg").decode("utf-8")
+            except Exception:
+                pass
 
-            if planetary and house:
-                dot = render_both_dispositors(planetary, house)
-            elif planetary:
-                dot = render_dispositor_graph(planetary, title="Planetary Dispositors")
-            elif house:
-                dot = render_dispositor_graph(house, title="House Dispositors")
-            else:
-                return None
-
-            svg_content = dot.pipe(format="svg").decode("utf-8")
-            return ("Dispositor Graph", {"type": "svg", "content": svg_content})
-        except Exception:
-            return None
+        return ("Dispositor Graph", sub)
 
     def _format_result(self, result, title: str) -> dict[str, Any]:
         """Format a DispositorResult for display."""

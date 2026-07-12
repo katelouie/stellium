@@ -1,6 +1,6 @@
 # TODO
 
-*43 open tasks (synced from Obsidian)*
+*44 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -29,6 +29,7 @@
 - Integrate Simplified Chinese translation strings into main library and web
 - LMT (Local Mean Time) support for historical charts
 - Optimize 'stellium cache info' — get_stats() walks the whole cache dir (slow/hangs on large caches)
+- PDF table zebra: decide flat vs full-bleed. Mockup tables were NOT zebra-striped, so cells could sit inset from the panel edge. Ours ARE zebra-striped, and the stripes stop ~18pt short of the rounded panel edge (the section inset), which reads slightly odd. Two options to pick from: (a) drop the zebra (rows all same, rely on hairlines/whitespace like the mockup), or (b) full-bleed the zebra to the panel edges (wrap table bodies in pad(x:-18pt), set section block clip:true for the rounded corners, and set table cell x-inset to ~18pt so text stays aligned with the section header) — optionally with a soft fade at the edges. Bounded change to typst_theme/components.typ (section + table components) + engine.typ (apply the negative pad for table-kind sections). Kate was unsure which looks better.
 - Structure-first section contract
 - Update ARCHITECTURE.md directory structure to match codebase
 - Update COMPETITIVE_ANALYSIS.md — house exports done, re-evaluate gaps

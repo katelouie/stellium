@@ -333,6 +333,10 @@ def _moon_phase(name: str, d: dict[str, Any]) -> dict | None:
 
 def _generic(name: str, d: dict[str, Any]) -> dict | None:
     """Map a generic section dict to a themed engine section."""
+    # Structured dispositor graph (drawn natively; SVG kept for other renderers).
+    dg = d.get("graph")
+    if dg and dg.get("graphs"):
+        return {"kind": "dispositor_graph", "title": name, "graphs": dg["graphs"]}
     # Structured aspectarian (carried on the "svg" aspectarian subsection).
     ac = d.get("aspectarian")
     if ac and ac.get("bodies"):

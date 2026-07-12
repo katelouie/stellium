@@ -106,6 +106,8 @@
     )
   } else if kind == "aspect_list" {
     (c.aspect-list)(sec.aspects)
+  } else if kind == "dispositor_graph" {
+    (c.dispositor-graph)(sec.graphs)
   } else if kind == "svg" {
     if sec.at("svg_file", default: none) != none {
       align(center)[#image(sec.svg_file, width: 92%)]
