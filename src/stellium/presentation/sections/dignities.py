@@ -312,31 +312,36 @@ class DispositorSection:
         planetary: "DispositorResult | None",
         house: "DispositorResult | None",
     ) -> tuple[str, dict[str, Any]] | None:
-        """Try to render dispositor graph as SVG. Returns None if graphviz unavailable."""
-        import shutil
+        """Build the dispositor graph section.
 
-        if not shutil.which("dot"):
-            return None
+        Emits a structured, laid-out ``graph`` payload (nodes + edges + ranks)
+        that the Typst PDF draws natively, plus an svgwrite-rendered SVG (same
+        layout) for the other renderers (HTML embeds it). No graphviz dependency.
+        """
+        from stellium.engines.dispositors import (
+            dispositor_graph_data,
+            render_dispositor_svg,
+        )
 
-        try:
-            from stellium.engines.dispositors import (
-                render_both_dispositors,
-                render_dispositor_graph,
+        graphs = []
+        if planetary:
+            graphs.append(
+                {"title": "Planetary Dispositors", **dispositor_graph_data(planetary)}
             )
-
-            if planetary and house:
-                dot = render_both_dispositors(planetary, house)
-            elif planetary:
-                dot = render_dispositor_graph(planetary, title="Planetary Dispositors")
-            elif house:
-                dot = render_dispositor_graph(house, title="House Dispositors")
-            else:
-                return None
-
-            svg_content = dot.pipe(format="svg").decode("utf-8")
-            return ("Dispositor Graph", {"type": "svg", "content": svg_content})
-        except Exception:
+        if house:
+            graphs.append(
+                {"title": "House Dispositors", **dispositor_graph_data(house)}
+            )
+        if not graphs:
             return None
+
+        sub: dict[str, Any] = {"type": "svg", "graph": {"graphs": graphs}}
+        try:
+            sub["content"] = render_dispositor_svg(graphs)
+        except Exception:
+            pass
+
+        return ("Dispositor Graph", sub)
 
     def _format_result(self, result, title: str) -> dict[str, Any]:
         """Format a DispositorResult for display."""

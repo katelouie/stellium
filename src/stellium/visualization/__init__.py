@@ -28,7 +28,11 @@ from .layers import (
     PlanetLayer,
     ZodiacLayer,
 )
-from .moon_phase import MoonPhaseLayer
+from .moon_phase import (
+    MoonPhaseLayer,
+    draw_moon_phase_standalone,
+    moon_phase_svg,
+)
 from .palettes import (
     AspectPalette,
     PlanetGlyphPalette,
@@ -74,6 +78,8 @@ __all__ = [
     "ChartShapeLayer",
     "ElementModalityTableLayer",
     "MoonPhaseLayer",
+    "draw_moon_phase_standalone",
+    "moon_phase_svg",
     "PositionTableLayer",
     "HouseCuspTableLayer",
     # Standalone aspectarian generator

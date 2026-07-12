@@ -42,8 +42,8 @@ from stellium.engines.dispositors import (
     DispositorEngine,
     DispositorResult,
     MutualReception,
-    render_both_dispositors,
-    render_dispositor_graph,
+    dispositor_graph_data,
+    render_dispositor_svg,
 )
 from stellium.engines.ephemeris import (
     MissingEphemerisWarning,
@@ -183,8 +183,8 @@ __all__ = [
     "DispositorEngine",
     "DispositorResult",
     "MutualReception",
-    "render_dispositor_graph",
-    "render_both_dispositors",
+    "dispositor_graph_data",
+    "render_dispositor_svg",
     # Longitude Search, Ingresses, Stations, Eclipses, & Aspect Exactitude
     "find_longitude_crossing",
     "find_all_longitude_crossings",

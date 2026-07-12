@@ -455,11 +455,14 @@ def draw_moon_phase_standalone(
     filename: str = "moon_phase.svg",
     size: int = 200,
     style: dict[str, Any] | None = None,
+    background: str | None = None,
+    show_label: bool = False,
 ) -> str:
     """
     Draw a standalone moon phase SVG.
 
-    Useful for testing or standalone moon phase displays.
+    Useful for testing, standalone moon phase displays, or embedding a phase
+    illustration in another document (e.g. a report's moon-phase section).
 
     Args:
         phase_frac: Illuminated fraction (0-1)
@@ -467,6 +470,8 @@ def draw_moon_phase_standalone(
         filename: Output filename
         size: SVG size in pixels
         style: Style overrides
+        background: Background fill (e.g. "#1a1a1a"). None (default) leaves the
+            square transparent so it composits cleanly into any surface.
 
     Returns:
         Filename of saved SVG
@@ -475,8 +480,8 @@ def draw_moon_phase_standalone(
         # Draw a waxing crescent
         draw_moon_phase_standalone(0.25, 90, "waxing_crescent.svg")
 
-        # Draw a full moon
-        draw_moon_phase_standalone(1.0, 180, "full_moon.svg")
+        # Draw a full moon on a dark card
+        draw_moon_phase_standalone(1.0, 180, "full_moon.svg", background="#1a1a1a")
     """
     moon = CelestialPosition(
         name="Moon",
@@ -499,21 +504,84 @@ def draw_moon_phase_standalone(
         viewBox=f"0 0 {size} {size}",
     )
 
-    # Add background
-    dwg.add(dwg.rect(insert=(0, 0), size=(size, size), fill="#1a1a1a"))
+    # Add background only if requested (default: transparent square)
+    if background is not None:
+        dwg.add(dwg.rect(insert=(0, 0), size=(size, size), fill=background))
 
-    # Create moon phase layer
-    layer = MoonPhaseLayer(style_override=style)
+    # Create moon phase layer. Force centre placement and (by default) no label
+    # so the illustration stands alone and needs no aspect / theme context.
+    layer = MoonPhaseLayer(
+        style_override=style, position="center", show_label=show_label
+    )
 
     # Render (need a mock renderer/chart for the interface)
     from unittest.mock import Mock
 
     mock_renderer = Mock()
     mock_renderer.center = size // 2
+    mock_renderer.size = size
+    mock_renderer.x_offset = 0
+    mock_renderer.y_offset = 0
+    # Real style dict so the (optional) label path resolves theme colours.
+    mock_renderer.style = {
+        "planets": {"info_color": "#333333"},
+        "background_color": background or "#FFFFFF",
+    }
     mock_chart = Mock()
     mock_chart.get_object = lambda name: moon if name == "Moon" else None
+    mock_chart.aspects = []  # standalone: no aspects to avoid (layer checks this)
 
     layer.render(mock_renderer, dwg, mock_chart)
 
     dwg.save()
     return filename
+
+
+def moon_phase_svg(
+    chart: Any,
+    filename: str = "moon_phase.svg",
+    size: int = 200,
+    style: dict[str, Any] | None = None,
+    background: str | None = None,
+    show_label: bool = False,
+) -> str:
+    """
+    Render a chart's Moon phase as a standalone square SVG.
+
+    Pulls the illuminated fraction and phase angle from the chart's Moon and
+    draws just the phase illustration — handy for embedding the phase on its
+    own (e.g. a report's moon-phase section) rather than inside a wheel.
+
+    Args:
+        chart: A CalculatedChart with a Moon position carrying phase data.
+        filename: Output filename.
+        size: SVG size in pixels (square).
+        style: Style overrides passed to the moon-phase layer.
+        background: Background fill; None (default) leaves it transparent.
+
+    Returns:
+        The output filename.
+
+    Raises:
+        ValueError: If the chart has no Moon or no phase data.
+
+    Example:
+        moon_phase_svg(chart, "moon.svg", size=120)
+    """
+    moon = chart.get_object("Moon")
+    if moon is None:
+        raise ValueError("Chart has no Moon position to draw a phase for.")
+    phase = getattr(moon, "phase", None)
+    if phase is None:
+        raise ValueError(
+            "Moon has no phase data; the chart must compute Moon phase first."
+        )
+    return draw_moon_phase_standalone(
+        phase_frac=phase.illuminated_fraction,
+        phase_angle=phase.phase_angle,
+        filename=filename,
+        size=size,
+        style=style,
+        background=background,
+        show_label=show_label,
+    )

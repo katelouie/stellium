@@ -82,14 +82,16 @@ class ChartComposer:
             profile="full",
         )
 
-        # Background
-        dwg.add(
-            dwg.rect(
-                insert=(0, 0),
-                size=(f"{dims.width}px", f"{dims.height}px"),
-                fill=self._get_background_color(),
+        # Background (skipped when transparent so the wheel composits onto
+        # whatever surface embeds it, e.g. a themed PDF panel).
+        if not getattr(self.config.wheel, "transparent_background", False):
+            dwg.add(
+                dwg.rect(
+                    insert=(0, 0),
+                    size=(f"{dims.width}px", f"{dims.height}px"),
+                    fill=self._get_background_color(),
+                )
             )
-        )
 
         return dwg
 

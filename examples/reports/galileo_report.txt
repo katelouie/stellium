@@ -6,7 +6,7 @@ Date: February 15, 1564
 Time: 04:00 PM
 Timezone: Europe/Rome
 Location: Pisa, Italy
-Coordinates: 43.7167°, 10.4000°
+Coordinates: 43.4715°, 10.6798°
 House System: Placidus
 Zodiac: Tropical
 Chart Ruler: Sun (Leo Rising)
@@ -30,6 +30,7 @@ Planet Positions
 │ ☊ North Node        │ ♑︎ Capricorn 6°35'    │ 5          │
 │ ☋ South Node        │ ♋︎ Cancer 6°35'       │ 11         │
 │ ⚸ Black Moon Lilith │ ♍︎ Virgo 17°33'       │ 2          │
-│ 🜊 Vertex            │ ♐︎ Sagittarius 25°52' │ 5          │
+│ 🜊 Vertex            │ ♐︎ Sagittarius 25°54' │ 5          │
+│ ⚷ Chiron            │ ♑︎ Capricorn 18°39'   │ 6          │
 └─────────────────────┴───────────────────────┴────────────┘
 

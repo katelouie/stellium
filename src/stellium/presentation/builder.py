@@ -1295,11 +1295,14 @@ class ReportBuilder:
             ...     .render())
 
         Note:
-            For graphical output (SVG), use the DispositorEngine directly:
-                from stellium.engines.dispositors import DispositorEngine, render_both_dispositors
+            For standalone graph output (SVG), use the DispositorEngine directly:
+                from stellium.engines.dispositors import (
+                    DispositorEngine, dispositor_graph_data, render_dispositor_svg,
+                )
                 engine = DispositorEngine(chart)
-                graph = render_both_dispositors(engine.planetary(), engine.house_based())
-                graph.render("dispositors", format="svg")
+                graphs = [{"title": "Planetary",
+                           **dispositor_graph_data(engine.planetary())}]
+                render_dispositor_svg(graphs, "dispositors.svg")
         """
         self._sections.append(
             DispositorSection(
@@ -1867,6 +1870,7 @@ class ReportBuilder:
         format: str = "rich_table",
         file: str | None = None,
         show: bool | None = None,
+        theme: str = "house",
     ) -> str | None:
         """
         Render the report with flexible output options.
@@ -1877,6 +1881,9 @@ class ReportBuilder:
             show: Whether to display in terminal. Defaults to True for terminal
                   formats (rich_table, plain_table, text, prose) and False for file
                   formats (pdf, html).
+            theme: PDF design-system theme (format="pdf" only). One of
+                  "house" (default), "sepia", "celestial", "blues", "greyscale".
+                  "greyscale" is the laser/B&W print theme.
 
         Returns:
             Filename if saved to file, None otherwise
@@ -1910,8 +1917,11 @@ class ReportBuilder:
         if show is None:
             show = format in terminal_formats
 
-        # Resolve chart image path (auto-generate if requested)
-        chart_svg_path = self._resolve_chart_image_path(file)
+        # Resolve chart image path (auto-generate if requested). For PDF, theme
+        # the wheel to match the report theme.
+        chart_svg_path = self._resolve_chart_image_path(
+            file, theme if format == "pdf" else None
+        )
 
         # Resolve title (use instance var or generate default)
         title = self._title
@@ -1941,7 +1951,7 @@ class ReportBuilder:
         if file:
             # Handle PDF format (binary output via Typst)
             if format == "pdf":
-                content = self._to_typst_pdf(section_data, chart_svg_path, title)
+                content = self._to_typst_pdf(section_data, chart_svg_path, title, theme)
                 with open(file, "wb") as f:
                     f.write(content)
             else:
@@ -1996,7 +2006,9 @@ class ReportBuilder:
         chart_svg_path = self._resolve_chart_image_path(None)
         return self._to_string(section_data, format, chart_svg_path)
 
-    def _resolve_chart_image_path(self, output_file: str | None) -> str | None:
+    def _resolve_chart_image_path(
+        self, output_file: str | None, theme: str | None = None
+    ) -> str | None:
         """
         Resolve the chart image path for rendering.
 
@@ -2029,8 +2041,36 @@ class ReportBuilder:
                 fd, svg_path = tempfile.mkstemp(suffix=".svg", prefix="stellium_chart_")
                 os.close(fd)
 
-            # Generate the chart
-            self._chart.draw(svg_path).preset_standard().save()
+            # Generate the chart. Reports carry the name / date / place in their
+            # own overview (and the PDF title page), so the wheel's header would
+            # duplicate it. Strip the header (which also lets the wheel centre in
+            # its square SVG) and the info corner (which otherwise reveals the
+            # native info once the header is off), leaving a clean wheel + moon.
+            draw = (
+                self._chart.draw(svg_path)
+                .preset_standard()
+                .without_header()
+                .without_chart_info()
+            )
+            # For PDFs the wheel sits on a themed panel; drop its own background
+            # rect so it composits onto the page.
+            if theme is not None:
+                draw = draw.with_transparent_background()
+            # For themed PDFs, coordinate the wheel with the report theme so it
+            # doesn't read as a light wheel dropped onto a dark page.
+            if theme is not None:
+                from stellium.presentation.typst_render import THEME_WHEEL
+
+                viz_theme, zodiac_palette, aspect_palette = THEME_WHEEL.get(
+                    theme, (None, None, None)
+                )
+                if viz_theme is not None:
+                    draw = draw.with_theme(viz_theme).with_zodiac_palette(
+                        zodiac_palette
+                    )
+                    if aspect_palette is not None:
+                        draw = draw.with_aspect_palette(aspect_palette)
+            draw.save()
             return svg_path
 
         return None
@@ -2104,6 +2144,7 @@ class ReportBuilder:
         section_data: list[tuple[str, dict[str, Any]]],
         chart_svg_path: str | None = None,
         title: str | None = None,
+        theme: str = "house",
     ) -> bytes:
         """
         Convert report to PDF bytes using Typst (internal helper).
@@ -2119,7 +2160,7 @@ class ReportBuilder:
         Returns:
             PDF as bytes
         """
-        from stellium.presentation.renderers import TypstRenderer
+        from stellium.presentation.typst_render import render_pdf
 
         # Build title from chart name if not provided
         if title is None and self._chart:
@@ -2129,11 +2170,12 @@ class ReportBuilder:
             else:
                 title = "Natal Chart Report"
 
-        renderer = TypstRenderer()
-        return renderer.render_report(
+        return render_pdf(
+            self._chart,
             section_data,
             chart_svg_path=chart_svg_path,
-            title=title or "Astrological Report",
+            title=title,
+            theme=theme,
         )
 
     def _print_to_console(

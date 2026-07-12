@@ -40,7 +40,6 @@ dependencies = [
     "pyyaml",
     "typst",
     "python-dateutil",
-    "graphviz",
 ]
 
 [project.optional-dependencies]
@@ -92,6 +91,9 @@ where = ["src"]
     "swisseph/ephe/*.se1",
     "swisseph/ephe/*.txt",
     "geocode_cache.json",
+    "fonts/*.ttf",
+    "fonts/*.otf",
+    "fonts/LICENSE-FONTS.txt",
 ]
 
 # Tool configurations

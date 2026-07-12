@@ -134,6 +134,7 @@ class ChartWheelConfig:
     aspect_palette: str | None = None  # None = use theme default
     planet_glyph_palette: str | None = None  # None = use theme default
     color_sign_info: bool = False
+    transparent_background: bool = False  # Skip the full-canvas background rect
 
     # Tick marks
     show_degree_ticks: bool = False  # Show 1° tick marks on zodiac ring

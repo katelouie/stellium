@@ -31,8 +31,6 @@ Example:
 from dataclasses import dataclass
 from typing import Literal
 
-import graphviz
-
 from stellium.core.models import CalculatedChart
 from stellium.engines.dignities import DIGNITIES
 
@@ -537,284 +535,248 @@ class DispositorEngine:
 # =============================================================================
 
 
-def render_dispositor_graph(
-    result: DispositorResult,
-    *,
-    use_glyphs: bool = True,
-    title: str | None = None,
-) -> "graphviz.Digraph":
+def dispositor_graph_data(result: "DispositorResult") -> dict:
+    """Structured, laid-out dispositor graph for native (non-graphviz) drawing.
+
+    The graph is a functional DAG (each node points to its single ruler, chains
+    converging on the final dispositor / mutual-reception cycle), so a clean
+    layered layout is just a BFS: rank = number of steps from the sink. Returns
+    nodes (with display name, glyph, rank, column) + edges + max_rank, ready for
+    a renderer to place circles by (col, rank) and draw arrows between them.
+
+    Portable and themeable: no graphviz, no fonts baked into an SVG.
     """
-    Render a single dispositor result as a graphviz Digraph.
+    from collections import deque
 
-    Args:
-        result: DispositorResult from DispositorEngine
-        use_glyphs: Use planet glyphs (☉♀♂) instead of names
-        title: Optional title for the graph
-
-    Returns:
-        graphviz.Digraph object (call .render() to save)
-
-    Raises:
-        ImportError: If graphviz is not installed
-    """
     from stellium.core.registry import CELESTIAL_REGISTRY
 
-    # Create digraph with Stellium styling
-    dot = graphviz.Digraph(comment=title or f"{result.mode.title()} Dispositors")
+    node_ids: list[str] = []
+    fwd: dict[str, str] = {}
+    rev: dict[str, list[str]] = {}
+    for e in result.edges:
+        for n in (e.source, e.target):
+            if n not in node_ids:
+                node_ids.append(n)
+        fwd[e.source] = e.target
+        rev.setdefault(e.target, []).append(e.source)
+    if not node_ids:
+        return {"nodes": [], "edges": [], "max_rank": 0}
 
-    # Stellium palette (matching PDF/chart styling)
-    dot.attr(bgcolor="#F5F0E6")  # Cream background
-    dot.attr(
-        "node",
-        shape="circle",
-        style="filled",
-        fillcolor="#E8E0D4",  # Warm beige nodes
-        color="#8B7355",  # Warm brown border
-        fontname="Crimson Pro",
-        fontsize="14",
-        penwidth="1.5",
-    )
-    dot.attr(
-        "edge",
-        color="#9B8AA6",  # Purple-ish edges
-        penwidth="1.5",
-    )
-
-    # Set title
-    if title:
-        dot.attr(label=title, fontsize="16", fontname="Crimson Pro", labelloc="t")
-
-    # Helper to get node label
-    def get_label(node: str) -> str:
-        if result.mode == "planetary" and use_glyphs:
-            if node in CELESTIAL_REGISTRY:
-                return CELESTIAL_REGISTRY[node].glyph
-        elif result.mode == "house":
-            # For houses, just use the number
-            return node
-        return node
-
-    # Collect all nodes
-    nodes = set()
-    for edge in result.edges:
-        nodes.add(edge.source)
-        nodes.add(edge.target)
-
-    # Find final dispositor(s) for special styling
-    final_set = set()
-    if result.final_dispositor:
-        if isinstance(result.final_dispositor, tuple):
-            final_set = set(result.final_dispositor)
-        else:
-            final_set = {result.final_dispositor}
-
-    # Find mutual reception nodes
-    mr_nodes = set()
+    # Sink = final dispositor / mutual-reception nodes (everything flows here).
+    sink: set[str] = set()
+    fd = result.final_dispositor
+    if fd:
+        sink.update(fd if isinstance(fd, tuple) else (fd,))
     for mr in result.mutual_receptions:
-        mr_nodes.add(mr.node1)
-        mr_nodes.add(mr.node2)
+        sink.add(mr.node1)
+        sink.add(mr.node2)
+    sink &= set(node_ids)
+    if not sink:
+        sink = {n for n in node_ids if fwd.get(n) in (None, n)} or {node_ids[0]}
 
-    # Add nodes with special styling for final dispositor
-    for node in nodes:
-        label = get_label(node)
-        if node in final_set:
-            # Final dispositor gets gold fill and thicker border
-            dot.node(
-                node,
-                label,
-                fillcolor="#D4AF37",  # Gold
-                color="#8B6914",  # Darker gold border
-                penwidth="2.5",
-            )
-        elif node in mr_nodes:
-            # Mutual reception nodes get a subtle purple tint
-            dot.node(
-                node,
-                label,
-                fillcolor="#D8D0E0",  # Light purple
-            )
-        else:
-            dot.node(node, label)
-
-    # Add edges
-    seen_edges = set()
-    for edge in result.edges:
-        _edge_key = (edge.source, edge.target)
-
-        # Check if this is part of a mutual reception
-        is_mutual = False
-        for mr in result.mutual_receptions:
-            if (edge.source == mr.node1 and edge.target == mr.node2) or (
-                edge.source == mr.node2 and edge.target == mr.node1
+    # rank = distance from the sink, following dependents (reverse edges) outward.
+    rank: dict[str, int] = dict.fromkeys(sink, 0)
+    q = deque(sink)
+    while q:
+        n = q.popleft()
+        for dep in rev.get(n, []):
+            if dep not in rank:
+                rank[dep] = rank[n] + 1
+                q.append(dep)
+    # Disconnected nodes: follow their forward chain to something ranked.
+    for n in node_ids:
+        if n not in rank:
+            chain: list[str] = []
+            cur: str | None = n
+            guard = 0
+            while (
+                cur is not None and cur not in rank and cur not in chain and guard < 100
             ):
-                is_mutual = True
-                break
+                chain.append(cur)
+                cur = fwd.get(cur)
+                guard += 1
+            base = rank.get(cur, 0)
+            for i, m in enumerate(reversed(chain)):
+                rank[m] = base + i + 1
 
-        if is_mutual:
-            # Render mutual receptions with bidirectional arrow (only once)
-            pair = tuple(sorted([edge.source, edge.target]))
-            if pair not in seen_edges:
-                seen_edges.add(pair)
-                dot.edge(
-                    edge.source,
-                    edge.target,
-                    dir="both",
-                    color="#7B6B8A",  # Darker purple for emphasis
-                    penwidth="2.0",
-                )
+    max_rank = max(rank.values())
+    by_rank: dict[int, list[str]] = {}
+    for n in node_ids:
+        by_rank.setdefault(rank[n], []).append(n)
+
+    mutual_nodes: set[str] = set()
+    for mr in result.mutual_receptions:
+        mutual_nodes.add(mr.node1)
+        mutual_nodes.add(mr.node2)
+
+    is_house = result.mode == "house"
+    nodes = []
+    for n in node_ids:
+        r = rank[n]
+        row = by_rank[r]
+        if is_house or n not in CELESTIAL_REGISTRY:
+            label, glyph = str(n), ""
         else:
-            # Self-loop (final dispositor)
-            if edge.source == edge.target:
-                dot.edge(
-                    edge.source,
-                    edge.target,
-                    color="#8B6914",  # Gold edge for self-loop
-                    penwidth="2.0",
-                )
-            else:
-                dot.edge(edge.source, edge.target)
+            reg = CELESTIAL_REGISTRY[n]
+            label, glyph = reg.display_name, (reg.glyph or "")
+        nodes.append(
+            {
+                "id": n,
+                "label": label,
+                "glyph": glyph,
+                "rank": r,
+                "col": row.index(n),
+                "ncols": len(row),
+                "final": n in sink,
+                "mutual": n in mutual_nodes,
+            }
+        )
 
-    return dot
+    mr_pairs = {tuple(sorted((m.node1, m.node2))) for m in result.mutual_receptions}
+    seen_mr: set = set()
+    edges = []
+    for e in result.edges:
+        key = tuple(sorted((e.source, e.target)))
+        mutual = key in mr_pairs
+        if mutual:
+            if key in seen_mr:
+                continue
+            seen_mr.add(key)
+        edges.append({"from": e.source, "to": e.target, "mutual": mutual})
+
+    return {"nodes": nodes, "edges": edges, "max_rank": max_rank}
 
 
-def render_both_dispositors(
-    planetary: DispositorResult,
-    house: DispositorResult,
-    *,
-    use_glyphs: bool = True,
-) -> "graphviz.Digraph":
-    """
-    Render both planetary and house dispositors as subgraphs in a single SVG.
+def render_dispositor_svg(
+    graphs: list[dict],
+    filename: str | None = None,
+) -> str:
+    """Render one or more laid-out dispositor graphs to an SVG string (svgwrite).
+
+    Replaces the old graphviz renderer: uses the same layered layout as the
+    native PDF graph (dispositor_graph_data), so there is no graphviz dependency.
 
     Args:
-        planetary: Planetary DispositorResult
-        house: House-based DispositorResult
-        use_glyphs: Use planet glyphs for planetary graph
+        graphs: list of dicts, each ``{"title", "nodes", "edges", "max_rank"}``
+            (dispositor_graph_data output plus a title). Rendered side by side,
+            each in its own rounded panel.
+        filename: optional path to also save the SVG.
 
     Returns:
-        graphviz.Digraph with both graphs as labeled clusters
-
-    Example:
-        >>> engine = DispositorEngine(chart)
-        >>> planetary = engine.planetary()
-        >>> house = engine.house_based()
-        >>> graph = render_both_dispositors(planetary, house)
-        >>> graph.render("dispositors", format="svg")
+        The SVG document as a string.
     """
-    from stellium.core.registry import CELESTIAL_REGISTRY
+    import math
 
-    # Create parent digraph
-    dot = graphviz.Digraph(comment="Dispositor Graphs")
-    dot.attr(bgcolor="#F5F0E6", rankdir="TB")
-    dot.attr(
-        "node",
-        shape="circle",
-        style="filled",
-        fillcolor="#E8E0D4",
-        color="#8B7355",
-        fontname="Crimson Pro",
-        fontsize="14",
-        penwidth="1.5",
+    import svgwrite
+
+    R = 20
+    gap = 66
+    colw = 74
+    pad = 22
+    title_h = 34
+    c_panel, c_border = "#FAF6EE", "#D8CBB6"
+    c_node, c_node_edge = "#EFE9DC", "#8B7355"
+    c_final, c_final_edge = "#D4AF37", "#8B6914"
+    c_glyph, c_title = "#3A2233", "#8B7355"
+    c_edge, c_edge_mr = "#9B8AA6", "#8B6914"
+
+    layouts = []
+    for g in graphs:
+        maxr = g["max_rank"]
+        max_ncols = max((n["ncols"] for n in g["nodes"]), default=1)
+        gw = max(max_ncols * colw, colw)
+        gh = title_h + pad + maxr * gap + 2 * R + pad
+        layouts.append((g, gw, gh, maxr))
+    total_w = sum(gw for _, gw, _, _ in layouts) + pad * (len(layouts) + 1)
+    total_h = max((gh for _, _, gh, _ in layouts), default=120) + pad
+
+    dwg = svgwrite.Drawing(
+        filename=filename or "dispositor.svg",
+        size=(f"{total_w}px", f"{total_h}px"),
+        viewBox=f"0 0 {total_w} {total_h}",
+        debug=False,
     )
-    dot.attr(
-        "edge",
-        color="#9B8AA6",
-        penwidth="1.5",
-    )
+    # forward arrowhead (line end) + reversed one (line start, for mutual pairs).
+    m_end = dwg.marker(insert=(7, 3), size=(8, 6), orient="auto", id="disp-arrow")
+    m_end.viewbox(0, 0, 8, 6)
+    m_end.add(dwg.path(d="M0,0 L8,3 L0,6 Z", fill=c_edge_mr))
+    dwg.defs.add(m_end)
+    m_start = dwg.marker(insert=(1, 3), size=(8, 6), orient="auto", id="disp-arrow-rev")
+    m_start.viewbox(0, 0, 8, 6)
+    m_start.add(dwg.path(d="M8,0 L0,3 L8,6 Z", fill=c_edge_mr))
+    dwg.defs.add(m_start)
 
-    def get_label(node: str, mode: str) -> str:
-        if mode == "planetary" and use_glyphs:
-            if node in CELESTIAL_REGISTRY:
-                return CELESTIAL_REGISTRY[node].glyph
-        return node
+    x_off = pad
+    for g, gw, gh, maxr in layouts:
+        dwg.add(
+            dwg.rect(
+                insert=(x_off, pad / 2),
+                size=(gw, gh - pad / 2),
+                rx=10,
+                fill=c_panel,
+                stroke=c_border,
+                stroke_width=1,
+            )
+        )
+        dwg.add(
+            dwg.text(
+                g["title"].upper(),
+                insert=(x_off + gw / 2, title_h - 6),
+                text_anchor="middle",
+                font_size="11px",
+                font_family="Georgia, serif",
+                fill=c_title,
+                letter_spacing="1.5",
+            )
+        )
+        nmap = {n["id"]: n for n in g["nodes"]}
 
-    def add_subgraph(result: DispositorResult, cluster_id: str, label: str):
-        """Add a dispositor result as a subgraph cluster."""
-        with dot.subgraph(name=f"cluster_{cluster_id}") as c:
-            c.attr(label=label, fontsize="14", fontname="Crimson Pro")
-            c.attr(style="rounded", color="#8B7355", bgcolor="#FAF7F2")
+        def _pos(n, _x_off=x_off, _gw=gw, _maxr=maxr):
+            x = _x_off + _gw * (n["col"] + 0.5) / max(n["ncols"], 1)
+            y = title_h + pad + R + (_maxr - n["rank"]) * gap
+            return x, y
 
-            # Find special nodes
-            final_set = set()
-            if result.final_dispositor:
-                if isinstance(result.final_dispositor, tuple):
-                    final_set = set(result.final_dispositor)
-                else:
-                    final_set = {result.final_dispositor}
+        for e in g["edges"]:
+            a, b = nmap[e["from"]], nmap[e["to"]]
+            ax, ay = _pos(a)
+            bx, by = _pos(b)
+            dx, dy = bx - ax, by - ay
+            length = max(math.hypot(dx, dy), 0.001)
+            ux, uy = dx / length, dy / length
+            sx, sy = ax + ux * R, ay + uy * R
+            ex, ey = bx - ux * (R + 2), by - uy * (R + 2)
+            col = c_edge_mr if e["mutual"] else c_edge
+            line = dwg.line(start=(sx, sy), end=(ex, ey), stroke=col, stroke_width=1.5)
+            line["marker-end"] = "url(#disp-arrow)"
+            if e["mutual"]:
+                line["marker-start"] = "url(#disp-arrow-rev)"
+            dwg.add(line)
 
-            mr_nodes = set()
-            for mr in result.mutual_receptions:
-                mr_nodes.add(mr.node1)
-                mr_nodes.add(mr.node2)
+        for n in g["nodes"]:
+            x, y = _pos(n)
+            dwg.add(
+                dwg.circle(
+                    center=(x, y),
+                    r=R,
+                    fill=(c_final if n["final"] else c_node),
+                    stroke=(c_final_edge if n["final"] else c_node_edge),
+                    stroke_width=1.4,
+                )
+            )
+            label = n["glyph"] if n["glyph"] else n["label"]
+            dwg.add(
+                dwg.text(
+                    label,
+                    insert=(x, y),
+                    text_anchor="middle",
+                    dominant_baseline="central",
+                    font_size=("17px" if n["glyph"] else "13px"),
+                    font_family="'Noto Sans Symbols', 'Noto Sans Symbols2', sans-serif",
+                    fill=c_glyph,
+                )
+            )
+        x_off += gw + pad
 
-            # Collect nodes
-            nodes = set()
-            for edge in result.edges:
-                nodes.add(edge.source)
-                nodes.add(edge.target)
-
-            # Prefix node names to avoid conflicts between subgraphs
-            prefix = f"{cluster_id}_"
-
-            # Add nodes
-            for node in nodes:
-                node_id = prefix + node
-                label_text = get_label(node, result.mode)
-
-                if node in final_set:
-                    c.node(
-                        node_id,
-                        label_text,
-                        fillcolor="#D4AF37",
-                        color="#8B6914",
-                        penwidth="2.5",
-                    )
-                elif node in mr_nodes:
-                    c.node(
-                        node_id,
-                        label_text,
-                        fillcolor="#D8D0E0",
-                    )
-                else:
-                    c.node(node_id, label_text)
-
-            # Add edges
-            seen_edges = set()
-            for edge in result.edges:
-                src_id = prefix + edge.source
-                tgt_id = prefix + edge.target
-
-                is_mutual = False
-                for mr in result.mutual_receptions:
-                    if (edge.source == mr.node1 and edge.target == mr.node2) or (
-                        edge.source == mr.node2 and edge.target == mr.node1
-                    ):
-                        is_mutual = True
-                        break
-
-                if is_mutual:
-                    pair = tuple(sorted([edge.source, edge.target]))
-                    if pair not in seen_edges:
-                        seen_edges.add(pair)
-                        c.edge(
-                            src_id,
-                            tgt_id,
-                            dir="both",
-                            color="#7B6B8A",
-                            penwidth="2.0",
-                        )
-                elif edge.source == edge.target:
-                    c.edge(
-                        src_id,
-                        tgt_id,
-                        color="#8B6914",
-                        penwidth="2.0",
-                    )
-                else:
-                    c.edge(src_id, tgt_id)
-
-    # Add both subgraphs
-    add_subgraph(planetary, "planetary", "Planetary Dispositors")
-    add_subgraph(house, "house", "House Dispositors")
-
-    return dot
+    if filename:
+        dwg.save()
+    return dwg.tostring()
