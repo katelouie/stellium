@@ -31,6 +31,20 @@ jobs:
     - name: Build package
       run: python -m build
 
+    - name: Verify built version matches the release tag
+      # The package version is dynamic (attr = stellium.__version__). If the tag
+      # is bumped but __version__ is not, the build silently produces the OLD
+      # version and PyPI rejects it as a duplicate. Fail loudly here instead.
+      run: |
+        built=$(ls dist/*.whl | sed -E 's|.*/stellium-([^-]+)-py3.*|\1|')
+        tag="${GITHUB_REF_NAME#v}"
+        echo "built wheel version: $built"
+        echo "release tag version: $tag"
+        if [ "$built" != "$tag" ]; then
+          echo "::error::Built version ($built) does not match release tag ($tag). Did you forget to bump src/stellium/__init__.py __version__?"
+          exit 1
+        fi
+
     - name: Check package
       run: twine check dist/*
 
