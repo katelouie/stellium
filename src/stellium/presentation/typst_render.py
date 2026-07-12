@@ -87,21 +87,16 @@ def _theme_dir() -> str:
 
 
 def _font_paths() -> list[str]:
-    """Bundled font directories, so the PDF (and embedded SVGs) render astro
-    glyphs from packaged fonts rather than relying on whatever the host has.
+    """The bundled font directory (packaged under ``stellium/data/fonts``), so the
+    PDF renders identically on any machine — every display/body/mono face the
+    themes use plus the Noto symbol fonts, with no dependency on host fonts.
 
-    Typst still searches system fonts too (ignore_system_fonts stays False), so
-    the display/body faces resolve; these just guarantee the symbol coverage.
+    The path is package-relative (works from a source checkout and an installed
+    wheel alike). System fonts are still searched too (ignore_system_fonts stays
+    False), but the bundle is self-sufficient.
     """
-    repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-    base = os.path.join(repo, "assets", "fonts")
-    dirs = [
-        base,
-        os.path.join(base, "Cinzel_Decorative"),
-        os.path.join(base, "Crimson_Pro"),
-        os.path.join(base, "Crimson_Pro", "static"),
-    ]
-    return [d for d in dirs if os.path.isdir(d)]
+    fonts = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "fonts")
+    return [fonts] if os.path.isdir(fonts) else []
 
 
 # ---------------------------------------------------------------------------
