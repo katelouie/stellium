@@ -20,6 +20,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
+from typing import Any
 
 import pytz
 
@@ -1106,3 +1107,190 @@ def find_lunations(
 
     entries.sort(key=lambda e: e.date)
     return entries
+
+
+# ---------------------------------------------------------------------------
+# traditional condition — the chart analysis page
+# ---------------------------------------------------------------------------
+
+TRADITIONAL_PLANETS: list[str] = [
+    "Sun",
+    "Moon",
+    "Mercury",
+    "Venus",
+    "Mars",
+    "Jupiter",
+    "Saturn",
+]
+
+
+@dataclass(frozen=True)
+class PlanetCondition:
+    """A traditional planet, and the rulers of the place it occupies.
+
+    Honeycomb's "chart analysis" is the *inverse* of a dignity score: rather than
+    asking what dignities a planet holds, it asks who governs the ground it stands
+    on — its domicile, exaltation, bound, triplicity and decan lords. That is the
+    raw material for judging condition, and it is what the daily pages' timelord
+    notation refers back to.
+    """
+
+    planet: str
+    sign: str
+    degree: float
+    house: int | None
+    element: str
+    modality: str
+
+    domicile_lord: str | None
+    exaltation_lord: str | None
+    bound_lord: str | None
+    triplicity_lords: tuple[str, ...]
+    decan_lord: str | None
+
+    dignities: tuple[str, ...]  # dignities this planet itself holds
+    score: int
+    is_peregrine: bool
+
+
+@dataclass(frozen=True)
+class SectCondition:
+    """Who is on side, and who is not.
+
+    Sect is the single most consequential judgement in traditional practice: it
+    decides which benefic helps most and which malefic hurts most.
+    """
+
+    sect: str  # "day" | "night"
+    sect_light: str  # Sun by day, Moon by night
+    benefic_of_sect: str
+    benefic_contrary: str
+    malefic_of_sect: str
+    malefic_contrary: str
+
+
+@dataclass(frozen=True)
+class ChartCondition:
+    """The traditional condition of a chart."""
+
+    sect: SectCondition
+    planets: tuple[PlanetCondition, ...]
+
+
+def _lord(value: Any) -> str | None:
+    """Normalise a ruler name out of the dignity tables.
+
+    `DIGNITIES` records the absence of an exaltation lord as the literal *string*
+    ``"None"`` (Aquarius, Leo, Gemini, Scorpio, Sagittarius), so a bare truthiness
+    check happily prints "None" as if it were a planet.
+    """
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text or text.lower() == "none":
+        return None
+    return text
+
+
+def _bound_lord(sign: str, degree_in_sign: float) -> str | None:
+    """The Egyptian bound lord for a degree of a sign."""
+    from stellium.engines.dignities import DIGNITIES
+
+    bounds = DIGNITIES.get(sign, {}).get("bound_egypt") or {}
+    lord = None
+    for start in sorted(bounds):
+        if degree_in_sign >= start:
+            lord = bounds[start]
+    return lord
+
+
+def _decan_lord(
+    sign: str, degree_in_sign: float, system: str = "chaldean"
+) -> str | None:
+    """The decan (face) lord — Chaldean order by default, as Honeycomb uses."""
+    from stellium.engines.dignities import DIGNITIES
+
+    key = "decan_chaldean" if system == "chaldean" else "decan_trip"
+    decans = DIGNITIES.get(sign, {}).get(key) or []
+    index = min(int(degree_in_sign // 10), 2)
+    return decans[index] if len(decans) > index else None
+
+
+def find_chart_condition(natal_chart: CalculatedChart) -> ChartCondition:
+    """The traditional condition of the natal chart.
+
+    Uses only what Stellium already models — sect, the essential-dignity tables,
+    Egyptian bounds and Chaldean decans. It deliberately does NOT attempt
+    bonification and maltreatment: those are a further layer of Hellenistic
+    doctrine that this library does not model, and inventing them here would be
+    dressing a guess up as a judgement.
+    """
+    from stellium.engines.dignities import DIGNITIES, TraditionalDignityCalculator
+
+    sect = getattr(natal_chart, "sect", None) or "day"
+    is_day = sect == "day"
+
+    sect_condition = SectCondition(
+        sect=sect,
+        sect_light="Sun" if is_day else "Moon",
+        benefic_of_sect="Jupiter" if is_day else "Venus",
+        benefic_contrary="Venus" if is_day else "Jupiter",
+        malefic_of_sect="Saturn" if is_day else "Mars",
+        malefic_contrary="Mars" if is_day else "Saturn",
+    )
+
+    calculator = TraditionalDignityCalculator()
+    conditions: list[PlanetCondition] = []
+
+    for name in TRADITIONAL_PLANETS:
+        position = natal_chart.get_object(name)
+        if position is None:
+            continue
+
+        sign = position.sign
+        data = DIGNITIES.get(sign, {})
+        traditional = data.get("traditional", {})
+        triplicity = data.get("triplicity", {})
+        degree_in_sign = _degree_in_sign(position.longitude)
+
+        try:
+            dignity = calculator.calculate_dignities(position, sect=sect)
+        except Exception:
+            dignity = {}
+
+        # Day/night ordering matters: the sect ruler leads, then the other, then
+        # the cooperating (participating) ruler.
+        if is_day:
+            lords = (triplicity.get("day"), triplicity.get("night"))
+        else:
+            lords = (triplicity.get("night"), triplicity.get("day"))
+        triplicity_lords = tuple(
+            lord
+            for lord in (
+                _lord(lords[0]),
+                _lord(lords[1]),
+                _lord(triplicity.get("coop")),
+            )
+            if lord
+        )
+
+        conditions.append(
+            PlanetCondition(
+                planet=name,
+                sign=sign,
+                degree=degree_in_sign,
+                house=natal_chart.get_house(name),
+                element=data.get("element", ""),
+                modality=data.get("modality", ""),
+                domicile_lord=_lord(traditional.get("ruler")),
+                exaltation_lord=_lord(traditional.get("exaltation")),
+                bound_lord=_bound_lord(sign, degree_in_sign),
+                triplicity_lords=triplicity_lords,
+                decan_lord=_decan_lord(sign, degree_in_sign),
+                dignities=tuple(dignity.get("dignities", ())),
+                score=int(dignity.get("score", 0) or 0),
+                is_peregrine=bool(dignity.get("is_peregrine", False)),
+            )
+        )
+
+    return ChartCondition(sect=sect_condition, planets=tuple(conditions))

@@ -20,7 +20,11 @@ import tempfile
 from dataclasses import dataclass
 from datetime import date
 
-from stellium.planner.almanac import build_year_almanac, find_natal_transits
+from stellium.planner.almanac import (
+    build_year_almanac,
+    find_chart_condition,
+    find_natal_transits,
+)
 from stellium.planner.contract import build_planner_data
 from stellium.planner.events import DailyEventCollector
 
@@ -118,6 +122,7 @@ class PlannerRenderer:
             location_label=self._location_label(natal_chart),
             svgs=svgs.as_dict(),
             transit_planets=self._legend_planets(),
+            condition=find_chart_condition(natal_chart),
         )
 
         return self._compile(data, theme)

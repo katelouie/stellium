@@ -427,3 +427,60 @@ def test_contact_glyphs_lead_with_the_bodies_the_event_is_about():
 
     # Anything trimmed is counted, never silently dropped.
     assert _contacts_glyphs(contacts, limit=1).endswith("+1")
+
+
+# ---------------------------------------------------------------------------
+# traditional condition
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.slow
+def test_chart_condition_reads_the_traditional_lords(natal_chart):
+    from stellium.planner.almanac import find_chart_condition
+
+    condition = find_chart_condition(natal_chart)
+
+    # Sun above the horizon in the 9th → a day chart, with the day sect assignments.
+    assert condition.sect.sect == "day"
+    assert condition.sect.sect_light == "Sun"
+    assert condition.sect.benefic_of_sect == "Jupiter"
+    assert condition.sect.malefic_of_sect == "Saturn"
+
+    by_name = {p.planet: p for p in condition.planets}
+
+    # Saturn in its own Capricorn rules the ground it stands on.
+    saturn = by_name["Saturn"]
+    assert saturn.sign == "Capricorn"
+    assert saturn.domicile_lord == "Saturn"
+    assert saturn.score > 0
+
+    # Jupiter is exalted in Cancer.
+    assert by_name["Jupiter"].sign == "Cancer"
+    assert "exaltation" in by_name["Jupiter"].dignities
+
+    # Every planet gets bound, decan and triplicity lords.
+    for planet in condition.planets:
+        assert planet.bound_lord
+        assert planet.decan_lord
+        assert planet.triplicity_lords
+
+
+@pytest.mark.slow
+def test_absent_exaltation_lord_is_none_not_the_string_none(natal_chart):
+    """Regression: DIGNITIES records "no exaltation" as the literal string "None".
+
+    Aquarius, Leo, Gemini, Scorpio and Sagittarius have no traditional exaltation
+    lord, but the table stores `"None"` — so a bare truthiness check prints "None"
+    as though it were a planet.
+    """
+    from stellium.planner.almanac import find_chart_condition
+
+    condition = find_chart_condition(natal_chart)
+    moon = next(p for p in condition.planets if p.planet == "Moon")
+
+    assert moon.sign == "Aquarius"
+    assert moon.exaltation_lord is None  # not the string "None"
+
+    for planet in condition.planets:
+        assert planet.exaltation_lord != "None"
+        assert planet.domicile_lord != "None"

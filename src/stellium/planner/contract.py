@@ -299,6 +299,95 @@ def _lunations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
     }
 
 
+def _chart_analysis_section(condition) -> dict[str, Any] | None:
+    """The traditional condition of the natal chart.
+
+    Who governs the ground each planet stands on — its domicile, exaltation, bound,
+    triplicity and decan lords — plus the sect judgement that decides which benefic
+    helps most and which malefic hurts most.
+
+    Deliberately stops short of bonification and maltreatment: that is a further
+    layer of Hellenistic doctrine Stellium does not model, and inventing it here
+    would dress a guess up as a judgement.
+    """
+    if condition is None or not condition.planets:
+        return None
+
+    sect = condition.sect
+    pairs = [
+        ["Sect", f"{sect.sect.title()} chart  ·  sect light {sect.sect_light}"],
+        [
+            "Benefics",
+            f"{sect.benefic_of_sect} is of the sect  ·  "
+            f"{sect.benefic_contrary} is contrary",
+        ],
+        [
+            "Malefics",
+            f"{sect.malefic_of_sect} is of the sect  ·  "
+            f"{sect.malefic_contrary} is contrary",
+        ],
+    ]
+
+    # The engine's internal dignity names are not reader-facing.
+    pretty = {
+        "triplicity_ruler": "triplicity",
+        "term": "bound",
+        "decan": "decan",
+        "domicile": "domicile",
+        "exaltation": "exaltation",
+        "detriment": "detriment",
+        "fall": "fall",
+    }
+
+    rows = []
+    for p in condition.planets:
+        # A planet can be peregrine *and* in detriment — peregrine only means it
+        # holds no essential dignity, and detriment is a debility, not a dignity.
+        # Printing "peregrine" alone would hide the more telling fact.
+        named = [pretty.get(d, d) for d in p.dignities if d != "peregrine"]
+        standing = ", ".join(named) if named else "peregrine"
+
+        rows.append(
+            [
+                p.planet,
+                f"{p.degree:.0f}° {p.sign}",
+                _ordinal(p.house) if p.house else "—",
+                p.domicile_lord or "—",
+                p.exaltation_lord or "—",
+                p.bound_lord or "—",
+                ", ".join(p.triplicity_lords) or "—",
+                p.decan_lord or "—",
+                f"{standing} ({p.score:+d})",
+            ]
+        )
+
+    return {
+        "kind": "compound",
+        "title": "Chart Analysis",
+        "descriptor": "Traditional condition",
+        "new_page": True,
+        "sections": [
+            {"kind": "key_value", "title": "Sect", "pairs": pairs},
+            {
+                "kind": "table",
+                "title": "Who rules the ground each planet stands on",
+                "headers": [
+                    "Planet",
+                    "Position",
+                    "House",
+                    "Domicile",
+                    "Exalt",
+                    "Bound",
+                    "Triplicity",
+                    "Decan",
+                    "Standing",
+                ],
+                "rows": rows,
+            },
+        ],
+    }
+
+
 def _progressed_moon_section(almanac: YearAlmanac) -> dict[str, Any] | None:
     """The progressed Moon's year.
 
@@ -664,6 +753,7 @@ def build_planner_data(
     location_label: str | None = None,
     svgs: dict[str, str] | None = None,
     transit_planets: list[str] | None = None,
+    condition: Any = None,
 ) -> dict[str, Any]:
     """Serialise a planner to the JSON contract the Typst design system renders.
 
@@ -747,6 +837,10 @@ def build_planner_data(
                 "svg_content": svgs["natal"],
             }
         )
+
+    analysis = _chart_analysis_section(condition)
+    if analysis:
+        front.append(analysis)
 
     if svgs.get("ephemeris"):
         front.append(
