@@ -170,6 +170,135 @@ def _year_transits(almanac: YearAlmanac) -> dict[str, Any] | None:
     }
 
 
+def _contacts_glyphs(contacts, limit: int = 8, focus: tuple[str, ...] = ()) -> str:
+    """Natal contacts as a compact glyph run: `♂☌♆  ☉□♀  ☽□♀`.
+
+    Spelled out in words this would swamp the page — the whole point of these
+    reference tables is that a sky event carries its natal contacts *inline*.
+
+    `focus` names the bodies the event is *about* (the Sun and Moon for a lunation,
+    the turning planet for a station) and floats their contacts to the front. Sorted
+    by orb alone, the slow outer planets — which sit in aspect for months on end —
+    crowd out the very thing the reader opened the page to find.
+    """
+    from stellium.planner.events import ASPECT_GLYPHS_BY_NAME, PLANET_GLYPHS
+
+    if focus:
+        contacts = sorted(
+            contacts,
+            key=lambda c: (0 if c.transit_planet in focus else 1, c.orb),
+        )
+
+    parts = []
+    for contact in contacts[:limit]:
+        transit = PLANET_GLYPHS.get(contact.transit_planet, contact.transit_planet[:2])
+        aspect = ASPECT_GLYPHS_BY_NAME.get(contact.aspect_name, "")
+        natal = PLANET_GLYPHS.get(contact.natal_planet, contact.natal_planet[:2])
+        parts.append(f"{transit}{aspect}{natal}")
+
+    text = "  ".join(parts)
+    if len(contacts) > limit:
+        text += f"  +{len(contacts) - limit}"
+    return text
+
+
+def _ingresses_section(almanac: YearAlmanac) -> dict[str, Any] | None:
+    """Every sign change in the range — the sky's itinerary."""
+    if not almanac.ingresses:
+        return None
+
+    return {
+        "kind": "table",
+        "title": "Planetary Ingresses",
+        "descriptor": "When each planet changes sign",
+        "new_page": True,
+        "headers": ["Date", "Planet", "Enters", ""],
+        "rows": [
+            [
+                _fmt_date(i.date),
+                i.planet,
+                i.sign,
+                "℞" if i.retrograde else "",
+            ]
+            for i in almanac.ingresses
+        ],
+    }
+
+
+def _stations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
+    """Stations, with the retrograde shadow and what each one touches in the chart.
+
+    The shadow is what makes a station actionable: the retrograde's real reach is
+    from the day the planet first crosses the degree it will station direct at,
+    to the day it finally clears the degree it stationed retrograde at.
+    """
+    if not almanac.stations:
+        return None
+
+    rows = []
+    for station in almanac.stations:
+        shadow = ""
+        if station.shadow_enter:
+            shadow = f"enters shadow {_fmt_date(station.shadow_enter)}"
+        elif station.shadow_exit:
+            shadow = f"leaves shadow {_fmt_date(station.shadow_exit)}"
+
+        rows.append(
+            [
+                _fmt_date(station.date),
+                station.planet,
+                "℞" if station.direction == "retrograde" else "D",
+                f"{station.degree:.0f}° {station.sign}",
+                shadow,
+                _contacts_glyphs(
+                    station.natal_contacts, limit=6, focus=(station.planet,)
+                ),
+            ]
+        )
+
+    return {
+        "kind": "table",
+        "title": "Stations",
+        "descriptor": "Where each planet turns — and what it touches in your chart",
+        "new_page": True,
+        "headers": ["Date", "Planet", "", "Degree", "Shadow", "Your chart"],
+        "rows": rows,
+    }
+
+
+def _lunations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
+    """Every new and full Moon, in your houses, with its natal contacts."""
+    if not almanac.lunations:
+        return None
+
+    rows = []
+    for lunation in almanac.lunations:
+        label = "New Moon" if lunation.phase == "new" else "Full Moon"
+        if lunation.eclipse:
+            label = lunation.eclipse.title()
+
+        rows.append(
+            [
+                _fmt_date(lunation.date),
+                label,
+                f"{lunation.degree:.0f}° {lunation.sign}",
+                _ordinal(lunation.natal_house) if lunation.natal_house else "—",
+                _contacts_glyphs(
+                    lunation.natal_contacts, limit=6, focus=("Sun", "Moon")
+                ),
+            ]
+        )
+
+    return {
+        "kind": "table",
+        "title": "Lunations",
+        "descriptor": "Each new and full Moon, and where it lands for you",
+        "new_page": True,
+        "headers": ["Date", "Phase", "Degree", "Your House", "Your chart"],
+        "rows": rows,
+    }
+
+
 def _progressed_moon_section(almanac: YearAlmanac) -> dict[str, Any] | None:
     """The progressed Moon's year.
 
@@ -572,6 +701,15 @@ def build_planner_data(
         front.append(transits_page)
 
     front.append(_year_overview(start, end, marks, first_weekday))
+
+    # The sky's own calendar — each event annotated with what it touches in you.
+    for section in (
+        _lunations_section(almanac),
+        _stations_section(almanac),
+        _ingresses_section(almanac),
+    ):
+        if section:
+            front.append(section)
 
     # The natal chart as a *lookup*, not a portrait: the positions table leads,
     # because that is what the daily pages send you here to find.

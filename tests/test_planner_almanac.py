@@ -350,3 +350,80 @@ def test_weekly_pages_can_start_on_a_different_day_than_the_month_grid(natal_cha
     month = data["months"][0]
     assert month["weekdays"][0] == "Sun"
     assert month["weeks_detail"][0]["days"][0]["weekday"] == "Monday"
+
+
+# ---------------------------------------------------------------------------
+# the sky, annotated with what it touches in you
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.slow
+def test_retrograde_shadow_brackets_the_retrograde(natal_chart):
+    """The shadow is defined by the OTHER station's degree, not the station's own.
+
+    Enters shadow: first passing the degree it will later station direct at.
+    Leaves shadow: climbing back to the degree it stationed retrograde at.
+    Using a station's own degree trivially returns the station's own date — which
+    is exactly the bug this pins.
+    """
+    from stellium.planner.almanac import find_stations
+
+    stations = find_stations(natal_chart, YEAR_START, YEAR_END, TZ, planets=["Mercury"])
+    retrogrades = [s for s in stations if s.direction == "retrograde"]
+    directs = [s for s in stations if s.direction == "direct"]
+    assert retrogrades and directs
+
+    for station in retrogrades:
+        assert station.shadow_enter is not None
+        assert station.shadow_enter < station.date, "shadow must precede the station"
+
+    for station in directs:
+        assert station.shadow_exit is not None
+        assert station.shadow_exit > station.date, "shadow must outlast the station"
+
+
+@pytest.mark.slow
+def test_lunations_are_placed_in_houses_and_tag_eclipses(natal_chart):
+    from stellium.planner.almanac import find_lunations
+
+    lunations = find_lunations(natal_chart, YEAR_START, YEAR_END, TZ)
+    # Roughly two per synodic month.
+    assert 20 <= len(lunations) <= 30
+
+    for lunation in lunations:
+        assert lunation.phase in {"new", "full"}
+        assert 1 <= (lunation.natal_house or 0) <= 12
+        assert 0.0 <= lunation.degree < 30.0
+
+    # 2026's eclipses must surface as tagged lunations, not as separate events.
+    eclipses = [x for x in lunations if x.eclipse]
+    assert len(eclipses) == 4
+
+
+@pytest.mark.slow
+def test_natal_contacts_respect_the_orb(natal_chart):
+    from stellium.planner.almanac import CONTACT_ORB, find_lunations
+
+    lunations = find_lunations(natal_chart, YEAR_START, YEAR_END, TZ)
+    contacts = [c for lunation in lunations for c in lunation.natal_contacts]
+    assert contacts
+    for contact in contacts:
+        assert contact.orb <= CONTACT_ORB
+
+
+def test_contact_glyphs_lead_with_the_bodies_the_event_is_about():
+    """Sorted by orb alone, slow outer planets crowd out the event's own bodies."""
+    from stellium.planner.almanac import NatalContact
+    from stellium.planner.contract import _contacts_glyphs
+
+    contacts = [
+        NatalContact("Saturn", "Moon", 60, "Sextile", 0.1),
+        NatalContact("Mercury", "Sun", 60, "Sextile", 2.9),
+    ]
+    # By orb, Saturn's tighter aspect wins the single slot...
+    assert _contacts_glyphs(contacts, limit=1).startswith("♄⚹☽")
+    # ...but for a Mercury station, Mercury's own contact is what you came for.
+    assert _contacts_glyphs(contacts, limit=1, focus=("Mercury",)).startswith("☿⚹☉")
+
+    # Anything trimmed is counted, never silently dropped.
+    assert _contacts_glyphs(contacts, limit=1).endswith("+1")

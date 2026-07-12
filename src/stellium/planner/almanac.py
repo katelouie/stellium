@@ -180,6 +180,11 @@ class YearAlmanac:
     transits: tuple[TransitHit, ...]
     zr_periods: tuple[ZRYearPeriod, ...]
 
+    # The sky, annotated with what it touches in the native's chart.
+    ingresses: tuple[IngressEntry, ...] = ()
+    stations: tuple[StationEntry, ...] = ()
+    lunations: tuple[LunationEntry, ...] = ()
+
 
 # ---------------------------------------------------------------------------
 # helpers
@@ -690,6 +695,9 @@ def build_year_almanac(
         progressed_moon=find_progressed_moon(natal_chart, start, end),
         transits=tuple(transits),
         zr_periods=tuple(find_zr_year(natal_chart, start, end, lot=lot)),
+        ingresses=tuple(find_ingresses(start, end, timezone)),
+        stations=tuple(find_stations(natal_chart, start, end, timezone)),
+        lunations=tuple(find_lunations(natal_chart, start, end, timezone)),
     )
 
 
@@ -719,3 +727,382 @@ def _solar_return_datetime(
         return _natal_datetime(chart)
     except Exception:
         return None
+
+
+# ---------------------------------------------------------------------------
+# the sky, annotated with what it touches in you
+# ---------------------------------------------------------------------------
+#
+# The organizing idea behind a good almanac: a mundane event is only half the
+# story. "New Moon, 21°58' Virgo" is a fact about the sky; "...and it squares your
+# natal Saturn" is the reason you are holding the book. So every sky event below
+# carries its contacts to the native's chart.
+
+# Contacts are reported tightly — a station or lunation is a moment, not a season,
+# so a wide orb would list half the chart.
+CONTACT_ORB = 3.0
+
+# Only the inner planets have a retrograde "shadow" worth printing: the outer ones
+# spend so long retrograde that the shadow is most of the year.
+SHADOW_PLANETS: list[str] = ["Mercury", "Venus", "Mars"]
+
+
+@dataclass(frozen=True)
+class NatalContact:
+    """An aspect from a body in the sky to a natal planet, at a given moment."""
+
+    transit_planet: str
+    natal_planet: str
+    aspect_angle: int
+    aspect_name: str
+    orb: float
+
+
+@dataclass(frozen=True)
+class IngressEntry:
+    """A planet changing sign."""
+
+    date: date
+    planet: str
+    sign: str
+    retrograde: bool
+
+
+@dataclass(frozen=True)
+class StationEntry:
+    """A planet turning retrograde or direct, and what it touches in the chart.
+
+    ``shadow_enter`` / ``shadow_exit`` bracket the retrograde: the planet first
+    crosses the degree it will later station at, and finally clears the degree it
+    stationed direct at. Reported only for the inner planets (see SHADOW_PLANETS).
+    """
+
+    date: date
+    planet: str
+    direction: str  # "retrograde" | "direct"
+    degree: float
+    sign: str
+    natal_contacts: tuple[NatalContact, ...]
+    shadow_enter: date | None = None
+    shadow_exit: date | None = None
+
+
+@dataclass(frozen=True)
+class LunationEntry:
+    """A new or full Moon — placed in the native's houses, with its natal contacts."""
+
+    date: date
+    phase: str  # "new" | "full"
+    degree: float
+    sign: str
+    natal_house: int | None
+    eclipse: str | None  # e.g. "total solar", None if not an eclipse
+    natal_contacts: tuple[NatalContact, ...]
+
+
+def natal_contacts_at(
+    natal_chart: CalculatedChart,
+    julian_day: float,
+    orb: float = CONTACT_ORB,
+    planets: list[str] | None = None,
+) -> list[NatalContact]:
+    """What the sky is aspecting in the natal chart at a given instant.
+
+    Reads transiting longitudes straight from the ephemeris rather than building a
+    whole chart — this is called once per station and lunation, and a chart build
+    per event would dominate the planner's runtime.
+    """
+    from stellium.engines.search import SWISS_EPHEMERIS_IDS, _get_position_and_speed
+
+    if planets is None:
+        planets = [
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
+
+    contacts: list[NatalContact] = []
+    for transit_planet in planets:
+        object_id = SWISS_EPHEMERIS_IDS.get(transit_planet)
+        if object_id is None:
+            continue
+        try:
+            longitude, _speed = _get_position_and_speed(object_id, julian_day)
+        except Exception:
+            continue
+
+        for natal_obj in natal_chart.get_planets():
+            for angle, name in ASPECT_NAMES.items():
+                error = abs(_signed_aspect_error(longitude, natal_obj.longitude, angle))
+                if error <= orb:
+                    contacts.append(
+                        NatalContact(
+                            transit_planet=transit_planet,
+                            natal_planet=natal_obj.name,
+                            aspect_angle=angle,
+                            aspect_name=name,
+                            orb=error,
+                        )
+                    )
+
+    contacts.sort(key=lambda c: c.orb)
+    return contacts
+
+
+def find_ingresses(
+    start: date,
+    end: date,
+    timezone: str,
+    planets: list[str] | None = None,
+) -> list[IngressEntry]:
+    """Every sign change in the range, for the reference page."""
+    from stellium.engines.search import find_all_sign_changes
+
+    if planets is None:
+        planets = [
+            "Sun",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+            "Uranus",
+            "Neptune",
+            "Pluto",
+        ]
+
+    tz = pytz.timezone(timezone)
+    entries: list[IngressEntry] = []
+
+    for planet in planets:
+        try:
+            changes = find_all_sign_changes(
+                planet,
+                datetime.combine(start, datetime.min.time()),
+                datetime.combine(end, datetime.max.time()),
+            )
+        except Exception:
+            continue
+
+        for change in changes:
+            entries.append(
+                IngressEntry(
+                    date=_to_local_date(_jd_to_utc(change.julian_day), tz),
+                    planet=planet,
+                    sign=change.sign,
+                    retrograde=bool(getattr(change, "retrograde", False)),
+                )
+            )
+
+    entries.sort(key=lambda e: e.date)
+    return entries
+
+
+def find_stations(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+    timezone: str,
+    planets: list[str] | None = None,
+) -> list[StationEntry]:
+    """Stations in the range, each with its natal contacts and retrograde shadow.
+
+    Stations are *paired* (retrograde → direct) because the shadow is defined by
+    the other end of the retrograde, not by the station itself:
+
+      enters shadow — when the planet first passes the degree it will later
+                      station DIRECT at
+      leaves shadow — when, after turning direct, it climbs back to the degree it
+                      stationed RETROGRADE at
+
+    Using a station's own degree would trivially return the station's own date.
+    """
+    from stellium.engines.search import find_all_stations
+
+    if planets is None:
+        planets = list(RETROGRADE_PLANETS)
+
+    tz = pytz.timezone(timezone)
+    entries: list[StationEntry] = []
+
+    # Padded, so a station inside the range can still find its partner outside it.
+    search_start = datetime.combine(
+        start - timedelta(days=_STATION_PAD_DAYS), datetime.min.time()
+    )
+    search_end = datetime.combine(
+        end + timedelta(days=_STATION_PAD_DAYS), datetime.max.time()
+    )
+
+    for planet in planets:
+        try:
+            stations = sorted(
+                find_all_stations(planet, search_start, search_end),
+                key=lambda st: st.julian_day,
+            )
+        except Exception:
+            continue
+
+        wants_shadow = planet in SHADOW_PLANETS
+
+        for index, station in enumerate(stations):
+            longitude = getattr(station, "longitude", None)
+            if longitude is None:
+                continue
+
+            when = _to_local_date(_jd_to_utc(station.julian_day), tz)
+            if not (start <= when <= end):
+                continue  # only report stations inside the planner's range
+
+            shadow_enter: date | None = None
+            shadow_exit: date | None = None
+
+            if wants_shadow:
+                if station.station_type == "retrograde":
+                    partner = _next_station(stations, index, "direct")
+                    if partner is not None:
+                        shadow_enter = _crossing_near(
+                            planet,
+                            getattr(partner, "longitude", None),
+                            station.julian_day,
+                            tz,
+                            back=True,
+                        )
+                else:
+                    partner = _previous_station(stations, index, "retrograde")
+                    if partner is not None:
+                        shadow_exit = _crossing_near(
+                            planet,
+                            getattr(partner, "longitude", None),
+                            station.julian_day,
+                            tz,
+                            back=False,
+                        )
+
+            entries.append(
+                StationEntry(
+                    date=when,
+                    planet=planet,
+                    direction=station.station_type,
+                    degree=_degree_in_sign(longitude),
+                    sign=_sign_of(longitude),
+                    natal_contacts=tuple(
+                        natal_contacts_at(natal_chart, station.julian_day)
+                    ),
+                    shadow_enter=shadow_enter,
+                    shadow_exit=shadow_exit,
+                )
+            )
+
+    entries.sort(key=lambda e: e.date)
+    return entries
+
+
+def _next_station(stations: list, index: int, kind: str):
+    for station in stations[index + 1 :]:
+        if station.station_type == kind:
+            return station
+    return None
+
+
+def _previous_station(stations: list, index: int, kind: str):
+    for station in reversed(stations[:index]):
+        if station.station_type == kind:
+            return station
+    return None
+
+
+def _crossing_near(
+    planet: str,
+    degree: float | None,
+    station_jd: float,
+    tz: pytz.BaseTzInfo,
+    back: bool,
+) -> date | None:
+    """When the planet last/next passed a given degree, either side of a station."""
+    from stellium.engines.search import find_all_longitude_crossings
+
+    if degree is None:
+        return None
+
+    station_dt = _jd_to_utc(station_jd).replace(tzinfo=None)
+    # An inner-planet retrograde plus its shadow fits comfortably inside ~4 months.
+    window = timedelta(days=120)
+    lo = station_dt - window if back else station_dt
+    hi = station_dt if back else station_dt + window
+
+    try:
+        crossings = find_all_longitude_crossings(planet, degree % 360, lo, hi)
+    except Exception:
+        return None
+    if not crossings:
+        return None
+
+    # Going back we want the *earliest* pass of that degree; going forward, the last.
+    chosen = crossings[0] if back else crossings[-1]
+    return _to_local_date(_jd_to_utc(chosen.julian_day), tz)
+
+
+def find_lunations(
+    natal_chart: CalculatedChart,
+    start: date,
+    end: date,
+    timezone: str,
+) -> list[LunationEntry]:
+    """Every new and full Moon, placed in the native's houses, with natal contacts."""
+    from stellium.electional.intervals import _find_all_lunations
+    from stellium.engines.search import (
+        SWISS_EPHEMERIS_IDS,
+        _datetime_to_julian_day,
+        _get_position_and_speed,
+    )
+
+    tz = pytz.timezone(timezone)
+    start_jd = _datetime_to_julian_day(datetime.combine(start, datetime.min.time()))
+    end_jd = _datetime_to_julian_day(datetime.combine(end, datetime.max.time()))
+
+    # Eclipses are lunations too; tag them rather than listing them twice.
+    eclipses = {e.date: e for e in find_eclipses(natal_chart, start, end, timezone)}
+
+    moon_id = SWISS_EPHEMERIS_IDS["Moon"]
+    entries: list[LunationEntry] = []
+
+    for phase in ("new", "full"):
+        try:
+            moments = _find_all_lunations(start_jd, end_jd, phase)
+        except Exception:
+            continue
+
+        for jd in moments:
+            try:
+                longitude, _speed = _get_position_and_speed(moon_id, jd)
+            except Exception:
+                continue
+
+            when = _to_local_date(_jd_to_utc(jd), tz)
+            eclipse = eclipses.get(when)
+
+            entries.append(
+                LunationEntry(
+                    date=when,
+                    phase=phase,
+                    degree=_degree_in_sign(longitude),
+                    sign=_sign_of(longitude),
+                    natal_house=house_for_longitude(natal_chart, longitude),
+                    eclipse=(
+                        f"{eclipse.detail} {eclipse.eclipse_type}".strip()
+                        if eclipse
+                        else None
+                    ),
+                    natal_contacts=tuple(natal_contacts_at(natal_chart, jd)),
+                )
+            )
+
+    entries.sort(key=lambda e: e.date)
+    return entries
