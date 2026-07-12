@@ -5,11 +5,7 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Removed
-
-- **`GauquelinHouses` house system** — removed. It never actually worked: Swiss Ephemeris returns 36 Gauquelin sectors, but the `HouseCusps` model requires exactly 12 cusps, so selecting it raised `ValueError` (the test suite skipped it to dodge the crash). Gauquelin sectors are a *statistical-research* instrument (the Mars-effect "plus zones"), not a 12-cusp house-placement system, so they were miscategorized in the house-system registry. If wanted for Gauquelin/Mars-effect studies over a dataset, the right shape is an **analysis primitive** (a `gauquelin_sector()`-style function usable in batch/pandas work), not a house system — a planned follow-up. House-system count: 18 → 17.
+## [0.21.0] - 2026-07-11
 
 ### Changed
 
@@ -31,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **graphviz dependency** — the dispositor graph no longer uses graphviz (it is now drawn natively; see "Native, portable dispositor graph" above), so `graphviz` is dropped from the package dependencies and the `dot` system binary is no longer required. `render_dispositor_graph` / `render_both_dispositors` (which returned `graphviz.Digraph` objects) are replaced by `dispositor_graph_data` + `render_dispositor_svg`.
+- **`GauquelinHouses` house system** — removed. It never actually worked: Swiss Ephemeris returns 36 Gauquelin sectors, but the `HouseCusps` model requires exactly 12 cusps, so selecting it raised `ValueError` (the test suite skipped it to dodge the crash). Gauquelin sectors are a *statistical-research* instrument (the Mars-effect "plus zones"), not a 12-cusp house-placement system, so they were miscategorized in the house-system registry. If wanted for Gauquelin/Mars-effect studies over a dataset, the right shape is an **analysis primitive** (a `gauquelin_sector()`-style function usable in batch/pandas work), not a house system — a planned follow-up. House-system count: 18 → 17.
 
 ## [0.20.0] - 2026-07-10
 

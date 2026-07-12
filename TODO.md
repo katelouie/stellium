@@ -1,6 +1,6 @@
 # TODO
 
-*45 open tasks (synced from Obsidian)*
+*44 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -40,7 +40,6 @@
 ## Low
 
 - AI tool definitions for LLM function-calling integration
-- Add OFL license file for bundled Noto fonts. assets/fonts/ now bundles NotoSansSymbols-Regular + NotoSansSymbols2-Regular (Open Font License). Add the OFL.txt / license text alongside them for compliance. Also decide whether to keep or remove the extra untracked Noto weight variants + variable font Kate dropped in (only the two Regulars are used/committed).
 - Astrological weather API (daily dignities, VOC Moon, planetary hours)
 - Build research platform (hypothesis testing, batch analysis)
 - Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
