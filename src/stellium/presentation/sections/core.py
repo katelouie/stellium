@@ -362,9 +362,11 @@ class PlanetPositionSection:
 
             planets.append(
                 {
-                    "name": pos.name,  # canonical (glyph lookup)
-                    "label": display_name,  # display text
+                    "name": pos.name,  # canonical (matching)
+                    "label": display_name,  # registry display name
+                    "glyph": glyph or "",  # registry glyph char
                     "sign": pos.sign,
+                    "sign_glyph": sign_glyph or "",
                     "degree": deg_str,
                     "houses": houses,
                     "speed": f"{pos.speed_longitude:.3f}°",

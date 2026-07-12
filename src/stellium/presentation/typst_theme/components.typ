@@ -53,11 +53,13 @@
   }
 
   // --- disc: tinted circle carrying a planet glyph or a short text label ------
-  let disc(sign: none, glyph-name: none, label: none, size: 34pt) = {
-    let inner = if glyph-name != none and planet-glyph-of(glyph-name) != none {
-      glyph(planet-glyph-of(glyph-name), size: size * 0.5, fill: ink)
+  // glyph-char is the registry glyph (e.g. "⚸"); falls back to an abbreviation
+  // of the label when there is no glyph (e.g. angles / points without one).
+  let disc(sign: none, glyph-char: none, label: none, size: 34pt) = {
+    let inner = if glyph-char != none and glyph-char != "" {
+      glyph(glyph-char, size: size * 0.5, fill: ink)
     } else if label != none {
-      text(font: body, size: size * 0.34, fill: ink)[#label]
+      text(font: body, size: size * 0.3, fill: ink)[#label.slice(0, calc.min(2, label.len()))]
     } else { [] }
     let fill-c = if laser { none } else { tint-of(sign) }
     let stroke-c = if laser { 1.4pt + ink } else { none }
@@ -81,11 +83,15 @@
   }
 
   // --- aspect glyph in its type colour ---------------------------------------
+  // Boxed at a fixed height with vertical centring so ☌ ⚹ ☍ (which sit high in
+  // the font) line up with □ △ everywhere they appear.
   let aspect-mark(name, size: 11pt) = {
     let ch = aspect-glyph-of(name)
     let col = aspect-colors.at(aspect-key-of(name))
-    if ch == none { text(font: body, size: size, fill: col)[#name] }
-    else { glyph(ch, size: size, fill: col) }
+    let g = if ch == none { text(font: body, size: size, fill: col)[#name] } else {
+      glyph(ch, size: size, fill: col)
+    }
+    box(height: size, align(center + horizon)[#g])
   }
 
   // --- running header / footer (splat into set page) -------------------------
@@ -230,12 +236,12 @@
       let cells = (
         // disc + name
         grid(columns: (auto, auto), column-gutter: 8pt, align: horizon,
-          disc(sign: p.sign, glyph-name: p.name, size: 26pt),
+          disc(sign: p.sign, glyph-char: p.at("glyph", default: ""), label: p.at("label", default: p.name), size: 26pt),
           disp(p.at("label", default: p.name), size: 13pt, fill: ink)),
         // position: sign glyph + sign + mono degree
         {
-          let sg = sign-glyph-of(p.sign)
-          box[#(if sg != none { glyph(sg, size: 11pt, fill: accent) }) #text(font: body, size: 11pt, fill: muted)[#p.sign] #h(3pt) #mono(p.degree, size: 11pt, fill: ink)]
+          let sg = p.at("sign_glyph", default: sign-glyph-of(p.sign))
+          box[#(if sg != none and sg != "" { glyph(sg, size: 11pt, fill: accent) }) #text(font: body, size: 11pt, fill: muted)[#p.sign] #h(3pt) #mono(p.degree, size: 11pt, fill: ink)]
         },
       )
       cells += p.houses.map(h => align(center + horizon)[#badge(h)])
@@ -285,11 +291,12 @@
   let aspectarian(bodies, cells) = {
     let n = bodies.len()
     if n == 0 { return [] }
+    let name-of(b) = if type(b) == dictionary { b.name } else { b }
     // aspect lookup keyed by hi_lo body indices
     let amap = (:)
     for cel in cells {
-      let i = bodies.position(x => x == cel.p1)
-      let j = bodies.position(x => x == cel.p2)
+      let i = bodies.position(x => name-of(x) == cel.p1)
+      let j = bodies.position(x => name-of(x) == cel.p2)
       if i != none and j != none and i != j {
         let hi = calc.max(i, j)
         let lo = calc.min(i, j)
@@ -299,11 +306,13 @@
     let cs = 21pt
     let cell(i, j) = {
       if j == i {
-        let g = planet-glyph-of(bodies.at(i))
+        let b = bodies.at(i)
+        let gch = if type(b) == dictionary { b.at("glyph", default: "") } else { "" }
+        let lbl-txt = if type(b) == dictionary { b.at("label", default: b.name) } else { b }
         box(width: cs, height: cs, radius: 3pt, fill: hair.lighten(35%))[
           #align(center + horizon)[#(
-            if g != none { glyph(g, size: 11pt, fill: ink) } else {
-              text(font: body, size: 7pt, fill: ink)[#bodies.at(i)]
+            if gch != "" { glyph(gch, size: 11pt, fill: ink) } else {
+              text(font: body, size: 6pt, fill: ink)[#lbl-txt.slice(0, calc.min(2, lbl-txt.len()))]
             }
           )]
         ]
@@ -342,9 +351,8 @@
 
   // --- aspect list: structured rows with design-system glyphs ----------------
   let aspect-list(aspects) = {
-    let planet-cell(nm) = {
-      let g = planet-glyph-of(nm)
-      box[#(if g != none { glyph(g, size: 11pt, fill: ink) }) #text(font: body, size: 10.5pt, fill: ink)[ #nm]]
+    let planet-cell(gch, lbl-txt) = {
+      box[#(if gch != none and gch != "" { glyph(gch, size: 11pt, fill: ink) }) #text(font: body, size: 10.5pt, fill: ink)[ #lbl-txt]]
     }
     let applying-cell(ap) = {
       if ap == true { text(font: body, size: 10pt, fill: muted)[Applying] }
@@ -364,9 +372,9 @@
         align(right)[#lbl("Applying", size: 7.5pt)],
       ),
       ..aspects.map(a => (
-        planet-cell(a.p1),
+        planet-cell(a.at("p1_glyph", default: ""), a.at("p1_label", default: a.p1)),
         box[#aspect-mark(a.aspect, size: 11pt) #text(font: body, size: 10.5pt, fill: ink)[ #a.aspect]],
-        planet-cell(a.p2),
+        planet-cell(a.at("p2_glyph", default: ""), a.at("p2_label", default: a.p2)),
         mono(a.at("orb", default: ""), size: 9.5pt, fill: muted),
         applying-cell(a.at("applying", default: none)),
       )).flatten(),

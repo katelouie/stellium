@@ -30,6 +30,12 @@
   Air: rgb("#9B8BC4"), Water: rgb("#5B9BB5"),
 )
 
+// Modalities get their own three distinct hues (cardinal = initiating warm,
+// fixed = steady deep, mutable = adaptable green).
+#let modality-colors = (
+  Cardinal: rgb("#BC5A46"), Fixed: rgb("#6B4C7A"), Mutable: rgb("#4A9B6E"),
+)
+
 // Zodiac order — structural (theme-independent). Used to index a sign-tint
 // palette by sign name.
 #let sign-order = (
@@ -116,6 +122,7 @@
   out.insert("sign-tints", sign-palettes.at(t.signs).map(rgb))
   out.insert("aspect-colors", aspect-colors)
   out.insert("element-colors", element-colors)
+  out.insert("modality-colors", modality-colors)
   out.insert("sign-order", sign-order)
   out
 }

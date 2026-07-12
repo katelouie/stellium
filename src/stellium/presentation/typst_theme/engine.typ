@@ -32,8 +32,8 @@
     stack(spacing: 9pt, ..group.map(g => {
       let fill = if tone == "element" {
         c.theme.element-colors.at(g.label, default: c.theme.accent)
-      } else if tone == "gold" and g.label == "Mutable" {
-        c.theme.gold
+      } else if tone == "modality" {
+        c.theme.modality-colors.at(g.label, default: c.theme.accent)
       } else { c.theme.accent }
       (c.bar-row)(g.label, g.count, mx, g.count, fill: fill)
     }))
@@ -54,17 +54,28 @@
     [
       #(c.lbl)("Modalities")
       #v(8pt)
-      #bars-for(sec.modalities, "gold")
+      #bars-for(sec.modalities, "modality")
       #if sec.at("polarity", default: none) != none [
         #v(12pt)
         #(c.lbl)("Polarity")
         #v(8pt)
         #let pol = sec.polarity
         #let total = calc.max(pol.yang + pol.yin, 1)
-        #box(width: 100%, height: 9pt, radius: 4pt, clip: true, fill: c.theme.hair)[
-          #box(width: (pol.yang / total) * 100%, height: 9pt, fill: c.theme.gold)
-          #box(width: (pol.yin / total) * 100%, height: 9pt, fill: c.theme.accent)
-        ]
+        #grid(
+          columns: (auto, 1fr, auto),
+          align: (left + horizon, center + horizon, right + horizon),
+          column-gutter: 10pt,
+          box[#(c.mono)(str(pol.yang), size: 10pt, fill: c.theme.gold) #text(font: c.theme.body, size: 9pt, fill: c.theme.muted)[Yang]],
+          box(width: 100%, height: 9pt, radius: 4pt, clip: true, fill: c.theme.hair)[
+            #grid(
+              columns: (calc.max(pol.yang, 0) * 1fr, calc.max(pol.yin, 0) * 1fr),
+              rows: 9pt,
+              rect(width: 100%, height: 100%, stroke: none, fill: c.theme.gold),
+              rect(width: 100%, height: 100%, stroke: none, fill: c.theme.accent),
+            )
+          ],
+          box[#text(font: c.theme.body, size: 9pt, fill: c.theme.muted)[Yin ] #(c.mono)(str(pol.yin), size: 10pt, fill: c.theme.accent)],
+        )
       ]
     ],
   )

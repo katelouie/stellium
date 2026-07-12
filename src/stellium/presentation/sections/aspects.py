@@ -356,19 +356,35 @@ class AspectSection:
         for aspect in aspects:
             body_objs[aspect.object1.name] = aspect.object1
             body_objs[aspect.object2.name] = aspect.object2
-        bodies = [o.name for o in sorted(body_objs.values(), key=get_object_sort_key)]
-        pairs = [
-            {
-                "p1": aspect.object1.name,
-                "p2": aspect.object2.name,
-                "aspect": aspect.aspect_name,
-                "orb": f"{aspect.orb:.2f}°",
-                "applying": (
-                    None if aspect.is_applying is None else bool(aspect.is_applying)
-                ),
-            }
-            for aspect in aspects
-        ]
+
+        def _body_info(nm: str) -> tuple[str, str]:
+            disp, glyph = get_object_display(nm)
+            return disp, (glyph or "")
+
+        bodies = []
+        for o in sorted(body_objs.values(), key=get_object_sort_key):
+            disp, glyph = _body_info(o.name)
+            bodies.append({"name": o.name, "label": disp, "glyph": glyph})
+
+        pairs = []
+        for aspect in aspects:
+            p1d, p1g = _body_info(aspect.object1.name)
+            p2d, p2g = _body_info(aspect.object2.name)
+            pairs.append(
+                {
+                    "p1": aspect.object1.name,
+                    "p1_label": p1d,
+                    "p1_glyph": p1g,
+                    "p2": aspect.object2.name,
+                    "p2_label": p2d,
+                    "p2_glyph": p2g,
+                    "aspect": aspect.aspect_name,
+                    "orb": f"{aspect.orb:.2f}°",
+                    "applying": (
+                        None if aspect.is_applying is None else bool(aspect.is_applying)
+                    ),
+                }
+            )
 
         return {
             "type": "table",
