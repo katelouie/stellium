@@ -95,6 +95,10 @@
     )
   } else if kind == "aspect_list" {
     (c.aspect-list)(sec.aspects)
+  } else if kind == "svg" {
+    if sec.at("svg_file", default: none) != none {
+      align(center)[#image(sec.svg_file, width: 92%)]
+    } else { [] }
   } else if kind == "side_by_side" {
     (c.side-by-side)(sec.tables)
   } else if kind == "compound" {

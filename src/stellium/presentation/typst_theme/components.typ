@@ -220,6 +220,10 @@
       head-cells += (align(right)[#lbl("Speed", size: 7.5pt)], align(right)[#lbl("Motion", size: 7.5pt)])
     }
     let ncol = 2 + house-headers.len() + (if show-speed { 2 } else { 0 })
+    // Fill the panel width: name auto, position stretches, the rest hug right.
+    let col-spec = (auto, 1fr)
+    for _ in house-headers { col-spec.push(auto) }
+    if show-speed { col-spec.push(auto); col-spec.push(auto) }
 
     let rows = ()
     for p in planets {
@@ -245,7 +249,7 @@
     }
 
     table(
-      columns: ncol,
+      columns: col-spec,
       stroke: none,
       inset: (x: 4pt, y: 7pt),
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
@@ -255,10 +259,17 @@
   }
 
   // --- themed generic fallback table (long-tail sections) --------------------
-  let generic-table(headers, rows) = {
+  // full-width: true stretches the first column so the table spans the panel
+  // (good for wide tables); false leaves it natural width, centred in the panel.
+  let generic-table(headers, rows, full-width: true) = {
     let ncol = headers.len()
-    table(
-      columns: ncol,
+    let col-spec = if full-width and ncol > 1 {
+      (1fr,) + (auto,) * (ncol - 1)
+    } else {
+      (auto,) * ncol
+    }
+    let tbl = table(
+      columns: col-spec,
       stroke: none,
       inset: (x: 8pt, y: 7pt),
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
@@ -266,6 +277,7 @@
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
       ..rows.map(r => r.map(cell => text(font: (body, symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
     )
+    if full-width { tbl } else { align(center)[#tbl] }
   }
 
   // --- aspectarian: lower-triangular aspect matrix ---------------------------

@@ -288,12 +288,21 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
         return {"kind": "aspect_list", "title": name, "aspects": d["aspect_pairs"]}
     typ = d.get("type")
     if typ == "table":
-        return {
-            "kind": "table",
-            "title": name,
-            "headers": [str(h) for h in d.get("headers", [])],
-            "rows": [[str(c) for c in r] for r in d.get("rows", [])],
-        }
+        headers = [str(h) for h in d.get("headers", [])]
+        rows = [[str(c) for c in r] for r in d.get("rows", [])]
+        # Narrow + long tables (e.g. house cusps) waste the page's width run as a
+        # single column. Split them into two halves side by side so they fill it.
+        if len(headers) <= 3 and len(rows) >= 12:
+            mid = (len(rows) + 1) // 2
+            return {
+                "kind": "side_by_side",
+                "title": name,
+                "tables": [
+                    {"title": "", "headers": headers, "rows": rows[:mid]},
+                    {"title": "", "headers": headers, "rows": rows[mid:]},
+                ],
+            }
+        return {"kind": "table", "title": name, "headers": headers, "rows": rows}
     if typ == "key_value":
         return {
             "kind": "key_value",
@@ -326,7 +335,14 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
             if mapped:
                 subs.append(mapped)
         return {"kind": "compound", "title": name, "sections": subs}
-    # svg / unknown: skip (inline SVG sections not embedded in this pass)
+    if typ == "svg":
+        content = d.get("content", "")
+        if content:
+            # svg_content is materialised to a file in render_pdf (Typst embeds
+            # an image path, not an inline SVG string).
+            return {"kind": "svg", "title": name, "svg_content": content}
+        return None
+    # unknown: skip
     return None
 
 
@@ -406,6 +422,25 @@ def render_pdf(
                 except Exception:  # never let a drawing failure break the PDF
                     pass
                 break
+
+        # Materialise embedded SVG sections (dispositor graph, profection wheel,
+        # ZR viz, ...) to files so Typst can image() them, recursing into
+        # compound subsections.
+        svg_seq = [0]
+
+        def _materialize_svgs(sec: dict) -> None:
+            if sec.get("kind") == "svg" and sec.get("svg_content"):
+                svg_seq[0] += 1
+                fn = f"embed_{svg_seq[0]}.svg"
+                with open(os.path.join(tmp, fn), "w", encoding="utf-8") as fh:
+                    fh.write(sec["svg_content"])
+                sec["svg_file"] = fn
+                del sec["svg_content"]
+            for sub in sec.get("sections", []):
+                _materialize_svgs(sub)
+
+        for sec in data.get("sections", []):
+            _materialize_svgs(sec)
 
         with open(os.path.join(tmp, "data.json"), "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False)
