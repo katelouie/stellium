@@ -111,7 +111,7 @@
     zebra: "#16466E", grid: "#3E6E96",
     display: "Space Grotesk", body: "Space Grotesk", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
-    signs: "blues", laser: false, label: "Blues",
+    signs: "blues", laser: false, label: "Blues", page-grid: "#123A5A",
   ),
   greyscale: (
     bg: "#FFFFFF", ink: "#1B1B1B", accent: "#1B1B1B", gold: "#6A6A6A",

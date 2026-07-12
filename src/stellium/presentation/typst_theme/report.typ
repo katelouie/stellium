@@ -15,10 +15,25 @@
 #let data = json(data-path)
 #let c = make(resolve-theme(theme-name))
 
+// Optional blueprint / graph-paper grid on the page background (visible only
+// where the opaque section panels don't cover it). Themes opt in via `page-grid`.
+#let pg = c.theme.at("page-grid", default: none)
+#let page-background = if pg != none {
+  let gc = rgb(pg)
+  rect(
+    width: 100%, height: 100%, stroke: none,
+    fill: tiling(size: (16pt, 16pt))[
+      #place(line(start: (0pt, 0pt), end: (16pt, 0pt), stroke: 0.35pt + gc))
+      #place(line(start: (0pt, 0pt), end: (0pt, 16pt), stroke: 0.35pt + gc))
+    ],
+  )
+} else { none }
+
 #set page(
   paper: "us-letter",
   margin: (x: 0.7in, y: 0.7in),
   fill: c.theme.bg,
+  background: page-background,
   header: (c.header)(
     data.meta.at("running_left", default: ""),
     data.meta.at("running_right", default: ""),
