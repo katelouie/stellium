@@ -46,13 +46,30 @@
     ),
   )
 
+  // --- how much is this event about *you*? ----------------------------------
+  // A packed day is unreadable when every line is the same ink. Colour encodes
+  // relevance, not category, so the eye can trkiage a cell without reading it:
+  // what touches your natal chart pops in the theme's accent, sky landmarks
+  // (eclipses, stations, lunations) take gold, plain sky events sit in ink, and
+  // the Moon's constant housekeeping recedes into muted grey.
+  //
+  // Comes from the theme's own event palette (palettes.typ). It deliberately does
+  // NOT reuse accent/ink: in most themes those are neighbouring dark tones, so a
+  // natal transit would not separate from a plain sky event — which is the whole
+  // job. `natal` gets a real hue shift away from the body text.
+  let ec = t.at(
+    "event-colors",
+    default: (natal: t.accent, notable: t.gold, mundane: t.ink, lunar: t.muted),
+  )
+  let event-color(cls) = ec.at(cls, default: ec.mundane)
+
   // --- one event line inside a month cell -----------------------------------
   // Tight by necessity: a busy day can carry eight of these. Time is muted so
   // the glyph — the thing you scan for — carries the contrast.
   let month-event(ev) = block(
     width: 100%,
     spacing: 0pt,
-    text(size: 5.5pt, fill: t.ink)[
+    text(size: 5.5pt, fill: event-color(ev.at("class", default: "mundane")))[
       #text(fill: t.muted)[#ev.at("time", default: "")]
       #h(2pt)
       #ev.at("symbol", default: "")
@@ -165,7 +182,10 @@
         } else {
           stack(
             spacing: 2.5pt,
-            ..events.map(ev => text(size: 7pt, fill: t.ink)[
+            ..events.map(ev => text(
+              size: 7pt,
+              fill: event-color(ev.at("class", default: "mundane")),
+            )[
               #text(fill: t.muted, size: 6.5pt)[#ev.at("time", default: "")]
               #h(4pt)
               #ev.at("description", default: "")
@@ -285,6 +305,19 @@
       text(size: 8pt, fill: t.ink)[#item.at("label", default: "")],
     )
 
+    // The colour code needs a *coloured* sample, not a glyph — showing the ink
+    // itself is the whole point of that group.
+    let swatch-entry(item) = {
+      let c = event-color(item.at("class", default: "mundane"))
+      grid(
+        columns: (30pt, 1fr),
+        column-gutter: 4pt,
+        align: (center + horizon, left + horizon),
+        text(size: 9pt, fill: c)[#sym.circle.filled],
+        text(size: 8pt, fill: c)[#item.at("label", default: "")],
+      )
+    }
+
     let group(g) = block(
       width: 100%,
       breakable: false,
@@ -298,7 +331,13 @@
           fill: t.muted,
         )[#upper(g.at("title", default: ""))],
         line(length: 100%, stroke: 0.4pt + t.hair),
-        ..g.at("items", default: ()).map(entry),
+        ..g
+          .at("items", default: ())
+          .map(item => if g.at("swatches", default: false) {
+            swatch-entry(item)
+          } else {
+            entry(item)
+          }),
       ),
     )
 

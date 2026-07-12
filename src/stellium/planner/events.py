@@ -98,6 +98,7 @@ class DailyEvent:
         description: Human-readable description
         symbol: Glyph representation for compact display
         priority: Sorting priority (1=highest, 5=lowest)
+        event_class: How the reader should *weight* this event (see below)
     """
 
     time: datetime
@@ -114,6 +115,20 @@ class DailyEvent:
     description: str
     symbol: str
     priority: int = 3
+
+    # A packed day is unreadable when every line is the same ink. `event_type`
+    # says *what happened*; `event_class` says *how much it is about you*, which
+    # is what the eye needs to triage a cell at a glance:
+    #
+    #   natal    — touches your natal chart. The reason you own this planner.
+    #   notable  — a landmark in the sky itself (eclipse, station, lunation).
+    #   lunar    — the Moon's own housekeeping (ingresses, void-of-course).
+    #              Frequent and low-stakes, so it should recede.
+    #   mundane  — everything else happening in the sky.
+    #
+    # Renderers key a colour off this. Set at collection time, because the
+    # collector is the only place that knows without guessing.
+    event_class: Literal["natal", "notable", "lunar", "mundane"] = "mundane"
 
     def __lt__(self, other: DailyEvent) -> bool:
         """Sort by time, then priority."""
@@ -178,6 +193,7 @@ class DailyEventCollector:
         self,
         transit_planets: list[str] | None = None,
         aspects: list[int] | None = None,
+        moon_aspects: list[int] | None = None,
     ) -> None:
         """
         Collect transits from outer planets to natal planets.
@@ -188,6 +204,11 @@ class DailyEventCollector:
         Args:
             transit_planets: Which transiting planets (default: Jupiter-Pluto)
             aspects: Which aspects to include (default: major Ptolemaic)
+            moon_aspects: Aspects to collect for the *transiting Moon* specifically
+                (default: conjunctions only). The Moon aspects every natal planet
+                every month, so at the full major set it produces ~68% of all natal
+                transit lines and drowns the slower, more meaningful hits. Pass
+                ``aspects`` here to opt back into the whole set.
         """
         from stellium.engines.search import find_all_longitude_crossings
 
@@ -197,6 +218,9 @@ class DailyEventCollector:
         if aspects is None:
             aspects = [0, 60, 90, 120, 180]
 
+        if moon_aspects is None:
+            moon_aspects = [0]
+
         # Get start/end as datetime for search functions
         start_dt = datetime.combine(self.start, datetime.min.time())
         end_dt = datetime.combine(self.end, datetime.max.time())
@@ -205,11 +229,13 @@ class DailyEventCollector:
         natal_planets = self.natal_chart.get_planets()
 
         for transit_planet in transit_planets:
+            planet_aspects = moon_aspects if transit_planet == "Moon" else aspects
+
             for natal_obj in natal_planets:
                 natal_name = natal_obj.name
                 natal_lon = natal_obj.longitude
 
-                for aspect_angle in aspects:
+                for aspect_angle in planet_aspects:
                     # Calculate target longitude(s) for this aspect
                     # For most aspects, there's one target
                     # For non-conjunction/opposition, the aspect can form from either side
@@ -252,6 +278,7 @@ class DailyEventCollector:
                                     DailyEvent(
                                         time=local_time,
                                         event_type="transit_natal",
+                                        event_class="natal",
                                         description=f"{transit_planet} {aspect_glyph} natal {natal_name}",
                                         symbol=f"{transit_glyph}{aspect_glyph}{natal_glyph}(n)",
                                         priority=priority,
@@ -266,12 +293,15 @@ class DailyEventCollector:
         Collect planet sign ingresses.
 
         Args:
-            planets: Which planets to track (default: all)
+            planets: Which planets to track (default: the transiting bodies).
+                NOT every body Stellium knows a glyph for — PLANET_GLYPHS is now
+                derived from the registry and covers ~50 objects including fixed
+                stars, which have no ingresses worth reporting.
         """
         from stellium.engines.search import find_all_sign_changes
 
         if planets is None:
-            planets = list(PLANET_GLYPHS.keys())
+            planets = list(DEFAULT_TRANSIT_PLANETS)
 
         start_dt = datetime.combine(self.start, datetime.min.time())
         end_dt = datetime.combine(self.end, datetime.max.time())
@@ -285,16 +315,18 @@ class DailyEventCollector:
                     planet_glyph = PLANET_GLYPHS.get(planet, planet[0])
                     sign_glyph = SIGN_GLYPHS.get(ingress.sign, ingress.sign[:3])
 
-                    # Moon ingresses are lower priority
-                    priority = 4 if planet == "Moon" else 2
+                    # The Moon changes sign every ~2.5 days; that is housekeeping,
+                    # not news, so it recedes into the lunar class.
+                    is_moon = planet == "Moon"
 
                     self._add_event(
                         DailyEvent(
                             time=local_time,
                             event_type="ingress",
+                            event_class="lunar" if is_moon else "mundane",
                             description=f"{planet} enters {ingress.sign}",
                             symbol=f"{planet_glyph}\u2192{sign_glyph}",  # → arrow
-                            priority=priority,
+                            priority=4 if is_moon else 2,
                         )
                     )
             except Exception:
@@ -334,6 +366,7 @@ class DailyEventCollector:
                         DailyEvent(
                             time=local_time,
                             event_type="station",
+                            event_class="notable",
                             description=desc,
                             symbol=symbol,
                             priority=1,  # Stations are important
@@ -365,6 +398,7 @@ class DailyEventCollector:
                     description="New Moon",
                     symbol="\U0001f311",  # 🌑
                     priority=1,
+                    event_class="notable",
                 )
             )
 
@@ -379,6 +413,7 @@ class DailyEventCollector:
                     description="Full Moon",
                     symbol="\U0001f315",  # 🌕
                     priority=1,
+                    event_class="notable",
                 )
             )
 
@@ -410,6 +445,7 @@ class DailyEventCollector:
                 DailyEvent(
                     time=start_local,
                     event_type="voc_start",
+                    event_class="lunar",
                     description="VOC begins",
                     symbol="\u263d\u2205",  # ☽∅ (Moon + empty set)
                     priority=4,
@@ -422,6 +458,7 @@ class DailyEventCollector:
                 DailyEvent(
                     time=end_local,
                     event_type="voc_end",
+                    event_class="lunar",
                     description="VOC ends",
                     symbol="\u263d\u2713",  # ☽✓ (Moon + check)
                     priority=4,
@@ -452,6 +489,7 @@ class DailyEventCollector:
                     DailyEvent(
                         time=local_time,
                         event_type="eclipse",
+                        event_class="notable",
                         description=desc,
                         symbol=symbol,
                         priority=1,  # Eclipses are very important
@@ -464,6 +502,7 @@ class DailyEventCollector:
         self,
         natal_transits: bool = True,
         transit_planets: list[str] | None = None,
+        moon_natal_aspects: list[int] | None = None,
         ingresses: bool = True,
         ingress_planets: list[str] | None = None,
         stations: bool = True,
@@ -479,6 +518,8 @@ class DailyEventCollector:
         Args:
             natal_transits: Include transits to natal planets
             transit_planets: Which transiting planets
+            moon_natal_aspects: Aspects to collect for the transiting Moon
+                (default: conjunctions only — see collect_natal_transits)
             ingresses: Include sign ingresses
             ingress_planets: Which planets for ingresses
             stations: Include retrograde/direct stations
@@ -489,7 +530,9 @@ class DailyEventCollector:
             eclipses: Include eclipses
         """
         if natal_transits:
-            self.collect_natal_transits(transit_planets)
+            self.collect_natal_transits(
+                transit_planets, moon_aspects=moon_natal_aspects
+            )
 
         if ingresses:
             self.collect_ingresses(ingress_planets)

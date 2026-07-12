@@ -24,6 +24,26 @@
   greyscale: (conjunction: "#333333", sextile: "#666666", square: "#555555", trine: "#777777", opposition: "#444444"),
 )
 
+// Calendar event colours, keyed by how much the event is about *you*:
+//
+//   natal    touches your natal chart — the reason you own the planner
+//   notable  a landmark in the sky (eclipse, station, lunation)
+//   mundane  everything else happening in the sky
+//   lunar    the Moon's housekeeping (ingresses, void-of-course) — recedes
+//
+// These cannot just reuse `accent` / `ink`: in most themes those are neighbouring
+// dark tones, so `natal` would not separate from `mundane` — which is the entire
+// job. `natal` therefore gets a deliberate *hue* shift away from the body text,
+// the way a good almanac prints your transits in blue against the sky's black.
+// Greyscale has no hue to spend, so it separates by value and nothing else.
+#let theme-event-colors = (
+  house: (natal: "#1F6F8B", notable: "#B0872F", mundane: "#3A2233", lunar: "#A08A72"),
+  sepia: (natal: "#2E6171", notable: "#9B7343", mundane: "#3A2A1A", lunar: "#9A7A52"),
+  celestial: (natal: "#7FC7D9", notable: "#FFD700", mundane: "#D8D3E0", lunar: "#8A82A0"),
+  blues: (natal: "#7FE3D4", notable: "#FFD700", mundane: "#CFE3F2", lunar: "#6E8FA8"),
+  greyscale: (natal: "#111111", notable: "#444444", mundane: "#777777", lunar: "#AAAAAA"),
+)
+
 // Polarity bar: a warm (yang) / cool (yin) pair that stays distinct in every
 // theme (gold==accent in Celestial, so we can't reuse those). laser -> greys.
 #let polarity-colors = (yang: rgb("#CE9A34"), yin: rgb("#5E7E9C"))
@@ -141,6 +161,14 @@
     (
       conjunction: rgb(asp.conjunction), sextile: rgb(asp.sextile),
       square: rgb(asp.square), trine: rgb(asp.trine), opposition: rgb(asp.opposition),
+    ),
+  )
+  let ev = theme-event-colors.at(name, default: theme-event-colors.house)
+  out.insert(
+    "event-colors",
+    (
+      natal: rgb(ev.natal), notable: rgb(ev.notable),
+      mundane: rgb(ev.mundane), lunar: rgb(ev.lunar),
     ),
   )
   out.insert("polarity-colors", polarity-colors)

@@ -325,6 +325,18 @@ def _glyph_key(planets: list[str], aspects: list[str]) -> dict[str, Any]:
                     {"glyph": "VOC", "label": "Moon void of course"},
                 ],
             },
+            # The colour code is the fastest thing on the daily pages, so it has to
+            # be the most clearly explained thing in the key.
+            {
+                "title": "Colour",
+                "swatches": True,
+                "items": [
+                    {"class": "natal", "label": "Touches your natal chart"},
+                    {"class": "notable", "label": "Eclipse, station or lunation"},
+                    {"class": "mundane", "label": "Happening in the sky"},
+                    {"class": "lunar", "label": "The Moon's comings and goings"},
+                ],
+            },
         ],
     }
 
@@ -355,7 +367,11 @@ def _month_calendar(
                     "in_month": day.month == month,
                     "mark": marks.get(day),
                     "events": [
-                        {"time": _fmt_time(e.time), "symbol": e.symbol}
+                        {
+                            "time": _fmt_time(e.time),
+                            "symbol": e.symbol,
+                            "class": e.event_class,
+                        }
                         for e in sorted(events)
                     ],
                 }
@@ -399,7 +415,11 @@ def _month_weeks_detail(
                     "day": day.day,
                     "in_range": start <= day <= end,
                     "events": [
-                        {"time": _fmt_time(e.time), "description": e.description}
+                        {
+                            "time": _fmt_time(e.time),
+                            "description": e.description,
+                            "class": e.event_class,
+                        }
                         for e in events
                     ],
                 }
