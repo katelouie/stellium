@@ -13,7 +13,11 @@ from typing import TYPE_CHECKING, Literal
 
 import pytz
 
-from stellium.core.registry import ASPECT_REGISTRY, CELESTIAL_REGISTRY
+from stellium.core.registry import (
+    ASPECT_REGISTRY,
+    CELESTIAL_REGISTRY,
+    ECLIPTIC_ASPECT_REGISTRY,
+)
 from stellium.engines.dignities import DIGNITIES
 
 if TYPE_CHECKING:
@@ -44,13 +48,13 @@ ASPECT_GLYPHS_BY_NAME: dict[str, str] = {
 }
 
 # Keyed by exact angle, because that is the unit the longitude-crossing search
-# works in. Declination aspects are excluded deliberately: Parallel sits at 0°
-# and Contraparallel at 180°, so including them would collide with Conjunction
-# and Opposition and (last one wins) silently replace ☌ with ∥.
+# works in. Built over the *ecliptic* view: angle is only a unique key there, since
+# declination aspects are recorded at 0°/180° by analogy with Conjunction and
+# Opposition and would otherwise overwrite them.
 ASPECT_GLYPHS: dict[int, str] = {
     int(info.angle): info.glyph
-    for info in ASPECT_REGISTRY.values()
-    if info.glyph and info.category != "Declination"
+    for info in ECLIPTIC_ASPECT_REGISTRY.values()
+    if info.glyph
 }
 
 # Default planets for natal transits (all 10 planets + Node + Chiron)

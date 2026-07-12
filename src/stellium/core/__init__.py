@@ -43,6 +43,8 @@ from stellium.core.protocols import ChartLike, ChartType
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     CELESTIAL_REGISTRY,
+    DECLINATION_ASPECT_REGISTRY,
+    ECLIPTIC_ASPECT_REGISTRY,
     get_aspect_by_alias,
     get_aspect_info,
     get_by_alias,
@@ -88,6 +90,8 @@ __all__ = [
     # Registries
     "CELESTIAL_REGISTRY",
     "ASPECT_REGISTRY",
+    "DECLINATION_ASPECT_REGISTRY",
+    "ECLIPTIC_ASPECT_REGISTRY",
     "get_object_info",
     "get_aspect_info",
     "get_by_alias",

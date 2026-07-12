@@ -260,9 +260,10 @@ def test_almanac_datetime_access_does_not_assume_a_native_attribute():
 def test_aspect_glyphs_by_angle_exclude_declination_aspects():
     """Regression: Parallel sits at 0° and Contraparallel at 180°.
 
-    Both are in ASPECT_REGISTRY alongside Conjunction (0°) and Opposition (180°),
-    so building an angle-keyed map without excluding declination aspects silently
-    replaces ☌ with ∥ and ☍ with ⋕ (last one wins).
+    Both live in ASPECT_REGISTRY alongside Conjunction (0°) and Opposition (180°),
+    so an angle-keyed map built over the *whole* registry silently replaces ☌ with
+    ∥ and ☍ with ⋕ (last one wins). This map is built over ECLIPTIC_ASPECT_REGISTRY,
+    where angle is a unique key — see TestAspectRegistryViews.
     """
     from stellium.planner.events import ASPECT_GLYPHS
 

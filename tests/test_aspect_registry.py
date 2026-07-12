@@ -305,3 +305,62 @@ class TestAspectRegistrySearch:
         results_lower = search_aspects("square")
         assert len(results_upper) == len(results_lower)
         assert len(results_upper) >= 1
+
+
+class TestAspectRegistryViews:
+    """The ecliptic / declination derived views.
+
+    Declination aspects live in ASPECT_REGISTRY alongside the ecliptic ones so that
+    looking an aspect up *by name* stays uniform — a caller holding an Aspect with
+    aspect_name="Parallel" wants its glyph and should not have to know its family.
+
+    But they are recorded at 0° and 180° purely by analogy with Conjunction and
+    Opposition, so angle is NOT a unique key across the whole registry. Anything
+    keying on angle must build over the ecliptic view.
+    """
+
+    def test_views_partition_the_registry(self):
+        from stellium.core.registry import (
+            ASPECT_REGISTRY,
+            DECLINATION_ASPECT_REGISTRY,
+            ECLIPTIC_ASPECT_REGISTRY,
+        )
+
+        assert set(ECLIPTIC_ASPECT_REGISTRY) | set(DECLINATION_ASPECT_REGISTRY) == set(
+            ASPECT_REGISTRY
+        )
+        assert not set(ECLIPTIC_ASPECT_REGISTRY) & set(DECLINATION_ASPECT_REGISTRY)
+
+    def test_declination_view_holds_exactly_the_declination_aspects(self):
+        from stellium.core.registry import DECLINATION_ASPECT_REGISTRY
+
+        assert set(DECLINATION_ASPECT_REGISTRY) == {"Parallel", "Contraparallel"}
+
+    def test_angle_is_a_unique_key_within_the_ecliptic_view(self):
+        """The invariant that makes angle-keyed lookups safe.
+
+        Across the FULL registry it does not hold: Parallel collides with
+        Conjunction at 0°, Contraparallel with Opposition at 180°.
+        """
+        from stellium.core.registry import (
+            ASPECT_REGISTRY,
+            ECLIPTIC_ASPECT_REGISTRY,
+        )
+
+        ecliptic_angles = [info.angle for info in ECLIPTIC_ASPECT_REGISTRY.values()]
+        assert len(ecliptic_angles) == len(set(ecliptic_angles))
+
+        # ...and demonstrate the collision the view exists to prevent.
+        all_angles = [info.angle for info in ASPECT_REGISTRY.values()]
+        assert len(all_angles) != len(set(all_angles))
+
+    def test_name_lookup_stays_uniform_across_both_families(self):
+        """Declination aspects must remain resolvable through the shared registry.
+
+        The report's DeclinationAspectSection does exactly this to get their glyph.
+        """
+        from stellium.core.registry import get_aspect_info
+
+        assert get_aspect_info("Parallel").glyph == "∥"
+        assert get_aspect_info("Contraparallel").glyph == "⋕"
+        assert get_aspect_info("Conjunction").glyph == "☌"
