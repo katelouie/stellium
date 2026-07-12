@@ -70,6 +70,7 @@ class ChartDrawBuilder:
         # Theme and palettes - None = use config defaults
         self._theme: str | None = None
         self._zodiac_palette: str | None = None
+        self._transparent_background: bool = False
         self._aspect_palette: str | None = None
         self._planet_glyph_palette: str | None = None
         self._color_sign_info: bool | None = None
@@ -409,6 +410,18 @@ class ChartDrawBuilder:
         self._chart_info_fields = fields
         return self
 
+    def with_transparent_background(self) -> "ChartDrawBuilder":
+        """
+        Skip the full-canvas background rectangle so the wheel composits onto
+        whatever surface embeds it (e.g. a themed report panel) instead of
+        carrying its own opaque background.
+
+        Returns:
+            Self for chaining
+        """
+        self._transparent_background = True
+        return self
+
     def without_chart_info(self) -> "ChartDrawBuilder":
         """
         Disable the chart information box.
@@ -729,6 +742,8 @@ class ChartDrawBuilder:
             wheel_kwargs["planet_glyph_palette"] = self._planet_glyph_palette
         if self._color_sign_info is not None:
             wheel_kwargs["color_sign_info"] = self._color_sign_info
+        if self._transparent_background:
+            wheel_kwargs["transparent_background"] = True
         if self._show_degree_ticks is not None:
             wheel_kwargs["show_degree_ticks"] = self._show_degree_ticks
         if self._show_planet_ticks is not None:

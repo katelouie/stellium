@@ -2049,6 +2049,10 @@ class ReportBuilder:
                 .without_header()
                 .without_chart_info()
             )
+            # For PDFs the wheel sits on a themed panel; drop its own background
+            # rect so it composits onto the page.
+            if theme is not None:
+                draw = draw.with_transparent_background()
             # For themed PDFs, coordinate the wheel with the report theme so it
             # doesn't read as a light wheel dropped onto a dark page.
             if theme is not None:

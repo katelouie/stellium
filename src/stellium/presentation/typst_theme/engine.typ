@@ -13,7 +13,7 @@
   (c.title-block)(meta)
   v(14pt)
   if meta.at("chart_svg", default: none) != none {
-    align(center)[#image(meta.chart_svg, width: 46%)]
+    align(center)[#image(meta.chart_svg, width: 60%)]
     v(10pt)
   }
   if meta.at("cards", default: ()).len() > 0 {
