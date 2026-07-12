@@ -13,49 +13,44 @@ from typing import TYPE_CHECKING, Literal
 
 import pytz
 
+from stellium.core.registry import ASPECT_REGISTRY, CELESTIAL_REGISTRY
+from stellium.engines.dignities import DIGNITIES
+
 if TYPE_CHECKING:
     from stellium.core.models import CalculatedChart
 
 
-# Planet glyphs for display
-PLANET_GLYPHS = {
-    "Sun": "\u2609",  # ☉
-    "Moon": "\u263d",  # ☽
-    "Mercury": "\u263f",  # ☿
-    "Venus": "\u2640",  # ♀
-    "Mars": "\u2642",  # ♂
-    "Jupiter": "\u2643",  # ♃
-    "Saturn": "\u2644",  # ♄
-    "Uranus": "\u2645",  # ♅
-    "Neptune": "\u2646",  # ♆
-    "Pluto": "\u2647",  # ♇
-    "True Node": "\u260a",  # ☊
-    "Chiron": "\u26b7",  # ⚷
+# Glyphs are *derived* from the registries rather than hand-maintained here. This
+# module used to carry its own three hardcoded copies — which is how the planner's
+# legend and the report could drift apart, and how any body outside the hardcoded
+# dozen (an asteroid, a lot) silently rendered as a bare letter.
+PLANET_GLYPHS: dict[str, str] = {
+    name: info.glyph for name, info in CELESTIAL_REGISTRY.items() if info.glyph
 }
 
-# Aspect glyphs
-ASPECT_GLYPHS = {
-    0: "\u260c",  # ☌ conjunction
-    60: "\u26b9",  # ⚹ sextile
-    90: "\u25a1",  # □ square
-    120: "\u25b3",  # △ trine
-    180: "\u260d",  # ☍ opposition
+# The registry's sign symbols carry a U+FE0E text-presentation selector. That is
+# right for a standalone glyph, but these get concatenated into dense one-line
+# calendar entries, so strip it and keep the bare codepoint.
+SIGN_GLYPHS: dict[str, str] = {
+    sign: data["symbol"].replace("︎", "")
+    for sign, data in DIGNITIES.items()
+    if data.get("symbol")
 }
 
-# Sign glyphs
-SIGN_GLYPHS = {
-    "Aries": "\u2648",
-    "Taurus": "\u2649",
-    "Gemini": "\u264a",
-    "Cancer": "\u264b",
-    "Leo": "\u264c",
-    "Virgo": "\u264d",
-    "Libra": "\u264e",
-    "Scorpio": "\u264f",
-    "Sagittarius": "\u2650",
-    "Capricorn": "\u2651",
-    "Aquarius": "\u2652",
-    "Pisces": "\u2653",
+# Keyed by name — the unambiguous key. Anything reading an aspect semantically
+# (the legend, the almanac) should use this.
+ASPECT_GLYPHS_BY_NAME: dict[str, str] = {
+    info.name: info.glyph for info in ASPECT_REGISTRY.values() if info.glyph
+}
+
+# Keyed by exact angle, because that is the unit the longitude-crossing search
+# works in. Declination aspects are excluded deliberately: Parallel sits at 0°
+# and Contraparallel at 180°, so including them would collide with Conjunction
+# and Opposition and (last one wins) silently replace ☌ with ∥.
+ASPECT_GLYPHS: dict[int, str] = {
+    int(info.angle): info.glyph
+    for info in ASPECT_REGISTRY.values()
+    if info.glyph and info.category != "Declination"
 }
 
 # Default planets for natal transits (all 10 planets + Node + Chiron)

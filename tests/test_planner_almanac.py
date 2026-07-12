@@ -250,3 +250,48 @@ def test_almanac_datetime_access_does_not_assume_a_native_attribute():
     # Must still build without touching a `.native` attribute.
     almanac = build_year_almanac(chart, YEAR_START, YEAR_END, TZ)
     assert almanac.age == 35
+
+
+# ---------------------------------------------------------------------------
+# glyphs (derived from the registries, not hand-maintained)
+# ---------------------------------------------------------------------------
+
+
+def test_aspect_glyphs_by_angle_exclude_declination_aspects():
+    """Regression: Parallel sits at 0° and Contraparallel at 180°.
+
+    Both are in ASPECT_REGISTRY alongside Conjunction (0°) and Opposition (180°),
+    so building an angle-keyed map without excluding declination aspects silently
+    replaces ☌ with ∥ and ☍ with ⋕ (last one wins).
+    """
+    from stellium.planner.events import ASPECT_GLYPHS
+
+    assert ASPECT_GLYPHS[0] == "☌"
+    assert ASPECT_GLYPHS[180] == "☍"
+    assert ASPECT_GLYPHS[90] == "□"
+    assert ASPECT_GLYPHS[120] == "△"
+    assert ASPECT_GLYPHS[60] == "⚹"
+
+
+def test_sign_glyphs_have_no_variation_selector():
+    """The registry's symbols carry U+FE0E; the calendar concatenates them inline."""
+    from stellium.planner.events import SIGN_GLYPHS
+
+    assert SIGN_GLYPHS["Aries"] == "♈"
+    for glyph in SIGN_GLYPHS.values():
+        assert "︎" not in glyph
+
+
+def test_glyphs_are_derived_from_the_registry_not_a_hardcoded_dozen():
+    """They used to be three hardcoded dicts, so an asteroid rendered as a letter."""
+    from stellium.planner.events import ASPECT_GLYPHS_BY_NAME, PLANET_GLYPHS
+
+    # The classic bodies still resolve...
+    assert PLANET_GLYPHS["Sun"] == "☉"
+    assert PLANET_GLYPHS["Pluto"] == "♇"
+    # ...and so do bodies the old hardcoded dict never covered.
+    assert PLANET_GLYPHS.get("Ceres")
+    assert len(PLANET_GLYPHS) > 12
+
+    assert ASPECT_GLYPHS_BY_NAME["Conjunction"] == "☌"
+    assert ASPECT_GLYPHS_BY_NAME["Opposition"] == "☍"

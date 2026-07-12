@@ -271,13 +271,11 @@ def _glyph_key(planets: list[str], aspects: list[str]) -> dict[str, Any]:
     pages are dense glyph shorthand at 5.5pt — without a key they are unreadable
     to anyone but the author.
     """
-    from stellium.planner.almanac import ASPECT_NAMES
-    from stellium.planner.events import ASPECT_GLYPHS, PLANET_GLYPHS, SIGN_GLYPHS
-
-    # ASPECT_GLYPHS is keyed by exact angle, not by name.
-    aspect_glyph_by_name = {
-        name: ASPECT_GLYPHS.get(angle, "") for angle, name in ASPECT_NAMES.items()
-    }
+    from stellium.planner.events import (
+        ASPECT_GLYPHS_BY_NAME,
+        PLANET_GLYPHS,
+        SIGN_GLYPHS,
+    )
 
     signs = [
         "Aries",
@@ -309,7 +307,7 @@ def _glyph_key(planets: list[str], aspects: list[str]) -> dict[str, Any]:
             {
                 "title": "Aspects",
                 "items": [
-                    {"glyph": aspect_glyph_by_name.get(a, ""), "label": a}
+                    {"glyph": ASPECT_GLYPHS_BY_NAME.get(a, ""), "label": a}
                     for a in aspects
                 ],
             },
