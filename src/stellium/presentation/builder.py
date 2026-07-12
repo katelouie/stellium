@@ -2033,8 +2033,18 @@ class ReportBuilder:
                 fd, svg_path = tempfile.mkstemp(suffix=".svg", prefix="stellium_chart_")
                 os.close(fd)
 
-            # Generate the chart
-            self._chart.draw(svg_path).preset_standard().save()
+            # Generate the chart. Reports carry the name / date / place in their
+            # own overview (and the PDF title page), so the wheel's header would
+            # duplicate it. Strip the header (which also lets the wheel centre in
+            # its square SVG) and the info corner (which otherwise reveals the
+            # native info once the header is off), leaving a clean wheel + moon.
+            (
+                self._chart.draw(svg_path)
+                .preset_standard()
+                .without_header()
+                .without_chart_info()
+                .save()
+            )
             return svg_path
 
         return None

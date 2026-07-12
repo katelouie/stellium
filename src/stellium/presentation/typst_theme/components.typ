@@ -186,7 +186,11 @@
       column-gutter: 20pt,
       align: (center, left),
       [
-        #box(width: 100pt, height: 100pt, radius: 50%, stroke: 1pt + hair)
+        #(if data.at("moon_svg", default: none) != none {
+          image(data.moon_svg, width: 100pt)
+        } else {
+          box(width: 100pt, height: 100pt, radius: 50%, stroke: 1pt + hair)
+        })
         #v(6pt)
         #text(font: body, size: 13pt, weight: "medium", fill: ink)[#data.phase]
       ],

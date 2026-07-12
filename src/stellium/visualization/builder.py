@@ -409,6 +409,19 @@ class ChartDrawBuilder:
         self._chart_info_fields = fields
         return self
 
+    def without_chart_info(self) -> "ChartDrawBuilder":
+        """
+        Disable the chart information box.
+
+        Useful when the surrounding context (e.g. a report title page) already
+        shows the name / date / place, so the in-wheel box would be redundant.
+
+        Returns:
+            Self for chaining
+        """
+        self._chart_info = False
+        return self
+
     def with_aspect_counts(self, position: str = "top-right") -> "ChartDrawBuilder":
         """
         Add aspect counts summary.

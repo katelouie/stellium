@@ -109,10 +109,10 @@ def _metadata_line(chart: Any, overview: dict[str, str]) -> list[str]:
         items.append(sect)
     try:
         moon = chart.get_object("Moon")
-        img = getattr(moon, "image_data", None)
-        if img is not None:
-            frac = getattr(img, "illuminated_fraction", None)
-            phase = getattr(img, "phase_name", None)
+        ph = getattr(moon, "phase", None)
+        if ph is not None:
+            frac = getattr(ph, "illuminated_fraction", None)
+            phase = getattr(ph, "phase_name", None)
             if phase and frac is not None:
                 items.append(f"{phase} {frac * 100:.0f}%")
     except Exception:
@@ -394,6 +394,19 @@ def render_pdf(
         if chart_svg_path and os.path.exists(chart_svg_path):
             shutil.copy2(chart_svg_path, os.path.join(tmp, "chart.svg"))
             data["meta"]["chart_svg"] = "chart.svg"
+
+        # Draw a standalone moon-phase illustration for any moon-phase section.
+        for sec in data.get("sections", []):
+            if sec.get("kind") == "moon_phase":
+                try:
+                    from stellium.visualization import moon_phase_svg
+
+                    moon_phase_svg(chart, os.path.join(tmp, "moon.svg"), size=200)
+                    sec["moon_svg"] = "moon.svg"
+                except Exception:  # never let a drawing failure break the PDF
+                    pass
+                break
+
         with open(os.path.join(tmp, "data.json"), "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False)
 

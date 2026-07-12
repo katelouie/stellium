@@ -1,6 +1,6 @@
 # TODO
 
-*40 open tasks (synced from Obsidian)*
+*41 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -12,6 +12,7 @@
 
 - Add cities gazetteer to webapp for geocoding reliability and autocomplete
 - Add eclipse Saros series and prenatal eclipse lookup
+- Aspects on by default in ChartBuilder (fix empty-aspects footgun). DECIDED approach A: ChartBuilder.calculate() computes aspects by default via a default aspect engine (ModernAspectEngine), with an opt-out (e.g. .with_aspects(enabled=False) or a calculate flag) for batch/analysis where aspects aren't needed. Today calculate() without an explicit .with_aspects(engine) yields chart.aspects==[] silently, so report AspectSection/aspectarian/cross-aspects/aspect-patterns render nothing. Own branch off main. Watch for tests that assume empty aspects; run full suite. Surfaced during the PDF Typst revamp.
 - BaZi Annual pillars (流年)
 - BaZi Luck pillars calculation
 - BaZi: Clashes, combinations, and penalties
