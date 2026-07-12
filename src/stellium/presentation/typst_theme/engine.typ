@@ -61,20 +61,22 @@
         #v(8pt)
         #let pol = sec.polarity
         #let total = calc.max(pol.yang + pol.yin, 1)
+        #let cy = if c.theme.laser { rgb("#8A8A8A") } else { c.theme.polarity-colors.yang }
+        #let ci = if c.theme.laser { rgb("#4A4A4A") } else { c.theme.polarity-colors.yin }
         #grid(
           columns: (auto, 1fr, auto),
           align: (left + horizon, center + horizon, right + horizon),
           column-gutter: 10pt,
-          box[#(c.mono)(str(pol.yang), size: 10pt, fill: c.theme.gold) #text(font: c.theme.body, size: 9pt, fill: c.theme.muted)[Yang]],
+          box[#(c.mono)(str(pol.yang), size: 10pt, fill: cy) #text(font: c.theme.body, size: 9pt, fill: c.theme.muted)[Yang]],
           box(width: 100%, height: 9pt, radius: 4pt, clip: true, fill: c.theme.hair)[
             #grid(
               columns: (calc.max(pol.yang, 0) * 1fr, calc.max(pol.yin, 0) * 1fr),
               rows: 9pt,
-              rect(width: 100%, height: 100%, stroke: none, fill: c.theme.gold),
-              rect(width: 100%, height: 100%, stroke: none, fill: c.theme.accent),
+              rect(width: 100%, height: 100%, stroke: none, fill: cy),
+              rect(width: 100%, height: 100%, stroke: none, fill: ci),
             )
           ],
-          box[#text(font: c.theme.body, size: 9pt, fill: c.theme.muted)[Yin ] #(c.mono)(str(pol.yin), size: 10pt, fill: c.theme.accent)],
+          box[#text(font: c.theme.body, size: 9pt, fill: c.theme.muted)[Yin ] #(c.mono)(str(pol.yin), size: 10pt, fill: ci)],
         )
       ]
     ],

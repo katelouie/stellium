@@ -38,14 +38,16 @@ _TEMPLATE_FILES = (
     "report.typ",
 )
 
-# Per-theme wheel styling: (visualization theme, zodiac palette). Keeps the
-# embedded chart wheel visually coherent with the PDF theme.
+# Per-theme wheel styling: (visualization theme, zodiac palette, aspect palette).
+# Keeps the embedded chart wheel coherent with the PDF theme AND matching the
+# PDF's own aspect colours (see theme-aspect-colors in palettes.typ). Greyscale
+# is fully desaturated: grey wheel + greyscale aspects.
 THEME_WHEEL = {
-    "house": ("classic", "rainbow"),
-    "sepia": ("classic", "rainbow_sepia"),
-    "celestial": ("celestial", "rainbow_celestial"),
-    "blues": ("midnight", "rainbow_midnight"),
-    "greyscale": ("classic", "rainbow"),
+    "house": ("classic", "rainbow", "classic"),
+    "sepia": ("classic", "rainbow_sepia", "sepia"),
+    "celestial": ("celestial", "rainbow_celestial", "celestial"),
+    "blues": ("midnight", "rainbow_midnight", "midnight"),
+    "greyscale": ("classic", "grey", "greyscale"),
 }
 
 # Per-theme moon-phase illustration colours (lit = illuminated limb, shadow =

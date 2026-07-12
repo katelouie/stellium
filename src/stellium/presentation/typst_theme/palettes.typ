@@ -13,15 +13,20 @@
 
 // --- Global constants: SHARED by every theme (not theme tokens) --------------
 
-// Aspect colour code — identical across aspectarian, aspect list, cross-chart
-// aspects, ZR events and midpoint trees, in all themes.
-#let aspect-colors = (
-  conjunction: rgb("#7a5c72"),
-  sextile: rgb("#3d7eb8"),
-  square: rgb("#c0392b"),
-  trine: rgb("#4a9b6e"),
-  opposition: rgb("#a33227"),
+// Aspect colour code — keyed to each theme so the PDF aspect glyphs match the
+// chart wheel's aspect palette (values mirror visualization/palettes.py:
+// classic/sepia/celestial/midnight/greyscale).
+#let theme-aspect-colors = (
+  house: (conjunction: "#34495E", sextile: "#27AE60", square: "#F39C12", trine: "#3498DB", opposition: "#E74C3C"),
+  sepia: (conjunction: "#654321", sextile: "#D2691E", square: "#8B4513", trine: "#CD853F", opposition: "#A0522D"),
+  celestial: (conjunction: "#FFD700", sextile: "#DDA0DD", square: "#BA55D3", trine: "#9370DB", opposition: "#DA70D6"),
+  blues: (conjunction: "#FFD700", sextile: "#00CED1", square: "#FFA500", trine: "#4169E1", opposition: "#DC143C"),
+  greyscale: (conjunction: "#333333", sextile: "#666666", square: "#555555", trine: "#777777", opposition: "#444444"),
 )
+
+// Polarity bar: a warm (yang) / cool (yin) pair that stays distinct in every
+// theme (gold==accent in Celestial, so we can't reuse those). laser -> greys.
+#let polarity-colors = (yang: rgb("#CE9A34"), yin: rgb("#5E7E9C"))
 
 // Element / modality bar colours — semantic constants shared across colour
 // themes (laser mode overrides bars to muted grey in components.typ).
@@ -72,17 +77,22 @@
 // Colours are hex strings here; resolve-theme() lifts them to rgb() and attaches
 // the shared constants. Every theme declares the SAME keys (schema discipline):
 // a missing key in one theme is a bug, not a default to paper over.
+// `zebra` = the alternating table-row shade, keyed to each theme: a subtle
+// variant of the panel (a touch darker on light panels, a touch lighter on dark).
+// `grid` = the aspectarian cell-stroke, a mid-tone visible on light AND dark.
 #let themes = (
   house: (
     bg: "#FAF8F6", ink: "#3A2233", accent: "#47283F", gold: "#B0872F",
     muted: "#A08A72", rule: "#D8CBB6", hair: "#ECE4D6", panel: "#FFFFFF",
+    zebra: "#F4EFE7", grid: "#C9B79E",
     display: "Cormorant Garamond", body: "EB Garamond", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "rainbow", laser: false, label: "House Style",
   ),
   sepia: (
     bg: "#F2E8D5", ink: "#3A2A1A", accent: "#8B5A2B", gold: "#9B7343",
-    muted: "#9A7A52", rule: "#B8A07A", hair: "#DDCEB0", panel: "#FFFFFF",
+    muted: "#9A7A52", rule: "#B8A07A", hair: "#DDCEB0", panel: "#FBF5E9",
+    zebra: "#F3E9D3", grid: "#B49A72",
     display: "Newsreader", body: "EB Garamond", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "sepia", laser: false, label: "Sepia",
@@ -90,6 +100,7 @@
   celestial: (
     bg: "#17111F", ink: "#D9C9F2", accent: "#E8B44A", gold: "#E8B44A",
     muted: "#8B7BB0", rule: "#E8B44A", hair: "#3A2A55", panel: "#1F1730",
+    zebra: "#2A2142", grid: "#4E3F68",
     display: "Cinzel", body: "Spectral", mono: "IBM Plex Mono",
     display-tracking: 0.06em, display-weight: 600,
     signs: "celestial", laser: false, label: "Celestial",
@@ -97,6 +108,7 @@
   blues: (
     bg: "#0A2A44", ink: "#DCEFFF", accent: "#BFE3FF", gold: "#8FC3EE",
     muted: "#7FB2D8", rule: "#BFE3FF", hair: "#123A5A", panel: "#10375A",
+    zebra: "#16466E", grid: "#3E6E96",
     display: "Space Grotesk", body: "Space Grotesk", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "blues", laser: false, label: "Blues",
@@ -104,6 +116,7 @@
   greyscale: (
     bg: "#FFFFFF", ink: "#1B1B1B", accent: "#1B1B1B", gold: "#6A6A6A",
     muted: "#8A8A8A", rule: "#1B1B1B", hair: "#DDD8CF", panel: "#FFFFFF",
+    zebra: "#EFEFEF", grid: "#B8B8B8",
     display: "IBM Plex Serif", body: "IBM Plex Serif", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "greyscale", laser: true, label: "Greyscale",
@@ -111,16 +124,26 @@
 )
 
 // resolve-theme(name) -> a ready-to-use theme dict with rgb() colours, the
-// resolved sign-tint ramp, and the shared aspect colours attached.
+// resolved sign-tint ramp, and the theme's aspect + polarity + bar colours.
 #let resolve-theme(name) = {
   let t = themes.at(name, default: themes.house)
-  let color-keys = ("bg", "ink", "accent", "gold", "muted", "rule", "hair", "panel")
+  let color-keys = (
+    "bg", "ink", "accent", "gold", "muted", "rule", "hair", "panel", "zebra", "grid",
+  )
   let out = (:)
   for (k, v) in t {
     out.insert(k, if color-keys.contains(k) { rgb(v) } else { v })
   }
+  let asp = theme-aspect-colors.at(name, default: theme-aspect-colors.house)
   out.insert("sign-tints", sign-palettes.at(t.signs).map(rgb))
-  out.insert("aspect-colors", aspect-colors)
+  out.insert(
+    "aspect-colors",
+    (
+      conjunction: rgb(asp.conjunction), sextile: rgb(asp.sextile),
+      square: rgb(asp.square), trine: rgb(asp.trine), opposition: rgb(asp.opposition),
+    ),
+  )
+  out.insert("polarity-colors", polarity-colors)
   out.insert("element-colors", element-colors)
   out.insert("modality-colors", modality-colors)
   out.insert("sign-order", sign-order)

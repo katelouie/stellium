@@ -25,6 +25,8 @@
   let rule = t.rule
   let hair = t.hair
   let panel = t.panel
+  let zebra = t.zebra
+  let gridline = t.grid
   let laser = t.laser
   let display = t.display
   let body = t.body
@@ -258,7 +260,7 @@
       columns: col-spec,
       stroke: none,
       inset: (x: 4pt, y: 7pt),
-      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
+      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..head-cells),
       ..rows.flatten(),
     )
@@ -284,7 +286,7 @@
       stroke: none,
       inset: (x: 8pt, y: 7pt),
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
-      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
+      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
       ..rows.map(r => r.map(cell => text(font: (body, ..symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
     )
@@ -314,7 +316,7 @@
         let b = bodies.at(i)
         let gch = if type(b) == dictionary { b.at("glyph", default: "") } else { "" }
         let lbl-txt = if type(b) == dictionary { b.at("label", default: b.name) } else { b }
-        box(width: cs, height: cs, radius: 3pt, fill: hair.lighten(35%))[
+        box(width: cs, height: cs, radius: 3pt, fill: zebra)[
           #align(center + horizon)[#(
             if gch != "" { glyph(gch, size: 11pt, fill: ink) } else {
               text(font: body, size: 6pt, fill: ink)[#lbl-txt.slice(0, calc.min(2, lbl-txt.len()))]
@@ -323,7 +325,7 @@
         ]
       } else if j < i {
         let asp = amap.at(str(i) + "_" + str(j), default: none)
-        box(width: cs, height: cs, stroke: 0.5pt + hair)[
+        box(width: cs, height: cs, stroke: 0.5pt + gridline)[
           #align(center + horizon)[#(if asp != none { aspect-mark(asp, size: 11pt) })]
         ]
       } else {
@@ -408,7 +410,7 @@
       // nodes
       #for n in g.nodes {
         let (x, y) = posof(n)
-        let fill-c = if n.final { gold } else if laser { panel } else { hair.lighten(20%) }
+        let fill-c = if n.final { gold } else if laser { panel } else { zebra }
         let txt-c = if n.final and not laser { bg } else { ink }
         place(
           dx: (x - R) * 1pt,
@@ -457,7 +459,7 @@
       stroke: none,
       inset: (x: 6pt, y: 6pt),
       align: (col, row) => if col >= 3 { right + horizon } else { left + horizon },
-      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { hair.lighten(55%) } else { none },
+      fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(
         lbl("Planet 1", size: 7.5pt), lbl("Aspect", size: 7.5pt),
         lbl("Planet 2", size: 7.5pt),

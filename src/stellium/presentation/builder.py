@@ -2058,11 +2058,15 @@ class ReportBuilder:
             if theme is not None:
                 from stellium.presentation.typst_render import THEME_WHEEL
 
-                viz_theme, zodiac_palette = THEME_WHEEL.get(theme, (None, None))
+                viz_theme, zodiac_palette, aspect_palette = THEME_WHEEL.get(
+                    theme, (None, None, None)
+                )
                 if viz_theme is not None:
                     draw = draw.with_theme(viz_theme).with_zodiac_palette(
                         zodiac_palette
                     )
+                    if aspect_palette is not None:
+                        draw = draw.with_aspect_palette(aspect_palette)
             draw.save()
             return svg_path
 
