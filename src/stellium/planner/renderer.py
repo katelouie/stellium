@@ -113,11 +113,28 @@ class PlannerRenderer:
             page_size=self.config.page_size,
             binding_margin=self.config.binding_margin,
             week_starts_on=self.config.week_starts_on,
+            weekly_starts_on=getattr(self.config, "weekly_starts_on", None),
+            time_format=getattr(self.config, "time_format", "12h"),
+            location_label=self._location_label(natal_chart),
             svgs=svgs.as_dict(),
             transit_planets=self._legend_planets(),
         )
 
         return self._compile(data, theme)
+
+    def _location_label(self, natal_chart) -> str | None:
+        """Where the planner's event times are local to.
+
+        A planner is used where you *live*, which need not be where you were born,
+        so ``.location()`` overrides the birth place for this line (and for casting
+        the solar return). Falls back to the birth location.
+        """
+        location = self.config.location
+        if isinstance(location, str) and location.strip():
+            return location.strip()
+        if isinstance(location, tuple):
+            return f"{location[0]:.4f}, {location[1]:.4f}"
+        return getattr(natal_chart.location, "name", None) or None
 
     # -- inputs -------------------------------------------------------------
 
@@ -277,7 +294,12 @@ class PlannerRenderer:
     def _solar_return_svg(self, natal_chart, theme: str, start: date) -> str:
         from stellium.returns import ReturnBuilder
 
-        chart = ReturnBuilder.solar(natal_chart, year=start.year).calculate()
+        # A relocated solar return: cast for where the native will *be*, if they
+        # said. `ReturnBuilder.solar` has always taken this; the planner just never
+        # passed it, so `.location()` was silently doing nothing.
+        chart = ReturnBuilder.solar(
+            natal_chart, year=start.year, location=self.config.location
+        ).calculate()
         return self._wheel_svg(chart, theme)
 
     def _section_svg(self, which: str, natal_chart) -> str:

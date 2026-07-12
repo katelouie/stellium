@@ -109,7 +109,7 @@
     size: 15pt,
     tracking: 0.22em,
     fill: c.theme.muted,
-  )[#upper(str(meta.at("year", default: "")))]
+  )[#upper(str(meta.at("period", default: meta.at("year", default: ""))))]
 
   #v(12pt)
   #(c.metadata-line)(meta.at("metadata", default: ()))

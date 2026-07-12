@@ -296,3 +296,57 @@ def test_glyphs_are_derived_from_the_registry_not_a_hardcoded_dozen():
 
     assert ASPECT_GLYPHS_BY_NAME["Conjunction"] == "☌"
     assert ASPECT_GLYPHS_BY_NAME["Opposition"] == "☍"
+
+
+# ---------------------------------------------------------------------------
+# planner options (Honeycomb parity)
+# ---------------------------------------------------------------------------
+
+
+def test_period_label_does_not_call_a_september_range_a_year():
+    """A planner need not be a calendar year — Honeycomb's run Sep→Aug."""
+    from stellium.planner.contract import _period_label
+
+    assert _period_label(date(2026, 1, 1), date(2026, 12, 31)) == "2026"
+    assert _period_label(date(2026, 9, 1), date(2027, 8, 31)) == "Sep 2026 – Aug 2027"
+    assert _period_label(date(2026, 6, 1), date(2026, 8, 31)) == "Jun–Aug 2026"
+
+
+def test_time_format_switches_between_12h_and_24h():
+    from datetime import datetime
+
+    from stellium.planner.contract import _fmt_time
+
+    stamp = datetime(2026, 1, 1, 15, 16)
+    assert _fmt_time(stamp, "12h") == "3:16p"
+    assert _fmt_time(stamp, "24h") == "15:16"
+
+
+@pytest.mark.slow
+def test_weekly_pages_can_start_on_a_different_day_than_the_month_grid(natal_chart):
+    """A US reader often wants a Sunday-led month but a Monday-led working week."""
+    from stellium.planner.contract import build_planner_data
+    from stellium.planner.events import DailyEventCollector
+
+    collector = DailyEventCollector(
+        natal_chart=natal_chart, start=YEAR_START, end=YEAR_END, timezone=TZ
+    )
+    collector.collect_all()
+    events: dict = {}
+    for event in collector.get_all_events():
+        events.setdefault(event.time.date(), []).append(event)
+
+    almanac = build_year_almanac(natal_chart, YEAR_START, YEAR_END, TZ)
+    data = build_planner_data(
+        natal_chart,
+        almanac,
+        events,
+        name="Test",
+        theme="house",
+        week_starts_on="sunday",
+        weekly_starts_on="monday",
+    )
+
+    month = data["months"][0]
+    assert month["weekdays"][0] == "Sun"
+    assert month["weeks_detail"][0]["days"][0]["weekday"] == "Monday"

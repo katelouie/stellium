@@ -53,7 +53,15 @@ class PlannerConfig:
     # Page layout
     page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
     binding_margin: float = 0.0  # Extra margin for binding (inches)
+
+    # The month grid and the weekly pages are different reading surfaces, so they
+    # get independent first days: a US reader often wants a Sunday-led month grid
+    # but a Monday-led working week. `weekly_starts_on=None` follows the monthly.
     week_starts_on: Literal["sunday", "monday"] = "sunday"
+    weekly_starts_on: Literal["sunday", "monday"] | None = None
+
+    # 24h suits most of the world; the calendar cells are tight either way.
+    time_format: Literal["12h", "24h"] = "12h"
 
     # Design system theme (see stellium.presentation.typst_render.THEMES).
     # "greyscale" is laser-printer safe, which matters more for a planner than a
@@ -111,6 +119,8 @@ class PlannerBuilder:
         self._page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
         self._binding_margin = 0.0
         self._week_starts_on: Literal["sunday", "monday"] = "sunday"
+        self._weekly_starts_on: Literal["sunday", "monday"] | None = None
+        self._time_format: Literal["12h", "24h"] = "12h"
 
         # Design system theme
         self._theme = "house"
@@ -208,6 +218,25 @@ class PlannerBuilder:
             >>> PlannerBuilder.for_native(native).year(2026).theme("greyscale")
         """
         self._theme = name
+        return self
+
+    def time_format(self, fmt: Literal["12h", "24h"]) -> PlannerBuilder:
+        """Render event times as 12-hour (``2:49p``) or 24-hour (``14:49``).
+
+        Example:
+            >>> PlannerBuilder.for_native(native).year(2026).time_format("24h")
+        """
+        self._time_format = fmt
+        return self
+
+    def weekly_starts_on(self, day: Literal["sunday", "monday"]) -> PlannerBuilder:
+        """First day of the *weekly* pages, independent of the month grid.
+
+        The month grid and the weekly pages are different reading surfaces — a US
+        reader often wants a Sunday-led month but a Monday-led working week. If
+        this is never called, the weekly pages follow ``week_starts_on``.
+        """
+        self._weekly_starts_on = day
         return self
 
     # ===== Front Matter Configuration =====
@@ -454,6 +483,8 @@ class PlannerBuilder:
             page_size=self._page_size,
             binding_margin=self._binding_margin,
             week_starts_on=self._week_starts_on,
+            weekly_starts_on=self._weekly_starts_on,
+            time_format=self._time_format,
             theme=self._theme,
         )
 

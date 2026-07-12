@@ -43,8 +43,13 @@ def _fmt_date(d: date) -> str:
     return d.strftime("%b %-d")
 
 
-def _fmt_time(dt: Any) -> str:
-    """Compact 12-hour time — '2:49a' — since calendar cells are tiny."""
+def _fmt_time(dt: Any, fmt: str = "12h") -> str:
+    """Compact event time. Calendar cells are tiny, so 12-hour loses the 'm'.
+
+    '2:49p' (12h) or '14:49' (24h).
+    """
+    if fmt == "24h":
+        return dt.strftime("%H:%M")
     stamp = dt.strftime("%-I:%M%p").lower()
     return stamp.replace("am", "a").replace("pm", "p")
 
@@ -352,6 +357,7 @@ def _month_calendar(
     events_by_date: dict[date, list[DailyEvent]],
     marks: dict[date, str],
     first_weekday: int,
+    time_format: str = "12h",
 ) -> dict[str, Any]:
     """One month as a 7-column grid of day cells."""
     cal = calendar.Calendar(firstweekday=first_weekday)
@@ -368,7 +374,7 @@ def _month_calendar(
                     "mark": marks.get(day),
                     "events": [
                         {
-                            "time": _fmt_time(e.time),
+                            "time": _fmt_time(e.time, time_format),
                             "symbol": e.symbol,
                             "class": e.event_class,
                         }
@@ -393,6 +399,7 @@ def _month_weeks_detail(
     first_weekday: int,
     start: date,
     end: date,
+    time_format: str = "12h",
 ) -> list[dict[str, Any]]:
     """The month's weeks as writable day pages."""
     cal = calendar.Calendar(firstweekday=first_weekday)
@@ -416,7 +423,7 @@ def _month_weeks_detail(
                     "in_range": start <= day <= end,
                     "events": [
                         {
-                            "time": _fmt_time(e.time),
+                            "time": _fmt_time(e.time, time_format),
                             "description": e.description,
                             "class": e.event_class,
                         }
@@ -487,7 +494,7 @@ def _year_overview(
 
     return {
         "kind": "year_overview",
-        "title": f"{start.year} at a Glance",
+        "title": f"{_period_label(start, end)} at a Glance",
         "descriptor": "Highlighted days carry an eclipse or a station",
         "new_page": True,
         "months": months,
@@ -523,6 +530,9 @@ def build_planner_data(
     page_size: str = "letter",
     binding_margin: float = 0.0,
     week_starts_on: str = "sunday",
+    weekly_starts_on: str | None = None,
+    time_format: str = "12h",
+    location_label: str | None = None,
     svgs: dict[str, str] | None = None,
     transit_planets: list[str] | None = None,
 ) -> dict[str, Any]:
@@ -547,7 +557,10 @@ def build_planner_data(
     from stellium.presentation.sections.core import PlanetPositionSection
 
     svgs = svgs or {}
+    # calendar.Calendar: Monday=0 … Sunday=6
     first_weekday = 6 if week_starts_on.lower() == "sunday" else 0
+    weekly_first = weekly_starts_on or week_starts_on
+    weekly_weekday = 6 if weekly_first.lower() == "sunday" else 0
     marks = build_marks(almanac)
 
     start, end = almanac.start, almanac.end
@@ -648,10 +661,21 @@ def build_planner_data(
     cursor = date(start.year, start.month, 1)
     while cursor <= end:
         month = _month_calendar(
-            cursor.year, cursor.month, events_by_date, marks, first_weekday
+            cursor.year,
+            cursor.month,
+            events_by_date,
+            marks,
+            first_weekday,
+            time_format,
         )
         month["weeks_detail"] = _month_weeks_detail(
-            cursor.year, cursor.month, events_by_date, first_weekday, start, end
+            cursor.year,
+            cursor.month,
+            events_by_date,
+            weekly_weekday,
+            start,
+            end,
+            time_format,
         )
         months.append(month)
         cursor = (
@@ -665,19 +689,39 @@ def build_planner_data(
         birth.strftime("%B %-d, %Y"),
         getattr(natal_chart.location, "name", "") or "",
     ]
+    # Times are local to wherever the planner is *used*, which is not necessarily
+    # where the native was born. Say so, the way a good almanac does.
+    if location_label:
+        metadata.append(f"All times local to {location_label}")
+
+    period = _period_label(start, end)
 
     return {
         "meta": {
             "name": name,
             "year": start.year,
+            "period": period,
             "metadata": [m for m in metadata if m],
             "page_size": PAPER_SIZES.get(page_size.lower(), "us-letter"),
             "binding_margin": float(binding_margin),
             "running_left": name,
-            "running_right": str(start.year),
-            "footer": f"{name} · {start.year}",
+            "running_right": period,
+            "footer": f"{name} · {period}",
             "theme": theme,
         },
         "front": front,
         "months": months,
     }
+
+
+def _period_label(start: date, end: date) -> str:
+    """What to call the planner's span.
+
+    A planner does not have to be a calendar year — Honeycomb's run Sep→Aug — so a
+    bare "2026" would be a lie for any range that crosses a New Year.
+    """
+    if start.month == 1 and end.month == 12 and start.year == end.year:
+        return str(start.year)
+    if start.year == end.year:
+        return f"{start:%b}–{end:%b} {start.year}"
+    return f"{start:%b %Y} – {end:%b %Y}"
