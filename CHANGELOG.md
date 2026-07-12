@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **The planner is rebuilt on the Typst design system, and its front matter is redesigned** — `PlannerBuilder(...).generate()` now serialises the planner to a JSON contract that the bundled design system renders, replacing a renderer that built ~1,100 lines of Typst markup as Python f-strings around a hardcoded purple palette. The planner gains all five themes (`.theme("house" | "sepia" | "celestial" | "blues" | "greyscale")`), the shared glyph/component vocabulary, and the bundled font stack. Chart wheels are now drawn stripped (no header, info box, or moon-phase corner) and transparent, and theme-coordinated, so they composite onto the page instead of sitting in a hardcoded gold frame.
+
+  The front matter was **redesigned, not ported**. A natal report is a *portrait* — read once, about who you are. A planner is an *instrument* — consulted daily, for a year, with a pen in hand. Its front matter is therefore a **reference section**, ordered "this year → your chart → how to read it", answering the questions the daily pages actually provoke:
+
+  - **The Year at a Glance** (new) — Lord of the Year and the profection, the solar return, the active releasing period, **eclipses placed in *your* houses**, the retrograde windows (with any that straddle a year boundary flagged rather than truncated), and the slow transits that shape the year. Every one of these was already computable; none of it had ever been gathered onto a page.
+  - **A year overview** (new) — twelve mini-months with eclipse and station days marked, so the shape of the year is legible without reading a word.
+  - **Your natal chart as a lookup, not a portrait** — the placements table now leads (the wheel follows on its own page), because a daily line reading `Moon □ natal Mercury` sends you here to find out *where natal Mercury is*.
+  - **The progressed Moon** — replaces the decorative progressed wheel (nothing on the daily pages ever cited one) with what a planner can use: its dated exact aspects to your natal planets. Under secondary progression the Moon covers only ~13° in a year, so it changes sign at most once — the aspects are the payload.
+  - **Zodiacal releasing scoped to the year**, not the lifetime.
+  - **A glyph legend** (new) — the daily pages are dense 5.5pt glyph shorthand, and were effectively unreadable without a key. A report spells things out in prose and never needs one; a planner must have one.
+
+  The front matter is curated **on** by default (a planner should be useful out of the box); drop any page with the matching `.without_*()` call — `.without_natal_chart()`, `.without_progressed_chart()`, `.without_solar_return()`, `.without_profections()`, `.without_zr_timeline()`, `.without_graphic_ephemeris()`.
+
+- **Planner glyphs are derived from the registries** — `planner/events.py` carried its own three hardcoded glyph dicts (a fourth copy alongside `CELESTIAL_REGISTRY`, `ASPECT_REGISTRY` and the design system's `glyphs.typ`). They are now derived, so there is a single source of truth: coverage goes from 12 hardcoded bodies to 49 (an asteroid or a lot previously fell through and rendered as a bare letter) and from 5 aspects to 17.
+
+### Added
+
+- **`stellium.planner.almanac` — the planner's year-level reference data** — the year-scoped counterpart to `events.py` (which is day-scoped). `build_year_almanac(chart, start, end, timezone)` returns a `YearAlmanac`: the profection and Lord of the Year, the solar return, eclipses with the natal house each falls in, retrograde windows clipped to the year, the progressed Moon's walk and its dated natal aspects, the year-defining outer transits, and the releasing periods active this year. Each piece is also available on its own (`find_eclipses`, `find_retrogrades`, `find_progressed_moon`, `find_zr_year`, `house_for_longitude`). Everything is computed from the engines directly rather than by re-parsing `DailyEvent`'s human-readable strings.
+- **`TransitHit` and `find_natal_transits()`** — a shared structured transit primitive. The daily transit lines and the year's transit summary come from the same longitude-crossing search, so it now runs once and both consumers read structure.
+- **`PlannerBuilder.theme()` and the `.without_*()` front-matter opt-outs** (see above).
+- **Planner tests** — `tests/test_planner_almanac.py` (22 tests). The planner previously had **no unit tests at all**, only an end-to-end cookbook smoke test.
+
+### Fixed
+
+- **Planner PDFs were not portable** — the planner passed Typst a repo-root `assets/fonts/` path that never shipped in the wheel, so a `pip install`ed planner silently fell back to host fonts and tofu'd the astrology glyphs. It now uses the packaged font bundle, like the report.
+- **Aspect glyphs could silently become declination glyphs** — `ASPECT_REGISTRY` contains Parallel (0°) and Contraparallel (180°) alongside Conjunction (0°) and Opposition (180°), so keying glyphs by angle let a declination aspect overwrite a Ptolemaic one (☌ → ∥). Declination aspects are now excluded from the angle-keyed map, and `ASPECT_GLYPHS_BY_NAME` is the unambiguous key.
+- **The planner built its natal chart three times** per run; it now builds it once.
+- **`examples/planner_cookbook.py`'s `minimal_planner()` was not minimal** — it claimed to disable the front matter "by not calling `with_*` methods", but those default to on, so it had been quietly generating the *full* front matter. It now opts out explicitly.
+
 ## [0.21.1] - 2026-07-12
 
 ### Fixed

@@ -899,7 +899,9 @@ Data access and notable births registry.
 
 ## Planner (`stellium.planner`)
 
-PDF planner generation with astrological data.
+PDF planner generation with astrological data. Two data layers feed it, split by
+scope: `events` gathers what happens on each *day*, and `almanac` aggregates the
+*year* into the reference pages the front matter renders.
 
 ```{eval-rst}
 .. automodule:: stellium.planner.builder
@@ -908,13 +910,25 @@ PDF planner generation with astrological data.
    :show-inheritance:
    :no-index:
 
-.. automodule:: stellium.planner.renderer
+.. automodule:: stellium.planner.almanac
    :members:
    :undoc-members:
    :show-inheritance:
    :no-index:
 
 .. automodule:: stellium.planner.events
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.planner.contract
+   :members:
+   :undoc-members:
+   :show-inheritance:
+   :no-index:
+
+.. automodule:: stellium.planner.renderer
    :members:
    :undoc-members:
    :show-inheritance:

@@ -75,13 +75,46 @@ finds times satisfying conditions. Building blocks:
 
 ## Planner (personalized PDF)
 Source: `planner/`. **`PlannerBuilder.for_native(native)`** →
-`.year(...)`/`.date_range(...)`, front matter (`with_natal_chart()`,
+`.year(...)`/`.date_range(...)`, `.theme(...)`, front matter (`with_natal_chart()`,
 `with_solar_return()`, `with_profections()`, `with_zr_timeline(...)`,
 `with_graphic_ephemeris(...)`), daily content (`include_natal_transits(...)`,
 `include_moon_phases()`, `include_voc(...)`, `include_ingresses(...)`,
-`include_stations(...)`), layout (`page_size(...)`, `week_starts_on(...)`),
-then `.generate("planner.pdf")` (Typst). Events gathered by
-`planner/events.py::DailyEventCollector`.
+`include_stations(...)`), layout (`page_size(...)`, `binding_margin(...)`,
+`week_starts_on(...)`), then `.generate("planner.pdf")`.
+
+**Rendering is data-driven**, like the report: `planner/contract.py::
+build_planner_data` serialises to a JSON contract, and `planner/renderer.py`
+compiles `typst_theme/planner.typ` with `sys_inputs={theme, data}` and the
+packaged fonts. The planner reuses the report's section *kinds* (`compound`,
+`key_value`, `table`, `planet_positions`, `svg`) via `engine.typ::body-of`; only
+`year_overview` and `glyph_key` are planner-native, and only three components are
+new Typst (`typst_theme/planner_components.typ`: `month-grid`, `week-page`,
+`year-overview`). All five themes apply.
+
+**Two data layers, by scope:**
+- `planner/events.py::DailyEventCollector` — *day*-scoped. Transits, ingresses,
+  stations, Moon phases, VOC, eclipses → `DailyEvent` per day. Its glyph maps are
+  derived from `CELESTIAL_REGISTRY` / `ASPECT_REGISTRY` / `DIGNITIES`. Note
+  `ASPECT_GLYPHS` is angle-keyed and **excludes declination aspects** (Parallel is
+  0°, Contraparallel 180°, so they would collide with Conjunction/Opposition);
+  use `ASPECT_GLYPHS_BY_NAME` when you have a name.
+- `planner/almanac.py::build_year_almanac` — *year*-scoped, feeding the front
+  matter's reference pages: `YearAlmanac` (profection + Lord of the Year, solar
+  return, eclipses **with the natal house each falls in**, retrograde windows
+  clipped to the year, the progressed Moon and its dated natal aspects,
+  year-defining outer transits, ZR periods active this year). Requires a chart
+  built with `ZodiacalReleasingAnalyzer` for the ZR part (it reads analyzer
+  metadata; otherwise it returns `[]`).
+
+`TransitHit` / `find_natal_transits()` is the shared primitive behind both — run
+it once and pass the result into `build_year_almanac(transits=...)` so the
+longitude-crossing search doesn't happen twice.
+
+**Design note.** The front matter is a *reference section*, not an overture: a
+report is a portrait (read once), a planner is an instrument (consulted daily).
+It is ordered "this year → your chart → how to read it", the natal chart leads
+with a **positions table** rather than the wheel, and it is curated on by default
+(opt out with `.without_*()`).
 
 ## Chinese astrology (BaZi / Four Pillars)
 Source: `chinese/`. Reach it via **`chart.bazi()`** or
