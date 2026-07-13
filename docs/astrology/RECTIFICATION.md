@@ -192,7 +192,6 @@ This is the part that matters.
 
 For anyone not in the notables catalog, pass events explicitly:
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder, Native, analyze_sect
 from stellium.data import LifeEvent
@@ -207,6 +206,10 @@ events = [
 ]
 a = analyze_sect(chart, events=events)
 print(a.p_day, a.leans)
+```
+<!--pytest-codeblocks:expected-output-->
+```
+0.6048940312763954 day
 ```
 
 `LifeEvent` fields: `date` (`"YYYY"`, `"YYYY-MM"`, or `"YYYY-MM-DD"`), `precision`,

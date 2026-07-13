@@ -216,7 +216,6 @@ For comprehensive documentation, see:
 
 ### Calculate a Chart
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 

@@ -1043,7 +1043,6 @@ python examples/report_examples.py
 
 ### Quick API Examples
 
-<!--doc-output:volatile-->
 ```python
 # Simple chart
 from stellium import ChartBuilder
@@ -1085,6 +1084,104 @@ report.render(format="rich_table")
 
 # Draw chart
 chart.draw("chart.svg").save()
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun: 285.81° Capricorn
+Sun Conjunction Moon
+Sun Conjunction Mercury
+Sun Trine Saturn
+Sun Conjunction MC
+Sun Square Vertex
+
+Chart Overview
+──────────────
+Date: January 06, 2000
+Time: 12:00 PM
+Timezone: America/Los_Angeles
+Location: Seattle, King County, Washington, United States
+Coordinates: 47.6038°, -122.3301°
+House System: Placidus, Whole Sign
+Zodiac: Tropical
+Chart Ruler: Mars (Aries Rising)
+
+Planet Positions
+────────────────
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Planet              ┃ Position              ┃ House (Pl) ┃ House (WS) ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ ☉ Sun               │ ♑︎ Capricorn 15°48'   │ 10         │ 10         │
+│ ☽ Moon              │ ♑︎ Capricorn 16°36'   │ 10         │ 10         │
+│ ☿ Mercury           │ ♑︎ Capricorn 10°16'   │ 9          │ 10         │
+│ ♀ Venus             │ ♐︎ Sagittarius 8°01'  │ 8          │ 9          │
+│ ♂ Mars              │ ♓︎ Pisces 2°06'       │ 11         │ 12         │
+│ ♃ Jupiter           │ ♈︎ Aries 25°31'       │ 12         │ 1          │
+│ ♄ Saturn            │ ♉︎ Taurus 10°18'      │ 1          │ 2          │
+│ ♅ Uranus            │ ♒︎ Aquarius 15°05'    │ 11         │ 11         │
+│ ♆ Neptune           │ ♒︎ Aquarius 3°23'     │ 10         │ 11         │
+│ ♇ Pluto             │ ♐︎ Sagittarius 11°38' │ 8          │ 9          │
+│ ☊ North Node        │ ♌︎ Leo 3°40'          │ 5          │ 5          │
+│ ☋ South Node        │ ♒︎ Aquarius 3°40'     │ 11         │ 11         │
+│ ⚸ Black Moon Lilith │ ♐︎ Sagittarius 24°03' │ 9          │ 9          │
+│ 🜊 Vertex            │ ♎︎ Libra 10°26'       │ 6          │ 7          │
+│ ⚷ Chiron            │ ♐︎ Sagittarius 12°13' │ 8          │ 9          │
+└─────────────────────┴───────────────────────┴────────────┴────────────┘
+
+Major Aspects
+─────────────
+
+  Aspectarian
+[SVG: 404x404px - use HTML/PDF output to view]
+
+  Aspect List
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━┓
+┃ Planet 1            ┃ Aspect        ┃ Planet 2            ┃ Orb   ┃ Applying ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━┩
+│ ☿ Mercury           │ △ Trine       │ ♄ Saturn            │ 0.05° │ A→       │
+│ ☿ Mercury           │ □ Square      │ 🜊 Vertex            │ 0.18° │ —        │
+│ ♆ Neptune           │ ☍ Opposition  │ ☊ North Node        │ 0.28° │ A→       │
+│ ♆ Neptune           │ ☌ Conjunction │ ☋ South Node        │ 0.28° │ A→       │
+│ ♇ Pluto             │ ☌ Conjunction │ ⚷ Chiron            │ 0.58° │ ←S       │
+│ ☉ Sun               │ ☌ Conjunction │ ☽ Moon              │ 0.80° │ ←S       │
+│ ♇ Pluto             │ ⚹ Sextile     │ 🜊 Vertex            │ 1.19° │ —        │
+│ ♃ Jupiter           │ ☌ Conjunction │ ASC                 │ 1.35° │ —        │
+│ ♃ Jupiter           │ △ Trine       │ ⚸ Black Moon Lilith │ 1.46° │ A→       │
+│ ⚷ Chiron            │ ⚹ Sextile     │ 🜊 Vertex            │ 1.77° │ —        │
+│ MC                  │ □ Square      │ 🜊 Vertex            │ 1.87° │ —        │
+│ ♄ Saturn            │ △ Trine       │ MC                  │ 2.00° │ —        │
+│ ☿ Mercury           │ ☌ Conjunction │ MC                  │ 2.05° │ —        │
+│ ♀ Venus             │ ⚹ Sextile     │ 🜊 Vertex            │ 2.42° │ —        │
+│ ⚸ Black Moon Lilith │ △ Trine       │ ASC                 │ 2.81° │ —        │
+│ ♅ Uranus            │ ⚹ Sextile     │ ⚷ Chiron            │ 2.87° │ A→       │
+│ ♅ Uranus            │ ⚹ Sextile     │ ♇ Pluto             │ 3.45° │ ←S       │
+│ ☉ Sun               │ ☌ Conjunction │ MC                  │ 3.49° │ —        │
+│ ♀ Venus             │ ☌ Conjunction │ ♇ Pluto             │ 3.61° │ A→       │
+│ ♀ Venus             │ ☌ Conjunction │ ⚷ Chiron            │ 4.19° │ A→       │
+│ ☽ Moon              │ ☌ Conjunction │ MC                  │ 4.30° │ —        │
+│ ♀ Venus             │ △ Trine       │ ☊ North Node        │ 4.36° │ ←S       │
+│ ♀ Venus             │ ⚹ Sextile     │ ☋ South Node        │ 4.36° │ ←S       │
+│ ♅ Uranus            │ △ Trine       │ 🜊 Vertex            │ 4.64° │ —        │
+│ ♀ Venus             │ ⚹ Sextile     │ ♆ Neptune           │ 4.64° │ ←S       │
+│ ♄ Saturn            │ □ Square      │ ♅ Uranus            │ 4.77° │ ←S       │
+│ ♂ Mars              │ ⚹ Sextile     │ ASC                 │ 5.23° │ —        │
+│ ☉ Sun               │ □ Square      │ 🜊 Vertex            │ 5.36° │ —        │
+│ ☉ Sun               │ △ Trine       │ ♄ Saturn            │ 5.49° │ ←S       │
+│ ☉ Sun               │ ☌ Conjunction │ ☿ Mercury           │ 5.54° │ A→       │
+│ ♀ Venus             │ □ Square      │ ♂ Mars              │ 5.93° │ ←S       │
+│ ☽ Moon              │ □ Square      │ 🜊 Vertex            │ 6.17° │ —        │
+│ ☽ Moon              │ △ Trine       │ ♄ Saturn            │ 6.30° │ ←S       │
+│ ☽ Moon              │ ☌ Conjunction │ ☿ Mercury           │ 6.34° │ ←S       │
+│ ♆ Neptune           │ □ Square      │ ASC                 │ 6.52° │ —        │
+│ ♄ Saturn            │ □ Square      │ ☋ South Node        │ 6.65° │ A→       │
+│ ♄ Saturn            │ □ Square      │ ☊ North Node        │ 6.65° │ ←S       │
+│ ☋ South Node        │ △ Trine       │ 🜊 Vertex            │ 6.78° │ —        │
+│ ☊ North Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
+│ ☋ South Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
+│ ♄ Saturn            │ □ Square      │ ♆ Neptune           │ 6.93° │ A→       │
+│ ♆ Neptune           │ △ Trine       │ 🜊 Vertex            │ 7.06° │ —        │
+│ ♃ Jupiter           │ □ Square      │ ♆ Neptune           │ 7.87° │ A→       │
+│ ♇ Pluto             │ △ Trine       │ ☊ North Node        │ 7.97° │ ←S       │
+└─────────────────────┴───────────────┴─────────────────────┴───────┴──────────┘
 ```
 
 ### Key Files to Know

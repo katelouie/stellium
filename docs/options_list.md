@@ -93,7 +93,6 @@ Hypothetical points used in Uranian astrology.
 
 ### Example: Selecting Celestial Objects
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -159,7 +158,6 @@ Stellium implements all major house systems via the Swiss Ephemeris. You can use
 
 ### Example: Using House Systems
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -212,7 +210,6 @@ Stellium supports sidereal zodiac calculations with multiple ayanamsa options ac
 
 ### Example: Sidereal Charts
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -284,7 +281,6 @@ Additional stars for detailed analysis.
 
 ### Example: Including Fixed Stars
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -309,6 +305,12 @@ chart = ChartBuilder.from_native(native).add_component(FixedStarsComponent(stars
 fixed_stars = chart.get_component_result("Fixed Stars")
 for star in fixed_stars:
     print(f"{star.name}: {star.longitude:.2f}° {star.sign}")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Regulus: 149.75° Leo
+Algol: 56.09° Taurus
+Spica: 203.76° Libra
 ```
 
 ---
@@ -372,7 +374,6 @@ Based on each planet's exaltation sign ruler.
 
 ### Example: Calculating Arabic Parts
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -392,6 +393,10 @@ chart = ChartBuilder.from_native(native).add_component(
 # Access results
 fortune = chart.get_object("Part of Fortune")
 print(f"Part of Fortune: {fortune.longitude:.2f}° {fortune.sign}")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Part of Fortune: 311.26° Aquarius
 ```
 
 ---
@@ -451,7 +456,6 @@ Stellium supports major, minor, harmonic, and declination aspects with configura
 
 ### Example: Aspect Configuration
 
-<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -477,6 +481,13 @@ chart = (ChartBuilder.from_native(native)
 # Access aspects
 for aspect in chart.aspects[:5]:
     print(f"{aspect.object1.name} {aspect.aspect_name} {aspect.object2.name} (orb: {aspect.orb:.2f}°)")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Moon H5 Uranus (orb: 0.26°)
+Moon H5 Neptune (orb: 1.50°)
+Jupiter H5 Uranus (orb: 0.70°)
+Jupiter H5 Neptune (orb: 1.94°)
 ```
 
 ---

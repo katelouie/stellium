@@ -827,7 +827,6 @@ chart.draw().with_moon_phase(
 
 The fluent API lets you stack configuration for complete control:
 
-<!--doc-output:volatile-->
 ```python
 from datetime import datetime
 from stellium import ChartBuilder, Native
