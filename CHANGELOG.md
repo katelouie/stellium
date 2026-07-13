@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **PNG export — `chart.draw(...).save_png()` / `.to_png()`**, and `svg_to_png()` for any SVG. Charts have always been exportable as SVG, but rasterising one has been a reliable way to produce a wall of tofu boxes: an astrology chart is mostly *text* (☉ ♀ ♄ for the planets, ♈ ♉ ♊ for the signs), and **every general-purpose rasteriser — rsvg, cairosvg, Inkscape — resolves the font family against the *host's* installed fonts**. On a machine without a symbol font the glyphs simply are not there. That is not a bug in those tools; it is what they do.
+
+  So Stellium does not ask the host. Typst rasterises the chart with `ignore_system_fonts=True` and **only the fonts Stellium bundles** — which `tests/test_glyph_coverage.py` proves cover every glyph the registries can emit. The result is identical on a laptop, in CI, and in a bare container with no fonts installed at all, which is the whole point of exporting a PNG rather than an SVG. No new dependency: Typst was already there for the PDFs.
+
+  ```python
+  chart.draw("einstein.svg").preset_standard().save_png(scale=2)   # -> einstein.png
+  chart.draw_dial("dial.svg", degrees=90).to_png(background="white")
+  ```
+
+  `scale` is pixels per SVG unit (`2.0` for retina density). The background is **transparent** by default, for compositing; pass a colour if the target cannot cope with an alpha channel. Wheel and dial charts both support it.
+
 > ### ⚠️ This release corrects wrong answers
 >
 > Four bugs in this release were **silently returning incorrect results**, not crashing.
@@ -76,6 +89,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - **`presentation/renderers.py::TypstRenderer` and `presentation/templates/astro_report.typ`** — two dead generations of the PDF renderer, 752 lines in total. `TypstRenderer` was unreachable (exported from no `__init__`, imported by nothing, tested by nothing): it built Typst *source* as Python f-strings around a hardcoded purple palette, which is precisely what the data-driven design system replaced. `astro_report.typ` was deader still — `TypstRenderer` inlines all its own Typst and never read it; the template belongs to a generation *before* that one. Neither was part of the public API.
+
+### Fixed
+
+- **The hand-drawn glyph SVGs never shipped, so 25 bodies rendered as tofu for everyone who installed from PyPI.** `CELESTIAL_REGISTRY` referenced them as the *relative* path `"assets/glyphs/pholus.svg"`, resolved against the repository root — a directory that is not in the wheel. `visualization.core.get_glyph()` then fell back to the Unicode glyph **silently**. The SVGs exist precisely *because* those codepoints are inadequate, so the fallback was a visible failure dressed as graceful degradation: Pholus is U+2B30, present in **no font on any platform**; Eris rendered as a tofu box; and Sedna's fallback was the literal string **`"Sed"`** — the first three letters of its own name. It looked perfect for us, because we run from the repository root.
+
+  The glyphs are now package data (`stellium/data/glyphs/`), declared in `package-data`, and resolved package-relative by `data.paths.find_glyph_svg()` — never against the repo root, and never against the working directory. A glyph that cannot be found now raises `MissingGlyphWarning` rather than degrading in silence.
+
+- **Three glyphs were in none of the bundled fonts**: Semisquare (U+2220), Contraparallel (U+22D5) and Pholus (U+2B30) — so they were tofu in the PDF too, not just the SVG. Adds **Noto Sans Math, subsetted to the 11 codepoints Stellium's registries actually emit (8 KB, not 967 KB)**. The OFL permits this — the font declares no Reserved Font Name, and the copyright and licence notices are retained in its name table — and `LICENSE-FONTS.txt` records it. Typst's symbol-font fallback now includes it.
+
+  `tests/test_glyph_coverage.py` is the guard: **every glyph must be drawable** — either a bundled SVG, or a codepoint that a bundled font actually contains. Nothing in the rendering stack reports otherwise; fonts, SVG readers and Typst all substitute silently, so a missing glyph is never an error anywhere — just a chart that looks wrong to the person holding it.
 
 ## [0.21.1] - 2026-07-12
 

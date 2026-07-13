@@ -20,6 +20,7 @@ See the HTML full theme and palette reference overview [rendered here](https://h
 - [Moon Phase Display](#moon-phase-display)
 - [Advanced Customization](#advanced-customization)
 - [Comparison Charts](#comparison-charts)
+- [PNG Export](#png-export)
 - [Technical Details](#technical-details)
 
 ---
@@ -928,6 +929,58 @@ The `preset_synastry()` is optimized for relationship charts:
 - Moon in corner (saves space)
 - Moon label shown (identifies which chart's moon)
 - Chart info and aspect counts displayed
+
+---
+
+## PNG Export
+
+```python
+chart.draw("einstein.svg").preset_standard().save_png(scale=2)   # -> einstein.png
+```
+
+`save_png()` writes a file (defaulting to the SVG's name with a `.png` suffix) and
+returns the filename. `to_png()` gives you the bytes instead. Both work on wheel
+charts and dial charts.
+
+| argument | meaning |
+|---|---|
+| `scale` | Pixels per SVG unit. `2.0` (the default) renders an 800-unit chart at 1600px — retina density, or a print-quality asset. |
+| `background` | Page colour: a hex string (`"#faf8f5"`) or a name (`"white"`). **Default is transparent**, for compositing. Pass a colour if your target cannot handle an alpha channel. |
+
+```python
+# bytes, for an HTTP response or an email attachment
+png: bytes = chart.draw("c.svg").preset_standard().to_png(scale=2, background="white")
+
+# any SVG, not just a chart
+from stellium.visualization import svg_to_png
+png = svg_to_png(some_svg_markup, scale=3)
+```
+
+### Why not just use rsvg / cairosvg / Inkscape?
+
+Because they produce tofu, and it is not their fault.
+
+An astrology chart is mostly **text**: `☉ ♀ ♄` for the planets, `♈ ♉ ♊` for the
+signs, `℞` for retrograde. In an SVG those are `<text>` elements naming a font
+family — and every general-purpose rasteriser resolves that family against the
+**host's installed fonts**. If the machine has no font containing `♈`, you get a box.
+The glyph is not missing from your file; the rasteriser simply could not find a font
+that draws it. Most servers, most containers and many laptops have no symbol font at
+all, which is exactly why rasterising astrology SVGs has a reputation for this.
+
+Stellium sidesteps the question entirely: it **bundles** every font its charts need,
+and rasterises with Typst using *only those fonts* (`ignore_system_fonts=True`). The
+host's font situation is never consulted, so the PNG is the same on your laptop, in
+CI, and in a scratch container with no fonts installed — which is the whole point of
+exporting a raster image in the first place.
+
+There is no extra dependency to install: Typst is already there for the PDF reports.
+
+> The bodies Unicode does not usefully cover — the centaurs, the TNOs, the Uranian
+> points, the named stars — are drawn from **bundled SVG glyphs** rather than a font
+> at all, so they need nothing from anybody. `tests/test_glyph_coverage.py` asserts
+> that *every* glyph Stellium can emit is either one of those SVGs or a codepoint
+> present in a bundled font.
 
 ---
 
