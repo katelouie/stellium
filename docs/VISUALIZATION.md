@@ -35,7 +35,6 @@ from stellium import ChartBuilder
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 chart.draw("einstein.svg").save()
 ```
-
 ![Einstein - Plain](images/examples/readme_einstein.svg)
 
 That's it! You now have a beautiful natal chart saved as `einstein.svg`.
@@ -828,6 +827,7 @@ chart.draw().with_moon_phase(
 
 The fluent API lets you stack configuration for complete control:
 
+<!--doc-output:volatile-->
 ```python
 from datetime import datetime
 from stellium import ChartBuilder, Native
@@ -848,7 +848,6 @@ chart.draw("comprehensive.svg") \
     .with_chart_shape(position="bottom-right") \
     .save()
 ```
-
 ### Backwards Compatibility
 
 The old `draw_chart()` function still works if you prefer functional style:
@@ -923,7 +922,6 @@ comparison.draw("synastry.svg") \
     .with_theme("celestial") \
     .save()
 ```
-
 The `preset_synastry()` is optimized for relationship charts:
 
 - Moon in corner (saves space)

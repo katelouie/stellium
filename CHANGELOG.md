@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The documentation's code blocks are now held to the output they claim** — `scripts/update_doc_outputs.py`, and a `tests/test_doc_codeblocks.py` that finally reads what a block *prints*. It only ever checked that a block did not crash: stdout was executed and thrown away, so a doc could assert any result it liked and stay green forever. It did. The (unreleased) astrology guide stated William Lilly's Venus scored **`+7 ['domicile', 'term']`**; it scores **`+10 ['domicile', 'triplicity_ruler', 'term']`**, and always has — Lilly has no birth time on record, so his chart is a *noon* `UnknownTimeChart`, unambiguously a **day** chart, whose Earth triplicity ruler is Venus. The documented numbers require a *night* chart. They cannot have come from running the code.
+
+  So a human no longer writes an expected output — the library does. `python scripts/update_doc_outputs.py` runs each block and writes its real output back into the markdown (pytest-codeblocks' `<!--pytest-codeblocks:expected-output-->` convention), and CI fails the day a library change makes a document false. You cannot fabricate a result you do not author. Guide chapters are discovered by glob, so a new one is covered the moment it lands.
+
+  Two things turned out to be genuinely unpinnable, and say so out loud with `<!--doc-output:volatile-->` rather than quietly going unchecked: blocks that read the clock, and the **15 blocks that geocode a place name** — those resolve coordinates through a live Nominatim call, and the test suite's own mock geocoder returns *different* coordinates again (`"…Washington, USA"` at one lat/lon, the real service `"…Washington, United States"` at another), which moves the MC and every orb with it. Examples built on `from_notable()` carry fixed data and are fully verified.
+
 - **34 new bodies — `CELESTIAL_REGISTRY` goes from 49 to 83** — with two new builder methods and a much larger `with_tnos()`:
 
   - **`with_named_asteroids()`** — 18 asteroids beyond the big four: Psyche, Sappho, Pandora, Amor, Astraea, Hebe, Iris, Flora, Metis, Fortuna, Diana, Hidalgo, Icarus, Toro, Bacchus, Eros, Urania, Apollo.
@@ -95,6 +101,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The documentation no longer recommends caching the ephemeris.** `CLAUDE.md`, the architecture docs and the performance notes all advertised `@cached(cache_type="ephemeris")` as a "20× faster" optimisation and told contributors to reach for it. It was never measured, and it was 13× *slower* (see 0.21.1). Those claims are gone, and the guidance now says what is actually true: `swe.calc_ut` is microseconds, a pickle round-trip is not, and caching is for the network calls. PNG export is surfaced in the README and `examples/chart_cookbook.py`.
 
 ### Fixed
+
+- **The same chart, calculated twice, was not the same chart** *(output ordering change)*. `chart.positions` came out in a **different order on every run** — and everything downstream inherited it, because the aspect engines feed `positions` straight into `combinations()`. So `chart.aspects` was reordered too, and with it every report, aspectarian, and exported JSON. Two people running byte-identical code got documents that listed their planets and aspects differently; so did the same person, twice.
+
+  ```
+  run 1:  Moon Trine Venus       Moon Square MC        Chiron Conjunction Neptune
+  run 2:  Neptune Square Node    Neptune Conj Chiron   Neptune Trine Uranus
+  run 3:  Saturn Sextile Node    Saturn Conj Mercury   Saturn Trine South Node
+  ```
+
+  Three separate places deduplicated with a **set** and then called `list()` on it — a correct dedupe followed by an arbitrary order: `ChartBuilder._get_objects_list()`, and the Grand Cross and Mystic Rectangle finders in `AspectPatternAnalyzer` (whose set literals meant a pattern reported *its own planets* in a different order each run). All three now use `dict.fromkeys()`, which dedupes and keeps the order the caller asked for — so `positions` finally comes out as Sun, Moon, Mercury… as configured, rather than however the hash table felt.
+
+  It was invisible because it is **arbitrary per process**, not per call: Python randomizes string hashing at interpreter start, and `CelestialPosition` is a frozen dataclass hashing off its string fields. Within one process the order is stable, so every existing test passed, and building two charts in one test and comparing them proved nothing. The new `tests/test_determinism.py` therefore spawns **real subprocesses with differing `PYTHONHASHSEED`** and pins a maximal chart's entire `to_dict()` across them — the general lesson being that a nondeterminism test which does not cross a process boundary is testing the seed, not the code.
 
 - **Three values in the traditional dignity tables were simply wrong** *(dignity output change)*. They do not crash; they silently corrupt dignity scoring, and feed onward into almuten, sect analysis, length-of-life and the planner's Chart Analysis page. Found by testing the tables against the sources they claim to follow.
   1. **The Water triplicity had its day and night rulers swapped.** Ours read day=Mars, night=Venus. Dorotheus gives Water as **day=Venus, night=Mars**, participating=Moon. Fire, Earth and Air all matched Dorotheus *exactly* — so the table was plainly meant to be Dorothean, and Water alone was reversed. It was neither Dorothean nor Ptolemaic (Ptolemy and Lilly give Mars for both). Affects every chart with a planet in Cancer, Scorpio or Pisces.

@@ -785,7 +785,6 @@ chart.draw("my_palette.svg") \
     .with_zodiac_palette("viridis") \
     .save()
 ```
-
 ---
 
 ## See Also

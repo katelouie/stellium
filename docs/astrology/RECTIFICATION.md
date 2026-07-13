@@ -17,6 +17,10 @@ a = analyze_sect(chart)
 
 print(f"{a.p_day:.2f}  → {a.leans}")   # 0.80  → day
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+0.80  → day
+```
 
 Or drop it straight into a report (renders in every format):
 
@@ -188,6 +192,7 @@ This is the part that matters.
 
 For anyone not in the notables catalog, pass events explicitly:
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder, Native, analyze_sect
 from stellium.data import LifeEvent
@@ -262,7 +267,6 @@ from stellium import get_notable_life_events, get_notable_temperament
 events = get_notable_life_events("Frida Kahlo")     # ~Rodden-B, taxonomy-tagged
 traits = get_notable_temperament("Frida Kahlo")     # soft/interpretive (warns on access)
 ```
-
 - **Life events** — dated, taxonomy-tagged, gathered from biographies + AstroDataBank
   via research. Sourced but **not** certificate-verified — roughly Rodden **B**
   grade. Each carries an honest `precision` and a `representative_date` helper.

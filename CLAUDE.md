@@ -772,23 +772,34 @@ for layer in layers:
 dwg.save()
 ```
 
-### Task 4: Add Caching to Expensive Calculations
+### Task 4: Add Caching — and when not to
 
-<!--pytest.mark.skip-->
+**Do not disk-cache a calculation.** This section used to recommend exactly that,
+with `@cached(cache_type="ephemeris")` on a method, and called it "20× faster". It
+was never measured. It was **13× slower** — a `swe.calc_ut` takes microseconds and a
+pickle round-trip does not — and because `@cached` on a *method* puts `self` in the
+key, and `self`'s repr contains a memory address, no entry could ever be found
+again. Every call missed, every call wrote a file, nothing was ever read back. It
+reached **18.5 million files** before anyone looked. See CHANGELOG 0.21.1.
+
+Cache a **network call**, keyed on a plain string. That is the case the mechanism
+was always right for, and the only remaining `@cached` in the library:
+
 ```python
-from stellium.utils.cache import cached
-
-class MyEngine:
-    @cached(cache_type="ephemeris", max_age_seconds=86400)
-    def expensive_calculation(self, param1: str, param2: float) -> dict:
-        """Expensive calculation that benefits from caching."""
-        # Expensive work here
-        result = ...
-        return result
-
-# First call: calculates and caches
-# Second call with same params: returns cached result (20x faster!)
+# src/stellium/core/native.py — geocoding: a slow network round-trip, stable key
+@cached(cache_type="geocoding", max_age_seconds=604800)
+def geocode_location(location: str) -> tuple[float, float, str]:
+    ...
 ```
+
+Two rules, both now enforced rather than advised:
+
+- **Never on a method.** `self` becomes part of the key. `_make_key()` now raises
+  `UnstableCacheKey` on any argument whose repr embeds a memory address, and
+  `@cached` degrades to an uncached call with a warning rather than silently
+  poisoning the cache.
+- **Measure before you cache.** If the work is cheaper than the pickle, caching it
+  is a pessimisation that also fills the user's disk.
 
 ### Task 5: Working with the Notable Database
 
@@ -970,9 +981,10 @@ class ChartBuilder:
         if self._datetime in self._cache:
             return self._cache[self._datetime]
 
-# ✅ DO: Make caching explicit at function level
-@cached(cache_type="ephemeris")
-def calculate_positions(...):
+# ✅ DO: Make caching explicit at function level — and only for a network call,
+# never for a computation, and never on a method (`self` poisons the key).
+@cached(cache_type="geocoding")
+def geocode_location(location: str):
     ...
 ```
 
@@ -1031,6 +1043,7 @@ python examples/report_examples.py
 
 ### Quick API Examples
 
+<!--doc-output:volatile-->
 ```python
 # Simple chart
 from stellium import ChartBuilder
@@ -1098,10 +1111,14 @@ chart.draw("chart.svg").save()
 
 ### Performance Tips
 
-1. Use caching for expensive operations: `@cached(cache_type="ephemeris")`
-2. Batch ephemeris calls when possible
-3. Use MockEphemerisEngine for tests that don't need real calculations
-4. Enable cache: `from stellium.utils.cache import enable_cache; enable_cache()`
+1. **Do not disk-cache ephemeris or house calculations.** They are microseconds; a
+   pickle round-trip is not. Caching them measured 13× *slower*. (`enable_cache()`
+   does not exist — this list used to recommend it.)
+2. Cache **network** calls only, keyed on a plain string — see geocoding.
+3. Never put `@cached` on a method: `self` lands in the key and the entry is
+   unfindable forever after.
+4. Batch ephemeris calls when possible.
+5. Use MockEphemerisEngine for tests that don't need real calculations.
 
 ### Decision Guide
 

@@ -93,6 +93,7 @@ Hypothetical points used in Uranian astrology.
 
 ### Example: Selecting Celestial Objects
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -108,7 +109,6 @@ sun = chart.get_object("Sun")
 chiron = chart.get_object("Chiron")
 lilith = chart.get_object("Mean Apogee")  # or "Black Moon Lilith"
 ```
-
 ---
 
 ## House Systems (18 systems)
@@ -159,6 +159,7 @@ Stellium implements all major house systems via the Swiss Ephemeris. You can use
 
 ### Example: Using House Systems
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -179,7 +180,6 @@ chart = (ChartBuilder.from_native(native)
 placidus_cusps = chart.get_houses("Placidus")
 whole_sign_cusps = chart.get_houses("Whole Sign")
 ```
-
 ---
 
 ## Ayanamsas / Sidereal Zodiacs (9 systems)
@@ -212,6 +212,7 @@ Stellium supports sidereal zodiac calculations with multiple ayanamsa options ac
 
 ### Example: Sidereal Charts
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -228,7 +229,6 @@ chart = ChartBuilder.from_native(native).with_sidereal("fagan_bradley").calculat
 # KP astrology
 chart = ChartBuilder.from_native(native).with_sidereal("krishnamurti").calculate()
 ```
-
 ---
 
 ## Fixed Stars (26 stars)
@@ -284,6 +284,7 @@ Additional stars for detailed analysis.
 
 ### Example: Including Fixed Stars
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -371,6 +372,7 @@ Based on each planet's exaltation sign ruler.
 
 ### Example: Calculating Arabic Parts
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native
@@ -449,6 +451,7 @@ Stellium supports major, minor, harmonic, and declination aspects with configura
 
 ### Example: Aspect Configuration
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.core.native import Native

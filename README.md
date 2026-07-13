@@ -163,7 +163,6 @@ from stellium import ChartBuilder
 chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 chart.draw("einstein.svg").save()
 ```
-
 ![Einstein - Plain](docs/images/examples/readme_einstein.svg)
 
 **That's it!** You now have a beautiful natal chart SVG for Einstein.
@@ -213,6 +212,7 @@ export too.
 
 ### Your Own Chart
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 
@@ -250,6 +250,7 @@ Phase: Full (100% illuminated)
 
 ### Level 1: Exploring Chart Data
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 
@@ -272,6 +273,7 @@ for i, cusp in enumerate(houses.cusps, 1):
 
 ### Level 2: Custom House Systems & Aspects
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.engines import WholeSignHouses, ModernAspectEngine, SimpleOrbEngine
@@ -294,6 +296,7 @@ Placidus (default), Whole Sign, Koch, Equal, Regiomontanus, Campanus, Porphyry, 
 
 ### Level 3: Multiple House Systems
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.engines import PlacidusHouses, WholeSignHouses, KochHouses
@@ -317,6 +320,7 @@ print(f"Sun in Koch House: {chart.get_house('Sun', 'Koch')}")
 
 ### Level 4: Arabic Parts & Components
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder
 from stellium.components import ArabicPartsCalculator, MidpointCalculator
@@ -346,6 +350,7 @@ for mp in midpoints[:5]:  # First 5 midpoints
 
 ### Level 5: Terminal Reports with Rich
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder, Native, ReportBuilder
 from stellium.components import DignityComponent
@@ -405,6 +410,19 @@ for aspect in cross_aspects[:10]:
     print(f"{aspect.object1.name} ({synastry.labels[0]}) "
           f"{aspect.aspect_name} "
           f"{aspect.object2.name} ({synastry.labels[1]})")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun (Kate) Trine Mars (Alex)
+Sun (Kate) Trine Chiron (Alex)
+Sun (Kate) Opposition MC (Alex)
+Sun (Kate) Conjunction IC (Alex)
+Moon (Kate) Sextile Mars (Alex)
+Moon (Kate) Conjunction True Node (Alex)
+Moon (Kate) Opposition South Node (Alex)
+Moon (Kate) Trine MC (Alex)
+Moon (Kate) Sextile IC (Alex)
+Mercury (Kate) Trine Chiron (Alex)
 ```
 
 **Comparison Chart Types:**
@@ -524,6 +542,7 @@ if sun.is_out_of_bounds:
 
 Create relationship, timing, and synthesis charts:
 
+<!--doc-output:volatile-->
 ```python
 from stellium import MultiChartBuilder, Native, SynthesisBuilder
 
@@ -550,7 +569,6 @@ composite = SynthesisBuilder.composite(native_a, native_b).calculate()
 # Davison (relationship midpoint chart with actual location)
 davison = SynthesisBuilder.davison(native_a, native_b).calculate()
 ```
-
 **Comparison Types:**
 
 - **Synastry**: Two natal charts overlaid (bi-wheel)
@@ -594,6 +612,43 @@ print(f"{a.p_day:.2f} → {a.leans}")           # 0.80 → day
 from stellium import ReportBuilder
 ReportBuilder().from_chart(chart).with_sect_rectification().render(format="markdown")
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+0.80 → day
+## Sect Rectification
+
+### Anchor
+
+**Chart sect (as given):** Day  
+**Daylight prior P(day):** 0.55  (geometry, the base rate)  
+**Calibrated P(day):** 0.80  → leans DAY (80% conf)  
+**Reading:** indicator, not oracle — adjudicate with real knowledge  
+**⚠ Moon band:** Moon crosses Taurus → Gemini within the 24h — its sign (and anything it rules) is a band, not a point.  
+
+### Day vs Night hypotheses
+
+|                     | IF DAY (above horizon)                                    | IF NIGHT (below horizon)                                     |
+| ------------------- | --------------------------------------------------------- | ------------------------------------------------------------ |
+| Sect light          | Sun in Cancer (peregrine)                                 | Moon in Taurus (exalted)                                     |
+| Out-of-sect malefic | Mars in Capricorn (exalted)                               | Saturn in Pisces (peregrine)                                 |
+|   → hardship reads  | hot, sharp, sudden — accidents, violence, fever, conflict | cold, slow, chronic — illness, poverty, confinement, decline |
+| In-sect benefic     | Jupiter in Cancer (exalted)                               | Venus in Gemini (peregrine)                                  |
+|   → fortune reads   | Jupiter-toned — honour, wealth, law, faith, expansion     | Venus-toned — love, art, beauty, pleasure, music             |
+
+### Evidence & convergence
+
+Evidence alignment — does the life match each hypothesis?
+  hardship flavour (malefic-of-sect, VALIDATED +0.35): leans DAY  (4.0 day / 2.0 night)
+  fortune flavour  (benefic-of-sect): leans NIGHT  (0.6 day / 7.6 night)
+  firdaria time-lord fit: day-hits 9 / night-hits 8 → favours day
+
+Soft signals (⚠ ~null on strangers — high value only with real first-hand knowledge):
+  malefic-of-temperament (Mars-hot − Saturn-cold) = +0 → —
+  sect-light temperament (Solar − Lunar)        = +1 → DAY
+
+Convergence (counted, never summed): DAY 3 · NIGHT 1 (of 4 techniques)
+→ SECT: trust this anchor — it is the only cross-validated signal (~70%). The soft/timing rows routinely point the wrong way; when they fight the anchor on sect, the anchor wins. TIME-within-sect is where your own knowledge decides.
+```
 
 ### Data Export
 
@@ -613,6 +668,7 @@ data = chart.to_dict()
 
 Generate a personalized year-long astrological planner as a PDF:
 
+<!--doc-output:volatile-->
 ```python
 from stellium import Native, PlannerBuilder
 
@@ -627,7 +683,6 @@ planner = (
     .generate("my_planner.pdf")
 )
 ```
-
 The front matter is curated on by default, so that's already a complete planner.
 Drop any page with the matching `.without_*()` call.
 
@@ -663,6 +718,7 @@ See the [planner cookbook](examples/planner_cookbook.py) for detailed recipes, a
 
 Generate multi-page PDF documents with one chart per page, like an old-school astrologer's chart atlas:
 
+<!--doc-output:volatile-->
 ```python
 from stellium.visualization.atlas import AtlasBuilder
 from stellium.core.native import Native
@@ -693,7 +749,6 @@ AtlasBuilder.from_all_notables().save("complete_atlas.pdf")
 # Filter by category and sort by birth date
 AtlasBuilder.from_all_notables(category="scientist", sort_by="date").save("scientists.pdf")
 ```
-
 **Atlas Features:**
 
 - **Multiple input methods**: Add natives directly, look up notables by name, or use `from_all_notables()` for the entire database
@@ -723,6 +778,22 @@ stats = ChartStats(charts)
 print(stats.element_distribution())
 print(stats.sign_distribution("Sun"))
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+sun_sign
+Capricorn      3
+Aquarius       3
+Pisces         2
+Scorpio        2
+Cancer         2
+Taurus         2
+Sagittarius    2
+Leo            2
+Gemini         2
+Name: count, dtype: int64
+{'fire': 0.235, 'earth': 0.23, 'air': 0.22, 'water': 0.315}
+{'Aries': 0, 'Taurus': 2, 'Gemini': 2, 'Cancer': 2, 'Leo': 2, 'Virgo': 0, 'Libra': 0, 'Scorpio': 2, 'Sagittarius': 2, 'Capricorn': 3, 'Aquarius': 3, 'Pisces': 2}
+```
 
 Requires: `pip install stellium[analysis]`
 
@@ -732,13 +803,13 @@ See the [analysis cookbook](examples/analysis_cookbook.ipynb) for comprehensive 
 
 A chart builds in about **0.2 ms**. There is nothing to configure and nothing to warm up.
 
+<!--doc-output:volatile-->
 ```python
 from stellium import ChartBuilder, Native
 
 native = Native("2000-01-06 12:00", "Seattle, WA")
 chart = ChartBuilder.from_native(native).calculate()   # ~0.2 ms
 ```
-
 Chart calculation is not cached — recomputing is faster than reading a cache. Geocoding
 *is* cached, since that one is a network call; it lives in `~/.cache/stellium/`
 (see [docs/LOCATIONS.md](docs/LOCATIONS.md)).
