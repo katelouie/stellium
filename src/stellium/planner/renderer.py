@@ -13,9 +13,7 @@ fonts that never shipped in the wheel), and the shared glyph/component vocabular
 
 from __future__ import annotations
 
-import json
 import os
-import shutil
 import tempfile
 from dataclasses import dataclass
 from datetime import date
@@ -27,21 +25,7 @@ from stellium.planner.almanac import (
 )
 from stellium.planner.contract import build_planner_data
 from stellium.planner.events import DailyEventCollector
-
-try:
-    import typst as _typst
-except ImportError:  # pragma: no cover - typst is a hard dependency in practice
-    _typst = None
-
-# The planner's Typst entry point plus everything it imports.
-_TEMPLATE_FILES = (
-    "palettes.typ",
-    "glyphs.typ",
-    "components.typ",
-    "engine.typ",
-    "planner_components.typ",
-    "planner.typ",
-)
+from stellium.presentation.typst_runtime import TypstDocument, require_typst
 
 
 @dataclass
@@ -75,10 +59,7 @@ class PlannerRenderer:
 
     def render(self) -> bytes:
         """Build the planner and compile it to PDF bytes."""
-        if _typst is None:
-            raise RuntimeError(
-                "Typst library not available. Install with: pip install typst"
-            )
+        require_typst()  # fail before building charts, not after
 
         theme = getattr(self.config, "theme", "house")
         start, end = self._date_range()
@@ -369,43 +350,16 @@ class PlannerRenderer:
     # -- compile ------------------------------------------------------------
 
     def _compile(self, data: dict, theme: str) -> bytes:
-        from stellium.presentation.typst_render import THEMES, _font_paths, _theme_dir
+        """Hand the contract to the shared Typst runtime.
 
-        if theme not in THEMES:
-            raise ValueError(
-                f"Unknown theme {theme!r}. Choose from: {', '.join(THEMES)}"
-            )
-
-        with tempfile.TemporaryDirectory(prefix="stellium_planner_") as tmp:
-            for filename in _TEMPLATE_FILES:
-                shutil.copy2(
-                    os.path.join(_theme_dir(), filename), os.path.join(tmp, filename)
-                )
-
-            # Materialise embedded SVGs so Typst can image() them.
-            self._materialize_svgs(data.get("front", []), tmp)
-
-            with open(os.path.join(tmp, "data.json"), "w", encoding="utf-8") as fh:
-                json.dump(data, fh, ensure_ascii=False)
-
-            return _typst.compile(
-                os.path.join(tmp, "planner.typ"),
-                root=tmp,
-                font_paths=_font_paths(),
-                sys_inputs={"theme": theme, "data": "data.json"},
-            )
-
-    def _materialize_svgs(
-        self, sections: list[dict], tmp: str, seq: list[int] | None = None
-    ) -> None:
-        if seq is None:
-            seq = [0]
-        for section in sections:
-            if section.get("kind") == "svg" and section.get("svg_content"):
-                seq[0] += 1
-                filename = f"embed_{seq[0]}.svg"
-                with open(os.path.join(tmp, filename), "w", encoding="utf-8") as fh:
-                    fh.write(section["svg_content"])
-                section["svg_file"] = filename
-                del section["svg_content"]
-            self._materialize_svgs(section.get("sections", []), tmp, seq)
+        The temp-dir/copy-design-system/materialise-SVGs/compile dance is identical
+        to the report's, so it lives in one place now (typst_runtime.TypstDocument).
+        The planner only has to name the extra component module it brings.
+        """
+        with TypstDocument(
+            "planner.typ",
+            theme,
+            extra_templates=("planner_components.typ",),
+            prefix="stellium_planner_",
+        ) as doc:
+            return doc.render(data, svg_sections=data.get("front", []))
