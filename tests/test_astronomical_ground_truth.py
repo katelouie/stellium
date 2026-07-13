@@ -665,20 +665,16 @@ def test_profections_cycle_every_twelve_years():
 # ===========================================================================
 
 
-@pytest.mark.xfail(
-    reason="FOUND BY THIS SUITE, NOT YET DIAGNOSED: `voc_windows()` returns at "
-    "least one January 2026 window during which the Moon changes sign — but a void "
-    "period is defined as ending AT the ingress, so it cannot span one. Either the "
-    "window's end is being placed past the ingress, or the window is being merged "
-    "with the next one. Needs investigation; failing loudly on purpose.",
-    strict=False,
-)
 def test_void_of_course_means_no_more_aspects_before_the_moon_leaves_its_sign():
     """The definition, not the implementation.
 
     The Moon is void from its last Ptolemaic aspect to a visible planet until it
     changes sign. So during a VOC period the Moon must make NO further exact aspect
     to Sun-Saturn — and it must still be in the sign it started in.
+
+    Note the sign is sampled strictly INSIDE the window. A void window is a closed
+    interval whose endpoints are ingress instants, where the Moon sits exactly on a
+    30° boundary and the sign index is a coin-flip on the last floating-point bit.
     """
     from stellium.electional.intervals import voc_windows
     from stellium.engines.search import _julian_day_to_datetime
@@ -688,16 +684,19 @@ def test_void_of_course_means_no_more_aspects_before_the_moon_leaves_its_sign():
 
     visible = ("Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn")
     moon_id = SWISS_EPHEMERIS_IDS["Moon"]
+    inside = 0.002  # ~3 minutes; the Moon moves ~0.03° — well clear of a boundary
 
     for window in windows[:6]:
         start_jd, end_jd = window.start_jd, window.end_jd
 
         # The Moon does not change sign mid-void: the ingress is what ENDS it.
-        sign_at_start = int(_get_position_and_speed(moon_id, start_jd)[0] % 360 // 30)
-        just_before_end = int(
-            _get_position_and_speed(moon_id, end_jd - 0.001)[0] % 360 // 30
+        just_after_start = int(
+            _get_position_and_speed(moon_id, start_jd + inside)[0] % 360 // 30
         )
-        assert sign_at_start == just_before_end, (
+        just_before_end = int(
+            _get_position_and_speed(moon_id, end_jd - inside)[0] % 360 // 30
+        )
+        assert just_after_start == just_before_end, (
             f"the Moon changed sign during a void period starting "
             f"{_julian_day_to_datetime(start_jd):%Y-%m-%d %H:%M}"
         )
@@ -717,3 +716,58 @@ def test_void_of_course_means_no_more_aspects_before_the_moon_leaves_its_sign():
                     f"{hits[0].datetime_utc:%Y-%m-%d %H:%M}, during a period the "
                     f"engine calls void-of-course"
                 )
+
+
+def test_the_moon_enters_leo_on_2026_01_04_at_13_43_ut():
+    """An almanac fact, to anchor the whole-sign void below.
+
+    Cafe Astrology publishes this ingress at 8:43 AM ET — 13:43 UT.
+    """
+    from stellium.engines.search import find_all_sign_changes
+
+    changes = find_all_sign_changes("Moon", datetime(2026, 1, 4), datetime(2026, 1, 5))
+    leo = [c for c in changes if c.datetime_utc.day == 4]
+    assert leo, "the Moon must enter a new sign on 2026-01-04"
+
+    ingress = leo[0].datetime_utc
+    assert ingress.hour == 13 and abs(ingress.minute - 43) <= 1, (
+        f"published ingress is 13:43 UT; we say {ingress:%H:%M}"
+    )
+
+
+def test_a_whole_sign_void_is_possible_and_traditional_rules_produce_one():
+    """The Moon's entire Leo passage of Jan 2026 is void under traditional rules.
+
+    Not a bug — a consequence of the definition. Aspect targets from a single planet
+    sit at 0/±60/±90/±120/180, a lattice with 60° holes in it. In January 2026 five of
+    the six traditional planets are clustered in Capricorn, so their holes coincide,
+    and the gap lands squarely on Leo: the Moon's last aspect (trine Saturn, 116.4°)
+    perfects in Cancer, and the next (trine Mercury, 154.2°) waits until Virgo.
+
+    The outer planets fill that hole, which is why the modern mode sees an ordinary
+    few-hour void over the same passage — and why published tables (which use the
+    outers) show a short one. Both are right; they are different definitions.
+
+    This test exists so nobody "fixes" the long window away.
+    """
+    from stellium.electional.intervals import voc_windows
+
+    leo_passage = (datetime(2026, 1, 4, 14, 0), datetime(2026, 1, 6, 16, 0))
+
+    traditional = voc_windows(*leo_passage, mode="traditional")
+    assert len(traditional) == 1, "the Leo passage is one unbroken traditional void"
+    trad_hours = (traditional[0].end_jd - traditional[0].start_jd) * 24
+    assert trad_hours > 24, (
+        f"traditional rules must find a whole-sign void here, got {trad_hours:.1f}h"
+    )
+
+    modern = voc_windows(*leo_passage, mode="modern")
+    modern_hours = sum((w.end_jd - w.start_jd) * 24 for w in modern)
+    assert modern_hours < 12, (
+        f"the outers fill the 60° gap, so the modern void is short; "
+        f"got {modern_hours:.1f}h"
+    )
+    assert modern_hours < trad_hours, (
+        "a modern void is a subset of the traditional one — more planets to aspect "
+        "means the Moon's last aspect can only come later"
+    )
