@@ -117,12 +117,28 @@ class TestFontIndependence:
     def test_every_glyph_in_a_tno_chart_survives_rasterisation(self):
         """The bodies whose glyphs Unicode does not cover — the ones that rendered as
         tofu, or as the literal string "Sed", before the glyph SVGs were packaged.
+
+        Drawn directly rather than through a `.with_tnos()` chart: the TNO ephemeris
+        files are a separate download, so on a clean machine those bodies are dropped
+        and no glyph is embedded at all. The first version of this test passed only
+        because the author happened to have fetched the .se1 files an hour earlier —
+        which is the exact class of environment-dependent bug this file exists to
+        catch, so it is worth naming.
         """
-        chart = ChartBuilder.from_notable("Albert Einstein").with_tnos().calculate()
-        svg = chart.draw("t.svg").preset_standard().save(to_string=True)
+        import svgwrite
 
-        # Each hand-drawn glyph is embedded as a nested <svg> with the 12x12 viewBox.
-        assert 'viewBox="0 0 12 12"' in svg, "no bundled glyph SVGs were embedded"
+        from stellium.visualization.core import embed_svg_glyph, get_glyph
 
-        png = svg_to_png(svg, scale=1)
-        assert png_size(png)[0] > 100
+        drawn = ["Pholus", "Eris", "Sedna", "Sirius", "Gonggong"]
+
+        canvas = svgwrite.Drawing(size=(400, 120))
+        for index, body in enumerate(drawn):
+            glyph = get_glyph(body)
+            assert glyph["type"] == "svg", (
+                f"{body} should resolve to a bundled SVG glyph, got {glyph['type']!r} "
+                f"({glyph['value']!r}) — Unicode does not usefully cover it"
+            )
+            embed_svg_glyph(canvas, glyph["value"], 50 + index * 75, 60, 40)
+
+        png = svg_to_png(canvas.tostring(), scale=1)
+        assert png_size(png) == (400, 120)
