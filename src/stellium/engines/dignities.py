@@ -121,7 +121,7 @@ DIGNITIES = {
             19: "Jupiter",
             26: "Saturn",
         },
-        "triplicity": {"day": "Mars", "night": "Venus", "coop": "Moon"},
+        "triplicity": {"day": "Venus", "night": "Mars", "coop": "Moon"},
     },
     "Leo": {
         "symbol": "♌︎",
@@ -233,7 +233,7 @@ DIGNITIES = {
             19: "Jupiter",
             24: "Saturn",
         },
-        "triplicity": {"day": "Mars", "night": "Venus", "coop": "Moon"},
+        "triplicity": {"day": "Venus", "night": "Mars", "coop": "Moon"},
     },
     "Sagittarius": {
         "symbol": "♐︎",
@@ -274,7 +274,7 @@ DIGNITIES = {
         "symbol": "♑︎",
         "element": "Earth",
         "modality": "Cardinal",
-        "exaltation_degree": 27,
+        "exaltation_degree": 28,
         "traditional": {
             "ruler": "Saturn",
             "exaltation": "Mars",
@@ -335,7 +335,7 @@ DIGNITIES = {
             "ruler": "Jupiter",
             "exaltation": "Venus",
             "detriment": "Mercury",
-            "fall": "Ceres",
+            "fall": "Mercury",
         },
         "modern": {
             "ruler": "Neptune",
@@ -352,7 +352,7 @@ DIGNITIES = {
             19: "Mars",
             28: "Saturn",
         },
-        "triplicity": {"day": "Mars", "night": "Venus", "coop": "Moon"},
+        "triplicity": {"day": "Venus", "night": "Mars", "coop": "Moon"},
     },
 }
 

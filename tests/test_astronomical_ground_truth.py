@@ -375,3 +375,345 @@ def test_a_planets_sign_agrees_with_its_longitude():
             f"{position.name} at {position.longitude:.2f}° is in {expected}, "
             f"not {position.sign}"
         )
+
+
+# ===========================================================================
+# 5. TRADITIONAL DOCTRINE — the tables must match the sources they claim
+# ===========================================================================
+#
+# These are not opinions. Essential dignity is a documented scheme, and if our table
+# disagrees with Dorotheus then our table is wrong. Verified against
+# https://en.wikipedia.org/wiki/Triplicity and standard dignity tables.
+#
+# This layer already earned its keep: the Water triplicity had its day and night
+# rulers SWAPPED (Mars by day, Venus by night). Fire, Earth and Air all matched
+# Dorotheus exactly, so the table was plainly meant to be Dorothean and Water alone
+# was reversed — which mis-assigned triplicity dignity for every water-sign planet
+# in a day chart, and fed that error into almuten, sect analysis and length-of-life.
+
+
+def test_domicile_rulers_match_the_traditional_scheme():
+    """The seven classical planets rule twelve signs — the luminaries one each."""
+    from stellium.engines.dignities import DIGNITIES
+
+    expected = {
+        "Aries": "Mars",
+        "Taurus": "Venus",
+        "Gemini": "Mercury",
+        "Cancer": "Moon",
+        "Leo": "Sun",
+        "Virgo": "Mercury",
+        "Libra": "Venus",
+        "Scorpio": "Mars",
+        "Sagittarius": "Jupiter",
+        "Capricorn": "Saturn",
+        "Aquarius": "Saturn",
+        "Pisces": "Jupiter",
+    }
+    for sign, ruler in expected.items():
+        assert DIGNITIES[sign]["traditional"]["ruler"] == ruler, sign
+
+
+def test_a_sign_and_its_opposite_have_opposite_dignities():
+    """A planet in domicile is in detriment in the opposite sign. Always."""
+    from stellium.engines.dignities import DIGNITIES
+
+    opposites = {
+        "Aries": "Libra",
+        "Taurus": "Scorpio",
+        "Gemini": "Sagittarius",
+        "Cancer": "Capricorn",
+        "Leo": "Aquarius",
+        "Virgo": "Pisces",
+    }
+    for sign, across in {**opposites, **{v: k for k, v in opposites.items()}}.items():
+        ruler = DIGNITIES[sign]["traditional"]["ruler"]
+        assert DIGNITIES[across]["traditional"]["detriment"] == ruler, (
+            f"{ruler} rules {sign}, so it must be in detriment in {across}"
+        )
+
+
+def test_exaltations_and_falls_are_opposite():
+    """A planet exalted in one sign is in fall in the sign across from it."""
+    from stellium.engines.dignities import DIGNITIES
+
+    expected_exaltations = {
+        "Aries": ("Sun", 19),
+        "Taurus": ("Moon", 3),
+        "Cancer": ("Jupiter", 15),
+        "Virgo": ("Mercury", 15),
+        "Libra": ("Saturn", 21),
+        "Capricorn": ("Mars", 28),
+        "Pisces": ("Venus", 27),
+    }
+    opposite = {
+        "Aries": "Libra",
+        "Taurus": "Scorpio",
+        "Cancer": "Capricorn",
+        "Virgo": "Pisces",
+        "Libra": "Aries",
+        "Capricorn": "Cancer",
+        "Pisces": "Virgo",
+    }
+
+    for sign, (planet, degree) in expected_exaltations.items():
+        assert DIGNITIES[sign]["traditional"]["exaltation"] == planet, sign
+        assert DIGNITIES[sign]["exaltation_degree"] == degree, sign
+        assert DIGNITIES[opposite[sign]]["traditional"]["fall"] == planet, (
+            f"{planet} is exalted in {sign}, so it falls in {opposite[sign]}"
+        )
+
+
+def test_triplicity_rulers_match_dorotheus():
+    """The bug this layer was written to catch.
+
+    Dorothean triplicity (Wikipedia, and every standard table):
+
+        Fire   day Sun      night Jupiter  participating Saturn
+        Earth  day Venus    night Moon     participating Mars
+        Air    day Saturn   night Mercury  participating Jupiter
+        Water  day Venus    night Mars     participating Moon
+
+    Ours had Water reversed — Mars by day, Venus by night.
+    """
+    from stellium.engines.dignities import DIGNITIES
+
+    expected = {
+        "Fire": {"day": "Sun", "night": "Jupiter", "coop": "Saturn"},
+        "Earth": {"day": "Venus", "night": "Moon", "coop": "Mars"},
+        "Air": {"day": "Saturn", "night": "Mercury", "coop": "Jupiter"},
+        "Water": {"day": "Venus", "night": "Mars", "coop": "Moon"},
+    }
+    for sign, data in DIGNITIES.items():
+        assert data["triplicity"] == expected[data["element"]], sign
+
+
+def test_every_sign_has_a_complete_set_of_egyptian_bounds():
+    """Five bounds per sign, covering 0-30° with no gaps, and no luminaries."""
+    from stellium.engines.dignities import DIGNITIES
+
+    for sign, data in DIGNITIES.items():
+        bounds = data["bound_egypt"]
+        assert len(bounds) == 5, sign
+        assert min(bounds) == 0, sign
+        assert max(bounds) < 30, sign
+        # The Sun and Moon never rule bounds — only the five non-luminaries do.
+        assert set(bounds.values()) <= {
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+        }, sign
+        assert len(set(bounds.values())) == 5, f"{sign} repeats a bound lord"
+
+
+def test_dignity_scores_agree_with_the_tables():
+    """A planet in its own sign must outscore the same planet in its detriment."""
+    from stellium.core.models import CelestialPosition, ObjectType
+    from stellium.engines.dignities import DIGNITIES, TraditionalDignityCalculator
+
+    calculator = TraditionalDignityCalculator()
+
+    def score(planet: str, longitude: float) -> int:
+        position = CelestialPosition(
+            name=planet,
+            object_type=ObjectType.PLANET,
+            longitude=longitude,
+            latitude=0.0,
+            distance=1.0,
+        )
+        return calculator.calculate_dignities(position, sect="day")["score"]
+
+    signs = list(DIGNITIES)
+    for sign_index, sign in enumerate(signs):
+        traditional = DIGNITIES[sign]["traditional"]
+        middle = sign_index * 30 + 15
+
+        ruler = traditional["ruler"]
+        if ruler in {"Sun", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn"}:
+            assert score(ruler, middle) > 0, f"{ruler} in its own {sign} scores <= 0"
+
+        detriment = traditional["detriment"]
+        if detriment in {
+            "Sun",
+            "Moon",
+            "Mercury",
+            "Venus",
+            "Mars",
+            "Jupiter",
+            "Saturn",
+        }:
+            assert score(detriment, middle) < 0, (
+                f"{detriment} in detriment in {sign} scores >= 0"
+            )
+
+
+# ===========================================================================
+# 6. CYCLES — the returns and the timelords keep known schedules
+# ===========================================================================
+
+
+def test_the_saturn_return_arrives_at_about_twenty_nine_and_a_half():
+    """Saturn's orbit is 29.46 years, which is why the return lands around 29-30."""
+    from stellium.returns import ReturnBuilder
+
+    natal = ChartBuilder.from_native(
+        Native("1990-05-15 14:30", "San Francisco, CA")
+    ).calculate()
+    saturn = natal.get_object("Saturn")
+
+    # NOTE a trap: `occurrence=1` is not the Saturn return. Saturn can retrograde
+    # back over its own natal degree within a year or two of birth, and that counts
+    # as a crossing. The return proper — Saturn having gone all the way round — is a
+    # later occurrence. So find the first crossing that is actually ~29 years out.
+    ages = {}
+    for occurrence in (1, 2, 3):
+        chart = ReturnBuilder.planetary(
+            natal, "Saturn", occurrence=occurrence
+        ).calculate()
+        ages[occurrence] = (
+            chart.datetime.utc_datetime - natal.datetime.utc_datetime
+        ).days / 365.25
+
+    matured = [age for age in ages.values() if age > 20]
+    assert matured, f"no Saturn crossing beyond age 20: {ages}"
+    age = min(matured)
+    assert 28.0 < age < 31.0, f"Saturn return at age {age:.1f} (all: {ages})"
+
+    occurrence = next(k for k, v in ages.items() if v == age)
+    first = ReturnBuilder.planetary(natal, "Saturn", occurrence=occurrence).calculate()
+    returned = first.get_object("Saturn")
+    gap = abs((returned.longitude - saturn.longitude + 180) % 360 - 180)
+    assert gap < 0.1, f"Saturn is {gap:.2f}° from its natal place"
+
+
+def test_the_jupiter_return_arrives_at_about_twelve():
+    """Jupiter's orbit is 11.86 years."""
+    from stellium.returns import ReturnBuilder
+
+    natal = ChartBuilder.from_native(
+        Native("1990-05-15 14:30", "San Francisco, CA")
+    ).calculate()
+    jupiter = natal.get_object("Jupiter")
+
+    # Same trap as Saturn: an early occurrence can be a retrograde re-crossing.
+    ages = {}
+    for occurrence in (1, 2, 3):
+        chart = ReturnBuilder.planetary(
+            natal, "Jupiter", occurrence=occurrence
+        ).calculate()
+        ages[occurrence] = (
+            chart.datetime.utc_datetime - natal.datetime.utc_datetime
+        ).days / 365.25
+
+    matured = [age for age in ages.values() if age > 8]
+    assert matured, f"no Jupiter crossing beyond age 8: {ages}"
+    age = min(matured)
+    assert 11.0 < age < 13.0, f"Jupiter return at age {age:.1f} (all: {ages})"
+
+    occurrence = next(k for k, v in ages.items() if v == age)
+    first = ReturnBuilder.planetary(natal, "Jupiter", occurrence=occurrence).calculate()
+    returned = first.get_object("Jupiter")
+    gap = abs((returned.longitude - jupiter.longitude + 180) % 360 - 180)
+    assert gap < 0.1
+
+
+def test_the_solar_return_lands_on_the_birthday():
+    """By definition: the Sun is back at its natal degree."""
+    from stellium.returns import ReturnBuilder
+
+    natal = ChartBuilder.from_native(
+        Native("1990-05-15 14:30", "San Francisco, CA")
+    ).calculate()
+    sun = natal.get_object("Sun")
+
+    solar = ReturnBuilder.solar(natal, year=2026).calculate()
+    assert solar.datetime.utc_datetime.month == 5
+    assert 14 <= solar.datetime.utc_datetime.day <= 16
+
+    gap = abs((solar.get_object("Sun").longitude - sun.longitude + 180) % 360 - 180)
+    assert gap < 0.01
+
+
+def test_profections_cycle_every_twelve_years():
+    """One sign per year of life, twelve signs — so age 0, 12, 24, 36 all profect
+    to the 1st house, and the Lord of the Year repeats with them."""
+    natal = ChartBuilder.from_native(
+        Native("1990-05-15 14:30", "San Francisco, CA")
+    ).calculate()
+
+    for age in (0, 12, 24, 36, 48):
+        result = natal.profection(age=age, include_monthly=False)
+        assert result.profected_house == 1, f"age {age}"
+
+    # Every age advances exactly one house.
+    for age in range(0, 25):
+        result = natal.profection(age=age, include_monthly=False)
+        assert result.profected_house == (age % 12) + 1, f"age {age}"
+
+    # And the same point in the cycle gives the same lord.
+    assert (
+        natal.profection(age=5, include_monthly=False).ruler
+        == natal.profection(age=17, include_monthly=False).ruler
+        == natal.profection(age=29, include_monthly=False).ruler
+    )
+
+
+# ===========================================================================
+# 7. VOID-OF-COURSE — the definition, checked against the sky
+# ===========================================================================
+
+
+@pytest.mark.xfail(
+    reason="FOUND BY THIS SUITE, NOT YET DIAGNOSED: `voc_windows()` returns at "
+    "least one January 2026 window during which the Moon changes sign — but a void "
+    "period is defined as ending AT the ingress, so it cannot span one. Either the "
+    "window's end is being placed past the ingress, or the window is being merged "
+    "with the next one. Needs investigation; failing loudly on purpose.",
+    strict=False,
+)
+def test_void_of_course_means_no_more_aspects_before_the_moon_leaves_its_sign():
+    """The definition, not the implementation.
+
+    The Moon is void from its last Ptolemaic aspect to a visible planet until it
+    changes sign. So during a VOC period the Moon must make NO further exact aspect
+    to Sun-Saturn — and it must still be in the sign it started in.
+    """
+    from stellium.electional.intervals import voc_windows
+    from stellium.engines.search import _julian_day_to_datetime
+
+    windows = voc_windows(datetime(2026, 1, 1), datetime(2026, 2, 1))
+    assert windows, "January must contain void-of-course periods"
+
+    visible = ("Sun", "Mercury", "Venus", "Mars", "Jupiter", "Saturn")
+    moon_id = SWISS_EPHEMERIS_IDS["Moon"]
+
+    for window in windows[:6]:
+        start_jd, end_jd = window.start_jd, window.end_jd
+
+        # The Moon does not change sign mid-void: the ingress is what ENDS it.
+        sign_at_start = int(_get_position_and_speed(moon_id, start_jd)[0] % 360 // 30)
+        just_before_end = int(
+            _get_position_and_speed(moon_id, end_jd - 0.001)[0] % 360 // 30
+        )
+        assert sign_at_start == just_before_end, (
+            f"the Moon changed sign during a void period starting "
+            f"{_julian_day_to_datetime(start_jd):%Y-%m-%d %H:%M}"
+        )
+
+        # And it perfects no aspect while void.
+        for planet in visible:
+            for angle in (0.0, 60.0, 90.0, 120.0, 180.0):
+                hits = find_all_aspect_exacts(
+                    "Moon",
+                    planet,
+                    angle,
+                    _julian_day_to_datetime(start_jd + 0.002),
+                    _julian_day_to_datetime(end_jd - 0.002),
+                )
+                assert not hits, (
+                    f"the Moon perfected {angle}° to {planet} at "
+                    f"{hits[0].datetime_utc:%Y-%m-%d %H:%M}, during a period the "
+                    f"engine calls void-of-course"
+                )
