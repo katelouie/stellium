@@ -148,6 +148,56 @@ def get_glyph(object_name: str) -> dict[str, str]:
     return {"type": "unicode", "value": object_name[:3]}
 
 
+def get_aspect_glyph(aspect_name: str) -> dict[str, str]:
+    """
+    Get the glyph for an aspect, preferring the drawn one.
+
+    The sibling of `get_glyph()`, for `ASPECT_REGISTRY` rather than the bodies. It
+    exists because the harmonic aspects have no Unicode codepoint *anywhere* — no
+    block encodes a quintile — so they carry ASCII initials (`Q`, `bQ`, `tS`) as
+    their `glyph`. Those are the convention in Solar Fire and on astro.com and are
+    the right fallback for a terminal or a plain-text report, but in a drawing they
+    are letters sitting among symbols.
+
+    So a harmonic aspect resolves to its star polygon: the regular {n/k} figure whose
+    edge subtends the aspect's own angle, which is the same rule the classical glyphs
+    already follow (△ is the trine because a triangle's edge subtends 120°). The
+    Ptolemaic and minor aspects have real codepoints and stay Unicode.
+
+    Args:
+        aspect_name: Aspect name (e.g., "Trine", "Biquintile")
+
+    Returns:
+        Dictionary with:
+        - "type": "unicode" or "svg"
+        - "value": glyph string (unicode) or SVG content string (for inline embedding)
+    """
+    from stellium.data.paths import find_glyph_svg
+
+    info = get_aspect_info(aspect_name) or get_aspect_by_alias(aspect_name)
+    if info is None or not info.glyph:
+        # Ugly, but legible — the reader at least learns which aspect it is.
+        return {"type": "unicode", "value": aspect_name[:3]}
+
+    if info.glyph_svg_path:
+        svg_file = find_glyph_svg(info.glyph_svg_path)
+        if svg_file is not None:
+            return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+
+        # Unlike a body, the Unicode fallback here is *legible* — an ASCII initial,
+        # not a tofu box — so this degrades gracefully and does not warn. It is still
+        # worth knowing the package is incomplete.
+        warnings.warn(
+            f"Glyph SVG {info.glyph_svg_path!r} for aspect {aspect_name!r} is missing "
+            f"from the installation; falling back to the ASCII initial "
+            f"{info.glyph!r}. This is a packaging fault — please report it.",
+            MissingGlyphWarning,
+            stacklevel=2,
+        )
+
+    return {"type": "unicode", "value": info.glyph}
+
+
 def embed_svg_glyph(
     dwg: svgwrite.Drawing,
     svg_content: str,
@@ -273,30 +323,6 @@ def get_display_name(object_name: str) -> str:
     if obj_info:
         return obj_info.display_name
     return object_name
-
-
-def get_aspect_glyph(aspect_name: str) -> str:
-    """
-    Get the glyph for an astrological aspect.
-
-    Args:
-        aspect_name: Aspect name (e.g., "Conjunction", "Trine", "Conjunct")
-
-    Returns:
-        Unicode glyph string or abbreviation if not found
-    """
-    # Try exact name first
-    aspect_info = get_aspect_info(aspect_name)
-    if aspect_info and aspect_info.glyph:
-        return aspect_info.glyph
-
-    # Try as alias (e.g., "Conjunct" → "Conjunction")
-    aspect_info = get_aspect_by_alias(aspect_name)
-    if aspect_info and aspect_info.glyph:
-        return aspect_info.glyph
-
-    # Fallback: use first 3 characters
-    return aspect_name[:3]
 
 
 class ChartRenderer:

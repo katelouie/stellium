@@ -334,3 +334,85 @@ def test_filled_glyphs_are_recoloured_by_the_theme_not_left_black():
         dwg = svgwrite.Drawing(size=(100, 100))
         embed_svg_glyph(dwg, get_glyph(name)["value"], 50, 50, 40, fill_color=themed)
         assert f'stroke="{themed}"' in dwg.tostring(), f"{name}'s stroke was not themed"
+
+
+# ---------------------------------------------------------------------------
+# The harmonic aspects: is the drawn glyph geometrically *true*?
+# ---------------------------------------------------------------------------
+
+
+def test_harmonic_aspect_glyphs_subtend_their_own_angle():
+    """Each harmonic glyph must be the star polygon whose edge *is* the aspect.
+
+    This is the rule the classical glyphs already follow — △ is the trine because a
+    triangle's edge subtends 120°, □ is the square because a square's subtends 90° —
+    and the 5th/7th/9th harmonics were simply never given the same treatment. So the
+    glyph is not decorative and "it looks like a star" is not the standard: the angle
+    between two vertices joined by the path must equal the aspect's angle, or the
+    glyph is quietly claiming to be a different aspect.
+
+    A drawing can be checked against a number, so it should be.
+    """
+    import math
+    import re
+
+    from stellium.core.registry import get_aspects_by_category
+
+    harmonics = [a for a in get_aspects_by_category("Harmonic") if a.glyph_svg_path]
+    assert len(harmonics) == 8, (
+        "expected 8 drawn harmonic aspects, found "
+        f"{[a.name for a in harmonics]} — did a glyph_svg_path go missing?"
+    )
+
+    for aspect in harmonics:
+        svg_file = find_glyph_svg(aspect.glyph_svg_path)
+        assert svg_file is not None, f"{aspect.name}: {aspect.glyph_svg_path} missing"
+
+        d = re.search(r'\sd="([^"]+)"', svg_file.read_text()).group(1)
+        points = [
+            (float(x), float(y))
+            for x, y in re.findall(r"[ML]\s*(-?[\d.]+)\s+(-?[\d.]+)", d)
+        ]
+        assert len(points) >= 5, f"{aspect.name}: only {len(points)} vertices"
+
+        # The centre of a regular polygon is the mean of its vertices.
+        cx = sum(x for x, _ in points) / len(points)
+        cy = sum(y for _, y in points) / len(points)
+
+        bearings = [math.degrees(math.atan2(y - cy, x - cx)) for x, y in points]
+        for i in range(len(bearings)):
+            step = abs(bearings[(i + 1) % len(bearings)] - bearings[i]) % 360
+            subtended = min(step, 360 - step)  # unsigned, and every harmonic is < 180°
+            assert abs(subtended - aspect.angle) < 0.05, (
+                f"{aspect.name} is drawn subtending {subtended:.2f}° but the aspect "
+                f"is {aspect.angle:.2f}° — the glyph depicts the wrong aspect"
+            )
+
+
+def test_no_harmonic_glyph_is_a_degenerate_star():
+    """{9/3} is three triangles, not a nine-fold star — and it is *also* the trine.
+
+    A star polygon {n/k} is a single closed figure only when gcd(n, k) == 1. Where it
+    isn't, the edge subtends a *lower* harmonic's angle (3·360/9 = 120° — the trine),
+    which is exactly why ASPECT_REGISTRY has never carried a "trinovile". If one ever
+    appears, it is a duplicate of an aspect we already have under another name, and
+    its glyph would be a lie about which aspect it is.
+    """
+    from math import gcd
+
+    from stellium.core.registry import get_aspects_by_category
+
+    for aspect in get_aspects_by_category("Harmonic"):
+        if not aspect.family:
+            continue
+        n = {"Quintile Series": 5, "Septile Series": 7, "Novile Series": 9}[
+            aspect.family
+        ]
+        k = round(aspect.angle * n / 360)
+        assert gcd(n, k) == 1, (
+            f"{aspect.name} is {{{n}/{k}}}, which degenerates into {gcd(n, k)} "
+            f"figures — it is not a {n}-fold aspect but a {360 * gcd(n, k) / n:g}° one"
+        )
+        assert abs(k * 360 / n - aspect.angle) < 0.01, (
+            f"{aspect.name}'s angle {aspect.angle}° is not a {n}th harmonic"
+        )

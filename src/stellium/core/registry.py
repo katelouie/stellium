@@ -1553,6 +1553,11 @@ class AspectInfo:
 
     # Visual Representation
     glyph: str = ""  # Unicode astrological symbol (e.g., "☌", "□", "△")
+    # A drawn glyph, as a bare filename in the packaged glyph directory. Used where
+    # the Unicode glyph is inadequate — the harmonic aspects have no codepoint at all
+    # in any block, and fall back to ASCII initials (Q, bQ, tS). Resolved by
+    # `data.paths.find_glyph_svg`; a *path* here is a bug (see the celestial registry).
+    glyph_svg_path: str = ""
     color: str = "#CCCCCC"  # Default hex color for visualization
 
     # Default Orb Settings
@@ -1689,6 +1694,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Quintile Series",
         glyph="Q",
+        glyph_svg_path="quintile.svg",  # {5/1} pentagon — its edge subtends 72°
         color="#16A085",
         default_orb=1.0,
         description="A creative 72° aspect (H5) indicating talent, skill, and unique gifts.",
@@ -1700,6 +1706,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Quintile Series",
         glyph="bQ",
+        glyph_svg_path="biquintile.svg",  # {5/2} pentagram — its edge subtends 144°
         color="#138D75",
         default_orb=1.0,
         description="A creative 144° aspect (H5) emphasizing artistic expression and innovation.",
@@ -1714,6 +1721,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Septile Series",
         glyph="S",
+        glyph_svg_path="septile.svg",  # {7/1} heptagon — its edge subtends 51.43°
         color="#8E44AD",
         default_orb=1.0,
         description="A mystical 51.43° aspect (H7) indicating fate, destiny, and spiritual purpose.",
@@ -1725,6 +1733,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Septile Series",
         glyph="bS",
+        glyph_svg_path="biseptile.svg",  # {7/2} heptagram — its edge subtends 102.86°
         color="#7D3C98",
         default_orb=1.0,
         description="A mystical 102.86° aspect (H7) emphasizing karmic patterns and destiny.",
@@ -1736,6 +1745,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Septile Series",
         glyph="tS",
+        glyph_svg_path="triseptile.svg",  # {7/3} heptagram — its edge subtends 154.29°
         color="#6C3483",
         default_orb=1.0,
         description="A mystical 154.29° aspect (H7) indicating fated encounters and spiritual gifts.",
@@ -1750,6 +1760,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Novile Series",
         glyph="N",
+        glyph_svg_path="novile.svg",  # {9/1} nonagon — its edge subtends 40°
         color="#2980B9",
         default_orb=1.0,
         description="A spiritual 40° aspect (H9) indicating completion, perfection, and higher wisdom.",
@@ -1761,6 +1772,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Novile Series",
         glyph="bN",
+        glyph_svg_path="binovile.svg",  # {9/2} nonagram — its edge subtends 80°
         color="#21618C",
         default_orb=1.0,
         aliases=["Seminovile"],
@@ -1773,6 +1785,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Novile Series",
         glyph="qN",
+        glyph_svg_path="quadnovile.svg",  # {9/4} nonagram — its edge subtends 160°
         color="#1A5276",
         default_orb=1.0,
         description="A spiritual 160° aspect (H9) indicating spiritual mastery and enlightenment.",

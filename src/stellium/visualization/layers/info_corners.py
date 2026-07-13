@@ -12,12 +12,21 @@ from stellium.core.models import (
 )
 from stellium.visualization.core import (
     ChartRenderer,
+    embed_svg_glyph,
+    get_aspect_glyph,
 )
 from stellium.visualization.palettes import (
     adjust_color_for_contrast,
 )
 
 __all__ = ["ChartInfoLayer", "AspectCountsLayer", "ElementModalityTableLayer"]
+
+
+def _px(size: str | float) -> float:
+    """`"11px"` -> `11.0`. The styles carry CSS lengths; geometry needs a number."""
+    if isinstance(size, int | float):
+        return float(size)
+    return float(str(size).removesuffix("px").strip() or 0)
 
 
 class ChartInfoLayer:
@@ -412,8 +421,6 @@ class AspectCountsLayer:
         self, renderer: ChartRenderer, dwg: svgwrite.Drawing, chart: CalculatedChart
     ) -> None:
         """Render aspect counts."""
-        from stellium.core.registry import get_aspect_info
-
         # Count aspects by type
         aspect_counts = {}
         for aspect in chart.aspects:
@@ -434,10 +441,10 @@ class AspectCountsLayer:
         aspect_style_dict = renderer.style.get("aspects", {})
 
         for aspect_name, count in sorted_aspects:
-            aspect_info = get_aspect_info(aspect_name)
-            if aspect_info and aspect_info.glyph:
-                glyph = aspect_info.glyph
-            else:
+            # A dict — {"type": "unicode"|"svg", "value": …} — because the harmonic
+            # aspects have no codepoint in any Unicode block and are drawn instead.
+            glyph = get_aspect_glyph(aspect_name)
+            if not glyph["value"]:
                 glyph = None  # No glyph, just use text
 
             # Get the color for this aspect (for legend)
@@ -512,11 +519,28 @@ class AspectCountsLayer:
                     glyph_x = x
                     text_x = x + glyph_width if glyph else x
 
-                # Render glyph with symbol font (if present)
-                if glyph:
+                # Render glyph (if present)
+                if glyph and glyph["type"] == "svg":
+                    # embed_svg_glyph centres on its coordinate, whereas the text path
+                    # anchors on a baseline — so convert.
+                    size = _px(self.style["text_size"])
+                    centre_x = (
+                        glyph_x - size / 2
+                        if text_anchor == "end"
+                        else glyph_x + size / 2
+                    )
+                    embed_svg_glyph(
+                        dwg,
+                        glyph["value"],
+                        centre_x,
+                        line_y + glyph_y_offset + size / 2,
+                        size,
+                        fill_color=fill_color,
+                    )
+                elif glyph:
                     dwg.add(
                         dwg.text(
-                            glyph,
+                            glyph["value"],
                             insert=(glyph_x, line_y + glyph_y_offset),
                             text_anchor=text_anchor
                             if text_anchor == "end"
