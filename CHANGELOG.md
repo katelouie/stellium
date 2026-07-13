@@ -5,6 +5,20 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **The ephemeris cache was a write-only log that grew without bound — it had accumulated 18.5 million files.** Three defects compounded. (1) `@cached` was applied to **methods**, so `self` was `args[0]`, and `json.dumps(default=str)` rendered it as `<SwissEphemerisEngine object at 0x104f2a390>` — putting the object's **memory address** in the cache key. No entry could ever be found again by another instance or process: every lookup missed, every call wrote a new file, and nothing was ever read back. Measured, the same chart built three times produced 28 → 55 → 82 pickle files and zero hits. (2) The default directory was the **relative** `".cache"`, which `Path.mkdir()` resolves against the current working directory, so the cache materialised wherever Python happened to be launched — eight of them accumulated across the repo, one of them 145 MB *inside the package*. (3) `_default_cache = Cache()` ran at **module scope**, so merely importing Stellium created directories on disk.
+
+  It was also never worth doing: a `swe.calc_ut` is microseconds and a pickle round-trip is not, so disk-caching positions measured **13× slower than recomputing them**. The ephemeris and house engines are therefore no longer disk-cached at all — **chart building goes from 2.4 ms to 0.21 ms**, and the full test suite from ~60 s to ~15 s. Geocoding *is* still cached, which is the case the mechanism was always right for: a network call keyed on a plain string, whose key was stable all along.
+
+  The cache now defaults to an absolute per-user directory (`STELLIUM_CACHE_DIR`, else `XDG_CACHE_HOME` / `LOCALAPPDATA` / `~/Library/Caches`), is created lazily on first write rather than at import, and `_make_key()` **refuses** an argument whose repr embeds a memory address (raising `UnstableCacheKey`) instead of silently poisoning the key; `@cached` degrades to an uncached call with a warning.
+
+### Deprecated
+
+- **`ChartBuilder.with_cache()` is deprecated and does nothing.** It never did: the `Cache` it built was stored on the builder and read by no code path (`_get_cache()` was never called), while the ephemeris engines used the *global* cache regardless — so `with_cache(enabled=False)` disabled nothing. Chart calculation is no longer disk-cached at all; set `STELLIUM_CACHE_DIR` to relocate the geocoding cache.
+
 ## [0.21.0] - 2026-07-11
 
 ### Changed

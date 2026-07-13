@@ -83,20 +83,46 @@ Parse external sources into `list[Native]` (re-exported from `stellium`):
 
 ## 4. Caching (`utils/cache.py`, `utils/cache_utils.py`)
 
-File-based pickle cache with subdirs `ephemeris`, `geocoding`, `general`.
+File-based pickle cache. **In practice this now means geocoding only.**
+
+> ⚠️ **Do not disk-cache the ephemeris.** A `swe.calc_ut` takes microseconds; a
+> pickle round-trip does not. Caching positions to disk measured **13× slower**
+> than recomputing them (2.4 ms/chart → 0.21 ms/chart when removed). `@cached` is
+> for calls that are slow because they *leave the process* — a network request.
+> Before adding it, check that the thing you are caching is slower than a file read.
+
+> ⚠️ **Never put `@cached` on a method.** `self` becomes `args[0]`, and its default
+> repr contains its **memory address** — so the key changes every run and the entry
+> can never be found again. Every call then misses, writes a new file, and reads
+> nothing back. That is precisely what happened: **18.5 million files** accumulated
+> in one directory. `_make_key` now raises `UnstableCacheKey` for such an argument,
+> and `@cached` degrades to an uncached call with a `RuntimeWarning` rather than
+> silently poisoning the key. Cache a **module-level function of plain values**.
 
 ```python
 from stellium.utils.cache import cached
 
-@cached(cache_type="ephemeris")          # cache_type ∈ {"ephemeris","geocoding","general"}
-def expensive(...): ...
+@cached(cache_type="geocoding", max_age_seconds=604800)
+def _cached_geocode(location_name: str) -> dict: ...   # ✅ plain args, network-bound
 ```
 
+- **Location** — `default_cache_dir()`: absolute and per-user, honouring
+  `STELLIUM_CACHE_DIR`, then `XDG_CACHE_HOME` / `LOCALAPPDATA` /
+  `~/Library/Caches`. It used to default to the *relative* `".cache"`, which
+  `Path.mkdir()` resolves against the **current working directory** — so the cache
+  materialised wherever Python happened to be launched. Eight of them accumulated
+  across the repo, one 145 MB *inside the package itself*.
+- **Lazily created** — directories are made on first *write*. The default instance
+  is built by `get_default_cache()`, not at import. **Importing a library must not
+  touch the disk** (`_default_cache = Cache()` at module scope did exactly that).
 - `Cache`: `.get/.set/.clear(cache_type)`, `.size()`, `.get_stats()`; default
-  expiry 24h.
+  expiry 24h. Subdirs `ephemeris`, `geocoding`, `general` (the first is now unused).
 - Management helpers (`cache_utils.py`): `print_cache_info()`,
   `clear_ephemeris_cache()`, `clear_geocoding_cache()`, `clear_all_cache()`,
   `get_cache_stats()`. Also exposed via `stellium cache` CLI.
+- `ChartBuilder.with_cache()` is **deprecated and a no-op** — it never had an
+  effect (`_get_cache()` was never called by anything, and the engines used the
+  global cache regardless, so `with_cache(enabled=False)` disabled nothing).
 
 ---
 
