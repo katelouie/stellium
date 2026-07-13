@@ -91,6 +91,19 @@ packaged fonts. The planner reuses the report's section *kinds* (`compound`,
 new Typst (`typst_theme/planner_components.typ`: `month-grid`, `week-page`,
 `year-overview`). All five themes apply.
 
+**Calendar events carry an `event_class`** (`natal` / `notable` / `mundane` /
+`lunar`), set at collection time, and renderers key a colour off it from the
+theme's `event-colors` palette. This is the difference between a scannable day and
+a wall of glyphs. Note the palette is **semantic, not structural**: it does NOT
+reuse `accent`/`ink`, because those are neighbouring dark tones in several themes
+(ΔE 5.9 in *house*) — see `tests/test_typst_theme_palettes.py`, which enforces that
+the four classes stay ≥15 ΔE apart and ≥3:1 against the page in every theme.
+
+**The Moon is quieted by default.** The transiting Moon aspects every natal planet
+every month — 68% of all natal transit lines, measured — so it contributes
+**conjunctions only** unless you pass `moon_natal_aspects` / `moon_aspects`. The
+same rule applies to mundane transits.
+
 **Two data layers, by scope:**
 - `planner/events.py::DailyEventCollector` — *day*-scoped. Transits, ingresses,
   stations, Moon phases, VOC, eclipses → `DailyEvent` per day. Its glyph maps are
@@ -102,9 +115,23 @@ new Typst (`typst_theme/planner_components.typ`: `month-grid`, `week-page`,
   matter's reference pages: `YearAlmanac` (profection + Lord of the Year, solar
   return, eclipses **with the natal house each falls in**, retrograde windows
   clipped to the year, the progressed Moon and its dated natal aspects,
-  year-defining outer transits, ZR periods active this year). Requires a chart
-  built with `ZodiacalReleasingAnalyzer` for the ZR part (it reads analyzer
-  metadata; otherwise it returns `[]`).
+  year-defining outer transits, ZR periods active this year, plus the sky-event
+  pages: `ingresses`, `stations`, `lunations`). Requires a chart built with
+  `ZodiacalReleasingAnalyzer` for the ZR part (it reads analyzer metadata;
+  otherwise it returns `[]`).
+
+  The organizing idea: **every sky event carries what it touches in the chart**.
+  `natal_contacts_at(chart, jd)` reads transiting longitudes straight from the
+  ephemeris (a chart build per event would dominate runtime) and is what lets a
+  lunation say *"…and it squares your natal Saturn"*. Stations also carry the
+  **retrograde shadow**, which is computed by *pairing* stations: a planet enters
+  shadow when it first crosses the degree it will later station **direct** at, and
+  leaves it when it climbs back to the degree it stationed **retrograde** at. Using
+  a station's own degree trivially returns the station's own date.
+
+  `find_chart_condition(chart)` gives the traditional condition (sect; domicile,
+  exaltation, bound, triplicity and decan lords per planet). It stops short of
+  bonification/maltreatment, which Stellium does not model.
 
 `TransitHit` / `find_natal_transits()` is the shared primitive behind both — run
 it once and pass the result into `build_year_almanac(transits=...)` so the

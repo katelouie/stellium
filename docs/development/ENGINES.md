@@ -102,12 +102,39 @@ convenience `annual(age, point="ASC")`, `lord_of_year(age)`,
   stations, exact aspects, angle crossings); foundation for the
   [electional](./SUBSYSTEMS.md) module and the planner.
 
+  **The folded-separation trap** (worth understanding before touching this file).
+  `_get_aspect_separation()` returns an **unsigned** separation in **0–180**, not a
+  signed 0–360 difference. Three consequences, each of which was a real bug:
+  1. An aspect angle past 180° must be **reflected** (`360 - angle`), never wrapped
+     with `% 180` — because `180 % 180 == 0`, and modulo silently turns every
+     *opposition* search into a *conjunction* search.
+  2. At **both** ends of the 0–180 range the error only *touches* zero rather than
+     crossing it, so a sign-change test can never bracket a conjunction **or** an
+     opposition. Both need extremum detection (`_is_extremum_aspect`).
+  3. Newton–Raphson does **not** converge on a folded quantity — its derivative
+     flips where it folds. Conjunctions/oppositions refine by **ternary search**;
+     genuine crossings refine by **bisection** on the bracket, which is guaranteed
+     to converge. A failed search returns `None`, never a "best estimate".
+
 ---
 
 ## Gotchas
 - House systems return **angles alongside cusps** — the builder appends those
   angles to the chart's positions.
 - `DeclinationAspectEngine` ignores the `OrbEngine` (uses its own fixed orb).
+- **Declination aspects are not ecliptic aspects.** Parallel and Contraparallel live
+  in `ASPECT_REGISTRY` at 0° and 180° purely *by analogy* with Conjunction and
+  Opposition — they are relationships between **declinations** and cannot be derived
+  from longitude. So:
+  - Anything keying on **angle** must build over `ECLIPTIC_ASPECT_REGISTRY`, where
+    angle is a unique key; over the full registry, Parallel overwrites Conjunction.
+    Use `get_aspect_info()` / name-keyed lookups freely — those stay uniform.
+  - The ecliptic engines (`ModernAspectEngine` and friends) **refuse** them with a
+    `ConfigurationWarning`; use `ChartBuilder.with_declination_aspects()`.
+- **`DIGNITIES` uses a real `None` for an absent lord**, not the string `"None"`.
+  Leo/Scorpio/Aquarius have no traditional exaltation lord; Leo/Taurus/Aquarius have
+  no fall. (It *did* store `"None"` — a truthy string that printed as if it were a
+  planet — until that was fixed.)
 - Profections default to Whole Sign even when the chart's primary system is
   Placidus — pass `house_system` to override.
 
