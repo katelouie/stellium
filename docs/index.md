@@ -29,6 +29,8 @@ PALETTE_GALLERY
 :caption: Reference
 
 ARCHITECTURE
+LOCATIONS
+DIAGNOSTICS
 options_list
 ```
 

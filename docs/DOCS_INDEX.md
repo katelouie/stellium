@@ -33,6 +33,7 @@ A complete map of Stellium's documentation. The **hub** for development is
 | [CHART_TYPES.md](CHART_TYPES.md) | Natal, synastry, transits, returns, composite, etc. |
 | [THEME_GALLERY.md](THEME_GALLERY.md) / [PALETTE_GALLERY.md](PALETTE_GALLERY.md) | Visual catalogs |
 | [DIAGNOSTICS.md](DIAGNOSTICS.md) | Logging & warnings — silencing, filtering, capturing, `configure_logging` |
+| [LOCATIONS.md](LOCATIONS.md) | Where Stellium reads and writes — ephemeris vs. cache dirs, `STELLIUM_EPHE_PATH` / `STELLIUM_CACHE_DIR`, portable & read-only-`$HOME` installs |
 | [options_list.md](options_list.md) | Complete configuration reference |
 | [api/index.md](api/index.md) | API reference |
 

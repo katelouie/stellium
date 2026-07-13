@@ -81,7 +81,7 @@ Parse external sources into `list[Native]` (re-exported from `stellium`):
 
 ---
 
-## 4. Caching (`utils/cache.py`, `utils/cache_utils.py`)
+## 4. Caching (`utils/cache.py`)
 
 File-based pickle cache. **In practice this now means geocoding only.**
 
@@ -122,6 +122,7 @@ def _cached_geocode(location_name: str) -> dict: ...   # ✅ plain args, network
   Portable installs set **both** `STELLIUM_EPHE_PATH` and `STELLIUM_CACHE_DIR`;
   `stellium cache info` prints both resolved paths *and which env var set them*,
   which is the actual question behind most path bug reports (see issue #34).
+  User-facing guide: [docs/LOCATIONS.md](../LOCATIONS.md).
 
   It used to default to the *relative* `".cache"`, which `Path.mkdir()` resolves
   against the **current working directory** — so the cache materialised wherever
@@ -132,9 +133,10 @@ def _cached_geocode(location_name: str) -> dict: ...   # ✅ plain args, network
   touch the disk** (`_default_cache = Cache()` at module scope did exactly that).
 - `Cache`: `.get/.set/.clear(cache_type)`, `.size()`, `.get_stats()`; default
   expiry 24h. Subdirs `ephemeris`, `geocoding`, `general` (the first is now unused).
-- Management helpers (`cache_utils.py`): `print_cache_info()`,
-  `clear_ephemeris_cache()`, `clear_geocoding_cache()`, `clear_all_cache()`,
-  `get_cache_stats()`. Also exposed via `stellium cache` CLI.
+- Module helpers (`utils/cache.py`): `clear_cache(cache_type=None)`,
+  `cache_size(cache_type=None)`, `cache_info()`, `get_default_cache()`,
+  `set_default_cache(cache)`. Exposed via the `stellium cache`
+  {`info`,`clear`,`size`} CLI.
 - `ChartBuilder.with_cache()` is **deprecated and a no-op** — it never had an
   effect (`_get_cache()` was never called by anything, and the engines used the
   global cache regardless, so `with_cache(enabled=False)` disabled nothing).

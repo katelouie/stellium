@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`stellium cache info` now says where Stellium reads *and* writes, and why.** It prints the resolved cache directory *and* the resolved ephemeris directory, each annotated with whether it came from an environment variable or the default — which is the actual question behind most path bug reports (#34). Portable and read-only-`$HOME` installs (Windows embedded Python on a `D:` drive, Docker, Lambda) set `STELLIUM_EPHE_PATH` and `STELLIUM_CACHE_DIR`; the README now has a worked PowerShell recipe.
+- **`stellium cache info` now says where Stellium reads *and* writes, and why.** It prints the resolved cache directory *and* the resolved ephemeris directory, each annotated with whether it came from an environment variable or the default — which is the actual question behind most path bug reports (#34). Portable and read-only-`$HOME` installs (Windows embedded Python on a `D:` drive, Docker, Lambda) set `STELLIUM_EPHE_PATH` and `STELLIUM_CACHE_DIR`; the new [docs/LOCATIONS.md](docs/LOCATIONS.md) gathers all of this — ephemeris vs. cache directories, custom folders, a worked PowerShell recipe, and troubleshooting — with the README linking to it.
 
 ### Deprecated
 

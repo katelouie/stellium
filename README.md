@@ -420,98 +420,23 @@ See `stellium --help` for full CLI documentation.
 
 ---
 
-## Ephemeris Data Location
-
-Stellium bundles enough Swiss Ephemeris data to cover **1800–2999 CE** and
-automatically copies it to `~/.stellium/ephe/` on first use, so most users
-never need to download anything. Use `stellium ephemeris download` if you
-need coverage outside that range or extra asteroid files.
-
-### Using a custom ephemeris directory
-
-You can point Stellium at any existing Swiss Ephemeris folder — handy for
-portable installs, read-only home directories (Docker, Lambda, shared
-hosts), or for reusing a folder you already maintain for another astrology
-tool. Two options, in order of precedence:
-
-```python
-# 1. Explicit argument wins over everything else
-from stellium import ChartBuilder
-from stellium.engines.ephemeris import SwissEphemerisEngine
-
-chart = (ChartBuilder.from_native(native)
-    .with_ephemeris(SwissEphemerisEngine(ephe_path=r"D:\swisseph\ephe"))
-    .calculate())
-```
-
-```bash
-# 2. Environment variable — no code changes required
-export STELLIUM_EPHE_PATH=/opt/swisseph/ephe       # macOS / Linux
-set STELLIUM_EPHE_PATH=D:\swisseph\ephe            # Windows (cmd)
-$env:STELLIUM_EPHE_PATH = "D:\swisseph\ephe"       # Windows (PowerShell)
-```
-
-When you supply a custom path Stellium uses it **as-is**: the folder is not
-created, and the bundled ephemeris files are **not** copied into it.
-Make sure it already contains every `.se1` file you need for the objects
-and date range you plan to calculate.
-
----
-
 ## Where Stellium Reads and Writes
 
-Two directories, kept apart on purpose:
+Stellium touches exactly two directories, and they get opposite treatment:
 
-| | Default (macOS / Linux) | Default (Windows) | Override |
+| | Default (macOS / Linux) | Default (Windows) | Override with |
 |---|---|---|---|
 | **Ephemeris** — *data; keep it* | `~/.stellium/ephe/` | `C:\Users\<you>\.stellium\ephe\` | `STELLIUM_EPHE_PATH` |
 | **Cache** — *disposable* | `~/.cache/stellium/` | `%LOCALAPPDATA%\stellium\cache\` | `STELLIUM_CACHE_DIR` |
 
-The ephemeris directory holds any asteroid or TNO files **you** downloaded, so
-it is worth keeping. The cache holds pickled geocoding lookups and is safe to
-delete at any time — that is why it lives under `~/.cache`, which backup tools
-skip and cleaners empty. (`XDG_CACHE_HOME` is honoured if you set it.)
+Enough Swiss Ephemeris data to cover **1800–2999 CE** is bundled and unpacked on
+first use, so most users never need to download anything. To see where both
+directories actually resolved — and whether a variable or the default put them
+there — run `stellium cache info`.
 
-To see where they actually resolved, and which environment variable — if any —
-put them there:
-
-```bash
-stellium cache info
-```
-
-### Portable installs (and read-only home directories)
-
-If you run a portable or embedded Python, or your home directory is read-only
-(Docker, Lambda, shared hosts), set both variables and Stellium will never touch
-your home drive. For example, a portable Python on Windows with the project on
-`D:`:
-
-```powershell
-# PowerShell — put everything on D:, next to the project
-$env:STELLIUM_EPHE_PATH  = "D:\Astrology\Stellium\ephe"
-$env:STELLIUM_CACHE_DIR  = "D:\Astrology\Stellium\cache"
-
-# Make it stick across sessions (current user, no admin needed):
-[Environment]::SetEnvironmentVariable("STELLIUM_EPHE_PATH",  "D:\Astrology\Stellium\ephe",  "User")
-[Environment]::SetEnvironmentVariable("STELLIUM_CACHE_DIR",  "D:\Astrology\Stellium\cache", "User")
-
-# Verify — this prints both paths and where each one came from:
-stellium cache info
-```
-
-```bash
-# macOS / Linux equivalent
-export STELLIUM_EPHE_PATH=/opt/stellium/ephe
-export STELLIUM_CACHE_DIR=/opt/stellium/cache
-```
-
-Two things to know when you redirect the ephemeris:
-
-- Stellium uses that folder **as-is** — it will not create it or copy the
-  bundled `.se1` files into it. Populate it first, either by copying
-  `~/.stellium/ephe/` across or by running `stellium ephemeris download`
-  **after** setting the variable.
-- The cache directory *is* created for you, on first write.
+📍 **[docs/LOCATIONS.md](docs/LOCATIONS.md)** — custom ephemeris folders,
+portable and read-only-`$HOME` installs (Docker, Lambda, Windows embedded Python
+on a `D:` drive), what is safe to delete, and troubleshooting.
 
 ---
 
