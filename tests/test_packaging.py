@@ -80,16 +80,27 @@ def _data_files_in_the_source_tree() -> list[Path]:
     return found
 
 
+def _package_relative(path: Path) -> str:
+    """Always forward slashes.
+
+    `str(PurePath)` gives backslashes on Windows, so comparing against the
+    forward-slash keys in INTENTIONALLY_UNSHIPPED silently never matched there — and
+    this test failed on Windows only. (It caught that about itself, which is at least
+    the right kind of embarrassing.)
+    """
+    return path.relative_to(PACKAGE_ROOT).as_posix()
+
+
 def test_every_data_file_in_the_tree_is_declared_in_package_data():
     """The invariant. A data file present in src/ but absent from the wheel is a bug
     that only shows up for people who `pip install`, never for us."""
     shipped = _files_the_wheel_will_contain()
 
     missing = sorted(
-        str(path.relative_to(PACKAGE_ROOT))
+        _package_relative(path)
         for path in _data_files_in_the_source_tree()
         if path not in shipped
-        and str(path.relative_to(PACKAGE_ROOT)) not in INTENTIONALLY_UNSHIPPED
+        and _package_relative(path) not in INTENTIONALLY_UNSHIPPED
     )
 
     assert not missing, (
