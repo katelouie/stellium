@@ -75,13 +75,99 @@ finds times satisfying conditions. Building blocks:
 
 ## Planner (personalized PDF)
 Source: `planner/`. **`PlannerBuilder.for_native(native)`** →
-`.year(...)`/`.date_range(...)`, front matter (`with_natal_chart()`,
+`.year(...)`/`.date_range(...)`, `.theme(...)`, front matter (`with_natal_chart()`,
 `with_solar_return()`, `with_profections()`, `with_zr_timeline(...)`,
 `with_graphic_ephemeris(...)`), daily content (`include_natal_transits(...)`,
 `include_moon_phases()`, `include_voc(...)`, `include_ingresses(...)`,
-`include_stations(...)`), layout (`page_size(...)`, `week_starts_on(...)`),
-then `.generate("planner.pdf")` (Typst). Events gathered by
-`planner/events.py::DailyEventCollector`.
+`include_stations(...)`), layout (`page_size(...)`, `binding_margin(...)`,
+`week_starts_on(...)`), then `.generate("planner.pdf")`.
+
+**Rendering is data-driven**, like the report: `planner/contract.py::
+build_planner_data` serialises to a JSON contract, and `planner/renderer.py`
+compiles `typst_theme/planner.typ` with `sys_inputs={theme, data}` and the
+packaged fonts. The planner reuses the report's section *kinds* (`compound`,
+`key_value`, `table`, `planet_positions`, `svg`) via `engine.typ::body-of`; only
+`year_overview` and `glyph_key` are planner-native, and only three components are
+new Typst (`typst_theme/planner_components.typ`: `month-grid`, `week-page`,
+`year-overview`). All five themes apply.
+
+**Calendar events carry an `event_class`** (`natal` / `notable` / `mundane` /
+`lunar`), set at collection time, and renderers key a colour off it from the
+theme's `event-colors` palette. This is the difference between a scannable day and
+a wall of glyphs. Note the palette is **semantic, not structural**: it does NOT
+reuse `accent`/`ink`, because those are neighbouring dark tones in several themes
+(ΔE 5.9 in *house*) — see `tests/test_typst_theme_palettes.py`, which enforces that
+the four classes stay ≥15 ΔE apart and ≥3:1 against the page in every theme.
+
+**The Moon is quieted by default.** The transiting Moon aspects every natal planet
+every month — 68% of all natal transit lines, measured — so it contributes
+**conjunctions only** unless you pass `moon_natal_aspects` / `moon_aspects`. The
+same rule applies to mundane transits.
+
+**Two data layers, by scope:**
+- `planner/events.py::DailyEventCollector` — *day*-scoped. Transits, ingresses,
+  stations, Moon phases, VOC, eclipses → `DailyEvent` per day. Its glyph maps are
+  derived from `CELESTIAL_REGISTRY` / `ASPECT_REGISTRY` / `DIGNITIES`. Note
+  `ASPECT_GLYPHS` is angle-keyed and **excludes declination aspects** (Parallel is
+  0°, Contraparallel 180°, so they would collide with Conjunction/Opposition);
+  use `ASPECT_GLYPHS_BY_NAME` when you have a name.
+- `planner/almanac.py::build_year_almanac` — *year*-scoped, feeding the front
+  matter's reference pages: `YearAlmanac` (profection + Lord of the Year, solar
+  return, eclipses **with the natal house each falls in**, retrograde windows
+  clipped to the year, the progressed Moon and its dated natal aspects,
+  year-defining outer transits, ZR periods active this year, plus the sky-event
+  pages: `ingresses`, `stations`, `lunations`). Requires a chart built with
+  `ZodiacalReleasingAnalyzer` for the ZR part (it reads analyzer metadata;
+  otherwise it returns `[]`).
+
+  The organizing idea: **every sky event carries what it touches in the chart**.
+  `natal_contacts_at(chart, jd)` reads transiting longitudes straight from the
+  ephemeris (a chart build per event would dominate runtime) and is what lets a
+  lunation say *"…and it squares your natal Saturn"*. Stations also carry the
+  **retrograde shadow**, which is computed by *pairing* stations: a planet enters
+  shadow when it first crosses the degree it will later station **direct** at, and
+  leaves it when it climbs back to the degree it stationed **retrograde** at. Using
+  a station's own degree trivially returns the station's own date.
+
+  `find_chart_condition(chart)` gives the traditional condition (sect; domicile,
+  exaltation, bound, triplicity and decan lords per planet). It stops short of
+  bonification/maltreatment, which Stellium does not model.
+
+`TransitHit` / `find_natal_transits()` is the shared primitive behind both — run
+it once and pass the result into `build_year_almanac(transits=...)` so the
+longitude-crossing search doesn't happen twice.
+
+**Design note.** The front matter is a *reference section*, not an overture: a
+report is a portrait (read once), a planner is an instrument (consulted daily).
+It is ordered "this year → your chart → how to read it", the natal chart leads
+with a **positions table** rather than the wheel, and it is curated on by default
+(opt out with `.without_*()`).
+
+**The span is free, and the front matter adapts to it.** `.year(N)` is only
+shorthand for `.date_range(Jan 1, Dec 31)`; any range works, and a one-month
+planner (~20 pages, ~6 s) is the quickest way to preview a theme or a config —
+see `one_month_relocated_planner()` in `examples/planner_cookbook.py`. Page titles
+come from `contract._period_label` / `_span_descriptor` / `_span_noun`, never from
+hardcoded strings: a March planner says "March 2026 at a Glance", not "The Year at
+a Glance". `_span_noun` goes by *length* (≥300 days ⇒ "Year"), so a Sep→Aug planner
+is still correctly a year. `test_planner_almanac.py` asserts that no front-matter
+title in a one-month planner contains the word "year".
+
+**Birth place vs. current place are different knobs.**
+- `.timezone()` (required) is the clock every event is printed in — the one that
+  matters day to day.
+- `.location()` is where charts are *cast*, and reaches exactly two things: the
+  **relocated solar return** and the title-page label.
+
+That is less limiting than it looks: transits, ingresses, stations, lunations and
+VOC are all geocentric ecliptic longitudes, so they are location-independent by
+nature. Only the *clock* and the *houses* are local. Eclipses are placed in the
+**natal** (birth) houses.
+
+> Gotcha, fixed: `ReturnBuilder.solar(natal, year=N)` used to search from 1 January
+> of year N, and the underlying search returns the nearest crossing in *either*
+> direction — so every native born Jul–Dec silently got the **previous** year's
+> solar return. It now searches from the birthday's anniversary in year N.
 
 ## Chinese astrology (BaZi / Four Pillars)
 Source: `chinese/`. Reach it via **`chart.bazi()`** or

@@ -595,7 +595,7 @@ data = chart.to_dict()
 
 ### PDF Planner Generation
 
-Generate beautiful personalized astrological planners as PDF files:
+Generate a personalized year-long astrological planner as a PDF:
 
 ```python
 from stellium import Native, PlannerBuilder
@@ -604,29 +604,44 @@ native = Native("1990-05-15 14:30", "San Francisco, CA")
 
 planner = (
     PlannerBuilder.for_native(native)
-    .year(2025)
+    .year(2026)
     .timezone("America/Los_Angeles")
-    .with_natal_chart()
-    .with_solar_return()
-    .with_graphic_ephemeris(harmonic=90)
-    .include_natal_transits()  # All planets + Node + Chiron
-    .include_moon_phases()
-    .include_voc(mode="traditional")
+    .theme("house")          # or sepia / celestial / blues / greyscale
+    .page_size("letter")
     .generate("my_planner.pdf")
 )
 ```
 
-**Planner Features:**
+The front matter is curated on by default, so that's already a complete planner.
+Drop any page with the matching `.without_*()` call.
 
-- **Front matter pages**: Natal chart, progressed chart, solar return, annual profection, graphic ephemeris
-- **Monthly calendar grids**: Full-page calendar view with all events displayed
-- **Weekly detail pages**: 7-day spreads with compact event listings
-- **Daily events**: Transit-to-natal aspects, Moon phases, VOC periods, ingresses, stations, eclipses
-- **Configurable**: Week start (Sunday/Monday), page size (A4/Letter), binding margins
+**The reference section (front matter).** A planner isn't a report — you don't read
+it once, you *consult* it all year with a pen in hand. So its front matter answers
+the questions the daily pages provoke:
 
-Requires: `pip install typst`
+- **The Year at a Glance** — Lord of the Year, the solar return, **eclipses placed
+  in _your_ houses**, every retrograde window, and the slow transits that shape the year
+- **A year overview** — twelve mini-months with eclipse and station days marked
+- **Your natal chart as a lookup** — the positions table leads (when a daily page
+  says `Moon □ natal Mercury`, this is where you find out where natal Mercury *is*),
+  with the wheel following
+- **The year's transit map, solar return and profections**
+- **The progressed Moon** — its dated exact aspects to your natal planets
+- **Zodiacal releasing**, scoped to this year
+- **A glyph legend** for reading the daily pages
 
-See the [planner cookbook](examples/planner_cookbook.py) for detailed recipes.
+**The year itself.** Monthly calendar grids with every event packed into the day
+cells, then weekly pages of day boxes with room to write.
+
+**Themed.** All five design-system themes apply — chart wheels, aspect colours and
+table shading stay coordinated with the page. Use `greyscale` if you're printing at
+home; it swaps ink fills for outlines. Fonts are bundled, so the PDF renders
+identically on any machine.
+
+Requires the `typst` binary.
+
+See the [planner cookbook](examples/planner_cookbook.py) for detailed recipes, and
+[an example planner](examples/planners/full_planner.pdf) for the output.
 
 ### Chart Atlas PDF Generation
 

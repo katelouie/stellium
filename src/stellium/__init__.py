@@ -53,6 +53,8 @@ from stellium.core.native import Native, Notable
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     CELESTIAL_REGISTRY,
+    DECLINATION_ASPECT_REGISTRY,
+    ECLIPTIC_ASPECT_REGISTRY,
     FIXED_STARS_REGISTRY,
     get_aspect_info,
     get_fixed_star_info,
@@ -134,6 +136,8 @@ __all__ = [
     # Registries
     "CELESTIAL_REGISTRY",
     "ASPECT_REGISTRY",
+    "DECLINATION_ASPECT_REGISTRY",
+    "ECLIPTIC_ASPECT_REGISTRY",
     "FIXED_STARS_REGISTRY",
     "get_object_info",
     "get_aspect_info",

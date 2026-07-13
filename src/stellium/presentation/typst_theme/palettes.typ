@@ -24,6 +24,34 @@
   greyscale: (conjunction: "#333333", sextile: "#666666", square: "#555555", trine: "#777777", opposition: "#444444"),
 )
 
+// Calendar event colours, keyed by how much the event is about *you*:
+//
+//   natal    touches your natal chart — the reason you own the planner
+//   notable  a landmark in the sky (eclipse, station, lunation)
+//   mundane  everything else happening in the sky
+//   lunar    the Moon's housekeeping (ingresses, void-of-course) — recedes
+//
+// These cannot just reuse `accent` / `ink`: in most themes those are neighbouring
+// dark tones, so `natal` would not separate from `mundane` — which is the entire
+// job. `natal` therefore gets a deliberate *hue* shift away from the body text,
+// the way a good almanac prints your transits in blue against the sky's black.
+// Greyscale has no hue to spend, so it separates by value and nothing else.
+// These values are held to a promise the structural tokens do not make, and
+// tests/test_typst_theme_palettes.py enforces it: within every theme, all four
+// classes are >= 15 dE apart and >= 3:1 against that theme's page. Do not hand-tune
+// one without re-running those tests — the first draft of this palette reused
+// `muted` and `gold` for sepia, which are the same muddy brown (dE 6.9), so
+// "eclipse" and "the Moon changed sign" rendered identically.
+#let theme-event-colors = (
+  house: (natal: "#1F6F8B", notable: "#B0872F", mundane: "#3A2233", lunar: "#A08A72"),
+  sepia: (natal: "#2E6171", notable: "#B5651D", mundane: "#3A2A1A", lunar: "#867A5C"),
+  celestial: (natal: "#7FC7D9", notable: "#FFD700", mundane: "#D8D3E0", lunar: "#8A82A0"),
+  blues: (natal: "#7FE3D4", notable: "#FFD700", mundane: "#CFE3F2", lunar: "#6E8FA8"),
+  // No hue to spend, so the four separate by value alone — and still have to clear
+  // 3:1 on white, which caps how light `lunar` can be.
+  greyscale: (natal: "#000000", notable: "#2A2A2A", mundane: "#4E4E4E", lunar: "#787878"),
+)
+
 // Polarity bar: a warm (yang) / cool (yin) pair that stays distinct in every
 // theme (gold==accent in Celestial, so we can't reuse those). laser -> greys.
 #let polarity-colors = (yang: rgb("#CE9A34"), yin: rgb("#5E7E9C"))
@@ -141,6 +169,14 @@
     (
       conjunction: rgb(asp.conjunction), sextile: rgb(asp.sextile),
       square: rgb(asp.square), trine: rgb(asp.trine), opposition: rgb(asp.opposition),
+    ),
+  )
+  let ev = theme-event-colors.at(name, default: theme-event-colors.house)
+  out.insert(
+    "event-colors",
+    (
+      natal: rgb(ev.natal), notable: rgb(ev.notable),
+      mundane: rgb(ev.mundane), lunar: rgb(ev.lunar),
     ),
   )
   out.insert("polarity-colors", polarity-colors)

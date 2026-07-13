@@ -40,14 +40,10 @@ DATA_SUFFIXES = {
 }
 
 # Files deliberately NOT shipped. Each needs a reason — this list is a confession,
-# not a convenience.
-INTENTIONALLY_UNSHIPPED = {
-    # Orphaned template from the pre-design-system PDF renderer. Nothing reads it:
-    # the only class that ever could (`presentation/renderers.py::TypstRenderer`) is
-    # itself unreferenced, unexported and untested. Left in the tree pending removal;
-    # shipping a dead file would be worse than not shipping it.
-    "presentation/templates/astro_report.typ",
-}
+# not a convenience. (It is empty: the one entry it held, the orphaned
+# `presentation/templates/astro_report.typ`, was deleted along with the dead
+# TypstRenderer that never read it.)
+INTENTIONALLY_UNSHIPPED: set[str] = set()
 
 
 def _declared_globs() -> dict[str, list[str]]:

@@ -6,9 +6,12 @@ These tests verify that ReturnBuilder correctly calculates:
 - Planetary Returns (Saturn, Jupiter, etc.)
 """
 
+import datetime as dt
+
 import pytest
 
 from stellium.core.builder import ChartBuilder
+from stellium.core.native import Native
 from stellium.returns import ReturnBuilder
 
 pytestmark = pytest.mark.slow
@@ -263,3 +266,52 @@ class TestEdgeCases:
             diff = 360 - diff
 
         assert diff < PRECISION_THRESHOLD
+
+
+class TestSolarReturnYearSelection:
+    """`year=N` must return the solar return that falls IN year N.
+
+    Regression: the search started from Jan 1 of the requested year, and
+    find_return_near_date() returns the nearest crossing in EITHER direction. For a
+    birthday in the second half of the year the nearest return to Jan 1 is the
+    PREVIOUS year's, so every native born Jul-Dec silently got the wrong chart.
+
+    It survived because every fixture in this file has a first-half birthday
+    (Einstein 14 Mar, Kate 6 Jan) — so the tests only ever exercised the half that
+    worked. Hence the sweep over all twelve months below.
+    """
+
+    @pytest.mark.parametrize("birth_month", range(1, 13))
+    def test_solar_return_falls_in_the_requested_year(self, birth_month):
+        native = Native(dt.datetime(1990, birth_month, 15, 12, 0), "Boston, MA")
+        natal = ChartBuilder.from_native(native).calculate()
+
+        sr = ReturnBuilder.solar(natal, 2026).calculate()
+
+        assert sr.datetime.utc_datetime.year == 2026, (
+            f"born in month {birth_month}: asked for the 2026 solar return, got "
+            f"{sr.datetime.utc_datetime:%Y-%m-%d}"
+        )
+        assert sr.datetime.utc_datetime.month == birth_month
+
+    def test_consecutive_years_are_a_year_apart(self):
+        """A July birthday — the case that was broken."""
+        native = Native(dt.datetime(1990, 7, 15, 14, 30), "Boston, MA")
+        natal = ChartBuilder.from_native(native).calculate()
+
+        years = [
+            ReturnBuilder.solar(natal, y).calculate().datetime.utc_datetime
+            for y in (2024, 2025, 2026)
+        ]
+        assert [d.year for d in years] == [2024, 2025, 2026]
+        for earlier, later in zip(years, years[1:], strict=False):
+            assert 364 <= (later - earlier).days <= 367
+
+    def test_leap_day_birthday_still_resolves(self):
+        """29 February has no anniversary in a common year."""
+        native = Native(dt.datetime(1992, 2, 29, 12, 0), "Boston, MA")
+        natal = ChartBuilder.from_native(native).calculate()
+
+        sr = ReturnBuilder.solar(natal, 2026).calculate()
+        assert sr.datetime.utc_datetime.year == 2026
+        assert sr.datetime.utc_datetime.month == 2

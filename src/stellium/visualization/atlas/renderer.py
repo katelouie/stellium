@@ -13,13 +13,10 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from stellium.visualization.atlas.config import AtlasConfig, AtlasEntry
 
-# Check if typst is available
-try:
-    import typst as typst_lib
-
-    TYPST_AVAILABLE = True
-except ImportError:
-    TYPST_AVAILABLE = False
+from stellium.presentation.typst_runtime import (
+    compile_pdf,
+    typst_available,
+)
 
 
 class AtlasRenderer:
@@ -37,7 +34,7 @@ class AtlasRenderer:
         Args:
             config: AtlasConfig from AtlasBuilder
         """
-        if not TYPST_AVAILABLE:
+        if not typst_available():
             raise ImportError(
                 "Typst library not available. Install with: pip install typst"
             )
@@ -68,43 +65,20 @@ class AtlasRenderer:
             with open(typst_path, "w", encoding="utf-8") as f:
                 f.write(typst_content)
 
-            # Get font directories
-            font_dirs = self._get_font_dirs()
-
             # Compile to PDF. Use the temp directory as the Typst project
             # root — all chart SVGs are generated inside _temp_dir, and this
             # avoids platform-specific issues with root="/" on Windows where
             # the temp dir may live on a different drive than the POSIX root.
-            pdf_bytes = typst_lib.compile(
-                typst_path,
-                root=self._temp_dir,
-                font_paths=font_dirs,
-            )
-
-            return pdf_bytes
+            #
+            # Fonts come from the shared runtime. This used to resolve its own path,
+            # and got it wrong: four dirname() calls from here lands on `src/assets/
+            # fonts`, which has never existed. The atlas has therefore always been
+            # rendering with whatever host fonts Typst happened to find.
+            return compile_pdf(typst_path, root=self._temp_dir)
 
         finally:
             # Clean up temp files
             self._cleanup_temp_files()
-
-    def _get_font_dirs(self) -> list[str]:
-        """Get font directories for Typst compilation."""
-        base_font_dir = os.path.join(
-            os.path.dirname(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
-            ),
-            "assets",
-            "fonts",
-        )
-        return [
-            base_font_dir,
-            os.path.join(base_font_dir, "Cinzel_Decorative"),
-            os.path.join(base_font_dir, "Crimson_Pro"),
-            os.path.join(base_font_dir, "Crimson_Pro", "static"),
-            os.path.join(base_font_dir, "Noto_Sans_Symbols"),
-            os.path.join(base_font_dir, "Noto_Sans_Symbols_2"),
-            os.path.join(base_font_dir, "Symbola"),
-        ]
 
     def _cleanup_temp_files(self) -> None:
         """Clean up temporary files."""
@@ -281,7 +255,11 @@ class AtlasRenderer:
 // TYPOGRAPHY
 // ============================================================================
 #set text(
-  font: ("Crimson Pro", "Noto Sans Symbols 2", "Noto Sans Symbols", "Symbola", "Georgia", "serif"),
+  // Faces the package bundles (stellium/data/fonts), so an atlas renders the same
+  // everywhere. It used to name "Crimson Pro" and "Cinzel Decorative", neither of
+  // which ships — and it pointed font_paths at a directory that never existed, so
+  // every one of these fell through to whatever the host happened to have.
+  font: ("EB Garamond", "Noto Sans Symbols 2", "Noto Sans Symbols", "Symbola", "Georgia", "serif"),
   size: 11pt,
   fill: text-dark,
 )
@@ -298,7 +276,7 @@ class AtlasRenderer:
   #box(width: 70%)[
     #line(length: 100%, stroke: 0.75pt + gold)
     #v(0.3in)
-    #text(font: "Cinzel Decorative", size: 32pt, fill: primary, tracking: 1.5pt)[
+    #text(font: "Cinzel", size: 32pt, fill: primary, tracking: 1.5pt)[
       {self._escape(section_name)}
     ]
     #v(0.15in)
@@ -324,7 +302,7 @@ class AtlasRenderer:
   #box(width: 70%)[
     #line(length: 100%, stroke: 0.75pt + gold)
     #v(0.2in)
-    #text(font: "Cinzel Decorative", size: 28pt, fill: primary, tracking: 1.5pt)[
+    #text(font: "Cinzel", size: 28pt, fill: primary, tracking: 1.5pt)[
       {title}
     ]
     #v(0.2in)
@@ -335,7 +313,7 @@ class AtlasRenderer:
 #v(1fr)
 
 #align(center)[
-  #text(font: "Cinzel Decorative", size: 9pt, fill: accent, style: "italic")[
+  #text(font: "Cinzel", size: 9pt, fill: accent, style: "italic")[
     Generated with Stellium
   ]
 ]

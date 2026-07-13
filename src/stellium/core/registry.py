@@ -1453,6 +1453,37 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
 
 
 # ============================================================================
+# ASPECT REGISTRY — DERIVED VIEWS
+# ============================================================================
+#
+# Declination aspects live in ASPECT_REGISTRY alongside the ecliptic ones so that
+# looking an aspect up *by name* stays uniform: a caller holding an Aspect with
+# `aspect_name="Parallel"` just wants its glyph and should not have to know which
+# family it belongs to (see `get_aspect_display`, and OrbEngine's default map).
+#
+# But the two families are not interchangeable, because declination aspects do not
+# have a meaningful ecliptic angle — Parallel is recorded at 0° and Contraparallel
+# at 180° purely by analogy with Conjunction and Opposition. That means **angle is
+# not a unique key across the whole registry**: an angle-keyed map built over all
+# of it silently lets Parallel overwrite Conjunction (∥ replacing ☌).
+#
+# So anything keying on *angle* — or reasoning about ecliptic geometry at all —
+# should build over ECLIPTIC_ASPECT_REGISTRY, where angle is unique.
+
+ECLIPTIC_ASPECT_REGISTRY: dict[str, AspectInfo] = {
+    name: info
+    for name, info in ASPECT_REGISTRY.items()
+    if info.category != "Declination"
+}
+
+DECLINATION_ASPECT_REGISTRY: dict[str, AspectInfo] = {
+    name: info
+    for name, info in ASPECT_REGISTRY.items()
+    if info.category == "Declination"
+}
+
+
+# ============================================================================
 # ASPECT REGISTRY HELPER FUNCTIONS
 # ============================================================================
 

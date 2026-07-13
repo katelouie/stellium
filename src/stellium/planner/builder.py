@@ -53,7 +53,20 @@ class PlannerConfig:
     # Page layout
     page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
     binding_margin: float = 0.0  # Extra margin for binding (inches)
+
+    # The month grid and the weekly pages are different reading surfaces, so they
+    # get independent first days: a US reader often wants a Sunday-led month grid
+    # but a Monday-led working week. `weekly_starts_on=None` follows the monthly.
     week_starts_on: Literal["sunday", "monday"] = "sunday"
+    weekly_starts_on: Literal["sunday", "monday"] | None = None
+
+    # 24h suits most of the world; the calendar cells are tight either way.
+    time_format: Literal["12h", "24h"] = "12h"
+
+    # Design system theme (see stellium.presentation.typst_render.THEMES).
+    # "greyscale" is laser-printer safe, which matters more for a planner than a
+    # report — people print these at home.
+    theme: str = "house"
 
 
 class PlannerBuilder:
@@ -106,6 +119,11 @@ class PlannerBuilder:
         self._page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
         self._binding_margin = 0.0
         self._week_starts_on: Literal["sunday", "monday"] = "sunday"
+        self._weekly_starts_on: Literal["sunday", "monday"] | None = None
+        self._time_format: Literal["12h", "24h"] = "12h"
+
+        # Design system theme
+        self._theme = "house"
 
     # ===== Constructors =====
 
@@ -187,7 +205,68 @@ class PlannerBuilder:
         self._location = location
         return self
 
+    # ===== Theme =====
+
+    def theme(self, name: str) -> PlannerBuilder:
+        """Choose the design-system theme.
+
+        One of ``house`` (default), ``sepia``, ``celestial``, ``blues``, or
+        ``greyscale``. Prefer ``greyscale`` if the planner is destined for a home
+        laser printer — it swaps ink fills for outlines.
+
+        Example:
+            >>> PlannerBuilder.for_native(native).year(2026).theme("greyscale")
+        """
+        self._theme = name
+        return self
+
+    def time_format(self, fmt: Literal["12h", "24h"]) -> PlannerBuilder:
+        """Render event times as 12-hour (``2:49p``) or 24-hour (``14:49``).
+
+        Example:
+            >>> PlannerBuilder.for_native(native).year(2026).time_format("24h")
+        """
+        self._time_format = fmt
+        return self
+
+    def weekly_starts_on(self, day: Literal["sunday", "monday"]) -> PlannerBuilder:
+        """First day of the *weekly* pages, independent of the month grid.
+
+        The month grid and the weekly pages are different reading surfaces — a US
+        reader often wants a Sunday-led month but a Monday-led working week. If
+        this is never called, the weekly pages follow ``week_starts_on``.
+        """
+        self._weekly_starts_on = day
+        return self
+
     # ===== Front Matter Configuration =====
+    #
+    # The front matter is curated by default — a planner should be useful out of
+    # the box — so these are opt-*outs*. Use ``.without_*()`` to drop a page.
+
+    def without_natal_chart(self) -> PlannerBuilder:
+        """Drop the natal reference page."""
+        return self.with_natal_chart(False)
+
+    def without_progressed_chart(self) -> PlannerBuilder:
+        """Drop the progressed-Moon page."""
+        return self.with_progressed_chart(False)
+
+    def without_solar_return(self) -> PlannerBuilder:
+        """Drop the solar return chart."""
+        return self.with_solar_return(False)
+
+    def without_profections(self) -> PlannerBuilder:
+        """Drop the profections wheel."""
+        return self.with_profections(False)
+
+    def without_zr_timeline(self) -> PlannerBuilder:
+        """Drop the zodiacal-releasing page."""
+        return self.with_zr_timeline(enabled=False)
+
+    def without_graphic_ephemeris(self) -> PlannerBuilder:
+        """Drop the year's transit map."""
+        return self.with_graphic_ephemeris(enabled=False)
 
     def with_natal_chart(self, enabled: bool = True) -> PlannerBuilder:
         """Include natal chart wheel in front matter."""
@@ -404,6 +483,9 @@ class PlannerBuilder:
             page_size=self._page_size,
             binding_margin=self._binding_margin,
             week_starts_on=self._week_starts_on,
+            weekly_starts_on=self._weekly_starts_on,
+            time_format=self._time_format,
+            theme=self._theme,
         )
 
     def generate(self, output_path: str | None = None) -> bytes:

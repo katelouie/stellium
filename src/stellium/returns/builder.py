@@ -367,11 +367,25 @@ class ReturnBuilder:
         return_number: int | None = None
 
         if self._year is not None:
-            # Solar return: find return in specified year
-            # Start searching from Jan 1 of that year
-            search_start = datetime_to_julian_day(
-                dt.datetime(self._year, 1, 1, tzinfo=pytz.UTC)
-            )
+            # Search from the birthday's anniversary in the requested year — the
+            # return always falls within a day of it.
+            #
+            # This used to search from Jan 1, but find_return_near_date() returns the
+            # return *closest* to its target in EITHER direction. For a birthday in
+            # the second half of the year, the return closest to Jan 1 is the one in
+            # the PREVIOUS year, so every native born Jul-Dec silently got the wrong
+            # solar return.
+            natal_utc = self._natal.datetime.utc_datetime
+            try:
+                anniversary = dt.datetime(
+                    self._year, natal_utc.month, natal_utc.day, tzinfo=pytz.UTC
+                )
+            except ValueError:
+                # 29 February in a common year; the return is still within a day.
+                anniversary = dt.datetime(
+                    self._year, natal_utc.month, 28, tzinfo=pytz.UTC
+                )
+            search_start = datetime_to_julian_day(anniversary)
             return_jd = find_return_near_date(
                 self._planet, natal_longitude, search_start
             )

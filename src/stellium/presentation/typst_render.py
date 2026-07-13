@@ -1,54 +1,36 @@
-"""Themed PDF rendering via the bundled Typst design system.
+"""Themed PDF rendering for **reports**, via the bundled Typst design system.
 
-This module serialises a report (chart + section data) to the JSON contract that
-``typst_theme/`` consumes, then compiles the bundled Typst template to PDF. A
-*theme* is chosen by name and passed through ``sys.inputs`` — layout, glyphs and
-components are shared; the theme is pure data (see ``typst_theme/palettes.typ``).
+This module's job is the *report-specific* half: turning a chart plus its section
+data into the JSON contract that ``typst_theme/report.typ`` consumes. The generic
+half — where the design system lives, where the fonts live, how a document is
+compiled — is in :mod:`stellium.presentation.typst_runtime`, which the planner and
+the atlas share.
 
-The old string-building renderer emitted Typst markup inline; this one keeps all
-visual concerns inside the ``.typ`` design system and hands it structured data.
+A *theme* is chosen by name and passed through ``sys.inputs``: layout, glyphs and
+components are shared, and the theme is pure data (see ``typst_theme/palettes.typ``).
 """
 
 from __future__ import annotations
 
-import json
 import os
-import shutil
-import tempfile
 from typing import Any
 
-try:  # typst-py is an optional/heavy dependency
-    import typst as _typst
-except ImportError:  # pragma: no cover - exercised only when typst missing
-    _typst = None
-
-THEMES = ("house", "sepia", "celestial", "blues", "greyscale")
-THEME_LABELS = {
-    "house": "House Style",
-    "sepia": "Sepia",
-    "celestial": "Celestial",
-    "blues": "Blues",
-    "greyscale": "Greyscale",
-}
-_TEMPLATE_FILES = (
-    "palettes.typ",
-    "glyphs.typ",
-    "components.typ",
-    "engine.typ",
-    "report.typ",
+from stellium.presentation.typst_runtime import (
+    THEME_LABELS,
+    THEME_WHEEL,
+    THEMES,
+    TypstDocument,
+    validate_theme,
 )
 
-# Per-theme wheel styling: (visualization theme, zodiac palette, aspect palette).
-# Keeps the embedded chart wheel coherent with the PDF theme AND matching the
-# PDF's own aspect colours (see theme-aspect-colors in palettes.typ). Greyscale
-# is fully desaturated: grey wheel + greyscale aspects.
-THEME_WHEEL = {
-    "house": ("classic", "rainbow", "classic"),
-    "sepia": ("classic", "rainbow_sepia", "sepia"),
-    "celestial": ("celestial", "rainbow_celestial", "celestial"),
-    "blues": ("midnight", "rainbow_midnight", "midnight"),
-    "greyscale": ("classic", "grey", "greyscale"),
-}
+__all__ = [
+    "MOON_STYLES",
+    "THEMES",
+    "THEME_LABELS",
+    "THEME_WHEEL",
+    "build_report_data",
+    "render_pdf",
+]
 
 # Per-theme moon-phase illustration colours (lit = illuminated limb, shadow =
 # dark limb). Light themes: light lit on a dark shadow; dark themes: light lit on
@@ -80,23 +62,6 @@ MOON_STYLES = {
         "border_color": "#1B1B1B",
     },
 }
-
-
-def _theme_dir() -> str:
-    return os.path.join(os.path.dirname(__file__), "typst_theme")
-
-
-def _font_paths() -> list[str]:
-    """The bundled font directory (packaged under ``stellium/data/fonts``), so the
-    PDF renders identically on any machine — every display/body/mono face the
-    themes use plus the Noto symbol fonts, with no dependency on host fonts.
-
-    The path is package-relative (works from a source checkout and an installed
-    wheel alike). System fonts are still searched too (ignore_system_fonts stays
-    False), but the bundle is self-sufficient.
-    """
-    fonts = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "fonts")
-    return [fonts] if os.path.isdir(fonts) else []
 
 
 # ---------------------------------------------------------------------------
@@ -476,66 +441,41 @@ def render_pdf(
     title: str | None = None,
     theme: str = "house",
 ) -> bytes:
-    """Render a report to PDF bytes using the bundled Typst design system."""
-    if _typst is None:
-        raise RuntimeError(
-            "Typst library not available. Install with: pip install typst"
-        )
-    if theme not in THEMES:
-        raise ValueError(f"Unknown theme {theme!r}. Choose from: {', '.join(THEMES)}")
+    """Render a report to PDF bytes using the bundled Typst design system.
 
+    The temp-dir/copy-templates/materialise-SVGs/compile dance lives in
+    :class:`~stellium.presentation.typst_runtime.TypstDocument`, which the planner
+    shares. What is left here is the part that is genuinely about *reports*.
+    """
+    validate_theme(theme)
     data = build_report_data(chart, section_data, title, theme)
 
-    with tempfile.TemporaryDirectory(prefix="stellium_pdf_") as tmp:
-        for fn in _TEMPLATE_FILES:
-            shutil.copy2(os.path.join(_theme_dir(), fn), os.path.join(tmp, fn))
+    with TypstDocument("report.typ", theme, prefix="stellium_pdf_") as doc:
         if chart_svg_path and os.path.exists(chart_svg_path):
-            shutil.copy2(chart_svg_path, os.path.join(tmp, "chart.svg"))
-            data["meta"]["chart_svg"] = "chart.svg"
+            data["meta"]["chart_svg"] = doc.add_file("chart.svg", src=chart_svg_path)
 
-        # Draw a standalone moon-phase illustration for any moon-phase section.
-        for sec in data.get("sections", []):
-            if sec.get("kind") == "moon_phase":
-                try:
-                    from stellium.visualization import moon_phase_svg
+        _draw_moon_phase(doc, chart, data, theme)
 
-                    moon_phase_svg(
-                        chart,
-                        os.path.join(tmp, "moon.svg"),
-                        size=200,
-                        style=MOON_STYLES.get(theme),
-                    )
-                    sec["moon_svg"] = "moon.svg"
-                except Exception:  # never let a drawing failure break the PDF
-                    pass
-                break
+        return doc.render(data, svg_sections=data.get("sections", []))
 
-        # Materialise embedded SVG sections (dispositor graph, profection wheel,
-        # ZR viz, ...) to files so Typst can image() them, recursing into
-        # compound subsections.
-        svg_seq = [0]
 
-        def _materialize_svgs(sec: dict) -> None:
-            if sec.get("kind") == "svg" and sec.get("svg_content"):
-                svg_seq[0] += 1
-                fn = f"embed_{svg_seq[0]}.svg"
-                with open(os.path.join(tmp, fn), "w", encoding="utf-8") as fh:
-                    fh.write(sec["svg_content"])
-                sec["svg_file"] = fn
-                del sec["svg_content"]
-            for sub in sec.get("sections", []):
-                _materialize_svgs(sub)
+def _draw_moon_phase(doc: TypstDocument, chart: Any, data: dict, theme: str) -> None:
+    """Draw the standalone moon-phase illustration, if the report has such a section."""
+    section = next(
+        (s for s in data.get("sections", []) if s.get("kind") == "moon_phase"), None
+    )
+    if section is None:
+        return
 
-        for sec in data.get("sections", []):
-            _materialize_svgs(sec)
+    try:
+        from stellium.visualization import moon_phase_svg
 
-        with open(os.path.join(tmp, "data.json"), "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False)
-
-        pdf_bytes = _typst.compile(
-            os.path.join(tmp, "report.typ"),
-            root=tmp,
-            font_paths=_font_paths(),
-            sys_inputs={"theme": theme, "data": "data.json"},
+        moon_phase_svg(
+            chart,
+            os.path.join(doc.root, "moon.svg"),
+            size=200,
+            style=MOON_STYLES.get(theme),
         )
-    return pdf_bytes
+        section["moon_svg"] = "moon.svg"
+    except Exception:  # never let a drawing failure break the PDF
+        pass

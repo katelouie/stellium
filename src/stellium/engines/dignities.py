@@ -121,7 +121,7 @@ DIGNITIES = {
             19: "Jupiter",
             26: "Saturn",
         },
-        "triplicity": {"day": "Mars", "night": "Venus", "coop": "Moon"},
+        "triplicity": {"day": "Venus", "night": "Mars", "coop": "Moon"},
     },
     "Leo": {
         "symbol": "♌︎",
@@ -130,9 +130,9 @@ DIGNITIES = {
         "exaltation_degree": None,
         "traditional": {
             "ruler": "Sun",
-            "exaltation": "None",
+            "exaltation": None,
             "detriment": "Saturn",
-            "fall": "None",
+            "fall": None,
         },
         "modern": {
             "ruler": "Sun",
@@ -214,7 +214,7 @@ DIGNITIES = {
         "exaltation_degree": None,
         "traditional": {
             "ruler": "Mars",
-            "exaltation": "None",
+            "exaltation": None,
             "detriment": "Venus",
             "fall": "Moon",
         },
@@ -233,7 +233,7 @@ DIGNITIES = {
             19: "Jupiter",
             24: "Saturn",
         },
-        "triplicity": {"day": "Mars", "night": "Venus", "coop": "Moon"},
+        "triplicity": {"day": "Venus", "night": "Mars", "coop": "Moon"},
     },
     "Sagittarius": {
         "symbol": "♐︎",
@@ -274,7 +274,7 @@ DIGNITIES = {
         "symbol": "♑︎",
         "element": "Earth",
         "modality": "Cardinal",
-        "exaltation_degree": 27,
+        "exaltation_degree": 28,
         "traditional": {
             "ruler": "Saturn",
             "exaltation": "Mars",
@@ -305,9 +305,9 @@ DIGNITIES = {
         "exaltation_degree": None,
         "traditional": {
             "ruler": "Saturn",
-            "exaltation": "None",
+            "exaltation": None,
             "detriment": "Sun",
-            "fall": "None",
+            "fall": None,
         },
         "modern": {
             "ruler": "Uranus",
@@ -335,7 +335,7 @@ DIGNITIES = {
             "ruler": "Jupiter",
             "exaltation": "Venus",
             "detriment": "Mercury",
-            "fall": "Ceres",
+            "fall": "Mercury",
         },
         "modern": {
             "ruler": "Neptune",
@@ -352,7 +352,7 @@ DIGNITIES = {
             19: "Mars",
             28: "Saturn",
         },
-        "triplicity": {"day": "Mars", "night": "Venus", "coop": "Moon"},
+        "triplicity": {"day": "Venus", "night": "Mars", "coop": "Moon"},
     },
 }
 
@@ -569,6 +569,11 @@ class TraditionalDignityCalculator:
             "score": score,
             "details": details,
             "is_peregrine": is_peregrine,
+            "reception_potential": reception_potential,
+            # Misspelled since this method was written. The docstring, the local
+            # variable and _check_reception_potential() all say "reception", so
+            # anyone following the docs got nothing back. Kept as an alias so an
+            # existing caller reading the typo'd key does not break.
             "receiption_potential": reception_potential,
             "interpretation": self._interpret_score(score, dignities),
         }

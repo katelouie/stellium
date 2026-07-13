@@ -1,5 +1,7 @@
 """Tests for the Aspect Registry."""
 
+from datetime import datetime
+
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     get_aspect_by_alias,
@@ -305,3 +307,237 @@ class TestAspectRegistrySearch:
         results_lower = search_aspects("square")
         assert len(results_upper) == len(results_lower)
         assert len(results_upper) >= 1
+
+
+class TestAspectRegistryViews:
+    """The ecliptic / declination derived views.
+
+    Declination aspects live in ASPECT_REGISTRY alongside the ecliptic ones so that
+    looking an aspect up *by name* stays uniform — a caller holding an Aspect with
+    aspect_name="Parallel" wants its glyph and should not have to know its family.
+
+    But they are recorded at 0° and 180° purely by analogy with Conjunction and
+    Opposition, so angle is NOT a unique key across the whole registry. Anything
+    keying on angle must build over the ecliptic view.
+    """
+
+    def test_views_partition_the_registry(self):
+        from stellium.core.registry import (
+            ASPECT_REGISTRY,
+            DECLINATION_ASPECT_REGISTRY,
+            ECLIPTIC_ASPECT_REGISTRY,
+        )
+
+        assert set(ECLIPTIC_ASPECT_REGISTRY) | set(DECLINATION_ASPECT_REGISTRY) == set(
+            ASPECT_REGISTRY
+        )
+        assert not set(ECLIPTIC_ASPECT_REGISTRY) & set(DECLINATION_ASPECT_REGISTRY)
+
+    def test_declination_view_holds_exactly_the_declination_aspects(self):
+        from stellium.core.registry import DECLINATION_ASPECT_REGISTRY
+
+        assert set(DECLINATION_ASPECT_REGISTRY) == {"Parallel", "Contraparallel"}
+
+    def test_angle_is_a_unique_key_within_the_ecliptic_view(self):
+        """The invariant that makes angle-keyed lookups safe.
+
+        Across the FULL registry it does not hold: Parallel collides with
+        Conjunction at 0°, Contraparallel with Opposition at 180°.
+        """
+        from stellium.core.registry import (
+            ASPECT_REGISTRY,
+            ECLIPTIC_ASPECT_REGISTRY,
+        )
+
+        ecliptic_angles = [info.angle for info in ECLIPTIC_ASPECT_REGISTRY.values()]
+        assert len(ecliptic_angles) == len(set(ecliptic_angles))
+
+        # ...and demonstrate the collision the view exists to prevent.
+        all_angles = [info.angle for info in ASPECT_REGISTRY.values()]
+        assert len(all_angles) != len(set(all_angles))
+
+    def test_name_lookup_stays_uniform_across_both_families(self):
+        """Declination aspects must remain resolvable through the shared registry.
+
+        The report's DeclinationAspectSection does exactly this to get their glyph.
+        """
+        from stellium.core.registry import get_aspect_info
+
+        assert get_aspect_info("Parallel").glyph == "∥"
+        assert get_aspect_info("Contraparallel").glyph == "⋕"
+        assert get_aspect_info("Conjunction").glyph == "☌"
+
+
+class TestDeclinationAspectsAreNotEclipticAspects:
+    """Declination aspects must never be computed from ecliptic longitude.
+
+    Parallel and Contraparallel live in ASPECT_REGISTRY at 0° and 180° purely by
+    analogy with Conjunction and Opposition. An ecliptic engine that trusts that
+    angle measures the wrong thing entirely: it will report an *opposition* as a
+    contraparallel, because the two longitudes happen to be 180° apart.
+    """
+
+    def test_ecliptic_engine_refuses_declination_aspects(self):
+        import warnings
+
+        from stellium import ChartBuilder, Native
+        from stellium.core.config import AspectConfig
+        from stellium.engines.aspects import ModernAspectEngine
+
+        native = Native("1990-05-15 14:30", "San Francisco, CA")
+
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            chart = (
+                ChartBuilder.from_native(native)
+                .with_aspects(
+                    ModernAspectEngine(
+                        AspectConfig(aspects=["Parallel", "Contraparallel"])
+                    )
+                )
+                .calculate()
+            )
+
+        # Nothing fabricated from longitude...
+        assert len(chart.aspects) == 0
+        # ...and the user is told why, and what to use instead.
+        messages = " ".join(str(w.message) for w in caught)
+        assert "declination aspect" in messages
+        assert "with_declination_aspects" in messages
+
+    def test_real_ecliptic_aspects_still_compute(self):
+        from stellium import ChartBuilder, Native
+        from stellium.core.config import AspectConfig
+        from stellium.engines.aspects import ModernAspectEngine
+
+        native = Native("1990-05-15 14:30", "San Francisco, CA")
+        chart = (
+            ChartBuilder.from_native(native)
+            .with_aspects(ModernAspectEngine(AspectConfig(aspects=["Conjunction"])))
+            .calculate()
+        )
+        assert len(chart.aspects) > 0
+        assert all(a.aspect_name == "Conjunction" for a in chart.aspects)
+
+
+class TestDignityTablesUseRealNone:
+    """DIGNITIES stored "no exaltation lord" as the literal string "None"."""
+
+    def test_absent_lords_are_none_not_the_string(self):
+        from stellium.engines.dignities import DIGNITIES
+
+        # No planet is exalted in Leo, Scorpio or Aquarius; none falls in Leo,
+        # Taurus or Aquarius.
+        assert DIGNITIES["Leo"]["traditional"]["exaltation"] is None
+        assert DIGNITIES["Aquarius"]["traditional"]["exaltation"] is None
+        assert DIGNITIES["Scorpio"]["traditional"]["exaltation"] is None
+
+        for sign, data in DIGNITIES.items():
+            for system in ("traditional", "modern"):
+                for key in ("ruler", "exaltation", "detriment", "fall"):
+                    assert data[system].get(key) != "None", f"{sign}.{system}.{key}"
+
+    def test_reception_potential_key_is_spelled_correctly(self):
+        """The docstring, the local var and the method all say "reception"."""
+        from stellium import ChartBuilder, Native
+        from stellium.engines.dignities import TraditionalDignityCalculator
+
+        chart = ChartBuilder.from_native(
+            Native("1990-05-15 14:30", "San Francisco, CA")
+        ).calculate()
+        result = TraditionalDignityCalculator().calculate_dignities(
+            chart.get_object("Sun"), sect="day"
+        )
+        assert "reception_potential" in result
+        # The historical typo is kept as an alias so existing callers keep working.
+        assert result["receiption_potential"] == result["reception_potential"]
+
+
+class TestAspectExactitudeSearch:
+    """Regression tests for find_aspect_exact / find_all_aspect_exacts.
+
+    Three bugs, all found by wiring up the planner's mundane-transit collector:
+
+    1. `aspect_angle % 180` — and 180 % 180 == 0, so EVERY opposition search was
+       silently a conjunction search. Oppositions could not be found at all, and the
+       conjunction it found instead was returned labelled as the opposition.
+    2. Separation is measured 0-180, so at both 0 deg and 180 deg the error only
+       *touches* zero rather than crossing it. Only the conjunction half of that had
+       extremum detection, so nothing could bracket an opposition either.
+    3. Refinement used Newton-Raphson, which does not converge on the folded
+       separation (its derivative flips where it folds). On failure the old code
+       returned its last guess as though it were the answer.
+    """
+
+    START = datetime(2026, 1, 1)
+    END = datetime(2026, 12, 31)
+
+    @staticmethod
+    def _separation(name1: str, name2: str, julian_day: float) -> float:
+        from stellium.engines.search import (
+            SWISS_EPHEMERIS_IDS,
+            _get_position_and_speed,
+        )
+
+        a, _ = _get_position_and_speed(SWISS_EPHEMERIS_IDS[name1], julian_day)
+        b, _ = _get_position_and_speed(SWISS_EPHEMERIS_IDS[name2], julian_day)
+        return abs((a - b + 180) % 360 - 180)
+
+    def test_venus_can_never_oppose_the_sun(self):
+        """Venus strays at most ~47 deg from the Sun. An opposition is impossible."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        assert find_all_aspect_exacts("Sun", "Venus", 180.0, self.START, self.END) == []
+        assert (
+            find_all_aspect_exacts("Sun", "Mercury", 180.0, self.START, self.END) == []
+        )
+        # Nor can it trine or square it.
+        assert find_all_aspect_exacts("Sun", "Venus", 120.0, self.START, self.END) == []
+
+    def test_oppositions_are_actually_found(self):
+        """The outer planets each oppose the Sun once a year."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        for planet in ("Jupiter", "Saturn", "Uranus", "Neptune"):
+            hits = find_all_aspect_exacts("Sun", planet, 180.0, self.START, self.END)
+            assert len(hits) == 1, planet
+            separation = self._separation("Sun", planet, hits[0].julian_day)
+            assert abs(separation - 180.0) < 0.01, planet
+
+    def test_lunations(self):
+        """A year holds 12-13 new and full Moons."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        new = find_all_aspect_exacts("Sun", "Moon", 0.0, self.START, self.END)
+        full = find_all_aspect_exacts("Sun", "Moon", 180.0, self.START, self.END)
+        assert 12 <= len(new) <= 13
+        assert 12 <= len(full) <= 13
+
+    def test_fast_recurring_aspects_are_not_dropped(self):
+        """The Moon trines Jupiter about twice a month. This used to return zero."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        hits = find_all_aspect_exacts("Moon", "Jupiter", 120.0, self.START, self.END)
+        assert len(hits) >= 20
+
+    def test_every_returned_aspect_is_actually_exact(self):
+        """The heart of it: never return a moment that is not the aspect."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        cases = [
+            ("Sun", "Mars", 90.0),
+            ("Jupiter", "Saturn", 120.0),
+            ("Mars", "Saturn", 90.0),
+            ("Venus", "Mars", 0.0),
+            ("Sun", "Jupiter", 180.0),
+            ("Moon", "Mars", 90.0),
+        ]
+        for name1, name2, angle in cases:
+            for hit in find_all_aspect_exacts(
+                name1, name2, angle, self.START, self.END
+            ):
+                separation = self._separation(name1, name2, hit.julian_day)
+                assert abs(separation - angle) < 0.01, (
+                    f"{name1} {angle} {name2} at {hit.datetime_utc}: separation is "
+                    f"{separation:.4f}, not {angle}"
+                )
