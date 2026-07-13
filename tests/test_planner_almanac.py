@@ -371,6 +371,34 @@ def test_time_format_switches_between_12h_and_24h():
     assert _fmt_time(stamp, "24h") == "15:16"
 
 
+def test_week_start_rotates_every_calendar_surface():
+    """Both the month grid and the year-overview mini-months honour the week start.
+
+    They reach `first_weekday` down separate paths, so a fix to one can silently
+    leave the other Sunday-led — and a planner with a Monday month grid above
+    Sunday-led mini-months just looks broken.
+    """
+    from stellium.planner.contract import (
+        _weekday_initials,
+        _weekday_names,
+        _year_overview,
+    )
+
+    SUNDAY, MONDAY = 6, 0
+
+    assert _weekday_names(SUNDAY)[0] == "Sun"
+    assert _weekday_names(MONDAY)[0] == "Mon"
+    assert _weekday_initials(SUNDAY) == ["S", "M", "T", "W", "T", "F", "S"]
+    assert _weekday_initials(MONDAY) == ["M", "T", "W", "T", "F", "S", "S"]
+
+    for first_weekday, expected in ((SUNDAY, "S"), (MONDAY, "M")):
+        overview = _year_overview(
+            date(2026, 3, 1), date(2026, 3, 31), {}, first_weekday
+        )
+        mini = overview["months"][0]
+        assert mini["weekday_initials"][0] == expected
+
+
 @pytest.mark.slow
 def test_weekly_pages_can_start_on_a_different_day_than_the_month_grid(natal_chart):
     """A US reader often wants a Sunday-led month but a Monday-led working week."""
