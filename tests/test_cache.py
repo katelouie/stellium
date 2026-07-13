@@ -17,6 +17,7 @@ package*. Three independent defects, each of which has a test here:
 
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -84,23 +85,43 @@ class TestCacheDirectoryIsAbsolute:
         assert default_cache_dir() != (tmp_path / ".cache")
         assert tmp_path not in default_cache_dir().parents
 
-    def test_cache_lives_beside_the_ephemeris_under_the_stellium_home(self):
-        """One convention, not two.
+    def test_the_cache_is_kept_out_of_the_ephemeris_directory(self):
+        """Disposable data must not share a home with data you cannot re-fetch.
 
-        The ephemeris already lives in ``~/.stellium/ephe`` (and `data/paths.py` has
-        always documented ``~/.stellium/cache`` as its neighbour). A platform cache
-        dir — LOCALAPPDATA, XDG_CACHE_HOME — would scatter Stellium's state across two
-        unrelated places, which is a real cost for portable installs.
+        ``~/.stellium/ephe`` holds asteroid and TNO files the *user downloaded*. The
+        cache is throwaway. Keeping them apart means "clear Stellium's junk" can
+        never point at the ephemeris.
         """
-        from stellium.data.paths import get_user_data_dir, get_user_ephe_dir
+        from stellium.data.paths import USER_DATA_DIR
 
         cache = default_cache_dir()
-        assert cache.parent == get_user_data_dir().resolve()
-        assert cache.parent == get_user_ephe_dir().resolve().parent
+        assert USER_DATA_DIR.resolve() not in [cache, *cache.parents], (
+            f"the cache ({cache}) is inside the ephemeris home ({USER_DATA_DIR})"
+        )
+
+    def test_default_follows_the_platform_cache_convention(self, monkeypatch):
+        """XDG on Linux/macOS; LOCALAPPDATA on Windows."""
+        monkeypatch.delenv("STELLIUM_CACHE_DIR", raising=False)
+        monkeypatch.setenv("XDG_CACHE_HOME", "/xdg")
+
+        if sys.platform != "win32":
+            assert default_cache_dir() == Path("/xdg/stellium")
+
+    def test_xdg_cache_home_is_honoured(self, tmp_path, monkeypatch):
+        if sys.platform == "win32":
+            pytest.skip("XDG is not the Windows convention")
+        monkeypatch.delenv("STELLIUM_CACHE_DIR", raising=False)
+        monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path))
+        assert default_cache_dir() == (tmp_path / "stellium").resolve()
 
     def test_env_var_overrides_the_location(self, tmp_path, monkeypatch):
         monkeypatch.setenv("STELLIUM_CACHE_DIR", str(tmp_path / "custom"))
         assert default_cache_dir() == (tmp_path / "custom").resolve()
+
+    def test_stellium_cache_dir_beats_xdg(self, tmp_path, monkeypatch):
+        monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "xdg"))
+        monkeypatch.setenv("STELLIUM_CACHE_DIR", str(tmp_path / "explicit"))
+        assert default_cache_dir() == (tmp_path / "explicit").resolve()
 
     def test_a_portable_install_can_redirect_everything_off_the_home_drive(
         self, tmp_path, monkeypatch

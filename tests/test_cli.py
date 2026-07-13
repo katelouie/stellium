@@ -120,19 +120,40 @@ class TestCacheCommands:
         assert "size" in result.output
 
     def test_cache_info_cmd(self, runner: CliRunner, mock_cache_info: dict):
-        """Test 'cache info' command."""
+        """'cache info' reports both paths and where each came from.
+
+        "Which directory is Stellium actually using, and what set it?" is the question
+        behind most path bug reports (#34), so the command has to answer it without
+        the user reading any docs.
+        """
         with patch("stellium.cli.cache.cache_info", return_value=mock_cache_info):
             result = runner.invoke(cli, ["cache", "info"])
 
         assert result.exit_code == 0
-        assert "Stellium Cache Information" in result.output
-        assert "Cache Directory:" in result.output
+        assert "Cache (disposable):" in result.output
+        assert "Ephemeris (data):" in result.output
+        # ...and the provenance of each, so nobody has to guess.
+        assert "STELLIUM_CACHE_DIR" in result.output
+        assert "STELLIUM_EPHE_PATH" in result.output
+
         assert "Max Age:" in result.output
         assert "Total Files:" in result.output
         assert "Total Size:" in result.output
         assert "By Type:" in result.output
         assert "ephemeris:" in result.output
         assert "geocoding:" in result.output
+
+    def test_cache_info_says_which_env_var_set_the_path(
+        self, runner: CliRunner, mock_cache_info: dict, tmp_path, monkeypatch
+    ):
+        """The portable-install case: it must confirm the override took effect."""
+        monkeypatch.setenv("STELLIUM_CACHE_DIR", str(tmp_path / "cache"))
+
+        with patch("stellium.cli.cache.cache_info", return_value=mock_cache_info):
+            result = runner.invoke(cli, ["cache", "info"])
+
+        assert result.exit_code == 0
+        assert "set by STELLIUM_CACHE_DIR" in result.output
 
     def test_cache_clear_all(self, runner: CliRunner):
         """Test 'cache clear' command clears all caches."""

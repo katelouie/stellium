@@ -106,13 +106,22 @@ from stellium.utils.cache import cached
 def _cached_geocode(location_name: str) -> dict: ...   # ✅ plain args, network-bound
 ```
 
-- **Location** — `default_cache_dir()` → `~/.stellium/cache/`, **beside**
-  `~/.stellium/ephe/`, overridable with `STELLIUM_CACHE_DIR` exactly as the
-  ephemeris is with `STELLIUM_EPHE_PATH` (both resolved in `data/paths.py`). One
-  Stellium home, one convention — a portable install (Windows embedded Python on a
-  `D:` drive) redirects *one* place, not two unrelated platform directories. That is
-  why this is deliberately **not** `XDG_CACHE_HOME` / `LOCALAPPDATA` /
-  `~/Library/Caches`.
+- **Location** — `data/paths.py::resolve_cache_dir()` (re-exported as
+  `utils.cache.default_cache_dir()`): `STELLIUM_CACHE_DIR`, else
+  `%LOCALAPPDATA%\stellium\cache` on Windows, else `$XDG_CACHE_HOME/stellium` or
+  `~/.cache/stellium`.
+
+  **Deliberately *not* under `~/.stellium/`.** That directory is *data you would
+  hate to lose* — it holds the asteroid/TNO ephemeris the user downloaded. A cache
+  is disposable, and `~/.cache` is the one place the ecosystem agrees is safe to
+  wipe (backups skip it, cleaners empty it). Keeping them apart means "clear
+  Stellium's junk" can never point at the ephemeris. macOS uses `~/.cache` rather
+  than `~/Library/Caches` because this is a developer-facing library and that is
+  where its users look.
+
+  Portable installs set **both** `STELLIUM_EPHE_PATH` and `STELLIUM_CACHE_DIR`;
+  `stellium cache info` prints both resolved paths *and which env var set them*,
+  which is the actual question behind most path bug reports (see issue #34).
 
   It used to default to the *relative* `".cache"`, which `Path.mkdir()` resolves
   against the **current working directory** — so the cache materialised wherever

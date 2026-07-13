@@ -6,18 +6,35 @@ This module handles:
 2. Bundled package data (notables, essential ephemeris files)
 3. First-run initialization (copying bundled ephemeris to user directory)
 
-The user directory structure:
-    ~/.stellium/
-    ├── ephe/           # Swiss Ephemeris files (copied from package + user downloads)
-    │   ├── sepl_18.se1
-    │   ├── semo_18.se1
-    │   └── ...
-    └── cache/          # Future: cache files
+Two directories, deliberately kept apart by how much you would miss them:
+
+    ~/.stellium/                    # DATA — you would hate to lose this
+    └── ephe/                       #   Swiss Ephemeris (bundled + files YOU downloaded)
+        ├── sepl_18.se1
+        └── ...                     #   incl. asteroid/TNO files fetched on request
+
+    ~/.cache/stellium/              # DISPOSABLE — safe to delete at any time
+    └── geocoding/                  #   pickled network lookups
+
+The cache does *not* live under ``~/.stellium/``, so that "clear Stellium's junk"
+can never point at ephemeris the user spent time downloading. ``~/.cache`` is the
+directory the ecosystem already agrees is disposable — backup tools skip it,
+cleaners empty it. On Windows the equivalent is ``%LOCALAPPDATA%\\stellium\\cache``.
+
+Both are overridable, and the two env vars are the whole story for a portable or
+read-only-$HOME install (Docker, Lambda, a Windows embedded Python on a D: drive):
+
+    STELLIUM_EPHE_PATH   -> where the ephemeris is read from
+    STELLIUM_CACHE_DIR   -> where the cache is written
+
+``stellium cache info`` prints both resolved paths and which env var, if any, set
+them.
 """
 
 import importlib.resources
 import os
 import shutil
+import sys
 from pathlib import Path
 
 import swisseph as swe
@@ -36,8 +53,9 @@ USER_EPHE_DIR = USER_DATA_DIR / "ephe"
 # Swiss Ephemeris folder from another astrology tool.
 ENV_EPHE_PATH = "STELLIUM_EPHE_PATH"
 
-# Same, for the cache. Keeping both under ~/.stellium/ means a portable install
-# (Windows embedded Python on a D: drive, say) has one home to redirect, not two.
+# Same, for the cache — but the cache does NOT live under ~/.stellium/. See
+# resolve_cache_dir(): precious data (downloaded ephemeris) and disposable data
+# (pickles) want different homes.
 ENV_CACHE_PATH = "STELLIUM_CACHE_DIR"
 
 # Package data locations (using importlib.resources)
@@ -88,16 +106,20 @@ def get_user_ephe_dir() -> Path:
 def resolve_cache_dir() -> Path:
     """The cache directory, as an absolute path. Does **not** create it.
 
-    Same shape as :func:`_resolve_ephe_path`, so there is one convention to learn
-    rather than two: an env var, then a directory under the Stellium home.
-
     1. ``STELLIUM_CACHE_DIR`` environment variable
-    2. Default ``~/.stellium/cache/``
+    2. ``%LOCALAPPDATA%\\stellium\\cache`` on Windows
+    3. ``$XDG_CACHE_HOME/stellium``, else ``~/.cache/stellium``
 
-    Deliberately *not* a platform cache dir (``XDG_CACHE_HOME`` / ``LOCALAPPDATA`` /
-    ``~/Library/Caches``): the ephemeris already lives under ``~/.stellium/``, and a
-    portable install should need to redirect **one** Stellium home, not hunt down two
-    unrelated locations on two different drives.
+    **The cache is deliberately kept out of** ``~/.stellium/``. That directory holds
+    *data you would hate to lose* — in particular the asteroid and TNO ephemeris the
+    user downloaded themselves. A cache is by definition disposable, and ``~/.cache``
+    is the one place the whole ecosystem already agrees is safe to wipe: backup tools
+    exclude it, cleaners empty it, CI images mount it. Keeping the two apart means
+    "clear Stellium's junk" can never point at the ephemeris.
+
+    On macOS this uses ``~/.cache`` rather than the Apple-orthodox
+    ``~/Library/Caches``: Stellium is a developer-facing library and that is where its
+    users look. Set ``XDG_CACHE_HOME`` if you want otherwise.
 
     Never relative — the old default was the bare ``".cache"``, which resolves against
     the current working directory and so followed you around the filesystem.
@@ -105,7 +127,15 @@ def resolve_cache_dir() -> Path:
     env_value = os.environ.get(ENV_CACHE_PATH)
     if env_value:
         return Path(env_value).expanduser().resolve()
-    return (USER_DATA_DIR / "cache").resolve()
+
+    if sys.platform == "win32":
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        base = Path(local_app_data) if local_app_data else Path.home() / "AppData/Local"
+        return (base / "stellium" / "cache").resolve()
+
+    xdg = os.environ.get("XDG_CACHE_HOME")
+    base = Path(xdg).expanduser() if xdg else Path.home() / ".cache"
+    return (base / "stellium").resolve()
 
 
 def get_user_cache_dir() -> Path:
