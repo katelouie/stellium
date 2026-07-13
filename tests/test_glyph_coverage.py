@@ -60,16 +60,38 @@ def _bundled_codepoints() -> set[int]:
 
 
 def _glyph_entries():
-    """(registry, name, glyph, svg_filename) for everything that has a glyph."""
+    """(source, name, glyph, svg_filename) for everything that has a glyph.
+
+    Includes the **legacy dicts** in `visualization/core.py`, not just the registries.
+    They are not vestigial: `get_glyph()` falls back to them, so `Part of Fortune` —
+    which lives only there — was rendering as ⊗ (U+2297), a codepoint in none of our
+    bundled fonts. It was tofu in every chart with Arabic Parts, and this test walked
+    straight past it because it only looked at the registries.
+    """
+    from stellium.core.registry import FIXED_STARS_REGISTRY
+    from stellium.visualization.core import (
+        ANGLE_GLYPHS,
+        PLANET_GLYPHS,
+        ZODIAC_GLYPHS,
+    )
+
     for registry_name, registry in (
         ("CELESTIAL", CELESTIAL_REGISTRY),
         ("ASPECT", ASPECT_REGISTRY),
+        ("FIXED_STARS", FIXED_STARS_REGISTRY),
     ):
         for name, info in registry.items():
             glyph = getattr(info, "glyph", None)
             if not glyph:
                 continue
             yield registry_name, name, glyph, getattr(info, "glyph_svg_path", None)
+
+    for name, glyph in PLANET_GLYPHS.items():
+        yield "PLANET_GLYPHS", name, glyph, None
+    for name, glyph in ANGLE_GLYPHS.items():
+        yield "ANGLE_GLYPHS", name, glyph, None
+    for index, glyph in enumerate(ZODIAC_GLYPHS):
+        yield "ZODIAC_GLYPHS", f"sign {index + 1}", glyph, None
 
 
 def test_the_bundled_glyph_directory_ships_and_is_not_empty():

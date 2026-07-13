@@ -73,6 +73,114 @@ LATIN = list(range(0x20, 0x7F)) + [
     0x2713,
 ]
 
+
+# ---------------------------------------------------------------------------
+# THE WISHLIST — what Stellium does not know yet
+# ---------------------------------------------------------------------------
+#
+# Every body below is **computable today**: Swiss Ephemeris has it, we just have no
+# registry entry. So this is missing *knowledge*, not missing capability.
+#
+# Items are checked against the registry each time this runs, so they migrate out of
+# the wishlist and into the sheet proper the moment they are wired up. The sheet fills
+# itself in.
+#
+# `unicode` means a codepoint that a bundled font already carries — those need no glyph
+# work at all, only a registry entry. Everything else needs drawing.
+
+WISHLIST: dict[str, list[dict]] = {
+    "Wanted — Asteroids": [
+        # The personal-name asteroids, heavily used in modern practice for
+        # relationship and vocation work. None need a new glyph: they follow the
+        # existing asteroid convention.
+        {"name": "Psyche", "mpc": 16},
+        {"name": "Eros", "mpc": 433},
+        {"name": "Sappho", "mpc": 80},
+        {"name": "Pandora", "mpc": 55},
+        {"name": "Amor", "mpc": 1221},
+        {"name": "Astraea", "mpc": 5},
+        {"name": "Hebe", "mpc": 6},
+        {"name": "Iris", "mpc": 7},
+        {"name": "Flora", "mpc": 8},
+        {"name": "Metis", "mpc": 9},
+        {"name": "Fortuna", "mpc": 19},
+        {"name": "Urania", "mpc": 30},
+        {"name": "Diana", "mpc": 78},
+        {"name": "Hidalgo", "mpc": 944},
+        {"name": "Icarus", "mpc": 1566},
+        {"name": "Toro", "mpc": 1685},
+        {"name": "Bacchus", "mpc": 2063},
+        {"name": "Apollo", "mpc": 1862},
+    ],
+    "Wanted — Centaurs": [
+        {"name": "Asbolus", "mpc": 8405},
+        {"name": "Hylonome", "mpc": 10370},
+        {"name": "Okyrhoe", "mpc": 52872},
+        {"name": "Echeclus", "mpc": 60558},
+        {"name": "Elatus", "mpc": 31824},
+        {"name": "Bienor", "mpc": 54598},
+    ],
+    "Wanted — TNOs": [
+        {"name": "Varuna", "mpc": 20000},
+        {"name": "Ixion", "mpc": 28978},
+        {"name": "Salacia", "mpc": 120347},
+        {"name": "Huya", "mpc": 38628},
+        {"name": "Chaos", "mpc": 19521},
+        {"name": "Logos", "mpc": 58534},
+        {"name": "Typhon", "mpc": 42355},
+        {"name": "Deucalion", "mpc": 53311},
+        {"name": "Altjira", "mpc": 148780},
+    ],
+    "Wanted — Elements": [
+        # The alchemical triangles. Unicode has them and we already bundle a font
+        # that does too — these are free, and need only a place to live.
+        {"name": "Fire", "unicode": "\U0001f702"},
+        {"name": "Earth", "unicode": "\U0001f703"},
+        {"name": "Air", "unicode": "\U0001f701"},
+        {"name": "Water", "unicode": "\U0001f704"},
+    ],
+    "Wanted — Hellenistic Lots": [
+        # Fortune and Spirit are computed already; the rest are not, and none of the
+        # seven has a standard glyph. They would need drawing.
+        {"name": "Lot of Eros"},
+        {"name": "Lot of Necessity"},
+        {"name": "Lot of Courage"},
+        {"name": "Lot of Victory"},
+        {"name": "Lot of Nemesis"},
+        {"name": "Lot of Basis"},
+        {"name": "Lot of Exaltation"},
+    ],
+    "Wanted — Condition": [
+        # Retrograde has a glyph and we use it. The rest of a planet's condition is
+        # spelled out in words, and there is no standard symbol for any of them.
+        {"name": "Direct"},
+        {"name": "Stationary"},
+        {"name": "Combust"},
+        {"name": "Cazimi"},
+        {"name": "Under the beams"},
+    ],
+    "Wanted — Dignity": [
+        # Reports currently spell these out. No standard glyphs exist.
+        {"name": "Domicile"},
+        {"name": "Exaltation"},
+        {"name": "Detriment"},
+        {"name": "Fall"},
+        {"name": "Triplicity"},
+        {"name": "Term"},
+        {"name": "Face"},
+        {"name": "Peregrine"},
+    ],
+    "Wanted — Hypotheticals": [
+        {"name": "Transpluto"},
+        {"name": "Vulcan"},
+        {"name": "Dark Moon Lilith"},
+        {"name": "Priapus"},
+        {"name": "Selena"},
+    ],
+    # NOT listed: modality symbols. There is no standard glyph for cardinal, fixed or
+    # mutable, and inventing one would be worse than spelling the word.
+}
+
 GROUP_ORDER = [
     "Zodiac Signs",
     "Planets & Luminaries",
@@ -84,6 +192,7 @@ GROUP_ORDER = [
     "Aspects — Minor",
     "Aspects — Harmonic",
     "Aspects — Declination",
+    *WISHLIST,
 ]
 
 
@@ -204,6 +313,49 @@ def inventory() -> list[dict]:
             }
         )
 
+    # --- the wishlist ------------------------------------------------------
+    # Checked against the registry, so anything we wire up graduates out of "wanted"
+    # and into its real group on the next run. The sheet fills itself in.
+    known = {n.lower() for n in CELESTIAL_REGISTRY}
+    for obj in CELESTIAL_REGISTRY.values():
+        known |= {a.lower() for a in (obj.aliases or ())}
+
+    for group, wanted in WISHLIST.items():
+        # Only *bodies* can graduate into CELESTIAL_REGISTRY, so only they are checked
+        # against it. Otherwise the element Earth collides with the planet Earth (which
+        # the registry carries for heliocentric charts) and silently vanishes.
+        is_body = group in ("Wanted — Asteroids", "Wanted — Centaurs", "Wanted — TNOs")
+
+        for entry in wanted:
+            name = entry["name"]
+            if is_body and name.lower() in known:
+                continue  # already wired; it appears in its real group above
+
+            glyph = entry.get("unicode", "")
+            if glyph:
+                source = source_for(glyph, None)
+                # A codepoint a bundled font already carries: no drawing needed, only
+                # a registry entry. Flag it as ready rather than as a gap.
+                if source["kind"] == "font":
+                    source = {"kind": "ready", "detail": source["detail"]}
+            elif entry.get("mpc"):
+                source = {
+                    "kind": "wanted",
+                    "detail": f"MPC {entry['mpc']} · computable today",
+                }
+            else:
+                source = {"kind": "wanted", "detail": "needs a drawn glyph"}
+
+            items.append(
+                {
+                    "group": group,
+                    "name": name,
+                    "glyph": glyph,
+                    "codepoint": codepoints(glyph) if glyph else "—",
+                    **source,
+                }
+            )
+
     return items
 
 
@@ -252,6 +404,10 @@ def cell(i):
     kind = i["kind"]
     if kind == "svg":
         mark = clean_svg(i["svg"], i["name"])
+    elif kind == "ready":
+        mark = f'<span class="uglyph">{html.escape(i["glyph"])}</span>'
+    elif kind == "wanted":
+        mark = '<span class="wantmark">+</span>'
     elif kind in ("text", "none"):
         mark = f'<span class="asciiglyph">{html.escape(i["glyph"] or "—")}</span>'
     else:
@@ -263,6 +419,8 @@ def cell(i):
         "text": ("gap", "ASCII letters"),
         "none": ("gap", "none"),
         "missing": ("gap", "No font has it"),
+        "ready": ("ready", "Font ready · needs an entry"),
+        "wanted": ("want", html.escape(i["detail"])),
     }[kind]
 
     return f"""      <li class="cell {"is-gap" if kind in ("text", "none", "missing") else ""}">
@@ -284,6 +442,11 @@ def main() -> None:
 
     counts = Counter(i["kind"] for i in items)
     gaps = [i for i in items if i["kind"] in ("text", "missing", "none")]
+
+    # The wishlist is a roadmap, not part of the inventory — keep the counts honest.
+    have = [i for i in items if i["kind"] not in ("ready", "wanted")]
+    wishlist = [i for i in items if i["kind"] in ("ready", "wanted")]
+    ready = [i for i in items if i["kind"] == "ready"]
 
     sections = []
     for g, entries in groups.items():
@@ -332,6 +495,9 @@ def main() -> None:
       --gap:        #9A5B00;
       --gap-bg:     #FBEBD2;
       --gap-edge:   #E0A550;
+  --want:       #5B5F73;
+  --want-bg:    #E9EBF1;
+  --want-edge:  #C3C7D4;
       --font-scale: 1;
     }}
     @media (prefers-color-scheme: dark) {{
@@ -394,6 +560,8 @@ def main() -> None:
     .tally .t-drawn .n {{ color: var(--drawn); }}
     .tally .t-gap {{ background: var(--gap-bg); }}
     .tally .t-gap .n {{ color: var(--gap); }}
+    .tally .t-want {{ background: var(--want-bg); }}
+    .tally .t-want .n {{ color: var(--want); }}
 
     .group {{ margin-bottom: 3.25rem; }}
     .group h2 {{
@@ -413,6 +581,12 @@ def main() -> None:
     .cell {{ background: var(--paper-2); padding: 1.1rem 0.75rem 0.9rem; text-align: center;
       display: flex; flex-direction: column; align-items: center; gap: 0.3rem; }}
     .cell.is-gap {{ background: var(--gap-bg); }}
+    .cell.is-want {{ background: var(--want-bg); }}
+    .wantmark {{ font-family: "sheet-mono", monospace; font-size: 1.9rem; color: var(--want-edge);
+      border: 1px dashed var(--want-edge); border-radius: 50%; width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center; line-height: 1; }}
+    .b-ready {{ color: var(--drawn); border: 1px solid var(--drawn); }}
+    .b-want {{ color: var(--want); border: 1px dashed var(--want-edge); }}
 
     .glyphbox {{ height: 62px; display: flex; align-items: center; justify-content: center; color: var(--ink); }}
     .uglyph {{ font-family: "glyph-1", "glyph-2", "glyph-3", sans-serif; font-size: 2.6rem; line-height: 1; }}
@@ -451,15 +625,17 @@ def main() -> None:
       <header>
         <p class="eyebrow">Stellium · Glyph Inventory</p>
         <h1>Every symbol we can draw, and the nine we can’t</h1>
-        <p class="lede">All {len(items)} glyphs the registries can emit, rendered from the package’s own bundled fonts and SVGs — <strong>the same ones a chart uses</strong>. This sheet embeds those faces directly, so what you see is what a reader gets, not what your system happens to have installed.</p>
+        <p class="lede">Every one of the {len(have)} glyphs Stellium can draw, rendered from the package’s own bundled fonts and SVGs — <strong>the same ones a chart uses</strong>. The faces are embedded here directly, so what you see is what a reader gets, not what your system happens to have installed.</p>
+        <p class="lede">Below the inventory sits a <strong>wishlist</strong>: {len(wishlist)} things Stellium doesn’t know yet. Every body in it is <em>computable today</em> — Swiss Ephemeris has it and we simply have no registry entry — so this is missing knowledge, not missing capability. Wire one up and it graduates out of the wishlist on the next run.</p>
       </header>
 
       <div class="tally">
-        <div><span class="n">{len(items)}</span><span class="l">Symbols</span></div>
+        <div><span class="n">{len(have)}</span><span class="l">Can draw</span></div>
         <div><span class="n">{counts["font"]}</span><span class="l">From a font</span></div>
         <div class="t-drawn"><span class="n">{counts["svg"]}</span><span class="l">Drawn as SVG</span></div>
         <div class="t-gap"><span class="n">{len(gaps)}</span><span class="l">Gaps</span></div>
         <div><span class="n">0</span><span class="l">Tofu</span></div>
+        <div class="t-want"><span class="n">{len(wishlist)}</span><span class="l">On the wishlist</span></div>
       </div>
 
     {chr(10).join(sections)}
@@ -489,6 +665,7 @@ def main() -> None:
         f"  {len(items)} symbols · {counts['font']} font · {counts['svg']} svg · "
         f"{len(gaps)} gaps"
     )
+    print(f"  wishlist: {len(wishlist)} ({len(ready)} need only a registry entry)")
     for gap in gaps:
         print(f"    GAP  {gap['group']:28s} {gap['name']:24s} {gap['detail']}")
 

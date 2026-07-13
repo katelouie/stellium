@@ -337,6 +337,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Chariklo",
         object_type=ObjectType.ASTEROID,
         glyph="Cha",
+        glyph_svg_path="chariklo.svg",
         swiss_ephemeris_id=20199,  # MPC 10199 + AST_OFFSET
         category="Centaur",
         description="Chiron's wife - represents compassionate healing, devotion, and grounding spiritual wisdom.",
