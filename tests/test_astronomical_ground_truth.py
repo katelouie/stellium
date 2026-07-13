@@ -831,6 +831,21 @@ JPL_HORIZONS_2000_01_01 = {
     "Icarus": (11566, 283.0601, "1566 Icarus"),
     "Toro": (11685, 334.2433, "1685 Toro"),
     "Bacchus": (12063, 275.7490, "2063 Bacchus"),
+    "Eros": (10433, 236.2763, "433 Eros"),
+    "Urania": (10030, 293.0707, "30 Urania"),
+    "Apollo": (11862, 218.7561, "1862 Apollo"),
+    # Centaurs.
+    "Asbolus": (18405, 241.8773, "8405 Asbolus"),
+    "Hylonome": (20370, 209.6611, "10370 Hylonome"),
+    "Echeclus": (70558, 169.3224, "60558 Echeclus"),
+    "Elatus": (41824, 31.8706, "31824 Elatus"),
+    "Bienor": (64598, 329.0291, "54598 Bienor"),
+    # TNOs.
+    "Ixion": (38978, 244.6849, "28978 Ixion"),
+    "Huya": (48628, 199.1555, "38628 Huya"),
+    "Chaos": (29521, 57.1501, "19521 Chaos"),
+    "Deucalion": (63311, 206.2992, "53311 Deucalion"),
+    "Altjira": (158780, 49.7767, "148780 Altjira"),
 }
 
 

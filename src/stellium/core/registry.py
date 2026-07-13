@@ -576,6 +576,136 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         category="Asteroid",
         description="Ecstasy, intoxication, and release from the ordinary self.",
     ),
+    "Eros": CelestialObjectInfo(
+        name="Eros",
+        display_name="Eros",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ero",
+        glyph_svg_path="eros.svg",
+        swiss_ephemeris_id=10433,  # MPC 433 + AST_OFFSET
+        category="Asteroid",
+        description="Desire that will not be reasoned with — passion, and what it costs to want.",
+    ),
+    "Urania": CelestialObjectInfo(
+        name="Urania",
+        display_name="Urania",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ura",
+        glyph_svg_path="urania.svg",
+        swiss_ephemeris_id=10030,  # MPC 30 + AST_OFFSET
+        category="Asteroid",
+        description="Astronomy and astrology themselves; the study of the sky, and pattern-sense.",
+    ),
+    "Apollo": CelestialObjectInfo(
+        name="Apollo",
+        display_name="Apollo",
+        object_type=ObjectType.ASTEROID,
+        glyph="Apo",
+        glyph_svg_path="apollo.svg",
+        swiss_ephemeris_id=11862,  # MPC 1862 + AST_OFFSET
+        category="Asteroid",
+        description="The masculine principle in its bright form: aim, ambition, and the pursuit.",
+    ),
+    "Asbolus": CelestialObjectInfo(
+        name="Asbolus",
+        display_name="Asbolus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Asb",
+        glyph_svg_path="asbolus.svg",
+        swiss_ephemeris_id=18405,  # MPC 8405 + AST_OFFSET
+        category="Centaur",
+        description="The seer who reads the omens and is not believed. Intuition under threat.",
+    ),
+    "Hylonome": CelestialObjectInfo(
+        name="Hylonome",
+        display_name="Hylonome",
+        object_type=ObjectType.ASTEROID,
+        glyph="Hyl",
+        glyph_svg_path="hylonome.svg",
+        swiss_ephemeris_id=20370,  # MPC 10370 + AST_OFFSET
+        category="Centaur",
+        description="Grief, and the dignity in it. Mourning, and love that outlives its object.",
+    ),
+    "Echeclus": CelestialObjectInfo(
+        name="Echeclus",
+        display_name="Echeclus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ech",
+        glyph_svg_path="echeclus.svg",
+        swiss_ephemeris_id=70558,  # MPC 60558 + AST_OFFSET
+        category="Centaur",
+        description="What was suppressed and erupts anyway. Sudden, unlooked-for release.",
+    ),
+    "Elatus": CelestialObjectInfo(
+        name="Elatus",
+        display_name="Elatus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ela",
+        glyph_svg_path="elatus.svg",
+        swiss_ephemeris_id=41824,  # MPC 31824 + AST_OFFSET
+        category="Centaur",
+        description="The voice, and its power to wound or to carry. Speech as an act.",
+    ),
+    "Bienor": CelestialObjectInfo(
+        name="Bienor",
+        display_name="Bienor",
+        object_type=ObjectType.ASTEROID,
+        glyph="Bie",
+        glyph_svg_path="bienor.svg",
+        swiss_ephemeris_id=64598,  # MPC 54598 + AST_OFFSET
+        category="Centaur",
+        description="Strength held collectively — what a group can do that a person cannot.",
+    ),
+    "Ixion": CelestialObjectInfo(
+        name="Ixion",
+        display_name="Ixion",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ixi",
+        glyph_svg_path="ixion.svg",
+        swiss_ephemeris_id=38978,  # MPC 28978 + AST_OFFSET
+        category="TNO",
+        description="The one given a second chance who squandered it. Transgression, and what follows.",
+    ),
+    "Huya": CelestialObjectInfo(
+        name="Huya",
+        display_name="Huya",
+        object_type=ObjectType.ASTEROID,
+        glyph="Huy",
+        glyph_svg_path="huya.svg",
+        swiss_ephemeris_id=48628,  # MPC 38628 + AST_OFFSET
+        category="TNO",
+        description="Rain-bringer. What arrives from elsewhere to end a drought.",
+    ),
+    "Chaos": CelestialObjectInfo(
+        name="Chaos",
+        display_name="Chaos",
+        object_type=ObjectType.ASTEROID,
+        glyph="Cha",
+        glyph_svg_path="chaos.svg",
+        swiss_ephemeris_id=29521,  # MPC 19521 + AST_OFFSET
+        category="TNO",
+        description="The formless state before order — potential that has not yet chosen a shape.",
+    ),
+    "Deucalion": CelestialObjectInfo(
+        name="Deucalion",
+        display_name="Deucalion",
+        object_type=ObjectType.ASTEROID,
+        glyph="Deu",
+        glyph_svg_path="deucalion.svg",
+        swiss_ephemeris_id=63311,  # MPC 53311 + AST_OFFSET
+        category="TNO",
+        description="The one who survives the flood, and begins again. Continuity through catastrophe.",
+    ),
+    "Altjira": CelestialObjectInfo(
+        name="Altjira",
+        display_name="Altjira",
+        object_type=ObjectType.ASTEROID,
+        glyph="Alt",
+        glyph_svg_path="altjira.svg",
+        swiss_ephemeris_id=158780,  # MPC 148780 + AST_OFFSET
+        category="TNO",
+        description="The dreamtime: the world as it was made, and is still being made.",
+    ),
     # ========================================================================
     # URANIAN / HAMBURG SCHOOL PLANETS
     # ========================================================================

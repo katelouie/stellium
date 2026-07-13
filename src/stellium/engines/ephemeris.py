@@ -134,6 +134,19 @@ SWISS_EPHEMERIS_IDS = {
     # --- Centaurs and asteroids CELESTIAL_REGISTRY knew about but this table did not.
     # calculate_positions() skips any name missing from here, SILENTLY — so these three
     # had a registry entry and a hand-drawn glyph, and could never be calculated.
+    "Eros": 433 + 10000,  # MPC 433
+    "Urania": 30 + 10000,  # MPC 30
+    "Apollo": 1862 + 10000,  # MPC 1862
+    "Asbolus": 8405 + 10000,  # MPC 8405
+    "Hylonome": 10370 + 10000,  # MPC 10370
+    "Echeclus": 60558 + 10000,  # MPC 60558
+    "Elatus": 31824 + 10000,  # MPC 31824
+    "Bienor": 54598 + 10000,  # MPC 54598
+    "Ixion": 28978 + 10000,  # MPC 28978
+    "Huya": 38628 + 10000,  # MPC 38628
+    "Chaos": 19521 + 10000,  # MPC 19521
+    "Deucalion": 53311 + 10000,  # MPC 53311
+    "Altjira": 148780 + 10000,  # MPC 148780
     "Hygiea": 10 + 10000,  # MPC 10
     "Nessus": 7066 + 10000,  # MPC 7066
     "Chariklo": 10199 + 10000,  # MPC 10199
