@@ -6,6 +6,7 @@ and components to build a complete chart.
 """
 
 import datetime as dt
+import warnings
 
 import pytz
 import swisseph as swe
@@ -36,7 +37,7 @@ from stellium.engines.aspects import ModernAspectEngine
 from stellium.engines.ephemeris import SwissEphemerisEngine
 from stellium.engines.houses import PlacidusHouses
 from stellium.engines.orbs import SimpleOrbEngine
-from stellium.utils.cache import Cache, get_default_cache
+from stellium.utils.cache import Cache
 
 
 class ChartBuilder:
@@ -888,46 +889,31 @@ class ChartBuilder:
         self,
         cache: Cache | None = None,
         enabled: bool = True,
-        cache_dir: str = ".cache",
+        cache_dir: str | None = None,
         max_age_seconds: int = 86400,
     ) -> "ChartBuilder":
         """
-        Configure caching for this chart calculation.
+        Deprecated, and a no-op. Chart calculation is not disk-cached.
 
-        Args:
-            cache: Custom cache instance (creates new one if None)
-            enabled: Whether to enable caching
-            cache_dir: Cache directory
-            max_age_seconds: Maximum cache age
+        This never had an effect: the cache it built was stored on the builder and
+        read by nothing (``_get_cache()`` was never called). The ephemeris engines
+        used the *global* cache regardless, so ``with_cache(enabled=False)`` did not
+        disable anything.
+
+        There is now nothing to configure. Swiss Ephemeris positions are no longer
+        cached to disk at all — the round-trip measured 13x slower than simply
+        recomputing them. Geocoding *is* still cached (it is a network call); point
+        it somewhere else with the ``STELLIUM_CACHE_DIR`` environment variable, or
+        manage it via :class:`stellium.utils.cache.Cache`.
 
         Returns:
             Self for chaining
-
-        Examples:
-            # Disable caching for this chart
-            chart = ChartBuilder.from_native(native).with_cache(enabled=False).calculate()
-
-            # Use custom cache directory
-            chart = ChartBuilder.from_native(native).with_cache(cache_dir="/tmp/my_cache").calculate()
-
-            # Use shared cache instance
-            my_cache = Cache(cache_dir="/shared/cache")
-            chart1 = ChartBuilder.from_native(n1).with_cache(cache=my_cache).calculate()
-            chart2 = ChartBuilder.from_native(n2).with_cache(cache=my_cache).calculate()
         """
-        if cache is not None:
-            self._cache = cache
-        else:
-            self._cache = Cache(
-                cache_dir=cache_dir,
-                max_age_seconds=max_age_seconds,
-                enabled=enabled,
-            )
-
+        warnings.warn(
+            "ChartBuilder.with_cache() is deprecated and does nothing. Chart "
+            "calculation is not disk-cached (it is faster to recompute). Geocoding "
+            "still is — set STELLIUM_CACHE_DIR to relocate that cache.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self
-
-    def _get_cache(self) -> Cache:
-        """Get the cache instance for this builder."""
-        if self._cache is None:
-            return get_default_cache()
-        return self._cache

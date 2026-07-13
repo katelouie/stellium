@@ -11,7 +11,6 @@ from stellium.core.models import (
     HouseCusps,
     ObjectType,
 )
-from stellium.utils.cache import cached
 
 # Swiss Ephemeris house system codes.
 # NOTE: the Gauquelin division (swe code "G") is intentionally omitted. It is a
@@ -79,7 +78,8 @@ class SwissHouseSystemBase:
 
         return flags
 
-    @cached(cache_type="ephemeris", max_age_seconds=86400)
+    # Not disk-cached: swe.houses is arithmetic, and the decorator on a *method* put
+    # `self`'s memory address in the cache key. See utils/cache.py.
     def _calculate_swiss_houses(
         self,
         julian_day: float,
