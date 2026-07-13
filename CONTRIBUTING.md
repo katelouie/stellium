@@ -99,6 +99,26 @@ def get_object(self, name):
     return self._positions.get(name)
 ```
 
+### Adding a non-Python file? Declare it in `package-data`
+
+`[tool.setuptools.packages.find]` collects **Python modules only**. Any other file —
+a `.typ` template, a locale `.json`, a `.yaml` — must be listed in
+`[tool.setuptools.package-data]` in `pyproject.toml`, or it will simply not be in
+the wheel.
+
+This fails in the nastiest possible way: everything works perfectly from your
+checkout, because the file is right there on disk. It only breaks for people who
+`pip install`. That is [#60](https://github.com/katelouie/stellium/issues/60) — the
+entire Typst design system was missing from the published wheel, so every PDF render
+raised `FileNotFoundError` for users while the test suite stayed green.
+
+`tests/test_packaging.py` now enforces it: every data file under `src/stellium/` must
+be covered by a glob. If you add one and forget, that test tells you.
+
+Keep the globs **tight** (`typst_theme/*.typ`, not `typst_theme/**/*`). A wide glob
+ships whatever happens to be sitting in the directory — a stray cache once put 37,000
+files inside `typst_theme/`.
+
 ## Architecture
 
 > 📚 **Deeper reference lives in [`docs/development/`](docs/development/README.md)

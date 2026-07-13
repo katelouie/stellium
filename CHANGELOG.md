@@ -5,6 +5,32 @@ All notable changes to Stellium will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **The Typst design system was missing from the published wheel, so every PDF report failed on an installed copy** ([#60](https://github.com/katelouie/stellium/issues/60)). `[tool.setuptools.packages.find]` collects Python modules only; `presentation/typst_theme/` holds five `.typ` files and no `__init__.py`, so it was never a package and was never declared in `package-data` either. From a source checkout everything worked — the files were right there on disk — which is exactly why it shipped. On a wheel, `ReportBuilder.render(format="pdf")` raised `FileNotFoundError`. (The planner was unaffected: it generates its own Typst and does not read the design system — though see *Known issues* below.) The same omission silently broke the **Chinese locale**: `i18n/loader.py` reads `locales/*/strings.json` relative to its own file, and `locales/zh_CN/strings.json` was not in the wheel either, so `zh_CN` quietly fell back to English.
+
+  Both are now declared, with deliberately tight globs — a directory-wide `typst_theme/**/*` would have swept in whatever happened to be sitting in the tree, and a stray cache had at one point put **37,000 files inside `typst_theme/`**. New `tests/test_packaging.py` asserts the general invariant (*every data file in `src/stellium/` is covered by a package-data glob*), that the design system and locales specifically ship, that no glob sweeps in cache junk, and — as the only oracle that cannot be fooled — **builds a real wheel and looks inside it**.
+
+- **The ephemeris cache was a write-only log that grew without bound — it had accumulated 18.5 million files.** Three defects compounded. (1) `@cached` was applied to **methods**, so `self` was `args[0]`, and `json.dumps(default=str)` rendered it as `<SwissEphemerisEngine object at 0x104f2a390>` — putting the object's **memory address** in the cache key. No entry could ever be found again by another instance or process: every lookup missed, every call wrote a new file, and nothing was ever read back. Measured, the same chart built three times produced 28 → 55 → 82 pickle files and zero hits. (2) The default directory was the **relative** `".cache"`, which `Path.mkdir()` resolves against the current working directory, so the cache materialised wherever Python happened to be launched — eight of them accumulated across the repo, one of them 145 MB *inside the package*. (3) `_default_cache = Cache()` ran at **module scope**, so merely importing Stellium created directories on disk.
+
+  It was also never worth doing: a `swe.calc_ut` is microseconds and a pickle round-trip is not, so disk-caching positions measured **13× slower than recomputing them**. The ephemeris and house engines are therefore no longer disk-cached at all — **chart building goes from 2.4 ms to 0.21 ms**, and the full test suite from ~60 s to ~15 s. Geocoding *is* still cached, which is the case the mechanism was always right for: a network call keyed on a plain string, whose key was stable all along.
+
+  The cache now defaults to `~/.cache/stellium/` (`%LOCALAPPDATA%\stellium\cache` on Windows; `XDG_CACHE_HOME` honoured), overridable with **`STELLIUM_CACHE_DIR`**. It is deliberately kept *out* of `~/.stellium/`, which holds the asteroid/TNO ephemeris the user downloaded — a cache is disposable and belongs where backup tools skip it and cleaners empty it, so that "clear Stellium's junk" can never point at the ephemeris. It is created lazily on first write rather than at import, and `_make_key()` **refuses** an argument whose repr embeds a memory address (raising `UnstableCacheKey`) instead of silently poisoning the key; `@cached` degrades to an uncached call with a warning.
+
+### Added
+
+- **`stellium cache info` now says where Stellium reads *and* writes, and why.** It prints the resolved cache directory *and* the resolved ephemeris directory, each annotated with whether it came from an environment variable or the default — which is the actual question behind most path bug reports (#34). Portable and read-only-`$HOME` installs (Windows embedded Python on a `D:` drive, Docker, Lambda) set `STELLIUM_EPHE_PATH` and `STELLIUM_CACHE_DIR`; the new [docs/LOCATIONS.md](docs/LOCATIONS.md) gathers all of this — ephemeris vs. cache directories, custom folders, a worked PowerShell recipe, and troubleshooting — with the README linking to it.
+
+### Deprecated
+
+- **`ChartBuilder.with_cache()` is deprecated and does nothing.** It never did: the `Cache` it built was stored on the builder and read by no code path (`_get_cache()` was never called), while the ephemeris engines used the *global* cache regardless — so `with_cache(enabled=False)` disabled nothing. Chart calculation is no longer disk-cached at all; set `STELLIUM_CACHE_DIR` to relocate the geocoding cache (default `~/.cache/stellium/`).
+
+### Known issues
+
+- **The planner's fonts fall back to system fonts on an installed copy.** `planner/renderer.py` resolves its font directory by walking up from `__file__` to the *repository root* and looking for `assets/fonts/` — a path that exists only in a source checkout, not in the wheel. Planners still render (Typst substitutes available system fonts), so this is cosmetic rather than a failure, but the intended typography is lost — and on a bare container with no fonts installed it would be worse. It is the same shape of bug as #60, one directory over. Left for the next release, where `planner/renderer.py` is rewritten onto the design system and uses the packaged font stack (`stellium/data/fonts/`) rather than being patched in place.
+
 ## [0.21.0] - 2026-07-11
 
 ### Changed

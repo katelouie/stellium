@@ -108,7 +108,7 @@ Source: `cli/`. Entry point `stellium = "stellium.cli:cli"` (`pyproject.toml`).
 - `stellium ephemeris download [--years START-END --force --quiet]`;
   `stellium ephemeris download-asteroid <ids>|--tnos [--list --force]`
 - `stellium cache ...` (cache management; see
-  [COMPONENTS_AND_ANALYSIS](./COMPONENTS_AND_ANALYSIS.md#4-caching-utilscachepy-utilscache_utilspy))
+  [COMPONENTS_AND_ANALYSIS](./COMPONENTS_AND_ANALYSIS.md#4-caching-utilscachepy))
 
 ## Progressions & directions
 - Secondary/tertiary/minor progressions: `utils/progressions.py` (+

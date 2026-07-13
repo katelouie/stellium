@@ -30,7 +30,6 @@ from stellium.engines.houses import (
 )
 from stellium.engines.orbs import SimpleOrbEngine
 from stellium.engines.patterns import AspectPatternAnalyzer
-from stellium.utils.cache import Cache
 
 pytestmark = pytest.mark.slow
 
@@ -424,49 +423,42 @@ class TestChartBuilderUnknownTime:
 
 
 class TestChartBuilderCacheConfiguration:
-    """Tests for cache configuration methods."""
+    """`with_cache()` is deprecated and does nothing.
 
-    def test_with_cache_custom_instance(self):
-        """Test with_cache() with custom Cache instance."""
-        import tempfile
+    The tests that used to live here asserted `builder._cache is custom_cache` — that
+    the setting had been *stored*. None of them checked that it did anything, and it
+    never did: `_get_cache()` was never called by any code path, and the ephemeris
+    engines used the global cache regardless. `with_cache(enabled=False)` disabled
+    nothing. Assert the honest behaviour instead.
+    """
 
-        with tempfile.TemporaryDirectory() as tmpdir:
-            custom_cache = Cache(cache_dir=tmpdir, max_age_seconds=3600)
-
-            native = Native("1994-01-06 11:47", "Palo Alto, CA")
-            builder = ChartBuilder.from_native(native).with_cache(cache=custom_cache)
-
-            assert builder._cache is custom_cache
-
-    def test_with_cache_creates_new_cache(self):
-        """Test with_cache() creates new Cache when none provided."""
-        import tempfile
-
-        with tempfile.TemporaryDirectory() as tmpdir:
-            native = Native("1994-01-06 11:47", "Palo Alto, CA")
-            builder = ChartBuilder.from_native(native).with_cache(
-                cache_dir=tmpdir,
-                max_age_seconds=7200,
-            )
-
-            assert builder._cache is not None
-            assert builder._cache.max_age == 7200
-
-    def test_with_cache_disabled(self):
-        """Test with_cache() can disable caching."""
+    def test_with_cache_is_deprecated_and_does_nothing(self):
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
-        builder = ChartBuilder.from_native(native).with_cache(enabled=False)
 
-        assert builder._cache is not None
-        assert builder._cache.enabled is False
+        with pytest.warns(DeprecationWarning, match="does nothing"):
+            builder = ChartBuilder.from_native(native).with_cache(enabled=False)
 
-    def test_get_cache_returns_default_when_none_set(self):
-        """Test _get_cache() returns default cache when none configured."""
+        # Still chainable, and still builds a chart.
+        assert builder.calculate().get_object("Sun") is not None
+
+    def test_chart_calculation_writes_nothing_to_disk(self, tmp_path, monkeypatch):
+        """The regression that started this: chart building was a write-only cache.
+
+        `@cached` on a *method* put `self` — memory address and all — in the key, so
+        no entry was ever found again. Three identical chart builds produced 28 -> 55
+        -> 82 pickle files and zero hits. Nothing should be written now.
+        """
+        monkeypatch.setenv("STELLIUM_CACHE_DIR", str(tmp_path / "cache"))
+        monkeypatch.chdir(tmp_path)
+
         native = Native("1994-01-06 11:47", "Palo Alto, CA")
-        builder = ChartBuilder.from_native(native)
+        for _ in range(3):
+            ChartBuilder.from_native(native).calculate()
 
-        cache = builder._get_cache()
-        assert cache is not None
+        assert list(tmp_path.rglob("*.pickle")) == []
+        assert not (tmp_path / ".cache").exists(), (
+            "a chart build created a .cache/ in the working directory"
+        )
 
 
 class TestChartBuilderWithConfig:

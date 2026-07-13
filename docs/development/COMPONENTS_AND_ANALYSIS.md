@@ -81,22 +81,65 @@ Parse external sources into `list[Native]` (re-exported from `stellium`):
 
 ---
 
-## 4. Caching (`utils/cache.py`, `utils/cache_utils.py`)
+## 4. Caching (`utils/cache.py`)
 
-File-based pickle cache with subdirs `ephemeris`, `geocoding`, `general`.
+File-based pickle cache. **In practice this now means geocoding only.**
+
+> ⚠️ **Do not disk-cache the ephemeris.** A `swe.calc_ut` takes microseconds; a
+> pickle round-trip does not. Caching positions to disk measured **13× slower**
+> than recomputing them (2.4 ms/chart → 0.21 ms/chart when removed). `@cached` is
+> for calls that are slow because they *leave the process* — a network request.
+> Before adding it, check that the thing you are caching is slower than a file read.
+
+> ⚠️ **Never put `@cached` on a method.** `self` becomes `args[0]`, and its default
+> repr contains its **memory address** — so the key changes every run and the entry
+> can never be found again. Every call then misses, writes a new file, and reads
+> nothing back. That is precisely what happened: **18.5 million files** accumulated
+> in one directory. `_make_key` now raises `UnstableCacheKey` for such an argument,
+> and `@cached` degrades to an uncached call with a `RuntimeWarning` rather than
+> silently poisoning the key. Cache a **module-level function of plain values**.
 
 ```python
 from stellium.utils.cache import cached
 
-@cached(cache_type="ephemeris")          # cache_type ∈ {"ephemeris","geocoding","general"}
-def expensive(...): ...
+@cached(cache_type="geocoding", max_age_seconds=604800)
+def _cached_geocode(location_name: str) -> dict: ...   # ✅ plain args, network-bound
 ```
 
+- **Location** — `data/paths.py::resolve_cache_dir()` (re-exported as
+  `utils.cache.default_cache_dir()`): `STELLIUM_CACHE_DIR`, else
+  `%LOCALAPPDATA%\stellium\cache` on Windows, else `$XDG_CACHE_HOME/stellium` or
+  `~/.cache/stellium`.
+
+  **Deliberately *not* under `~/.stellium/`.** That directory is *data you would
+  hate to lose* — it holds the asteroid/TNO ephemeris the user downloaded. A cache
+  is disposable, and `~/.cache` is the one place the ecosystem agrees is safe to
+  wipe (backups skip it, cleaners empty it). Keeping them apart means "clear
+  Stellium's junk" can never point at the ephemeris. macOS uses `~/.cache` rather
+  than `~/Library/Caches` because this is a developer-facing library and that is
+  where its users look.
+
+  Portable installs set **both** `STELLIUM_EPHE_PATH` and `STELLIUM_CACHE_DIR`;
+  `stellium cache info` prints both resolved paths *and which env var set them*,
+  which is the actual question behind most path bug reports (see issue #34).
+  User-facing guide: [docs/LOCATIONS.md](../LOCATIONS.md).
+
+  It used to default to the *relative* `".cache"`, which `Path.mkdir()` resolves
+  against the **current working directory** — so the cache materialised wherever
+  Python happened to be launched. Eight of them accumulated across the repo, one
+  145 MB *inside the package itself*.
+- **Lazily created** — directories are made on first *write*. The default instance
+  is built by `get_default_cache()`, not at import. **Importing a library must not
+  touch the disk** (`_default_cache = Cache()` at module scope did exactly that).
 - `Cache`: `.get/.set/.clear(cache_type)`, `.size()`, `.get_stats()`; default
-  expiry 24h.
-- Management helpers (`cache_utils.py`): `print_cache_info()`,
-  `clear_ephemeris_cache()`, `clear_geocoding_cache()`, `clear_all_cache()`,
-  `get_cache_stats()`. Also exposed via `stellium cache` CLI.
+  expiry 24h. Subdirs `ephemeris`, `geocoding`, `general` (the first is now unused).
+- Module helpers (`utils/cache.py`): `clear_cache(cache_type=None)`,
+  `cache_size(cache_type=None)`, `cache_info()`, `get_default_cache()`,
+  `set_default_cache(cache)`. Exposed via the `stellium cache`
+  {`info`,`clear`,`size`} CLI.
+- `ChartBuilder.with_cache()` is **deprecated and a no-op** — it never had an
+  effect (`_get_cache()` was never called by anything, and the engines used the
+  global cache regardless, so `with_cache(enabled=False)` disabled nothing).
 
 ---
 

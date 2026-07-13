@@ -21,7 +21,6 @@ from stellium.data.paths import initialize_ephemeris
 # StelliumWarning hierarchy); re-exported here and from stellium.engines for
 # backward compatibility.
 from stellium.exceptions import MissingEphemerisWarning
-from stellium.utils.cache import cached
 
 
 def _set_ephemeris_path(ephe_path: str | Path | None = None) -> None:
@@ -283,7 +282,11 @@ class SwissEphemerisEngine:
 
         return flags
 
-    @cached(cache_type="ephemeris", max_age_seconds=86400)
+    # Deliberately NOT disk-cached. A swe.calc_ut is microseconds; a pickle
+    # round-trip is not. Caching this to disk measured 13x SLOWER than recomputing,
+    # and because the decorator sat on a *method*, `self` went into the cache key —
+    # complete with its memory address — so no entry was ever found again and every
+    # call wrote a new file. See utils/cache.py.
     def _calculate_single_position(
         self,
         julian_day: float,
@@ -399,7 +402,7 @@ class SwissEphemerisEngine:
 
         warnings.warn(" ".join(parts), MissingEphemerisWarning, stacklevel=2)
 
-    @cached(cache_type="ephemeris", max_age_seconds=86400)
+    # Not disk-cached, for the same reason as _calculate_single_position above.
     def _calculate_phase(
         self,
         julian_day: float,

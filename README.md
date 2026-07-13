@@ -420,41 +420,23 @@ See `stellium --help` for full CLI documentation.
 
 ---
 
-## Ephemeris Data Location
+## Where Stellium Reads and Writes
 
-Stellium bundles enough Swiss Ephemeris data to cover **1800–2999 CE** and
-automatically copies it to `~/.stellium/ephe/` on first use, so most users
-never need to download anything. Use `stellium ephemeris download` if you
-need coverage outside that range or extra asteroid files.
+Stellium touches exactly two directories, and they get opposite treatment:
 
-### Using a custom ephemeris directory
+| | Default (macOS / Linux) | Default (Windows) | Override with |
+|---|---|---|---|
+| **Ephemeris** — *data; keep it* | `~/.stellium/ephe/` | `C:\Users\<you>\.stellium\ephe\` | `STELLIUM_EPHE_PATH` |
+| **Cache** — *disposable* | `~/.cache/stellium/` | `%LOCALAPPDATA%\stellium\cache\` | `STELLIUM_CACHE_DIR` |
 
-You can point Stellium at any existing Swiss Ephemeris folder — handy for
-portable installs, read-only home directories (Docker, Lambda, shared
-hosts), or for reusing a folder you already maintain for another astrology
-tool. Two options, in order of precedence:
+Enough Swiss Ephemeris data to cover **1800–2999 CE** is bundled and unpacked on
+first use, so most users never need to download anything. To see where both
+directories actually resolved — and whether a variable or the default put them
+there — run `stellium cache info`.
 
-```python
-# 1. Explicit argument wins over everything else
-from stellium import ChartBuilder
-from stellium.engines.ephemeris import SwissEphemerisEngine
-
-chart = (ChartBuilder.from_native(native)
-    .with_ephemeris(SwissEphemerisEngine(ephe_path=r"D:\swisseph\ephe"))
-    .calculate())
-```
-
-```bash
-# 2. Environment variable — no code changes required
-export STELLIUM_EPHE_PATH=/opt/swisseph/ephe       # macOS / Linux
-set STELLIUM_EPHE_PATH=D:\swisseph\ephe            # Windows (cmd)
-$env:STELLIUM_EPHE_PATH = "D:\swisseph\ephe"       # Windows (PowerShell)
-```
-
-When you supply a custom path Stellium uses it **as-is**: the folder is not
-created, and the bundled ephemeris files are **not** copied into it.
-Make sure it already contains every `.se1` file you need for the objects
-and date range you plan to calculate.
+📍 **[docs/LOCATIONS.md](docs/LOCATIONS.md)** — custom ephemeris folders,
+portable and read-only-`$HOME` installs (Docker, Lambda, Windows embedded Python
+on a `D:` drive), what is safe to delete, and troubleshooting.
 
 ---
 

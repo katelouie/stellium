@@ -84,6 +84,13 @@ where = ["src"]
 "" = "src"
 
 [tool.setuptools.package-data]
+# Anything here that is NOT a .py file must be listed, or it will not ship in the
+# wheel — `packages.find` only collects Python. tests/test_packaging.py enforces
+# that every data file under src/stellium/ is covered by one of these globs.
+#
+# Keep the patterns TIGHT. A directory glob like "typst_theme/**/*" would sweep up
+# anything that happens to be sitting in the tree — and a stray cache once put
+# 37,000 files inside typst_theme/.
 "stellium.data" = [
     "notables/**/*.yaml",
     "notables/**/*.yml",
@@ -94,6 +101,17 @@ where = ["src"]
     "fonts/*.ttf",
     "fonts/*.otf",
     "fonts/LICENSE-FONTS.txt",
+]
+# The Typst design system. Not a Python package (no __init__.py) — it is read at
+# runtime from `os.path.dirname(__file__)/typst_theme`, so it ships as package data
+# of stellium.presentation. Without this, every PDF/planner render fails for anyone
+# who installed from a wheel (issue #60).
+"stellium.presentation" = [
+    "typst_theme/*.typ",
+]
+# Locale strings, read by i18n/loader.py from `Path(__file__).parent / "locales"`.
+"stellium.i18n" = [
+    "locales/*/*.json",
 ]
 
 # Tool configurations
