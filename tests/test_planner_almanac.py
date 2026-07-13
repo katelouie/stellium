@@ -561,3 +561,48 @@ def test_absent_exaltation_lord_is_none_not_the_string_none(natal_chart):
     for planet in condition.planets:
         assert planet.exaltation_lord != "None"
         assert planet.domicile_lord != "None"
+
+
+def test_no_glibc_only_strftime_directives_anywhere_in_the_planner():
+    """`%-d` and `%-I` are a **glibc extension**, not standard C.
+
+    Windows rejects them outright — `ValueError: Invalid format string` — so a planner
+    built there crashed while every test on Linux and macOS passed. Caught only by the
+    CI matrix. There is no portable directive (Windows spells it `%#d`), so the fix is
+    to format the parts by hand; this test makes sure nobody reintroduces one.
+    """
+    import inspect
+
+    from stellium.planner import contract, events, renderer
+
+    for module in (contract, events, renderer):
+        source = inspect.getsource(module)
+        for directive in ("%-d", "%-I", "%-m", "%-H", "%-j", "%-y"):
+            # The module may *mention* one in a comment explaining why not to use it.
+            offenders = [
+                line
+                for line in source.splitlines()
+                if directive in line and not line.lstrip().startswith("#")
+            ]
+            assert not offenders, (
+                f"{module.__name__} uses {directive!r}, which raises ValueError on "
+                f"Windows:\n  " + "\n  ".join(offenders)
+            )
+
+
+def test_times_and_dates_format_without_leading_zeros():
+    """The behaviour the glibc directives were there for, now done portably."""
+    from datetime import datetime
+
+    from stellium.planner.contract import _fmt_date, _fmt_datetime, _fmt_time
+
+    assert _fmt_date(date(2026, 3, 3)) == "Mar 3"  # not "Mar 03"
+    assert _fmt_time(datetime(2026, 1, 1, 14, 49)) == "2:49p"
+    assert _fmt_time(datetime(2026, 1, 1, 9, 5)) == "9:05a"
+    assert _fmt_time(datetime(2026, 1, 1, 14, 49), "24h") == "14:49"
+
+    # Midnight is 12am and noon is 12pm — the classic 12-hour-clock off-by-twelve.
+    assert _fmt_time(datetime(2026, 1, 1, 0, 30)) == "12:30a"
+    assert _fmt_time(datetime(2026, 1, 1, 12, 30)) == "12:30p"
+
+    assert _fmt_datetime(datetime(2026, 7, 15, 11, 19)) == "July 15, 2026 at 11:19 AM"

@@ -39,8 +39,28 @@ def _ordinal(n: int) -> str:
     return f"{n}{suffix}"
 
 
+# NOTE: no `%-d` / `%-I` anywhere in this module.
+#
+# The dash-modifier that strips a leading zero is a **glibc extension**. It is not in
+# the C standard and Windows rejects it outright — `ValueError: Invalid format string`
+# — so a planner built on Windows crashed while every test on Linux and macOS passed.
+# (Windows spells it `%#d`; there is no portable directive.) Format the parts by hand
+# instead: `d.day` and `dt.hour` are plain integers and need no zero-stripping at all.
+
+
 def _fmt_date(d: date) -> str:
-    return d.strftime("%b %-d")
+    """'Mar 3' — no leading zero, portably."""
+    return f"{d:%b} {d.day}"
+
+
+def _fmt_long_date(d: date) -> str:
+    """'March 3, 2026'."""
+    return f"{d:%B} {d.day}, {d.year}"
+
+
+def _hour12(dt: Any) -> tuple[int, str]:
+    """(hour on a 12-hour clock, 'am'|'pm'). Midnight is 12am, noon is 12pm."""
+    return (dt.hour % 12) or 12, "am" if dt.hour < 12 else "pm"
 
 
 def _fmt_time(dt: Any, fmt: str = "12h") -> str:
@@ -49,9 +69,15 @@ def _fmt_time(dt: Any, fmt: str = "12h") -> str:
     '2:49p' (12h) or '14:49' (24h).
     """
     if fmt == "24h":
-        return dt.strftime("%H:%M")
-    stamp = dt.strftime("%-I:%M%p").lower()
-    return stamp.replace("am", "a").replace("pm", "p")
+        return f"{dt.hour:02d}:{dt.minute:02d}"
+    hour, meridiem = _hour12(dt)
+    return f"{hour}:{dt.minute:02d}{meridiem[0]}"
+
+
+def _fmt_datetime(dt: Any) -> str:
+    """'July 15, 2026 at 11:19 AM'."""
+    hour, meridiem = _hour12(dt)
+    return f"{_fmt_long_date(dt)} at {hour}:{dt.minute:02d} {meridiem.upper()}"
 
 
 # ---------------------------------------------------------------------------
@@ -84,9 +110,7 @@ def _year_at_a_glance(almanac: YearAlmanac) -> dict[str, Any]:
         ],
     ]
     if almanac.solar_return:
-        pairs.append(
-            ["Solar Return", almanac.solar_return.strftime("%B %-d, %Y at %-I:%M %p")]
-        )
+        pairs.append(["Solar Return", _fmt_datetime(almanac.solar_return)])
     for period in almanac.zr_periods:
         if period.level == 1:
             pairs.append(["Releasing (L1)", f"{period.sign}, ruled by {period.ruler}"])
@@ -655,7 +679,7 @@ def _month_weeks_detail(
                 }
             )
 
-        label = f"{week[0]:%b %-d} – {week[-1]:%b %-d, %Y}"
+        label = f"{_fmt_date(week[0])} – {_fmt_date(week[-1])}, {week[-1].year}"
         pages.append({"label": label, "days": days})
 
     return pages
@@ -931,7 +955,7 @@ def build_planner_data(
 
     birth = natal_chart.datetime.local_datetime or natal_chart.datetime.utc_datetime
     metadata = [
-        birth.strftime("%B %-d, %Y"),
+        _fmt_long_date(birth),
         getattr(natal_chart.location, "name", "") or "",
     ]
     # Times are local to wherever the planner is *used*, which is not necessarily
