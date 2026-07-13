@@ -120,6 +120,7 @@ class PlannerRenderer:
             weekly_starts_on=getattr(self.config, "weekly_starts_on", None),
             time_format=getattr(self.config, "time_format", "12h"),
             location_label=self._location_label(natal_chart),
+            include_natal=self.config.include_natal_chart,
             svgs=svgs.as_dict(),
             transit_planets=self._legend_planets(),
             condition=find_chart_condition(natal_chart),

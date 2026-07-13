@@ -751,6 +751,7 @@ def build_planner_data(
     weekly_starts_on: str | None = None,
     time_format: str = "12h",
     location_label: str | None = None,
+    include_natal: bool = True,
     svgs: dict[str, str] | None = None,
     transit_planets: list[str] | None = None,
     condition: Any = None,
@@ -802,9 +803,12 @@ def build_planner_data(
             front.append(section)
 
     # The natal chart as a *lookup*, not a portrait: the positions table leads,
-    # because that is what the daily pages send you here to find.
+    # because that is what the daily pages send you here to find. `.without_natal_chart()`
+    # drops the whole reference — table AND wheel — not just the drawing.
     natal_sections: list[dict[str, Any]] = []
-    positions = PlanetPositionSection().generate_data(natal_chart)
+    positions = (
+        PlanetPositionSection().generate_data(natal_chart) if include_natal else {}
+    )
     if positions.get("planets"):
         natal_sections.append(
             {
@@ -955,5 +959,7 @@ def _period_label(start: date, end: date) -> str:
     if start.month == 1 and end.month == 12 and start.year == end.year:
         return str(start.year)
     if start.year == end.year:
+        if start.month == end.month:
+            return f"{start:%B %Y}"  # a single month is not a "Jan–Jan" range
         return f"{start:%b}–{end:%b} {start.year}"
     return f"{start:%b %Y} – {end:%b %Y}"

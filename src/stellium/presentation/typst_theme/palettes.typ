@@ -36,12 +36,20 @@
 // job. `natal` therefore gets a deliberate *hue* shift away from the body text,
 // the way a good almanac prints your transits in blue against the sky's black.
 // Greyscale has no hue to spend, so it separates by value and nothing else.
+// These values are held to a promise the structural tokens do not make, and
+// tests/test_typst_theme_palettes.py enforces it: within every theme, all four
+// classes are >= 15 dE apart and >= 3:1 against that theme's page. Do not hand-tune
+// one without re-running those tests — the first draft of this palette reused
+// `muted` and `gold` for sepia, which are the same muddy brown (dE 6.9), so
+// "eclipse" and "the Moon changed sign" rendered identically.
 #let theme-event-colors = (
   house: (natal: "#1F6F8B", notable: "#B0872F", mundane: "#3A2233", lunar: "#A08A72"),
-  sepia: (natal: "#2E6171", notable: "#9B7343", mundane: "#3A2A1A", lunar: "#9A7A52"),
+  sepia: (natal: "#2E6171", notable: "#B5651D", mundane: "#3A2A1A", lunar: "#867A5C"),
   celestial: (natal: "#7FC7D9", notable: "#FFD700", mundane: "#D8D3E0", lunar: "#8A82A0"),
   blues: (natal: "#7FE3D4", notable: "#FFD700", mundane: "#CFE3F2", lunar: "#6E8FA8"),
-  greyscale: (natal: "#111111", notable: "#444444", mundane: "#777777", lunar: "#AAAAAA"),
+  // No hue to spend, so the four separate by value alone — and still have to clear
+  // 3:1 on white, which caps how light `lunar` can be.
+  greyscale: (natal: "#000000", notable: "#2A2A2A", mundane: "#4E4E4E", lunar: "#787878"),
 )
 
 // Polarity bar: a warm (yang) / cool (yin) pair that stays distinct in every
