@@ -133,3 +133,82 @@ def test_every_glyph_can_actually_be_drawn():
         + "\n\nFix by adding an SVG to stellium/data/glyphs/ and pointing the "
         "registry entry at it, or by bundling a font that covers the codepoint."
     )
+
+
+# ---------------------------------------------------------------------------
+# fixed stars — three separate bugs, all of which rendered silently
+# ---------------------------------------------------------------------------
+
+
+def test_fixed_stars_resolve_to_their_drawn_glyph_not_a_generic_star():
+    """A fixed star lives in BOTH registries.
+
+    CELESTIAL_REGISTRY carries a generic ★; FIXED_STARS_REGISTRY carries the real
+    hand-drawn sigil. `get_glyph()` used to consult only the former, so eight drawn
+    star glyphs were unreachable and every star rendered as the same anonymous ★.
+    Algol passed by pure accident — its celestial entry happened to name the same file.
+    """
+    from stellium.core.registry import FIXED_STARS_REGISTRY
+    from stellium.visualization.core import get_glyph
+
+    drawn = [n for n, s in FIXED_STARS_REGISTRY.items() if s.glyph_svg_path]
+    assert drawn, "expected some fixed stars to have hand-drawn glyphs"
+
+    generic = [n for n in drawn if get_glyph(n)["type"] != "svg"]
+    assert not generic, (
+        f"these stars have a drawn glyph that get_glyph() cannot reach, so they "
+        f"render as a generic ★: {generic}"
+    )
+
+
+def test_glyph_svgs_are_square_so_they_are_not_shrunk_and_clipped():
+    """`embed_svg_glyph` nests the SVG in a SQUARE box using the file's own viewBox.
+
+    The star glyphs shipped with a 2:1 landscape viewBox (52.9 x 26.5), so
+    preserveAspectRatio fitted the *width* and they rendered at ~57% scale with their
+    tops and bottoms clipped off.
+    """
+    import re
+
+    from stellium.data.paths import glyph_svg_dir
+
+    skewed = []
+    for svg in sorted(glyph_svg_dir().glob("*.svg")):
+        box = re.search(r'viewBox="([^"]+)"', svg.read_text())
+        assert box, f"{svg.name} has no viewBox"
+        _, _, w, h = (float(v) for v in box.group(1).split())
+        if abs(w - h) > 0.01 * max(w, h):
+            skewed.append(f"{svg.name} ({w:g} x {h:g})")
+
+    assert not skewed, (
+        "glyph SVGs must have a square viewBox or they are scaled down and clipped "
+        "when embedded:\n  " + "\n  ".join(skewed)
+    )
+
+
+def test_filled_glyphs_are_recoloured_by_the_theme_not_left_black():
+    """Two drawing conventions live in the bundle, and both must theme.
+
+        bodies (Pholus, Eris)  fill:none  + stroke:<colour>   -> an outline
+        stars  (Sirius, Algol) fill:<colour> + stroke:none     -> a solid shape
+
+    `embed_svg_glyph` used to theme the stroke and copy the *file's* fill through
+    verbatim, so the filled star glyphs stayed #000000 whatever the theme — black on
+    black on every dark theme, and nothing anywhere said so.
+    """
+    import svgwrite
+
+    from stellium.visualization.core import embed_svg_glyph, get_glyph
+
+    themed = "#F0B95F"
+    for name in ("Sirius", "Aldebaran"):  # filled
+        dwg = svgwrite.Drawing(size=(100, 100))
+        embed_svg_glyph(dwg, get_glyph(name)["value"], 50, 50, 40, fill_color=themed)
+        markup = dwg.tostring()
+        assert f'fill="{themed}"' in markup, f"{name}'s fill was not themed"
+        assert "#000" not in markup, f"{name} still carries a hardcoded black"
+
+    for name in ("Pholus", "Eris"):  # stroked
+        dwg = svgwrite.Drawing(size=(100, 100))
+        embed_svg_glyph(dwg, get_glyph(name)["value"], 50, 50, 40, fill_color=themed)
+        assert f'stroke="{themed}"' in dwg.tostring(), f"{name}'s stroke was not themed"

@@ -87,7 +87,19 @@ def get_glyph(object_name: str) -> dict[str, str]:
         - "type": "unicode" or "svg"
         - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """
+    from stellium.core.registry import FIXED_STARS_REGISTRY
     from stellium.data.paths import find_glyph_svg
+
+    # A fixed star lives in BOTH registries: CELESTIAL_REGISTRY carries a generic ★,
+    # while FIXED_STARS_REGISTRY carries its real hand-drawn glyph. This used to look
+    # in CELESTIAL_REGISTRY only, so eight drawn star glyphs were never reachable and
+    # every star rendered as the same anonymous ★ — Algol worked purely by accident,
+    # because its celestial entry happened to name the same file.
+    star = FIXED_STARS_REGISTRY.get(object_name)
+    if star is not None and star.glyph_svg_path:
+        svg_file = find_glyph_svg(star.glyph_svg_path)
+        if svg_file is not None:
+            return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
 
     # Try registry first
     obj_info = get_object_info(object_name)
@@ -183,10 +195,26 @@ def embed_svg_glyph(
         if not path_d:
             continue
 
-        # Parse style into attributes
-        stroke = fill_color or "#000"
+        # A glyph is drawn one of two ways, and we have both in the bundle:
+        #
+        #   bodies (Pholus, Eris, …)  fill:none      + stroke:<colour>   -> an outline
+        #   stars  (Sirius, Algol, …) fill:<colour>  + stroke:none       -> a solid shape
+        #
+        # Recolour whichever one the glyph actually uses. This used to theme the stroke
+        # only and copy the *file's* fill through verbatim — so the filled star glyphs
+        # stayed #000000 whatever the theme, i.e. black on black on the dark themes.
+        colour = fill_color or "#000"
         stroke_width = 0.6
-        fill = "none"
+
+        source_fill = "none"
+        if "fill:" in style:
+            fill_match = re.search(r"fill:([^;]+)", style)
+            if fill_match:
+                source_fill = fill_match.group(1).strip()
+
+        is_filled = source_fill not in ("none", "")
+        fill = colour if is_filled else "none"
+        stroke = "none" if is_filled else colour
 
         if "stroke-width:" in style:
             sw_match = re.search(r"stroke-width:([^;]+)", style)
@@ -195,11 +223,6 @@ def embed_svg_glyph(
                     stroke_width = float(sw_match.group(1).strip())
                 except ValueError:
                     pass
-
-        if "fill:" in style:
-            fill_match = re.search(r"fill:([^;]+)", style)
-            if fill_match:
-                fill = fill_match.group(1).strip()
 
         # Create the path using svgwrite with debug mode disabled
         # to bypass the strict path validation
@@ -212,6 +235,13 @@ def embed_svg_glyph(
         )
         path["stroke-linecap"] = "round"
         path["stroke-linejoin"] = "round"
+
+        # Filled glyphs rely on the even-odd rule for their counters (the hole in
+        # Sirius's ring, say). Drop it and they fill in solid.
+        if is_filled and "fill-rule:" in style:
+            rule = re.search(r"fill-rule:([^;]+)", style)
+            if rule:
+                path["fill-rule"] = rule.group(1).strip()
 
         nested_svg.add(path)
 
