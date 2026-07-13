@@ -145,6 +145,42 @@ def get_user_cache_dir() -> Path:
     return cache_dir
 
 
+# ---------------------------------------------------------------------------
+# bundled glyph SVGs
+# ---------------------------------------------------------------------------
+#
+# Hand-drawn glyphs for bodies that Unicode does not usefully cover — the centaurs,
+# the TNOs, the Uranian points, the named fixed stars. These are **package data**,
+# not user data: they ship inside the wheel and are never written to.
+#
+# They used to live in a repo-root `assets/glyphs/` directory, referenced from
+# CELESTIAL_REGISTRY as the *relative* path `"assets/glyphs/pholus.svg"` and resolved
+# against the repo root. That works in a source checkout and nowhere else: the
+# directory is not in the wheel, so on an installed copy every one of these fell
+# through to a Unicode fallback — and `⬰` (Pholus) is in no font on any platform,
+# while Sedna's fallback was the literal string "Sed". Twenty-five bodies rendered as
+# tofu or as three letters of their own name, for every pip user, silently.
+
+GLYPH_DIR = Path(__file__).parent / "glyphs"
+
+
+def glyph_svg_dir() -> Path:
+    """The bundled glyph directory. Package-relative; never depends on the cwd."""
+    return GLYPH_DIR
+
+
+def find_glyph_svg(filename: str) -> Path | None:
+    """Resolve a registry ``glyph_svg_path`` to a real file, or None.
+
+    Accepts a bare filename (``"pholus.svg"``) and, for compatibility, the old
+    repo-relative form (``"assets/glyphs/pholus.svg"``) — only the basename is used.
+    """
+    if not filename:
+        return None
+    candidate = GLYPH_DIR / Path(filename).name
+    return candidate if candidate.is_file() else None
+
+
 def _get_bundled_ephe_path() -> Path | None:
     """
     Get the path to bundled ephemeris files in the package.

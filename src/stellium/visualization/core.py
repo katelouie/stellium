@@ -9,6 +9,7 @@ It is based on a "Layer" strategy pattern.
 """
 
 import math
+import warnings
 from typing import Any, Protocol
 
 import svgwrite
@@ -20,6 +21,7 @@ from stellium.core.registry import (
     get_aspect_info,
     get_object_info,
 )
+from stellium.exceptions import MissingGlyphWarning
 
 # Legacy glyph dictionaries - kept for backwards compatibility
 # Prefer using the registry via get_glyph() helper function
@@ -85,26 +87,30 @@ def get_glyph(object_name: str) -> dict[str, str]:
         - "type": "unicode" or "svg"
         - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """
-    from pathlib import Path
+    from stellium.data.paths import find_glyph_svg
 
     # Try registry first
     obj_info = get_object_info(object_name)
     if obj_info:
-        # Check if there's an SVG path
         if obj_info.glyph_svg_path:
-            # Resolve to absolute path for SVG reading
-            # The path is relative to project root
-            svg_path = Path(obj_info.glyph_svg_path)
-            if not svg_path.is_absolute():
-                # Go up from visualization/core.py to project root
-                # visualization/ -> stellium/ -> src/ -> project_root/
-                project_root = Path(__file__).parent.parent.parent.parent
-                svg_path = project_root / obj_info.glyph_svg_path
-            if svg_path.exists():
-                # Read SVG content for inline embedding
-                svg_content = svg_path.read_text(encoding="utf-8")
-                return {"type": "svg", "value": svg_content}
-            # Fall back to unicode glyph if SVG doesn't exist
+            svg_file = find_glyph_svg(obj_info.glyph_svg_path)
+            if svg_file is not None:
+                return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+
+            # The SVG exists precisely *because* the Unicode glyph is inadequate —
+            # Pholus's U+2B30 is in no font on any platform, and Sedna's fallback was
+            # the string "Sed". So falling back here is a visible failure, not a
+            # graceful degradation, and it must say so. This used to be silent, which
+            # is how every pip-installed chart came to render these as tofu while ours
+            # looked perfect.
+            warnings.warn(
+                f"Glyph SVG {obj_info.glyph_svg_path!r} for {object_name!r} is "
+                f"missing from the installation; falling back to the Unicode glyph "
+                f"{obj_info.glyph!r}, which most fonts do not contain. This is a "
+                f"packaging fault — please report it.",
+                MissingGlyphWarning,
+                stacklevel=2,
+            )
             return {"type": "unicode", "value": obj_info.glyph}
         return {"type": "unicode", "value": obj_info.glyph}
 
@@ -114,7 +120,8 @@ def get_glyph(object_name: str) -> dict[str, str]:
     if object_name in ANGLE_GLYPHS:
         return {"type": "unicode", "value": ANGLE_GLYPHS[object_name]}
 
-    # Final fallback: use first 2-3 characters
+    # Final fallback: the first few letters of the name. Ugly, but legible — unlike a
+    # tofu box, the reader at least learns which body it is.
     return {"type": "unicode", "value": object_name[:3]}
 
 

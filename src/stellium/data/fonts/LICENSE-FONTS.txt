@@ -24,6 +24,13 @@ Copyright notices
                         (https://github.com/productiontype/Newsreader)
   Noto Sans Symbols     Copyright 2022 The Noto Project Authors
   Noto Sans Symbols 2   (https://github.com/notofonts/symbols)
+  Noto Sans Math        Copyright 2022 Google LLC
+    (subsetted)         (https://github.com/notofonts/math)
+                        NOTE: this file is a SUBSET of Noto Sans Math, containing
+                        only the codepoints Stellium's registries emit (11 glyphs,
+                        8 KB rather than 967 KB). The OFL permits modification; the
+                        font declares no Reserved Font Name, and the original
+                        copyright and license notices are retained in its name table.
   Space Grotesk         Copyright 2020 The Space Grotesk Project Authors
                         (https://github.com/floriankarsten/space-grotesk)
   Spectral              Copyright 2017 The Spectral Project Authors

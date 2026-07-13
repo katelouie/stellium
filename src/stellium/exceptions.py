@@ -55,6 +55,21 @@ class ConfigurationWarning(StelliumWarning):
     """
 
 
+class MissingGlyphWarning(StelliumWarning):
+    """A body's bundled SVG glyph could not be found, so a Unicode glyph was used.
+
+    These SVGs exist precisely *because* the Unicode codepoint is inadequate — Pholus
+    is U+2B30, which is present in no font on any platform, and Sedna's fallback is
+    the literal string "Sed". So this is a visible failure, not a graceful
+    degradation, and it is almost always a **packaging fault** rather than anything
+    the caller did.
+
+    Silence it as usual if you must::
+
+        warnings.filterwarnings("ignore", category=MissingGlyphWarning)
+    """
+
+
 class MissingEphemerisWarning(StelliumWarning):
     """A body was skipped because its ephemeris file is unavailable.
 

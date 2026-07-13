@@ -185,13 +185,20 @@ class TestCelestialRegistryGlyphs:
     def test_svg_glyph_paths_when_present(self):
         """Objects with SVG glyphs should have valid paths."""
         # Check objects that we know have SVG glyphs
+        from stellium.data.paths import find_glyph_svg
+
         svg_objects = ["Nessus", "Pholus", "Eris"]
         for obj_name in svg_objects:
             obj = get_object_info(obj_name)
             if obj:  # Only test if object exists in registry
                 assert obj.glyph_svg_path is not None
-                assert "assets/glyphs/" in obj.glyph_svg_path
                 assert obj.glyph_svg_path.endswith(".svg")
+                # A bare filename, resolved against the *packaged* glyph directory.
+                # It used to be the repo-relative "assets/glyphs/pholus.svg", which
+                # pointed outside the wheel — so this test asserted the very format
+                # that made 25 bodies render as tofu for everyone who pip-installed.
+                assert "/" not in obj.glyph_svg_path
+                assert find_glyph_svg(obj.glyph_svg_path) is not None
 
 
 class TestCelestialRegistryMetadata:

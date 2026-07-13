@@ -101,6 +101,11 @@ where = ["src"]
     "fonts/*.ttf",
     "fonts/*.otf",
     "fonts/LICENSE-FONTS.txt",
+    # Hand-drawn glyphs for bodies Unicode does not usefully cover (centaurs, TNOs,
+    # Uranian points, named stars). CELESTIAL_REGISTRY points at these by filename;
+    # without them, 25 bodies fall back to a Unicode codepoint that most fonts —
+    # and, for Pholus, *every* font — do not contain.
+    "glyphs/*.svg",
 ]
 # The Typst design system. Not a Python package (no __init__.py) — it is read at
 # runtime from `os.path.dirname(__file__)/typst_theme`, so it ships as package data
