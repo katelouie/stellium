@@ -13,11 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   It was also never worth doing: a `swe.calc_ut` is microseconds and a pickle round-trip is not, so disk-caching positions measured **13× slower than recomputing them**. The ephemeris and house engines are therefore no longer disk-cached at all — **chart building goes from 2.4 ms to 0.21 ms**, and the full test suite from ~60 s to ~15 s. Geocoding *is* still cached, which is the case the mechanism was always right for: a network call keyed on a plain string, whose key was stable all along.
 
-  The cache now defaults to an absolute per-user directory (`STELLIUM_CACHE_DIR`, else `XDG_CACHE_HOME` / `LOCALAPPDATA` / `~/Library/Caches`), is created lazily on first write rather than at import, and `_make_key()` **refuses** an argument whose repr embeds a memory address (raising `UnstableCacheKey`) instead of silently poisoning the key; `@cached` degrades to an uncached call with a warning.
+  The cache now defaults to `~/.stellium/cache/` — **beside** `~/.stellium/ephe/`, overridable with `STELLIUM_CACHE_DIR` exactly as the ephemeris is with `STELLIUM_EPHE_PATH`, so a portable install (Windows embedded Python on a `D:` drive, say) redirects one Stellium home rather than two unrelated platform directories. It is created lazily on first write rather than at import, and `_make_key()` **refuses** an argument whose repr embeds a memory address (raising `UnstableCacheKey`) instead of silently poisoning the key; `@cached` degrades to an uncached call with a warning.
 
 ### Deprecated
 
-- **`ChartBuilder.with_cache()` is deprecated and does nothing.** It never did: the `Cache` it built was stored on the builder and read by no code path (`_get_cache()` was never called), while the ephemeris engines used the *global* cache regardless — so `with_cache(enabled=False)` disabled nothing. Chart calculation is no longer disk-cached at all; set `STELLIUM_CACHE_DIR` to relocate the geocoding cache.
+- **`ChartBuilder.with_cache()` is deprecated and does nothing.** It never did: the `Cache` it built was stored on the builder and read by no code path (`_get_cache()` was never called), while the ephemeris engines used the *global* cache regardless — so `with_cache(enabled=False)` disabled nothing. Chart calculation is no longer disk-cached at all; set `STELLIUM_CACHE_DIR` to relocate the geocoding cache (default `~/.stellium/cache/`).
 
 ## [0.21.0] - 2026-07-11
 

@@ -84,9 +84,50 @@ class TestCacheDirectoryIsAbsolute:
         assert default_cache_dir() != (tmp_path / ".cache")
         assert tmp_path not in default_cache_dir().parents
 
+    def test_cache_lives_beside_the_ephemeris_under_the_stellium_home(self):
+        """One convention, not two.
+
+        The ephemeris already lives in ``~/.stellium/ephe`` (and `data/paths.py` has
+        always documented ``~/.stellium/cache`` as its neighbour). A platform cache
+        dir — LOCALAPPDATA, XDG_CACHE_HOME — would scatter Stellium's state across two
+        unrelated places, which is a real cost for portable installs.
+        """
+        from stellium.data.paths import get_user_data_dir, get_user_ephe_dir
+
+        cache = default_cache_dir()
+        assert cache.parent == get_user_data_dir().resolve()
+        assert cache.parent == get_user_ephe_dir().resolve().parent
+
     def test_env_var_overrides_the_location(self, tmp_path, monkeypatch):
         monkeypatch.setenv("STELLIUM_CACHE_DIR", str(tmp_path / "custom"))
         assert default_cache_dir() == (tmp_path / "custom").resolve()
+
+    def test_a_portable_install_can_redirect_everything_off_the_home_drive(
+        self, tmp_path, monkeypatch
+    ):
+        """Windows embedded Python, project on D:, nothing writing to C:\\Users.
+
+        The mirror of STELLIUM_EPHE_PATH: both knobs take an absolute path, both win
+        over the default, and neither depends on the working directory.
+        """
+        portable = tmp_path / "D_drive" / "Astrology"
+        monkeypatch.setenv("STELLIUM_CACHE_DIR", str(portable / "cache"))
+        monkeypatch.setenv("STELLIUM_EPHE_PATH", str(portable / "ephe"))
+        monkeypatch.chdir(tmp_path)
+
+        from stellium.data.paths import _resolve_ephe_path
+
+        assert default_cache_dir() == (portable / "cache").resolve()
+
+        ephe_dir, explicit = _resolve_ephe_path(None)
+        assert explicit is True
+        assert ephe_dir == portable / "ephe"
+
+        # And a write lands there, not in the home directory or the cwd.
+        cache = Cache()
+        cache.set("geocoding", "k", {"lat": 1.0})
+        assert (portable / "cache" / "geocoding" / "k.pickle").exists()
+        assert not (tmp_path / ".cache").exists()
 
 
 class TestCacheKeysMustBeStable:

@@ -36,6 +36,10 @@ USER_EPHE_DIR = USER_DATA_DIR / "ephe"
 # Swiss Ephemeris folder from another astrology tool.
 ENV_EPHE_PATH = "STELLIUM_EPHE_PATH"
 
+# Same, for the cache. Keeping both under ~/.stellium/ means a portable install
+# (Windows embedded Python on a D: drive, say) has one home to redirect, not two.
+ENV_CACHE_PATH = "STELLIUM_CACHE_DIR"
+
 # Package data locations (using importlib.resources)
 PACKAGE_DATA_MODULE = "stellium.data"
 
@@ -79,6 +83,36 @@ def get_user_ephe_dir() -> Path:
     """
     USER_EPHE_DIR.mkdir(parents=True, exist_ok=True)
     return USER_EPHE_DIR
+
+
+def resolve_cache_dir() -> Path:
+    """The cache directory, as an absolute path. Does **not** create it.
+
+    Same shape as :func:`_resolve_ephe_path`, so there is one convention to learn
+    rather than two: an env var, then a directory under the Stellium home.
+
+    1. ``STELLIUM_CACHE_DIR`` environment variable
+    2. Default ``~/.stellium/cache/``
+
+    Deliberately *not* a platform cache dir (``XDG_CACHE_HOME`` / ``LOCALAPPDATA`` /
+    ``~/Library/Caches``): the ephemeris already lives under ``~/.stellium/``, and a
+    portable install should need to redirect **one** Stellium home, not hunt down two
+    unrelated locations on two different drives.
+
+    Never relative — the old default was the bare ``".cache"``, which resolves against
+    the current working directory and so followed you around the filesystem.
+    """
+    env_value = os.environ.get(ENV_CACHE_PATH)
+    if env_value:
+        return Path(env_value).expanduser().resolve()
+    return (USER_DATA_DIR / "cache").resolve()
+
+
+def get_user_cache_dir() -> Path:
+    """The cache directory, creating it if necessary."""
+    cache_dir = resolve_cache_dir()
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    return cache_dir
 
 
 def _get_bundled_ephe_path() -> Path | None:

@@ -10,20 +10,22 @@ that the thing you are caching is slower than a file read.
 
 Two rules this module learned the hard way:
 
-1. **The cache directory is absolute and per-user.** It used to default to the
-   *relative* `".cache"`, which `Path.mkdir()` resolves against the current working
-   directory — so the cache materialised wherever you happened to launch Python.
-   Eight of them accumulated across the repo, including one *inside the package*.
+1. **The cache directory is absolute, and it lives under the Stellium home.**
+   ``~/.stellium/cache/``, beside ``~/.stellium/ephe/``, overridable with
+   ``STELLIUM_CACHE_DIR`` exactly as the ephemeris is with ``STELLIUM_EPHE_PATH`` —
+   so a portable install redirects *one* home, not two unrelated platform
+   directories. It used to default to the *relative* `".cache"`, which
+   `Path.mkdir()` resolves against the current working directory, so the cache
+   materialised wherever you happened to launch Python. Eight of them accumulated
+   across the repo, including one *inside the package*.
 2. **Nothing is created at import.** The default instance is now built lazily; the
    directories are made on first write. Importing a library must not touch the disk.
 """
 
 import hashlib
 import json
-import os
 import pickle
 import re
-import sys
 import time
 import warnings
 from collections.abc import Callable
@@ -66,24 +68,17 @@ def _stable_repr(obj: Any) -> str:
 
 
 def default_cache_dir() -> Path:
-    """The per-user cache directory, as an absolute path.
+    """The cache directory, as an absolute path: ``~/.stellium/cache/``.
 
-    Honours ``STELLIUM_CACHE_DIR``, then the platform convention
-    (``XDG_CACHE_HOME`` / ``LOCALAPPDATA`` / ``~/Library/Caches``), and never
-    depends on the current working directory.
+    Set ``STELLIUM_CACHE_DIR`` to move it — the same shape as ``STELLIUM_EPHE_PATH``,
+    so a portable install redirects one Stellium home rather than two unrelated
+    platform directories. See :func:`stellium.data.paths.resolve_cache_dir`.
+
+    Imported lazily to keep `utils` free of an import-time dependency on `data`.
     """
-    override = os.environ.get("STELLIUM_CACHE_DIR")
-    if override:
-        return Path(override).expanduser().resolve()
+    from stellium.data.paths import resolve_cache_dir
 
-    if sys.platform == "win32":
-        base = os.environ.get("LOCALAPPDATA") or "~/AppData/Local"
-    elif sys.platform == "darwin":
-        base = os.environ.get("XDG_CACHE_HOME") or "~/Library/Caches"
-    else:
-        base = os.environ.get("XDG_CACHE_HOME") or "~/.cache"
-
-    return (Path(base).expanduser() / "stellium").resolve()
+    return resolve_cache_dir()
 
 
 class Cache:

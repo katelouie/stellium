@@ -106,12 +106,18 @@ from stellium.utils.cache import cached
 def _cached_geocode(location_name: str) -> dict: ...   # ✅ plain args, network-bound
 ```
 
-- **Location** — `default_cache_dir()`: absolute and per-user, honouring
-  `STELLIUM_CACHE_DIR`, then `XDG_CACHE_HOME` / `LOCALAPPDATA` /
-  `~/Library/Caches`. It used to default to the *relative* `".cache"`, which
-  `Path.mkdir()` resolves against the **current working directory** — so the cache
-  materialised wherever Python happened to be launched. Eight of them accumulated
-  across the repo, one 145 MB *inside the package itself*.
+- **Location** — `default_cache_dir()` → `~/.stellium/cache/`, **beside**
+  `~/.stellium/ephe/`, overridable with `STELLIUM_CACHE_DIR` exactly as the
+  ephemeris is with `STELLIUM_EPHE_PATH` (both resolved in `data/paths.py`). One
+  Stellium home, one convention — a portable install (Windows embedded Python on a
+  `D:` drive) redirects *one* place, not two unrelated platform directories. That is
+  why this is deliberately **not** `XDG_CACHE_HOME` / `LOCALAPPDATA` /
+  `~/Library/Caches`.
+
+  It used to default to the *relative* `".cache"`, which `Path.mkdir()` resolves
+  against the **current working directory** — so the cache materialised wherever
+  Python happened to be launched. Eight of them accumulated across the repo, one
+  145 MB *inside the package itself*.
 - **Lazily created** — directories are made on first *write*. The default instance
   is built by `get_default_cache()`, not at import. **Importing a library must not
   touch the disk** (`_default_cache = Cache()` at module scope did exactly that).
