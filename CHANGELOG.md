@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **The Typst design system was missing from the published wheel, so every PDF and planner render failed on an installed copy** ([#60](https://github.com/katelouie/stellium/issues/60)). `[tool.setuptools.packages.find]` collects Python modules only; `presentation/typst_theme/` holds five `.typ` files and no `__init__.py`, so it was never a package and was never declared in `package-data` either. From a source checkout everything worked — the files were right there on disk — which is exactly why it shipped. On a wheel, `ReportBuilder.render(format="pdf")` and every `PlannerBuilder` raised `FileNotFoundError`. The same omission silently broke the **Chinese locale**: `i18n/loader.py` reads `locales/*/strings.json` relative to its own file, and `locales/zh_CN/strings.json` was not in the wheel either, so `zh_CN` quietly fell back to English.
+- **The Typst design system was missing from the published wheel, so every PDF report failed on an installed copy** ([#60](https://github.com/katelouie/stellium/issues/60)). `[tool.setuptools.packages.find]` collects Python modules only; `presentation/typst_theme/` holds five `.typ` files and no `__init__.py`, so it was never a package and was never declared in `package-data` either. From a source checkout everything worked — the files were right there on disk — which is exactly why it shipped. On a wheel, `ReportBuilder.render(format="pdf")` raised `FileNotFoundError`. (The planner was unaffected: it generates its own Typst and does not read the design system — though see *Known issues* below.) The same omission silently broke the **Chinese locale**: `i18n/loader.py` reads `locales/*/strings.json` relative to its own file, and `locales/zh_CN/strings.json` was not in the wheel either, so `zh_CN` quietly fell back to English.
 
   Both are now declared, with deliberately tight globs — a directory-wide `typst_theme/**/*` would have swept in whatever happened to be sitting in the tree, and a stray cache had at one point put **37,000 files inside `typst_theme/`**. New `tests/test_packaging.py` asserts the general invariant (*every data file in `src/stellium/` is covered by a package-data glob*), that the design system and locales specifically ship, that no glob sweeps in cache junk, and — as the only oracle that cannot be fooled — **builds a real wheel and looks inside it**.
 
@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 - **`ChartBuilder.with_cache()` is deprecated and does nothing.** It never did: the `Cache` it built was stored on the builder and read by no code path (`_get_cache()` was never called), while the ephemeris engines used the *global* cache regardless — so `with_cache(enabled=False)` disabled nothing. Chart calculation is no longer disk-cached at all; set `STELLIUM_CACHE_DIR` to relocate the geocoding cache (default `~/.cache/stellium/`).
+
+### Known issues
+
+- **The planner's fonts fall back to system fonts on an installed copy.** `planner/renderer.py` resolves its font directory by walking up from `__file__` to the *repository root* and looking for `assets/fonts/` — a path that exists only in a source checkout, not in the wheel. Planners still render (Typst substitutes available system fonts), so this is cosmetic rather than a failure, but the intended typography is lost — and on a bare container with no fonts installed it would be worse. It is the same shape of bug as #60, one directory over. Left for the next release, where `planner/renderer.py` is rewritten onto the design system and uses the packaged font stack (`stellium/data/fonts/`) rather than being patched in place.
 
 ## [0.21.0] - 2026-07-11
 
