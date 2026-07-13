@@ -91,8 +91,10 @@ def _year_at_a_glance(almanac: YearAlmanac) -> dict[str, Any]:
         if period.level == 1:
             pairs.append(["Releasing (L1)", f"{period.sign}, ruled by {period.ruler}"])
 
+    # "Overview", not "The Year" — the page title already names the span, and the
+    # span is not necessarily a year.
     sections: list[dict[str, Any]] = [
-        {"kind": "key_value", "title": "The Year", "pairs": pairs}
+        {"kind": "key_value", "title": "Overview", "pairs": pairs}
     ]
 
     if almanac.eclipses:
@@ -136,8 +138,11 @@ def _year_at_a_glance(almanac: YearAlmanac) -> dict[str, Any]:
 
     return {
         "kind": "compound",
-        "title": "The Year at a Glance",
-        "descriptor": f"{almanac.start:%B %Y} – {almanac.end:%B %Y}",
+        # A planner is not necessarily a year (see _period_label), so neither is its
+        # dashboard. The old hardcoding also produced "March 2026 – March 2026" for a
+        # single-month planner.
+        "title": f"{_period_label(almanac.start, almanac.end)} at a Glance",
+        "descriptor": _span_descriptor(almanac.start, almanac.end),
         "new_page": True,
         "sections": sections,
     }
@@ -154,7 +159,7 @@ def _year_transits(almanac: YearAlmanac) -> dict[str, Any] | None:
 
     return {
         "kind": "table",
-        "title": "Transits That Shape the Year",
+        "title": f"Transits That Shape the {_span_noun(almanac.start, almanac.end)}",
         "descriptor": "The slow movers, and when they land",
         "new_page": True,
         "headers": ["Date", "Transit", "Aspect", "Natal"],
@@ -473,7 +478,7 @@ def _zr_section(almanac: YearAlmanac, svg: str | None) -> dict[str, Any] | None:
         sections.append(
             {
                 "kind": "table",
-                "title": "Periods active this year",
+                "title": f"Periods active this {_span_noun(almanac.start, almanac.end).lower()}",
                 "headers": ["Level", "Sign", "Ruler", "Runs", ""],
                 "rows": rows,
             }
@@ -712,7 +717,9 @@ def _year_overview(
 
     return {
         "kind": "year_overview",
-        "title": f"{_period_label(start, end)} at a Glance",
+        # "Calendar", not "{period} at a Glance" — that title now belongs to the
+        # dashboard, and two pages called the same thing is worse than a plain name.
+        "title": "Calendar",
         "descriptor": "Highlighted days carry an eclipse or a station",
         "new_page": True,
         "months": months,
@@ -850,7 +857,9 @@ def build_planner_data(
         front.append(
             {
                 "kind": "svg",
-                "title": "The Year's Transits",
+                # Span-agnostic titles: the running header already says which
+                # months this planner covers, and it may not be a year.
+                "title": "The Slow Transits",
                 "descriptor": "Where the slow movers travel",
                 "new_page": True,
                 "svg_content": svgs["ephemeris"],
@@ -870,7 +879,7 @@ def build_planner_data(
         front.append(
             {
                 "kind": "compound",
-                "title": "The Year's Charts",
+                "title": "Your Charts",
                 "new_page": True,
                 "sections": year_charts,
             }
@@ -963,3 +972,26 @@ def _period_label(start: date, end: date) -> str:
             return f"{start:%B %Y}"  # a single month is not a "Jan–Jan" range
         return f"{start:%b}–{end:%b} {start.year}"
     return f"{start:%b %Y} – {end:%b %Y}"
+
+
+def _span_descriptor(start: date, end: date) -> str:
+    """The exact days the planner covers, spelled out under its title.
+
+    The title says what to *call* the span; this says where it actually begins and
+    ends — which is the thing you want when the planner is a custom range.
+    """
+    if (start.year, start.month) == (end.year, end.month):
+        return f"{start.day} – {end.day} {start:%B %Y}"
+    if start.year == end.year:
+        return f"{start.day} {start:%B} – {end.day} {end:%B %Y}"
+    return f"{start.day} {start:%B %Y} – {end.day} {end:%B %Y}"
+
+
+def _span_noun(start: date, end: date) -> str:
+    """What to call the span in running prose: "the Year" or "the Period".
+
+    A Sep→Aug planner is still a year, so this goes by length rather than by whether
+    the range happens to sit inside one calendar year. Only say "Year" when it is
+    one — "Transits That Shape the Period" is stiff, but it beats lying.
+    """
+    return "Year" if (end - start).days >= 300 else "Period"

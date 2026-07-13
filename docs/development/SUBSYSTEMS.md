@@ -143,6 +143,32 @@ It is ordered "this year → your chart → how to read it", the natal chart lea
 with a **positions table** rather than the wheel, and it is curated on by default
 (opt out with `.without_*()`).
 
+**The span is free, and the front matter adapts to it.** `.year(N)` is only
+shorthand for `.date_range(Jan 1, Dec 31)`; any range works, and a one-month
+planner (~20 pages, ~6 s) is the quickest way to preview a theme or a config —
+see `one_month_relocated_planner()` in `examples/planner_cookbook.py`. Page titles
+come from `contract._period_label` / `_span_descriptor` / `_span_noun`, never from
+hardcoded strings: a March planner says "March 2026 at a Glance", not "The Year at
+a Glance". `_span_noun` goes by *length* (≥300 days ⇒ "Year"), so a Sep→Aug planner
+is still correctly a year. `test_planner_almanac.py` asserts that no front-matter
+title in a one-month planner contains the word "year".
+
+**Birth place vs. current place are different knobs.**
+- `.timezone()` (required) is the clock every event is printed in — the one that
+  matters day to day.
+- `.location()` is where charts are *cast*, and reaches exactly two things: the
+  **relocated solar return** and the title-page label.
+
+That is less limiting than it looks: transits, ingresses, stations, lunations and
+VOC are all geocentric ecliptic longitudes, so they are location-independent by
+nature. Only the *clock* and the *houses* are local. Eclipses are placed in the
+**natal** (birth) houses.
+
+> Gotcha, fixed: `ReturnBuilder.solar(natal, year=N)` used to search from 1 January
+> of year N, and the underlying search returns the nearest crossing in *either*
+> direction — so every native born Jul–Dec silently got the **previous** year's
+> solar return. It now searches from the birthday's anniversary in year N.
+
 ## Chinese astrology (BaZi / Four Pillars)
 Source: `chinese/`. Reach it via **`chart.bazi()`** or
 **`ChartBuilder...bazi()`**, or directly with `BaZiEngine(timezone_offset_hours)

@@ -204,6 +204,58 @@ def custom_range_planner():
 
 
 # =============================================================================
+# ONE MONTH, FULL FRONT MATTER, AND A SECOND LOCATION
+# =============================================================================
+
+
+def one_month_relocated_planner():
+    """
+    A single month, with the whole reference section, for someone living abroad.
+
+    Two things worth knowing here.
+
+    **The range is free.** `.year(2026)` is only shorthand for
+    `.date_range(date(2026, 1, 1), date(2026, 12, 31))`. Any span works, and the
+    front matter adapts: the pages are titled from the actual range, so this one
+    says "March 2026 at a Glance" rather than pretending to be a year. A month
+    takes about 6 seconds and comes out ~20 pages — a good way to preview a theme
+    or a config without waiting on a full year.
+
+    **Birth place and current place are different things.** The native was born in
+    Boston; she lives in Lisbon now. So:
+
+    - `.timezone()` sets the clock every event is printed in. This is the one that
+      matters most day to day — it is what makes "Moon enters Leo, 1:43 PM" true
+      where you are standing.
+    - `.location()` sets where charts are *cast*, which is what makes the solar
+      return a relocated one. Recast for Lisbon, this native's solar return
+      Ascendant moves by nearly 60°, taking every house cusp with it.
+
+    Most of a planner is location-independent and that is not a limitation: the
+    transits, ingresses, stations, lunations and void-of-course periods are all
+    geocentric ecliptic longitudes. The sky does the same thing whichever city you
+    watch it from — only the *clock* and the *houses* are local.
+    """
+    from datetime import date
+
+    native = Native(
+        datetime_input="1990-07-15 14:30",
+        location_input="Boston, MA",  # where she was born
+    )
+
+    planner = (
+        PlannerBuilder.for_native(native)
+        .date_range(date(2026, 3, 1), date(2026, 3, 31))
+        .timezone("Europe/Lisbon")  # the clock she actually lives on
+        .location("Lisbon, Portugal")  # where her charts get cast
+        .theme("sepia")
+        .generate(get_output_path("one_month_relocated_planner.pdf"))
+    )
+
+    print(f"One-month relocated planner: {len(planner):,} bytes")
+
+
+# =============================================================================
 # LETTER SIZE WITH BINDING MARGIN
 # =============================================================================
 
@@ -387,6 +439,7 @@ if __name__ == "__main__":
     # outer_planets_planner()
     # monday_start_planner()
     # custom_range_planner()
+    # one_month_relocated_planner()  # ~6s — the quickest way to preview a config
     # printable_planner()
     # minimal_planner()
     # modern_voc_planner()

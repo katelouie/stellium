@@ -310,6 +310,55 @@ def test_period_label_does_not_call_a_september_range_a_year():
     assert _period_label(date(2026, 1, 1), date(2026, 12, 31)) == "2026"
     assert _period_label(date(2026, 9, 1), date(2027, 8, 31)) == "Sep 2026 – Aug 2027"
     assert _period_label(date(2026, 6, 1), date(2026, 8, 31)) == "Jun–Aug 2026"
+    assert _period_label(date(2026, 3, 1), date(2026, 3, 31)) == "March 2026"
+
+
+def test_the_dashboard_is_not_called_a_year_when_it_is_a_month():
+    """The dashboard hardcoded "The Year at a Glance" and a "%B %Y – %B %Y"
+    descriptor, so a one-month planner announced "March 2026 – March 2026"."""
+    from stellium.planner.contract import _span_descriptor
+
+    assert _span_descriptor(date(2026, 3, 1), date(2026, 3, 31)) == "1 – 31 March 2026"
+    assert (
+        _span_descriptor(date(2026, 6, 1), date(2026, 8, 31))
+        == "1 June – 31 August 2026"
+    )
+    assert (
+        _span_descriptor(date(2026, 9, 1), date(2027, 8, 31))
+        == "1 September 2026 – 31 August 2027"
+    )
+
+
+def test_no_front_matter_page_calls_a_one_month_planner_a_year(natal_chart):
+    """The front matter used to be year-shaped in its wording: a March planner was
+    headed "The Year at a Glance" and titled its panels "The Year", "The Year's
+    Transits", "The Year's Charts". A planner's span is whatever you asked for.
+    """
+    from stellium.planner.almanac import build_year_almanac
+    from stellium.planner.contract import build_planner_data
+
+    start, end = date(2026, 3, 1), date(2026, 3, 31)
+    almanac = build_year_almanac(natal_chart, start, end, TZ)
+
+    data = build_planner_data(
+        natal_chart,
+        almanac,
+        {},
+        name="Test",
+        theme="house",
+    )
+
+    assert data["meta"]["period"] == "March 2026"
+
+    titles = [str(section.get("title", "")) for section in data["front"]]
+    titles += [
+        str(sub.get("title", ""))
+        for section in data["front"]
+        for sub in section.get("sections", [])
+    ]
+
+    offenders = [t for t in titles if "year" in t.lower()]
+    assert not offenders, f"a one-month planner is calling itself a year: {offenders}"
 
 
 def test_time_format_switches_between_12h_and_24h():

@@ -262,6 +262,10 @@
     block(
       width: 100%,
       inset: 5pt,
+      // Each month carries its own border, so the layout below can be a strokeless
+      // grid. A bordered table would draw the empty cells of a ragged final row —
+      // a one-month planner is a single month beside two empty boxes.
+      stroke: 0.4pt + t.hair,
       stack(
         spacing: 3pt,
         align(
@@ -284,11 +288,15 @@
     )
   }
 
-  // --- the whole year, twelve mini-months ------------------------------------
-  let year-overview(months) = table(
+  // --- the months of the planner's span, however many there are ---------------
+  // Always three across, so a month is always a third of the page wide — a lone
+  // month stretched to full width reads as a stray table, not a calendar. The grid
+  // is strokeless and each month carries its own border, so the unused cells of a
+  // ragged last row simply draw nothing.
+  let year-overview(months) = grid(
     columns: (1fr,) * 3,
-    stroke: 0.4pt + t.hair,
-    inset: 2pt,
+    column-gutter: 2pt,
+    row-gutter: 2pt,
     ..months.map(mini-month),
   )
 
