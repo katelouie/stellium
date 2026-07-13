@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.21.1] - 2026-07-12
+
 ### Fixed
 
 - **The Typst design system was missing from the published wheel, so every PDF report failed on an installed copy** ([#60](https://github.com/katelouie/stellium/issues/60)). `[tool.setuptools.packages.find]` collects Python modules only; `presentation/typst_theme/` holds five `.typ` files and no `__init__.py`, so it was never a package and was never declared in `package-data` either. From a source checkout everything worked — the files were right there on disk — which is exactly why it shipped. On a wheel, `ReportBuilder.render(format="pdf")` raised `FileNotFoundError`. (The planner was unaffected: it generates its own Typst and does not read the design system — though see *Known issues* below.) The same omission silently broke the **Chinese locale**: `i18n/loader.py` reads `locales/*/strings.json` relative to its own file, and `locales/zh_CN/strings.json` was not in the wheel either, so `zh_CN` quietly fell back to English.
