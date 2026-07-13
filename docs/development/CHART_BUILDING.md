@@ -61,7 +61,6 @@ computes until `.calculate()`.
 | `with_unknown_time()` | normalize time to noon → returns `UnknownTimeChart` |
 | `add_component(component)` | optional positions (Arabic Parts, midpoints, …) |
 | `add_analyzer(analyzer)` | optional metadata (patterns, ZR, …) |
-| `with_cache(cache=None, enabled=True, cache_dir=..., max_age_seconds=...)` | caching |
 
 ### Execution
 - `calculate() -> CalculatedChart | UnknownTimeChart`

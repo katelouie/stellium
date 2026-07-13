@@ -124,9 +124,10 @@ chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .calculate())                                              # Lazy evaluation
 ```
 
-- **Performance** - Advanced caching system makes repeated calculations fast
+- **Performance** - A chart builds in ~0.2 ms, with nothing to configure or warm up
 - **Flexibility** - Calculate multiple house systems simultaneously
-- **Accuracy** - Swiss Ephemeris provides planetary positions accurate to fractions of an arc-second
+- **Accuracy** - Swiss Ephemeris positions, cross-checked against NASA JPL Horizons (every asteroid verified to within 2 arcseconds)
+- **Portable output** - SVG, PDF and PNG that render identically everywhere: every font and glyph the charts need ships *inside* the package
 - **Modern Python** - Takes full advantage of Python 3.11+ features
 
 ---
@@ -192,6 +193,21 @@ chart.draw("custom.svg") \
 ![Einstein - Celestial](docs/images/examples/readme_einstein_celestial.svg)
 
 **Discover features through autocomplete!** Type `chart.draw().` and your IDE will show you everything available.
+
+#### PNG export, without the tofu
+
+```python
+chart.draw("einstein.svg").preset_standard().save_png(scale=2)   # -> einstein.png
+```
+
+Rasterising an astrology SVG usually gives you a wall of tofu boxes, because general
+rasterisers (rsvg, cairosvg, Inkscape) resolve `♈ ♉ ♊` against the *host's* fonts — and
+most machines have no symbol font. Stellium doesn't ask the host: it **bundles every
+font and glyph its charts need** and renders with system fonts switched off, so the PNG
+is identical on your laptop, in CI, and in a bare container.
+
+`scale` is pixels per SVG unit; the background is transparent by default. Dial charts
+export too.
 
 📚 **See the [Visualization Guide](docs/VISUALIZATION.md) for complete documentation, theme gallery, and examples.**
 
@@ -714,21 +730,18 @@ See the [analysis cookbook](examples/analysis_cookbook.ipynb) for comprehensive 
 
 ### Performance
 
+A chart builds in about **0.2 ms**. There is nothing to configure and nothing to warm up.
+
 ```python
 from stellium import ChartBuilder, Native
-from stellium.utils.cache import cache_info, clear_cache
 
 native = Native("2000-01-06 12:00", "Seattle, WA")
-
-# First calculation: ~200ms (result is cached automatically)
-chart1 = ChartBuilder.from_native(native).calculate()
-
-# Subsequent calculations: ~10ms (20x faster!)
-chart2 = ChartBuilder.from_native(native).calculate()
-
-info = cache_info()
-print(f"Cached files: {info['total_cached_files']}, Size: {info['cache_size_mb']} MB")
+chart = ChartBuilder.from_native(native).calculate()   # ~0.2 ms
 ```
+
+Chart calculation is not cached — recomputing is faster than reading a cache. Geocoding
+*is* cached, since that one is a network call; it lives in `~/.cache/stellium/`
+(see [docs/LOCATIONS.md](docs/LOCATIONS.md)).
 
 ---
 

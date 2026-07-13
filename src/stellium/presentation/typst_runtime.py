@@ -155,6 +155,36 @@ def compile_pdf(
     )
 
 
+def compile_png(
+    entry: str,
+    *,
+    root: str,
+    ppi: float = 144.0,
+    sys_inputs: dict[str, str] | None = None,
+) -> bytes:
+    """Compile a ``.typ`` entry file to PNG bytes.
+
+    **``ignore_system_fonts=True`` is the whole point.** Typst is used here as a
+    rasteriser precisely because it can be told to render with *only* the fonts we
+    bundle — which means the output is identical on a developer's Mac, in CI, and in a
+    bare container with no fonts installed at all.
+
+    Every other SVG rasteriser (rsvg, cairosvg, Inkscape) resolves ``<text>`` against
+    the *host's* fonts, so an astrology chart comes out full of tofu boxes on any
+    machine that lacks a symbol font. That is not a bug we can fix in those tools; it
+    is what they are designed to do.
+    """
+    return require_typst().compile(
+        entry,
+        root=root,
+        font_paths=font_paths(),
+        ignore_system_fonts=True,
+        format="png",
+        ppi=ppi,
+        sys_inputs=sys_inputs or {},
+    )
+
+
 def materialize_svgs(
     sections: list[dict], root: str, seq: list[int] | None = None
 ) -> None:

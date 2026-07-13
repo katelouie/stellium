@@ -548,6 +548,48 @@ def example_21_batch_charts():
         print(f"  Created: {output}")
 
 
+def example_22_png_export():
+    """
+    Example 22: PNG Export — portable, and tofu-free
+
+    An astrology chart is mostly *text*: ☉ ♀ ♄ for the planets, ♈ ♉ ♊ for the signs,
+    ℞ for retrograde. In an SVG those are <text> elements naming a font family — and
+    **every general-purpose rasteriser resolves that family against the host's
+    installed fonts**. rsvg, cairosvg, Inkscape, browsers: all of them. Run this
+    project's own chart SVG through `rsvg-convert` and you get twelve tofu boxes
+    where the zodiac signs should be, because the machine had no symbol font.
+
+    So Stellium does not ask the host. It rasterises with Typst using **only its own
+    bundled fonts** (`ignore_system_fonts=True`), which are guaranteed to cover every
+    glyph the registries can emit. The PNG looks the same on your laptop, in CI, and
+    in a bare container with no fonts installed at all.
+    """
+    section_header("Example 22: PNG Export")
+
+    chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
+
+    # `scale` is pixels per SVG unit — 2.0 for a retina-density image.
+    # The background is transparent by default, which is what you want for
+    # compositing; pass a colour if your target cannot handle an alpha channel.
+    png = (
+        chart.draw(str(OUTPUT_DIR / "22_einstein.svg"))
+        .preset_standard()
+        .save_png(scale=2)
+    )
+    print(f"  Created: {png}  (transparent background, 2x)")
+
+    opaque = (
+        chart.draw(str(OUTPUT_DIR / "22_einstein_white.svg"))
+        .preset_standard()
+        .save_png(scale=1, background="white")
+    )
+    print(f"  Created: {opaque}  (white background, 1x)")
+
+    # Dial charts rasterise too, and you can keep the bytes instead of a file.
+    dial_bytes = chart.draw_dial(str(OUTPUT_DIR / "22_dial.svg"), degrees=90).to_png()
+    print(f"  Dial PNG: {len(dial_bytes):,} bytes in memory")
+
+
 # =============================================================================
 # MAIN
 # =============================================================================
@@ -600,6 +642,9 @@ def main():
 
     # --- Part 9: Batch ---
     example_21_batch_charts()
+
+    # --- Part 10: Raster export ---
+    example_22_png_export()
 
     print("\n" + "=" * 60)
     print("  COOKBOOK COMPLETE")

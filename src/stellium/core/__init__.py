@@ -45,10 +45,17 @@ from stellium.core.registry import (
     CELESTIAL_REGISTRY,
     DECLINATION_ASPECT_REGISTRY,
     ECLIPTIC_ASPECT_REGISTRY,
+    ELEMENTS,
+    MODALITIES,
+    QUALITY_REGISTRY,
+    QualityInfo,
     get_aspect_by_alias,
     get_aspect_info,
     get_by_alias,
+    get_element_of,
+    get_modality_of,
     get_object_info,
+    get_quality_info,
 )
 
 __all__ = [

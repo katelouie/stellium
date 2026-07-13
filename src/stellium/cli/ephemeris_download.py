@@ -17,6 +17,7 @@ Common asteroid numbers:
 - Haumea: 136108 (ast136/)
 - Orcus: 90482 (ast90/)
 - Quaoar: 50000 (ast50/)
+- Gonggong: 225088 (ast225/)
 """
 
 import urllib.error
@@ -41,6 +42,45 @@ COMMON_ASTEROIDS = {
     "Haumea": 136108,
     "Orcus": 90482,
     "Quaoar": 50000,
+    "Gonggong": 225088,
+    # Centaurs and asteroids the registry knows but that need their own file.
+    # Named asteroids (relationship / vocation work).
+    "Psyche": 16,
+    "Sappho": 80,
+    "Pandora": 55,
+    "Amor": 1221,
+    "Astraea": 5,
+    "Hebe": 6,
+    "Iris": 7,
+    "Flora": 8,
+    "Metis": 9,
+    "Fortuna": 19,
+    "Diana": 78,
+    "Hidalgo": 944,
+    "Icarus": 1566,
+    "Toro": 1685,
+    "Bacchus": 2063,
+    "Eros": 433,
+    "Urania": 30,
+    "Apollo": 1862,
+    "Asbolus": 8405,
+    "Hylonome": 10370,
+    "Echeclus": 60558,
+    "Elatus": 31824,
+    "Bienor": 54598,
+    "Ixion": 28978,
+    "Huya": 38628,
+    "Chaos": 19521,
+    "Deucalion": 53311,
+    "Altjira": 148780,
+    "Okyrhoe": 52872,
+    "Varuna": 20000,
+    "Salacia": 120347,
+    "Logos": 58534,
+    "Typhon": 42355,
+    "Hygiea": 10,
+    "Nessus": 7066,
+    "Chariklo": 10199,
 }
 
 # File patterns and their descriptions

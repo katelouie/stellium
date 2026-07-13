@@ -283,6 +283,8 @@ class ChartBuilder:
         - Haumea (rebirth, fertility)
         - Orcus (oaths, consequences)
         - Quaoar (creation, harmony)
+        - Gonggong (disruption that clears ground)
+        - Ixion, Huya, Chaos, Deucalion, Altjira
 
         Note: TNOs require additional Swiss Ephemeris asteroid files (se1 files)
         to be present in your ephemeris data directory. Download them from:
@@ -292,8 +294,105 @@ class ChartBuilder:
 
             chart = ChartBuilder.from_native(native).with_tnos().calculate()
         """
-        tno_names = ["Eris", "Sedna", "Makemake", "Haumea", "Orcus", "Quaoar"]
+        tno_names = [
+            "Eris",
+            "Sedna",
+            "Makemake",
+            "Haumea",
+            "Orcus",
+            "Quaoar",
+            "Gonggong",
+            "Ixion",
+            "Huya",
+            "Chaos",
+            "Deucalion",
+            "Altjira",
+            "Varuna",
+            "Salacia",
+            "Logos",
+            "Typhon",
+        ]
         for name in tno_names:
+            if name not in self._config.include_asteroids:
+                self._config.include_asteroids.append(name)
+        return self
+
+    def with_named_asteroids(self) -> "ChartBuilder":
+        """
+        Include the named asteroids used in modern practice.
+
+        Psyche, Sappho, Pandora, Amor, Eros, Astraea, Hebe, Iris, Flora, Metis,
+        Fortuna, Diana, Hidalgo, Icarus, Toro, Bacchus, Urania, Apollo — the ones
+        consulted for relationship and vocation work.
+
+        Each needs its own Swiss Ephemeris file. Fetch them with::
+
+            stellium ephemeris download-asteroid 16     # Psyche
+            stellium ephemeris download-asteroid 433    # Eros
+
+        A body whose file is absent is skipped with a `MissingEphemerisWarning` naming
+        the command to fetch it.
+
+        Example::
+
+            chart = ChartBuilder.from_native(native).with_named_asteroids().calculate()
+        """
+        named = [
+            "Psyche",
+            "Sappho",
+            "Pandora",
+            "Amor",
+            "Astraea",
+            "Hebe",
+            "Iris",
+            "Flora",
+            "Metis",
+            "Fortuna",
+            "Diana",
+            "Hidalgo",
+            "Icarus",
+            "Toro",
+            "Bacchus",
+            "Eros",
+            "Urania",
+            "Apollo",
+        ]
+        for name in named:
+            if name not in self._config.include_asteroids:
+                self._config.include_asteroids.append(name)
+        return self
+
+    def with_centaurs(self) -> "ChartBuilder":
+        """
+        Include the centaurs — the bodies between Saturn and Neptune.
+
+        Chiron, Pholus, Nessus, Chariklo, Asbolus, Hylonome, Echeclus, Elatus, Bienor.
+        Read as the wound and what is done with it; each carries its own flavour of
+        rupture and repair.
+
+        Chiron is calculated by default. The rest need their own Swiss Ephemeris
+        files — a body whose file is absent is skipped with a `MissingEphemerisWarning`
+        naming the command to fetch it::
+
+            stellium ephemeris download-asteroid 8405    # Asbolus
+
+        Example::
+
+            chart = ChartBuilder.from_native(native).with_centaurs().calculate()
+        """
+        centaurs = [
+            "Chiron",
+            "Pholus",
+            "Nessus",
+            "Chariklo",
+            "Asbolus",
+            "Hylonome",
+            "Echeclus",
+            "Elatus",
+            "Bienor",
+            "Okyrhoe",
+        ]
+        for name in centaurs:
             if name not in self._config.include_asteroids:
                 self._config.include_asteroids.append(name)
         return self

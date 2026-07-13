@@ -113,6 +113,48 @@ SWISS_EPHEMERIS_IDS = {
     "Makemake": 136472 + 10000,  # MPC 136472
     "Haumea": 136108 + 10000,  # MPC 136108
     "Orcus": 90482 + 10000,  # MPC 90482
+    "Gonggong": 225088 + 10000,  # MPC 225088 (formerly 2007 OR10)
+    # --- Named asteroids (relationship / vocation work). Each needs its own .se1:
+    #        stellium ephemeris download-asteroid <mpc>
+    "Psyche": 16 + 10000,  # MPC 16
+    "Sappho": 80 + 10000,  # MPC 80
+    "Pandora": 55 + 10000,  # MPC 55
+    "Amor": 1221 + 10000,  # MPC 1221
+    "Astraea": 5 + 10000,  # MPC 5
+    "Hebe": 6 + 10000,  # MPC 6
+    "Iris": 7 + 10000,  # MPC 7
+    "Flora": 8 + 10000,  # MPC 8
+    "Metis": 9 + 10000,  # MPC 9
+    "Fortuna": 19 + 10000,  # MPC 19
+    "Diana": 78 + 10000,  # MPC 78
+    "Hidalgo": 944 + 10000,  # MPC 944
+    "Icarus": 1566 + 10000,  # MPC 1566
+    "Toro": 1685 + 10000,  # MPC 1685
+    "Bacchus": 2063 + 10000,  # MPC 2063
+    # --- Centaurs and asteroids CELESTIAL_REGISTRY knew about but this table did not.
+    # calculate_positions() skips any name missing from here, SILENTLY — so these three
+    # had a registry entry and a hand-drawn glyph, and could never be calculated.
+    "Eros": 433 + 10000,  # MPC 433
+    "Urania": 30 + 10000,  # MPC 30
+    "Apollo": 1862 + 10000,  # MPC 1862
+    "Asbolus": 8405 + 10000,  # MPC 8405
+    "Hylonome": 10370 + 10000,  # MPC 10370
+    "Echeclus": 60558 + 10000,  # MPC 60558
+    "Elatus": 31824 + 10000,  # MPC 31824
+    "Bienor": 54598 + 10000,  # MPC 54598
+    "Ixion": 28978 + 10000,  # MPC 28978
+    "Huya": 38628 + 10000,  # MPC 38628
+    "Chaos": 19521 + 10000,  # MPC 19521
+    "Deucalion": 53311 + 10000,  # MPC 53311
+    "Altjira": 148780 + 10000,  # MPC 148780
+    "Okyrhoe": 52872 + 10000,  # MPC 52872
+    "Varuna": 20000 + 10000,  # MPC 20000
+    "Salacia": 120347 + 10000,  # MPC 120347
+    "Logos": 58534 + 10000,  # MPC 58534
+    "Typhon": 42355 + 10000,  # MPC 42355
+    "Hygiea": 10 + 10000,  # MPC 10
+    "Nessus": 7066 + 10000,  # MPC 7066
+    "Chariklo": 10199 + 10000,  # MPC 10199
 }
 
 

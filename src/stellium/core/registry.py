@@ -28,9 +28,12 @@ class CelestialObjectInfo:
 
     # Visual Representation
     glyph: str  # Unicode astrological glyph (e.g., "☽", "☊", "⚸")
-    glyph_svg_path: str | None = (
-        None  # Path to SVG image for objects without Unicode glyphs
-    )
+    # Filename of a bundled SVG glyph, for bodies Unicode does not usefully cover
+    # (centaurs, TNOs, Uranian points, named stars). Resolved against the packaged
+    # glyph directory by `stellium.data.paths.find_glyph_svg` — a bare filename, NOT
+    # a path. It used to be "assets/glyphs/pholus.svg", relative to the repo root,
+    # which resolved to nothing at all once installed.
+    glyph_svg_path: str | None = None
 
     # Ephemeris/Calculation Data
     swiss_ephemeris_id: int | None = None  # Swiss Ephemeris object ID (if applicable)
@@ -289,7 +292,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Hygiea",
         object_type=ObjectType.ASTEROID,
         glyph="⚕",
-        glyph_svg_path="assets/glyphs/hygiea.svg",
+        glyph_svg_path="hygiea.svg",
         swiss_ephemeris_id=10010,  # AST_OFFSET (10000) + asteroid number (10)
         category="Main Belt Asteroid",
         aliases=["Hygeia"],
@@ -314,7 +317,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Pholus",
         object_type=ObjectType.ASTEROID,
         glyph="⬰",
-        glyph_svg_path="assets/glyphs/pholus.svg",
+        glyph_svg_path="pholus.svg",
         swiss_ephemeris_id=16,
         category="Centaur",
         description="Small cause, big effect - represents multigenerational patterns and catalyst events.",
@@ -324,8 +327,8 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Nessus",
         object_type=ObjectType.ASTEROID,
         glyph="Nes",
-        glyph_svg_path="assets/glyphs/nessus.svg",
-        swiss_ephemeris_id=7066,
+        glyph_svg_path="nessus.svg",
+        swiss_ephemeris_id=17066,  # MPC 7066 + AST_OFFSET
         category="Centaur",
         description="Represents abuse, boundaries violated, karmic consequences, and the poison that becomes medicine.",
     ),
@@ -334,7 +337,8 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Chariklo",
         object_type=ObjectType.ASTEROID,
         glyph="Cha",
-        swiss_ephemeris_id=10199,
+        glyph_svg_path="chariklo.svg",
+        swiss_ephemeris_id=20199,  # MPC 10199 + AST_OFFSET
         category="Centaur",
         description="Chiron's wife - represents compassionate healing, devotion, and grounding spiritual wisdom.",
     ),
@@ -346,8 +350,8 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Eris",
         object_type=ObjectType.ASTEROID,
         glyph="⯰",
-        glyph_svg_path="assets/glyphs/eris.svg",
-        swiss_ephemeris_id=136199,
+        glyph_svg_path="eris.svg",
+        swiss_ephemeris_id=146199,  # MPC 136199 + AST_OFFSET
         category="Dwarf Planet (TNO)",
         aliases=["Xena"],
         description="The dwarf planet of discord, rivalry, and fierce feminine power. Larger than Pluto.",
@@ -357,8 +361,8 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Sedna",
         object_type=ObjectType.ASTEROID,
         glyph="Sed",
-        glyph_svg_path="assets/glyphs/sedna.svg",
-        swiss_ephemeris_id=90377,
+        glyph_svg_path="sedna.svg",
+        swiss_ephemeris_id=100377,  # MPC 90377 + AST_OFFSET
         category="Trans-Neptunian Object",
         description="Represents deep cold, isolation, victim consciousness, and the slow thaw of healing.",
     ),
@@ -367,7 +371,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Makemake",
         object_type=ObjectType.ASTEROID,
         glyph="🝼",
-        swiss_ephemeris_id=136472,
+        swiss_ephemeris_id=146472,  # MPC 136472 + AST_OFFSET
         category="Dwarf Planet (TNO)",
         description="Represents environmental awareness, resourcefulness, and manifestation.",
     ),
@@ -376,7 +380,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Haumea",
         object_type=ObjectType.ASTEROID,
         glyph="🝻",
-        swiss_ephemeris_id=136108,
+        swiss_ephemeris_id=146108,  # MPC 136108 + AST_OFFSET
         category="Dwarf Planet (TNO)",
         description="Represents rebirth, fertility, connection to nature, and rapid transformation.",
     ),
@@ -385,8 +389,8 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Orcus",
         object_type=ObjectType.ASTEROID,
         glyph="Orc",
-        glyph_svg_path="assets/glyphs/orcus.svg",
-        swiss_ephemeris_id=90482,
+        glyph_svg_path="orcus.svg",
+        swiss_ephemeris_id=100482,  # MPC 90482 + AST_OFFSET
         category="Trans-Neptunian Object",
         aliases=["Anti-Pluto"],
         description="The anti-Pluto - represents oaths, consequences, and the afterlife.",
@@ -396,10 +400,361 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Quaoar",
         object_type=ObjectType.ASTEROID,
         glyph="Qua",
-        glyph_svg_path="assets/glyphs/quaoar.svg",
-        swiss_ephemeris_id=50000,
+        glyph_svg_path="quaoar.svg",
+        swiss_ephemeris_id=60000,  # MPC 50000 + AST_OFFSET
         category="Trans-Neptunian Object",
         description="Represents creation myths, harmony, and finding order in chaos.",
+    ),
+    "Gonggong": CelestialObjectInfo(
+        name="Gonggong",
+        display_name="Gonggong",
+        object_type=ObjectType.ASTEROID,
+        glyph="Gon",
+        glyph_svg_path="gonggong.svg",
+        swiss_ephemeris_id=235088,  # MPC 225088 + AST_OFFSET
+        category="Trans-Neptunian Object",
+        aliases=("2007 OR10",),
+        description=(
+            "Chinese water god of floods and chaos. Read for disruption that clears "
+            "ground, and for what will not stay contained."
+        ),
+    ),
+    # ========================================================================
+    # NAMED ASTEROIDS
+    #
+    # The personal-name asteroids, used in modern practice for relationship and
+    # vocation work. Each needs its own .se1 file:
+    #     stellium ephemeris download-asteroid <mpc>
+    # ========================================================================
+    "Psyche": CelestialObjectInfo(
+        name="Psyche",
+        display_name="Psyche",
+        object_type=ObjectType.ASTEROID,
+        glyph="Psy",
+        glyph_svg_path="psyche.svg",
+        swiss_ephemeris_id=10016,  # MPC 16 + AST_OFFSET
+        category="Asteroid",
+        description="The soul, and the wound in it. Where you were broken open, and what that made possible.",
+    ),
+    "Sappho": CelestialObjectInfo(
+        name="Sappho",
+        display_name="Sappho",
+        object_type=ObjectType.ASTEROID,
+        glyph="Sap",
+        glyph_svg_path="sappho.svg",
+        swiss_ephemeris_id=10080,  # MPC 80 + AST_OFFSET
+        category="Asteroid",
+        description="Poetic and erotic sensibility; artistic friendship, and love that does not fit a category.",
+    ),
+    "Pandora": CelestialObjectInfo(
+        name="Pandora",
+        display_name="Pandora",
+        object_type=ObjectType.ASTEROID,
+        glyph="Pan",
+        glyph_svg_path="pandora.svg",
+        swiss_ephemeris_id=10055,  # MPC 55 + AST_OFFSET
+        category="Asteroid",
+        description="Curiosity that cannot be un-satisfied. The question you had to ask, and its consequences.",
+    ),
+    "Amor": CelestialObjectInfo(
+        name="Amor",
+        display_name="Amor",
+        object_type=ObjectType.ASTEROID,
+        glyph="Amo",
+        glyph_svg_path="amor.svg",
+        swiss_ephemeris_id=11221,  # MPC 1221 + AST_OFFSET
+        category="Asteroid",
+        description="Love given freely and without condition — compassion rather than desire.",
+    ),
+    "Astraea": CelestialObjectInfo(
+        name="Astraea",
+        display_name="Astraea",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ast",
+        glyph_svg_path="astraea.svg",
+        swiss_ephemeris_id=10005,  # MPC 5 + AST_OFFSET
+        category="Asteroid",
+        description="Justice, and the return of it. Discernment; the refusal to look away.",
+    ),
+    "Hebe": CelestialObjectInfo(
+        name="Hebe",
+        display_name="Hebe",
+        object_type=ObjectType.ASTEROID,
+        glyph="Heb",
+        glyph_svg_path="hebe.svg",
+        swiss_ephemeris_id=10006,  # MPC 6 + AST_OFFSET
+        category="Asteroid",
+        description="Youth, service, and the cup that is refilled. Vitality offered to others.",
+    ),
+    "Iris": CelestialObjectInfo(
+        name="Iris",
+        display_name="Iris",
+        object_type=ObjectType.ASTEROID,
+        glyph="Iri",
+        glyph_svg_path="iris.svg",
+        swiss_ephemeris_id=10007,  # MPC 7 + AST_OFFSET
+        category="Asteroid",
+        description="The messenger between worlds. Communication that crosses a threshold.",
+    ),
+    "Flora": CelestialObjectInfo(
+        name="Flora",
+        display_name="Flora",
+        object_type=ObjectType.ASTEROID,
+        glyph="Flo",
+        glyph_svg_path="flora.svg",
+        swiss_ephemeris_id=10008,  # MPC 8 + AST_OFFSET
+        category="Asteroid",
+        description="Flowering, sensual pleasure, and the health of the body.",
+    ),
+    "Metis": CelestialObjectInfo(
+        name="Metis",
+        display_name="Metis",
+        object_type=ObjectType.ASTEROID,
+        glyph="Met",
+        glyph_svg_path="metis.svg",
+        swiss_ephemeris_id=10009,  # MPC 9 + AST_OFFSET
+        category="Asteroid",
+        description="Practical wisdom and counsel — the intelligence that was swallowed.",
+    ),
+    "Fortuna": CelestialObjectInfo(
+        name="Fortuna",
+        display_name="Fortuna",
+        object_type=ObjectType.ASTEROID,
+        glyph="For",
+        glyph_svg_path="fortuna.svg",
+        swiss_ephemeris_id=10019,  # MPC 19 + AST_OFFSET
+        category="Asteroid",
+        description="Luck, chance, and the turning of the wheel. What is not earned.",
+    ),
+    "Diana": CelestialObjectInfo(
+        name="Diana",
+        display_name="Diana",
+        object_type=ObjectType.ASTEROID,
+        glyph="Dia",
+        glyph_svg_path="diana.svg",
+        swiss_ephemeris_id=10078,  # MPC 78 + AST_OFFSET
+        category="Asteroid",
+        description="The wild and the untouched. Sovereignty, and the refusal to be domesticated.",
+    ),
+    "Hidalgo": CelestialObjectInfo(
+        name="Hidalgo",
+        display_name="Hidalgo",
+        object_type=ObjectType.ASTEROID,
+        glyph="Hid",
+        glyph_svg_path="hidalgo.svg",
+        swiss_ephemeris_id=10944,  # MPC 944 + AST_OFFSET
+        category="Asteroid",
+        description="Self-assertion and the crusade; standing up on behalf of others.",
+    ),
+    "Icarus": CelestialObjectInfo(
+        name="Icarus",
+        display_name="Icarus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ica",
+        glyph_svg_path="icarus.svg",
+        swiss_ephemeris_id=11566,  # MPC 1566 + AST_OFFSET
+        category="Asteroid",
+        description="Recklessness, escape, and the flight too near the sun.",
+    ),
+    "Toro": CelestialObjectInfo(
+        name="Toro",
+        display_name="Toro",
+        object_type=ObjectType.ASTEROID,
+        glyph="Tor",
+        glyph_svg_path="toro.svg",
+        swiss_ephemeris_id=11685,  # MPC 1685 + AST_OFFSET
+        category="Asteroid",
+        description="Raw strength and the use of force — power, and its restraint.",
+    ),
+    "Bacchus": CelestialObjectInfo(
+        name="Bacchus",
+        display_name="Bacchus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Bac",
+        glyph_svg_path="bacchus.svg",
+        swiss_ephemeris_id=12063,  # MPC 2063 + AST_OFFSET
+        category="Asteroid",
+        description="Ecstasy, intoxication, and release from the ordinary self.",
+    ),
+    "Eros": CelestialObjectInfo(
+        name="Eros",
+        display_name="Eros",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ero",
+        glyph_svg_path="eros.svg",
+        swiss_ephemeris_id=10433,  # MPC 433 + AST_OFFSET
+        category="Asteroid",
+        description="Desire that will not be reasoned with — passion, and what it costs to want.",
+    ),
+    "Urania": CelestialObjectInfo(
+        name="Urania",
+        display_name="Urania",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ura",
+        glyph_svg_path="urania.svg",
+        swiss_ephemeris_id=10030,  # MPC 30 + AST_OFFSET
+        category="Asteroid",
+        description="Astronomy and astrology themselves; the study of the sky, and pattern-sense.",
+    ),
+    "Apollo": CelestialObjectInfo(
+        name="Apollo",
+        display_name="Apollo",
+        object_type=ObjectType.ASTEROID,
+        glyph="Apo",
+        glyph_svg_path="apollo.svg",
+        swiss_ephemeris_id=11862,  # MPC 1862 + AST_OFFSET
+        category="Asteroid",
+        description="The masculine principle in its bright form: aim, ambition, and the pursuit.",
+    ),
+    "Asbolus": CelestialObjectInfo(
+        name="Asbolus",
+        display_name="Asbolus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Asb",
+        glyph_svg_path="asbolus.svg",
+        swiss_ephemeris_id=18405,  # MPC 8405 + AST_OFFSET
+        category="Centaur",
+        description="The seer who reads the omens and is not believed. Intuition under threat.",
+    ),
+    "Hylonome": CelestialObjectInfo(
+        name="Hylonome",
+        display_name="Hylonome",
+        object_type=ObjectType.ASTEROID,
+        glyph="Hyl",
+        glyph_svg_path="hylonome.svg",
+        swiss_ephemeris_id=20370,  # MPC 10370 + AST_OFFSET
+        category="Centaur",
+        description="Grief, and the dignity in it. Mourning, and love that outlives its object.",
+    ),
+    "Echeclus": CelestialObjectInfo(
+        name="Echeclus",
+        display_name="Echeclus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ech",
+        glyph_svg_path="echeclus.svg",
+        swiss_ephemeris_id=70558,  # MPC 60558 + AST_OFFSET
+        category="Centaur",
+        description="What was suppressed and erupts anyway. Sudden, unlooked-for release.",
+    ),
+    "Elatus": CelestialObjectInfo(
+        name="Elatus",
+        display_name="Elatus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ela",
+        glyph_svg_path="elatus.svg",
+        swiss_ephemeris_id=41824,  # MPC 31824 + AST_OFFSET
+        category="Centaur",
+        description="The voice, and its power to wound or to carry. Speech as an act.",
+    ),
+    "Bienor": CelestialObjectInfo(
+        name="Bienor",
+        display_name="Bienor",
+        object_type=ObjectType.ASTEROID,
+        glyph="Bie",
+        glyph_svg_path="bienor.svg",
+        swiss_ephemeris_id=64598,  # MPC 54598 + AST_OFFSET
+        category="Centaur",
+        description="Strength held collectively — what a group can do that a person cannot.",
+    ),
+    "Ixion": CelestialObjectInfo(
+        name="Ixion",
+        display_name="Ixion",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ixi",
+        glyph_svg_path="ixion.svg",
+        swiss_ephemeris_id=38978,  # MPC 28978 + AST_OFFSET
+        category="TNO",
+        description="The one given a second chance who squandered it. Transgression, and what follows.",
+    ),
+    "Huya": CelestialObjectInfo(
+        name="Huya",
+        display_name="Huya",
+        object_type=ObjectType.ASTEROID,
+        glyph="Huy",
+        glyph_svg_path="huya.svg",
+        swiss_ephemeris_id=48628,  # MPC 38628 + AST_OFFSET
+        category="TNO",
+        description="Rain-bringer. What arrives from elsewhere to end a drought.",
+    ),
+    "Chaos": CelestialObjectInfo(
+        name="Chaos",
+        display_name="Chaos",
+        object_type=ObjectType.ASTEROID,
+        glyph="Cha",
+        glyph_svg_path="chaos.svg",
+        swiss_ephemeris_id=29521,  # MPC 19521 + AST_OFFSET
+        category="TNO",
+        description="The formless state before order — potential that has not yet chosen a shape.",
+    ),
+    "Deucalion": CelestialObjectInfo(
+        name="Deucalion",
+        display_name="Deucalion",
+        object_type=ObjectType.ASTEROID,
+        glyph="Deu",
+        glyph_svg_path="deucalion.svg",
+        swiss_ephemeris_id=63311,  # MPC 53311 + AST_OFFSET
+        category="TNO",
+        description="The one who survives the flood, and begins again. Continuity through catastrophe.",
+    ),
+    "Altjira": CelestialObjectInfo(
+        name="Altjira",
+        display_name="Altjira",
+        object_type=ObjectType.ASTEROID,
+        glyph="Alt",
+        glyph_svg_path="altjira.svg",
+        swiss_ephemeris_id=158780,  # MPC 148780 + AST_OFFSET
+        category="TNO",
+        description="The dreamtime: the world as it was made, and is still being made.",
+    ),
+    "Okyrhoe": CelestialObjectInfo(
+        name="Okyrhoe",
+        display_name="Okyrhoe",
+        object_type=ObjectType.ASTEROID,
+        glyph="Oky",
+        glyph_svg_path="okyrhoe.svg",
+        swiss_ephemeris_id=62872,  # MPC 52872 + AST_OFFSET
+        category="Centaur",
+        description="The seer silenced mid-prophecy — foresight that cannot be spoken.",
+    ),
+    "Varuna": CelestialObjectInfo(
+        name="Varuna",
+        display_name="Varuna",
+        object_type=ObjectType.ASTEROID,
+        glyph="Var",
+        glyph_svg_path="varuna.svg",
+        swiss_ephemeris_id=30000,  # MPC 20000 + AST_OFFSET
+        category="TNO",
+        description="The cosmic order and the oath that upholds it; judgement from a great height.",
+    ),
+    "Salacia": CelestialObjectInfo(
+        name="Salacia",
+        display_name="Salacia",
+        object_type=ObjectType.ASTEROID,
+        glyph="Sal",
+        glyph_svg_path="salacia.svg",
+        swiss_ephemeris_id=130347,  # MPC 120347 + AST_OFFSET
+        category="TNO",
+        description="The one taken by the sea and made queen of it. Consent found inside the taking.",
+    ),
+    "Logos": CelestialObjectInfo(
+        name="Logos",
+        display_name="Logos",
+        object_type=ObjectType.ASTEROID,
+        glyph="Log",
+        glyph_svg_path="logos.svg",
+        swiss_ephemeris_id=68534,  # MPC 58534 + AST_OFFSET
+        category="TNO",
+        description="The word that orders — reason as a structuring force.",
+    ),
+    "Typhon": CelestialObjectInfo(
+        name="Typhon",
+        display_name="Typhon",
+        object_type=ObjectType.ASTEROID,
+        glyph="Typ",
+        glyph_svg_path="typhon.svg",
+        swiss_ephemeris_id=52355,  # MPC 42355 + AST_OFFSET
+        category="TNO",
+        description="The monstrous last-born; chaos that rises against the settled order.",
     ),
     # ========================================================================
     # URANIAN / HAMBURG SCHOOL PLANETS
@@ -409,7 +764,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Cupido",
         object_type=ObjectType.ASTEROID,
         glyph="Cup",
-        glyph_svg_path="assets/glyphs/cupido.svg",
+        glyph_svg_path="cupido.svg",
         swiss_ephemeris_id=40,
         category="Uranian Planet",
         description="Hypothetical planet representing family, groups, art, and community.",
@@ -419,7 +774,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Hades",
         object_type=ObjectType.ASTEROID,
         glyph="Had",
-        glyph_svg_path="assets/glyphs/hades.svg",
+        glyph_svg_path="hades.svg",
         swiss_ephemeris_id=41,
         category="Uranian Planet",
         description="Hypothetical planet representing decay, the past, poverty, and what's hidden.",
@@ -429,7 +784,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Zeus",
         object_type=ObjectType.ASTEROID,
         glyph="Zeu",
-        glyph_svg_path="assets/glyphs/zeus.svg",
+        glyph_svg_path="zeus.svg",
         swiss_ephemeris_id=42,
         category="Uranian Planet",
         description="Hypothetical planet representing leadership, fire, machines, and directed energy.",
@@ -439,7 +794,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Kronos",
         object_type=ObjectType.ASTEROID,
         glyph="Kro",
-        glyph_svg_path="assets/glyphs/kronos.svg",
+        glyph_svg_path="kronos.svg",
         swiss_ephemeris_id=43,
         category="Uranian Planet",
         description="Hypothetical planet representing authority, expertise, and high position.",
@@ -449,7 +804,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Apollon",
         object_type=ObjectType.ASTEROID,
         glyph="Apo",
-        glyph_svg_path="assets/glyphs/apollon.svg",
+        glyph_svg_path="apollon.svg",
         swiss_ephemeris_id=44,
         category="Uranian Planet",
         description="Hypothetical planet representing expansion, science, commerce, and success.",
@@ -459,7 +814,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Admetos",
         object_type=ObjectType.ASTEROID,
         glyph="Adm",
-        glyph_svg_path="assets/glyphs/admetos.svg",
+        glyph_svg_path="admetos.svg",
         swiss_ephemeris_id=45,
         category="Uranian Planet",
         description="Hypothetical planet representing depth, stagnation, raw materials, and the earth.",
@@ -469,7 +824,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Vulkanus",
         object_type=ObjectType.ASTEROID,
         glyph="Vul",
-        glyph_svg_path="assets/glyphs/vulcanus.svg",
+        glyph_svg_path="vulcanus.svg",
         swiss_ephemeris_id=46,
         category="Uranian Planet",
         aliases=["Vulcanus"],
@@ -480,7 +835,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Poseidon",
         object_type=ObjectType.ASTEROID,
         glyph="Pos",
-        glyph_svg_path="assets/glyphs/poseidon.svg",
+        glyph_svg_path="poseidon.svg",
         swiss_ephemeris_id=47,
         category="Uranian Planet",
         description="Hypothetical planet representing spirituality, enlightenment, and clarity.",
@@ -506,7 +861,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Algol",
         object_type=ObjectType.FIXED_STAR,
         glyph="★",
-        glyph_svg_path="assets/glyphs/algol.svg",
+        glyph_svg_path="algol.svg",
         swiss_ephemeris_id=None,  # Fixed stars calculated differently
         category="Fixed Star",
         aliases=["Beta Persei", "The Demon Star"],
@@ -522,7 +877,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Regulus",
         object_type=ObjectType.FIXED_STAR,
         glyph="★",
-        glyph_svg_path="assets/glyphs/regulus.svg",
+        glyph_svg_path="regulus.svg",
         swiss_ephemeris_id=None,
         category="Fixed Star",
         aliases=["Alpha Leonis", "The Heart of the Lion"],
@@ -685,7 +1040,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Aldebaran": FixedStarInfo(
         name="Aldebaran",
         swe_name="Aldebaran",
-        glyph_svg_path="assets/glyphs/aldebaran.svg",
+        glyph_svg_path="aldebaran.svg",
         constellation="Taurus",
         bayer="Alpha Tauri",
         tier=1,
@@ -698,7 +1053,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Regulus": FixedStarInfo(
         name="Regulus",
         swe_name="Regulus",
-        glyph_svg_path="assets/glyphs/regulus.svg",
+        glyph_svg_path="regulus.svg",
         constellation="Leo",
         bayer="Alpha Leonis",
         tier=1,
@@ -738,7 +1093,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Algol": FixedStarInfo(
         name="Algol",
         swe_name="Algol",
-        glyph_svg_path="assets/glyphs/algol.svg",
+        glyph_svg_path="algol.svg",
         constellation="Perseus",
         bayer="Beta Persei",
         tier=2,
@@ -750,7 +1105,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Sirius": FixedStarInfo(
         name="Sirius",
         swe_name="Sirius",
-        glyph_svg_path="assets/glyphs/sirius.svg",
+        glyph_svg_path="sirius.svg",
         constellation="Canis Major",
         bayer="Alpha Canis Majoris",
         tier=2,
@@ -795,7 +1150,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Capella": FixedStarInfo(
         name="Capella",
         swe_name="Capella",
-        glyph_svg_path="assets/glyphs/capella.svg",
+        glyph_svg_path="capella.svg",
         constellation="Auriga",
         bayer="Alpha Aurigae",
         tier=2,
@@ -829,7 +1184,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Procyon": FixedStarInfo(
         name="Procyon",
         swe_name="Procyon",
-        glyph_svg_path="assets/glyphs/procyon.svg",
+        glyph_svg_path="procyon.svg",
         constellation="Canis Minor",
         bayer="Alpha Canis Minoris",
         tier=2,
@@ -932,7 +1287,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Alkaid": FixedStarInfo(
         name="Alkaid",
         swe_name="Alkaid",
-        glyph_svg_path="assets/glyphs/alkaid.svg",
+        glyph_svg_path="alkaid.svg",
         constellation="Ursa Major",
         bayer="Eta Ursae Majoris",
         tier=3,
@@ -977,7 +1332,7 @@ FIXED_STARS_REGISTRY: dict[str, FixedStarInfo] = {
     "Alcyone": FixedStarInfo(
         name="Alcyone",
         swe_name="Alcyone",
-        glyph_svg_path="assets/glyphs/alcyone.svg",
+        glyph_svg_path="alcyone.svg",
         constellation="Taurus",
         bayer="Eta Tauri",
         tier=2,
@@ -1198,6 +1553,11 @@ class AspectInfo:
 
     # Visual Representation
     glyph: str = ""  # Unicode astrological symbol (e.g., "☌", "□", "△")
+    # A drawn glyph, as a bare filename in the packaged glyph directory. Used where
+    # the Unicode glyph is inadequate — the harmonic aspects have no codepoint at all
+    # in any block, and fall back to ASCII initials (Q, bQ, tS). Resolved by
+    # `data.paths.find_glyph_svg`; a *path* here is a bug (see the celestial registry).
+    glyph_svg_path: str = ""
     color: str = "#CCCCCC"  # Default hex color for visualization
 
     # Default Orb Settings
@@ -1334,6 +1694,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Quintile Series",
         glyph="Q",
+        glyph_svg_path="quintile.svg",  # {5/1} pentagon — its edge subtends 72°
         color="#16A085",
         default_orb=1.0,
         description="A creative 72° aspect (H5) indicating talent, skill, and unique gifts.",
@@ -1345,6 +1706,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Quintile Series",
         glyph="bQ",
+        glyph_svg_path="biquintile.svg",  # {5/2} pentagram — its edge subtends 144°
         color="#138D75",
         default_orb=1.0,
         description="A creative 144° aspect (H5) emphasizing artistic expression and innovation.",
@@ -1359,6 +1721,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Septile Series",
         glyph="S",
+        glyph_svg_path="septile.svg",  # {7/1} heptagon — its edge subtends 51.43°
         color="#8E44AD",
         default_orb=1.0,
         description="A mystical 51.43° aspect (H7) indicating fate, destiny, and spiritual purpose.",
@@ -1370,6 +1733,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Septile Series",
         glyph="bS",
+        glyph_svg_path="biseptile.svg",  # {7/2} heptagram — its edge subtends 102.86°
         color="#7D3C98",
         default_orb=1.0,
         description="A mystical 102.86° aspect (H7) emphasizing karmic patterns and destiny.",
@@ -1381,6 +1745,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Septile Series",
         glyph="tS",
+        glyph_svg_path="triseptile.svg",  # {7/3} heptagram — its edge subtends 154.29°
         color="#6C3483",
         default_orb=1.0,
         description="A mystical 154.29° aspect (H7) indicating fated encounters and spiritual gifts.",
@@ -1395,6 +1760,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Novile Series",
         glyph="N",
+        glyph_svg_path="novile.svg",  # {9/1} nonagon — its edge subtends 40°
         color="#2980B9",
         default_orb=1.0,
         description="A spiritual 40° aspect (H9) indicating completion, perfection, and higher wisdom.",
@@ -1406,6 +1772,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Novile Series",
         glyph="bN",
+        glyph_svg_path="binovile.svg",  # {9/2} nonagram — its edge subtends 80°
         color="#21618C",
         default_orb=1.0,
         aliases=["Seminovile"],
@@ -1418,6 +1785,7 @@ ASPECT_REGISTRY: dict[str, AspectInfo] = {
         category="Harmonic",
         family="Novile Series",
         glyph="qN",
+        glyph_svg_path="quadnovile.svg",  # {9/4} nonagram — its edge subtends 160°
         color="#1A5276",
         default_orb=1.0,
         description="A spiritual 160° aspect (H9) indicating spiritual mastery and enlightenment.",
@@ -1581,3 +1949,126 @@ def search_aspects(query: str) -> list[AspectInfo]:
             results.append(aspect_info)
 
     return results
+
+
+# ============================================================================
+# QUALITIES: ELEMENTS AND MODALITIES
+# ============================================================================
+#
+# The sign qualities finally have a home. The element and modality maps were
+# duplicated across analysis/frames.py, visualization/grid.py, palettes.py and
+# info_corners.py, and none of them carried a glyph — so reports spelled these out in
+# words for want of anywhere to put a symbol.
+#
+# ELEMENTS take the alchemical triangles (🜂 🜃 🜁 🜄): old, unambiguous, and already in
+# a font we bundle.
+#
+# MODALITIES take the alchemical *tria prima* — sulfur, salt, mercury — which is the
+# attested mapping. But note the trap, and why the SVGs matter: **Mutable's Unicode
+# glyph is ☿, the same codepoint as the planet Mercury.** A chart showing both a
+# modality tally and Mercury would draw the identical symbol for two unrelated things,
+# with nothing to tell them apart. So each modality also carries a hand-drawn glyph,
+# which wins when present (`get_glyph()` prefers the SVG). The Unicode is the fallback
+# of last resort, not the intent.
+
+
+@dataclass(frozen=True)
+class QualityInfo:
+    """An element or a modality: the qualities a sign is made of."""
+
+    name: str
+    kind: str  # "element" | "modality"
+    glyph: str  # Unicode fallback — see the note above about ☿
+    signs: tuple[str, ...]
+    glyph_svg_path: str | None = None  # the drawn glyph; wins over `glyph`
+    description: str = ""
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.kind})"
+
+
+QUALITY_REGISTRY: dict[str, QualityInfo] = {
+    # --- Elements: the alchemical triangles -------------------------------
+    "Fire": QualityInfo(
+        name="Fire",
+        kind="element",
+        glyph="\U0001f702",
+        signs=("Aries", "Leo", "Sagittarius"),
+        description="Spirit, will, and the impulse outward. What ignites.",
+    ),
+    "Earth": QualityInfo(
+        name="Earth",
+        kind="element",
+        glyph="\U0001f703",
+        signs=("Taurus", "Virgo", "Capricorn"),
+        description="Body, substance, and consequence. What endures.",
+    ),
+    "Air": QualityInfo(
+        name="Air",
+        kind="element",
+        glyph="\U0001f701",
+        signs=("Gemini", "Libra", "Aquarius"),
+        description="Mind, relation, and exchange. What connects.",
+    ),
+    "Water": QualityInfo(
+        name="Water",
+        kind="element",
+        glyph="\U0001f704",
+        signs=("Cancer", "Scorpio", "Pisces"),
+        description="Feeling, memory, and the depths. What dissolves.",
+    ),
+    # --- Modalities: the tria prima, with drawn glyphs that take precedence -
+    "Cardinal": QualityInfo(
+        name="Cardinal",
+        kind="modality",
+        glyph="\U0001f70d",  # alchemical sulfur
+        glyph_svg_path="cardinal.svg",
+        signs=("Aries", "Cancer", "Libra", "Capricorn"),
+        description="Initiating. The quality that begins a season, and a thing.",
+    ),
+    "Fixed": QualityInfo(
+        name="Fixed",
+        kind="modality",
+        glyph="\U0001f714",  # alchemical salt
+        glyph_svg_path="fixed.svg",
+        signs=("Taurus", "Leo", "Scorpio", "Aquarius"),
+        description="Sustaining. The quality that holds a season at its height.",
+    ),
+    "Mutable": QualityInfo(
+        name="Mutable",
+        kind="modality",
+        # ☿ — the SAME codepoint as the planet Mercury. Which is exactly why
+        # mutable.svg exists and is preferred.
+        glyph="\u263f",
+        glyph_svg_path="mutable.svg",
+        signs=("Gemini", "Virgo", "Sagittarius", "Pisces"),
+        description="Adapting. The quality that dissolves a season into the next.",
+    ),
+}
+
+ELEMENTS: tuple[str, ...] = ("Fire", "Earth", "Air", "Water")
+MODALITIES: tuple[str, ...] = ("Cardinal", "Fixed", "Mutable")
+
+
+def get_quality_info(name: str) -> QualityInfo | None:
+    """Look up an element or modality (case-insensitive)."""
+    for key, info in QUALITY_REGISTRY.items():
+        if key.lower() == name.lower():
+            return info
+    return None
+
+
+def get_element_of(sign: str) -> QualityInfo | None:
+    """The element a sign belongs to."""
+    for name in ELEMENTS:
+        if sign in QUALITY_REGISTRY[name].signs:
+            return QUALITY_REGISTRY[name]
+    return None
+
+
+def get_modality_of(sign: str) -> QualityInfo | None:
+    """The modality a sign belongs to."""
+    for name in MODALITIES:
+        if sign in QUALITY_REGISTRY[name].signs:
+            return QUALITY_REGISTRY[name]
+    return None

@@ -771,3 +771,120 @@ def test_a_whole_sign_void_is_possible_and_traditional_rules_produce_one():
         "a modern void is a subset of the traditional one — more planets to aspect "
         "means the Moon's last aspect can only come later"
     )
+
+
+# ===========================================================================
+# 8. ASTEROID IDENTITY — are we even asking for the right rock?
+# ===========================================================================
+#
+# Swiss Ephemeris addresses a numbered asteroid as MPC number + AST_OFFSET (10000),
+# and it does not validate: ask for the wrong id and you get a different asteroid,
+# computed perfectly, with no complaint. The registry once stored raw MPC numbers in
+# a field named `swiss_ephemeris_id`, so requesting Eris's position asked swisseph
+# for id 136199 -- which resolves to the file `s126199s.se1`, an entirely different
+# body.
+#
+# There are also TWO conventions, and both are correct:
+#   - Ceres, Pallas, Juno, Vesta, Chiron, Pholus use swisseph's BUILT-IN ids
+#     (17, 18, 19, 20, 15, 16). NOT MPC + offset.
+#   - Everything else is MPC + AST_OFFSET.
+# Get that wrong for Hygiea (MPC 10) and id `10` is not an asteroid at all -- it is
+# the Mean Node.
+#
+# The reference longitudes below are from NASA JPL Horizons (ObsEcLon: ecliptic-of-
+# date longitude of the apparent position, with light-time, deflection and stellar
+# aberration -- exactly what Swiss Ephemeris computes), for 2000-01-01 12:00 UT.
+# Horizons shares no code with Swiss Ephemeris, so agreement means we are asking for
+# the right body. Verified live at the time of writing; worst disagreement 2".
+
+JPL_HORIZONS_2000_01_01 = {
+    # name:        (swiss id, JPL ObsEcLon, what JPL says the body IS)
+    "Ceres": (17, 184.4531, "1 Ceres"),
+    "Pallas": (18, 134.0433, "2 Pallas"),
+    "Juno": (19, 277.9961, "3 Juno"),
+    "Vesta": (20, 245.9720, "4 Vesta"),
+    "Chiron": (15, 251.6176, "2060 Chiron"),
+    "Pholus": (16, 215.4913, "5145 Pholus"),
+    "Hygiea": (10010, 227.8826, "10 Hygiea"),
+    "Nessus": (17066, 272.9138, "7066 Nessus"),
+    "Chariklo": (20199, 151.2472, "10199 Chariklo"),
+    "Gonggong": (235088, 327.3093, "225088 Gonggong"),
+    "Eris": (146199, 18.5913, "136199 Eris"),
+    "Sedna": (100377, 45.3567, "90377 Sedna"),
+    "Quaoar": (60000, 247.8631, "50000 Quaoar"),
+    "Orcus": (100482, 141.5759, "90482 Orcus"),
+    "Makemake": (146472, 166.3840, "136472 Makemake"),
+    "Haumea": (146108, 187.5650, "136108 Haumea"),
+    # The named asteroids — relationship and vocation work.
+    "Psyche": (10016, 330.3347, "16 Psyche"),
+    "Sappho": (10080, 247.9877, "80 Sappho"),
+    "Pandora": (10055, 283.0135, "55 Pandora"),
+    "Amor": (11221, 347.5330, "1221 Amor"),
+    "Astraea": (10005, 218.6520, "5 Astraea"),
+    "Hebe": (10006, 71.5224, "6 Hebe"),
+    "Iris": (10007, 139.8471, "7 Iris"),
+    "Flora": (10008, 259.2723, "8 Flora"),
+    "Metis": (10009, 268.0995, "9 Metis"),
+    "Fortuna": (10019, 226.2070, "19 Fortuna"),
+    "Diana": (10078, 267.3357, "78 Diana"),
+    "Hidalgo": (10944, 267.1750, "944 Hidalgo"),
+    "Icarus": (11566, 283.0601, "1566 Icarus"),
+    "Toro": (11685, 334.2433, "1685 Toro"),
+    "Bacchus": (12063, 275.7490, "2063 Bacchus"),
+    "Eros": (10433, 236.2763, "433 Eros"),
+    "Urania": (10030, 293.0707, "30 Urania"),
+    "Apollo": (11862, 218.7561, "1862 Apollo"),
+    # Centaurs.
+    "Asbolus": (18405, 241.8773, "8405 Asbolus"),
+    "Hylonome": (20370, 209.6611, "10370 Hylonome"),
+    "Echeclus": (70558, 169.3224, "60558 Echeclus"),
+    "Elatus": (41824, 31.8706, "31824 Elatus"),
+    "Bienor": (64598, 329.0291, "54598 Bienor"),
+    # TNOs.
+    "Ixion": (38978, 244.6849, "28978 Ixion"),
+    "Huya": (48628, 199.1555, "38628 Huya"),
+    "Chaos": (29521, 57.1501, "19521 Chaos"),
+    "Deucalion": (63311, 206.2992, "53311 Deucalion"),
+    "Altjira": (158780, 49.7767, "148780 Altjira"),
+    "Okyrhoe": (62872, 0.6819, "52872 Okyrhoe"),
+    "Varuna": (30000, 98.5962, "20000 Varuna"),
+    "Salacia": (130347, 336.9932, "120347 Salacia"),
+    "Logos": (68534, 160.3813, "58534 Logos"),
+    "Typhon": (52355, 114.7869, "42355 Typhon"),
+}
+
+
+@pytest.mark.parametrize(
+    "body,swiss_id,jpl_longitude,jpl_identity",
+    [(n, *v) for n, v in JPL_HORIZONS_2000_01_01.items()],
+)
+def test_the_registry_asks_swiss_ephemeris_for_the_right_asteroid(
+    body, swiss_id, jpl_longitude, jpl_identity
+):
+    """The id in the registry must address the body the name claims.
+
+    A wrong id does not raise -- it returns a different asteroid's position, and the
+    only way to notice is to ask something outside Swiss Ephemeris entirely.
+    """
+    import swisseph as swe
+
+    from stellium.core.registry import CELESTIAL_REGISTRY
+    from stellium.data.paths import initialize_ephemeris
+
+    assert CELESTIAL_REGISTRY[body].swiss_ephemeris_id == swiss_id, (
+        f"{body}'s registry id changed; if that was deliberate, re-verify it against "
+        f"JPL Horizons — it is supposed to be {jpl_identity}"
+    )
+
+    initialize_ephemeris()
+    try:
+        position, _ = swe.calc_ut(2451545.0, swiss_id, swe.FLG_SWIEPH)
+    except Exception as exc:  # the .se1 file is a separate download
+        pytest.skip(f"{body}: ephemeris file not installed ({exc})")
+
+    error = abs((position[0] - jpl_longitude + 180) % 360 - 180)
+    assert error < 0.01, (
+        f"{body} (swiss id {swiss_id}) is at {position[0]:.4f}°, but JPL Horizons puts "
+        f'{jpl_identity} at {jpl_longitude:.4f}° — a {error * 3600:.0f}" disagreement. '
+        f"We are almost certainly computing a different asteroid."
+    )

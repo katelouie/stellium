@@ -59,7 +59,7 @@ Stellium is a modern, protocol-driven Python astrology library built on Swiss Ep
 - SVG chart rendering with layer system
 - Rich terminal report generation
 - Synastry and transit comparisons
-- Full caching system for performance
+- SVG / PDF / PNG export with the fonts and glyphs bundled
 
 ---
 

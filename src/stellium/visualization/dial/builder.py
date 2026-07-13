@@ -20,13 +20,14 @@ from stellium.visualization.dial.layers import (
     DialPointerLayer,
 )
 from stellium.visualization.dial.renderer import DialRenderer
+from stellium.visualization.raster import RasterMixin
 from stellium.visualization.themes import ChartTheme
 
 if TYPE_CHECKING:
     pass
 
 
-class DialDrawBuilder:
+class DialDrawBuilder(RasterMixin):
     """
     Fluent builder for dial chart visualization.
 

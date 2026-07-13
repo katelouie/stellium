@@ -37,6 +37,7 @@ DATA_SUFFIXES = {
     ".otf",  # bundled fonts
     ".css",
     ".html",  # any templating
+    ".svg",  # bundled glyphs for bodies Unicode does not cover
 }
 
 # Files deliberately NOT shipped. Each needs a reason — this list is a confession,

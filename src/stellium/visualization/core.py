@@ -9,6 +9,7 @@ It is based on a "Layer" strategy pattern.
 """
 
 import math
+import warnings
 from typing import Any, Protocol
 
 import svgwrite
@@ -20,6 +21,7 @@ from stellium.core.registry import (
     get_aspect_info,
     get_object_info,
 )
+from stellium.exceptions import MissingGlyphWarning
 
 # Legacy glyph dictionaries - kept for backwards compatibility
 # Prefer using the registry via get_glyph() helper function
@@ -85,26 +87,53 @@ def get_glyph(object_name: str) -> dict[str, str]:
         - "type": "unicode" or "svg"
         - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """
-    from pathlib import Path
+    from stellium.core.registry import FIXED_STARS_REGISTRY, get_quality_info
+    from stellium.data.paths import find_glyph_svg
+
+    # A fixed star lives in BOTH registries: CELESTIAL_REGISTRY carries a generic ★,
+    # while FIXED_STARS_REGISTRY carries its real hand-drawn glyph. This used to look
+    # in CELESTIAL_REGISTRY only, so eight drawn star glyphs were never reachable and
+    # every star rendered as the same anonymous ★ — Algol worked purely by accident,
+    # because its celestial entry happened to name the same file.
+    star = FIXED_STARS_REGISTRY.get(object_name)
+    if star is not None and star.glyph_svg_path:
+        svg_file = find_glyph_svg(star.glyph_svg_path)
+        if svg_file is not None:
+            return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+
+    # Elements and modalities. Their drawn glyph wins for a reason: Mutable's Unicode
+    # fallback is ☿ — the SAME codepoint as the planet Mercury — so a chart showing
+    # both would draw one symbol for two unrelated things.
+    quality = get_quality_info(object_name)
+    if quality is not None:
+        if quality.glyph_svg_path:
+            svg_file = find_glyph_svg(quality.glyph_svg_path)
+            if svg_file is not None:
+                return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+        return {"type": "unicode", "value": quality.glyph}
 
     # Try registry first
     obj_info = get_object_info(object_name)
     if obj_info:
-        # Check if there's an SVG path
         if obj_info.glyph_svg_path:
-            # Resolve to absolute path for SVG reading
-            # The path is relative to project root
-            svg_path = Path(obj_info.glyph_svg_path)
-            if not svg_path.is_absolute():
-                # Go up from visualization/core.py to project root
-                # visualization/ -> stellium/ -> src/ -> project_root/
-                project_root = Path(__file__).parent.parent.parent.parent
-                svg_path = project_root / obj_info.glyph_svg_path
-            if svg_path.exists():
-                # Read SVG content for inline embedding
-                svg_content = svg_path.read_text(encoding="utf-8")
-                return {"type": "svg", "value": svg_content}
-            # Fall back to unicode glyph if SVG doesn't exist
+            svg_file = find_glyph_svg(obj_info.glyph_svg_path)
+            if svg_file is not None:
+                return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+
+            # The SVG exists precisely *because* the Unicode glyph is inadequate —
+            # Pholus's U+2B30 is in no font on any platform, and Sedna's fallback was
+            # the string "Sed". So falling back here is a visible failure, not a
+            # graceful degradation, and it must say so. This used to be silent, which
+            # is how every pip-installed chart came to render these as tofu while ours
+            # looked perfect.
+            warnings.warn(
+                f"Glyph SVG {obj_info.glyph_svg_path!r} for {object_name!r} is "
+                f"missing from the installation; falling back to the Unicode glyph "
+                f"{obj_info.glyph!r}, which most fonts do not contain. This is a "
+                f"packaging fault — please report it.",
+                MissingGlyphWarning,
+                stacklevel=2,
+            )
             return {"type": "unicode", "value": obj_info.glyph}
         return {"type": "unicode", "value": obj_info.glyph}
 
@@ -114,8 +143,59 @@ def get_glyph(object_name: str) -> dict[str, str]:
     if object_name in ANGLE_GLYPHS:
         return {"type": "unicode", "value": ANGLE_GLYPHS[object_name]}
 
-    # Final fallback: use first 2-3 characters
+    # Final fallback: the first few letters of the name. Ugly, but legible — unlike a
+    # tofu box, the reader at least learns which body it is.
     return {"type": "unicode", "value": object_name[:3]}
+
+
+def get_aspect_glyph(aspect_name: str) -> dict[str, str]:
+    """
+    Get the glyph for an aspect, preferring the drawn one.
+
+    The sibling of `get_glyph()`, for `ASPECT_REGISTRY` rather than the bodies. It
+    exists because the harmonic aspects have no Unicode codepoint *anywhere* — no
+    block encodes a quintile — so they carry ASCII initials (`Q`, `bQ`, `tS`) as
+    their `glyph`. Those are the convention in Solar Fire and on astro.com and are
+    the right fallback for a terminal or a plain-text report, but in a drawing they
+    are letters sitting among symbols.
+
+    So a harmonic aspect resolves to its star polygon: the regular {n/k} figure whose
+    edge subtends the aspect's own angle, which is the same rule the classical glyphs
+    already follow (△ is the trine because a triangle's edge subtends 120°). The
+    Ptolemaic and minor aspects have real codepoints and stay Unicode.
+
+    Args:
+        aspect_name: Aspect name (e.g., "Trine", "Biquintile")
+
+    Returns:
+        Dictionary with:
+        - "type": "unicode" or "svg"
+        - "value": glyph string (unicode) or SVG content string (for inline embedding)
+    """
+    from stellium.data.paths import find_glyph_svg
+
+    info = get_aspect_info(aspect_name) or get_aspect_by_alias(aspect_name)
+    if info is None or not info.glyph:
+        # Ugly, but legible — the reader at least learns which aspect it is.
+        return {"type": "unicode", "value": aspect_name[:3]}
+
+    if info.glyph_svg_path:
+        svg_file = find_glyph_svg(info.glyph_svg_path)
+        if svg_file is not None:
+            return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+
+        # Unlike a body, the Unicode fallback here is *legible* — an ASCII initial,
+        # not a tofu box — so this degrades gracefully and does not warn. It is still
+        # worth knowing the package is incomplete.
+        warnings.warn(
+            f"Glyph SVG {info.glyph_svg_path!r} for aspect {aspect_name!r} is missing "
+            f"from the installation; falling back to the ASCII initial "
+            f"{info.glyph!r}. This is a packaging fault — please report it.",
+            MissingGlyphWarning,
+            stacklevel=2,
+        )
+
+    return {"type": "unicode", "value": info.glyph}
 
 
 def embed_svg_glyph(
@@ -176,10 +256,26 @@ def embed_svg_glyph(
         if not path_d:
             continue
 
-        # Parse style into attributes
-        stroke = fill_color or "#000"
+        # A glyph is drawn one of two ways, and we have both in the bundle:
+        #
+        #   bodies (Pholus, Eris, …)  fill:none      + stroke:<colour>   -> an outline
+        #   stars  (Sirius, Algol, …) fill:<colour>  + stroke:none       -> a solid shape
+        #
+        # Recolour whichever one the glyph actually uses. This used to theme the stroke
+        # only and copy the *file's* fill through verbatim — so the filled star glyphs
+        # stayed #000000 whatever the theme, i.e. black on black on the dark themes.
+        colour = fill_color or "#000"
         stroke_width = 0.6
-        fill = "none"
+
+        source_fill = "none"
+        if "fill:" in style:
+            fill_match = re.search(r"fill:([^;]+)", style)
+            if fill_match:
+                source_fill = fill_match.group(1).strip()
+
+        is_filled = source_fill not in ("none", "")
+        fill = colour if is_filled else "none"
+        stroke = "none" if is_filled else colour
 
         if "stroke-width:" in style:
             sw_match = re.search(r"stroke-width:([^;]+)", style)
@@ -188,11 +284,6 @@ def embed_svg_glyph(
                     stroke_width = float(sw_match.group(1).strip())
                 except ValueError:
                     pass
-
-        if "fill:" in style:
-            fill_match = re.search(r"fill:([^;]+)", style)
-            if fill_match:
-                fill = fill_match.group(1).strip()
 
         # Create the path using svgwrite with debug mode disabled
         # to bypass the strict path validation
@@ -205,6 +296,13 @@ def embed_svg_glyph(
         )
         path["stroke-linecap"] = "round"
         path["stroke-linejoin"] = "round"
+
+        # Filled glyphs rely on the even-odd rule for their counters (the hole in
+        # Sirius's ring, say). Drop it and they fill in solid.
+        if is_filled and "fill-rule:" in style:
+            rule = re.search(r"fill-rule:([^;]+)", style)
+            if rule:
+                path["fill-rule"] = rule.group(1).strip()
 
         nested_svg.add(path)
 
@@ -225,30 +323,6 @@ def get_display_name(object_name: str) -> str:
     if obj_info:
         return obj_info.display_name
     return object_name
-
-
-def get_aspect_glyph(aspect_name: str) -> str:
-    """
-    Get the glyph for an astrological aspect.
-
-    Args:
-        aspect_name: Aspect name (e.g., "Conjunction", "Trine", "Conjunct")
-
-    Returns:
-        Unicode glyph string or abbreviation if not found
-    """
-    # Try exact name first
-    aspect_info = get_aspect_info(aspect_name)
-    if aspect_info and aspect_info.glyph:
-        return aspect_info.glyph
-
-    # Try as alias (e.g., "Conjunct" → "Conjunction")
-    aspect_info = get_aspect_by_alias(aspect_name)
-    if aspect_info and aspect_info.glyph:
-        return aspect_info.glyph
-
-    # Fallback: use first 3 characters
-    return aspect_name[:3]
 
 
 class ChartRenderer:

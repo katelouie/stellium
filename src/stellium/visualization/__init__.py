@@ -1,5 +1,7 @@
 """Visualization system for Stellium charts."""
 
+from stellium.visualization.raster import svg_to_png
+
 from .atlas import AtlasBuilder
 from .builder import ChartDrawBuilder
 from .core import ChartRenderer
@@ -80,6 +82,7 @@ __all__ = [
     "MoonPhaseLayer",
     "draw_moon_phase_standalone",
     "moon_phase_svg",
+    "svg_to_png",
     "PositionTableLayer",
     "HouseCuspTableLayer",
     # Standalone aspectarian generator

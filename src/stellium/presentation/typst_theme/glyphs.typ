@@ -9,8 +9,11 @@
 // ============================================================================
 
 // Noto Sans Symbols carries the classic planets/signs/aspects (U+2600–26FF);
-// Noto Sans Symbols 2 backs it for supplementary-plane glyphs (e.g. Vertex).
-#let symbol-font = ("Noto Sans Symbols", "Noto Sans Symbols 2")
+// Noto Sans Symbols 2 backs it for supplementary-plane glyphs (e.g. Vertex);
+// Noto Sans Math (subsetted) is the last resort, and the ONLY font that has
+// Semisquare (U+2220), Contraparallel (U+22D5) and Pholus (U+2B30) — all three
+// rendered as tofu boxes before it was bundled.
+#let symbol-font = ("Noto Sans Symbols", "Noto Sans Symbols 2", "Noto Sans Math")
 
 // Render an already-chosen glyph character in the symbol font, text-presentation.
 #let glyph(ch, size: 1em, fill: none) = {

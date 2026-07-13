@@ -19,13 +19,14 @@ from stellium.visualization.config import (
     InfoCornerConfig,
     TableConfig,
 )
+from stellium.visualization.raster import RasterMixin
 from stellium.visualization.themes import ChartTheme
 
 # Sentinel value to indicate "use theme's default colorful palette"
 _USE_THEME_DEFAULT_PALETTE = object()
 
 
-class ChartDrawBuilder:
+class ChartDrawBuilder(RasterMixin):
     """
     Fluent builder for chart visualization with preset support.
 
