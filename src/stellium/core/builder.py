@@ -307,6 +307,48 @@ class ChartBuilder:
                 self._config.include_asteroids.append(name)
         return self
 
+    def with_named_asteroids(self) -> "ChartBuilder":
+        """
+        Include the named asteroids used in modern practice.
+
+        Psyche, Sappho, Pandora, Amor, Astraea, Hebe, Iris, Flora, Metis, Fortuna,
+        Diana, Hidalgo, Icarus, Toro, Bacchus — the ones consulted for relationship
+        and vocation work.
+
+        Each needs its own Swiss Ephemeris file. Fetch them with::
+
+            stellium ephemeris download-asteroid 16     # Psyche
+            stellium ephemeris download-asteroid 433    # Eros
+
+        A body whose file is absent is skipped with a `MissingEphemerisWarning` naming
+        the command to fetch it.
+
+        Example::
+
+            chart = ChartBuilder.from_native(native).with_named_asteroids().calculate()
+        """
+        named = [
+            "Psyche",
+            "Sappho",
+            "Pandora",
+            "Amor",
+            "Astraea",
+            "Hebe",
+            "Iris",
+            "Flora",
+            "Metis",
+            "Fortuna",
+            "Diana",
+            "Hidalgo",
+            "Icarus",
+            "Toro",
+            "Bacchus",
+        ]
+        for name in named:
+            if name not in self._config.include_asteroids:
+                self._config.include_asteroids.append(name)
+        return self
+
     def with_uranian(self) -> "ChartBuilder":
         """
         Include Hamburg/Uranian hypothetical planets and points in the calculation.

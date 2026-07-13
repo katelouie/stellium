@@ -420,6 +420,163 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         ),
     ),
     # ========================================================================
+    # NAMED ASTEROIDS
+    #
+    # The personal-name asteroids, used in modern practice for relationship and
+    # vocation work. Each needs its own .se1 file:
+    #     stellium ephemeris download-asteroid <mpc>
+    # ========================================================================
+    "Psyche": CelestialObjectInfo(
+        name="Psyche",
+        display_name="Psyche",
+        object_type=ObjectType.ASTEROID,
+        glyph="Psy",
+        glyph_svg_path="psyche.svg",
+        swiss_ephemeris_id=10016,  # MPC 16 + AST_OFFSET
+        category="Asteroid",
+        description="The soul, and the wound in it. Where you were broken open, and what that made possible.",
+    ),
+    "Sappho": CelestialObjectInfo(
+        name="Sappho",
+        display_name="Sappho",
+        object_type=ObjectType.ASTEROID,
+        glyph="Sap",
+        glyph_svg_path="sappho.svg",
+        swiss_ephemeris_id=10080,  # MPC 80 + AST_OFFSET
+        category="Asteroid",
+        description="Poetic and erotic sensibility; artistic friendship, and love that does not fit a category.",
+    ),
+    "Pandora": CelestialObjectInfo(
+        name="Pandora",
+        display_name="Pandora",
+        object_type=ObjectType.ASTEROID,
+        glyph="Pan",
+        glyph_svg_path="pandora.svg",
+        swiss_ephemeris_id=10055,  # MPC 55 + AST_OFFSET
+        category="Asteroid",
+        description="Curiosity that cannot be un-satisfied. The question you had to ask, and its consequences.",
+    ),
+    "Amor": CelestialObjectInfo(
+        name="Amor",
+        display_name="Amor",
+        object_type=ObjectType.ASTEROID,
+        glyph="Amo",
+        glyph_svg_path="amor.svg",
+        swiss_ephemeris_id=11221,  # MPC 1221 + AST_OFFSET
+        category="Asteroid",
+        description="Love given freely and without condition — compassion rather than desire.",
+    ),
+    "Astraea": CelestialObjectInfo(
+        name="Astraea",
+        display_name="Astraea",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ast",
+        glyph_svg_path="astraea.svg",
+        swiss_ephemeris_id=10005,  # MPC 5 + AST_OFFSET
+        category="Asteroid",
+        description="Justice, and the return of it. Discernment; the refusal to look away.",
+    ),
+    "Hebe": CelestialObjectInfo(
+        name="Hebe",
+        display_name="Hebe",
+        object_type=ObjectType.ASTEROID,
+        glyph="Heb",
+        glyph_svg_path="hebe.svg",
+        swiss_ephemeris_id=10006,  # MPC 6 + AST_OFFSET
+        category="Asteroid",
+        description="Youth, service, and the cup that is refilled. Vitality offered to others.",
+    ),
+    "Iris": CelestialObjectInfo(
+        name="Iris",
+        display_name="Iris",
+        object_type=ObjectType.ASTEROID,
+        glyph="Iri",
+        glyph_svg_path="iris.svg",
+        swiss_ephemeris_id=10007,  # MPC 7 + AST_OFFSET
+        category="Asteroid",
+        description="The messenger between worlds. Communication that crosses a threshold.",
+    ),
+    "Flora": CelestialObjectInfo(
+        name="Flora",
+        display_name="Flora",
+        object_type=ObjectType.ASTEROID,
+        glyph="Flo",
+        glyph_svg_path="flora.svg",
+        swiss_ephemeris_id=10008,  # MPC 8 + AST_OFFSET
+        category="Asteroid",
+        description="Flowering, sensual pleasure, and the health of the body.",
+    ),
+    "Metis": CelestialObjectInfo(
+        name="Metis",
+        display_name="Metis",
+        object_type=ObjectType.ASTEROID,
+        glyph="Met",
+        glyph_svg_path="metis.svg",
+        swiss_ephemeris_id=10009,  # MPC 9 + AST_OFFSET
+        category="Asteroid",
+        description="Practical wisdom and counsel — the intelligence that was swallowed.",
+    ),
+    "Fortuna": CelestialObjectInfo(
+        name="Fortuna",
+        display_name="Fortuna",
+        object_type=ObjectType.ASTEROID,
+        glyph="For",
+        glyph_svg_path="fortuna.svg",
+        swiss_ephemeris_id=10019,  # MPC 19 + AST_OFFSET
+        category="Asteroid",
+        description="Luck, chance, and the turning of the wheel. What is not earned.",
+    ),
+    "Diana": CelestialObjectInfo(
+        name="Diana",
+        display_name="Diana",
+        object_type=ObjectType.ASTEROID,
+        glyph="Dia",
+        glyph_svg_path="diana.svg",
+        swiss_ephemeris_id=10078,  # MPC 78 + AST_OFFSET
+        category="Asteroid",
+        description="The wild and the untouched. Sovereignty, and the refusal to be domesticated.",
+    ),
+    "Hidalgo": CelestialObjectInfo(
+        name="Hidalgo",
+        display_name="Hidalgo",
+        object_type=ObjectType.ASTEROID,
+        glyph="Hid",
+        glyph_svg_path="hidalgo.svg",
+        swiss_ephemeris_id=10944,  # MPC 944 + AST_OFFSET
+        category="Asteroid",
+        description="Self-assertion and the crusade; standing up on behalf of others.",
+    ),
+    "Icarus": CelestialObjectInfo(
+        name="Icarus",
+        display_name="Icarus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Ica",
+        glyph_svg_path="icarus.svg",
+        swiss_ephemeris_id=11566,  # MPC 1566 + AST_OFFSET
+        category="Asteroid",
+        description="Recklessness, escape, and the flight too near the sun.",
+    ),
+    "Toro": CelestialObjectInfo(
+        name="Toro",
+        display_name="Toro",
+        object_type=ObjectType.ASTEROID,
+        glyph="Tor",
+        glyph_svg_path="toro.svg",
+        swiss_ephemeris_id=11685,  # MPC 1685 + AST_OFFSET
+        category="Asteroid",
+        description="Raw strength and the use of force — power, and its restraint.",
+    ),
+    "Bacchus": CelestialObjectInfo(
+        name="Bacchus",
+        display_name="Bacchus",
+        object_type=ObjectType.ASTEROID,
+        glyph="Bac",
+        glyph_svg_path="bacchus.svg",
+        swiss_ephemeris_id=12063,  # MPC 2063 + AST_OFFSET
+        category="Asteroid",
+        description="Ecstasy, intoxication, and release from the ordinary self.",
+    ),
+    # ========================================================================
     # URANIAN / HAMBURG SCHOOL PLANETS
     # ========================================================================
     "Cupido": CelestialObjectInfo(

@@ -815,6 +815,22 @@ JPL_HORIZONS_2000_01_01 = {
     "Orcus": (100482, 141.5759, "90482 Orcus"),
     "Makemake": (146472, 166.3840, "136472 Makemake"),
     "Haumea": (146108, 187.5650, "136108 Haumea"),
+    # The named asteroids — relationship and vocation work.
+    "Psyche": (10016, 330.3347, "16 Psyche"),
+    "Sappho": (10080, 247.9877, "80 Sappho"),
+    "Pandora": (10055, 283.0135, "55 Pandora"),
+    "Amor": (11221, 347.5330, "1221 Amor"),
+    "Astraea": (10005, 218.6520, "5 Astraea"),
+    "Hebe": (10006, 71.5224, "6 Hebe"),
+    "Iris": (10007, 139.8471, "7 Iris"),
+    "Flora": (10008, 259.2723, "8 Flora"),
+    "Metis": (10009, 268.0995, "9 Metis"),
+    "Fortuna": (10019, 226.2070, "19 Fortuna"),
+    "Diana": (10078, 267.3357, "78 Diana"),
+    "Hidalgo": (10944, 267.1750, "944 Hidalgo"),
+    "Icarus": (11566, 283.0601, "1566 Icarus"),
+    "Toro": (11685, 334.2433, "1685 Toro"),
+    "Bacchus": (12063, 275.7490, "2063 Bacchus"),
 }
 
 

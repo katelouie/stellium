@@ -183,6 +183,24 @@ def test_fixed_stars_resolve_to_their_drawn_glyph_not_a_generic_star():
     )
 
 
+# ---------------------------------------------------------------------------
+# THE GLYPH CONTRACT
+# ---------------------------------------------------------------------------
+#
+# `embed_svg_glyph()` does not parse SVG — it lifts out the path data and the paint and
+# re-emits them. So the glyphs have to conform to it, rather than it growing a parser
+# for every dialect a drawing program can produce. These SVGs are our own data; the
+# sane move is to fix the data.
+#
+# Run `python scripts/normalize_glyphs.py` and these all pass by construction.
+
+
+def _glyph_files():
+    from stellium.data.paths import glyph_svg_dir
+
+    return sorted(glyph_svg_dir().glob("*.svg"))
+
+
 def test_glyph_svgs_are_square_so_they_are_not_shrunk_and_clipped():
     """`embed_svg_glyph` nests the SVG in a SQUARE box using the file's own viewBox.
 
@@ -192,10 +210,8 @@ def test_glyph_svgs_are_square_so_they_are_not_shrunk_and_clipped():
     """
     import re
 
-    from stellium.data.paths import glyph_svg_dir
-
     skewed = []
-    for svg in sorted(glyph_svg_dir().glob("*.svg")):
+    for svg in _glyph_files():
         box = re.search(r'viewBox="([^"]+)"', svg.read_text())
         assert box, f"{svg.name} has no viewBox"
         _, _, w, h = (float(v) for v in box.group(1).split())
@@ -205,6 +221,89 @@ def test_glyph_svgs_are_square_so_they_are_not_shrunk_and_clipped():
     assert not skewed, (
         "glyph SVGs must have a square viewBox or they are scaled down and clipped "
         "when embedded:\n  " + "\n  ".join(skewed)
+    )
+
+
+def test_every_glyph_is_either_stroked_or_filled_and_says_so_plainly():
+    """Two paint modes, and no third option:
+
+        stroked   fill:none         + stroke:currentColor    (the bodies)
+        filled    fill:currentColor + stroke:none            (the star sigils)
+
+    Both are needed — a body glyph is a line drawing, a star sigil is a solid shape.
+    What is *not* allowed is a transparent fill sitting next to a stroke
+    (`fill:#000;fill-opacity:0`, which a drawing program emits happily). A browser
+    renders that as an outline, but "has a fill" then stops meaning "is filled", and
+    the renderer — which only looks at `fill:` — draws a solid blob instead. Exactly
+    one glyph shipped like that, and it would have rendered as an ink splat.
+    """
+    import re
+
+    offenders = []
+    for svg in _glyph_files():
+        text = svg.read_text()
+        for element in re.findall(r"<path[^>]*/?>", text, re.S):
+            style = (re.search(r'style="([^"]*)"', element) or [None, ""])[1]
+
+            fill = re.search(r"(?:^|;)\s*fill\s*:\s*([^;]+)", style)
+            stroke = re.search(r"(?:^|;)\s*stroke\s*:\s*([^;]+)", style)
+            fill = fill.group(1).strip() if fill else None
+            stroke = stroke.group(1).strip() if stroke else None
+
+            stroked = fill == "none" and stroke == "currentColor"
+            filled = fill == "currentColor" and stroke == "none"
+
+            if not (stroked or filled):
+                offenders.append(
+                    f"{svg.name}: fill={fill!r} stroke={stroke!r} — must be either "
+                    f"(none, currentColor) or (currentColor, none)"
+                )
+            if "opacity" in style:
+                offenders.append(
+                    f"{svg.name}: carries an opacity. A transparent fill beside a "
+                    f"stroke is an outline that the renderer reads as a solid shape."
+                )
+
+    assert not offenders, (
+        "glyph SVGs violate the contract — run `python scripts/normalize_glyphs.py`:"
+        "\n  " + "\n  ".join(offenders)
+    )
+
+
+def test_glyph_svgs_theme_themselves():
+    """`currentColor`, never a literal.
+
+    A hardcoded #000 is invisible on a dark background — which is precisely what the
+    star glyphs were, on every dark theme, for their whole existence.
+    """
+    import re
+
+    literals = [
+        svg.name
+        for svg in _glyph_files()
+        if re.search(r"(?:fill|stroke)\s*:\s*#[0-9a-fA-F]{3,8}", svg.read_text())
+    ]
+    assert not literals, (
+        "these glyphs hardcode a colour instead of inheriting it, so they cannot be "
+        f"themed: {literals}"
+    )
+
+
+def test_glyph_svgs_carry_no_editor_cruft():
+    """No sodipodi/inkscape namespaces, no metadata, no CSS classes.
+
+    The renderer pulls paths out with a regex. Anything else in the file is at best
+    dead weight in the wheel and at worst something it will misread.
+    """
+    offenders = []
+    for svg in _glyph_files():
+        text = svg.read_text()
+        for junk in ("sodipodi", "inkscape", "<metadata", "<style", "class="):
+            if junk in text:
+                offenders.append(f"{svg.name}: contains {junk!r}")
+
+    assert not offenders, "run `python scripts/normalize_glyphs.py`:\n  " + "\n  ".join(
+        offenders
     )
 
 
