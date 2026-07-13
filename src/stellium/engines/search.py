@@ -239,6 +239,15 @@ class AspectExact:
         )
 
 
+# A backstop, not a precision target. The refiner aims for 0.0001° and usually gets
+# there; when it runs out of iterations it can still be a fraction of a degree off,
+# and that is a *usable* answer. This bound exists only to catch the catastrophic
+# case — a "result" that is nowhere near the requested aspect — so that the search
+# returns None instead of a confident lie. Set it tight and you throw away good
+# answers; the 180°-off failures this guards against are not subtle.
+_ASPECT_EXACT_MAX_ERROR = 1.0  # degrees
+
+
 def _normalize_angle_error(angle: float) -> float:
     """Normalize angle difference to range [-180, +180].
 
@@ -1092,6 +1101,24 @@ def _get_aspect_separation(
     return diff, lon1, lon2, speed1, speed2
 
 
+def _aspect_error_magnitude(
+    obj1_id: int, obj2_id: int, julian_day: float, aspect_angle: float
+) -> float:
+    """How far two bodies are from an exact aspect, unsigned, at one instant."""
+    sep, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, julian_day)
+    return abs(_normalize_angle_error(sep - aspect_angle))
+
+
+def _is_extremum_aspect(aspect_angle: float) -> bool:
+    """Is this an aspect the separation *touches* rather than *crosses*?
+
+    Separation runs 0-180. A conjunction sits at the bottom of that range and an
+    opposition at the top, so for both the error reaches zero as a local minimum of
+    |error| and never changes sign. Every aspect in between is a genuine crossing.
+    """
+    return aspect_angle < 1.0 or aspect_angle > 179.0
+
+
 def _bracket_aspect(
     obj1_id: int,
     obj2_id: int,
@@ -1149,11 +1176,16 @@ def _bracket_aspect(
                 else:
                     return (next_jd, current_jd)
 
-        # For conjunctions (aspect_angle ≈ 0), separation is always positive [0, 180]
-        # so we need to detect local minima instead of sign changes
-        # A local minimum occurs when: prev_error > current_error and current_error < next_error
-        if aspect_angle < 1.0 and prev_error is not None:
-            # Using abs() since for 0° aspect, error = separation which is non-negative
+        # Separation is measured 0-180, so at BOTH ends of that range the error only
+        # *touches* zero — it never crosses it, and a sign-change test can never see
+        # it. At 0° the separation bottoms out; at 180° it tops out. Either way the
+        # signature is a local minimum of |error|, so both need extremum detection
+        # rather than a crossing.
+        #
+        # Only the conjunction half of that was ever implemented, which is the other
+        # reason oppositions could not be found: even with the angle no longer
+        # collapsing to 0, nothing here would have bracketed one.
+        if _is_extremum_aspect(aspect_angle) and prev_error is not None:
             if abs(prev_error) > abs(current_error) < abs(next_error):
                 # Found local minimum at current_jd, bracket it
                 if direction == "forward":
@@ -1229,7 +1261,15 @@ def find_aspect_exact(
         start_jd = start
 
     # Normalize aspect angle
-    aspect_angle = aspect_angle % 180  # Aspects are symmetric
+    # Separation is measured 0-180 (see _get_aspect_separation), so an angle beyond
+    # 180 must be REFLECTED, not wrapped: 270 -> 90. Modulo looks equivalent until
+    # you hand it an opposition, because 180 % 180 == 0 — which silently turned
+    # every opposition search into a conjunction search, found the conjunction, and
+    # returned it. That is why "Sun opposition Venus" was reported at a separation
+    # of 0.00°, an aspect Venus cannot make at all.
+    aspect_angle = aspect_angle % 360
+    if aspect_angle > 180:
+        aspect_angle = 360 - aspect_angle
 
     # Get aspect name
     aspect_name = ASPECT_ANGLES.get(aspect_angle, f"{aspect_angle}°")
@@ -1256,22 +1296,70 @@ def find_aspect_exact(
         error_before > 0 and relative_speed_before < 0
     )
 
-    # Phase 2: Refine with Newton-Raphson + bisection/golden section fallback
-    # For conjunctions (aspect_angle ≈ 0), we search for minimum separation
-    # For other aspects, we search for zero crossing
-    use_minimum_search = aspect_angle < 1.0
+    # Phase 2: Refine.
+    #
+    # Conjunctions and oppositions are EXTREMA of the separation, not crossings, so
+    # |error| has a V shape at the answer. Newton-Raphson on a V does not converge —
+    # it oscillates across the vertex — which is why this used to run out of
+    # iterations and hand back whatever guess it happened to be holding. Use a
+    # ternary search, which is what minimising a unimodal function actually wants.
+    #
+    # Every other aspect IS a genuine sign change, and Newton + bisection is right.
+    if _is_extremum_aspect(aspect_angle):
+        lo, hi = t1, t2
+        for _ in range(max_iterations * 2):
+            if hi - lo < 1e-7:
+                break
+            third = (hi - lo) / 3
+            m1, m2 = lo + third, hi - third
+            if _aspect_error_magnitude(obj1_id, obj2_id, m1, aspect_angle) < (
+                _aspect_error_magnitude(obj1_id, obj2_id, m2, aspect_angle)
+            ):
+                hi = m2
+            else:
+                lo = m1
 
-    t = (t1 + t2) / 2
+        t = (lo + hi) / 2
+        sep, lon1, lon2, _, _ = _get_aspect_separation(obj1_id, obj2_id, t)
+        if abs(_normalize_angle_error(sep - aspect_angle)) > _ASPECT_EXACT_MAX_ERROR:
+            # The separation never actually reaches this aspect in this window — e.g.
+            # Venus can only stray ~47 deg from the Sun, so it has a nearest approach
+            # to "opposition" but never makes one.
+            return None
 
-    for _ in range(max_iterations):
-        sep, lon1, lon2, speed1, speed2 = _get_aspect_separation(obj1_id, obj2_id, t)
+        return AspectExact(
+            julian_day=t,
+            datetime_utc=_julian_day_to_datetime(t),
+            object1_name=object1_name,
+            object2_name=object2_name,
+            aspect_angle=aspect_angle,
+            aspect_name=aspect_name,
+            object1_longitude=lon1,
+            object2_longitude=lon2,
+            is_applying_before=is_applying_before,
+        )
+
+    # A crossing aspect. We already hold a bracket in which the signed error changes
+    # sign, and bisection on that is *guaranteed* to converge. Newton-Raphson was
+    # used here before and is not: the separation is a folded quantity (0-180), so
+    # its derivative flips where it folds, and Newton would happily wander out of the
+    # bracket, run out of iterations, and hand back an unconverged guess. That is why
+    # a Moon-Jupiter trine — which happens roughly twice a month — could be missed
+    # entirely.
+    lo, hi = t1, t2
+    error_lo = _normalize_angle_error(
+        _get_aspect_separation(obj1_id, obj2_id, lo)[0] - aspect_angle
+    )
+
+    for _ in range(max_iterations * 2):
+        mid = (lo + hi) / 2
+        sep, lon1, lon2, _, _ = _get_aspect_separation(obj1_id, obj2_id, mid)
         error = _normalize_angle_error(sep - aspect_angle)
 
-        # Check convergence
-        if abs(error) < tolerance:
+        if abs(error) < tolerance or (hi - lo) < 1e-7:
             return AspectExact(
-                julian_day=t,
-                datetime_utc=_julian_day_to_datetime(t),
+                julian_day=mid,
+                datetime_utc=_julian_day_to_datetime(mid),
                 object1_name=object1_name,
                 object2_name=object2_name,
                 aspect_angle=aspect_angle,
@@ -1281,51 +1369,25 @@ def find_aspect_exact(
                 is_applying_before=is_applying_before,
             )
 
-        # Calculate relative speed for Newton-Raphson
-        # The derivative of separation w.r.t. time is approximately (speed2 - speed1)
-        # but we need to account for the sign of the error
-        relative_speed = speed2 - speed1
-
-        # Adjust sign based on how separation relates to error
-        # When separation > aspect_angle, error > 0
-        # We want to move in direction that decreases error
-        if abs(relative_speed) > 0.01:
-            newton_step = -error / relative_speed
-            # Clamp step to avoid huge jumps
-            newton_step = max(-10, min(10, newton_step))
-            t_new = t + newton_step
-
-            # Keep within bracket
-            t_new = max(t1, min(t2, t_new))
+        if (error < 0) == (error_lo < 0):
+            lo, error_lo = mid, error
         else:
-            # Bisection/golden section fallback when relative speed is very small
-            t_new = (t1 + t2) / 2
+            hi = mid
 
-        # Update bracket
-        if use_minimum_search:
-            # For conjunctions, use golden section search for minimum
-            # Compare errors at bracket endpoints and midpoint to narrow
-            sep1, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, t1)
-            sep2, _, _, _, _ = _get_aspect_separation(obj1_id, obj2_id, t2)
-            error1 = abs(sep1 - aspect_angle)
-            error2 = abs(sep2 - aspect_angle)
-
-            # Shrink bracket toward the side with smaller error
-            if error1 < error2:
-                t2 = t  # Keep t1, shrink from right
-            else:
-                t1 = t  # Keep t2, shrink from left
-        else:
-            # For other aspects, use bisection based on error sign
-            if error > 0:
-                t2 = t
-            else:
-                t1 = t
-
-        t = t_new
-
-    # Failed to converge - return best estimate
+    # Failed to converge. Do NOT hand back the last guess as though it were the
+    # answer: this function promises the moment two bodies are *actually* in aspect,
+    # and an unverified "best estimate" is a confident lie.
+    #
+    # Concretely, the 0°/360° wrap means the signed error at a conjunction reads as
+    # ±180°, which can bracket a phantom "opposition". Refinement then never
+    # converges — and the old code returned it anyway. That produced Sun opposition
+    # Venus, which is astronomically impossible (Venus never strays ~47° from the
+    # Sun); the separation at the returned moment was 0.00°, i.e. a conjunction.
     sep, lon1, lon2, _, _ = _get_aspect_separation(obj1_id, obj2_id, t)
+    final_error = abs(_normalize_angle_error(sep - aspect_angle))
+    if final_error > _ASPECT_EXACT_MAX_ERROR:
+        return None
+
     return AspectExact(
         julian_day=t,
         datetime_utc=_julian_day_to_datetime(t),

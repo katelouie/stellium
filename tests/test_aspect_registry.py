@@ -1,5 +1,7 @@
 """Tests for the Aspect Registry."""
 
+from datetime import datetime
+
 from stellium.core.registry import (
     ASPECT_REGISTRY,
     get_aspect_by_alias,
@@ -449,3 +451,93 @@ class TestDignityTablesUseRealNone:
         assert "reception_potential" in result
         # The historical typo is kept as an alias so existing callers keep working.
         assert result["receiption_potential"] == result["reception_potential"]
+
+
+class TestAspectExactitudeSearch:
+    """Regression tests for find_aspect_exact / find_all_aspect_exacts.
+
+    Three bugs, all found by wiring up the planner's mundane-transit collector:
+
+    1. `aspect_angle % 180` — and 180 % 180 == 0, so EVERY opposition search was
+       silently a conjunction search. Oppositions could not be found at all, and the
+       conjunction it found instead was returned labelled as the opposition.
+    2. Separation is measured 0-180, so at both 0 deg and 180 deg the error only
+       *touches* zero rather than crossing it. Only the conjunction half of that had
+       extremum detection, so nothing could bracket an opposition either.
+    3. Refinement used Newton-Raphson, which does not converge on the folded
+       separation (its derivative flips where it folds). On failure the old code
+       returned its last guess as though it were the answer.
+    """
+
+    START = datetime(2026, 1, 1)
+    END = datetime(2026, 12, 31)
+
+    @staticmethod
+    def _separation(name1: str, name2: str, julian_day: float) -> float:
+        from stellium.engines.search import (
+            SWISS_EPHEMERIS_IDS,
+            _get_position_and_speed,
+        )
+
+        a, _ = _get_position_and_speed(SWISS_EPHEMERIS_IDS[name1], julian_day)
+        b, _ = _get_position_and_speed(SWISS_EPHEMERIS_IDS[name2], julian_day)
+        return abs((a - b + 180) % 360 - 180)
+
+    def test_venus_can_never_oppose_the_sun(self):
+        """Venus strays at most ~47 deg from the Sun. An opposition is impossible."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        assert find_all_aspect_exacts("Sun", "Venus", 180.0, self.START, self.END) == []
+        assert (
+            find_all_aspect_exacts("Sun", "Mercury", 180.0, self.START, self.END) == []
+        )
+        # Nor can it trine or square it.
+        assert find_all_aspect_exacts("Sun", "Venus", 120.0, self.START, self.END) == []
+
+    def test_oppositions_are_actually_found(self):
+        """The outer planets each oppose the Sun once a year."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        for planet in ("Jupiter", "Saturn", "Uranus", "Neptune"):
+            hits = find_all_aspect_exacts("Sun", planet, 180.0, self.START, self.END)
+            assert len(hits) == 1, planet
+            separation = self._separation("Sun", planet, hits[0].julian_day)
+            assert abs(separation - 180.0) < 0.01, planet
+
+    def test_lunations(self):
+        """A year holds 12-13 new and full Moons."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        new = find_all_aspect_exacts("Sun", "Moon", 0.0, self.START, self.END)
+        full = find_all_aspect_exacts("Sun", "Moon", 180.0, self.START, self.END)
+        assert 12 <= len(new) <= 13
+        assert 12 <= len(full) <= 13
+
+    def test_fast_recurring_aspects_are_not_dropped(self):
+        """The Moon trines Jupiter about twice a month. This used to return zero."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        hits = find_all_aspect_exacts("Moon", "Jupiter", 120.0, self.START, self.END)
+        assert len(hits) >= 20
+
+    def test_every_returned_aspect_is_actually_exact(self):
+        """The heart of it: never return a moment that is not the aspect."""
+        from stellium.engines.search import find_all_aspect_exacts
+
+        cases = [
+            ("Sun", "Mars", 90.0),
+            ("Jupiter", "Saturn", 120.0),
+            ("Mars", "Saturn", 90.0),
+            ("Venus", "Mars", 0.0),
+            ("Sun", "Jupiter", 180.0),
+            ("Moon", "Mars", 90.0),
+        ]
+        for name1, name2, angle in cases:
+            for hit in find_all_aspect_exacts(
+                name1, name2, angle, self.START, self.END
+            ):
+                separation = self._separation(name1, name2, hit.julian_day)
+                assert abs(separation - angle) < 0.01, (
+                    f"{name1} {angle} {name2} at {hit.datetime_utc}: separation is "
+                    f"{separation:.4f}, not {angle}"
+                )

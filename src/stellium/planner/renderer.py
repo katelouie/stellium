@@ -194,6 +194,9 @@ class PlannerRenderer:
         )
         collector.collect_all(
             transit_planets=self.config.natal_transit_planets,
+            # This flag existed on PlannerConfig from the start but was never
+            # honoured — there was no mundane collector for it to switch on.
+            mundane_transits=self.config.include_mundane_transits,
             ingress_planets=self.config.ingress_planets,
             station_planets=self.config.station_planets,
             moon_phases=self.config.include_moon_phases,
