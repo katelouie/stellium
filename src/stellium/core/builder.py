@@ -283,6 +283,7 @@ class ChartBuilder:
         - Haumea (rebirth, fertility)
         - Orcus (oaths, consequences)
         - Quaoar (creation, harmony)
+        - Gonggong (disruption that clears ground)
 
         Note: TNOs require additional Swiss Ephemeris asteroid files (se1 files)
         to be present in your ephemeris data directory. Download them from:
@@ -292,7 +293,15 @@ class ChartBuilder:
 
             chart = ChartBuilder.from_native(native).with_tnos().calculate()
         """
-        tno_names = ["Eris", "Sedna", "Makemake", "Haumea", "Orcus", "Quaoar"]
+        tno_names = [
+            "Eris",
+            "Sedna",
+            "Makemake",
+            "Haumea",
+            "Orcus",
+            "Quaoar",
+            "Gonggong",
+        ]
         for name in tno_names:
             if name not in self._config.include_asteroids:
                 self._config.include_asteroids.append(name)

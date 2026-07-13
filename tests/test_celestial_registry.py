@@ -218,3 +218,96 @@ class TestCelestialRegistryMetadata:
         regulus = get_object_info("Regulus")
         if regulus:
             assert isinstance(regulus.metadata, dict)
+
+
+class TestEphemerisIdsAreConsistent:
+    """Two tables name the same bodies, and they disagreed.
+
+    `CELESTIAL_REGISTRY[x].swiss_ephemeris_id` and
+    `engines.ephemeris.SWISS_EPHEMERIS_IDS[x]` are both consulted at runtime — the
+    registry's by `utils/planetary_crossing.py` (so by `ReturnBuilder.planetary`), the
+    engine's by `calculate_positions()`. For all six TNOs they differed by exactly
+    AST_OFFSET (10000), because the registry stored the **MPC number** in a field named
+    *swiss_ephemeris_id*.
+
+    That is not a cosmetic mismatch: Swiss Ephemeris resolves id 136199 to the file
+    `s126199s.se1` — a *different asteroid*. Asking for Eris's return raised a
+    misleading "file not found", and anyone who happened to own that other asteroid's
+    file would have silently got the wrong body.
+    """
+
+    def test_the_registry_and_the_engine_agree_on_every_shared_body(self):
+        from stellium.core.registry import CELESTIAL_REGISTRY
+        from stellium.engines.ephemeris import SWISS_EPHEMERIS_IDS
+
+        disagreements = [
+            f"{name}: registry {info.swiss_ephemeris_id} vs engine "
+            f"{SWISS_EPHEMERIS_IDS[name]}"
+            for name, info in CELESTIAL_REGISTRY.items()
+            if info.swiss_ephemeris_id is not None
+            and name in SWISS_EPHEMERIS_IDS
+            and info.swiss_ephemeris_id != SWISS_EPHEMERIS_IDS[name]
+        ]
+        assert not disagreements, (
+            "these bodies have two different Swiss Ephemeris ids, and both are used:\n  "
+            + "\n  ".join(disagreements)
+        )
+
+    def test_every_body_the_registry_knows_can_actually_be_calculated(self):
+        """`calculate_positions()` skips any name absent from SWISS_EPHEMERIS_IDS —
+        silently. Hygiea, Nessus and Chariklo each had a registry entry and a
+        hand-drawn glyph, and could never be computed: requesting one gave you a chart
+        quietly missing that body.
+        """
+        from stellium.core.registry import CELESTIAL_REGISTRY
+        from stellium.engines.ephemeris import SWISS_EPHEMERIS_IDS
+
+        uncomputable = [
+            name
+            for name, info in CELESTIAL_REGISTRY.items()
+            if info.swiss_ephemeris_id is not None and name not in SWISS_EPHEMERIS_IDS
+        ]
+        assert not uncomputable, (
+            "the registry advertises these bodies but the ephemeris engine has no id "
+            f"for them, so they are silently dropped from every chart: {uncomputable}"
+        )
+
+    def test_numbered_asteroids_carry_the_ast_offset(self):
+        """Swiss Ephemeris addresses a numbered asteroid as MPC number + 10000.
+
+        A raw MPC number in this field points at a completely different rock.
+        """
+        import swisseph as swe
+
+        from stellium.core.registry import CELESTIAL_REGISTRY
+
+        # Bodies addressed by MPC number, as opposed to swisseph's built-in ids
+        # (Sun=0 … Pluto=9, Chiron=15, Ceres=17, …).
+        numbered = {
+            "Eris": 136199,
+            "Sedna": 90377,
+            "Quaoar": 50000,
+            "Makemake": 136472,
+            "Haumea": 136108,
+            "Orcus": 90482,
+            "Gonggong": 225088,
+            "Hygiea": 10,
+            "Nessus": 7066,
+            "Chariklo": 10199,
+        }
+        for name, mpc in numbered.items():
+            info = CELESTIAL_REGISTRY[name]
+            assert info.swiss_ephemeris_id == mpc + swe.AST_OFFSET, (
+                f"{name}: swiss_ephemeris_id should be MPC {mpc} + AST_OFFSET "
+                f"({mpc + swe.AST_OFFSET}), got {info.swiss_ephemeris_id}"
+            )
+
+
+def test_gonggong_is_registered_with_its_glyph():
+    """Its hand-drawn glyph sat unused in the package: a file with no registry entry."""
+    from stellium.core.registry import CELESTIAL_REGISTRY
+    from stellium.visualization.core import get_glyph
+
+    gonggong = CELESTIAL_REGISTRY["Gonggong"]
+    assert gonggong.glyph_svg_path == "gonggong.svg"
+    assert get_glyph("Gonggong")["type"] == "svg"

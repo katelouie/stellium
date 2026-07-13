@@ -328,7 +328,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         object_type=ObjectType.ASTEROID,
         glyph="Nes",
         glyph_svg_path="nessus.svg",
-        swiss_ephemeris_id=7066,
+        swiss_ephemeris_id=17066,  # MPC 7066 + AST_OFFSET
         category="Centaur",
         description="Represents abuse, boundaries violated, karmic consequences, and the poison that becomes medicine.",
     ),
@@ -337,7 +337,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Chariklo",
         object_type=ObjectType.ASTEROID,
         glyph="Cha",
-        swiss_ephemeris_id=10199,
+        swiss_ephemeris_id=20199,  # MPC 10199 + AST_OFFSET
         category="Centaur",
         description="Chiron's wife - represents compassionate healing, devotion, and grounding spiritual wisdom.",
     ),
@@ -350,7 +350,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         object_type=ObjectType.ASTEROID,
         glyph="⯰",
         glyph_svg_path="eris.svg",
-        swiss_ephemeris_id=136199,
+        swiss_ephemeris_id=146199,  # MPC 136199 + AST_OFFSET
         category="Dwarf Planet (TNO)",
         aliases=["Xena"],
         description="The dwarf planet of discord, rivalry, and fierce feminine power. Larger than Pluto.",
@@ -361,7 +361,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         object_type=ObjectType.ASTEROID,
         glyph="Sed",
         glyph_svg_path="sedna.svg",
-        swiss_ephemeris_id=90377,
+        swiss_ephemeris_id=100377,  # MPC 90377 + AST_OFFSET
         category="Trans-Neptunian Object",
         description="Represents deep cold, isolation, victim consciousness, and the slow thaw of healing.",
     ),
@@ -370,7 +370,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Makemake",
         object_type=ObjectType.ASTEROID,
         glyph="🝼",
-        swiss_ephemeris_id=136472,
+        swiss_ephemeris_id=146472,  # MPC 136472 + AST_OFFSET
         category="Dwarf Planet (TNO)",
         description="Represents environmental awareness, resourcefulness, and manifestation.",
     ),
@@ -379,7 +379,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         display_name="Haumea",
         object_type=ObjectType.ASTEROID,
         glyph="🝻",
-        swiss_ephemeris_id=136108,
+        swiss_ephemeris_id=146108,  # MPC 136108 + AST_OFFSET
         category="Dwarf Planet (TNO)",
         description="Represents rebirth, fertility, connection to nature, and rapid transformation.",
     ),
@@ -389,7 +389,7 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         object_type=ObjectType.ASTEROID,
         glyph="Orc",
         glyph_svg_path="orcus.svg",
-        swiss_ephemeris_id=90482,
+        swiss_ephemeris_id=100482,  # MPC 90482 + AST_OFFSET
         category="Trans-Neptunian Object",
         aliases=["Anti-Pluto"],
         description="The anti-Pluto - represents oaths, consequences, and the afterlife.",
@@ -400,9 +400,23 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         object_type=ObjectType.ASTEROID,
         glyph="Qua",
         glyph_svg_path="quaoar.svg",
-        swiss_ephemeris_id=50000,
+        swiss_ephemeris_id=60000,  # MPC 50000 + AST_OFFSET
         category="Trans-Neptunian Object",
         description="Represents creation myths, harmony, and finding order in chaos.",
+    ),
+    "Gonggong": CelestialObjectInfo(
+        name="Gonggong",
+        display_name="Gonggong",
+        object_type=ObjectType.ASTEROID,
+        glyph="Gon",
+        glyph_svg_path="gonggong.svg",
+        swiss_ephemeris_id=235088,  # MPC 225088 + AST_OFFSET
+        category="Trans-Neptunian Object",
+        aliases=("2007 OR10",),
+        description=(
+            "Chinese water god of floods and chaos. Read for disruption that clears "
+            "ground, and for what will not stay contained."
+        ),
     ),
     # ========================================================================
     # URANIAN / HAMBURG SCHOOL PLANETS

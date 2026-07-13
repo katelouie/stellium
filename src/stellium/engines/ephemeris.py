@@ -113,6 +113,14 @@ SWISS_EPHEMERIS_IDS = {
     "Makemake": 136472 + 10000,  # MPC 136472
     "Haumea": 136108 + 10000,  # MPC 136108
     "Orcus": 90482 + 10000,  # MPC 90482
+    "Gonggong": 225088 + 10000,  # MPC 225088 (formerly 2007 OR10)
+    # --- Centaurs and asteroids that CELESTIAL_REGISTRY knew about but this table
+    # did not. calculate_positions() skips any name missing from here, silently — so
+    # these three had a registry entry and a hand-drawn glyph and could never actually
+    # be calculated. Requesting them produced a chart quietly missing the body.
+    "Hygiea": 10 + 10000,  # MPC 10
+    "Nessus": 7066 + 10000,  # MPC 7066
+    "Chariklo": 10199 + 10000,  # MPC 10199
 }
 
 
