@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> ### ⚠️ This release corrects wrong answers
+>
+> Four bugs in this release were **silently returning incorrect results**, not crashing.
+> If you relied on any of the following, your output was wrong and will now change:
+>
+> | If you used… | You were getting… |
+> |---|---|
+> | `ElectionalSearch` / `find_aspect_exact` with an **opposition** | the **conjunction** — the opposite moment from the one you asked for |
+> | `ReturnBuilder.solar()` with a **July–December birthday** | the **previous year's** solar return chart |
+> | **dignity scores, almuten, sect, length-of-life** for a Water sign | a **swapped day/night triplicity ruler** (plus an asteroid in the traditional falls, and Mars's exaltation degree off by one) |
+> | **declination aspects** (Parallel / Contraparallel) on an ecliptic engine | an aspect measured against **longitude**, which cannot express it at all |
+>
+> All four are detailed under *Fixed* below. They were found by a new ground-truth
+> test suite (see *Added*) that checks the engines against the **sky** rather than
+> against themselves — an approach that found four bugs within an hour of existing.
+
 ### Changed
 
 - **The planner is rebuilt on the Typst design system, and its front matter is redesigned** — `PlannerBuilder(...).generate()` now serialises the planner to a JSON contract that the bundled design system renders, replacing a renderer that built ~1,100 lines of Typst markup as Python f-strings around a hardcoded purple palette. The planner gains all five themes (`.theme("house" | "sepia" | "celestial" | "blues" | "greyscale")`), the shared glyph/component vocabulary, and the bundled font stack. Chart wheels are now drawn stripped (no header, info box, or moon-phase corner) and transparent, and theme-coordinated, so they composite onto the page instead of sitting in a hardcoded gold frame.
@@ -31,8 +47,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`ECLIPTIC_ASPECT_REGISTRY` and `DECLINATION_ASPECT_REGISTRY`** — derived views over `ASPECT_REGISTRY`, exported from `stellium`. Declination aspects (Parallel, Contraparallel) deliberately stay *in* the main registry so that looking an aspect up **by name** remains uniform — a caller holding an `Aspect` with `aspect_name="Parallel"` just wants its glyph and shouldn't have to know which family it belongs to (this is what `get_aspect_display()` and `OrbEngine`'s default-orb map rely on). But they are recorded at 0° and 180° purely by analogy with Conjunction and Opposition, which means **angle is not a unique key across the whole registry**. Anything keying on angle — or reasoning about ecliptic geometry — should now build over `ECLIPTIC_ASPECT_REGISTRY`, where angle *is* unique (an invariant now pinned by a test).
 - **`PlannerBuilder.theme()` and the `.without_*()` front-matter opt-outs** (see above).
 - **Planner tests** — `tests/test_planner_almanac.py` (22 tests). The planner previously had **no unit tests at all**, only an end-to-end cookbook smoke test.
+- **A ground-truth test suite** (`tests/test_astronomical_ground_truth.py`) — tests that appeal to nothing in our own implementation. Most tests check that the code does what the code *says*; these check that it says something *true*. Four layers: **impossibilities** (Venus never strays 47° from the Sun, so a Sun–Venus trine cannot exist and must never be reported), **periodicities** (12–13 lunations a year; each outer planet opposes the Sun exactly once; Mercury retrogrades 3–4 times), **almanac facts** (the Great Conjunction of 21 Dec 2020; the Great American Eclipses of 2017 and 2024), and **cross-engine agreement** — the most valuable layer, where two independent code paths must agree and the other path is the oracle (every eclipse must fall on a syzygy; every station where speed crosses zero; every ingress on a 30° boundary). It found four real bugs within an hour of existing, three of them in tables that had been quietly wrong for months.
+- **`stellium.presentation.typst_runtime`** — the shared Typst runtime: `theme_dir()`, `font_paths()`, `THEMES`/`THEME_WHEEL`, `validate_theme()`, `compile_pdf()`, `materialize_svgs()` and a `TypstDocument` context manager. The report, the planner and the atlas each had their own copy of the temp-dir/copy-design-system/compile dance and their own answer for *where the fonts are* — and two of the three answers were wrong. Now there is one. (The planner was also importing `typst_render._font_paths` and `_theme_dir` across a package boundary: code that *said* "shared infrastructure" while *spelling* it "private".)
 
 ### Fixed
+
+- **Three values in the traditional dignity tables were simply wrong** *(dignity output change)*. They do not crash; they silently corrupt dignity scoring, and feed onward into almuten, sect analysis, length-of-life and the planner's Chart Analysis page. Found by testing the tables against the sources they claim to follow.
+  1. **The Water triplicity had its day and night rulers swapped.** Ours read day=Mars, night=Venus. Dorotheus gives Water as **day=Venus, night=Mars**, participating=Moon. Fire, Earth and Air all matched Dorotheus *exactly* — so the table was plainly meant to be Dorothean, and Water alone was reversed. It was neither Dorothean nor Ptolemaic (Ptolemy and Lilly give Mars for both). Affects every chart with a planet in Cancer, Scorpio or Pisces.
+  2. **Pisces' traditional fall was `"Ceres"`** — an asteroid, in the *traditional* table. Mercury is exalted in Virgo, so Mercury falls in Pisces.
+  3. **Mars' exaltation degree was 27° Capricorn.** It is 28°. The other six exaltation degrees were all correct, so this was a lone off-by-one.
 
 - **`ReturnBuilder.solar(natal, year=N)` returned the year *N−1* solar return for anyone born in the second half of the year.** It searched from **1 January** of year N, and the underlying `find_return_near_date()` returns the nearest crossing in *either* direction — so for a July birthday, the return nearest 1 January 2026 is the one in **July 2025**, 169 days back, rather than July 2026, 196 days forward. Every native born July–December was silently handed the wrong solar return chart, in a public API, and the planner's front matter inherited it. The search now starts from the birthday's anniversary in the requested year (leap-day births fall back to 28 February), where the return always falls within a day. It survived because every fixture in `tests/test_returns.py` has a first-half birthday (Einstein 14 March, Kate 6 January) and the tests asserted the return's *month* but never its *year* — so only the half that worked was ever exercised. The regression test now sweeps all twelve birth months.
 - **A planner that was not a year still called itself one.** The front matter hardcoded "The Year at a Glance", "The Year", "The Year's Transits", "The Year's Charts" and a `"%B %Y – %B %Y"` descriptor, so a one-month planner announced itself as **"March 2026 – March 2026"**. Titles are now derived from the actual span (`_period_label` / `_span_descriptor` / `_span_noun`): a March planner reads "March 2026 at a Glance / 1 – 31 March 2026", while a Sep→Aug planner is still correctly *a year* (the noun goes by length, not by whether the range sits inside one calendar year). The calendar page also drew the empty cells of a ragged final row as bordered boxes — a one-month planner was one month beside two empty holes — because the mini-month grid took its border from the enclosing table; each month now carries its own border and the grid is strokeless.
@@ -47,6 +70,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Aspect glyphs could silently become declination glyphs** — `ASPECT_REGISTRY` contains Parallel (0°) and Contraparallel (180°) alongside Conjunction (0°) and Opposition (180°), so keying glyphs by angle let a declination aspect overwrite a Ptolemaic one (☌ → ∥). Angle-keyed maps are now built over the new `ECLIPTIC_ASPECT_REGISTRY` view, where angle is a unique key, and `ASPECT_GLYPHS_BY_NAME` is available as the unambiguous key when you have a name.
 - **The planner built its natal chart three times** per run; it now builds it once.
 - **`examples/planner_cookbook.py`'s `minimal_planner()` was not minimal** — it claimed to disable the front matter "by not calling `with_*` methods", but those default to on, so it had been quietly generating the *full* front matter. It now opts out explicitly.
+
+- **The atlas has never used its own fonts.** `AtlasRenderer._get_font_dirs()` walked up four directories from its own file to reach `assets/fonts` — but the atlas lives one level deeper than the planner it was copied from, so it landed on `src/assets/fonts`, **a path that has never existed in any environment**. Typst does not error on a missing font directory; it silently substitutes whatever the host has. So every atlas ever generated was typeset in fallback faces, and the astrology glyphs depended on the host happening to have a symbol font. It now uses the packaged font bundle via the shared runtime, and asks for faces the package actually ships (it was naming "Crimson Pro" and "Cinzel Decorative", neither of which is bundled).
+
+### Removed
+
+- **`presentation/renderers.py::TypstRenderer` and `presentation/templates/astro_report.typ`** — two dead generations of the PDF renderer, 752 lines in total. `TypstRenderer` was unreachable (exported from no `__init__`, imported by nothing, tested by nothing): it built Typst *source* as Python f-strings around a hardcoded purple palette, which is precisely what the data-driven design system replaced. `astro_report.typ` was deader still — `TypstRenderer` inlines all its own Typst and never read it; the template belongs to a generation *before* that one. Neither was part of the public API.
 
 ## [0.21.1] - 2026-07-12
 
