@@ -35,6 +35,7 @@ from stellium.core.registry import (
     ASPECT_REGISTRY,
     CELESTIAL_REGISTRY,
     FIXED_STARS_REGISTRY,
+    QUALITY_REGISTRY,
 )
 from stellium.data.paths import find_glyph_svg
 from stellium.presentation.typst_runtime import font_paths
@@ -131,14 +132,6 @@ WISHLIST: dict[str, list[dict]] = {
         {"name": "Deucalion", "mpc": 53311},
         {"name": "Altjira", "mpc": 148780},
     ],
-    "Wanted — Elements": [
-        # The alchemical triangles. Unicode has them and we already bundle a font
-        # that does too — these are free, and need only a place to live.
-        {"name": "Fire", "unicode": "\U0001f702"},
-        {"name": "Earth", "unicode": "\U0001f703"},
-        {"name": "Air", "unicode": "\U0001f701"},
-        {"name": "Water", "unicode": "\U0001f704"},
-    ],
     "Wanted — Hellenistic Lots": [
         # Fortune and Spirit are computed already; the rest are not, and none of the
         # seven has a standard glyph. They would need drawing.
@@ -192,6 +185,8 @@ GROUP_ORDER = [
     "Aspects — Minor",
     "Aspects — Harmonic",
     "Aspects — Declination",
+    "Elements",
+    "Modalities",
     *WISHLIST,
 ]
 
@@ -310,6 +305,18 @@ def inventory() -> list[dict]:
                 "glyph": star.glyph or "",
                 "codepoint": codepoints(star.glyph or ""),
                 **source_for(star.glyph or "", star.glyph_svg_path),
+            }
+        )
+
+    for name, quality in QUALITY_REGISTRY.items():
+        group = "Elements" if quality.kind == "element" else "Modalities"
+        items.append(
+            {
+                "group": group,
+                "name": name,
+                "glyph": quality.glyph,
+                "codepoint": codepoints(quality.glyph),
+                **source_for(quality.glyph, quality.glyph_svg_path),
             }
         )
 

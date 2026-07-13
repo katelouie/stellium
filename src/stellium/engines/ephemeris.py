@@ -147,6 +147,11 @@ SWISS_EPHEMERIS_IDS = {
     "Chaos": 19521 + 10000,  # MPC 19521
     "Deucalion": 53311 + 10000,  # MPC 53311
     "Altjira": 148780 + 10000,  # MPC 148780
+    "Okyrhoe": 52872 + 10000,  # MPC 52872
+    "Varuna": 20000 + 10000,  # MPC 20000
+    "Salacia": 120347 + 10000,  # MPC 120347
+    "Logos": 58534 + 10000,  # MPC 58534
+    "Typhon": 42355 + 10000,  # MPC 42355
     "Hygiea": 10 + 10000,  # MPC 10
     "Nessus": 7066 + 10000,  # MPC 7066
     "Chariklo": 10199 + 10000,  # MPC 10199

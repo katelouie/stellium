@@ -706,6 +706,56 @@ CELESTIAL_REGISTRY: dict[str, CelestialObjectInfo] = {
         category="TNO",
         description="The dreamtime: the world as it was made, and is still being made.",
     ),
+    "Okyrhoe": CelestialObjectInfo(
+        name="Okyrhoe",
+        display_name="Okyrhoe",
+        object_type=ObjectType.ASTEROID,
+        glyph="Oky",
+        glyph_svg_path="okyrhoe.svg",
+        swiss_ephemeris_id=62872,  # MPC 52872 + AST_OFFSET
+        category="Centaur",
+        description="The seer silenced mid-prophecy — foresight that cannot be spoken.",
+    ),
+    "Varuna": CelestialObjectInfo(
+        name="Varuna",
+        display_name="Varuna",
+        object_type=ObjectType.ASTEROID,
+        glyph="Var",
+        glyph_svg_path="varuna.svg",
+        swiss_ephemeris_id=30000,  # MPC 20000 + AST_OFFSET
+        category="TNO",
+        description="The cosmic order and the oath that upholds it; judgement from a great height.",
+    ),
+    "Salacia": CelestialObjectInfo(
+        name="Salacia",
+        display_name="Salacia",
+        object_type=ObjectType.ASTEROID,
+        glyph="Sal",
+        glyph_svg_path="salacia.svg",
+        swiss_ephemeris_id=130347,  # MPC 120347 + AST_OFFSET
+        category="TNO",
+        description="The one taken by the sea and made queen of it. Consent found inside the taking.",
+    ),
+    "Logos": CelestialObjectInfo(
+        name="Logos",
+        display_name="Logos",
+        object_type=ObjectType.ASTEROID,
+        glyph="Log",
+        glyph_svg_path="logos.svg",
+        swiss_ephemeris_id=68534,  # MPC 58534 + AST_OFFSET
+        category="TNO",
+        description="The word that orders — reason as a structuring force.",
+    ),
+    "Typhon": CelestialObjectInfo(
+        name="Typhon",
+        display_name="Typhon",
+        object_type=ObjectType.ASTEROID,
+        glyph="Typ",
+        glyph_svg_path="typhon.svg",
+        swiss_ephemeris_id=52355,  # MPC 42355 + AST_OFFSET
+        category="TNO",
+        description="The monstrous last-born; chaos that rises against the settled order.",
+    ),
     # ========================================================================
     # URANIAN / HAMBURG SCHOOL PLANETS
     # ========================================================================
@@ -1886,3 +1936,126 @@ def search_aspects(query: str) -> list[AspectInfo]:
             results.append(aspect_info)
 
     return results
+
+
+# ============================================================================
+# QUALITIES: ELEMENTS AND MODALITIES
+# ============================================================================
+#
+# The sign qualities finally have a home. The element and modality maps were
+# duplicated across analysis/frames.py, visualization/grid.py, palettes.py and
+# info_corners.py, and none of them carried a glyph — so reports spelled these out in
+# words for want of anywhere to put a symbol.
+#
+# ELEMENTS take the alchemical triangles (🜂 🜃 🜁 🜄): old, unambiguous, and already in
+# a font we bundle.
+#
+# MODALITIES take the alchemical *tria prima* — sulfur, salt, mercury — which is the
+# attested mapping. But note the trap, and why the SVGs matter: **Mutable's Unicode
+# glyph is ☿, the same codepoint as the planet Mercury.** A chart showing both a
+# modality tally and Mercury would draw the identical symbol for two unrelated things,
+# with nothing to tell them apart. So each modality also carries a hand-drawn glyph,
+# which wins when present (`get_glyph()` prefers the SVG). The Unicode is the fallback
+# of last resort, not the intent.
+
+
+@dataclass(frozen=True)
+class QualityInfo:
+    """An element or a modality: the qualities a sign is made of."""
+
+    name: str
+    kind: str  # "element" | "modality"
+    glyph: str  # Unicode fallback — see the note above about ☿
+    signs: tuple[str, ...]
+    glyph_svg_path: str | None = None  # the drawn glyph; wins over `glyph`
+    description: str = ""
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.kind})"
+
+
+QUALITY_REGISTRY: dict[str, QualityInfo] = {
+    # --- Elements: the alchemical triangles -------------------------------
+    "Fire": QualityInfo(
+        name="Fire",
+        kind="element",
+        glyph="\U0001f702",
+        signs=("Aries", "Leo", "Sagittarius"),
+        description="Spirit, will, and the impulse outward. What ignites.",
+    ),
+    "Earth": QualityInfo(
+        name="Earth",
+        kind="element",
+        glyph="\U0001f703",
+        signs=("Taurus", "Virgo", "Capricorn"),
+        description="Body, substance, and consequence. What endures.",
+    ),
+    "Air": QualityInfo(
+        name="Air",
+        kind="element",
+        glyph="\U0001f701",
+        signs=("Gemini", "Libra", "Aquarius"),
+        description="Mind, relation, and exchange. What connects.",
+    ),
+    "Water": QualityInfo(
+        name="Water",
+        kind="element",
+        glyph="\U0001f704",
+        signs=("Cancer", "Scorpio", "Pisces"),
+        description="Feeling, memory, and the depths. What dissolves.",
+    ),
+    # --- Modalities: the tria prima, with drawn glyphs that take precedence -
+    "Cardinal": QualityInfo(
+        name="Cardinal",
+        kind="modality",
+        glyph="\U0001f70d",  # alchemical sulfur
+        glyph_svg_path="cardinal.svg",
+        signs=("Aries", "Cancer", "Libra", "Capricorn"),
+        description="Initiating. The quality that begins a season, and a thing.",
+    ),
+    "Fixed": QualityInfo(
+        name="Fixed",
+        kind="modality",
+        glyph="\U0001f714",  # alchemical salt
+        glyph_svg_path="fixed.svg",
+        signs=("Taurus", "Leo", "Scorpio", "Aquarius"),
+        description="Sustaining. The quality that holds a season at its height.",
+    ),
+    "Mutable": QualityInfo(
+        name="Mutable",
+        kind="modality",
+        # ☿ — the SAME codepoint as the planet Mercury. Which is exactly why
+        # mutable.svg exists and is preferred.
+        glyph="\u263f",
+        glyph_svg_path="mutable.svg",
+        signs=("Gemini", "Virgo", "Sagittarius", "Pisces"),
+        description="Adapting. The quality that dissolves a season into the next.",
+    ),
+}
+
+ELEMENTS: tuple[str, ...] = ("Fire", "Earth", "Air", "Water")
+MODALITIES: tuple[str, ...] = ("Cardinal", "Fixed", "Mutable")
+
+
+def get_quality_info(name: str) -> QualityInfo | None:
+    """Look up an element or modality (case-insensitive)."""
+    for key, info in QUALITY_REGISTRY.items():
+        if key.lower() == name.lower():
+            return info
+    return None
+
+
+def get_element_of(sign: str) -> QualityInfo | None:
+    """The element a sign belongs to."""
+    for name in ELEMENTS:
+        if sign in QUALITY_REGISTRY[name].signs:
+            return QUALITY_REGISTRY[name]
+    return None
+
+
+def get_modality_of(sign: str) -> QualityInfo | None:
+    """The modality a sign belongs to."""
+    for name in MODALITIES:
+        if sign in QUALITY_REGISTRY[name].signs:
+            return QUALITY_REGISTRY[name]
+    return None

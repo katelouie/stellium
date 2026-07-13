@@ -307,6 +307,10 @@ class ChartBuilder:
             "Chaos",
             "Deucalion",
             "Altjira",
+            "Varuna",
+            "Salacia",
+            "Logos",
+            "Typhon",
         ]
         for name in tno_names:
             if name not in self._config.include_asteroids:
@@ -386,6 +390,7 @@ class ChartBuilder:
             "Echeclus",
             "Elatus",
             "Bienor",
+            "Okyrhoe",
         ]
         for name in centaurs:
             if name not in self._config.include_asteroids:

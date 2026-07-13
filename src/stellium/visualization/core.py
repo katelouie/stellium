@@ -87,7 +87,7 @@ def get_glyph(object_name: str) -> dict[str, str]:
         - "type": "unicode" or "svg"
         - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """
-    from stellium.core.registry import FIXED_STARS_REGISTRY
+    from stellium.core.registry import FIXED_STARS_REGISTRY, get_quality_info
     from stellium.data.paths import find_glyph_svg
 
     # A fixed star lives in BOTH registries: CELESTIAL_REGISTRY carries a generic ★,
@@ -100,6 +100,17 @@ def get_glyph(object_name: str) -> dict[str, str]:
         svg_file = find_glyph_svg(star.glyph_svg_path)
         if svg_file is not None:
             return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+
+    # Elements and modalities. Their drawn glyph wins for a reason: Mutable's Unicode
+    # fallback is ☿ — the SAME codepoint as the planet Mercury — so a chart showing
+    # both would draw one symbol for two unrelated things.
+    quality = get_quality_info(object_name)
+    if quality is not None:
+        if quality.glyph_svg_path:
+            svg_file = find_glyph_svg(quality.glyph_svg_path)
+            if svg_file is not None:
+                return {"type": "svg", "value": svg_file.read_text(encoding="utf-8")}
+        return {"type": "unicode", "value": quality.glyph}
 
     # Try registry first
     obj_info = get_object_info(object_name)

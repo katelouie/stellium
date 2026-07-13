@@ -846,6 +846,11 @@ JPL_HORIZONS_2000_01_01 = {
     "Chaos": (29521, 57.1501, "19521 Chaos"),
     "Deucalion": (63311, 206.2992, "53311 Deucalion"),
     "Altjira": (158780, 49.7767, "148780 Altjira"),
+    "Okyrhoe": (62872, 0.6819, "52872 Okyrhoe"),
+    "Varuna": (30000, 98.5962, "20000 Varuna"),
+    "Salacia": (130347, 336.9932, "120347 Salacia"),
+    "Logos": (68534, 160.3813, "58534 Logos"),
+    "Typhon": (52355, 114.7869, "42355 Typhon"),
 }
 
 

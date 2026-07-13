@@ -68,7 +68,7 @@ def _glyph_entries():
     bundled fonts. It was tofu in every chart with Arabic Parts, and this test walked
     straight past it because it only looked at the registries.
     """
-    from stellium.core.registry import FIXED_STARS_REGISTRY
+    from stellium.core.registry import FIXED_STARS_REGISTRY, QUALITY_REGISTRY
     from stellium.visualization.core import (
         ANGLE_GLYPHS,
         PLANET_GLYPHS,
@@ -79,6 +79,7 @@ def _glyph_entries():
         ("CELESTIAL", CELESTIAL_REGISTRY),
         ("ASPECT", ASPECT_REGISTRY),
         ("FIXED_STARS", FIXED_STARS_REGISTRY),
+        ("QUALITY", QUALITY_REGISTRY),
     ):
         for name, info in registry.items():
             glyph = getattr(info, "glyph", None)
