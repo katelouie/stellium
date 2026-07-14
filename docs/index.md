@@ -1,74 +1,94 @@
 # Stellium Documentation
 
-A modern Python library for computational astrology built on Swiss Ephemeris for NASA-grade astronomical accuracy.
+A modern Python library for computational astrology, built on Swiss Ephemeris for
+NASA-grade astronomical accuracy.
+
+```python
+from stellium import ChartBuilder
+
+chart = ChartBuilder.from_notable("Carl Jung").calculate()
+chart.draw("jung.svg").preset_standard().save()
+```
+
+---
+
+## Where to start
+
+| If you want to… | Go to |
+|---|---|
+| Install it and draw your first chart | [Overview](README.md) |
+| Do a specific thing, with runnable code | [Cookbooks](cookbooks/index.md) — **357 recipes** |
+| Understand a subsystem in depth | [Guides](VISUALIZATION.md) |
+| Look up a class or a method | [API Reference](api/index.md) |
+| See what the charts actually look like | [Theme Gallery](THEME_GALLERY.md) · [Palette Gallery](PALETTE_GALLERY.md) |
+
+---
 
 ```{toctree}
-:maxdepth: 2
-:caption: Getting Started
+:hidden:
+:caption: Start Here
+:maxdepth: 1
 
 README
-VISUALIZATION
-REPORTS
-CHART_TYPES
 ```
 
 ```{toctree}
-:maxdepth: 2
-:caption: Visual Galleries
+:hidden:
+:caption: Guides
+:maxdepth: 1
+
+VISUALIZATION
+REPORTS
+CHART_TYPES
+astrology/RECTIFICATION
+LOCATIONS
+DIAGNOSTICS
+```
+
+```{toctree}
+:hidden:
+:caption: Cookbooks
+:maxdepth: 1
+
+cookbooks/index
+```
+
+```{toctree}
+:hidden:
+:caption: Reference
+:maxdepth: 1
+
+api/index
+options_list
+api/accidental_dignity_structure
+```
+
+```{toctree}
+:hidden:
+:caption: Galleries
+:maxdepth: 1
 
 THEME_GALLERY
 PALETTE_GALLERY
 ```
 
-```{raw} html
-<p><strong>Interactive Reference:</strong> <a href="starlight_colors.html" target="_blank">Full Color & Theme Reference (HTML)</a> - Complete interactive reference with all themes, palettes, and hex values</p>
-```
-
 ```{toctree}
-:maxdepth: 2
-:caption: Reference
-
-ARCHITECTURE
-LOCATIONS
-DIAGNOSTICS
-options_list
-```
-
-```{toctree}
-:maxdepth: 2
-:caption: Guides
+:hidden:
+:caption: Contributing
+:maxdepth: 1
 
 PUBLISHING
 ```
 
-```{toctree}
-:maxdepth: 2
-:caption: API Reference
+## Project links
 
-api/index
-api/accidental_dignity_structure
-```
+- [**Contributing**](https://github.com/katelouie/stellium/blob/main/CONTRIBUTING.md) — how to work on Stellium
+- [**Changelog**](https://github.com/katelouie/stellium/blob/main/CHANGELOG.md) — release history
+- [**GitHub**](https://github.com/katelouie/stellium) — source and issues
+- [**Colour & theme reference**](starlight_colors.html) — every theme, palette and hex value, in one interactive page
 
-## Quick Links
+## Indices
 
-- **[README](README.md)** - Project overview, installation, quick start
-- **[Visualization Guide](VISUALIZATION.md)** - Chart drawing and customization
-- **[Reports Guide](REPORTS.md)** - Report generation and PDF export
-- **[Chart Types](CHART_TYPES.md)** - Natal, synastry, transit, composite charts
-- **[Theme Gallery](THEME_GALLERY.md)** - Visual showcase of all themes
-- **[Palette Gallery](PALETTE_GALLERY.md)** - Zodiac ring color palettes
-- **[Color Reference (HTML)](starlight_colors.html)** - Interactive color & theme reference with hex values
-- **[API Reference](api/index.md)** - Complete autodoc from source code
-
-## Project Links
-
-- **[Contributing Guide](https://github.com/katelouie/stellium/blob/main/CONTRIBUTING.md)** - How to contribute to Stellium
-- **[Changelog](https://github.com/katelouie/stellium/blob/main/CHANGELOG.md)** - Version history and release notes
-- **[TODO / Roadmap](https://github.com/katelouie/stellium/blob/main/TODO.md)** - Development roadmap
-- **[GitHub Repository](https://github.com/katelouie/stellium)** - Source code and issues
-
-## Indices and tables
-
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`

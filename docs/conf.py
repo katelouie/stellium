@@ -83,3 +83,22 @@ intersphinx_mapping = {
 # Pygments style for code highlighting
 pygments_style = "monokai"  # code chrome is dark in BOTH themes (see the design)
 pygments_dark_style = "monokai"
+
+
+# -- Generated pages ---------------------------------------------------------
+# The 21 cookbooks in examples/ hold 357 runnable recipes, and none of them
+# appeared anywhere in this site. They are turned into pages here, on every build
+# (including on Read the Docs), rather than being committed — a generated page
+# that lives in git is a copy of the code that can drift from it, and the pages
+# `literalinclude` the real functions precisely so that they cannot.
+def _build_cookbook_pages(app):
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    script = Path(__file__).parent.parent / "scripts" / "build_cookbook_pages.py"
+    subprocess.run([sys.executable, str(script)], check=True)
+
+
+def setup(app):
+    app.connect("builder-inited", _build_cookbook_pages)
