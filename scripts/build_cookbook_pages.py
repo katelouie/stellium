@@ -11,7 +11,7 @@ so nothing can go stale: **there is no copy of the code to drift.**
 
 That matters here more than usual. There are 21 cookbooks holding **374 runnable
 recipes**, and not one of them appeared anywhere in the documentation site. Hand-
-copying that into Markdown would have created 357 code blocks with no connection to
+copying that into Markdown would have created 374 code blocks with no connection to
 the code they claim to show — which is exactly the failure the astrology guide made,
 and exactly what `tests/test_doc_codeblocks.py` exists to prevent.
 
