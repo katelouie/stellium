@@ -1139,8 +1139,8 @@ Major Aspects
 ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━┩
 │ ☿ Mercury           │ △ Trine       │ ♄ Saturn            │ 0.05° │ A→       │
 │ ☿ Mercury           │ □ Square      │ 🜊 Vertex            │ 0.18° │ —        │
-│ ♆ Neptune           │ ☍ Opposition  │ ☊ North Node        │ 0.28° │ A→       │
 │ ♆ Neptune           │ ☌ Conjunction │ ☋ South Node        │ 0.28° │ A→       │
+│ ♆ Neptune           │ ☍ Opposition  │ ☊ North Node        │ 0.28° │ A→       │
 │ ♇ Pluto             │ ☌ Conjunction │ ⚷ Chiron            │ 0.58° │ ←S       │
 │ ☉ Sun               │ ☌ Conjunction │ ☽ Moon              │ 0.80° │ ←S       │
 │ ♇ Pluto             │ ⚹ Sextile     │ 🜊 Vertex            │ 1.19° │ —        │
@@ -1158,8 +1158,8 @@ Major Aspects
 │ ♀ Venus             │ ☌ Conjunction │ ♇ Pluto             │ 3.61° │ A→       │
 │ ♀ Venus             │ ☌ Conjunction │ ⚷ Chiron            │ 4.19° │ A→       │
 │ ☽ Moon              │ ☌ Conjunction │ MC                  │ 4.30° │ —        │
-│ ♀ Venus             │ △ Trine       │ ☊ North Node        │ 4.36° │ ←S       │
 │ ♀ Venus             │ ⚹ Sextile     │ ☋ South Node        │ 4.36° │ ←S       │
+│ ♀ Venus             │ △ Trine       │ ☊ North Node        │ 4.36° │ ←S       │
 │ ♅ Uranus            │ △ Trine       │ 🜊 Vertex            │ 4.64° │ —        │
 │ ♀ Venus             │ ⚹ Sextile     │ ♆ Neptune           │ 4.64° │ ←S       │
 │ ♄ Saturn            │ □ Square      │ ♅ Uranus            │ 4.77° │ ←S       │
@@ -1175,8 +1175,8 @@ Major Aspects
 │ ♄ Saturn            │ □ Square      │ ☋ South Node        │ 6.65° │ A→       │
 │ ♄ Saturn            │ □ Square      │ ☊ North Node        │ 6.65° │ ←S       │
 │ ☋ South Node        │ △ Trine       │ 🜊 Vertex            │ 6.78° │ —        │
-│ ☊ North Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
 │ ☋ South Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
+│ ☊ North Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
 │ ♄ Saturn            │ □ Square      │ ♆ Neptune           │ 6.93° │ A→       │
 │ ♆ Neptune           │ △ Trine       │ 🜊 Vertex            │ 7.06° │ —        │
 │ ♃ Jupiter           │ □ Square      │ ♆ Neptune           │ 7.87° │ A→       │

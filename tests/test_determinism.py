@@ -30,6 +30,7 @@ process boundary is testing the seed, not the code.
 """
 
 import json
+import os
 import subprocess
 import sys
 import textwrap
@@ -66,12 +67,19 @@ MAXIMAL_CHART = textwrap.dedent("""
 
 
 def _run(code: str, seed: str) -> str:
-    """Run a snippet in a fresh interpreter with a given PYTHONHASHSEED."""
+    """Run a snippet in a fresh interpreter with a given PYTHONHASHSEED.
+
+    Inherit the environment and override only the seed. Handing subprocess a
+    *replacement* env drops SYSTEMROOT on Windows, and Winsock then cannot
+    initialize — `OSError: [WinError 10106]` — so the subprocess dies before it ever
+    reaches the code under test, and the failure looks like nondeterminism.
+    """
+    env = {**os.environ, "PYTHONHASHSEED": seed}
     result = subprocess.run(
         [sys.executable, "-c", code],
         capture_output=True,
         text=True,
-        env={"PYTHONHASHSEED": seed, "PATH": "/usr/bin:/bin"},
+        env=env,
         timeout=180,
         check=False,
     )

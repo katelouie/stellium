@@ -20,6 +20,7 @@ from ._utils import (
     get_aspect_display,
     get_object_display,
     get_object_sort_key,
+    get_orb_sort_key,
     get_sign_glyph,
 )
 
@@ -280,7 +281,7 @@ class DeclinationAspectSection:
 
         # Sort
         if self.sort_by == "orb":
-            aspects = sorted(aspects, key=lambda a: a.orb)
+            aspects = sorted(aspects, key=get_orb_sort_key)
         elif self.sort_by == "aspect_type":
             aspects = sorted(aspects, key=lambda a: a.aspect_name)
         elif self.sort_by == "planet":

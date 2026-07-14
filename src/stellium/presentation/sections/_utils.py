@@ -102,6 +102,40 @@ def get_object_sort_key(position):
     return (type_rank, 20000, position.name)
 
 
+def get_orb_sort_key(aspect) -> tuple:
+    """Sort key for ordering aspects by orb — a *total* order, and a stable one.
+
+    `sorted(aspects, key=lambda a: a.orb)` is not stable across machines, because
+    two aspects that are *mathematically* the same angle can hold different floats:
+
+        Neptune Square True Node    5.1401672080752405
+        Neptune Square South Node   5.140167208075212
+
+    The nodes are exactly 180° apart, so those orbs are the same number — they differ
+    only in the last bits, and which one sorts first depends on the platform's libm.
+    That is how the aspect table came out with two rows swapped on Linux versus macOS,
+    and it is not a rounding difference anyone can see: both print as 5.14°.
+
+    So the key quantizes before comparing, then breaks any resulting tie by name.
+    Quantizing alone is not enough (a true value can straddle the boundary and round
+    two ways); the names make the order total.
+
+    **This changes no value anywhere.** `aspect.orb` keeps every digit it had, in the
+    chart, in `to_dict()`, and on the page. The rounding exists only inside this
+    comparison and is thrown away with it.
+
+    1e-9° is ~3.6 microarcseconds. Swiss Ephemeris resolves about 0.001″, so the bits
+    being discarded here are roughly a million times finer than the ephemeris can see.
+    They are noise, not data.
+    """
+    return (
+        round(aspect.orb, 9),
+        aspect.object1.name,
+        aspect.aspect_name,
+        aspect.object2.name,
+    )
+
+
 def get_aspect_sort_key(aspect_name: str) -> tuple:
     """
     Generate sort key for consistent aspect ordering in reports.
