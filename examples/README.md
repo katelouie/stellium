@@ -280,12 +280,12 @@ Planet Positions
 ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Planet              ┃ Position              ┃ House (Pl) ┃
 ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
-│ ☉ Sun               │ ♓︎ Pisces 23°29'      │ 10         │
-│ ☽ Moon              │ ♐︎ Sagittarius 14°24' │ 6          │
-│ ☿ Mercury           │ ♈︎ Aries 3°07'        │ 10         │
-│ ♀ Venus             │ ♈︎ Aries 16°58'       │ 11         │
-│ ♂ Mars              │ ♑︎ Capricorn 26°54'   │ 8          │
-│ ♃ Jupiter           │ ♒︎ Aquarius 27°28'    │ 9          │
+│ ☉ Sun               │ ♓︎ Pisces 23°30'      │ 10         │
+│ ☽ Moon              │ ♐︎ Sagittarius 14°31' │ 6          │
+│ ☿ Mercury           │ ♈︎ Aries 3°08'        │ 10         │
+│ ♀ Venus             │ ♈︎ Aries 16°59'       │ 10         │
+│ ♂ Mars              │ ♑︎ Capricorn 26°54'   │ 7          │
+│ ♃ Jupiter           │ ♒︎ Aquarius 27°29'    │ 9          │
 │ ♄ Saturn            │ ♈︎ Aries 4°11'        │ 10         │
 │ ♅ Uranus            │ ♍︎ Virgo 1°17'        │ 3          │
 │ ♆ Neptune           │ ♉︎ Taurus 7°52'       │ 11         │
@@ -293,7 +293,7 @@ Planet Positions
 │ ☊ North Node        │ ♒︎ Aquarius 2°43'     │ 8          │
 │ ☋ South Node        │ ♌︎ Leo 2°43'          │ 2          │
 │ ⚸ Black Moon Lilith │ ♈︎ Aries 27°58'       │ 11         │
-│ 🜊 Vertex            │ ♏︎ Scorpio 25°20'     │ 5          │
+│ 🜊 Vertex            │ ♏︎ Scorpio 27°54'     │ 5          │
 │ ⚷ Chiron            │ ♉︎ Taurus 5°32'       │ 11         │
 └─────────────────────┴───────────────────────┴────────────┘
 
@@ -307,47 +307,47 @@ Major Aspects
 ┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━┓
 ┃ Planet 1            ┃ Aspect        ┃ Planet 2            ┃ Orb   ┃ Applying ┃
 ┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━┩
-│ ☿ Mercury           │ ⚹ Sextile     │ ☊ North Node        │ 0.39° │ ←S       │
-│ ☿ Mercury           │ △ Trine       │ ☋ South Node        │ 0.39° │ ←S       │
+│ ☿ Mercury           │ ⚹ Sextile     │ ☊ North Node        │ 0.41° │ ←S       │
+│ ☿ Mercury           │ △ Trine       │ ☋ South Node        │ 0.41° │ ←S       │
+│ ♃ Jupiter           │ □ Square      │ 🜊 Vertex            │ 0.42° │ —        │
 │ ♃ Jupiter           │ ⚹ Sextile     │ ⚸ Black Moon Lilith │ 0.49° │ A→       │
-│ ♇ Pluto             │ ☍ Opposition  │ 🜊 Vertex            │ 0.62° │ —        │
-│ ♆ Neptune           │ ⚹ Sextile     │ ASC                 │ 1.05° │ —        │
-│ ☿ Mercury           │ ☌ Conjunction │ ♄ Saturn            │ 1.06° │ A→       │
-│ ♂ Mars              │ □ Square      │ ⚸ Black Moon Lilith │ 1.07° │ A→       │
-│ ☉ Sun               │ ⚹ Sextile     │ ♇ Pluto             │ 1.23° │ A→       │
+│ ♂ Mars              │ ⚹ Sextile     │ 🜊 Vertex            │ 0.99° │ —        │
+│ ☿ Mercury           │ ☌ Conjunction │ ♄ Saturn            │ 1.05° │ A→       │
+│ ♂ Mars              │ □ Square      │ ⚸ Black Moon Lilith │ 1.06° │ A→       │
+│ ☉ Sun               │ ⚹ Sextile     │ ♇ Pluto             │ 1.22° │ A→       │
 │ ♄ Saturn            │ ⚹ Sextile     │ ☊ North Node        │ 1.46° │ ←S       │
 │ ♄ Saturn            │ △ Trine       │ ☋ South Node        │ 1.46° │ ←S       │
-│ ♆ Neptune           │ ⚹ Sextile     │ MC                  │ 1.47° │ —        │
-│ ♂ Mars              │ ⚹ Sextile     │ 🜊 Vertex            │ 1.57° │ —        │
-│ ☉ Sun               │ △ Trine       │ 🜊 Vertex            │ 1.84° │ —        │
-│ ♃ Jupiter           │ □ Square      │ 🜊 Vertex            │ 2.14° │ —        │
-│ ♂ Mars              │ △ Trine       │ ♇ Pluto             │ 2.18° │ ←S       │
+│ ☽ Moon              │ □ Square      │ MC                  │ 1.69° │ —        │
+│ ♂ Mars              │ △ Trine       │ ♇ Pluto             │ 2.19° │ ←S       │
 │ ♆ Neptune           │ ☌ Conjunction │ ⚷ Chiron            │ 2.33° │ A→       │
-│ ☽ Moon              │ △ Trine       │ ♀ Venus             │ 2.57° │ A→       │
+│ ☽ Moon              │ △ Trine       │ ♀ Venus             │ 2.46° │ A→       │
 │ ♃ Jupiter           │ □ Square      │ ♇ Pluto             │ 2.76° │ ←S       │
 │ ⚷ Chiron            │ □ Square      │ ☋ South Node        │ 2.81° │ ←S       │
 │ ☊ North Node        │ □ Square      │ ⚷ Chiron            │ 2.81° │ ←S       │
+│ ♇ Pluto             │ ☍ Opposition  │ 🜊 Vertex            │ 3.18° │ —        │
 │ ♅ Uranus            │ △ Trine       │ ⚸ Black Moon Lilith │ 3.31° │ A→       │
-│ ⚷ Chiron            │ ⚹ Sextile     │ ASC                 │ 3.38° │ —        │
+│ ♅ Uranus            │ □ Square      │ 🜊 Vertex            │ 3.38° │ —        │
 │ ☉ Sun               │ ⚹ Sextile     │ ♂ Mars              │ 3.41° │ A→       │
-│ ⚷ Chiron            │ ⚹ Sextile     │ MC                  │ 3.79° │ —        │
-│ ♃ Jupiter           │ ☍ Opposition  │ ♅ Uranus            │ 3.81° │ A→       │
+│ ♆ Neptune           │ ⚹ Sextile     │ ASC                 │ 3.77° │ —        │
+│ ♃ Jupiter           │ ☍ Opposition  │ ♅ Uranus            │ 3.80° │ A→       │
 │ ♅ Uranus            │ △ Trine       │ ⚷ Chiron            │ 4.26° │ ←S       │
-│ ♄ Saturn            │ □ Square      │ ASC                 │ 4.73° │ —        │
-│ ⚸ Black Moon Lilith │ □ Square      │ ☋ South Node        │ 4.76° │ A→       │
-│ ☊ North Node        │ □ Square      │ ⚸ Black Moon Lilith │ 4.76° │ A→       │
-│ ☽ Moon              │ □ Square      │ MC                  │ 5.06° │ —        │
+│ ☉ Sun               │ △ Trine       │ 🜊 Vertex            │ 4.40° │ —        │
+│ ⚸ Black Moon Lilith │ □ Square      │ ☋ South Node        │ 4.75° │ A→       │
+│ ☊ North Node        │ □ Square      │ ⚸ Black Moon Lilith │ 4.75° │ A→       │
+│ ☋ South Node        │ △ Trine       │ 🜊 Vertex            │ 4.83° │ —        │
+│ ☊ North Node        │ ⚹ Sextile     │ 🜊 Vertex            │ 4.83° │ —        │
+│ ♆ Neptune           │ ⚹ Sextile     │ MC                  │ 4.97° │ —        │
 │ ♆ Neptune           │ □ Square      │ ☋ South Node        │ 5.14° │ ←S       │
 │ ♆ Neptune           │ □ Square      │ ☊ North Node        │ 5.14° │ ←S       │
-│ ☿ Mercury           │ □ Square      │ ASC                 │ 5.80° │ —        │
+│ ☿ Mercury           │ △ Trine       │ 🜊 Vertex            │ 5.24° │ —        │
+│ ♀ Venus             │ □ Square      │ ASC                 │ 5.34° │ —        │
 │ ♂ Mars              │ ☌ Conjunction │ ☊ North Node        │ 5.82° │ A→       │
 │ ♂ Mars              │ ☍ Opposition  │ ☋ South Node        │ 5.82° │ A→       │
-│ ♅ Uranus            │ □ Square      │ 🜊 Vertex            │ 5.95° │ —        │
+│ ♄ Saturn            │ △ Trine       │ 🜊 Vertex            │ 6.29° │ —        │
 │ ♅ Uranus            │ □ Square      │ ♇ Pluto             │ 6.56° │ A→       │
 │ ♅ Uranus            │ △ Trine       │ ♆ Neptune           │ 6.58° │ ←S       │
-│ ☋ South Node        │ △ Trine       │ 🜊 Vertex            │ 7.39° │ —        │
+│ ♄ Saturn            │ □ Square      │ ASC                 │ 7.46° │ —        │
 │ ⚷ Chiron            │ ☌ Conjunction │ ⚸ Black Moon Lilith │ 7.57° │ A→       │
-│ ☿ Mercury           │ △ Trine       │ 🜊 Vertex            │ 7.78° │ —        │
 └─────────────────────┴───────────────┴─────────────────────┴───────┴──────────┘
 
 House Cusps
@@ -355,18 +355,18 @@ House Cusps
 ┏━━━━━━━┳━━━━━━━━━━━━┓
 ┃ House ┃ Cusp (Pl)  ┃
 ┡━━━━━━━╇━━━━━━━━━━━━┩
-│ 1     │ 8° ♋︎ 55'  │
-│ 2     │ 25° ♋︎ 58' │
-│ 3     │ 14° ♌︎ 53' │
-│ 4     │ 9° ♍︎ 20'  │
-│ 5     │ 14° ♎︎ 09' │
-│ 6     │ 29° ♏︎ 16' │
-│ 7     │ 8° ♑︎ 55'  │
-│ 8     │ 25° ♑︎ 58' │
-│ 9     │ 14° ♒︎ 53' │
-│ 10    │ 9° ♓︎ 20'  │
-│ 11    │ 14° ♈︎ 09' │
-│ 12    │ 29° ♉︎ 16' │
+│ 1     │ 11° ♋︎ 38' │
+│ 2     │ 28° ♋︎ 36' │
+│ 3     │ 17° ♌︎ 48' │
+│ 4     │ 12° ♍︎ 50' │
+│ 5     │ 18° ♎︎ 19' │
+│ 6     │ 3° ♐︎ 06'  │
+│ 7     │ 11° ♑︎ 38' │
+│ 8     │ 28° ♑︎ 36' │
+│ 9     │ 17° ♒︎ 48' │
+│ 10    │ 12° ♓︎ 50' │
+│ 11    │ 18° ♈︎ 19' │
+│ 12    │ 3° ♊︎ 06'  │
 └───────┴────────────┘
 ```
 

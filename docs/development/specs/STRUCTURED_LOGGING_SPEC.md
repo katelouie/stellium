@@ -2,11 +2,42 @@
 
 | | |
 |---|---|
-| **Status** | Draft — for review |
+| **Status** | **Implemented** — Phases 0–5 shipped. Only Phase 6 (web app) is open. |
 | **Created** | 2026-07-09 |
+| **Verified against the tree** | 2026-07-14 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
 | **Tracking** | Obsidian: "Introduce a structured logging system" |
+
+> ### What actually happened
+>
+> Everything in the migration plan below is **done except Phase 6**, which the spec
+> itself scopes to `web/` rather than the library. Measured against the tree:
+>
+> | The plan | Then | Now |
+> |---|---|---|
+> | Library-proper `print()` → warnings/logging | 20 | **0** |
+> | CLI `print()` → `click.echo` / Rich | 32 | **0** |
+> | `render()` product output (deliberately kept) | 3 | 3 |
+> | `ruff` `T20` guard, with the single allow-list | — | **on, and the tree is clean** |
+> | `_logging.py`, `configure_logging`, `NullHandler` | — | shipped, silent on import |
+> | Typed warning classes | — | **7** |
+>
+> Two warnings have joined the taxonomy since this was written, and both are the
+> decision rule in section 4 working as designed — a condition the *caller* must see,
+> not an operational trace the app opts into:
+>
+> - **`MissingGlyphWarning`** — a glyph SVG is missing from the installation, so the
+>   chart silently falls back to a Unicode codepoint that most fonts do not contain.
+> - **`TimeZoneWarning`** — a birth predates standard time and no longitude was given,
+>   so Local Mean Time cannot be resolved from the birthplace and the zone's own LMT
+>   is used instead. Costs a degree or more of Ascendant.
+>
+> **The one thing that did not survive contact:** the originating Obsidian task's
+> "167 bare prints" was a `grep` count, inflated by docstring examples and Rich's
+> `console.print`. Section 2.1 already corrected it to 55 by AST scan — but the *task*
+> still says 167, and should be closed rather than worked. There is no print problem
+> left to solve.
 
 ---
 
@@ -278,7 +309,7 @@ works. One filter silences everything:
 | Sites | Target | Notes |
 |---|---|---|
 | `cli/ephemeris_download.py` (16) | `click.echo` (+ `err=True` for diagnostics) | Already inside Click commands. |
-| `utils/cache_utils.py` (13) | **relocate** → `cli/` + Rich `Console` | CLI-presentation logic mis-filed in `utils/`; move under `cli/` and rebuild on Rich, don't convert in place (Q4). |
+| `utils/cache_utils.py` (13) | **relocate** → `cli/` + Rich `Console` | ✅ **Done.** It is now `cli/cache.py`, rebuilt on Rich. The file no longer exists under `utils/`, which is the spec working, not the spec rotting. |
 | `data/notables/generate_index.py` (3) | `click.echo` | `click.echo` needs no command context; works in a plain script. |
 
 **Kept (3 sites):** `presentation/builder.py:2094,2101,2107` — this is
@@ -432,7 +463,7 @@ convert; **3 render** kept.
 | File | Count | Target |
 |---|---|---|
 | `cli/ephemeris_download.py` | 16 | `click.echo` (`err=True` for diagnostics) |
-| `utils/cache_utils.py` | 13 | Rich `Console` |
+| ~~`utils/cache_utils.py`~~ → `cli/cache.py` | 13 | Rich `Console` ✅ |
 | `data/notables/generate_index.py` | 3 | `click.echo` |
 
 **Kept (render product output):** `presentation/builder.py:2094,2101,2107`.

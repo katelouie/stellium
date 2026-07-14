@@ -79,6 +79,7 @@
   year: 1564
   month: 4
   day: 23
+  calendar: julian
   hour: 8
   minute: 30
   latitude: 52.2
@@ -308,6 +309,7 @@
   year: 1207
   month: 9
   day: 30
+  calendar: julian
   hour: 12
   minute: 0
   latitude: 36.7581

@@ -99,7 +99,14 @@ def test_einstein_known_selection(einstein):
     r = einstein.length_of_life()
     assert r.hyleg.point == "Sun"
     assert r.alcocoden == "Mars"
-    assert r.base_family == "mean"
+    # `greater`, not `mean`, since Local Mean Time. base_family follows the
+    # alcocoden's *accidental* condition — angular gives greater years, succedent
+    # mean, cadent least — so it moves when the house cusps move. Einstein was born
+    # in 1879, before Germany adopted standard time, so his clock showed LMT; we used
+    # to take that from `Europe/Berlin` (i.e. Berlin, 13°24'E) when he was born in Ulm
+    # at 9°59'E. That 3.4° of longitude is ~13.5 minutes of clock, which was enough to
+    # carry Mars over a cusp: it is angular (7th) once the Ascendant is right.
+    assert r.base_family == "greater"
 
 
 def test_combust_alcocoden_switches_unit_to_months():

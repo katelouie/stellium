@@ -20,6 +20,7 @@ A complete map of Stellium's documentation. The **hub** for development is
 | [development/VISUALIZATION_INTERNALS.md](development/VISUALIZATION_INTERNALS.md) | SVG pipeline, coordinates, layers, themes/palettes, dial/vedic/atlas | Current |
 | [development/PRESENTATION_INTERNALS.md](development/PRESENTATION_INTERNALS.md) | `ReportBuilder`, sections, renderers | Current |
 | [development/SUBSYSTEMS.md](development/SUBSYSTEMS.md) | Multi-chart, returns, electional, planner, Chinese/BaZi, CLI | Current |
+| [development/NOTABLES.md](development/NOTABLES.md) | The notables database: schema, provenance, Old Style dates, curation rules | Current |
 | [development/EXTENDING.md](development/EXTENDING.md) | How to add engines/components/analyzers/layers/themes/sections | Current |
 
 ## User-facing guides — `docs/`

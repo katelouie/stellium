@@ -87,3 +87,16 @@ class MissingEphemerisWarning(StelliumWarning):
 
     Importable from ``stellium.engines`` as well, for backward compatibility.
     """
+
+
+class TimeZoneWarning(StelliumWarning):
+    """A time could not be resolved to UT as accurately as it should have been.
+
+    Raised when a birth predates standard time in its zone — when the clock on the
+    wall showed **Local Mean Time**, an offset determined by the birthplace's
+    longitude and nothing else — but no longitude was supplied. We then have to fall
+    back on the IANA zone's own LMT, which is its *reference city's*, not the
+    birthplace's: `Europe/London`'s LMT is −1m, while Diseworth (1°16′W, where William
+    Lilly was born) is −5m04s. Four minutes of clock is roughly a degree of Ascendant,
+    and for Lilly it was the difference between Pisces rising and Aquarius rising.
+    """

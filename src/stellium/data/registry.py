@@ -127,6 +127,11 @@ class NotableRegistry:
                         verified=entry.get("verified", False),
                         has_reliable_time=entry.get("has_reliable_time"),
                         verification_notes=entry.get("verification_notes", ""),
+                        # Absent means Gregorian, which is right for the ~180 modern
+                        # records and a coin-flip for a 17th-century one — so
+                        # tests/test_notable_calendars.py *requires* a pre-1753 birth
+                        # to say which calendar it means, rather than inherit this.
+                        calendar=entry.get("calendar"),
                     )
 
                     self._notables.append(notable)

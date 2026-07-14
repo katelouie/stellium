@@ -18,8 +18,9 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
 from stellium.core.models import ChartDateTime, ChartLocation
-from stellium.exceptions import GeocodingWarning
+from stellium.exceptions import GeocodingWarning, TimeZoneWarning
 from stellium.utils.cache import cached
+from stellium.utils.time import to_gregorian
 
 # Cache TimezoneFinder instance - initialization is expensive
 _timezone_finder: TimezoneFinder | None = None
@@ -38,7 +39,9 @@ DateTimeInput = dt.datetime | ChartDateTime | dict[str, Any] | str
 LocationInput = str | ChartLocation | tuple[float, float] | dict[str, float | str]
 
 
-def build_chart_datetime(local_dt: dt.datetime, timezone: str) -> ChartDateTime:
+def build_chart_datetime(
+    local_dt: dt.datetime, timezone: str, longitude: float | None = None
+) -> ChartDateTime:
     """Build a ``ChartDateTime`` from a local datetime and an IANA timezone.
 
     This is the single place that turns local wall-clock time into the
@@ -47,9 +50,32 @@ def build_chart_datetime(local_dt: dt.datetime, timezone: str) -> ChartDateTime:
     ``Native`` (datetime parsing) and ``ChartBuilder.with_unknown_time()``
     (re-anchoring to noon) call this so the two can never drift apart.
 
+    **Before standard time, the clock on the wall showed Local Mean Time** — noon was
+    when the Sun crossed *your* meridian, so the offset from UT is a function of your
+    longitude and nothing else. Britain adopted standard time in 1880, Germany in
+    1893, the United States in 1883; before that there was no zone to belong to.
+
+    IANA models this period as an ``LMT`` offset, and pytz will hand it to you — but
+    it is the LMT of the zone's *reference city*, not of the birthplace, and that is
+    not the same number. William Lilly was born at Diseworth, 1°16′W, whose LMT is
+    **−5m04s** from UT; ``Europe/London``'s LMT is −1m. Four minutes of clock is about
+    one degree of Ascendant, and in Lilly's case it was the difference between an
+    Ascendant in Pisces and one in Aquarius:
+
+        AstroDatabank publishes    Asc  2°04′ Pisces
+        LMT from his longitude     Asc  2°03.6′ Pisces
+        LMT from the IANA zone     Asc 29°47′ Aquarius     <- what we used to compute
+
+    So the zone is used to *detect* the pre-standard era (pytz names it ``LMT``), and
+    the offset is then computed from the birth longitude, which is what actually
+    determined the clock. This is what astrological practice and AstroDatabank both do.
+
     Args:
         local_dt: The local wall-clock time (naive or timezone-aware).
         timezone: IANA timezone string (required when ``local_dt`` is naive).
+        longitude: Birth longitude in degrees, east-positive. Required to resolve a
+            pre-standard-time date correctly; without it we can only fall back on the
+            zone's own LMT, and say so.
 
     Returns:
         A ``ChartDateTime`` carrying UTC time, Julian Day (UT), and the
@@ -65,6 +91,22 @@ def build_chart_datetime(local_dt: dt.datetime, timezone: str) -> ChartDateTime:
             aware_dt = pytz.timezone(timezone).localize(local_dt)
         except pytz.UnknownTimeZoneError as exc:
             raise ValueError(f"Invalid location timezone: {timezone}") from exc
+
+        if aware_dt.tzname() == "LMT":
+            if longitude is None:
+                warnings.warn(
+                    f"{local_dt.date()} predates standard time in {timezone!r}, when "
+                    f"the clock showed Local Mean Time — which depends on the birth "
+                    f"longitude, and none was given. Falling back to the zone's own "
+                    f"LMT, which is its reference city's, not the birthplace's. The "
+                    f"Ascendant may be off by a degree or more.",
+                    TimeZoneWarning,
+                    stacklevel=2,
+                )
+            else:
+                # LMT: UT = local − longitude/15 hours. Nothing else enters into it.
+                utc_naive = local_dt - dt.timedelta(hours=longitude / 15)
+                aware_dt = utc_naive.replace(tzinfo=dt.UTC)
     else:
         aware_dt = local_dt
 
@@ -126,7 +168,9 @@ class Native:
         if time_unknown:
             datetime_input = self._normalize_to_noon(datetime_input)
 
-        self.datetime = self._process_datetime(datetime_input, self.location.timezone)
+        self.datetime = self._process_datetime(
+            datetime_input, self.location.timezone, self.location.longitude
+        )
         self.name = name
 
     def _normalize_to_noon(self, datetime_input: DateTimeInput) -> dt.datetime:
@@ -306,7 +350,10 @@ class Native:
         )
 
     def _process_datetime(
-        self, time_input: DateTimeInput, loc_timezone: str
+        self,
+        time_input: DateTimeInput,
+        loc_timezone: str,
+        longitude: float | None = None,
     ) -> ChartDateTime:
         """
         Parses any time input into a ChartDateTime object.
@@ -330,7 +377,7 @@ class Native:
 
         # 3. Datetime Object Input (naive -> localize, aware -> as-is)
         if isinstance(time_input, dt.datetime):
-            return build_chart_datetime(time_input, loc_timezone)
+            return build_chart_datetime(time_input, loc_timezone, longitude)
 
         # 4. Dictionary Input
         elif isinstance(time_input, dict):
@@ -445,6 +492,7 @@ class Notable(Native):
         verified: bool = False,
         has_reliable_time: bool | None = None,
         verification_notes: str = "",
+        calendar: str | None = None,
     ):
         """
         Create Notable from structured data.
@@ -485,6 +533,14 @@ class Notable(Native):
         m = minute if minute is not None else 0
         local_dt = dt.datetime(year, month, day, h, m)
 
+        # Old Style dates are stored as their sources give them, and converted here.
+        # Historical records are cited in the calendar of their day — Lilly's birth is
+        # "1 May 1602" in Gadbury, in Lilly's own letter, and in AstroDatabank, and all
+        # three mean the *Julian* 1 May. Storing the converted date instead would make
+        # the record disagree with every source it cites, so the record keeps the date
+        # its sources give and declares which calendar that is.
+        local_dt = to_gregorian(local_dt, calendar)
+
         # Let Native handle ALL the parsing (and noon-normalization when unknown)!
         super().__init__(
             datetime_input=local_dt,  # Naive datetime
@@ -504,6 +560,13 @@ class Notable(Native):
         self.verified = verified
         self.has_reliable_time = has_reliable_time
         self.verification_notes = verification_notes
+
+        # Keep the clock time the record actually carries, even when we refuse to
+        # build houses from it. Without this it is gone — `local_datetime` has already
+        # been normalised to noon — and `from_notable(..., use_recorded_time=True)`
+        # would have nothing to reach for. The date here is post-calendar-conversion,
+        # so the pair reassembles correctly.
+        self.recorded_time: dt.time | None = dt.time(h, m) if has_clock_time else None
 
     @property
     def is_birth(self) -> bool:
