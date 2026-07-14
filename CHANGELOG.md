@@ -25,6 +25,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **The documentation's code blocks are now held to the output they claim** — `scripts/update_doc_outputs.py`, and a `tests/test_doc_codeblocks.py` that finally reads what a block *prints*. It only ever checked that a block did not crash: stdout was executed and thrown away, so a doc could assert any result it liked and stay green forever. It did. The (unreleased) astrology guide stated William Lilly's Venus scored **`+7 ['domicile', 'term']`**; it scores **`+10 ['domicile', 'triplicity_ruler', 'term']`**, and always has — Lilly has no birth time on record, so his chart is a *noon* `UnknownTimeChart`, unambiguously a **day** chart, whose Earth triplicity ruler is Venus. The documented numbers require a *night* chart. They cannot have come from running the code.
+
+  So a human no longer writes an expected output — the library does. `python scripts/update_doc_outputs.py` runs each block and writes its real output back into the markdown (pytest-codeblocks' `<!--pytest-codeblocks:expected-output-->` convention), and CI fails the day a library change makes a document false. You cannot fabricate a result you do not author. Guide chapters are discovered by glob, so a new one is covered the moment it lands.
+
+  A block whose output genuinely cannot be pinned marks itself `<!--doc-output:volatile-->` and is run but not compared — it must say so rather than quietly going unchecked. **As of now, nothing needs it: all 49 blocks are pinned.**
+
 - **34 new bodies — `CELESTIAL_REGISTRY` goes from 49 to 83** — with two new builder methods and a much larger `with_tnos()`:
 
   - **`with_named_asteroids()`** — 18 asteroids beyond the big four: Psyche, Sappho, Pandora, Amor, Astraea, Hebe, Iris, Flora, Metis, Fortuna, Diana, Hidalgo, Icarus, Toro, Bacchus, Eros, Urania, Apollo.
@@ -95,6 +101,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The documentation no longer recommends caching the ephemeris.** `CLAUDE.md`, the architecture docs and the performance notes all advertised `@cached(cache_type="ephemeris")` as a "20× faster" optimisation and told contributors to reach for it. It was never measured, and it was 13× *slower* (see 0.21.1). Those claims are gone, and the guidance now says what is actually true: `swe.calc_ut` is microseconds, a pickle round-trip is not, and caching is for the network calls. PNG export is surfaced in the README and `examples/chart_cookbook.py`.
 
 ### Fixed
+
+- **The same chart, calculated twice, was not the same chart** *(output ordering change)*. `chart.positions` came out in a **different order on every run** — and everything downstream inherited it, because the aspect engines feed `positions` straight into `combinations()`. So `chart.aspects` was reordered too, and with it every report, aspectarian, and exported JSON. Two people running byte-identical code got documents that listed their planets and aspects differently; so did the same person, twice.
+
+  ```
+  run 1:  Moon Trine Venus       Moon Square MC        Chiron Conjunction Neptune
+  run 2:  Neptune Square Node    Neptune Conj Chiron   Neptune Trine Uranus
+  run 3:  Saturn Sextile Node    Saturn Conj Mercury   Saturn Trine South Node
+  ```
+
+  Three separate places deduplicated with a **set** and then called `list()` on it — a correct dedupe followed by an arbitrary order: `ChartBuilder._get_objects_list()`, and the Grand Cross and Mystic Rectangle finders in `AspectPatternAnalyzer` (whose set literals meant a pattern reported *its own planets* in a different order each run). All three now use `dict.fromkeys()`, which dedupes and keeps the order the caller asked for — so `positions` finally comes out as Sun, Moon, Mercury… as configured, rather than however the hash table felt.
+
+  It was invisible because it is **arbitrary per process**, not per call: Python randomizes string hashing at interpreter start, and `CelestialPosition` is a frozen dataclass hashing off its string fields. Within one process the order is stable, so every existing test passed, and building two charts in one test and comparing them proved nothing. The new `tests/test_determinism.py` therefore spawns **real subprocesses with differing `PYTHONHASHSEED`** and pins a maximal chart's entire `to_dict()` across them — the general lesson being that a nondeterminism test which does not cross a process boundary is testing the seed, not the code.
+
+- **Report rows came out in a different order on Linux than on macOS** *(output ordering change)*. The aspect table sorted with `key=lambda a: a.orb` — a raw float. Two aspects that are *mathematically the same angle* hold orbs differing only in the last bits:
+
+  ```
+  Neptune Square True Node     5.1401672080752405
+  Neptune Square South Node    5.140167208075212
+  ```
+
+  The nodes are exactly 180° apart, so those are the same number; which one sorts first depends on the platform's libm. Both print as `5.14°`, so there was no visible rounding difference to notice — just two rows that quietly swapped places depending on the machine. The new `get_orb_sort_key()` quantizes at 1e-9° and then breaks ties by name (quantizing alone is not enough — a true value can straddle the boundary and round two ways; the names make the order *total*). **No value changes anywhere:** `aspect.orb` keeps every digit in the chart, in `to_dict()`, and on the page — the rounding lives inside the comparison key and dies with it. 1e-9° is ~3.6 microarcseconds, and Swiss Ephemeris resolves about 0.001″, so the discarded bits are roughly a million times finer than the ephemeris can see. Applied to all five orb sorts, including the planner's transit contacts, which would otherwise have shuffled a planner's daily lines between machines. Caught by the new doc snapshots: generated on macOS, validated on Ubuntu.
+
+- **The test suite's mock geocoder was charting the wrong places, and silently charting the ocean for anywhere it didn't know** *(test fixture; no library change)*. Not user-facing, but it means a large part of the suite has been validating against coordinates nobody ever gets.
+
+  `conftest.GEOCODED_LOCATIONS` exists so CI need not call Nominatim. Its coordinates were **hand-written from general knowledge, not captured from the geocoder they stand in for** — `37.7749, -122.4194` for San Francisco, `40.7128, -74.0060` for New York: the familiar textbook values. **Nine of the ten disagreed with what Nominatim actually returns**, and Tokyo was off by 0.11° of longitude — about **10 km**, which is a real shift in the MC and every house cusp with it.
+
+  Worse, the fallback for any location *not* in the list returned `(0.0, 0.0, "UTC")` — **Null Island, a point in the Gulf of Guinea** — under the comment *"prevents test failure"*. It did prevent them: **53 tests** were computing charts for the wrong hemisphere in the wrong timezone, and passing. A fixture whose purpose is to stop tests failing also stops them telling you anything.
+
+  The table is now **captured from the real `_cached_geocode` at full precision** (a script, not a memory), the six places that were silently landing in the Atlantic are added (Boston, Chicago, Mountain View, New Haven, Lima, Portland), and the fallback **raises** instead of inventing a location. It found one more on its first run: the README's atlas example builds a chart for `"Portland, OR"`, which had been Null Island all along.
+
+  Two things worth knowing that fell out of this: Nominatim is **not** nondeterministic — it returns the same answer every time, and an earlier draft of this entry wrongly said otherwise. And it returns names in the **local language** unless asked otherwise (`'東京都, 日本'`, `'Ulm, Baden-Württemberg, Deutschland'`), because Stellium never sets an `Accept-Language`; whether `location.name` should be localized is a real decision nobody has made.
 
 - **Three values in the traditional dignity tables were simply wrong** *(dignity output change)*. They do not crash; they silently corrupt dignity scoring, and feed onward into almuten, sect analysis, length-of-life and the planner's Chart Analysis page. Found by testing the tables against the sources they claim to follow.
   1. **The Water triplicity had its day and night rulers swapped.** Ours read day=Mars, night=Venus. Dorotheus gives Water as **day=Venus, night=Mars**, participating=Moon. Fire, Earth and Air all matched Dorotheus *exactly* — so the table was plainly meant to be Dorothean, and Water alone was reversed. It was neither Dorothean nor Ptolemaic (Ptolemy and Lilly give Mars for both). Affects every chart with a planet in Cancer, Scorpio or Pisces.

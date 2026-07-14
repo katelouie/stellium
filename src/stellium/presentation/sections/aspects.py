@@ -19,6 +19,7 @@ from ._utils import (
     get_aspect_sort_key,
     get_object_display,
     get_object_sort_key,
+    get_orb_sort_key,
 )
 
 
@@ -298,7 +299,7 @@ class AspectSection:
 
         # Sort aspects
         if self.sort_by == "orb":
-            aspects = sorted(aspects, key=lambda a: a.orb)
+            aspects = sorted(aspects, key=get_orb_sort_key)
         elif self.sort_by == "aspect_type":
             # Sort by aspect using registry order (angle order)
             aspects = sorted(aspects, key=lambda a: get_aspect_sort_key(a.aspect_name))
@@ -567,7 +568,7 @@ class CrossChartAspectSection:
 
         # Sort aspects
         if self.sort_by == "orb":
-            aspects = sorted(aspects, key=lambda a: a.orb)
+            aspects = sorted(aspects, key=get_orb_sort_key)
         elif self.sort_by == "aspect_type":
             aspects = sorted(aspects, key=lambda a: get_aspect_sort_key(a.aspect_name))
         elif self.sort_by == "planet":

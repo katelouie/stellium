@@ -643,65 +643,100 @@ def pytest_generate_tests(metafunc):
 GEOCODED_LOCATIONS = {
     # US Locations
     "Palo Alto, CA": {
-        "latitude": 37.4419,
-        "longitude": -122.1430,
-        "address": "Palo Alto, Santa Clara County, California, USA",
+        "latitude": 37.4443,
+        "longitude": -122.1598,
+        "address": "Palo Alto, Santa Clara County, California, United States",
         "timezone": "America/Los_Angeles",
     },
     "New York, NY": {
-        "latitude": 40.7128,
-        "longitude": -74.0060,
-        "address": "New York, New York, USA",
+        "latitude": 40.7127,
+        "longitude": -74.006,
+        "address": "New York, United States",
         "timezone": "America/New_York",
     },
     "Seattle, WA": {
-        "latitude": 47.6062,
-        "longitude": -122.3321,
-        "address": "Seattle, King County, Washington, USA",
+        "latitude": 47.6038,
+        "longitude": -122.3301,
+        "address": "Seattle, King County, Washington, United States",
         "timezone": "America/Los_Angeles",
     },
     "Los Angeles, CA": {
-        "latitude": 34.0522,
-        "longitude": -118.2437,
-        "address": "Los Angeles, Los Angeles County, California, USA",
+        "latitude": 34.0537,
+        "longitude": -118.2428,
+        "address": "Los Angeles, Los Angeles County, California, United States",
         "timezone": "America/Los_Angeles",
     },
     "San Francisco, CA": {
-        "latitude": 37.7749,
-        "longitude": -122.4194,
-        "address": "San Francisco, San Francisco County, California, USA",
+        "latitude": 37.7879,
+        "longitude": -122.4075,
+        "address": "San Francisco, California, United States",
         "timezone": "America/Los_Angeles",
     },
-    # International Locations
     "Ulm, Germany": {
-        "latitude": 48.4011,
-        "longitude": 9.9876,
-        "address": "Ulm, Baden-Württemberg, Germany",
+        "latitude": 48.3984,
+        "longitude": 9.9916,
+        "address": "Ulm, Germany",
         "timezone": "Europe/Berlin",
     },
     "Tokyo, Japan": {
-        "latitude": 35.6762,
-        "longitude": 139.6503,
+        "latitude": 35.7,
+        "longitude": 139.7667,
         "address": "Tokyo, Japan",
         "timezone": "Asia/Tokyo",
     },
     "London, UK": {
         "latitude": 51.5074,
         "longitude": -0.1278,
-        "address": "London, Greater London, England, United Kingdom",
+        "address": "Greater London, England, United Kingdom",
         "timezone": "Europe/London",
     },
     "Sydney, Australia": {
         "latitude": -33.8688,
         "longitude": 151.2093,
-        "address": "Sydney, New South Wales, Australia",
+        "address": "Sydney, Australia",
         "timezone": "Australia/Sydney",
     },
     "Fairbanks, AK": {
-        "latitude": 64.8378,
-        "longitude": -147.7164,
-        "address": "Fairbanks, Fairbanks North Star Borough, Alaska, USA",
+        "latitude": 64.837845,
+        "longitude": -147.716675,
+        "address": "Fairbanks, Fairbanks North Star Borough, Alaska, United States",
         "timezone": "America/Anchorage",
+    },
+    "Boston, MA": {
+        "latitude": 42.3588,
+        "longitude": -71.0578,
+        "address": "Boston, Suffolk County, Massachusetts, United States",
+        "timezone": "America/New_York",
+    },
+    "Chicago, IL": {
+        "latitude": 41.8756,
+        "longitude": -87.6244,
+        "address": "Chicago, South Chicago Township, Cook County, Illinois, United States",
+        "timezone": "America/Chicago",
+    },
+    "Mountain View CA": {
+        "latitude": 37.3893889,
+        "longitude": -122.0832101,
+        "address": "Mountain View, Santa Clara County, California, United States",
+        "timezone": "America/Los_Angeles",
+    },
+    "New Haven, CT": {
+        "latitude": 41.3082138,
+        "longitude": -72.9250518,
+        "address": "New Haven, South Central Connecticut Planning Region, Connecticut, United States",
+        "timezone": "America/New_York",
+    },
+    "Lima, Peru": {
+        "latitude": -12.0464,
+        "longitude": -77.0428,
+        "address": "Lima, Peru",
+        "timezone": "America/Lima",
+    },
+    "Portland, OR": {
+        "latitude": 45.5155,
+        "longitude": -122.6789,
+        "address": "Portland, OR, USA",
+        "timezone": "America/Los_Angeles",
     },
 }
 
@@ -734,14 +769,16 @@ def mock_geocoding_session():
             if key.lower() in normalized.lower() or normalized.lower() in key.lower():
                 return value
 
-        # Fallback: return a default location (prevents test failure)
-        # This handles any locations we haven't pre-geocoded
-        return {
-            "latitude": 0.0,
-            "longitude": 0.0,
-            "address": normalized,
-            "timezone": "UTC",
-        }
+        # No fallback. This used to return (0.0, 0.0, "UTC") — Null Island, a point
+        # in the Gulf of Guinea — with the comment "prevents test failure". It did
+        # prevent them: 53 tests were charting the wrong hemisphere, in the wrong
+        # timezone, and passing. A fixture whose purpose is to stop tests failing
+        # also stops them telling you anything.
+        raise AssertionError(
+            f"MOCK GEOCODER: {location_name!r} is not in GEOCODED_LOCATIONS.\n"
+            f"Add it (capture the *real* Nominatim answer — do not hand-write "
+            f"coordinates from memory) or mark the test @pytest.mark.uses_real_geocoding."
+        )
 
     # Use unittest.mock.patch since monkeypatch doesn't work with session scope
     with unittest.mock.patch(

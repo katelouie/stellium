@@ -853,7 +853,15 @@ def natal_contacts_at(
                         )
                     )
 
-    contacts.sort(key=lambda c: c.orb)
+    # Quantize before comparing, then break ties by name. Two aspects that are the
+    # same angle (a hit to the North Node and to the South Node, say) hold orbs that
+    # differ only in the last bits, and which sorts first then depends on the
+    # platform's libm — so the planner's transit list came out in a different order on
+    # Linux than on macOS. See presentation.sections._utils.get_orb_sort_key. No value
+    # is changed; the rounding lives in the key and dies with it.
+    contacts.sort(
+        key=lambda c: (round(c.orb, 9), c.transit_planet, c.aspect_name, c.natal_planet)
+    )
     return contacts
 
 

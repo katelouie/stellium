@@ -163,7 +163,6 @@ from stellium import ChartBuilder
 chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
 chart.draw("einstein.svg").save()
 ```
-
 ![Einstein - Plain](docs/images/examples/readme_einstein.svg)
 
 **That's it!** You now have a beautiful natal chart SVG for Einstein.
@@ -230,6 +229,12 @@ moon = chart.get_object("Moon")
 print(moon)
 print(moon.phase)
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun: 15°48' Capricorn (285.81°)
+Moon: 16°36' Capricorn (286.61°)
+Phase: New (0.0% illuminated)
+```
 
 ```sh
 Sun: 0°0' Libra (180°)
@@ -269,6 +274,75 @@ houses = chart.get_houses()  # Returns HouseCusps for default (or first) system
 for i, cusp in enumerate(houses.cusps, 1):
     print(f"House {i}: {cusp:.2f}°")
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun: 285.81° Capricorn
+Moon: 286.61° Capricorn
+Mercury: 280.27° Capricorn
+Venus: 248.03° Sagittarius
+Mars: 332.10° Pisces
+Jupiter: 25.52° Aries
+Saturn: 40.32° Taurus
+Uranus: 315.08° Aquarius
+Neptune: 303.39° Aquarius
+Pluto: 251.64° Sagittarius
+Sun Conjunction Moon (orb: 0.80°)
+Sun Conjunction Mercury (orb: 5.54°)
+Sun Trine Saturn (orb: 5.49°)
+Sun Conjunction MC (orb: 3.49°)
+Sun Square Vertex (orb: 5.36°)
+Moon Conjunction Mercury (orb: 6.34°)
+Moon Trine Saturn (orb: 6.30°)
+Moon Conjunction MC (orb: 4.30°)
+Moon Square Vertex (orb: 6.17°)
+Mercury Trine Saturn (orb: 0.05°)
+Mercury Conjunction MC (orb: 2.05°)
+Mercury Square Vertex (orb: 0.18°)
+Venus Square Mars (orb: 5.93°)
+Venus Sextile Neptune (orb: 4.64°)
+Venus Conjunction Pluto (orb: 3.61°)
+Venus Trine True Node (orb: 4.36°)
+Venus Conjunction Chiron (orb: 4.19°)
+Venus Sextile South Node (orb: 4.36°)
+Venus Sextile Vertex (orb: 2.42°)
+Mars Sextile ASC (orb: 5.23°)
+Jupiter Square Neptune (orb: 7.87°)
+Jupiter Trine Mean Apogee (orb: 1.46°)
+Jupiter Conjunction ASC (orb: 1.35°)
+Saturn Square Uranus (orb: 4.77°)
+Saturn Square Neptune (orb: 6.93°)
+Saturn Square True Node (orb: 6.65°)
+Saturn Square South Node (orb: 6.65°)
+Saturn Trine MC (orb: 2.00°)
+Uranus Sextile Pluto (orb: 3.45°)
+Uranus Sextile Chiron (orb: 2.87°)
+Uranus Trine Vertex (orb: 4.64°)
+Neptune Opposition True Node (orb: 0.28°)
+Neptune Conjunction South Node (orb: 0.28°)
+Neptune Square ASC (orb: 6.52°)
+Neptune Trine Vertex (orb: 7.06°)
+Pluto Trine True Node (orb: 7.97°)
+Pluto Conjunction Chiron (orb: 0.58°)
+Pluto Sextile Vertex (orb: 1.19°)
+True Node Square ASC (orb: 6.80°)
+Chiron Sextile Vertex (orb: 1.77°)
+Mean Apogee Trine ASC (orb: 2.81°)
+South Node Square ASC (orb: 6.80°)
+South Node Trine Vertex (orb: 6.78°)
+MC Square Vertex (orb: 1.87°)
+House 1: 26.87°
+House 2: 61.59°
+House 3: 83.34°
+House 4: 102.31°
+House 5: 123.53°
+House 6: 154.05°
+House 7: 206.87°
+House 8: 241.59°
+House 9: 263.34°
+House 10: 282.31°
+House 11: 303.53°
+House 12: 334.05°
+```
 
 ### Level 2: Custom House Systems & Aspects
 
@@ -287,6 +361,11 @@ print(f"House System: {chart.default_house_system}")
 # Access house cusps for the specific system
 whole_sign_cusps = chart.get_houses("Whole Sign")
 print(whole_sign_cusps.get_description(1))  # First House
+```
+<!--pytest-codeblocks:expected-output-->
+```
+House System: Whole Sign
+House 1: 0°00' Aries (0.00°)
 ```
 
 **Available House Systems:**
@@ -314,6 +393,12 @@ print(f"Sun in Whole Sign House: {chart.get_house('Sun', 'Whole Sign')}")
 
 print(f"Sun in Koch House: {chart.get_house('Sun', 'Koch')}")
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun in Placidus House: 10
+Sun in Whole Sign House: 10
+Sun in Koch House: 10
+```
 
 ### Level 4: Arabic Parts & Components
 
@@ -335,6 +420,42 @@ for part in arabic_parts:
 midpoints = chart.get_component_result("Midpoints")
 for mp in midpoints[:5]:  # First 5 midpoints
     print(f"{mp.object1.name}/{mp.object2.name} midpoint: {mp.longitude:.2f}°")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Part of Fortune            27.67° Aries        House 1
+Part of Spirit             26.06° Aries        House 12
+Part of Eros (Love)       248.83° Sagittarius  House 8
+Part of Eros (Planetary)  349.09° Pisces       House 12
+Part of Necessity (Ananke) 279.47° Capricorn    House 9
+Part of Courage (Tolma)   331.30° Pisces       House 11
+Part of Victory (Nike)     24.71° Aries        House 12
+Part of Nemesis            39.51° Taurus       House 1
+Part of Father            272.36° Capricorn    House 9
+Part of Mother             65.45° Gemini       House 2
+Part of Marriage          234.58° Scorpio      House 7
+Part of Children           12.07° Aries        House 12
+Part of Siblings          266.82° Sagittarius  House 9
+Part of Action (Praxis)    73.16° Gemini       House 2
+Part of Profession (User)  23.37° Aries        House 12
+Part of Passion / Lust    302.80° Aquarius     House 10
+Part of Illness / Disease 318.65° Aquarius     House 11
+Part of Death             140.57° Leo          House 5
+Part of Debt / Bondage    266.82° Sagittarius  House 9
+Part of Travel             78.70° Gemini       House 2
+Part of Friends / Associates  20.52° Aries        House 12
+Part of the Sun (Exaltation) 340.57° Pisces       House 12
+Part of the Moon (Exaltation)  65.45° Gemini       House 2
+Part of Mercury (Exaltation)  26.87° Aries        House 1
+Part of Venus (Exaltation) 249.38° Sagittarius  House 8
+Part of Mars (Exaltation) 318.65° Aquarius     House 11
+Part of Jupiter (Exaltation) 125.77° Leo          House 5
+Part of Saturn (Exaltation) 179.15° Virgo        House 6
+Sun/Moon midpoint: 286.21°
+Sun/ASC midpoint: 336.34°
+Sun/MC midpoint: 284.06°
+Moon/ASC midpoint: 336.74°
+Moon/MC midpoint: 284.46°
 ```
 
 **Available Components:**
@@ -376,6 +497,315 @@ report.render(format="rich_table")  # Beautiful terminal output
 report.render(format="plain_table", file="my_chart.txt")
 report.render(format="pdf", file="my_chart.pdf")  # PDF with Typst
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+
+Chart Overview
+──────────────
+Date: January 06, 2000
+Time: 12:00 PM
+Timezone: America/Los_Angeles
+Location: Seattle, King County, Washington, United States
+Coordinates: 47.6038°, -122.3301°
+House System: Placidus
+Zodiac: Tropical
+Chart Sect: Day Chart
+Chart Ruler: Mars (Aries Rising)
+
+Planet Positions
+────────────────
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Planet              ┃ Position              ┃ House (Pl) ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ ☉ Sun               │ ♑︎ Capricorn 15°48'   │ 10         │
+│ ☽ Moon              │ ♑︎ Capricorn 16°36'   │ 10         │
+│ ☿ Mercury           │ ♑︎ Capricorn 10°16'   │ 9          │
+│ ♀ Venus             │ ♐︎ Sagittarius 8°01'  │ 8          │
+│ ♂ Mars              │ ♓︎ Pisces 2°06'       │ 11         │
+│ ♃ Jupiter           │ ♈︎ Aries 25°31'       │ 12         │
+│ ♄ Saturn            │ ♉︎ Taurus 10°18'      │ 1          │
+│ ♅ Uranus            │ ♒︎ Aquarius 15°05'    │ 11         │
+│ ♆ Neptune           │ ♒︎ Aquarius 3°23'     │ 10         │
+│ ♇ Pluto             │ ♐︎ Sagittarius 11°38' │ 8          │
+│ ☊ North Node        │ ♌︎ Leo 3°40'          │ 5          │
+│ ☋ South Node        │ ♒︎ Aquarius 3°40'     │ 11         │
+│ ⚸ Black Moon Lilith │ ♐︎ Sagittarius 24°03' │ 9          │
+│ 🜊 Vertex            │ ♎︎ Libra 10°26'       │ 6          │
+│ ⚷ Chiron            │ ♐︎ Sagittarius 12°13' │ 8          │
+└─────────────────────┴───────────────────────┴────────────┘
+
+Declinations
+────────────
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━┓
+┃ Planet       ┃ Declination ┃ Direction ┃ Status ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━┩
+│ ☉ Sun        │ 22°30'      │ South     │        │
+│ ☽ Moon       │ 20°52'      │ South     │        │
+│ ☿ Mercury    │ 24°30'      │ South     │ OOB ⚠  │
+│ ♀ Venus      │ 19°46'      │ South     │        │
+│ ♂ Mars       │ 11°39'      │ South     │        │
+│ ♃ Jupiter    │ 8°42'       │ North     │        │
+│ ♄ Saturn     │ 12°36'      │ North     │        │
+│ ♅ Uranus     │ 16°56'      │ South     │        │
+│ ♆ Neptune    │ 19°10'      │ South     │        │
+│ ♇ Pluto      │ 11°24'      │ South     │        │
+│ ☊ North Node │ 19°19'      │ North     │        │
+└──────────────┴─────────────┴───────────┴────────┘
+
+House Cusps
+───────────
+┏━━━━━━━┳━━━━━━━━━━━━┓
+┃ House ┃ Cusp (Pl)  ┃
+┡━━━━━━━╇━━━━━━━━━━━━┩
+│ 1     │ 26° ♈︎ 51' │
+│ 2     │ 1° ♊︎ 35'  │
+│ 3     │ 23° ♊︎ 20' │
+│ 4     │ 12° ♋︎ 18' │
+│ 5     │ 3° ♌︎ 31'  │
+│ 6     │ 4° ♍︎ 03'  │
+│ 7     │ 26° ♎︎ 51' │
+│ 8     │ 1° ♐︎ 35'  │
+│ 9     │ 23° ♐︎ 20' │
+│ 10    │ 12° ♑︎ 18' │
+│ 11    │ 3° ♒︎ 31'  │
+│ 12    │ 4° ♓︎ 03'  │
+└───────┴────────────┘
+
+Major Aspects
+─────────────
+
+  Aspectarian
+[SVG: 404x404px - use HTML/PDF output to view]
+
+  Aspect List
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━┓
+┃ Planet 1            ┃ Aspect        ┃ Planet 2            ┃ Orb   ┃ Applying ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━┩
+│ ☿ Mercury           │ △ Trine       │ ♄ Saturn            │ 0.05° │ A→       │
+│ ☿ Mercury           │ □ Square      │ 🜊 Vertex            │ 0.18° │ —        │
+│ ♆ Neptune           │ ☌ Conjunction │ ☋ South Node        │ 0.28° │ A→       │
+│ ♆ Neptune           │ ☍ Opposition  │ ☊ North Node        │ 0.28° │ A→       │
+│ ♇ Pluto             │ ☌ Conjunction │ ⚷ Chiron            │ 0.58° │ ←S       │
+│ ☉ Sun               │ ☌ Conjunction │ ☽ Moon              │ 0.80° │ ←S       │
+│ ♇ Pluto             │ ⚹ Sextile     │ 🜊 Vertex            │ 1.19° │ —        │
+│ ♃ Jupiter           │ ☌ Conjunction │ ASC                 │ 1.35° │ —        │
+│ ♃ Jupiter           │ △ Trine       │ ⚸ Black Moon Lilith │ 1.46° │ A→       │
+│ ⚷ Chiron            │ ⚹ Sextile     │ 🜊 Vertex            │ 1.77° │ —        │
+│ MC                  │ □ Square      │ 🜊 Vertex            │ 1.87° │ —        │
+│ ♄ Saturn            │ △ Trine       │ MC                  │ 2.00° │ —        │
+│ ☿ Mercury           │ ☌ Conjunction │ MC                  │ 2.05° │ —        │
+│ ♀ Venus             │ ⚹ Sextile     │ 🜊 Vertex            │ 2.42° │ —        │
+│ ⚸ Black Moon Lilith │ △ Trine       │ ASC                 │ 2.81° │ —        │
+│ ♅ Uranus            │ ⚹ Sextile     │ ⚷ Chiron            │ 2.87° │ A→       │
+│ ♅ Uranus            │ ⚹ Sextile     │ ♇ Pluto             │ 3.45° │ ←S       │
+│ ☉ Sun               │ ☌ Conjunction │ MC                  │ 3.49° │ —        │
+│ ♀ Venus             │ ☌ Conjunction │ ♇ Pluto             │ 3.61° │ A→       │
+│ ♀ Venus             │ ☌ Conjunction │ ⚷ Chiron            │ 4.19° │ A→       │
+│ ☽ Moon              │ ☌ Conjunction │ MC                  │ 4.30° │ —        │
+│ ♀ Venus             │ ⚹ Sextile     │ ☋ South Node        │ 4.36° │ ←S       │
+│ ♀ Venus             │ △ Trine       │ ☊ North Node        │ 4.36° │ ←S       │
+│ ♅ Uranus            │ △ Trine       │ 🜊 Vertex            │ 4.64° │ —        │
+│ ♀ Venus             │ ⚹ Sextile     │ ♆ Neptune           │ 4.64° │ ←S       │
+│ ♄ Saturn            │ □ Square      │ ♅ Uranus            │ 4.77° │ ←S       │
+│ ♂ Mars              │ ⚹ Sextile     │ ASC                 │ 5.23° │ —        │
+│ ☉ Sun               │ □ Square      │ 🜊 Vertex            │ 5.36° │ —        │
+│ ☉ Sun               │ △ Trine       │ ♄ Saturn            │ 5.49° │ ←S       │
+│ ☉ Sun               │ ☌ Conjunction │ ☿ Mercury           │ 5.54° │ A→       │
+│ ♀ Venus             │ □ Square      │ ♂ Mars              │ 5.93° │ ←S       │
+│ ☽ Moon              │ □ Square      │ 🜊 Vertex            │ 6.17° │ —        │
+│ ☽ Moon              │ △ Trine       │ ♄ Saturn            │ 6.30° │ ←S       │
+│ ☽ Moon              │ ☌ Conjunction │ ☿ Mercury           │ 6.34° │ ←S       │
+│ ♆ Neptune           │ □ Square      │ ASC                 │ 6.52° │ —        │
+│ ♄ Saturn            │ □ Square      │ ☋ South Node        │ 6.65° │ A→       │
+│ ♄ Saturn            │ □ Square      │ ☊ North Node        │ 6.65° │ ←S       │
+│ ☋ South Node        │ △ Trine       │ 🜊 Vertex            │ 6.78° │ —        │
+│ ☋ South Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
+│ ☊ North Node        │ □ Square      │ ASC                 │ 6.80° │ —        │
+│ ♄ Saturn            │ □ Square      │ ♆ Neptune           │ 6.93° │ A→       │
+│ ♆ Neptune           │ △ Trine       │ 🜊 Vertex            │ 7.06° │ —        │
+│ ♃ Jupiter           │ □ Square      │ ♆ Neptune           │ 7.87° │ A→       │
+│ ♇ Pluto             │ △ Trine       │ ☊ North Node        │ 7.97° │ ←S       │
+└─────────────────────┴───────────────┴─────────────────────┴───────┴──────────┘
+
+Aspect Patterns
+───────────────
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Pattern  ┃ Planets                           ┃ Element/Quality  ┃ Details                   ┃
+┡━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Stellium │ ☉ Sun, ☽ Moon, ☿ Mercury, MC      │ Earth / Cardinal │ 4 planets                 │
+│ T-Square │ ♆ Neptune, ☊ North Node, ♄ Saturn │ Fixed            │ 3 planets, Apex: ♄ Saturn │
+│ T-Square │ ♆ Neptune, ☊ North Node, ASC      │ Mixed            │ 3 planets, Apex: ASC      │
+└──────────┴───────────────────────────────────┴──────────────────┴───────────────────────────┘
+
+Essential Dignities
+───────────────────
+┏━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━┓
+┃ Planet    ┃ Trad Score ┃ Mod Score ┃
+┡━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━┩
+│ ☉ Sun     │ 0          │ 0         │
+│ ☽ Moon    │ -5         │ -5        │
+│ ☿ Mercury │ 0          │ 0         │
+│ ♀ Venus   │ 0          │ 0         │
+│ ♂ Mars    │ 0          │ 0         │
+│ ♃ Jupiter │ 0          │ 0         │
+│ ♄ Saturn  │ 0          │ 0         │
+│ ♅ Uranus  │ 0          │ +6        │
+│ ♆ Neptune │ 0          │ -4        │
+│ ♇ Pluto   │ 0          │ 0         │
+│ ⚷ Chiron  │ 0          │ 0         │
+└───────────┴────────────┴───────────┘
+
+Chart Overview
+==============
+        Date: January 06, 2000
+        Time: 12:00 PM
+    Timezone: America/Los_Angeles
+    Location: Seattle, King County, Washington, United States
+ Coordinates: 47.6038°, -122.3301°
+House System: Placidus
+      Zodiac: Tropical
+  Chart Sect: Day Chart
+ Chart Ruler: Mars (Aries Rising)
+
+
+Planet Positions
+================
+| Planet              | Position              | House (Pl) |
+|---------------------|-----------------------|------------|
+| ☉ Sun               | ♑︎ Capricorn 15°48'   | 10         |
+| ☽ Moon              | ♑︎ Capricorn 16°36'   | 10         |
+| ☿ Mercury           | ♑︎ Capricorn 10°16'   | 9          |
+| ♀ Venus             | ♐︎ Sagittarius 8°01'  | 8          |
+| ♂ Mars              | ♓︎ Pisces 2°06'       | 11         |
+| ♃ Jupiter           | ♈︎ Aries 25°31'       | 12         |
+| ♄ Saturn            | ♉︎ Taurus 10°18'      | 1          |
+| ♅ Uranus            | ♒︎ Aquarius 15°05'    | 11         |
+| ♆ Neptune           | ♒︎ Aquarius 3°23'     | 10         |
+| ♇ Pluto             | ♐︎ Sagittarius 11°38' | 8          |
+| ☊ North Node        | ♌︎ Leo 3°40'          | 5          |
+| ☋ South Node        | ♒︎ Aquarius 3°40'     | 11         |
+| ⚸ Black Moon Lilith | ♐︎ Sagittarius 24°03' | 9          |
+| 🜊 Vertex            | ♎︎ Libra 10°26'       | 6          |
+| ⚷ Chiron            | ♐︎ Sagittarius 12°13' | 8          |
+
+
+Declinations
+============
+| Planet       | Declination | Direction | Status |
+|--------------|-------------|-----------|--------|
+| ☉ Sun        | 22°30'      | South     |        |
+| ☽ Moon       | 20°52'      | South     |        |
+| ☿ Mercury    | 24°30'      | South     | OOB ⚠  |
+| ♀ Venus      | 19°46'      | South     |        |
+| ♂ Mars       | 11°39'      | South     |        |
+| ♃ Jupiter    | 8°42'       | North     |        |
+| ♄ Saturn     | 12°36'      | North     |        |
+| ♅ Uranus     | 16°56'      | South     |        |
+| ♆ Neptune    | 19°10'      | South     |        |
+| ♇ Pluto      | 11°24'      | South     |        |
+| ☊ North Node | 19°19'      | North     |        |
+
+
+House Cusps
+===========
+| House | Cusp (Pl)  |
+|-------|------------|
+| 1     | 26° ♈︎ 51' |
+| 2     | 1° ♊︎ 35'  |
+| 3     | 23° ♊︎ 20' |
+| 4     | 12° ♋︎ 18' |
+| 5     | 3° ♌︎ 31'  |
+| 6     | 4° ♍︎ 03'  |
+| 7     | 26° ♎︎ 51' |
+| 8     | 1° ♐︎ 35'  |
+| 9     | 23° ♐︎ 20' |
+| 10    | 12° ♑︎ 18' |
+| 11    | 3° ♒︎ 31'  |
+| 12    | 4° ♓︎ 03'  |
+
+
+Major Aspects
+=============
+
+  Aspectarian
+  -----------
+  (unknown type svg)
+
+  Aspect List
+  -----------
+| Planet 1            | Aspect        | Planet 2            | Orb   | Applying |
+|---------------------|---------------|---------------------|-------|----------|
+| ☿ Mercury           | △ Trine       | ♄ Saturn            | 0.05° | A→       |
+| ☿ Mercury           | □ Square      | 🜊 Vertex            | 0.18° | —        |
+| ♆ Neptune           | ☌ Conjunction | ☋ South Node        | 0.28° | A→       |
+| ♆ Neptune           | ☍ Opposition  | ☊ North Node        | 0.28° | A→       |
+| ♇ Pluto             | ☌ Conjunction | ⚷ Chiron            | 0.58° | ←S       |
+| ☉ Sun               | ☌ Conjunction | ☽ Moon              | 0.80° | ←S       |
+| ♇ Pluto             | ⚹ Sextile     | 🜊 Vertex            | 1.19° | —        |
+| ♃ Jupiter           | ☌ Conjunction | ASC                 | 1.35° | —        |
+| ♃ Jupiter           | △ Trine       | ⚸ Black Moon Lilith | 1.46° | A→       |
+| ⚷ Chiron            | ⚹ Sextile     | 🜊 Vertex            | 1.77° | —        |
+| MC                  | □ Square      | 🜊 Vertex            | 1.87° | —        |
+| ♄ Saturn            | △ Trine       | MC                  | 2.00° | —        |
+| ☿ Mercury           | ☌ Conjunction | MC                  | 2.05° | —        |
+| ♀ Venus             | ⚹ Sextile     | 🜊 Vertex            | 2.42° | —        |
+| ⚸ Black Moon Lilith | △ Trine       | ASC                 | 2.81° | —        |
+| ♅ Uranus            | ⚹ Sextile     | ⚷ Chiron            | 2.87° | A→       |
+| ♅ Uranus            | ⚹ Sextile     | ♇ Pluto             | 3.45° | ←S       |
+| ☉ Sun               | ☌ Conjunction | MC                  | 3.49° | —        |
+| ♀ Venus             | ☌ Conjunction | ♇ Pluto             | 3.61° | A→       |
+| ♀ Venus             | ☌ Conjunction | ⚷ Chiron            | 4.19° | A→       |
+| ☽ Moon              | ☌ Conjunction | MC                  | 4.30° | —        |
+| ♀ Venus             | ⚹ Sextile     | ☋ South Node        | 4.36° | ←S       |
+| ♀ Venus             | △ Trine       | ☊ North Node        | 4.36° | ←S       |
+| ♅ Uranus            | △ Trine       | 🜊 Vertex            | 4.64° | —        |
+| ♀ Venus             | ⚹ Sextile     | ♆ Neptune           | 4.64° | ←S       |
+| ♄ Saturn            | □ Square      | ♅ Uranus            | 4.77° | ←S       |
+| ♂ Mars              | ⚹ Sextile     | ASC                 | 5.23° | —        |
+| ☉ Sun               | □ Square      | 🜊 Vertex            | 5.36° | —        |
+| ☉ Sun               | △ Trine       | ♄ Saturn            | 5.49° | ←S       |
+| ☉ Sun               | ☌ Conjunction | ☿ Mercury           | 5.54° | A→       |
+| ♀ Venus             | □ Square      | ♂ Mars              | 5.93° | ←S       |
+| ☽ Moon              | □ Square      | 🜊 Vertex            | 6.17° | —        |
+| ☽ Moon              | △ Trine       | ♄ Saturn            | 6.30° | ←S       |
+| ☽ Moon              | ☌ Conjunction | ☿ Mercury           | 6.34° | ←S       |
+| ♆ Neptune           | □ Square      | ASC                 | 6.52° | —        |
+| ♄ Saturn            | □ Square      | ☋ South Node        | 6.65° | A→       |
+| ♄ Saturn            | □ Square      | ☊ North Node        | 6.65° | ←S       |
+| ☋ South Node        | △ Trine       | 🜊 Vertex            | 6.78° | —        |
+| ☋ South Node        | □ Square      | ASC                 | 6.80° | —        |
+| ☊ North Node        | □ Square      | ASC                 | 6.80° | —        |
+| ♄ Saturn            | □ Square      | ♆ Neptune           | 6.93° | A→       |
+| ♆ Neptune           | △ Trine       | 🜊 Vertex            | 7.06° | —        |
+| ♃ Jupiter           | □ Square      | ♆ Neptune           | 7.87° | A→       |
+| ♇ Pluto             | △ Trine       | ☊ North Node        | 7.97° | ←S       |
+
+
+Aspect Patterns
+===============
+| Pattern  | Planets                           | Element/Quality  | Details                   |
+|----------|-----------------------------------|------------------|---------------------------|
+| Stellium | ☉ Sun, ☽ Moon, ☿ Mercury, MC      | Earth / Cardinal | 4 planets                 |
+| T-Square | ♆ Neptune, ☊ North Node, ♄ Saturn | Fixed            | 3 planets, Apex: ♄ Saturn |
+| T-Square | ♆ Neptune, ☊ North Node, ASC      | Mixed            | 3 planets, Apex: ASC      |
+
+
+Essential Dignities
+===================
+| Planet    | Trad Score | Mod Score |
+|-----------|------------|-----------|
+| ☉ Sun     | 0          | 0         |
+| ☽ Moon    | -5         | -5        |
+| ☿ Mercury | 0          | 0         |
+| ♀ Venus   | 0          | 0         |
+| ♂ Mars    | 0          | 0         |
+| ♃ Jupiter | 0          | 0         |
+| ♄ Saturn  | 0          | 0         |
+| ♅ Uranus  | 0          | +6        |
+| ♆ Neptune | 0          | -4        |
+| ♇ Pluto   | 0          | 0         |
+| ⚷ Chiron  | 0          | 0         |
+```
 
 ### Level 6: Advanced - Bi-Wheel Charts
 
@@ -405,6 +835,19 @@ for aspect in cross_aspects[:10]:
     print(f"{aspect.object1.name} ({synastry.labels[0]}) "
           f"{aspect.aspect_name} "
           f"{aspect.object2.name} ({synastry.labels[1]})")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun (Kate) Trine Mars (Alex)
+Sun (Kate) Trine Chiron (Alex)
+Sun (Kate) Opposition MC (Alex)
+Sun (Kate) Conjunction IC (Alex)
+Moon (Kate) Sextile Mars (Alex)
+Moon (Kate) Conjunction True Node (Alex)
+Moon (Kate) Opposition South Node (Alex)
+Moon (Kate) Trine MC (Alex)
+Moon (Kate) Sextile IC (Alex)
+Mercury (Kate) Trine Chiron (Alex)
 ```
 
 **Comparison Chart Types:**
@@ -550,7 +993,6 @@ composite = SynthesisBuilder.composite(native_a, native_b).calculate()
 # Davison (relationship midpoint chart with actual location)
 davison = SynthesisBuilder.davison(native_a, native_b).calculate()
 ```
-
 **Comparison Types:**
 
 - **Synastry**: Two natal charts overlaid (bi-wheel)
@@ -594,6 +1036,43 @@ print(f"{a.p_day:.2f} → {a.leans}")           # 0.80 → day
 from stellium import ReportBuilder
 ReportBuilder().from_chart(chart).with_sect_rectification().render(format="markdown")
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+0.80 → day
+## Sect Rectification
+
+### Anchor
+
+**Chart sect (as given):** Day  
+**Daylight prior P(day):** 0.55  (geometry, the base rate)  
+**Calibrated P(day):** 0.80  → leans DAY (80% conf)  
+**Reading:** indicator, not oracle — adjudicate with real knowledge  
+**⚠ Moon band:** Moon crosses Taurus → Gemini within the 24h — its sign (and anything it rules) is a band, not a point.  
+
+### Day vs Night hypotheses
+
+|                     | IF DAY (above horizon)                                    | IF NIGHT (below horizon)                                     |
+| ------------------- | --------------------------------------------------------- | ------------------------------------------------------------ |
+| Sect light          | Sun in Cancer (peregrine)                                 | Moon in Taurus (exalted)                                     |
+| Out-of-sect malefic | Mars in Capricorn (exalted)                               | Saturn in Pisces (peregrine)                                 |
+|   → hardship reads  | hot, sharp, sudden — accidents, violence, fever, conflict | cold, slow, chronic — illness, poverty, confinement, decline |
+| In-sect benefic     | Jupiter in Cancer (exalted)                               | Venus in Gemini (peregrine)                                  |
+|   → fortune reads   | Jupiter-toned — honour, wealth, law, faith, expansion     | Venus-toned — love, art, beauty, pleasure, music             |
+
+### Evidence & convergence
+
+Evidence alignment — does the life match each hypothesis?
+  hardship flavour (malefic-of-sect, VALIDATED +0.35): leans DAY  (4.0 day / 2.0 night)
+  fortune flavour  (benefic-of-sect): leans NIGHT  (0.6 day / 7.6 night)
+  firdaria time-lord fit: day-hits 9 / night-hits 8 → favours day
+
+Soft signals (⚠ ~null on strangers — high value only with real first-hand knowledge):
+  malefic-of-temperament (Mars-hot − Saturn-cold) = +0 → —
+  sect-light temperament (Solar − Lunar)        = +1 → DAY
+
+Convergence (counted, never summed): DAY 3 · NIGHT 1 (of 4 techniques)
+→ SECT: trust this anchor — it is the only cross-validated signal (~70%). The soft/timing rows routinely point the wrong way; when they fight the anchor on sect, the anchor wins. TIME-within-sect is where your own knowledge decides.
+```
 
 ### Data Export
 
@@ -627,7 +1106,6 @@ planner = (
     .generate("my_planner.pdf")
 )
 ```
-
 The front matter is curated on by default, so that's already a complete planner.
 Drop any page with the matching `.without_*()` call.
 
@@ -693,7 +1171,6 @@ AtlasBuilder.from_all_notables().save("complete_atlas.pdf")
 # Filter by category and sort by birth date
 AtlasBuilder.from_all_notables(category="scientist", sort_by="date").save("scientists.pdf")
 ```
-
 **Atlas Features:**
 
 - **Multiple input methods**: Add natives directly, look up notables by name, or use `from_all_notables()` for the entire database
@@ -723,6 +1200,22 @@ stats = ChartStats(charts)
 print(stats.element_distribution())
 print(stats.sign_distribution("Sun"))
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+sun_sign
+Capricorn      3
+Aquarius       3
+Pisces         2
+Scorpio        2
+Cancer         2
+Taurus         2
+Sagittarius    2
+Leo            2
+Gemini         2
+Name: count, dtype: int64
+{'fire': 0.235, 'earth': 0.23, 'air': 0.22, 'water': 0.315}
+{'Aries': 0, 'Taurus': 2, 'Gemini': 2, 'Cancer': 2, 'Leo': 2, 'Virgo': 0, 'Libra': 0, 'Scorpio': 2, 'Sagittarius': 2, 'Capricorn': 3, 'Aquarius': 3, 'Pisces': 2}
+```
 
 Requires: `pip install stellium[analysis]`
 
@@ -738,7 +1231,6 @@ from stellium import ChartBuilder, Native
 native = Native("2000-01-06 12:00", "Seattle, WA")
 chart = ChartBuilder.from_native(native).calculate()   # ~0.2 ms
 ```
-
 Chart calculation is not cached — recomputing is faster than reading a cache. Geocoding
 *is* cached, since that one is a network call; it lives in `~/.cache/stellium/`
 (see [docs/LOCATIONS.md](docs/LOCATIONS.md)).

@@ -560,7 +560,6 @@ chart.draw("my_chart.svg") \
     .with_zodiac_palette("rainbow_midnight") \
     .save()
 ```
-
 Try mixing and matching themes and palettes to find your perfect combination!
 
 ---

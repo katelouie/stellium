@@ -258,13 +258,18 @@ class AspectPatternAnalyzer:
 
         # Need at least 2 oppositions for a Grand Cross
         for opp1, opp2 in combinations(oppositions, 2):
-            planets_set = {opp1.object1, opp1.object2, opp2.object1, opp2.object2}
+            # dict, not set: a set would dedupe correctly and then hand back an
+            # arbitrary order — and since CelestialPosition hashes off its string
+            # fields, and Python randomizes string hashing per process, it was a
+            # *different* arbitrary order on every run. Two identical runs reported
+            # the same Grand Cross with its planets listed differently.
+            planets_list = list(
+                dict.fromkeys([opp1.object1, opp1.object2, opp2.object1, opp2.object2])
+            )
 
             # Grand Cross needs exactly 4 planets
-            if len(planets_set) != 4:
+            if len(planets_list) != 4:
                 continue
-
-            planets_list = list(planets_set)
 
             # Check that all 4 planets square each other appropriately
             # There should be 4 squares total
@@ -306,13 +311,14 @@ class AspectPatternAnalyzer:
         sextiles = [a for a in aspects if a.aspect_name == "Sextile"]
 
         for opp1, opp2 in combinations(oppositions, 2):
-            planets_set = {opp1.object1, opp1.object2, opp2.object1, opp2.object2}
+            # See _find_grand_crosses: a set here randomizes the member order per run.
+            planets_list = list(
+                dict.fromkeys([opp1.object1, opp1.object2, opp2.object1, opp2.object2])
+            )
 
             # Mystic Rectangle needs exactly 4 planets
-            if len(planets_set) != 4:
+            if len(planets_list) != 4:
                 continue
-
-            planets_list = list(planets_set)
 
             # Check for the required sextiles and trines
             found_sextiles = []

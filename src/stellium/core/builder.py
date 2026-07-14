@@ -657,8 +657,15 @@ class ChartBuilder:
             # Add Earth (it's now a planet in the chart)
             objects.append("Earth")
 
-        # Ensure all names are unique
-        return list(set(objects))
+        # Ensure all names are unique — *without* discarding the order they were
+        # asked for. `list(set(objects))` deduplicated correctly and then handed back
+        # an arbitrary order, and because Python randomizes string hashing per
+        # process, it was a *different* arbitrary order on every run. That ordering
+        # flowed into chart.positions, into combinations() in the aspect engines, and
+        # so into chart.aspects — meaning two identical runs of identical code
+        # produced reports whose planets and aspects were listed in different orders.
+        # dict preserves insertion order, so this dedupes and keeps it.
+        return list(dict.fromkeys(objects))
 
     def bazi(self):
         """

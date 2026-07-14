@@ -306,8 +306,12 @@ class MidpointTreeSection:
                         )
                     )
 
-        # Sort branches by orb (tightest first)
-        branches.sort(key=lambda b: b.orb)
+        # Sort branches by orb (tightest first), quantizing before the comparison and
+        # breaking ties by name — a raw float orb is not a stable sort key across
+        # platforms. See _utils.get_orb_sort_key.
+        branches.sort(
+            key=lambda b: (round(b.orb, 9), b.midpoint_display, b.aspect_name)
+        )
 
         # Get focal point display info
         focal_display_name, focal_glyph = get_object_display(focal.name)

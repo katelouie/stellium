@@ -108,7 +108,6 @@ sun = chart.get_object("Sun")
 chiron = chart.get_object("Chiron")
 lilith = chart.get_object("Mean Apogee")  # or "Black Moon Lilith"
 ```
-
 ---
 
 ## House Systems (18 systems)
@@ -179,7 +178,6 @@ chart = (ChartBuilder.from_native(native)
 placidus_cusps = chart.get_houses("Placidus")
 whole_sign_cusps = chart.get_houses("Whole Sign")
 ```
-
 ---
 
 ## Ayanamsas / Sidereal Zodiacs (9 systems)
@@ -228,7 +226,6 @@ chart = ChartBuilder.from_native(native).with_sidereal("fagan_bradley").calculat
 # KP astrology
 chart = ChartBuilder.from_native(native).with_sidereal("krishnamurti").calculate()
 ```
-
 ---
 
 ## Fixed Stars (26 stars)
@@ -308,6 +305,12 @@ chart = ChartBuilder.from_native(native).add_component(FixedStarsComponent(stars
 fixed_stars = chart.get_component_result("Fixed Stars")
 for star in fixed_stars:
     print(f"{star.name}: {star.longitude:.2f}° {star.sign}")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Regulus: 149.75° Leo
+Algol: 56.09° Taurus
+Spica: 203.76° Libra
 ```
 
 ---
@@ -390,6 +393,10 @@ chart = ChartBuilder.from_native(native).add_component(
 # Access results
 fortune = chart.get_object("Part of Fortune")
 print(f"Part of Fortune: {fortune.longitude:.2f}° {fortune.sign}")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Part of Fortune: 311.26° Aquarius
 ```
 
 ---
@@ -474,6 +481,13 @@ chart = (ChartBuilder.from_native(native)
 # Access aspects
 for aspect in chart.aspects[:5]:
     print(f"{aspect.object1.name} {aspect.aspect_name} {aspect.object2.name} (orb: {aspect.orb:.2f}°)")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Moon H5 Uranus (orb: 0.26°)
+Moon H5 Neptune (orb: 1.50°)
+Jupiter H5 Uranus (orb: 0.70°)
+Jupiter H5 Neptune (orb: 1.94°)
 ```
 
 ---
