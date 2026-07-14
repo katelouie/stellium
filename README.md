@@ -41,7 +41,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 **Western:**
 
 - **Large-scale data analysis** with pandas DataFrames, batch calculation, and statistical tools
-- **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md)).
+- **17 house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md)).
 - **Multiple house systems in a single chart** for comparison of traditions and meta-analysis
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
 - **Bi-, tri- and quad-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis

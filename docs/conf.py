@@ -255,6 +255,27 @@ def _site_stats() -> dict:
         ]
     subs["n_life_events"] = sum(len(e) for e in events)
     subs["n_notables_with_events"] = sum(1 for e in events if e)
+
+    # The options catalogue. options_list.md's summary line said "37 celestial objects"
+    # and "26 aspect types" against registries holding 83 and 19; the README claimed
+    # "23+ house systems" where there are 17 — an *overclaim*, which is the worst
+    # direction to be wrong in. tests/test_documented_counts.py pins the README, which
+    # is not a Sphinx page and so cannot use these.
+    from stellium.components.arabic_parts import ARABIC_PARTS_CATALOG
+    from stellium.core.ayanamsa import AYANAMSA_REGISTRY
+    from stellium.core.registry import (
+        ASPECT_REGISTRY,
+        CELESTIAL_REGISTRY,
+        FIXED_STARS_REGISTRY,
+    )
+    from stellium.engines.houses import HOUSE_SYSTEM_CODES
+
+    subs["n_objects"] = len(CELESTIAL_REGISTRY)
+    subs["n_house_systems"] = len(HOUSE_SYSTEM_CODES)
+    subs["n_ayanamsas"] = len(AYANAMSA_REGISTRY)
+    subs["n_fixed_stars"] = len(FIXED_STARS_REGISTRY)
+    subs["n_arabic_parts"] = len(ARABIC_PARTS_CATALOG)
+    subs["n_aspects"] = len(ASPECT_REGISTRY)
     # Per-cookbook recipe counts, e.g. {{ cb_electional }} -> 43. The home page picks
     # *which* cookbooks to feature; the build supplies how many recipes each one has.
     for slug, count in cookbooks["by_slug"].items():
