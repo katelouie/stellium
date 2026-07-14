@@ -4,17 +4,12 @@
 > [`examples/chart_cookbook.py`](../../../examples/chart_cookbook.py).
 > Prerequisites: [00 Orientation](./00_orientation.md).
 
-
-:::{admonition} 🚧 Under construction
+:::{admonition} 🚧 Draft chapter
 :class: warning
 
-This chapter is a **draft**. Its prose has not yet been re-verified against
-Stellium's computed output — so treat any specific degree, score or placement in it
-as unconfirmed until it has been.
-
-Two chapters of this guide were previously found to contain figures that had never
-been computed at all (see [Dignity & Rulership](06_dignity_and_rulership.md)). That is
-the check this chapter is still waiting for.
+This chapter is a draft. Its figures have not yet been checked against Stellium's
+computed output — read it, but treat any specific degree, score or placement in it as
+provisional.
 :::
 
 ## The one-line version

@@ -139,21 +139,16 @@ order).
 
 ## Status — 8 chapters of 24
 
-:::{admonition} 🚧 This guide is under construction
+:::{admonition} 🚧 Under construction
 :class: warning
 
-**Eight of twenty-four chapters are written.** The rest are planned, listed above,
-and not yet drafted — links to them do not exist rather than pointing somewhere empty.
+**Eight of twenty-four chapters are written.** The rest are planned — listed above —
+and not yet drafted.
 
-Of the eight, **two have been verified against computed output**: 06 Dignity &
-Rulership and 07 Lots. Those were rewritten from a chart that was actually run, and
-their code blocks are pinned by the test suite. The other six are drafts whose
-specific figures have **not** yet been re-checked against the library.
-
-That distinction is not pedantry. Chapters 06 and 07 previously asserted a dignity
-score of `+3` and a Lot of Fortune in the 7th house — numbers that had never been
-computed, and that the engine disagrees with. Every chapter here is worth reading;
-none of the unverified ones is worth quoting a number from yet.
+Chapters **06 Dignity & Rulership** and **07 Lots** have been checked against computed
+output: every figure in them comes from a chart that was run, and their code blocks are
+pinned by the test suite. The other six are drafts. Read them, but don't quote a number
+from them yet.
 :::
 
 | Chapter | Status |

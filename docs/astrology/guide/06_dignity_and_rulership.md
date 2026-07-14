@@ -5,16 +5,11 @@
 > Prerequisites: [01 The Zodiac](./01_the_zodiac.md), [03 Houses](./03_houses.md),
 > [05 Sect](./05_sect.md).
 
-
-:::{admonition} 🚧 Under construction — but this chapter's numbers were computed
+:::{admonition} ✅ Figures computed
 :class: note
 
-The guide as a whole is a draft. **This chapter is one of the two that have been
-rewritten from a chart that was actually run**: every figure in it comes from
-Stellium's own output, and its code blocks are pinned by the test suite, so a library
-change that moved a number would fail CI in this file.
-
-The surrounding chapters have not had that treatment yet.
+Every figure in this chapter comes from Stellium's own output, and its code blocks are
+pinned by the test suite: a library change that moved a number would fail here.
 :::
 
 ## The one-line version

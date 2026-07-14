@@ -3,23 +3,16 @@
 
     python scripts/build_gallery_pages.py
 
-The galleries used to be 1,373 lines of hand-written Markdown listing every theme and
-every palette, with image paths typed in by hand. A gallery of a registry is not a
-document — it is a *view* of the registry, and maintaining it by hand means it is
-wrong from the first commit that adds a theme. It was: the page opened with "each of
-Stellium's 13 themes" while `ChartTheme` had 14 members.
+A gallery of a registry is a *view* of that registry, not a document, so nothing here
+is authored: `ChartTheme`, `ZodiacPalette`, `AspectPalette` and `PlanetGlyphPalette`
+are enumerated, one chart is drawn per member, and the pages are written around the
+results. Add a theme to the enum and it appears in the gallery with no page to update.
 
-So nothing here is authored. `ChartTheme`, `ZodiacPalette`, `AspectPalette` and
-`PlanetGlyphPalette` are enumerated, one chart is drawn per member, and the pages are
-written around the results. Add a theme to the enum and it appears in the gallery with
-no page to update — which is the only arrangement in which the gallery cannot lie.
+The model is seaborn's: the thumbnail you click *is* the output of the code shown on
+the page it takes you to. Same native throughout (Einstein), so the only thing that
+differs between two images is the styling being demonstrated.
 
-The model is seaborn's: the thumbnail you click *is the output of the code shown on
-the page it takes you to*. Same native throughout (Einstein), so the only thing that
-changes between two images is the styling being demonstrated.
-
-Generated, gitignored, rebuilt every build — like the cookbooks. There is no copy to
-drift.
+Generated and gitignored, like the cookbook pages.
 """
 
 from __future__ import annotations
@@ -74,9 +67,8 @@ def draw(chart, path: Path, **style) -> None:
 def main() -> None:
     IMAGES.mkdir(parents=True, exist_ok=True)
 
-    # Clear the previous run's pages. A theme removed from the enum must vanish from
-    # the gallery, not linger as an orphan page nothing links to — and in FAST mode,
-    # where only a few members are rendered, the rest would otherwise be left behind.
+    # A theme removed from the enum must vanish from the gallery, not linger as an
+    # orphan page. (Also keeps FAST mode, which renders a subset, from leaving strays.)
     for stale in OUT.glob("*.md"):
         stale.unlink()
 
