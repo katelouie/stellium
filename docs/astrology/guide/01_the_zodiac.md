@@ -232,13 +232,13 @@ chart = ChartBuilder.from_notable("Carl Jung").calculate()
 sun = chart.get_object("Sun")
 print(sun.sign)             # Leo
 print(sun.sign_position)    # 3°18' Leo
-print(sun.longitude)        # 123.31  (the raw coordinate underneath)
+print(f"{sun.longitude:.4f}")  # the raw coordinate underneath
 ```
 <!--pytest-codeblocks:expected-output-->
 ```
 Leo
 3°18' Leo
-123.30532166261611
+123.3053
 ```
 
 Element and modality aren't a single field, but they're a two-line lookup, and

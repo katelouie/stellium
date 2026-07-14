@@ -205,11 +205,11 @@ events = [
               description="promoted, took over the family firm", significance="moderate"),
 ]
 a = analyze_sect(chart, events=events)
-print(a.p_day, a.leans)
+print(f"{a.p_day:.4f}", a.leans)   # a probability; 16 digits of it is noise
 ```
 <!--pytest-codeblocks:expected-output-->
 ```
-0.6048940312763954 day
+0.6049 day
 ```
 
 `LifeEvent` fields: `date` (`"YYYY"`, `"YYYY-MM"`, or `"YYYY-MM-DD"`), `precision`,

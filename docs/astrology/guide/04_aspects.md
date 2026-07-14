@@ -266,7 +266,9 @@ from stellium import ChartBuilder
 chart = ChartBuilder.from_notable("Wong Kar-wai").with_aspects().calculate()
 
 # Every aspect, sorted loudest (tightest orb) first, with applying/separating.
-for asp in sorted(chart.aspects, key=lambda a: a.orb):
+# Two aspects can tie on orb, so break the tie by name — otherwise the order
+# depends on floating-point noise and is not the same on every machine.
+for asp in sorted(chart.aspects, key=lambda a: (round(a.orb, 6), a.object1.name, a.object2.name)):
     if asp.is_applying is True:
         direction = "applying"
     elif asp.is_applying is False:
@@ -278,8 +280,8 @@ for asp in sorted(chart.aspects, key=lambda a: a.orb):
 ```
 <!--pytest-codeblocks:expected-output-->
 ```
-Mars         Opposition   True Node    orb 0.31°  separating
 Mars         Conjunction  South Node   orb 0.31°  separating
+Mars         Opposition   True Node    orb 0.31°  separating
 Venus        Trine        Jupiter      orb 1.04°  separating
 Mercury      Trine        Saturn       orb 1.05°  applying
 Sun          Square       Jupiter      orb 1.18°  separating
@@ -287,37 +289,37 @@ Neptune      Sextile      Pluto        orb 1.22°  exact/stationary
 Saturn       Sextile      Chiron       orb 1.31°  separating
 Jupiter      Trine        Chiron       orb 1.40°  separating
 Moon         Square       Mars         orb 1.77°  separating
-Moon         Square       True Node    orb 2.07°  separating
 Moon         Square       South Node   orb 2.07°  separating
+Moon         Square       True Node    orb 2.07°  separating
 Mercury      Opposition   Chiron       orb 2.36°  applying
 Venus        Trine        Chiron       orb 2.45°  separating
 Jupiter      Sextile      Saturn       orb 2.71°  separating
 Mercury      Trine        Mean Apogee  orb 2.77°  separating
 Moon         Square       Neptune      orb 2.88°  exact/stationary
-Sun          Square       True Node    orb 2.97°  applying
 Sun          Square       South Node   orb 2.97°  applying
-Venus        Trine        True Node    orb 3.11°  applying
+Sun          Square       True Node    orb 2.97°  applying
 Venus        Sextile      South Node   orb 3.11°  applying
+Venus        Trine        True Node    orb 3.11°  applying
 Sun          Square       Mars         orb 3.28°  applying
 Venus        Sextile      Mars         orb 3.41°  applying
 Mars         Trine        Pluto        orb 3.42°  applying
-Pluto        Sextile      True Node    orb 3.73°  separating
 Pluto        Trine        South Node   orb 3.73°  applying
+Pluto        Sextile      True Node    orb 3.73°  separating
 Venus        Opposition   Saturn       orb 3.76°  separating
 Mercury      Sextile      Jupiter      orb 3.76°  applying
 Saturn       Trine        Mean Apogee  orb 3.81°  applying
-Jupiter      Conjunction  True Node    orb 4.15°  applying
 Jupiter      Opposition   South Node   orb 4.15°  separating
+Jupiter      Conjunction  True Node    orb 4.15°  applying
 Mars         Opposition   Jupiter      orb 4.46°  separating
 Mars         Opposition   Neptune      orb 4.65°  exact/stationary
 Mercury      Sextile      Venus        orb 4.81°  applying
-Neptune      Conjunction  True Node    orb 4.95°  exact/stationary
 Neptune      Opposition   South Node   orb 4.95°  exact/stationary
+Neptune      Conjunction  True Node    orb 4.95°  exact/stationary
 Sun          Conjunction  Moon         orb 5.05°  separating
 Chiron       Sextile      Mean Apogee  orb 5.13°  applying
 Uranus       Trine        Mean Apogee  orb 5.54°  separating
-True Node    Trine        Chiron       orb 5.55°  applying
 Chiron       Sextile      South Node   orb 5.55°  separating
+True Node    Trine        Chiron       orb 5.55°  applying
 Mars         Sextile      Chiron       orb 5.86°  separating
 Moon         Square       Jupiter      orb 6.22°  separating
 Jupiter      Opposition   Mean Apogee  orb 6.53°  applying
@@ -346,7 +348,7 @@ robust = [
     if a.object1.name not in TIME_SENSITIVE
     and a.object2.name not in TIME_SENSITIVE
 ]
-for asp in sorted(robust, key=lambda a: a.orb):
+for asp in sorted(robust, key=lambda a: (round(a.orb, 6), a.object1.name, a.object2.name)):
     print(f"{asp.object1.name:10} {asp.aspect_name:12} {asp.object2.name:10} {asp.orb:.2f}°")
 ```
 

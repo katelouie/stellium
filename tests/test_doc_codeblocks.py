@@ -45,6 +45,7 @@ Marked slow: runs in CI and the full suite, not in the TDD loop.
 
 import contextlib
 import io
+import re
 import warnings
 from pathlib import Path
 
@@ -179,6 +180,30 @@ def test_doc_codeblock(block, doc_file, tmp_path, monkeypatch):
         f"    python scripts/update_doc_outputs.py {doc_file}\n"
         f"and read the diff — if a number moved, either the doc was wrong or the "
         f"library just changed behaviour, and both are worth knowing."
+    )
+
+
+# A float printed at full repr — 0.6048940312763954 — is not the same string on every
+# machine: the last bits differ between x86 and arm, and a pinned output that carries
+# them fails on the platform it was not generated on. The difference is ~1e-12°, a
+# million times finer than Swiss Ephemeris resolves, so the value is not wrong — the
+# expectation is too precise. Round at the print.
+LONG_FLOAT = re.compile(r"\d+\.\d{7,}")
+
+
+def test_no_pinned_output_depends_on_floating_point_noise():
+    """No expected output may carry a float with more than 6 decimals."""
+    offenders = []
+    for doc_file in doc_files():
+        for block in testable_blocks(doc_file):
+            for value in LONG_FLOAT.findall(block.expected_output or ""):
+                offenders.append(f"{doc_file}: {value}")
+
+    assert not offenders, (
+        "These pinned outputs print a float at a precision that is not reproducible "
+        "across platforms:\n  " + "\n  ".join(offenders) + "\n\n"
+        'Round it where it is printed — f"{value:.4f}" — then re-run '
+        "`python scripts/update_doc_outputs.py <file>`."
     )
 
 
