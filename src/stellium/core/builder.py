@@ -627,7 +627,9 @@ class ChartBuilder:
             noon_local = local_dt.replace(
                 hour=12, minute=0, second=0, microsecond=0, tzinfo=None
             )
-            self._datetime = build_chart_datetime(noon_local, self._location.timezone)
+            self._datetime = build_chart_datetime(
+                noon_local, self._location.timezone, self._location.longitude
+            )
 
         return self
 

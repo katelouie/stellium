@@ -1203,18 +1203,18 @@ print(stats.sign_distribution("Sun"))
 <!--pytest-codeblocks:expected-output-->
 ```
 sun_sign
+Pisces         3
 Capricorn      3
-Aquarius       3
-Pisces         2
 Scorpio        2
 Cancer         2
+Aquarius       2
 Taurus         2
 Sagittarius    2
 Leo            2
 Gemini         2
 Name: count, dtype: int64
-{'fire': 0.235, 'earth': 0.23, 'air': 0.22, 'water': 0.315}
-{'Aries': 0, 'Taurus': 2, 'Gemini': 2, 'Cancer': 2, 'Leo': 2, 'Virgo': 0, 'Libra': 0, 'Scorpio': 2, 'Sagittarius': 2, 'Capricorn': 3, 'Aquarius': 3, 'Pisces': 2}
+{'fire': 0.24, 'earth': 0.23, 'air': 0.215, 'water': 0.315}
+{'Aries': 0, 'Taurus': 2, 'Gemini': 2, 'Cancer': 2, 'Leo': 2, 'Virgo': 0, 'Libra': 0, 'Scorpio': 2, 'Sagittarius': 2, 'Capricorn': 3, 'Aquarius': 2, 'Pisces': 3}
 ```
 
 Requires: `pip install stellium[analysis]`

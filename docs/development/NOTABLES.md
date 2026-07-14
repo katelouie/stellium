@@ -194,11 +194,11 @@ how the bug surfaced.
 
 ## Known gaps
 
-- **Local Mean Time.** `timezone: Europe/London` is an anachronism for anyone born
-  before standard time (Britain adopted it in 1880). Lilly's record should be LMT at
-  1w16, which is ~5 minutes off GMT — around 1.3° of Ascendant. Every pre-1880 record
-  is affected, and the residual disagreement between our Lilly and ADB's is exactly
-  this. Tracked in `TODO.md`.
+- ~~**Local Mean Time.**~~ **Fixed.** A birth before standard time reached its zone
+  now resolves via LMT computed from the **birth longitude** (not the IANA zone's LMT,
+  which is its reference city's). 64 of the 211 dated records are affected. Lilly now
+  reproduces AstroDatabank's Sun, Moon *and* Ascendant to under an arcminute. See
+  `core/native.py::build_chart_datetime` and `tests/test_local_mean_time.py`.
 - **81 birth records have no usable `astrological_notes`**, so nothing validates them.
   They are not known-wrong; they are unchecked, which is different and worth closing.
 - **`time_system` is read by nothing.**

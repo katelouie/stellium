@@ -114,6 +114,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   It was invisible because it is **arbitrary per process**, not per call: Python randomizes string hashing at interpreter start, and `CelestialPosition` is a frozen dataclass hashing off its string fields. Within one process the order is stable, so every existing test passed, and building two charts in one test and comparing them proved nothing. The new `tests/test_determinism.py` therefore spawns **real subprocesses with differing `PYTHONHASHSEED`** and pins a maximal chart's entire `to_dict()` across them — the general lesson being that a nondeterminism test which does not cross a process boundary is testing the seed, not the code.
 
+- **Charts before standard time used the wrong Local Mean Time — the zone's, not the birthplace's** *(chart output change for any birth before standard time reached its location; 64 of the 211 dated notables)*. Before standard time, the clock on the wall showed **Local Mean Time**: noon was when the Sun crossed *your* meridian, so the offset from UT was a function of your longitude and nothing else. Britain adopted standard time in 1880, the United States in 1883, Germany in 1893.
+
+  IANA models that period as an `LMT` offset and pytz hands it over quite happily — but it is the LMT of the **zone's reference city**, not of the birthplace. William Lilly was born at Diseworth (1°16′W), whose LMT is **−5m04s** from UT; `Europe/London`'s LMT is −1m. Four minutes of clock is about a degree of Ascendant, and in Lilly's case it decided his **rising sign**:
+
+  | | Ascendant |
+  |---|---|
+  | AstroDatabank publishes | **2°04′ Pisces** |
+  | LMT from his longitude (now) | 2°03.6′ Pisces |
+  | LMT from the IANA zone (before) | 29°47′ **Aquarius** |
+
+  The zone is still what *detects* the pre-standard era — adoption was staggered by country, so there is no cutoff year to hardcode, and IANA knows the real date for every zone and names the period `LMT`. But the offset now comes from the birth longitude, which is what actually set the clock. This is what AstroDatabank and astrological practice both do, and with it Lilly's Sun, Moon **and** Ascendant all reproduce ADB to under an arcminute. A pre-standard birth with no longitude available now raises `TimeZoneWarning` rather than silently using the zone's.
+
+  The blast radius is real and worth naming: Einstein's Mars moves across a house cusp (Ulm is 9°59′E while `Europe/Berlin`'s LMT is Berlin's, 13°24′E — 3.4° of longitude, ~13½ minutes of clock), which changes his length-of-life from *mean* to *greater* years. Modern charts are untouched.
+
 - **Eight notables had the wrong birthday, by up to ten days** *(chart output change for those natives)*. Historical records are cited in the calendar of their day, and usually do not say so. William Lilly's birth is "1 May 1602" in Gadbury, in Lilly's own letter to Ashmole, and in AstroDatabank — and all three mean the **Julian** 1 May. Stored as `1602-05-01` and handed to Swiss Ephemeris as a Gregorian date, it computed a chart ten days early: Lilly's Sun came out at **10° Taurus instead of 19°**, and his Moon landed in **Virgo instead of Capricorn**. Not a rounding error — a different chart. Nothing raised.
 
   And it was not uniformly wrong, which is worse: Newton and Catherine the Great had been converted by whoever entered them, Lilly, Kepler, Galileo, Copernicus, Michelangelo, Nostradamus and Rumi had not, and **no field recorded which** — so you could not tell by looking, and neither could the library.
