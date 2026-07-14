@@ -16,3 +16,15 @@ repos:
         pass_filenames: false
         always_run: true
 
+      # POST-commit, deliberately. It cannot block a commit and cannot fail a push —
+      # it prints a reminder or it says nothing. Install with:
+      #     pre-commit install --hook-type post-commit
+      - id: docs-staleness
+        name: Docs freshness reminder
+        stages: [post-commit]
+        entry: python scripts/docs_staleness.py
+        language: system
+        pass_filenames: false
+        always_run: true
+        verbose: true          # pre-commit swallows stdout on success without this
+
