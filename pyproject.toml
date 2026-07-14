@@ -58,6 +58,7 @@ dev = [
     "isort>=5.13.0",
     "mypy>=1.8.0",
     "pre-commit>=3.6.0",
+    "bump-my-version>=1.4.0",
     "pandas>=2.0.0",
     "scipy>=1.10.0",
 ]
@@ -252,3 +253,37 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+[tool.bump_my_version]
+# `__version__` is the single source of truth — pyproject reads it via
+# [tool.setuptools.dynamic]. So there is exactly one file to edit, and the tool's real
+# job is keeping the version, the CHANGELOG heading, the commit and the tag from
+# drifting apart.
+#
+#   bump-my-version bump patch|minor|major        # do it
+#   bump-my-version bump minor --dry-run -v       # see it first
+#
+# The tag alone does NOT publish: .github/workflows/publish-to-pypi.yml fires on
+# `release: published`, so ship by creating a GitHub Release from the tag.
+current_version = "0.21.1"
+allow_dirty = false
+commit = true
+tag = true
+tag_name = "v{new_version}"
+commit_args = "--no-verify"
+message = "Release {new_version}"
+tag_message = "v{new_version}"
+
+[[tool.bump_my_version.files]]
+filename = "src/stellium/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+# Open the new release section and leave a fresh [Unreleased] above it, so the next
+# change has somewhere to go and nobody has to remember to add one.
+[[tool.bump_my_version.files]]
+filename = "CHANGELOG.md"
+search = "## [Unreleased]"
+replace = """## [Unreleased]
+
+## [{new_version}] - {now:%Y-%m-%d}"""
