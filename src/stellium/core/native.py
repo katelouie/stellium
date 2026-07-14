@@ -20,6 +20,7 @@ from timezonefinder import TimezoneFinder
 from stellium.core.models import ChartDateTime, ChartLocation
 from stellium.exceptions import GeocodingWarning
 from stellium.utils.cache import cached
+from stellium.utils.time import to_gregorian
 
 # Cache TimezoneFinder instance - initialization is expensive
 _timezone_finder: TimezoneFinder | None = None
@@ -445,6 +446,7 @@ class Notable(Native):
         verified: bool = False,
         has_reliable_time: bool | None = None,
         verification_notes: str = "",
+        calendar: str | None = None,
     ):
         """
         Create Notable from structured data.
@@ -484,6 +486,14 @@ class Notable(Native):
         h = hour if hour is not None else 12
         m = minute if minute is not None else 0
         local_dt = dt.datetime(year, month, day, h, m)
+
+        # Old Style dates are stored as their sources give them, and converted here.
+        # Historical records are cited in the calendar of their day — Lilly's birth is
+        # "1 May 1602" in Gadbury, in Lilly's own letter, and in AstroDatabank, and all
+        # three mean the *Julian* 1 May. Storing the converted date instead would make
+        # the record disagree with every source it cites, so the record keeps the date
+        # its sources give and declares which calendar that is.
+        local_dt = to_gregorian(local_dt, calendar)
 
         # Let Native handle ALL the parsing (and noon-normalization when unknown)!
         super().__init__(

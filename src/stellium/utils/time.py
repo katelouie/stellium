@@ -130,3 +130,68 @@ def offset_julian_day(jd: float, days: float) -> float:
         >>> jd_yesterday = offset_julian_day(jd, -1.0)
     """
     return jd + days
+
+
+# ---------------------------------------------------------------------------
+# Old Style / New Style — the Julian calendar
+# ---------------------------------------------------------------------------
+
+# Britain and its colonies kept the Julian calendar until September 1752; Catholic
+# Europe switched in October 1582; Russia not until 1918. So "which calendar is this
+# date in?" is a property of the *record*, not of the year — which is why a notable
+# born before this backstop must declare it rather than inherit a default.
+GREGORIAN_ADOPTION_BACKSTOP = 1753
+
+
+def julian_to_gregorian(datetime_obj: dt.datetime) -> dt.datetime:
+    """Reinterpret an Old Style (Julian calendar) date as its Gregorian equivalent.
+
+    Historical sources give Old Style dates and often do not say so. William Lilly's
+    birth is recorded — by Gadbury, by Lilly's own letter to Ashmole, by AstroDatabank
+    — as **1 May 1602**. That is a *Julian* date. Handed to an ephemeris as though it
+    were Gregorian it computes a chart for a day ten days earlier: Lilly's Sun comes
+    out at 10° Taurus instead of 19°, and his Moon lands in **Virgo** rather than
+    Capricorn. That is not a rounding error, it is a different chart.
+
+    The conversion is Swiss Ephemeris's own — `julday` in the Julian calendar, `revjul`
+    back out in the Gregorian — so we are not maintaining calendar arithmetic. It
+    handles the two things that trip hand-rolled versions: the offset is not a constant
+    ten days (it is 9 in the 1400s, 7 in the 1200s), and the conversion can roll the
+    **year** — Kepler's 27 December 1571 (OS) is 6 January *1572*.
+
+    Example:
+        >>> julian_to_gregorian(dt.datetime(1602, 5, 1, 2, 0))
+        datetime.datetime(1602, 5, 11, 2, 0)
+    """
+    hours = (
+        datetime_obj.hour
+        + datetime_obj.minute / 60
+        + datetime_obj.second / 3600
+        + datetime_obj.microsecond / 3_600_000_000
+    )
+    jd = swe.julday(
+        datetime_obj.year, datetime_obj.month, datetime_obj.day, hours, swe.JUL_CAL
+    )
+    year, month, day, _hour = swe.revjul(jd, swe.GREG_CAL)
+
+    # Only the *date* shifts. Carry the clock time through untouched rather than
+    # rebuilding it from revjul's float hour, which would introduce rounding into a
+    # value that was exact.
+    return datetime_obj.replace(year=year, month=month, day=day)
+
+
+def to_gregorian(datetime_obj: dt.datetime, calendar: str | None = None) -> dt.datetime:
+    """Normalise a datetime to the Gregorian calendar the rest of the stack assumes.
+
+    `calendar` is ``"julian"``, ``"gregorian"``, or ``None``. ``None`` means Gregorian
+    — the right default for the modern dates that are nearly all of any dataset, and a
+    dangerous one for a 17th-century record, which is why the notables loader *requires*
+    an early birth to declare which it means instead of inheriting this default.
+    """
+    if calendar is None or calendar == "gregorian":
+        return datetime_obj
+    if calendar == "julian":
+        return julian_to_gregorian(datetime_obj)
+    raise ValueError(
+        f"unknown calendar {calendar!r} — expected 'julian', 'gregorian', or None"
+    )

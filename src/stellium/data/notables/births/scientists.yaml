@@ -78,6 +78,7 @@
   year: 1643
   month: 1
   day: 4
+  calendar: gregorian
   hour: 1
   minute: 38
   latitude: 52.8055
@@ -102,6 +103,7 @@
   year: 1564
   month: 2
   day: 15
+  calendar: julian
   hour: 16
   minute: 0
   latitude: 43.4715
@@ -125,6 +127,7 @@
   year: 1473
   month: 2
   day: 19
+  calendar: julian
   hour: 17
   minute: 0
   latitude: 53.0333
@@ -152,6 +155,7 @@
   year: 1571
   month: 12
   day: 27
+  calendar: julian
   hour: 14
   minute: 30
   latitude: 48.75

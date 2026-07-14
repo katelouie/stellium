@@ -20,6 +20,7 @@ re-deriving the API from source each session:
 | SVG rendering internals, layers, themes/palettes, dial/vedic/atlas | [docs/development/VISUALIZATION_INTERNALS.md](docs/development/VISUALIZATION_INTERNALS.md) |
 | `ReportBuilder`, sections, renderers | [docs/development/PRESENTATION_INTERNALS.md](docs/development/PRESENTATION_INTERNALS.md) |
 | Multi-chart, returns, electional, planner, Chinese/BaZi, CLI | [docs/development/SUBSYSTEMS.md](docs/development/SUBSYSTEMS.md) |
+| The notables database — schema, provenance, Old Style dates, curation | [docs/development/NOTABLES.md](docs/development/NOTABLES.md) |
 | Adding an engine / component / analyzer / layer / theme / section | [docs/development/EXTENDING.md](docs/development/EXTENDING.md) |
 | Full doc index (incl. user-facing guides) | [docs/DOCS_INDEX.md](docs/DOCS_INDEX.md) |
 

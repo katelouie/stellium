@@ -123,7 +123,7 @@
   event_type: birth
   year: 1452
   month: 4
-  day: 23
+  day: 15
   hour: 21
   minute: 40
   latitude: 43.7833
@@ -139,14 +139,14 @@
   - Scientist
   - Mathematician
   notable_for: Italian Renaissance polymath - painter, sculptor, architect, musician, mathematician, engineer, inventor, anatomist, and writer. Created masterpieces including the Mona Lisa and The Last Supper. His notebooks contain designs for flying machines, tanks, and submarines centuries ahead of their time.
-  astrological_notes: Sun 3 Taurus, Moon 3 Pisces, Asc 6 Sagittarius
+  astrological_notes: 'NEEDS RE-SOURCING FROM ADB: the previous note (Sun 3 Taurus, Moon 3 Pisces, Asc 6 Sagittarius) was computed from the incorrect 23 April date, not taken from a source, so it silently corroborated the error.'
   data_quality: AA
   sources:
   - 'AstroDatabank: https://www.astro.com/astro-databank/Da_Vinci,_Leonardo'
   - 'Family diary: ''A grandson of mine was born April 15, Saturday, three hours into the night'''
   - Leonardo da Vinci, Reynal & Co.
   verified: true
-  calendar: julian_original
+  calendar: julian
   time_system: florentine
   has_reliable_time: true
   verification_notes: |
@@ -178,6 +178,7 @@
   year: 1475
   month: 3
   day: 6
+  calendar: julian
   hour: 1
   minute: 45
   latitude: 43.6389

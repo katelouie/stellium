@@ -27,7 +27,10 @@ spokes hold the technical detail.
    `ReportBuilder`, sections, renderers (rich/markdown/html/pdf/prose).
 7. **[SUBSYSTEMS.md](./SUBSYSTEMS.md)** — pointers: multi-chart, returns,
    electional, planner, Chinese/BaZi, CLI, progressions.
-8. **[EXTENDING.md](./EXTENDING.md)** — how to plug in every protocol
+8. **[NOTABLES.md](./NOTABLES.md)** — the notables database: schema, what each
+   provenance field means, Old Style (Julian) dates, and the rules for curating a
+   record so it stays auditable.
+9. **[EXTENDING.md](./EXTENDING.md)** — how to plug in every protocol
    (engines, components, analyzers, layers, themes, palettes, report sections).
 
 ## Design specs
