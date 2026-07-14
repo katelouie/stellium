@@ -205,7 +205,17 @@ The cookbook files in `examples/` are the best way to see (and show) how all the
 
 ## Publishing
 
-Releases are automated via GitHub Actions on tagged commits. Version is defined in `src/stellium/__init__.py`. This is maintainer-only.
+Maintainer-only. The version lives in `src/stellium/__init__.py`; `pyproject.toml` reads it from there.
+
+```bash
+bump-my-version bump minor --dry-run -v   # look first
+bump-my-version bump minor                # edits __version__ + CHANGELOG, commits, tags
+git push --follow-tags
+```
+
+That bumps the version, opens a dated section in the changelog (leaving a fresh `[Unreleased]` above it), commits, and tags `vX.Y.Z`.
+
+**Pushing the tag does not publish.** `.github/workflows/publish-to-pypi.yml` fires on `release: published`, so the last step is to create a GitHub Release from the tag — that is what uploads to PyPI.
 
 ## Getting Help
 
