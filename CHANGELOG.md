@@ -31,6 +31,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   A block whose output genuinely cannot be pinned marks itself `<!--doc-output:volatile-->` and is run but not compared — it must say so rather than quietly going unchecked. **As of now, nothing needs it: all 49 blocks are pinned.**
 
+- **`ChartBuilder.from_notable(name, use_recorded_time=True)`** — build a chart from the clock time in a record the audit distrusts. Some records carry a time we will not draw houses from: William Lilly's is rated **A** by AstroDatabank (quoted by the person — his own letter to Ashmole) *and* flagged unreliable, because ADB's notes say *"the time may have been rectified by him"* and the record's own audit is blunter still — *"cannot validate a rectifier."* So his chart defaults to unknown-time: noon, no houses, no angles, no Lots.
+
+  That default is right, but as a **hard block it protected nothing**. Anyone could write `Native(datetime(1602, 5, 11, 2, 0), "Diseworth")` and get the identical chart with **no caveat anywhere** — the same report, the same PDF, the same `to_dict()` as a chart built from a birth certificate. The guard did not reduce the risk; it pushed the risk somewhere nothing could see it.
+
+  So the flag is **provenance-preserving rather than provenance-erasing**: you get the chart, you get one `DataQualityWarning`, and the chart carries what it is standing on in `chart.metadata["time_provenance"]` — which travels into reports and `to_dict()`. A chart built on a rectified time can never quietly pass for one built on a birth record. It overrides the *audit*, not the absence of data (a record with no time at all raises rather than inventing one), and it is a silent no-op where nothing is being overridden.
+
+  It is only worth having because the other two fixes landed first: with Lilly's Old Style date and his Local Mean Time both corrected, the Ascendant this delivers is **2°03.6′ Pisces against AstroDatabank's 2°04′**. Before them it would have delivered a confident, wrong Ascendant — which is worse than refusing to draw one.
+
 - **34 new bodies — `CELESTIAL_REGISTRY` goes from 49 to 83** — with two new builder methods and a much larger `with_tnos()`:
 
   - **`with_named_asteroids()`** — 18 asteroids beyond the big four: Psyche, Sappho, Pandora, Amor, Astraea, Hebe, Iris, Flora, Metis, Fortuna, Diana, Hidalgo, Icarus, Toro, Bacchus, Eros, Urania, Apollo.

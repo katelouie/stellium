@@ -23,7 +23,7 @@ from stellium.core.models import (
     UnknownTimeChart,
     longitude_to_sign_and_degree,
 )
-from stellium.core.native import Native, build_chart_datetime
+from stellium.core.native import Native, Notable, build_chart_datetime
 from stellium.core.protocols import (
     AspectEngine,
     ChartAnalyzer,
@@ -37,6 +37,7 @@ from stellium.engines.aspects import ModernAspectEngine
 from stellium.engines.ephemeris import SwissEphemerisEngine
 from stellium.engines.houses import PlacidusHouses
 from stellium.engines.orbs import SimpleOrbEngine
+from stellium.exceptions import DataQualityWarning
 from stellium.utils.cache import Cache
 
 
@@ -94,6 +95,10 @@ class ChartBuilder:
 
         # Optional chart name (for display purposes)
         self._name: str | None = None
+        # Set only by from_notable(use_recorded_time=True): what this chart's
+        # houses and angles are actually standing on. Carried into metadata so the
+        # caveat travels with the chart instead of being lost at the door.
+        self._time_provenance: dict | None = None
 
         # Declination aspect engine (optional)
         self._declination_aspect_engine = None
@@ -119,7 +124,9 @@ class ChartBuilder:
         return builder
 
     @classmethod
-    def from_notable(cls, name: str) -> "ChartBuilder":
+    def from_notable(
+        cls, name: str, *, use_recorded_time: bool = False
+    ) -> "ChartBuilder":
         """
         Create a ChartBuilder from the notable registry by name.
 
@@ -130,16 +137,49 @@ class ChartBuilder:
 
         Args:
             name: Name of person or event (case-insensitive)
+            use_recorded_time: Build the chart from the clock time in the record even
+                though the audit marked it unreliable (``has_reliable_time: false``).
+                See below — this does not make the time trustworthy, it makes the
+                chart *say* what it is standing on.
 
         Returns:
             ChartBuilder instance ready to build, with name pre-set
 
         Raises:
-            ValueError: If name not found in registry
+            ValueError: If name not found, or if ``use_recorded_time`` is asked for a
+                record that has no clock time at all.
 
         Example:
             >>> chart = ChartBuilder.from_notable("Albert Einstein").calculate()
             >>> chart = ChartBuilder.from_notable("marie curie").calculate()
+
+        **On ``use_recorded_time``.** Some records carry a time we will not build
+        houses from. William Lilly's is the type case: AstroDatabank rates it **A**
+        (quoted by the person — his own letter to Ashmole), and also notes that *"the
+        time may have been rectified by him,"* with Gadbury giving 2:00, Sibly 2:08 and
+        Wangemann 3:00. Good provenance for a number he probably back-solved. So
+        ``has_reliable_time: false``, and by default his chart is unknown-time: noon, no
+        houses, no angles, no Lots.
+
+        That default is right, but as a *hard* block it protected nothing. The
+        determined reader simply wrote::
+
+            Native(datetime(1602, 5, 11, 2, 0), "Diseworth, England")
+
+        …and got the identical chart with **no caveat attached anywhere** — the same
+        report, the same PDF, the same ``to_dict()`` as an AA birth-certificate chart.
+        The guard did not reduce the risk; it pushed the risk somewhere nothing could
+        see it.
+
+        So this flag exists, and it is **provenance-preserving rather than
+        provenance-erasing**. It gives you the chart, warns once (``DataQualityWarning``),
+        and records what the chart is standing on in ``chart.metadata["time_provenance"]``
+        — which travels into reports and ``to_dict()``. A chart built on a rectified
+        time can then never quietly pass for one built on a birth record.
+
+        Rectification is legitimate practice (see ``stellium.rectification``), and its
+        whole output is a time you then want to *use*. What is not legitimate is
+        forgetting which kind of time you are holding.
         """
         registry = get_notable_registry()
         notable = registry.get_by_name(name)
@@ -150,10 +190,66 @@ class ChartBuilder:
                 f"Registry contains {available} entries. "
                 f"Use get_notable_registry().get_all() to see available notables."
             )
-        # Notable IS-A Native, so we can use from_native!
-        builder = cls.from_native(notable)
-        # Automatically set the notable's name on the chart
+
+        if not use_recorded_time:
+            # Notable IS-A Native, so we can use from_native!
+            builder = cls.from_native(notable)
+            builder._name = notable.name
+            return builder
+
+        return cls._from_notable_recorded_time(notable)
+
+    @classmethod
+    def _from_notable_recorded_time(cls, notable: Notable) -> "ChartBuilder":
+        """Rebuild a notable's chart from the clock time in its record."""
+        if notable.recorded_time is None:
+            raise ValueError(
+                f"{notable.name!r} has no clock time on record, so there is nothing to "
+                f"use. `use_recorded_time` overrides the *audit* "
+                f"(has_reliable_time: false); it cannot invent a time that was never "
+                f"written down."
+            )
+
+        if notable.has_reliable_time is not False:
+            # Nothing is being overridden — the time was already going to be used.
+            builder = cls.from_native(notable)
+            builder._name = notable.name
+            return builder
+
+        # local_datetime is noon-normalised but its *date* is correct (and already
+        # calendar-converted), so putting the recorded clock time back on it
+        # reassembles the moment the record actually claims.
+        date = notable.datetime.local_datetime or notable.datetime.utc_datetime
+        local = date.replace(
+            hour=notable.recorded_time.hour,
+            minute=notable.recorded_time.minute,
+            second=0,
+            microsecond=0,
+            tzinfo=None,
+        )
+
+        warnings.warn(
+            f"Building {notable.name!r} from the clock time in the record "
+            f"({local.strftime('%H:%M')}) even though the audit marked it unreliable "
+            f"(data_quality={notable.data_quality}, has_reliable_time=False). The "
+            f"houses, angles and Lots in this chart rest on that time. "
+            f"{notable.verification_notes.strip()[:160] or 'See the record for why.'}",
+            DataQualityWarning,
+            stacklevel=3,
+        )
+
+        native = Native(local, notable.location, name=notable.name)
+        builder = cls.from_native(native)
         builder._name = notable.name
+        # Travels into chart.metadata, and from there into reports and to_dict(), so
+        # the chart carries its own caveat rather than looking like a birth record.
+        builder._time_provenance = {
+            "source": "recorded_time_override",
+            "recorded_time": notable.recorded_time.strftime("%H:%M"),
+            "data_quality": notable.data_quality,
+            "has_reliable_time": False,
+            "note": notable.verification_notes.strip() or "",
+        }
         return builder
 
     @classmethod
@@ -912,6 +1008,10 @@ class ChartBuilder:
         # Flag unknown-time charts for downstream consumers.
         if is_unknown:
             final_metadata["time_unknown"] = True
+
+        # A chart built on a time the audit distrusts must say so, everywhere it goes.
+        if self._time_provenance is not None:
+            final_metadata["time_provenance"] = self._time_provenance
 
         # Step 7: Build final chart
         return _assemble(final_metadata)

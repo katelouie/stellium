@@ -75,6 +75,34 @@ decoration that will rot.
 >
 > **Route on `has_reliable_time`, never on `data_quality`.**
 
+### Using a distrusted time anyway: `use_recorded_time`
+
+```python
+chart = ChartBuilder.from_notable("William Lilly", use_recorded_time=True).calculate()
+# DataQualityWarning: ...the audit marked it unreliable (data_quality=A,
+# has_reliable_time=False). The houses, angles and Lots rest on that time.
+chart.metadata["time_provenance"]   # travels into reports and to_dict()
+```
+
+The unknown-time default is right, but as a *hard* block it protected nothing. The
+determined reader simply wrote `Native(datetime(1602, 5, 11, 2, 0), "Diseworth")` and
+got the identical chart with **no caveat attached anywhere** — the same report, the
+same PDF, the same `to_dict()` as a chart built from a birth certificate. The guard
+did not reduce the risk; it pushed the risk somewhere nothing could see it.
+
+So the flag is **provenance-preserving, not provenance-erasing**. You get the chart,
+you get one `DataQualityWarning`, and the chart *carries what it is standing on* in
+`metadata["time_provenance"]`. A chart built on a rectified time can then never quietly
+pass for one built on a birth record.
+
+It overrides the **audit**, not the absence of data: a record with no clock time at all
+raises `ValueError` rather than inventing one. Where nothing is being overridden (the
+time was already trusted) it is a silent no-op.
+
+Rectification is legitimate practice — `stellium.rectification` exists, and its whole
+output is a time you then want to *use*. What is not legitimate is forgetting which
+kind of time you are holding.
+
 ### Category
 
 | Field | Required | Read | Meaning |

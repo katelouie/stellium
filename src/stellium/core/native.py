@@ -561,6 +561,13 @@ class Notable(Native):
         self.has_reliable_time = has_reliable_time
         self.verification_notes = verification_notes
 
+        # Keep the clock time the record actually carries, even when we refuse to
+        # build houses from it. Without this it is gone — `local_datetime` has already
+        # been normalised to noon — and `from_notable(..., use_recorded_time=True)`
+        # would have nothing to reach for. The date here is post-calendar-conversion,
+        # so the pair reassembles correctly.
+        self.recorded_time: dt.time | None = dt.time(h, m) if has_clock_time else None
+
     @property
     def is_birth(self) -> bool:
         """Check if this is a birth record."""
