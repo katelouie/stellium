@@ -23,7 +23,12 @@ repos:
         name: Docs freshness reminder
         stages: [post-commit]
         entry: python scripts/docs_staleness.py
-        language: system
+        # `language: python` — NOT `system`. system resolves `python` through the
+        # pyenv shim, which here points at a version that isn't installed, so the
+        # reminder failed with exit 1: a hook whose whole promise is "never blocking"
+        # was the only thing in the run printing red. The script is pure stdlib and
+        # needs no project deps, so pre-commit's own venv is the right home for it.
+        language: python
         pass_filenames: false
         always_run: true
         verbose: true          # pre-commit swallows stdout on success without this
