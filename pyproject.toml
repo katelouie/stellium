@@ -265,7 +265,7 @@ directory = "htmlcov"
 #
 # The tag alone does NOT publish: .github/workflows/publish-to-pypi.yml fires on
 # `release: published`, so ship by creating a GitHub Release from the tag.
-current_version = "0.21.1"
+current_version = "0.22.0"
 allow_dirty = false
 commit = true
 tag = true

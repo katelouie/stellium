@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-07-14
+
 > ### ⚠️ This release corrects wrong answers
 >
 > Four bugs in this release were **silently returning incorrect results**, not crashing.
