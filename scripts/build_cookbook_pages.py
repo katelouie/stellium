@@ -15,14 +15,21 @@ copying that into Markdown would have created 374 code blocks with no connection
 the code they claim to show — which is exactly the failure the astrology guide made,
 and exactly what `tests/test_doc_codeblocks.py` exists to prevent.
 
-So the pages do not contain code. They `literalinclude` it, addressed by
-`:pyobject:`, which means Sphinx reads the function out of the real script at build
-time. Rename a recipe and the build tells you. Edit a recipe and the page follows.
+So the pages do not contain code. They `literalinclude` it by line range, so Sphinx
+reads it out of the real script at build time and there is nothing to keep in sync.
 
-Each cookbook is a module of `example_*` functions with a docstring apiece:
+A recipe's docstring is doing three jobs at once — titling it, explaining it, and
+sitting inside the code — and the function is wrapped in terminal plumbing. Both come
+apart:
 
-    def example_1_simplest_chart():
-        \"\"\"Example 1: The simplest possible chart.\"\"\"
+    docstring line 1  -> the page heading
+    docstring rest    -> prose, as Markdown, ABOVE the code
+    docstring itself  -> sliced OUT of the code (it is now both of the above)
+    section_header()  -> sliced out too: a banner announcing the example, on a page
+                         whose heading already announces it
+    def / indentation -> dedented away, so the snippet is code you can paste
+
+What is left is the code, and only the code.
 """
 
 from __future__ import annotations
@@ -30,6 +37,8 @@ from __future__ import annotations
 import argparse
 import ast
 import re
+import textwrap
+from dataclasses import dataclass
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -74,43 +83,122 @@ def split_title(raw: str) -> tuple[str, str]:
     return topic, subtitle[:1].upper() + subtitle[1:] if subtitle else ""
 
 
-# Plumbing, not recipes. Every cookbook has some.
-HELPERS = {
-    "main",
-    "get_output_path",
-    "section_header",
-    "header",
-    "print_header",
-    "setup",
-}
+# Plumbing, not recipes. Every cookbook has some, and several of them carry a
+# docstring, so "has a docstring" is not enough to tell them apart from content.
+HELPERS = {"main", "get_output_path", "setup"}
 
 
-def recipes(path: Path) -> list[tuple[str, str]]:
-    """(function name, first docstring line) for each recipe, in source order.
+def is_plumbing(name: str) -> bool:
+    """A helper, whatever it calls itself.
 
-    Most cookbooks name their recipes `example_1_…`, but not all: planner_cookbook
-    uses `basic_planner()`, `full_planner()`, and so on. Keying on the `example_`
-    prefix therefore found **nothing** in that file and silently emitted a page with
-    zero recipes — a generator that produces an empty page and does not say so is the
-    same shape of bug as everything else we have been deleting this week.
+    `print_results`, `print_windows`, `subsection_header` all have docstrings and were
+    being rendered as recipes.
+    """
+    return (
+        name in HELPERS
+        or name.startswith(("_", "print_"))
+        or name.endswith(("_header", "_headers"))
+    )
 
-    So the rule is structural rather than lexical: a recipe is a top-level function
-    with a docstring, that is not private and not plumbing. And `main()` asserts that
-    every cookbook yields at least one, so a naming convention we have not met yet
-    fails the build instead of quietly emptying a page.
+
+# The banner a recipe prints when the cookbook is run in a terminal. It exists to tell
+# you which example you are looking at — which, on a page whose heading already says
+# so, is the same sentence twice:
+#
+#     ## Solar Arc Directions to a Specific Date
+#     ```python
+#     section_header("Example 2: Solar Arc Directions to a Specific Date")   # <- this
+#     ...
+BANNER_CALLS = {"section_header", "print_header", "subsection_header", "header"}
+
+
+def is_banner(node: ast.stmt) -> bool:
+    """Is this statement pure terminal decoration?
+
+    Either a call to one of the banner helpers, or a `print()` whose arguments are
+    *entirely literal* — `print("\n" + "=" * 60)`, `print("EXAMPLE 1: SYNASTRY")`.
+
+    The literal test is what keeps this honest: `print(f"Found {len(results)} results")`
+    contains a Name and a Call, so it is real output and survives. Decoration is,
+    definitionally, the stuff that does not look at the data.
+    """
+    if not isinstance(node, ast.Expr) or not isinstance(node.value, ast.Call):
+        return False
+    func = node.value.func
+    name = getattr(func, "id", None)
+    if name in BANNER_CALLS:
+        return True
+    if name != "print":
+        return False
+    return not any(
+        isinstance(child, ast.Name | ast.Attribute | ast.Call)
+        for arg in node.value.args
+        for child in ast.walk(arg)
+    )
+
+
+@dataclass(frozen=True)
+class Recipe:
+    """One recipe, taken apart into the three things a page wants from it."""
+
+    name: str
+    title: str  # the docstring's first line -> the page heading
+    prose: str  # the rest of the docstring -> prose *above* the code
+    first_line: int  # first line of the body AFTER the docstring
+    last_line: int  # last line of the function
+
+
+def recipes(path: Path) -> list[Recipe]:
+    """Take each recipe apart: heading, prose, and the code without its docstring.
+
+    A recipe's docstring is already doing three jobs — titling it, explaining it, and
+    sitting inside the code. Rendered naively that means the title is printed twice
+    (once as the page heading, once inside the snippet) and the explanation is trapped
+    in a code block where it cannot be a paragraph, a list, or a link.
+
+    So the docstring is *lifted out*: line one becomes the heading, the rest becomes
+    prose above the code, and the code block is sliced to start after the docstring
+    ends. The reader gets an explanation they can read and a snippet they can copy.
+
+    On recognising a recipe at all: most cookbooks name theirs `example_1_…`, but not
+    all — planner_cookbook uses `basic_planner()`, `full_planner()`. Keying on the
+    `example_` prefix found **nothing** there and silently produced an empty page, so
+    the rule is structural instead: a top-level function with a docstring, neither
+    private nor plumbing. `main()` fails the build on a cookbook with zero recipes,
+    because that means a convention we have not met, not a cookbook with no content.
     """
     tree = ast.parse(path.read_text(encoding="utf-8"))
-    found = []
+    found: list[Recipe] = []
     for node in tree.body:
         if not isinstance(node, ast.FunctionDef):
             continue
-        if node.name.startswith("_") or node.name in HELPERS:
+        if is_plumbing(node.name):
             continue
         doc = ast.get_docstring(node)
         if not doc:
-            continue  # no docstring, no heading — it is a helper in all but name
-        title = EXAMPLE_PREFIX.sub("", doc.strip().split("\n")[0]).strip()
-        found.append((node.name, title.rstrip(".") or node.name.replace("_", " ")))
+            continue  # no docstring, no heading — plumbing in all but name
+
+        lines = doc.strip().split("\n")
+        title = EXAMPLE_PREFIX.sub("", lines[0]).strip().rstrip(".")
+        prose = textwrap.dedent("\n".join(lines[1:])).strip()
+
+        # Skip the docstring AND the banner statements that follow it, so the code
+        # block starts at the first line that actually does something.
+        body = node.body[1:]
+        while body and is_banner(body[0]):
+            body = body[1:]
+        if not body:
+            continue  # a docstring and a banner is not a recipe
+
+        found.append(
+            Recipe(
+                name=node.name,
+                title=title or node.name.replace("_", " "),
+                prose=prose,
+                first_line=body[0].lineno,
+                last_line=node.end_lineno,
+            )
+        )
     return found
 
 
@@ -162,12 +250,20 @@ def page(path: Path) -> tuple[str, str, int, str]:
         ":::",
         "",
     ]
-    for name, title in found:
+    for recipe in found:
+        out += [f"## {recipe.title}", ""]
+        if recipe.prose:
+            out += [recipe.prose, ""]
         out += [
-            f"## {title}",
-            "",
+            # :lines: skips the docstring, which is already the heading and the prose
+            # above. :dedent: unwraps the function body so the snippet is code you can
+            # paste, not code you have to unindent first. It is still a literalinclude,
+            # so Sphinx reads it out of the real script at build time.
             f"```{{literalinclude}} ../../examples/{path.name}",
-            ":pyobject: " + name,
+            f":lines: {recipe.first_line}-{recipe.last_line}",
+            ":dedent:",  # bare = strip the COMMON indent. ":dedent: 4" strips exactly
+            #                4 chars, which mangles a recipe holding a triple-quoted
+            #                string whose content starts at column 0 (io_cookbook).
             ":language: python",
             "```",
             "",
