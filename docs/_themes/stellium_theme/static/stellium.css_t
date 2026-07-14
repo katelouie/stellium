@@ -255,7 +255,7 @@ html[data-theme="dark"] .st-i-moon{display:none;}
 
 /* ============================ PROSE (page body) ============================ */
 .st-prose{max-width:820px;}
-.st-prose h1{font-family:'Spectral',serif; font-weight:600; font-size:42px; line-height:1.1; letter-spacing:-.6px; color:var(--fg); margin:0 0 18px;}
+.st-prose h1{font-family:'Spectral',serif; font-weight:600; font-size:44px; line-height:1.08; letter-spacing:-.6px; color:var(--fg); margin:0 0 18px;}
 .st-prose h2{font-family:'Spectral',serif; font-weight:600; font-size:27px; letter-spacing:-.3px; color:var(--fg); margin:40px 0 6px; padding-bottom:9px; border-bottom:1px solid var(--border);}
 .st-prose h3{font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:19px; color:var(--fg); margin:28px 0 10px;}
 .st-prose h4{font-weight:600; font-size:16px; color:var(--fg); margin:22px 0 8px;}
@@ -559,8 +559,8 @@ table.dataframe tbody tr:last-child th{border-bottom:0 !important;}
 
 /* ---- lede + eyebrow ---- */
 .st-lede{
-  font-size:17.5px; line-height:1.62; color:var(--fg-muted);
-  max-width:60ch; margin:0 0 26px;
+  font-size:19px; line-height:1.6; color:var(--fg-muted);
+  max-width:660px; margin:0 0 26px;
 }
 .st-lede p{margin:0;}
 .st-eyebrow{
@@ -928,3 +928,39 @@ a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(-
 .st-shot a{display:block;}
 .st-shot a img{margin:0;}
 .st-strip .st-shot p{margin:0;}
+
+/* ---------------------------------------------------------------------------
+   Home: the fork cards, brought to the design.
+
+   The card's first paragraph is its header row — a glyph in a soft tile beside a
+   Spectral title. Authored as one line of Markdown:
+
+       [⌘]{.st-glyph} **I'm a developer first**
+
+   so the glyph is a span the CSS can make a tile of, and the title is just strong.
+   --------------------------------------------------------------------------- */
+.st-card{padding:24px;}
+.st-card > p:first-child{
+  display:flex; align-items:center; gap:10px;
+  margin:0 0 8px;
+  justify-content:flex-start;          /* not space-between: these are not a row of two */
+}
+.st-card > p:first-child .st-glyph{margin:0;}
+.st-card > p:first-child strong{
+  font-family:'Spectral',serif; font-weight:600; font-size:21px; color:var(--fg);
+}
+.st-card-astro .st-glyph{background:var(--gold-soft); color:var(--gold);}
+
+/* The install pill reads as a shell prompt. The `$` is generated, so selecting the
+   pill (user-select:all) copies the command and not the prompt. */
+.st-cta-code::before{content:"$ "; color:var(--fg-faint);}
+
+/* Theme gallery: three to a row.
+   A natal wheel at 160px is a smudge — you cannot tell `midnight` from `celestial`,
+   which is the entire question the page exists to answer. The palette strips keep the
+   tighter grid: there, the thing being judged is a handful of colours, and it reads
+   fine small. */
+.st-strip-wide{grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));}
+@media (min-width:900px){
+  .st-strip-wide{grid-template-columns:repeat(3, 1fr);}
+}

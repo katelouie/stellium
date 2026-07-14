@@ -24,7 +24,9 @@ runs the real thing.
 Two lines of code
 :::
 
-```python
+```{code-block} python
+:caption: first_chart.py
+
 from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
@@ -50,7 +52,7 @@ Both lead into the same documentation; they just order it differently.
 ::::{container} st-fork
 
 :::{container} st-card st-card-dev
-**⌘ I'm a developer first**
+[⌘]{.st-glyph} **I'm a developer first**
 
 Typed, protocol-driven, composable. Feels familiar if you know React or PyTorch.
 
@@ -61,7 +63,7 @@ Typed, protocol-driven, composable. Feels familiar if you know React or PyTorch.
 :::
 
 :::{container} st-card st-card-astro
-**☾ I'm an astrologer first**
+[☾]{.st-glyph} **I'm an astrologer first**
 
 Traditional and modern techniques, real chart output, sensible defaults out of the box.
 
@@ -128,7 +130,9 @@ Most astrology libraries hand you one rigid constructor. Stellium hands you a
 builder: swap house systems, aspect engines and zodiacs, stack plugin components,
 and evaluate lazily — all fully typed.
 
-```python
+```{code-block} python
+:caption: composable.py
+
 from stellium import ChartBuilder
 from stellium.engines import ModernAspectEngine, PlacidusHouses, WholeSignHouses
 from stellium.components import ArabicPartsCalculator

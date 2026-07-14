@@ -73,6 +73,13 @@ def draw(chart, path: Path, **style) -> None:
 
 def main() -> None:
     IMAGES.mkdir(parents=True, exist_ok=True)
+
+    # Clear the previous run's pages. A theme removed from the enum must vanish from
+    # the gallery, not linger as an orphan page nothing links to — and in FAST mode,
+    # where only a few members are rendered, the rest would otherwise be left behind.
+    for stale in OUT.glob("*.md"):
+        stale.unlink()
+
     chart = ChartBuilder.from_notable(NATIVE).with_aspects().calculate()
 
     themes = list(ChartTheme)
@@ -160,7 +167,7 @@ chart.draw("out.svg").with_theme("midnight")
 Every image below is the same chart ({NATIVE}), so the styling is the only thing that
 differs. Click one for the code that made it.
 
-::::{{container}} st-strip
+::::{{container}} st-strip st-strip-wide
 
 {chr(10).join(cards)}
 ::::
