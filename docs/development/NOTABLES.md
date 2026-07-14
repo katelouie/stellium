@@ -51,7 +51,7 @@ decoration that will rot.
 |---|---|---|---|
 | `latitude` `longitude` | ✅ | ✅ | Decimal degrees. Stored, not geocoded — so a notable never depends on a network call. |
 | `location_name` | ✅ | ✅ | Human-readable; display only. |
-| `timezone` | ✅ | ✅ | IANA name. **See [Known gaps](#known-gaps): this is wrong for any pre-1880 birth**, which predates standard time. |
+| `timezone` | ✅ | ✅ | IANA name. For a birth **before standard time reached that zone**, it is used only to *detect* the era — the actual offset is Local Mean Time, computed from `longitude`. See [Local Mean Time](#local-mean-time). |
 
 ### Provenance — the part that matters
 
@@ -131,6 +131,41 @@ AstroDatabank itself displays both. So do we.
 
 Valid values are `julian` and `gregorian`. Nothing else. (`calendar: julian_original`
 shipped for months, parsed fine, and meant nothing.)
+
+---
+
+## Local Mean Time
+
+**Before standard time, the clock on the wall showed Local Mean Time.** Noon was when
+the Sun crossed *your* meridian, so the offset from UT was a function of your longitude
+and nothing else. Britain adopted standard time in 1880, the United States in 1883,
+Germany in 1893.
+
+IANA models that period as an `LMT` offset and pytz will hand it to you — but it is the
+LMT of the zone's **reference city**, not of the birthplace, and they are different
+numbers. Lilly was born at Diseworth (1°16′W), whose LMT is −5m04s from UT;
+`Europe/London`'s LMT is −1m. Four minutes of clock is roughly a degree of Ascendant,
+and for Lilly it decided his *rising sign*:
+
+| | Ascendant |
+|---|---|
+| AstroDatabank publishes | **2°04′ Pisces** |
+| LMT from his longitude (what we do now) | 2°03.6′ Pisces |
+| LMT from the IANA zone (what we did before) | 29°47′ **Aquarius** |
+
+So the zone is used only to **detect** the era — adoption was staggered by country, so
+there is no cutoff year to hardcode, and IANA knows the real date for every zone and
+names the period `LMT`. The offset then comes from `longitude`, which is what actually
+set the clock. This is what AstroDatabank and astrological practice both do.
+
+**This is why `latitude`/`longitude` are stored rather than geocoded**: a notable's
+Ascendant depends on its longitude to the arcminute, and must never depend on what a
+geocoding service happened to return today.
+
+**64 of the 211 dated records are affected** — Jung, Einstein, Freud, Churchill, Curie,
+Gandhi, Mozart, Tesla among them. See `core/native.py::build_chart_datetime` and
+`tests/test_local_mean_time.py`, which is pinned to AstroDatabank rather than to our
+own output, because a snapshot of ourselves ratified the wrong Ascendant for years.
 
 ---
 
