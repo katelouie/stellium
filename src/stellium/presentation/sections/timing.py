@@ -2,6 +2,7 @@
 Timing technique report sections.
 
 Includes:
+
 - ProfectionSection: Annual and monthly profections
 - ZodiacalReleasingSection: Zodiacal releasing periods and timeline
 """
@@ -317,10 +318,12 @@ class ZodiacalReleasingSection:
     with options to display current snapshot and/or L1 timeline.
 
     Snapshot mode shows:
+
     - Current L1/L2 periods (always shown)
     - L3/L4 context (current ± 2 periods) for finer timing
 
     Timeline mode shows:
+
     - All L1 periods with ages and status indicators
     - Peak (★), Angular (◆), and Current (⚡) markers
     """
@@ -338,18 +341,22 @@ class ZodiacalReleasingSection:
 
         Args:
             lots: Which lot(s) to display:
+
                 - str: Single lot name (e.g., "Part of Fortune")
                 - list[str]: Multiple lots (e.g., ["Part of Fortune", "Part of Spirit"])
                 - None or "all": All lots calculated in the chart
             mode: Display mode:
+
                 - "snapshot": Current periods only
                 - "timeline": L1 timeline only
                 - "both": Both snapshot and timeline (DEFAULT)
             query_date: Date for snapshot (defaults to now)
+
                 - datetime: Use this date
                 - str: Parse as ISO format
                 - None: Use current date/time
             query_age: Age for snapshot (alternative to query_date)
+
                 - float: Use this age
                 - None: Calculate from query_date
             context_periods: Number of periods before/after current to show

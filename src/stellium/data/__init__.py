@@ -2,6 +2,7 @@
 Stellium data package.
 
 Provides:
+
 - Notable births and events registry
 - Ephemeris path management
 - Package data access

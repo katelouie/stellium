@@ -2,6 +2,7 @@
 Core report sections for basic chart information.
 
 Includes:
+
 - ChartOverviewSection: Basic chart metadata (date, time, location)
 - PlanetPositionSection: Positions of celestial objects
 - HouseCuspsSection: House cusp positions for multiple systems
@@ -28,6 +29,7 @@ class ChartOverviewSection:
     Overview section with basic chart information.
 
     Shows:
+
     - Native name (if available)
     - Birth date/time
     - Location
@@ -50,6 +52,7 @@ class ChartOverviewSection:
         For Comparison/MultiChart objects, shows all charts' information.
 
         Why key-value format?
+
         - Simple label: value pairs
         - Easy to render as a list or small table
         - Human-readable structure
@@ -229,6 +232,7 @@ class PlanetPositionSection:
     """Table of planet positions.
 
     Shows:
+
     - Planet name
     - Sign + degree
     - House (optional)
@@ -248,6 +252,7 @@ class PlanetPositionSection:
             include_speed: Show speed column (for retrograde detection)
             include_house: Show house placement column
             house_systems: Which systems to display:
+
                 - "all": Show all calculated house systems (DEFAULT)
                 - list[str]: Show specific systems (e.g., ["Placidus", "Whole Sign"])
                 - None: Show default system only
@@ -456,6 +461,7 @@ class HouseCuspsSection:
     Table of house cusp positions for multiple house systems.
 
     Shows:
+
     - House number (1-12)
     - Cusp position for each calculated house system
     """
@@ -466,6 +472,7 @@ class HouseCuspsSection:
 
         Args:
             systems: Which systems to display:
+
                 - "all": Show all calculated house systems (DEFAULT)
                 - list[str]: Show specific systems (e.g., ["Placidus", "Whole Sign"])
         """

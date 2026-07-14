@@ -1,6 +1,7 @@
 """Chinese astrology systems for Stellium.
 
 This module provides implementations of various Chinese astrology systems:
+
 - Bazi (Four Pillars / 八字) - implemented
 - Zi Wei Dou Shu (Purple Star / 紫微斗數) - planned
 

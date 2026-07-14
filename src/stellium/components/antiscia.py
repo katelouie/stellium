@@ -11,6 +11,7 @@ Traditional astrologers use antiscia to find hidden connections between planets
 that don't make conventional aspects.
 
 Formulas:
+
 - Antiscion = (360° - longitude + 180°) % 360° = (180° - longitude) % 360°
   Equivalently: reflect across Cancer-Capricorn axis
 - Contra-antiscion = (360° - longitude) % 360°
@@ -80,17 +81,19 @@ class AntisciaCalculator:
     operating on a hidden or fated level.
 
     Usage:
-        chart = (ChartBuilder.from_native(native)
-            .add_component(AntisciaCalculator())
-            .calculate())
+        .. code-block:: python
 
-        # Access antiscia points (added to chart.positions)
-        antiscia_points = [p for p in chart.positions
-                          if p.object_type == ObjectType.ANTISCION]
+            chart = (ChartBuilder.from_native(native)
+                .add_component(AntisciaCalculator())
+                .calculate())
 
-        # Access conjunction data (in metadata)
-        antiscia_data = chart.metadata.get("antiscia", {})
-        conjunctions = antiscia_data.get("conjunctions", [])
+            # Access antiscia points (added to chart.positions)
+            antiscia_points = [p for p in chart.positions
+                              if p.object_type == ObjectType.ANTISCION]
+
+            # Access conjunction data (in metadata)
+            antiscia_data = chart.metadata.get("antiscia", {})
+            conjunctions = antiscia_data.get("conjunctions", [])
     """
 
     metadata_name = "antiscia"
@@ -313,6 +316,7 @@ class AntisciaCalculator:
 
         Returns:
             Dictionary containing:
+
             - conjunctions: List of AntisciaConjunction objects
             - contra_conjunctions: List of contra-antiscia conjunctions
             - orb: The orb used for calculations

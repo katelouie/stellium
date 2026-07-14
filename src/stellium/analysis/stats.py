@@ -398,6 +398,7 @@ class ChartStats:
         Requires pandas: pip install stellium[analysis]
 
         Supported variables:
+
         - "sun_sign", "moon_sign", "asc_sign", "mc_sign"
         - "sun_house", "moon_house", etc. (any object + "_house")
         - "sect" (day/night)

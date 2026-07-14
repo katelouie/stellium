@@ -11,6 +11,7 @@ is ruled by the planet that rules that weekday.
 Chaldean order (from slowest to fastest): Saturn → Jupiter → Mars → Sun → Venus → Mercury → Moon
 
 Day rulers:
+
 - Sunday: Sun
 - Monday: Moon
 - Tuesday: Mars

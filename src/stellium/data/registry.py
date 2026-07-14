@@ -148,6 +148,7 @@ class NotableRegistry:
         Parse location from YAML entry.
 
         Supports multiple formats:
+
         - location: "City, Country" (geocoded)
         - latitude/longitude: as tuple
         - latitude/longitude/timezone: as tuple (timezone will be found by Native)

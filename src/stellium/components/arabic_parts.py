@@ -8,6 +8,7 @@ or areas of life.
 Formula: Lot = Asc + Point2 - Point1
 
 Many lots are "sect-aware" - they flip the formula for day vs night charts:
+
 - Day Chart: Asc + Point2 - Point1
 - Night Chart: Asc + Point1 - Point2
 """

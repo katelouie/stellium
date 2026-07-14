@@ -5,6 +5,7 @@ Midpoints are the halfway point between two celestial objects.
 They represent the synthesis or blend of two planetary energies.
 
 In midpoint astrology:
+
 - Direct midpoint: Shortest arc between two points
 - Indirect midpoint: Opposite point (180° from direct)
 

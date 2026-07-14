@@ -2,6 +2,7 @@
 Component system for optional chart calculations.
 
 Components calculate additional objects based on:
+
 - Chart datetime/location
 - Already-calculated planetary positions
 - House cusps

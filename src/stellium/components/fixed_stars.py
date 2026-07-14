@@ -43,6 +43,7 @@ class FixedStarsComponent:
     positions for fixed stars and returns them as FixedStarPosition objects.
 
     Stars can be filtered by:
+
     - Specific star names
     - Tier (1=Royal, 2=Major, 3=Extended)
     - Royal stars only

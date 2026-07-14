@@ -172,6 +172,7 @@ class DirectionMethod(Protocol):
     """Protocol for direction calculation methods.
 
     Different implementations provide different mathematical approaches:
+
     - ZodiacalDirections: Projects onto ecliptic plane (2D)
     - MundaneDirections: Uses house-space proportions (3D/Placidus)
     """
@@ -206,6 +207,7 @@ class TimeKey(Protocol):
     """Protocol for converting arcs to time.
 
     Different keys represent different symbolic rates of motion:
+
     - Ptolemy: 1 degree = 1 year
     - Naibod: Based on mean solar motion (~1.0146 years/degree)
     """

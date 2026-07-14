@@ -213,6 +213,7 @@ class Cache:
 
         Returns:
             Dictionary with cache statistics including:
+
             - total_files: Number of cached files
             - total_size_bytes: Total cache size
             - by_type: Breakdown by cache type

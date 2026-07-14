@@ -6,11 +6,13 @@ the period from 13201 BCE to 17191 CE. The basic Stellium installation includes
 only essential files covering 1800-2400 CE (~7.8MB).
 
 Asteroid files are stored separately in ast0/, ast1/, etc. folders, where:
+
 - ast0/ contains asteroids 0-999
 - ast1/ contains asteroids 1000-1999
 - etc.
 
 Common asteroid numbers:
+
 - Eris: 136199 (ast136/)
 - Sedna: 90377 (ast90/)
 - Makemake: 136472 (ast136/)
@@ -239,6 +241,7 @@ def get_asteroid_filename(asteroid_number: int) -> str:
     Get the Swiss Ephemeris filename for an asteroid number.
 
     Long-range asteroid files (6000 year coverage) follow the pattern:
+
     - For numbers < 100000: se{number}.se1 (5-digit zero-padded)
     - For numbers >= 100000: s{number}.se1 (no zero-padding)
 
@@ -366,6 +369,7 @@ def resolve_asteroid_input(input_str: str) -> list[int]:
     Resolve asteroid input to a list of asteroid numbers.
 
     Accepts:
+
     - Single number: "136199"
     - Comma-separated: "136199,90377,50000"
     - Named asteroids: "eris", "sedna", "makemake"

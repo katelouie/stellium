@@ -219,6 +219,7 @@ class SynthesisChart(CalculatedChart):
     A chart synthesized from two source charts (composite or davison).
 
     Inherits all fields from CalculatedChart:
+
     - positions: tuple[CelestialPosition, ...]
     - aspects: tuple[Aspect, ...]
     - house_systems: dict[str, HouseCusps]
@@ -441,6 +442,7 @@ class SynthesisBuilder:
 
         Args:
             method: "short_arc" (default) or "long_arc"
+
                    - short_arc: Always takes shorter path around zodiac
                    - long_arc: Always takes longer path
 
@@ -602,6 +604,7 @@ class SynthesisBuilder:
         2. Calculate midpoint longitude (respecting midpoint_method)
         3. Create new CelestialPosition with midpoint coordinates
         4. Calculate houses based on _houses setting:
+
            - True: Derived ASC method (midpoint Ascendants)
            - False: No houses
            - "place": Reference place method (geographic midpoint)

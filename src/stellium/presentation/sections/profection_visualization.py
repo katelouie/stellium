@@ -2,6 +2,7 @@
 Profection wheel visualization section.
 
 Generates SVG wheel visualizations for annual profections:
+
 - Circular wheel with ages 0-95 spiraling through 12 houses
 - House labels with zodiac signs around perimeter
 - Natal planet positions marked on the wheel
@@ -114,6 +115,7 @@ class ProfectionVisualizationSection:
     Profection wheel visualization section.
 
     Generates an SVG visualization showing:
+
     - Circular wheel with ages spiraling through 12 houses
     - Zodiac signs and house labels around the perimeter
     - Natal planet positions
@@ -121,12 +123,14 @@ class ProfectionVisualizationSection:
     - Summary table with profection details
 
     Example:
-        section = ProfectionVisualizationSection(
-            age=30,
-            show_table=True
-        )
-        data = section.generate_data(chart)
-        # data["content"] contains SVG string
+        .. code-block:: python
+
+            section = ProfectionVisualizationSection(
+                age=30,
+                show_table=True
+            )
+            data = section.generate_data(chart)
+            # data["content"] contains SVG string
     """
 
     def __init__(

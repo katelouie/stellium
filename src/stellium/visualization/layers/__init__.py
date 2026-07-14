@@ -6,6 +6,7 @@ Each class knows how to draw one specific part of a chart,
 reading its data from the CalculatedChart object.
 
 This package is organized into submodules by layer type:
+
 - chart_frame: Header, borders, and ring boundaries
 - zodiac: Zodiac ring with signs and degrees
 - houses: House cusp rendering (inner and outer)

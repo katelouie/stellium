@@ -3,11 +3,13 @@ MultiWheel chart implementation for 2-4 chart comparisons.
 
 This module provides a unified interface for rendering multiple charts
 concentrically inside a single zodiac wheel:
+
 - Biwheel (2 charts): Natal + transits, synastry, etc.
 - Triwheel (3 charts): Natal + progressed + transits
 - Quadwheel (4 charts): Maximum supported
 
 Ring order (center → out):
+
 - Tiny aspect center (no aspect lines drawn)
 - Chart 1 ring (innermost) - houses + objects
 - Chart 2 ring
@@ -16,6 +18,7 @@ Ring order (center → out):
 - Zodiac ring (outermost)
 
 Each chart ring includes:
+
 - Alternating house fills (theme-colored per chart)
 - House divider lines (full ring width)
 - Planet glyphs with compact info (degree only)

@@ -2,6 +2,7 @@
 Transit calendar report sections.
 
 These sections show sky events (not natal chart analysis):
+
 - StationSection: Planetary stations (retrograde/direct)
 - IngressSection: Sign ingresses
 - EclipseSection: Solar and lunar eclipses

@@ -24,6 +24,7 @@ class RichTableRenderer:
     Requires: pip install rich
 
     Features:
+
     - Colored tables with borders
     - Automatic column width adjustment
     - Unicode box characters
@@ -334,6 +335,7 @@ class PlainTextRenderer:
     Plain text renderer with no dependencies.
 
     Creates simple ASCII tables and formatted text suitable for:
+
     - Log files
     - Email
     - Systems without Rich library
@@ -493,6 +495,7 @@ class MarkdownRenderer:
     GitHub Flavored Markdown renderer with no dependencies.
 
     Creates clean, portable markdown suitable for:
+
     - Obsidian / Notion / any markdown editor
     - GitHub READMEs, issues, and wikis
     - Documentation sites (MkDocs, Docusaurus, etc.)
@@ -928,6 +931,7 @@ class ProseRenderer:
     anywhere you want clean, readable text without tables or formatting codes.
 
     Output format:
+
     - Chart overview as flowing sentences
     - Lists of positions/aspects as bullet points
     - No tables, no headers, no special formatting

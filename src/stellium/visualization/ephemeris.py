@@ -384,6 +384,7 @@ class GraphicEphemeris:
         Detect where planet lines cross (aspects in harmonic view).
 
         In a 90° harmonic:
+
         - Lines crossing = hard aspect (conjunction, square, or opposition)
         - Determine which by checking actual longitude difference
 

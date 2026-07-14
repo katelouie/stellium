@@ -22,6 +22,7 @@ class HeaderLayer:
     Renders the chart header band at the top of the canvas.
 
     Displays native information prominently:
+
     - Single chart: Name, location, datetime, timezone, coordinates
     - Biwheel: Two-column layout with chart1 info left-aligned, chart2 right-aligned
     - Synthesis: "Composite: Name1 & Name2" or "Davison: Name1 & Name2" with midpoint info
@@ -711,6 +712,7 @@ class RingBoundaryLayer:
     Renders circular boundary lines between chart rings in a multiwheel chart.
 
     Draws circles at the boundaries between:
+
     - Each chart ring (chart1_ring_outer, chart2_ring_outer, etc.)
     - The outermost chart and the zodiac ring (zodiac_ring_inner)
 

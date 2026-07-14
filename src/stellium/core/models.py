@@ -201,18 +201,20 @@ class MidpointPosition(CelestialPosition):
         is_indirect: True if this is the indirect (opposite) midpoint
 
     Example:
-        # Sun at 10° Aries, Moon at 20° Aries
-        # Direct midpoint: 15° Aries
-        # Indirect midpoint: 15° Libra (opposite)
+        .. code-block:: python
 
-        midpoint = MidpointPosition(
-            name="Midpoint:Sun/Moon",
-            object_type=ObjectType.MIDPOINT,
-            longitude=15.0,  # 15° Aries
-            object1=sun_position,
-            object2=moon_position,
-            is_indirect=False,
-        )
+            # Sun at 10° Aries, Moon at 20° Aries
+            # Direct midpoint: 15° Aries
+            # Indirect midpoint: 15° Libra (opposite)
+
+            midpoint = MidpointPosition(
+                name="Midpoint:Sun/Moon",
+                object_type=ObjectType.MIDPOINT,
+                longitude=15.0,  # 15° Aries
+                object1=sun_position,
+                object2=moon_position,
+                is_indirect=False,
+            )
     """
 
     # Use field with default_factory=None pattern to handle required fields after optional ones
@@ -1102,6 +1104,7 @@ class CalculatedChart:
                   Also accepts the metadata key as an alias (e.g., "dignities").
 
         Returns:
+
             - For position-based components: list of CelestialPosition objects
             - For metadata-based components/analyzers: the stored dict or list
             - For dual-storage components: dict with "positions" and "metadata" keys
@@ -1314,6 +1317,7 @@ class CalculatedChart:
 
         Args:
             aspects: Planet set to consider:
+
                 - "traditional": Sun through Saturn (visible planets)
                 - "modern": Includes Uranus, Neptune, Pluto
 
@@ -2484,10 +2488,12 @@ class PhaseData:
 
     Attributes:
         phase_angle: Angular separation from Sun (0-360°)
+
             - 0° = conjunction (new moon)
             - 90° = quadrature (quarter moon)
             - 180° = opposition (full moon)
         illuminated_fraction: Fraction of disk that is illuminated (0.0-1.0)
+
             - 0.0 = completely dark (new)
             - 0.5 = half illuminated (quarter)
             - 1.0 = fully illuminated (full)
@@ -2683,12 +2689,14 @@ class UnknownTimeChart(CalculatedChart):
 
     Inherits from CalculatedChart for compatibility with all existing code,
     but has some key differences:
+
     - Houses are empty (no house cusps without birth time)
     - Angles are not calculated (no Asc/MC/Dsc/IC)
     - Moon is shown as a range rather than single position
     - Planetary positions are calculated for noon
 
     The chart can still be:
+
     - Visualized (without houses, with moon arc)
     - Exported to JSON
     - Used for aspect calculations (using noon Moon)

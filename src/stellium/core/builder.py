@@ -269,10 +269,12 @@ class ChartBuilder:
 
         Args:
             datetime_input: Datetime as string, datetime object, or dict
+
                 - String: "2024-11-24 14:30", "11/24/2024 2:30 PM", etc.
                 - datetime: Any datetime object (naive will be localized to location)
                 - dict: {"year": 2024, "month": 11, "day": 24, "hour": 14, "minute": 30}
             location_input: Location as string, (lat, lon) tuple, or dict
+
                 - String: "Palo Alto, CA" (will be geocoded)
                 - Tuple: (37.4419, -122.1430)
                 - dict: {"latitude": 37.4419, "longitude": -122.1430, "name": "Palo Alto"}
@@ -373,6 +375,7 @@ class ChartBuilder:
         Include Trans-Neptunian Objects in the calculation.
 
         Adds the major TNOs:
+
         - Eris (dwarf planet, discord)
         - Sedna (isolation, deep healing)
         - Makemake (resourcefulness, manifestation)
@@ -498,6 +501,7 @@ class ChartBuilder:
         Include Hamburg/Uranian hypothetical planets and points in the calculation.
 
         Adds the 8 transneptunian points (TNPs) used in Uranian astrology:
+
         - Cupido (family, groups, art, community)
         - Hades (decay, the past, what's hidden)
         - Zeus (leadership, fire, directed energy)
@@ -548,11 +552,13 @@ class ChartBuilder:
 
         Args:
             ayanamsa: The ayanamsa system to use. Common options:
+
                 - "lahiri" (default) - Indian government standard, most common for Vedic
                 - "fagan_bradley" - Primary Western sidereal
                 - "raman" - B.V. Raman's system, popular in South India
                 - "krishnamurti" - Used in KP system
                 - "yukteshwar" - Sri Yukteshwar's system
+
                 See stellium.core.ayanamsa.list_ayanamsas() for all options
 
         Returns:
@@ -618,6 +624,7 @@ class ChartBuilder:
         - **Houses and angles** are not calculated (Earth-horizon concepts)
 
         Heliocentric charts are used in:
+
         - Financial astrology (market timing)
         - Some modern experimental techniques
         - Scientific/astronomical contexts
@@ -695,6 +702,7 @@ class ChartBuilder:
         Mark this chart as having unknown birth time.
 
         When birth time is unknown:
+
         - Time is normalized to noon for planet calculations
         - Houses and angles will NOT be calculated
         - Moon will include a range showing possible positions throughout the day
@@ -1021,6 +1029,7 @@ class ChartBuilder:
         Calculate the Moon's position range for the day.
 
         Calculates Moon position at:
+
         - 00:00:00 (start of day in LOCAL timezone)
         - 12:00:00 (noon - displayed position)
         - 23:59:59 (end of day in LOCAL timezone)

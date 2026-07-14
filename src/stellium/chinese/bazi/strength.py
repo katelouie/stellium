@@ -19,6 +19,7 @@ by analyzing four traditional factors:
    elements weaken it.
 
 The weighted score determines strength classification:
+
 - Very Strong (极旺): dominant element, seasonal support, many roots
 - Strong (旺): favorable balance of support vs drain
 - Moderate (中和): roughly balanced
@@ -26,6 +27,7 @@ The weighted score determines strength classification:
 - Very Weak (极弱): no seasonal support, no roots, heavy drain
 
 References:
+
 - Traditional seasonal strength tables (十二长生 / Twelve Growth Stages)
 - Joey Yap, "BaZi — The Destiny Code"
 - Lily Chung, "The Path to Good Fortune"
@@ -99,6 +101,7 @@ def _get_seasonal_score(element: Element, month_branch: EarthlyBranch) -> int:
     """Get the seasonal strength score for an element in a given month.
 
     Uses the Wu Xing cycle relationships:
+
     - Same as prosperous element → PROSPEROUS (+3)
     - Produced by prosperous element → STRONG (+1)
     - Produces prosperous element (drained) → RESTING (0)
@@ -142,6 +145,7 @@ def _count_roots(chart: "BaZiChart", day_master_element: Element) -> float:
     - Year branch (年支): weight 0.6 — ancestors/distant pillar
 
     Within each branch, the hidden stem position also matters:
+
     - Main qi (本气): full weight — primary energy
     - Middle qi (中气): 60% weight — secondary
     - Residual qi (余气): 30% weight — trace energy
@@ -176,10 +180,12 @@ def _count_support_drain(
     """Count supporting vs draining elements in the chart.
 
     Supporting categories (help the Day Master):
+
     - Self/Companion (比劫) — same element
     - Resource (印星) — produces the Day Master
 
     Draining categories (weaken the Day Master):
+
     - Output (食伤) — Day Master produces (energy flows out)
     - Wealth (财星) — Day Master controls (effort to control)
     - Power (官杀) — controls Day Master (pressure)

@@ -165,6 +165,7 @@ class ChartDrawBuilder(RasterMixin):
 
         Args:
             palette: Can be:
+
                 - True: Use theme's default colorful palette
                 - str: Specific palette name (e.g., "grey", "rainbow", "viridis", "elemental")
 
@@ -276,6 +277,7 @@ class ChartDrawBuilder(RasterMixin):
 
         Args:
             systems: House system(s) to display. Can be:
+
                 - Single system name (e.g., "Placidus")
                 - List of system names (e.g., ["Placidus", "Whole Sign"])
                 - "all" to display all available house systems from the chart
@@ -301,6 +303,7 @@ class ChartDrawBuilder(RasterMixin):
         Enable the chart header band.
 
         The header displays native information prominently at the top of the chart:
+
         - Single chart: Name, location (with coordinates), datetime, timezone
         - Biwheel: Two-column layout with chart1 left-aligned, chart2 right-aligned
         - Synthesis: "Composite: Name1 & Name2" with midpoint info
@@ -502,6 +505,7 @@ class ChartDrawBuilder(RasterMixin):
             show_aspectarian: Show aspectarian grid
             show_house_cusps: Show house cusp table (natal charts only)
             aspectarian_mode: For comparison charts, which aspects to show:
+
                 - "cross_chart": Only cross-chart aspects (default)
                 - "all": All three grids (chart1 internal, chart2 internal, cross-chart)
                 - "chart1": Only chart1 internal aspects
@@ -646,6 +650,7 @@ class ChartDrawBuilder(RasterMixin):
         Synastry preset: Optimized for relationship comparison charts.
 
         For Comparison objects, automatically enables bi-wheel layout with:
+
         - Inner wheel: chart1 (native/person1) planets
         - Outer wheel: chart2 (partner/transit) planets
         - Extended canvas with position table and aspectarian

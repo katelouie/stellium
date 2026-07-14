@@ -64,6 +64,7 @@ class CSVColumnMapping:
         time_unknown: Column indicating if birth time is unknown (bool/flag)
 
     Location handling:
+
         - If latitude + longitude are provided: Uses coordinates directly.
           If location is also provided, it's used as the display name.
         - If only location is provided (no lat/lon): Geocodes the string.
@@ -229,6 +230,7 @@ def _parse_date_string(
     Parse a date string into (year, month, day).
 
     Supports various common formats:
+
     - ISO: 1994-01-06
     - US: 01/06/1994, 1/6/1994
     - EU: 06.01.1994, 6.1.1994
@@ -283,6 +285,7 @@ def _parse_time_string(
     Parse a time string into (hour, minute, second).
 
     Supports:
+
     - 24-hour: 11:47, 11:47:30
     - 12-hour: 11:47 AM, 11:47:30 PM
 

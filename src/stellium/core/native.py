@@ -288,6 +288,7 @@ class Native:
         Parse a datetime string into a datetime object.
 
         Supports formats:
+
         - ISO 8601: "2024-11-24T14:30:00"
         - Common: "2024-11-24 14:30:00", "2024-11-24 14:30"
         - US: "11/24/2024 14:30", "11/24/2024 2:30 PM"

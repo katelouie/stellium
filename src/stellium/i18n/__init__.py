@@ -21,6 +21,7 @@ Usage:
     print(get_available_locales())  # ["en", "zh_CN"]
 
 Design notes:
+
     - English is the identity locale: keys ARE the English strings, so no
       English locale file is needed.
     - Unknown keys return the key itself (graceful degradation).

@@ -127,6 +127,7 @@ def charts_to_dataframe(
     Convert charts to a DataFrame with one row per chart.
 
     This schema is best for:
+
     - Comparing charts across a dataset
     - Element/modality distribution analysis
     - Chart-wide pattern matching
@@ -137,6 +138,7 @@ def charts_to_dataframe(
 
     Returns:
         DataFrame with columns:
+
         - chart_id: Unique identifier
         - name: Chart name (from metadata)
         - datetime_utc: UTC datetime
@@ -275,6 +277,7 @@ def positions_to_dataframe(
     Convert charts to a DataFrame with one row per celestial position.
 
     This schema is best for:
+
     - Position distributions across many charts
     - Sign/house analysis
     - Speed and retrograde analysis
@@ -285,6 +288,7 @@ def positions_to_dataframe(
 
     Returns:
         DataFrame with columns:
+
         - chart_id: Links to chart-level data
         - chart_name: Chart name
         - object_name: "Sun", "Moon", etc.
@@ -357,6 +361,7 @@ def aspects_to_dataframe(
     Convert charts to a DataFrame with one row per aspect.
 
     This schema is best for:
+
     - Aspect frequency analysis
     - Aspect pattern research
     - Orb distribution analysis
@@ -367,6 +372,7 @@ def aspects_to_dataframe(
 
     Returns:
         DataFrame with columns:
+
         - chart_id: Links to chart-level data
         - chart_name: Chart name
         - object1: First object name

@@ -337,11 +337,13 @@ class ReportBuilder:
             Self for chaining
 
         Examples:
-            # Auto-generate chart image
-            report.with_chart_image()
+            .. code-block:: python
 
-            # Use existing SVG file
-            report.with_chart_image("my_chart.svg")
+                # Auto-generate chart image
+                report.with_chart_image()
+
+                # Use existing SVG file
+                report.with_chart_image("my_chart.svg")
         """
         if path:
             self._chart_image_path = path
@@ -364,8 +366,10 @@ class ReportBuilder:
             Self for chaining
 
         Examples:
-            report.with_title("Birth Chart Analysis")
-            report.with_title("Albert Einstein - Complete Natal Analysis")
+            .. code-block:: python
+
+                report.with_title("Birth Chart Analysis")
+                report.with_title("Albert Einstein - Complete Natal Analysis")
         """
         self._title = title
         return self
@@ -389,7 +393,9 @@ class ReportBuilder:
             Self for chaining
 
         Examples:
-            report.with_locale("zh_CN")
+            .. code-block:: python
+
+                report.with_locale("zh_CN")
         """
         self._locale = locale
         return self
@@ -422,6 +428,7 @@ class ReportBuilder:
             include_speed: Show speed in longitude (for retrogrades)
             include_house: Show house placement
             house_systems: Which house systems to display (DEFAULT: "all")
+
                 - "all": Show all calculated systems
                 - list[str]: Show specific systems
                 - None: Show default system only
@@ -558,15 +565,18 @@ class ReportBuilder:
 
         Args:
             mode: Which aspects to check (DEFAULT: "conjunction")
+
                 - "conjunction": Only conjunctions (most common, recommended)
                 - "hard": Conjunction, square, opposition
                 - "all": All major aspects
             orb: Maximum orb in degrees (DEFAULT: 1.5°)
                 Midpoints use tighter orbs than regular aspects.
             midpoint_filter: Which midpoints to check (DEFAULT: "all")
+
                 - "all": All calculated midpoints
                 - "core": Only Sun/Moon/ASC/MC midpoints
             sort_by: Sort order (DEFAULT: "orb")
+
                 - "orb": Tightest aspects first
                 - "planet": Group by aspecting planet
                 - "midpoint": Group by midpoint
@@ -628,10 +638,12 @@ class ReportBuilder:
                 Default: 10 planets + ASC + MC + True Node
             orb: Maximum orb in degrees (DEFAULT: 1.5°)
             aspect_mode: Which aspects to check (DEFAULT: "conjunction")
+
                 - "conjunction": Only conjunctions (0°)
                 - "hard": Conjunction + 45° series (0°, 45°, 90°, 135°, 180°)
                 - "all": All major aspects
             output: What to generate (DEFAULT: "both")
+
                 - "svg": Just SVG visualization
                 - "text": Just text output
                 - "both": Both SVG and text
@@ -684,6 +696,7 @@ class ReportBuilder:
 
         Args:
             mode: Which parts to display (DEFAULT: "all")
+
                 - "all": All calculated parts
                 - "core": 7 Hermetic Lots (Fortune, Spirit, Eros, etc.)
                 - "family": Family & Relationship Lots
@@ -795,6 +808,7 @@ class ReportBuilder:
 
         Args:
             systems: Which house systems to display (DEFAULT: "all")
+
                 - "all": Show all calculated systems
                 - list[str]: Show specific systems
 
@@ -814,6 +828,7 @@ class ReportBuilder:
 
         Args:
             essential: Which essential dignity system(s) to show (DEFAULT: "both")
+
                 - "traditional": Traditional dignities only
                 - "modern": Modern dignities only
                 - "both": Both systems
@@ -845,9 +860,11 @@ class ReportBuilder:
 
         Args:
             pattern_types: Which pattern types to show (DEFAULT: "all")
+
                 - "all": Show all detected patterns
                 - list[str]: Show specific pattern types
             sort_by: How to sort patterns (DEFAULT: "type")
+
                 - "type": Group by pattern type
                 - "element": Group by element
                 - "count": Sort by number of planets
@@ -950,10 +967,12 @@ class ReportBuilder:
 
         Args:
             lots: Which lot(s) to display:
+
                 - str: Single lot name (e.g., "Part of Fortune")
                 - list[str]: Multiple lots (e.g., ["Part of Fortune", "Part of Spirit"])
                 - None: All lots calculated in the chart (DEFAULT)
             mode: Display mode:
+
                 - "snapshot": Current periods only
                 - "timeline": L1 timeline only
                 - "both": Both snapshot and timeline (DEFAULT)
@@ -965,7 +984,7 @@ class ReportBuilder:
             Self for chaining
 
         Note:
-            Requires ZodiacalReleasingAnalyzer to be added during chart calculation:
+            Requires ZodiacalReleasingAnalyzer to be added during chart calculation::
 
                 from stellium.engines.releasing import ZodiacalReleasingAnalyzer
 
@@ -1030,6 +1049,7 @@ class ReportBuilder:
         Add Zodiacal Releasing visualization (SVG timeline diagram).
 
         Generates visual timeline diagrams in Honeycomb Collective style:
+
         - Overview page: natal angles chart + period length reference
         - Timeline page: stacked L1/L2/L3 timelines with peak shapes
 
@@ -1038,6 +1058,7 @@ class ReportBuilder:
             year: Year to visualize (defaults to current year)
             levels: Which levels to show in timeline (default: 1, 2, 3)
             output: What to generate:
+
                 - "overview": Just the overview page
                 - "timeline": Just the timeline visualization
                 - "both": Both pages (DEFAULT)
@@ -1046,7 +1067,7 @@ class ReportBuilder:
             Self for chaining
 
         Note:
-            Requires ZodiacalReleasingAnalyzer to be added during chart calculation:
+            Requires ZodiacalReleasingAnalyzer to be added during chart calculation::
 
                 from stellium.engines.releasing import ZodiacalReleasingAnalyzer
 
@@ -1091,6 +1112,7 @@ class ReportBuilder:
         Add profection wheel visualization section.
 
         Generates a visual wheel diagram showing annual profections:
+
         - Circular wheel with ages 0-95 spiraling through 12 houses
         - Zodiac signs and house labels around the perimeter
         - Natal planet positions marked on the wheel
@@ -1225,12 +1247,14 @@ class ReportBuilder:
 
         Args:
             mode: Which aspects to show (DEFAULT: "all")
+
                 - "all": Both parallel and contraparallel
                 - "parallel": Only parallel aspects
                 - "contraparallel": Only contraparallel aspects
             show_orbs: Show orb column (DEFAULT: True)
             show_oob_status: Show out-of-bounds status (DEFAULT: True)
             sort_by: How to sort aspects (DEFAULT: "orb")
+
                 - "orb": Tightest aspects first
                 - "planet": Group by planet
                 - "aspect_type": Group by Parallel/Contraparallel
@@ -1277,6 +1301,7 @@ class ReportBuilder:
 
         Args:
             mode: Which dispositor analysis to show (DEFAULT: "both")
+
                 - "planetary": Traditional planet-disposes-planet
                 - "house": Kate's house-based innovation (life area flow)
                 - "both": Show both analyses
@@ -1295,7 +1320,8 @@ class ReportBuilder:
             ...     .render())
 
         Note:
-            For standalone graph output (SVG), use the DispositorEngine directly:
+            For standalone graph output (SVG), use the DispositorEngine directly::
+
                 from stellium.engines.dispositors import (
                     DispositorEngine, dispositor_graph_data, render_dispositor_svg,
                 )
@@ -1328,12 +1354,14 @@ class ReportBuilder:
 
         Args:
             tier: Filter to specific tier (DEFAULT: None = all tiers)
+
                 - 1: Royal Stars only (Aldebaran, Regulus, Antares, Fomalhaut)
                 - 2: Major Stars only
                 - 3: Extended Stars only
                 - None: All tiers
             include_keywords: Include interpretive keywords column (DEFAULT: True)
             sort_by: Sort order (DEFAULT: "longitude")
+
                 - "longitude": Zodiacal order
                 - "magnitude": Brightest first
                 - "tier": Royal first, then Major, then Extended
@@ -1564,6 +1592,7 @@ class ReportBuilder:
         Minimal preset: Just the basics.
 
         Includes:
+
         - Chart overview (name, date, location)
         - Planet positions
 
@@ -1580,6 +1609,7 @@ class ReportBuilder:
         Standard preset: Common report sections for everyday use.
 
         Includes:
+
         - Chart overview
         - Planet positions (with house placements)
         - Major aspects (sorted by orb)
@@ -1610,6 +1640,7 @@ class ReportBuilder:
         Detailed preset: Comprehensive report with all major sections.
 
         Includes:
+
         - Chart overview
         - Moon phase
         - Planet positions (with speed and all house systems)
@@ -1645,6 +1676,7 @@ class ReportBuilder:
         Full preset: Everything available.
 
         Includes all sections for maximum detail:
+
         - Chart overview
         - Moon phase
         - Planet positions (with speed and all house systems)
@@ -1709,6 +1741,7 @@ class ReportBuilder:
         Positions-only preset: Focus on planetary placements.
 
         Includes:
+
         - Chart overview
         - Planet positions (with speed and house placements)
         - Declinations
@@ -1734,6 +1767,7 @@ class ReportBuilder:
         Aspects-only preset: Focus on planetary relationships.
 
         Includes:
+
         - Chart overview
         - All aspects (with orbs)
         - Aspect patterns (Grand Trines, T-Squares, etc.)
@@ -1757,6 +1791,7 @@ class ReportBuilder:
         Synastry preset: Optimized for relationship comparison charts.
 
         Designed for Comparison objects, this preset shows:
+
         - Chart overview (displays both charts' info)
         - Planet positions (side-by-side tables for each chart)
         - Cross-chart aspects (with chart labels)
@@ -1785,6 +1820,7 @@ class ReportBuilder:
         aspects to natal positions.
 
         Includes:
+
         - Chart overview
         - Planet positions (side-by-side: natal vs transit)
         - Cross-chart aspects (all aspects, tight orbs)
@@ -1818,6 +1854,7 @@ class ReportBuilder:
         around retrogrades, sign changes, and eclipses.
 
         Includes:
+
         - Planetary stations (retrograde/direct)
         - Sign ingresses (planets changing signs)
         - Eclipses (solar and lunar)
@@ -1893,19 +1930,21 @@ class ReportBuilder:
             ValueError: If unknown format specified
 
         Examples:
-            # Show in terminal with Rich formatting
-            report.render()
+            .. code-block:: python
 
-            # Save to file (with terminal preview)
-            report.render(format="plain_table", file="chart.txt")
+                # Show in terminal with Rich formatting
+                report.render()
 
-            # Save quietly (no terminal output)
-            report.render(format="plain_table", file="chart.txt", show=False)
+                # Save to file (with terminal preview)
+                report.render(format="plain_table", file="chart.txt")
 
-            # Generate PDF with chart image and title (configured via builder)
-            report.with_chart_image().with_title("My Report").render(
-                format="pdf", file="report.pdf"
-            )
+                # Save quietly (no terminal output)
+                report.render(format="plain_table", file="chart.txt", show=False)
+
+                # Generate PDF with chart image and title (configured via builder)
+                report.with_chart_image().with_title("My Report").render(
+                    format="pdf", file="report.pdf"
+                )
         """
         if not self._chart:
             raise ValueError("No chart set. Call .from_chart(chart) before rendering.")
@@ -2221,6 +2260,7 @@ class ReportBuilder:
         Get the appropriate renderer for the format.
 
         Why a factory method?
+
         - Centralizes renderer selection logic
         - Easy to add new renderers
         - Can implement caching if needed

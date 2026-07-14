@@ -6,6 +6,7 @@ Uses hierarchical filtering for performance and integrates with existing Stelliu
 infrastructure (VOC, dignities, aspects, phases, house placements).
 
 Core Concepts:
+
     - **Condition**: A callable that takes a CalculatedChart and returns bool
     - **Composition**: `all_of()`, `any_of()`, `not_()` combine conditions
     - **Search**: ElectionalSearch finds times matching conditions
@@ -287,6 +288,7 @@ class ElectionalSearch:
     within a date range where all conditions are met.
 
     Conditions can be:
+
     - Lambda functions: `lambda c: c.get_object("Moon").phase.is_waxing`
     - Helper predicates: `is_waxing()`, `not_voc()`, `on_angle("Jupiter")`
     - Composed conditions: `all_of(cond1, cond2)`, `any_of(cond1, cond2)`, `not_(cond)`
@@ -438,6 +440,7 @@ class ElectionalSearch:
 
         Returns:
             Tuple of (day_conditions, day_sign_conditions, other_conditions)
+
             - day_conditions: Check at noon, skip day if fails (phase, retrograde)
             - day_sign_conditions: Check at start+end, skip if BOTH fail (sign-based)
             - other_conditions: Check at every step (hour/minute level)
@@ -467,6 +470,7 @@ class ElectionalSearch:
 
         Returns:
             Tuple of (valid_windows, remaining_conditions):
+
             - valid_windows: List of TimeWindow objects, or None if no interval optimization
             - remaining_conditions: Conditions without window generators that must still be checked
         """
@@ -633,6 +637,7 @@ class ElectionalSearch:
         Args:
             max_results: Maximum number of results to return
             step: Time step granularity (default: "hour")
+
                 - "minute": Every minute (slow, use for short ranges)
                 - "5min", "15min", "30min": 5/15/30 minute steps
                 - "hour": Every hour (good default)

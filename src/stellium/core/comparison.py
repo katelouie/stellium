@@ -2,6 +2,7 @@
 Comparison chart implementation for synastry, transits, and progressions.
 
 This module provides a unified interface for comparing two charts:
+
 - Synastry: Two natal charts (relationship analysis)
 - Transits: Natal chart + current sky positions (timing analysis)
 - Progressions: Progressed chart + natal chart (symbolic timing)
@@ -14,11 +15,13 @@ Configuration:
 Uses AspectEngine + OrbEngine for aspect calculations:
 
 **AspectEngine:**
+
 - Determines which aspects to calculate (via AspectConfig)
 - CrossChartAspectEngine for cross-chart aspects (chart1 × chart2)
 - ModernAspectEngine for internal aspects (if charts lack them)
 
 **OrbEngine:**
+
 - Determines orb allowances for each aspect
 - Defaults are comparison-type specific:
   - Synastry: 6°/4° (moderate - connections matter)
@@ -28,14 +31,17 @@ Uses AspectEngine + OrbEngine for aspect calculations:
 Builder Methods:
 ----------------
 **Cross-chart aspects:**
+
 - .with_aspect_engine(engine) - Custom CrossChartAspectEngine
 - .with_orb_engine(engine) - Custom orb allowances
 
 **Internal (natal) aspects:**
+
 - .with_internal_aspect_engine(engine) - Engine for chart1/chart2 internal aspects
 - .with_internal_orb_engine(engine) - Orbs for internal aspects
 
 **House overlays:**
+
 - .without_house_overlays() - Disable house overlay calculation
 """
 
@@ -625,6 +631,7 @@ class ComparisonBuilder:
         Args:
             natal_data: Natal chart data (Native, CalculatedChart, or (datetime, location) tuple)
             transit_data: Transit time data. Can be:
+
                 - (datetime, location) tuple
                 - (datetime, None) to use natal location
                 - Native or CalculatedChart
@@ -693,6 +700,7 @@ class ComparisonBuilder:
             target_date: Target date for progression (triggers auto-calculation)
             age: Age in years for progression (alternative to target_date)
             angle_method: How to progress angles:
+
                 - "solar_arc" (default): Angles progress at rate of progressed Sun
                 - "naibod": Angles progress at mean Sun rate (59'08"/year)
                 - "quotidian": Raw angles from progressed chart cast (not recommended;
@@ -875,6 +883,7 @@ class ComparisonBuilder:
         moves at its own rate.
 
         Arc types supported:
+
             - "solar_arc": Arc = progressed Sun - natal Sun (~1°/year actual)
             - "naibod": Arc = 0.9856° × years (mean solar motion)
             - "lunar": Arc = progressed Moon - natal Moon (~12-13°/year)
@@ -1519,6 +1528,7 @@ class ComparisonBuilder:
         Calculate which houses each chart's planets fall into.
 
         This calculates house overlays in both directions:
+
         - Chart1 planets in Chart2 houses
         - Chart2 planets in Chart1 houses
 

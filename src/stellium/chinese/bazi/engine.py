@@ -1,6 +1,7 @@
 """Bazi (Four Pillars) calculation engine.
 
 This module implements the traditional calculation methods:
+
 - Year Pillar: Based on the Chinese year (starting at Li Chun)
 - Month Pillar: Based on solar terms, using the "Five Tigers" (五虎遁) formula
 - Day Pillar: Based on the day count from a reference date
@@ -66,6 +67,7 @@ def hour_to_branch_index(hour: int, minute: int = 0) -> int:
 
     The Chinese day starts at 23:00 (Zi hour).
     Each branch covers 2 hours:
+
     - Zi (子): 23:00-00:59
     - Chou (丑): 01:00-02:59
     - Yin (寅): 03:00-04:59
@@ -187,6 +189,7 @@ class BaZiEngine:
         """Calculate the Month Pillar using the Five Tigers formula.
 
         Month branches are fixed:
+
         - Month 1 (Tiger/寅): after Li Chun (~Feb 4)
         - Month 2 (Rabbit/卯): after Jing Zhe (~Mar 6)
         - etc.

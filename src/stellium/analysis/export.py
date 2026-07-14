@@ -34,6 +34,7 @@ def export_csv(
         charts: Sequence of CalculatedChart objects
         path: Output file path
         schema: Data schema to use:
+
             - "charts": One row per chart (default)
             - "positions": One row per celestial position
             - "aspects": One row per aspect

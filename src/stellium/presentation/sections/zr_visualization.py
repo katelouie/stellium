@@ -2,6 +2,7 @@
 Zodiacal Releasing visualization section.
 
 Generates SVG timeline visualizations similar to Honeycomb Collective style:
+
 - Page 1: Overview (natal angles chart + period length reference table)
 - Page 2: Stacked L1/L2/L3 timelines with peak shapes
 """
@@ -186,19 +187,22 @@ class ZRVisualizationSection:
     Zodiacal Releasing visualization section.
 
     Generates SVG timeline visualizations in Honeycomb Collective style:
+
     - Overview page: natal angles chart + period length reference
     - Timeline page: stacked L1/L2/L3 timelines with peak shapes
 
     Returns SVG content that can be embedded in PDF planners or reports.
 
     Example:
-        section = ZRVisualizationSection(
-            lot="Part of Fortune",
-            year=2025,
-            output="timeline"  # or "overview" or "both"
-        )
-        data = section.generate_data(chart)
-        # data["content"] contains SVG string
+        .. code-block:: python
+
+            section = ZRVisualizationSection(
+                lot="Part of Fortune",
+                year=2025,
+                output="timeline"  # or "overview" or "both"
+            )
+            data = section.generate_data(chart)
+            # data["content"] contains SVG string
     """
 
     def __init__(
@@ -1102,6 +1106,7 @@ The timeline on the following page shows your actual periods with start and end 
         Draw period as a bar graph rectangle.
 
         Bar height based on position from lot:
+
         - 1st & 10th: tallest (primary angular)
         - 4th & 7th: medium-tall (secondary angular)
         - Adjacent to angular: slightly shorter than their neighbor

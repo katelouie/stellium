@@ -186,6 +186,7 @@ class DispositorEngine:
     Calculate dispositor graphs for a chart.
 
     Supports two modes:
+
     - Planetary: Traditional planet-rules-planet dispositors
     - House: Kate's innovation - life-area-flows-to-life-area dispositors
 
@@ -478,6 +479,7 @@ class DispositorEngine:
         in the mutual reception pair.
 
         Returns:
+
             - Single string if one self-disposing final dispositor
             - Tuple of strings if mutual reception acts as sink, or multiple self-disposing
             - None if no clear final dispositor (complex loops)

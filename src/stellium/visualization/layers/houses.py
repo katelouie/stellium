@@ -26,16 +26,19 @@ class HouseCuspLayer:
     To draw multiple systems, add multiple layers.
 
     For multiwheel charts, use wheel_index to specify which chart ring to render:
+
     - wheel_index=0: Chart 1 (innermost)
     - wheel_index=1: Chart 2
     - wheel_index=2: Chart 3
     - wheel_index=3: Chart 4 (outermost, just inside zodiac)
 
     The layer will look up radii from the renderer using keys like:
+
     - chart{N}_ring_outer, chart{N}_ring_inner (ring bounds)
     - chart{N}_house_number (number placement)
 
     And fill colors from theme:
+
     - chart{N}_fill_1, chart{N}_fill_2 (alternating fills)
     """
 

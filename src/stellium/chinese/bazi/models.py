@@ -1,6 +1,7 @@
 """Bazi (Four Pillars) chart data models.
 
 A Bazi chart consists of four pillars:
+
 - Year Pillar (年柱) - represents ancestors, early childhood
 - Month Pillar (月柱) - represents parents, career
 - Day Pillar (日柱) - represents self, spouse

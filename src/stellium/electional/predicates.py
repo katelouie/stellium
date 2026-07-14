@@ -9,6 +9,7 @@ All predicates return `Callable[[CalculatedChart], bool]` (the Condition type).
 
 Each predicate is tagged with a "speed hint" indicating how quickly the condition
 changes, enabling hierarchical filtering for performance:
+
 - SPEED_DAY: Stable conditions (phase, retrograde) - checked once at noon
 - SPEED_DAY_SIGN: Sign-based conditions - checked at start+end of day
 - SPEED_HOUR: Hour-level conditions (VOC, aspects)
@@ -399,6 +400,7 @@ def is_dignified(
     """Planet has essential dignity.
 
     Essential dignity means the planet is strengthened by its sign position:
+
     - ruler: Planet rules the sign (e.g., Mars in Aries)
     - exaltation: Planet is exalted (e.g., Sun in Aries)
     - triplicity: Planet rules the element (depends on sect)

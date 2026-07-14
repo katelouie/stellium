@@ -11,6 +11,7 @@ Supports multiple progression types, each using a different time key:
   Intermediate rate between secondary and tertiary.
 
 This module provides:
+
 - Progressed datetime calculation for all three types
 - Angle adjustment methods (Solar Arc, Naibod)
 """

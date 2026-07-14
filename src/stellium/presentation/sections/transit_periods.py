@@ -5,6 +5,7 @@ Computes when transiting planets form aspects to natal positions,
 with orb entry/exit windows and multi-pass handling for retrograde transits.
 
 Two output modes:
+
 - TransitListSection: plain-text rows, e.g.:
     Dec 2 - Mar 2 '26 — Jupiter △ natal Chiron
     Dec 4 — Mercury □ natal Jupiter

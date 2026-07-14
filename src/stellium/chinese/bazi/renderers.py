@@ -1,6 +1,7 @@
 """Renderers for Bazi (Four Pillars) charts.
 
 This module provides different output formats for Bazi charts:
+
 - BaziRichRenderer: Beautiful terminal output using Rich library
 - BaziSVGRenderer: Visual SVG chart rendering
 - BaziProseRenderer: Natural language prose output
@@ -344,6 +345,7 @@ class BaziSVGRenderer:
     """Render Bazi charts as SVG images.
 
     Creates a visual representation of the Four Pillars with:
+
     - Color-coded elements
     - Hidden stems shown below main characters
     - Ten Gods labels
