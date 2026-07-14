@@ -1,0 +1,128 @@
+{#-
+  Stellium theme — master layout.
+  Inherits Sphinx's `basic` theme for all the <head> plumbing (CSS/JS includes,
+  metadata, search index) and overrides the visible page shell only.
+
+  Sphinx context used here:
+    project, release            – from conf.py
+    pathto(...)                 – URL helper (respects subdir builds)
+    toctree(...)                – renders the global nav tree (from your toctrees)
+    toc                         – the current page's local heading tree (right rail)
+    body                        – the rendered HTML of the current page
+    theme_accent, theme_github_url, ... – options from theme.conf / html_theme_options
+-#}
+{%- extends "basic/layout.html" %}
+
+{# --- inject fonts + our data-theme bootstrap before anything paints --- #}
+{%- block extrahead %}
+  {{ super() }}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Spectral:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script>
+    // Set the theme attribute before first paint to avoid a flash.
+    (function () {
+      try {
+        var stored = localStorage.getItem('stellium-theme');
+        document.documentElement.setAttribute(
+          'data-theme', stored || '{{ theme_default_mode|default("light") }}');
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', '{{ theme_default_mode|default("light") }}');
+      }
+    })();
+  </script>
+  <script src="{{ pathto('_static/stellium.js', 1) }}" defer></script>
+{%- endblock %}
+
+{# --- replace the entire visible page (basic puts relbar+sidebar here) --- #}
+{%- block content %}
+<header class="st-topbar">
+  <a class="st-brand" href="{{ pathto(root_doc) }}">
+    <span class="st-wordmark">{{ project }}</span>
+    {%- if theme_show_version|default(true) and release %}
+    <span class="st-version">v{{ release }}</span>
+    {%- endif %}
+  </a>
+
+  <form class="st-search" action="{{ pathto('search') }}" method="get" role="search">
+    <span class="st-search-icon">&#9095;</span>
+    <input type="text" name="q" placeholder="Search the documentation" aria-label="Search">
+    <span class="st-kbd">&#8984;K</span>
+  </form>
+
+  <div class="st-spacer"></div>
+
+  {%- if theme_github_url %}
+  {# A real GitHub mark. The scaffold used &#9096;, which is U+2388 HELM SYMBOL — it
+     renders as a ship's wheel, and in most fonts as a gear. #}
+  <a class="st-icon-btn" href="{{ theme_github_url }}" aria-label="Source on GitHub" title="Source on GitHub">
+    <svg viewBox="0 0 16 16" width="17" height="17" aria-hidden="true" fill="currentColor">
+      <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/>
+    </svg>
+  </a>
+  {%- endif %}
+  <button class="st-icon-btn" id="st-theme-toggle" type="button" aria-label="Toggle light / dark theme">
+    <span class="st-i-moon" aria-hidden="true">&#9790;</span><span class="st-i-sun" aria-hidden="true">&#9728;</span>
+  </button>
+
+  {# Mobile only. The scaffold hid the sidebar below 760px with `display:none` and
+     gave nothing in its place, so a phone had no navigation at all. #}
+  <button class="st-icon-btn st-menu-btn" id="st-menu-toggle" type="button"
+          aria-label="Open navigation" aria-expanded="false" aria-controls="st-sidebar">
+    <span aria-hidden="true">&#9776;</span>
+  </button>
+</header>
+
+<div class="st-scrim" id="st-scrim" hidden></div>
+
+<div class="st-shell">
+  {# ---------- LEFT: global navigation, generated from your toctree ----------
+
+     `titles_only=True` is load-bearing. Without it, Sphinx walks each document's
+     *headings* into the global nav as well as its pages: this sidebar rendered 457
+     links, 445 of which were in-page anchors (#your-first-chart-2-lines, …). The
+     left rail is the site map; the right rail is the page map. Keep them separate.
+
+     maxdepth=2 so a section's pages show, but a page's own sections do not.        #}
+  <aside class="st-sidebar st-scroll" id="st-sidebar">
+    <nav class="st-nav" aria-label="Site navigation">
+      {{ toctree(maxdepth=2, collapse=False, includehidden=True, titles_only=True) }}
+    </nav>
+  </aside>
+
+  {# ---------- CENTER: the page ---------- #}
+  <main class="st-main">
+    {%- block document %}
+      {%- if parents %}
+      <div class="st-breadcrumb">
+        {%- for p in parents %}<a href="{{ p.link }}">{{ p.title }}</a><span class="st-sep">/</span>{%- endfor %}
+        <span class="st-current">{{ title }}</span>
+      </div>
+      {%- endif %}
+      <article class="st-prose">
+        {{ body }}
+      </article>
+      {%- block prevnext %}
+      {%- if prev or next %}
+      <nav class="st-prevnext">
+        {%- if prev %}<a class="st-pn st-pn-prev" href="{{ prev.link }}"><span class="st-pn-dir">&#8592; Previous</span><span class="st-pn-title">{{ prev.title }}</span></a>{%- else %}<span></span>{%- endif %}
+        {%- if next %}<a class="st-pn st-pn-next" href="{{ next.link }}"><span class="st-pn-dir">Next &#8594;</span><span class="st-pn-title">{{ next.title }}</span></a>{%- endif %}
+      </nav>
+      {%- endif %}
+      {%- endblock %}
+    {%- endblock %}
+  </main>
+
+  {# ---------- RIGHT: on-this-page, from the current page's headings ---------- #}
+  <aside class="st-toc st-scroll">
+    {%- if display_toc %}
+    <div class="st-toc-label">On this page</div>
+    {{ toc }}
+    {%- endif %}
+  </aside>
+</div>
+{%- endblock %}
+
+{# basic renders its own footer inside block content; we suppress the relbars #}
+{%- block relbar1 %}{% endblock %}
+{%- block relbar2 %}{% endblock %}

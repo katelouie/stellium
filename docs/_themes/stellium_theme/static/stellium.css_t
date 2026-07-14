@@ -1,0 +1,344 @@
+/* ============================================================================
+   Stellium — Sphinx theme stylesheet
+   Ported from the HTML redesign. Two layers:
+     1. design tokens (:root light / [data-theme=dark])
+     2. styling for the SHELL classes (.st-*) and for Sphinx's own output
+        classes (.toctree-*, .headerlink, div.admonition, .highlight, dl.py …)
+   ========================================================================== */
+
+:root{
+  --bg:#ffffff; --bg-soft:#f7f7fb; --panel:#ffffff; --panel-2:#f3f3f9;
+  --border:#e9e9f1; --border-strong:#dcdce8;
+  --fg:#16161d; --fg-muted:#54566a; --fg-faint:#8a8c9d;
+  --accent:{{ theme_accent|default('#5b46b0') }}; --accent-2:#7d6fbf; --accent-soft:#eeebf8;
+  --gold:{{ theme_gold|default('#a9782a') }}; --gold-soft:#f5eeda;
+  --code-bg:#12131c; --code-fg:#dbdce9; --code-border:#20212e;
+  --note-bg:#eeebf8; --warn-bg:#f8f0dd; --warn-border:#d9a94a;
+  --sig-bg:#f7f7fb; --sig-border:#e3e3ee; --out-bg:#f7f7fb;
+  color-scheme:light;
+}
+html[data-theme="dark"]{
+  --bg:#090a10; --bg-soft:#0c0d15; --panel:#11121b; --panel-2:#171824;
+  --border:rgba(255,255,255,.08); --border-strong:rgba(255,255,255,.14);
+  --fg:#e9e9f3; --fg-muted:#a5a6b9; --fg-faint:#71738a;
+  --accent:{{ theme_accent_dark|default('#9b8ae8') }}; --accent-2:#b3a6e6; --accent-soft:rgba(155,138,232,.16);
+  --gold:{{ theme_gold_dark|default('#d9b46a') }}; --gold-soft:rgba(217,180,106,.13);
+  --code-bg:#0c0d15; --code-fg:#dbdce9; --code-border:rgba(255,255,255,.07);
+  --note-bg:rgba(155,138,232,.10); --warn-bg:rgba(217,180,106,.10); --warn-border:#d9b46a;
+  --sig-bg:rgba(255,255,255,.03); --sig-border:rgba(255,255,255,.1); --out-bg:rgba(255,255,255,.03);
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg); color:var(--fg);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none;}
+a:hover{color:var(--accent-2);}
+::selection{background:var(--accent-soft);}
+img{max-width:100%;}
+
+/* ---- transitions on theme flip ---- */
+body, .st-topbar, .st-sidebar, .st-toc, .st-main *{
+  transition:background-color .28s ease, border-color .28s ease, color .2s ease;
+}
+html:not([data-theme="dark"]) .st-i-sun{display:none;}
+html[data-theme="dark"] .st-i-moon{display:none;}
+
+.st-scroll::-webkit-scrollbar{width:8px;}
+.st-scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:8px;}
+
+/* ============================ TOPBAR ============================ */
+.st-topbar{
+  position:sticky; top:0; z-index:60;
+  display:flex; align-items:center; gap:20px;
+  height:60px; padding:0 24px;
+  background:color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+}
+.st-brand{display:flex; align-items:baseline; gap:9px;}
+.st-wordmark{font-family:'Cinzel Decorative',serif; font-weight:700; font-size:21px; color:var(--fg); letter-spacing:.5px;}
+.st-version{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--accent); border:1px solid var(--border-strong); border-radius:20px; padding:2px 7px;}
+.st-search{display:flex; align-items:center; gap:7px; flex:1; max-width:400px; background:var(--panel-2); border:1px solid var(--border); border-radius:9px; padding:0 11px; height:38px;}
+.st-search input{flex:1; border:none; background:transparent; color:var(--fg); font-size:13px; outline:none;}
+.st-search input::placeholder{color:var(--fg-faint);}
+.st-search-icon{color:var(--fg-faint); font-size:13px;}
+.st-kbd{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--fg-faint); border:1px solid var(--border-strong); border-radius:5px; padding:1px 6px;}
+.st-spacer{flex:1;}
+.st-icon-btn{display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:9px; border:1px solid var(--border); background:var(--panel-2); color:var(--fg-muted); cursor:pointer; font-size:15px;}
+.st-icon-btn:hover{color:var(--fg);}
+
+/* ============================ SHELL GRID ============================ */
+.st-shell{
+  display:grid;
+  grid-template-columns:290px minmax(0,1fr) 232px;
+  max-width:1500px; margin:0 auto; align-items:start;
+}
+.st-sidebar{
+  position:sticky; top:60px; align-self:start;
+  height:calc(100vh - 60px); overflow-y:auto;
+  padding:28px 16px 60px; border-right:1px solid var(--border);
+}
+.st-toc{
+  position:sticky; top:60px; align-self:start;
+  height:calc(100vh - 60px); overflow-y:auto;
+  padding:38px 18px 60px;
+}
+.st-main{min-width:0; padding:34px 56px 90px;}
+
+/* ---------------------------------------------------------------------------
+   Responsive.
+
+   The right rail is a convenience and can simply go. The left rail is the site
+   map, and cannot: hiding it with `display:none` (as the scaffold did) leaves a
+   phone with no navigation at all. Below 760px it becomes a drawer instead,
+   opened from the topbar and dismissed by the scrim, a link, or Escape.
+   --------------------------------------------------------------------------- */
+
+.st-menu-btn{display:none;}          /* desktop: the sidebar is always there */
+.st-scrim{display:none;}
+
+@media (max-width:1100px){
+  .st-shell{grid-template-columns:250px minmax(0,1fr);}
+  .st-toc{display:none;}
+}
+
+@media (max-width:760px){
+  .st-shell{grid-template-columns:1fr;}
+  .st-main{padding:28px 22px 70px;}
+  .st-menu-btn{display:inline-flex;}
+
+  /* The search field is the first thing to give up room on a narrow topbar. */
+  .st-search{display:none;}
+
+  .st-sidebar{
+    position:fixed; top:60px; left:0; z-index:40;
+    width:min(320px, 86vw); height:calc(100vh - 60px);
+    background:var(--bg); border-right:1px solid var(--border);
+    transform:translateX(-100%);
+    transition:transform .22s ease;
+    padding-top:8px;
+  }
+  html.st-nav-open .st-sidebar{transform:translateX(0);}
+
+  .st-scrim{
+    display:block; position:fixed; inset:60px 0 0 0; z-index:35;
+    background:rgba(0,0,0,.42);
+  }
+  .st-scrim[hidden]{display:none;}
+
+  /* Don't let the page scroll behind an open drawer. */
+  html.st-nav-open, html.st-nav-open body{overflow:hidden;}
+}
+
+/* Motion is a preference, not a given. */
+@media (prefers-reduced-motion:reduce){
+  .st-sidebar{transition:none;}
+  *{scroll-behavior:auto !important;}
+}
+
+/* ============================ LEFT NAV (toctree output) ============================
+
+   Written against Sphinx's ACTUAL output, which is:
+
+       <p class="caption"><span class="caption-text">Getting Started</span></p>
+       <ul>
+         <li class="toctree-l1"><a class="reference internal" href="…">Page title</a></li>
+         <li class="toctree-l1 current"> … nested <ul> for the current branch … </li>
+       </ul>
+
+   The scaffold styled `.st-nav > ul > li > a` as the section caption — but a
+   top-level list item is a *page*, not a caption. Every page link in the sidebar
+   was therefore rendered as 10px uppercase mono. Captions are <p class="caption">.
+   ------------------------------------------------------------------------------ */
+
+.st-nav ul{list-style:none; margin:0 0 14px; padding:0;}
+
+/* Section captions — the toctree's :caption:, and the only thing that is mono. */
+.st-nav p.caption{
+  margin:22px 10px 6px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10px; letter-spacing:1.6px; text-transform:uppercase;
+  color:var(--fg-faint);
+}
+.st-nav p.caption:first-child{margin-top:6px;}
+
+/* Page links, at every depth. */
+.st-nav a{
+  display:block; font-size:13.5px; line-height:1.35;
+  color:var(--fg-muted); text-decoration:none;
+  padding:7px 11px; border-radius:8px;
+}
+.st-nav a:hover{background:var(--panel-2); color:var(--fg);}
+
+/* The page you are on. `li.current` marks the whole ancestor branch, so pin the
+   accent to the anchor itself — otherwise a whole section lights up. */
+.st-nav a.current{
+  color:var(--accent); background:var(--accent-soft);
+  font-weight:600; box-shadow:inset 2px 0 0 var(--accent);
+}
+.st-nav li.current > a{color:var(--fg); font-weight:600;}
+
+/* Nested pages sit under a hairline, indented. */
+.st-nav ul ul{margin:2px 0 2px 12px; border-left:1px solid var(--border);}
+.st-nav ul ul a{font-size:13px; padding-left:12px;}
+
+/* ============================ RIGHT TOC ============================ */
+.st-toc-label{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1.6px; text-transform:uppercase; color:var(--fg-faint); margin-bottom:14px; padding-left:12px;}
+.st-toc ul{list-style:none; margin:0; padding:0;}
+.st-toc a{display:block; font-size:12.5px; color:var(--fg-muted); padding:3px 0 3px 12px; line-height:1.4;}
+.st-toc a:hover{color:var(--fg);}
+.st-toc ul ul{padding-left:12px;}
+.st-toc > ul > li > a{color:var(--accent); box-shadow:inset 2px 0 0 var(--accent);}
+
+/* ============================ BREADCRUMB / PREV-NEXT ============================ */
+.st-breadcrumb{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--fg-faint); margin-bottom:22px;}
+.st-breadcrumb a{color:var(--fg-faint);}
+.st-breadcrumb a:hover{color:var(--accent);}
+.st-breadcrumb .st-sep{opacity:.5; margin:0 8px;}
+.st-breadcrumb .st-current{color:var(--fg-muted);}
+.st-prevnext{display:flex; justify-content:space-between; gap:14px; margin-top:48px; padding-top:24px; border-top:1px solid var(--border);}
+.st-pn{display:block; min-width:240px; border:1px solid var(--border); border-radius:12px; padding:16px 20px;}
+.st-pn:hover{border-color:var(--accent); background:var(--panel-2);}
+.st-pn-next{text-align:right;}
+.st-pn-dir{display:block; font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--fg-faint); margin-bottom:4px;}
+.st-pn-title{font-weight:600; font-size:15px; color:var(--fg);}
+
+/* ============================ PROSE (page body) ============================ */
+.st-prose{max-width:820px;}
+.st-prose h1{font-family:'Spectral',serif; font-weight:600; font-size:42px; line-height:1.1; letter-spacing:-.6px; color:var(--fg); margin:0 0 18px;}
+.st-prose h2{font-family:'Spectral',serif; font-weight:600; font-size:27px; letter-spacing:-.3px; color:var(--fg); margin:40px 0 6px; padding-bottom:9px; border-bottom:1px solid var(--border);}
+.st-prose h3{font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:19px; color:var(--fg); margin:28px 0 10px;}
+.st-prose h4{font-weight:600; font-size:16px; color:var(--fg); margin:22px 0 8px;}
+.st-prose p{font-size:16px; line-height:1.72; color:var(--fg-muted); margin:0 0 18px;}
+.st-prose li{font-size:16px; line-height:1.7; color:var(--fg-muted); margin:4px 0;}
+.st-prose strong{color:var(--fg); font-weight:600;}
+.st-prose a{text-decoration:underline; text-underline-offset:2px; text-decoration-color:var(--border-strong);}
+.st-prose a:hover{text-decoration-color:var(--accent);}
+.st-prose img{border-radius:12px; border:1px solid var(--border);}
+.st-prose figure{margin:0 0 24px;}
+.st-prose figcaption{font-size:13.5px; color:var(--fg-muted); margin-top:8px;}
+
+/* headerlink pilcrow */
+.headerlink{color:var(--accent); opacity:0; margin-left:8px; font-size:.8em; text-decoration:none;}
+h1:hover .headerlink, h2:hover .headerlink, h3:hover .headerlink, h4:hover .headerlink{opacity:.5;}
+
+/* inline code */
+.st-prose code, code.literal, .rst-content code{
+  font-family:'IBM Plex Mono',monospace; font-size:.85em;
+  background:var(--accent-soft); color:var(--accent);
+  padding:1px 6px; border-radius:5px;
+}
+
+/* ============================ CODE BLOCKS (Pygments) ============================ */
+.highlight{
+  background:var(--code-bg) !important; border:1px solid var(--code-border);
+  border-radius:11px; margin:0 0 22px; overflow:hidden;
+}
+.highlight pre{
+  margin:0; padding:18px 20px; overflow-x:auto;
+  font-family:'IBM Plex Mono',monospace; font-size:13.5px; line-height:1.75;
+  color:var(--code-fg) !important; background:transparent !important;
+}
+div[class^="highlight"] code{background:transparent; color:inherit; padding:0;}
+.st-prose .highlight code{background:transparent; color:inherit; padding:0;}
+
+/* ============================ ADMONITIONS ============================ */
+div.admonition, .st-prose .admonition{
+  background:var(--note-bg); border:1px solid var(--border);
+  border-left:3px solid var(--accent); border-radius:10px;
+  padding:15px 18px; margin:0 0 24px;
+}
+div.admonition > .admonition-title{
+  font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:600;
+  letter-spacing:1px; text-transform:uppercase; color:var(--accent);
+  margin:0 0 6px; padding:0;
+}
+div.admonition p{font-size:14.5px; line-height:1.6; color:var(--fg-muted); margin:0;}
+div.admonition.warning, div.admonition.caution, div.admonition.attention{
+  background:var(--warn-bg); border-left-color:var(--warn-border);
+}
+div.admonition.warning > .admonition-title,
+div.admonition.caution > .admonition-title{color:var(--gold);}
+div.admonition.tip, div.admonition.hint{background:var(--warn-bg); border-left-color:var(--warn-border);}
+div.admonition.tip > .admonition-title{color:var(--gold);}
+
+/* ============================ TABLES ============================ */
+.st-prose table.docutils{
+  border-collapse:separate; border-spacing:0; width:100%;
+  border:1px solid var(--border); border-radius:11px; overflow:hidden;
+  font-size:14px; margin:0 0 24px;
+}
+.st-prose table.docutils th{
+  background:var(--panel-2); text-align:left; padding:11px 14px;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.8px;
+  text-transform:uppercase; color:var(--fg-faint); border-bottom:1px solid var(--border);
+}
+.st-prose table.docutils td{padding:9px 14px; border-top:1px solid var(--border); color:var(--fg-muted);}
+
+/* ============================ AUTODOC (dl.py) ============================ */
+dl.py, dl.class, dl.function, dl.method, dl.data{margin:0 0 20px;}
+dl.py > dt, dl.class > dt, dl.function > dt, dl.method > dt{
+  font-family:'IBM Plex Mono',monospace; font-size:13.5px;
+  background:var(--sig-bg); border:1px solid var(--sig-border);
+  border-left:3px solid var(--accent); border-radius:10px 10px 0 0;
+  padding:13px 18px; color:var(--fg); overflow-x:auto;
+}
+dl.py > dd{
+  border:1px solid var(--sig-border); border-top:none;
+  border-radius:0 0 10px 10px; padding:15px 18px; margin:0;
+}
+dl.py > dd p{font-size:14.5px; line-height:1.6; color:var(--fg-muted);}
+.sig-name, .py .property{color:var(--fg); font-weight:600;}
+.sig-prename, .pre{color:var(--fg-muted);}
+.sig-param, .n{color:var(--accent-2);}
+em.property, .k{color:var(--gold);}
+.field-list > dt{font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:var(--fg); background:none; border:none; padding:8px 0 2px;}
+.field-list dd{border:none; padding:0 0 6px;}
+
+/* ============================ FOOTER ============================ */
+footer, .footer{
+  max-width:1500px; margin:0 auto; padding:28px 56px 48px;
+  font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--fg-faint);
+  border-top:1px solid var(--border);
+}
+footer a{color:var(--fg-muted);}
+
+
+/* ---------------------------------------------------------------------------
+   On-this-page: the heading you are actually looking at (see stellium.js).
+   --------------------------------------------------------------------------- */
+.st-toc a{
+  display:block; padding:4px 0 4px 12px;
+  border-left:2px solid transparent;
+  color:var(--fg-muted); text-decoration:none; font-size:12.5px; line-height:1.5;
+}
+.st-toc a:hover{color:var(--fg);}
+.st-toc a.st-active{color:var(--accent); border-left-color:var(--accent); font-weight:500;}
+
+/* Anchors must not land under the 60px sticky topbar. */
+.st-prose :is(h1,h2,h3,h4,h5,h6){scroll-margin-top:76px;}
+
+/* A visible focus ring, everywhere. Keyboard users exist. */
+:is(a,button,input,summary):focus-visible{
+  outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;
+}
+
+/* ---------------------------------------------------------------------------
+   On-this-page: headings that contain code.
+
+   Several API headings are signatures — `with_zodiac_palette(palette: str)` —
+   and at 216px wide they ran straight out of the rail. Let them break, and shrink
+   the inline code so a signature stands a chance of fitting.
+   --------------------------------------------------------------------------- */
+.st-toc{overflow-wrap:anywhere;}
+.st-toc code, .st-toc .literal{
+  font-size:11px; padding:0 3px; background:none; color:inherit;
+  border:0; white-space:normal;
+}
+.st-toc ul ul{margin-left:10px;}
