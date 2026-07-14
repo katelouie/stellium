@@ -1241,32 +1241,29 @@ Chart calculation is not cached — recomputing is faster than reading a cache. 
 
 ### Example Cookbooks
 
-The `/examples` directory contains comprehensive, runnable cookbooks:
+> **📖 Read the cookbooks on the docs site: [stellium.readthedocs.io → Cookbooks](https://stellium.readthedocs.io/en/latest/cookbooks/index.html)**
+>
+> **367 runnable recipes across 21 cookbooks** — each rendered with **its real output**:
+> the tables it prints and the charts it draws, captured by *running* the code when the
+> docs are built. Same recipes as `examples/`, but you can see what they produce without
+> running anything.
 
-| Cookbook | Description |
-|----------|-------------|
-| **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
-| **[aspects_and_orbs_cookbook.py](examples/aspects_and_orbs_cookbook.py)** | 14 examples: aspect engines, orb engines (Simple, Luminaries, Complex, Moiety), traditional moiety systems |
-| **[dignities_cookbook.py](examples/dignities_cookbook.py)** | 14 examples: essential/accidental dignities, scoring, peregrine, mutual reception, dispositor graphs |
-| **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
-| **[multichart_cookbook.py](examples/multichart_cookbook.py)** | Synastry, transits, bi-, tri- and quad-wheels, compatibility |
-| **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
-| **[progressions_cookbook.py](examples/progressions_cookbook.py)** | 15 examples: set by date, current date or age; various angle progression methods |
-| **[arc_directions_cookbook.py](examples/arc_directions_cookbook.py)** | 14 examples: solar arc, naibod, lunar, chart ruler, sect, planetary arcs |
-| **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
-| **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
-| **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
-| **[vedic_cookbook.py](examples/vedic_cookbook.py)** | 7 examples: North Indian and South Indian chart styles, themes, label styles, ayanamsa |
-| **[transit_cookbook.py](examples/transit_cookbook.py)** | 6 examples: transit lists, Gantt timelines, custom aspects/orbs, dark/light themes |
-| **[ephemeris_cookbook.py](examples/ephemeris_cookbook.py)** | Examples of graphic ephemeris charts with optional natal overlays |
-| **[electional_cookbook.py](examples/electional_cookbook.py)** | 43 examples: finding auspicious times, predicates, planetary hours, aspect exactitude |
-| **[planner_cookbook.py](examples/planner_cookbook.py)** | 9 examples: PDF planners with charts, transits, Moon phases, VOC, calendar layouts |
-| **[bazi_cookbook.py](examples/bazi_cookbook.py)** | 22 examples: BaZi (Four Pillars) charts, pillars, hidden stems, Ten Gods, Day Master strength, elements |
-| **[analysis_cookbook.ipynb](examples/analysis_cookbook.ipynb)** | Jupyter notebook: batch calculation, pandas DataFrames, queries, statistics, export |
+The `examples/` directory is the source those pages are generated from — every recipe on
+the site is `literalinclude`d from a real function in a real script, so the two can never
+disagree.
+
+| | |
+|---|---|
+| **Charts & visuals** | chart · dial · vedic · ephemeris · comparison |
+| **Traditional** | dignities · hellenistic · profections · zodiacal releasing · directions · arc directions |
+| **Predictive** | transit · progressions · returns · electional |
+| **Output** | report · planner · io |
+| **Other traditions** | bazi (Four Pillars) |
+| **Analysis** | [analysis](https://stellium.readthedocs.io/en/latest/cookbooks/analysis.html) — pandas DataFrames, queries, statistics |
 
 ```bash
-# Run any cookbook
-python examples/<name>_cookbook.py
+# Or run any of them yourself
+python examples/chart_cookbook.py
 ```
 
 ### User Guides

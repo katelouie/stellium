@@ -40,6 +40,7 @@ import contextlib
 import io
 import os
 import re
+import shutil
 import tempfile
 import textwrap
 import warnings
@@ -61,6 +62,25 @@ SKIP_EXECUTION = {"planner"}
 
 # Output long enough to bury the next recipe. Keep the head, say what was cut.
 MAX_OUTPUT_LINES = 40
+
+# Where a recipe's rendered charts go. Generated, gitignored, rebuilt every build.
+IMAGES = OUT / "images"
+
+# Every cookbook resolves its output directory from __file__, not from the working
+# directory:
+#
+#     SCRIPT_DIR = Path(__file__).resolve().parent
+#     OUTPUT_DIR = SCRIPT_DIR / "charts"
+#
+# which means chdir'ing to a scratch directory does NOTHING to contain them — the
+# first build-time run wrote straight into examples/charts/, examples/reports/ and
+# examples/dials/, MODIFYING FILES THAT ARE COMMITTED. So the constant is rebound in
+# the module namespace after import, which both contains the writes and puts the
+# charts somewhere we can find them.
+OUTPUT_DIR_NAME = "OUTPUT_DIR"
+
+# What we can actually show on a page. A PDF is a download, not a figure.
+RENDERABLE = {".svg", ".png"}
 
 # "Example 1: Solar Arc Directions by Age" -> "Solar Arc Directions by Age".
 # The number is already the heading's position on the page; repeating it is noise.
@@ -219,7 +239,9 @@ def recipes(path: Path) -> list[Recipe]:
     return found
 
 
-def run_recipes(path: Path, plan: list[Recipe]) -> dict[str, str]:
+def run_recipes(
+    path: Path, plan: list[Recipe]
+) -> tuple[dict[str, str], dict[str, list[str]]]:
     """Execute a cookbook and capture what each recipe prints.
 
     The library writes the answers; nobody hand-copies them. This is the same contract
@@ -232,10 +254,11 @@ def run_recipes(path: Path, plan: list[Recipe]) -> dict[str, str]:
     for them.
     """
     if FAST or path.stem.removesuffix("_cookbook") in SKIP_EXECUTION:
-        return {}
+        return {}, {}
 
     namespace: dict = {"__name__": "__cookbook__", "__file__": str(path)}
     captured: dict[str, str] = {}
+    figures: dict[str, list[str]] = {}
     cwd = os.getcwd()
 
     with tempfile.TemporaryDirectory() as scratch, warnings.catch_warnings():
@@ -260,26 +283,70 @@ def run_recipes(path: Path, plan: list[Recipe]) -> dict[str, str]:
                 if callable(namespace.get(helper)):
                     namespace[helper] = lambda *args, **kwargs: None
 
+            # Contain the writes. See OUTPUT_DIR_NAME above: without this, a recipe
+            # saves its chart into examples/charts/ — inside the repository.
+            drawn_into = Path(scratch) / "drawn"
+            drawn_into.mkdir()
+            # Remember where the recipe *would* have written, so the captured output
+            # can say "examples/charts/01_simplest.svg" rather than leaking
+            # /var/folders/…/T/tmpqmmfj3dx/drawn/ at the reader.
+            declared = namespace.get(OUTPUT_DIR_NAME)
+            real_output_dir = (
+                Path(declared).relative_to(REPO).as_posix()
+                if isinstance(declared, Path) and declared.is_relative_to(REPO)
+                else "examples/output"
+            )
+            if OUTPUT_DIR_NAME in namespace:
+                namespace[OUTPUT_DIR_NAME] = drawn_into
+
+            slug = path.stem.removesuffix("_cookbook")
             for recipe in plan:
                 function = namespace.get(recipe.name)
                 if not callable(function):
                     continue
+
+                before = {f for f in drawn_into.rglob("*") if f.is_file()}
                 buffer = io.StringIO()
                 try:
                     with contextlib.redirect_stdout(buffer):
                         function()
-                except Exception as exc:  # noqa: BLE001 - report, do not mask
+                except Exception as exc:
                     raise SystemExit(
                         f"{path.name}::{recipe.name} raised {type(exc).__name__}: {exc}\n"
                         f"A cookbook recipe that does not run is a recipe the docs "
                         f"should not be showing."
                     ) from exc
-                text = buffer.getvalue().strip("\n")
+
+                text = (
+                    buffer.getvalue()
+                    .strip("\n")
+                    .replace(str(drawn_into), real_output_dir)
+                )
                 if text.strip():
                     captured[recipe.name] = text
+
+                # Whatever it drew, put it on the page next to the code that drew it.
+                new = sorted(
+                    f
+                    for f in drawn_into.rglob("*")
+                    if f.is_file()
+                    and f not in before
+                    and f.suffix.lower() in RENDERABLE
+                )
+                for index, source in enumerate(new):
+                    target_dir = IMAGES / slug
+                    target_dir.mkdir(parents=True, exist_ok=True)
+                    suffix = f"_{index}" if len(new) > 1 else ""
+                    target = (
+                        target_dir / f"{recipe.name}{suffix}{source.suffix.lower()}"
+                    )
+                    shutil.copy2(source, target)
+                    figures.setdefault(recipe.name, []).append(
+                        f"images/{slug}/{target.name}"
+                    )
         finally:
             os.chdir(cwd)
-    return captured
+    return captured, figures
 
 
 def output_block(text: str) -> list[str]:
@@ -342,7 +409,7 @@ def page(path: Path) -> tuple[str, str, int, str]:
         ":::",
         "",
     ]
-    outputs = run_recipes(path, found)
+    outputs, figures = run_recipes(path, found)
 
     for recipe in found:
         out += [f"## {recipe.title}", ""]
@@ -365,6 +432,16 @@ def page(path: Path) -> tuple[str, str, int, str]:
         # What it actually prints, captured by running it — never transcribed.
         if recipe.name in outputs:
             out += output_block(outputs[recipe.name])
+        # And what it actually draws.
+        for image in figures.get(recipe.name, []):
+            out += [
+                f"```{{figure}} {image}",
+                ":class: cookbook-figure",
+                "",
+                "Rendered by the code above.",
+                "```",
+                "",
+            ]
     return slug, "\n".join(out), len(found), heading
 
 
@@ -383,6 +460,20 @@ def main() -> None:
         return
 
     OUT.mkdir(parents=True, exist_ok=True)
+
+    # The analysis cookbook is a *notebook*, stored as MyST Markdown rather than
+    # .ipynb: it reads as a document on GitHub, diffs as plain text, and carries no
+    # stored outputs to go stale — it used to ship 52 of them, and they were wrong
+    # ("Calculated 146 charts" from a registry that now holds 211). myst-nb executes it
+    # at build time (conf.py, nb_execution_mode="force"), so its DataFrames are
+    # computed for the exact commit being rendered.
+    notebook = EXAMPLES / "analysis_cookbook.md"
+    notebook_cells = 0
+    if notebook.exists():
+        text = notebook.read_text(encoding="utf-8")
+        shutil.copy2(notebook, OUT / "analysis.md")
+        notebook_cells = text.count("```{code-cell}")
+
     written: list[tuple[str, str, int, str]] = []
     empty: list[str] = []
     for script in sorted(EXAMPLES.glob("*_cookbook.py")):
@@ -404,7 +495,7 @@ def main() -> None:
         )
 
     # An index, so the section has a landing page rather than a bare toctree.
-    total = sum(c for _, _, c, _ in written)
+    total = sum(c for _, _, c, _ in written) + notebook_cells
     index = [
         "# Cookbooks",
         "",
@@ -417,6 +508,10 @@ def main() -> None:
     ]
     for slug, _script, count, title in written:
         index.append(f"| [{title}]({slug}.md) | {count} |")
+    if notebook_cells:
+        index.append(
+            f"| [Analysis & DataFrames](analysis.md) — *executed notebook* | {notebook_cells} |"
+        )
     index += [
         "",
         "```{toctree}",
@@ -425,12 +520,20 @@ def main() -> None:
         "",
     ]
     index += [slug for slug, _, _, _ in written]
+    if notebook_cells:
+        index.append("analysis")
     index += ["```", ""]
     (OUT / "index.md").write_text("\n".join(index), encoding="utf-8")
 
     for _slug, script, count, title in written:
         print(f"  {title:34} {count:3} recipes  <- {script}")
-    print(f"\n  {len(written)} cookbooks, {total} recipes -> {OUT.relative_to(REPO)}/")
+    if notebook_cells:
+        print(
+            f"  {'Analysis & DataFrames':34} {notebook_cells:3} cells    <- analysis_cookbook.md (executed by myst-nb)"
+        )
+    print(
+        f"\n  {len(written) + bool(notebook_cells)} cookbooks, {total} recipes -> {OUT.relative_to(REPO)}/"
+    )
 
 
 if __name__ == "__main__":

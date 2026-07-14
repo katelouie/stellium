@@ -1,7 +1,27 @@
+# What Read the Docs installs to build the site. See .readthedocs.yaml.
+#
+# NOTE: pyproject.toml's "docs" extra declares mkdocs + mkdocs-material — a different
+# static site generator entirely, used by nothing. This file is the real one.
+
 # Capped <10: sphinx 10 removes APIs that sphinx-autodoc-typehints still uses
 # (RemovedInSphinx10Warning at build time). Lift once that plugin is compatible.
 sphinx>=9.0.4,<10
-sphinx-rtd-theme
-myst-parser
 sphinx-autodoc-typehints
-furo
+
+# myst-nb supersedes myst-parser: it IS myst-parser, plus notebooks. It executes
+# examples/analysis_cookbook.md at build time (conf.py, nb_execution_mode="force"), so
+# that page's DataFrames are computed for the exact commit being rendered — rather than
+# shipped as stored outputs, which is how it came to claim "Calculated 146 charts" from
+# a registry that now holds 211.
+myst-nb
+
+# The analysis cookbook is *about* pandas. Without it, that page has no outputs at all.
+pandas>=2.0.0
+
+# The cookbook pages execute all 367 recipes at build time and render the charts they
+# draw, so the build needs whatever a recipe reaches for. The library itself comes from
+# `pip install .` (see .readthedocs.yaml); this is the rest.
+graphviz
+
+# No theme dependency: docs/_themes/stellium_theme is ours and lives in-tree.
+# (furo AND sphinx-rtd-theme were both installed here. Neither was used.)

@@ -57,7 +57,10 @@ source_suffix = {
 # So the library computes them, every build. A cell that fails now fails the docs
 # build, which is the same contract as scripts/update_doc_outputs.py --check: the
 # author writes the question, the library writes the answer.
-nb_execution_mode = "cache"  # re-runs only when the notebook changes
+# "force", NOT "cache". The cache is keyed on the NOTEBOOK's content — so when the
+# library changes and the notebook does not, which is exactly the case we care
+# about, "cache" happily serves the old outputs. It executes in 7 seconds.
+nb_execution_mode = "force"
 nb_execution_timeout = 180
 nb_execution_raise_on_error = True
 nb_merge_streams = True  # one output block per cell, not one per print()
