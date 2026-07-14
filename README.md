@@ -41,7 +41,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 **Western:**
 
 - **Large-scale data analysis** with pandas DataFrames, batch calculation, and statistical tools
-- **23+ house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md)).
+- **17 house systems** including Placidus, Whole Sign, Koch, Equal, Regiomontanus, and more (see the [full list](docs/options_list.md)).
 - **Multiple house systems in a single chart** for comparison of traditions and meta-analysis
 - **Declination calculations** with out-of-bounds planet detection and parallel/contraparallel aspects
 - **Bi-, tri- and quad-wheel charts** for synastry, transits, progressions, returns, arc directions, and composite analysis
@@ -64,7 +64,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
 - **Antiscia and contra-antiscia** with a dedicated report section
-- **Beautiful visualizations** with professional SVG chart rendering and 13 themes
+- **Beautiful visualizations** with professional SVG chart rendering and **14 themes**
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Localized reports** — render terminal, Markdown, HTML, and PDF reports in multiple languages (Simplified Chinese included) via `with_locale()`
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
@@ -1241,32 +1241,29 @@ Chart calculation is not cached — recomputing is faster than reading a cache. 
 
 ### Example Cookbooks
 
-The `/examples` directory contains comprehensive, runnable cookbooks:
+> **📖 Read the cookbooks on the docs site: [stellium.readthedocs.io → Cookbooks](https://stellium.readthedocs.io/en/latest/cookbooks/index.html)**
+>
+> **367 runnable recipes across 21 cookbooks** — each rendered with **its real output**:
+> the tables it prints and the charts it draws, captured by *running* the code when the
+> docs are built. Same recipes as `examples/`, but you can see what they produce without
+> running anything.
 
-| Cookbook | Description |
-|----------|-------------|
-| **[chart_cookbook.py](examples/chart_cookbook.py)** | 21 examples: themes, palettes, house systems, tables, and more |
-| **[aspects_and_orbs_cookbook.py](examples/aspects_and_orbs_cookbook.py)** | 14 examples: aspect engines, orb engines (Simple, Luminaries, Complex, Moiety), traditional moiety systems |
-| **[dignities_cookbook.py](examples/dignities_cookbook.py)** | 14 examples: essential/accidental dignities, scoring, peregrine, mutual reception, dispositor graphs |
-| **[report_cookbook.py](examples/report_cookbook.py)** | 15 examples: terminal reports, PDF generation, batch processing |
-| **[multichart_cookbook.py](examples/multichart_cookbook.py)** | Synastry, transits, bi-, tri- and quad-wheels, compatibility |
-| **[returns_cookbook.py](examples/returns_cookbook.py)** | 14 examples: returns (solar, lunar, planetary), relocations |
-| **[progressions_cookbook.py](examples/progressions_cookbook.py)** | 15 examples: set by date, current date or age; various angle progression methods |
-| **[arc_directions_cookbook.py](examples/arc_directions_cookbook.py)** | 14 examples: solar arc, naibod, lunar, chart ruler, sect, planetary arcs |
-| **[profections_cookbook.py](examples/profections_cookbook.py)** | 24 examples: annual, monthly profections for multiple points |
-| **[zodiacal_releasing_cookbook.py](examples/zodiacal_releasing_cookbook.py)** | 14 examples: ZR timelines, snapshots, peaks, Loosing of Bond, reports |
-| **[dial_cookbook.py](examples/dial_cookbook.py)** | 16 examples: Uranian 90°/45°/360° dials, midpoints, pointers, transits, themes |
-| **[vedic_cookbook.py](examples/vedic_cookbook.py)** | 7 examples: North Indian and South Indian chart styles, themes, label styles, ayanamsa |
-| **[transit_cookbook.py](examples/transit_cookbook.py)** | 6 examples: transit lists, Gantt timelines, custom aspects/orbs, dark/light themes |
-| **[ephemeris_cookbook.py](examples/ephemeris_cookbook.py)** | Examples of graphic ephemeris charts with optional natal overlays |
-| **[electional_cookbook.py](examples/electional_cookbook.py)** | 43 examples: finding auspicious times, predicates, planetary hours, aspect exactitude |
-| **[planner_cookbook.py](examples/planner_cookbook.py)** | 9 examples: PDF planners with charts, transits, Moon phases, VOC, calendar layouts |
-| **[bazi_cookbook.py](examples/bazi_cookbook.py)** | 22 examples: BaZi (Four Pillars) charts, pillars, hidden stems, Ten Gods, Day Master strength, elements |
-| **[analysis_cookbook.ipynb](examples/analysis_cookbook.ipynb)** | Jupyter notebook: batch calculation, pandas DataFrames, queries, statistics, export |
+The `examples/` directory is the source those pages are generated from — every recipe on
+the site is `literalinclude`d from a real function in a real script, so the two can never
+disagree.
+
+| | |
+|---|---|
+| **Charts & visuals** | chart · dial · vedic · ephemeris · comparison |
+| **Traditional** | dignities · hellenistic · profections · zodiacal releasing · directions · arc directions |
+| **Predictive** | transit · progressions · returns · electional |
+| **Output** | report · planner · io |
+| **Other traditions** | bazi (Four Pillars) |
+| **Analysis** | [analysis](https://stellium.readthedocs.io/en/latest/cookbooks/analysis.html) — pandas DataFrames, queries, statistics |
 
 ```bash
-# Run any cookbook
-python examples/<name>_cookbook.py
+# Or run any of them yourself
+python examples/chart_cookbook.py
 ```
 
 ### User Guides
@@ -1282,7 +1279,7 @@ python examples/<name>_cookbook.py
 
 | Gallery | Description |
 |---------|-------------|
-| **[THEME_GALLERY.md](docs/THEME_GALLERY.md)** | Visual showcase of all 13+ chart themes |
+| **[THEME_GALLERY.md](docs/THEME_GALLERY.md)** | Visual showcase of every chart theme (generated from the registry) |
 | **[PALETTE_GALLERY.md](docs/PALETTE_GALLERY.md)** | Zodiac ring color palettes with previews |
 | **[HTML overview](docs/starlight_colors.html)** | Full color story overview of all themes and palettes |
 

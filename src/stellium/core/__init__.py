@@ -2,6 +2,7 @@
 Core data structures and building blocks.
 
 Exports the fundamental classes for working with charts:
+
 - ChartBuilder: Main API for creating charts
 - Native: Handles messy datetime/location inputs
 - Notable: Curated famous births/events

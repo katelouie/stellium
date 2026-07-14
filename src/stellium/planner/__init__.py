@@ -2,6 +2,7 @@
 Stellium Planner - Generate beautiful astrological planners as PDFs.
 
 This module creates personalized 12-month planners with:
+
 - Front matter: natal chart, progressed chart, solar return, profections, ZR timeline, graphic ephemeris
 - Daily pages: transit listings with times, Moon phases, VOC periods, ingresses
 

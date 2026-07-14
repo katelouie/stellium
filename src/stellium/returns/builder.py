@@ -2,6 +2,7 @@
 
 A "return" is a chart cast for the moment when a transiting planet
 returns to its exact natal position. Common returns include:
+
 - Solar Return: Sun returns to natal Sun position (~birthday)
 - Lunar Return: Moon returns to natal Moon position (~monthly)
 - Saturn Return: Saturn returns to natal Saturn (~age 29, 58)
@@ -56,6 +57,7 @@ class ReturnBuilder:
 
     Uses composition: wraps ChartBuilder rather than inheriting from it.
     This allows us to:
+
     - Lazily calculate the return moment before building the inner chart
     - Inject return-specific metadata into the final chart
     - Delegate all chainable methods without tight coupling

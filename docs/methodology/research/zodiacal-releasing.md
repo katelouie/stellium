@@ -2,7 +2,7 @@
 > contested points behind this technique — pure research, with no
 > implementation detail. For the curated summary of *what Stellium implements*
 > (defaults, the forks it chose, simplifications) and how these sources map to
-> the code, see [../README.md](../README.md).
+> the code, see [../README.md](https://github.com/katelouie/stellium/blob/main/README.md).
 
 ---
 

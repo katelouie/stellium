@@ -25,6 +25,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A rebuilt documentation site** ([stellium.readthedocs.io](https://stellium.readthedocs.io/)). The structure follows Diátaxis — Start Here, Guides, Cookbooks, Reference, Methodology, Galleries — behind a new custom Sphinx theme with light/dark modes, self-hosted fonts (no CDN request), a collapsible site map, and search.
+
+  Most of it is *generated from the library at build time*, so it cannot drift from the code:
+
+  | Section | What it is |
+  |---|---|
+  | **Cookbooks** | All 421 recipes from `examples/`, every one **executed on each build** and shown with its real output — 188 charts and 15 planner pages rendered inline. The code is `literalinclude`d from the scripts, so the page holds no copy of it. |
+  | **Galleries** | Every `ChartTheme` and palette, enumerated from the enums and drawn at build time. Click a theme for the four lines that produced it. |
+  | **API Reference** | One page per module, each object documented once, and every object now in the search index and cross-referenceable. |
+  | **Analysis notebook** | Executed at build time rather than shipping stored outputs. |
+  | **Counts** | "421 recipes", "14 themes", "211 notables" are resolved from the registries, not typed. |
+
+- **The Astrology Guide** is published — 8 of a planned 24 chapters, each marked with whether its figures have been verified against computed output. Explains the astrology (what a house *is*, why anyone argues about Placidus), not the API.
+
+- **A Methodology section** — what Stellium computes and on whose authority (Valens, Ptolemy, Firmicus, Houlding), where the tradition genuinely disagrees, and which default ships.
+
+- **`CITATION.cff`** — GitHub's *Cite this repository*, for referencing Stellium in research.
+
+- **A docs-freshness reminder** — an opt-in `post-commit` hook (`pre-commit install --hook-type post-commit`) that suggests rebuilding the docs when they fall behind the code. It never blocks a commit.
+
 - **The documentation's code blocks are now held to the output they claim** — `scripts/update_doc_outputs.py`, and a `tests/test_doc_codeblocks.py` that finally reads what a block *prints*. It only ever checked that a block did not crash: stdout was executed and thrown away, so a doc could assert any result it liked and stay green forever. It did. The (unreleased) astrology guide stated William Lilly's Venus scored **`+7 ['domicile', 'term']`**; it scores **`+10 ['domicile', 'triplicity_ruler', 'term']`**, and always has — Lilly has no birth time on record, so his chart is a *noon* `UnknownTimeChart`, unambiguously a **day** chart, whose Earth triplicity ruler is Venus. The documented numbers require a *night* chart. They cannot have come from running the code.
 
   So a human no longer writes an expected output — the library does. `python scripts/update_doc_outputs.py` runs each block and writes its real output back into the markdown (pytest-codeblocks' `<!--pytest-codeblocks:expected-output-->` convention), and CI fails the day a library change makes a document false. You cannot fabricate a result you do not author. Guide chapters are discovered by glob, so a new one is covered the moment it lands.
@@ -91,6 +111,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **`HouseSystemEngine.calculate_house_data()` now declares its `config` argument.** The Protocol took `(datetime, location)` while `ChartBuilder` called it with `(datetime, location, config)` — so a custom house system written against the *documented* interface raised `TypeError`. If you have one, it already needed the third argument; it is now in the Protocol.
+
+- **The planner cookbook's recipes render one quarter** rather than a full year, so the documentation can execute all of them. Swap `.date_range(...)` for `.year(2025)` for the full twelve months; nothing else changes.
+
 - **The planner is rebuilt on the Typst design system, and its front matter is redesigned** — `PlannerBuilder(...).generate()` now serialises the planner to a JSON contract that the bundled design system renders, replacing a renderer that built ~1,100 lines of Typst markup as Python f-strings around a hardcoded purple palette. The planner gains all five themes (`.theme("house" | "sepia" | "celestial" | "blues" | "greyscale")`), the shared glyph/component vocabulary, and the bundled font stack. Chart wheels are now drawn stripped (no header, info box, or moon-phase corner) and transparent, and theme-coordinated, so they composite onto the page instead of sitting in a hardcoded gold frame.
 
   The front matter was **redesigned, not ported**. A natal report is a *portrait* — read once, about who you are. A planner is an *instrument* — consulted daily, for a year, with a pen in hand. Its front matter is therefore a **reference section**, ordered "this year → your chart → how to read it", answering the questions the daily pages actually provoke:
@@ -109,6 +133,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The documentation no longer recommends caching the ephemeris.** `CLAUDE.md`, the architecture docs and the performance notes all advertised `@cached(cache_type="ephemeris")` as a "20× faster" optimisation and told contributors to reach for it. It was never measured, and it was 13× *slower* (see 0.21.1). Those claims are gone, and the guidance now says what is actually true: `swe.calc_ut` is microseconds, a pickle round-trip is not, and caching is for the network calls. PNG export is surfaced in the README and `examples/chart_cookbook.py`.
 
 ### Fixed
+
+- **API docs rendered lists as block quotes.** Around 250 bullet lists in library docstrings were missing the blank line RST requires, so they rendered as indented paragraphs with the bullets stripped and the lead-in sentence run into the first item. `Example:` blocks holding plain Python were parsed as prose (a line like `name="Midpoint:Sun/Moon",` became a definition list). Both are fixed; the docs now build with zero warnings.
+
+- **README counts.** "23+ house systems" — there are **17**; "13 themes" — there are **14**. `docs/options_list.md` claimed 37 celestial objects (there are 83) and 26 aspect types (19). The docs now resolve these from the registries; the README's are pinned by a test.
 
 - **The same chart, calculated twice, was not the same chart** *(output ordering change)*. `chart.positions` came out in a **different order on every run** — and everything downstream inherited it, because the aspect engines feed `positions` straight into `combinations()`. So `chart.aspects` was reordered too, and with it every report, aspectarian, and exported JSON. Two people running byte-identical code got documents that listed their planets and aspects differently; so did the same person, twice.
 

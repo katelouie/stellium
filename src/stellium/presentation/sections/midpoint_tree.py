@@ -124,10 +124,12 @@ class MidpointTreeSection:
                 Default: 10 planets + ASC + MC + True Node
             orb: Maximum orb in degrees (default 1.5°)
             aspect_mode: Which aspects to check:
+
                 - "conjunction": Only conjunctions (0°)
                 - "hard": Conjunction + 45° series (0°, 45°, 90°, 135°, 180°)
                 - "all": All major aspects
             output: What to generate:
+
                 - "svg": Just SVG visualization
                 - "text": Just text output
                 - "both": Both SVG and text (default)

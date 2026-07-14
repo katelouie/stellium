@@ -27,152 +27,264 @@ extensions = [
     "sphinx.ext.viewcode",  # Add links to source code
     "sphinx.ext.intersphinx",  # Link to other docs
     "sphinx_autodoc_typehints",  # Better type hints
-    "myst_parser",  # MARKDOWN SUPPORT!
+    # myst_nb supersedes myst_parser: it IS myst_parser, plus .ipynb.
+    "myst_nb",
 ]
+
+# Render a Google-style `Attributes:` block as :ivar: fields inside the class body,
+# not as free-standing `.. attribute::` directives.
+#
+# Required: our result models are frozen dataclasses that document their fields in an
+# `Attributes:` block, and autodoc's `:undoc-members:` emits an attribute for each field
+# too — so without this, every field is registered twice from a single directive.
+napoleon_use_ivar = True
+
+# In the "on this page" rail, a method is `add_analyzer()`, not
+# `ChartBuilder.add_analyzer()`. The rail is 232px wide; the class prefix is identical on
+# every entry, carries no information, and is the part that survives truncation.
+toc_object_entries_show_parents = "hide"
 
 # MyST configuration
 myst_enable_extensions = [
     "colon_fence",  # ::: fences
     "deflist",  # Definition lists
     "tasklist",  # Task lists
+    # `{{ n_recipes }}` — see _site_stats() at the foot of this file. Counts are
+    # resolved from the library at build time rather than typed into prose.
+    "substitution",
+    # `[42]{.st-n}` — a span with a class, so the landing pages can be laid out in
+    # plain Markdown (whose links Sphinx therefore checks) instead of raw HTML
+    # (whose links it cannot). The theme's CSS does the rest.
+    "attrs_inline",
 ]
+
+# Generate an anchor for every heading down to h4.
+#
+# Without this MyST creates NO heading anchors, so every `[Quick Start](#quick-start)`
+# in every hand-written table of contents silently resolved to nothing — which is most
+# of the 121 broken cross-references the build was reporting. The links rendered, they
+# just went nowhere.
+myst_heading_anchors = 4
 
 # Source file suffixes
 source_suffix = {
     ".rst": "restructuredtext",
-    ".md": "markdown",
+    ".md": "myst-nb",
+    ".ipynb": "myst-nb",
 }
 
+# EXECUTE the notebook at build time; never publish its stored outputs.
+#
+# analysis_cookbook.ipynb shipped 52 stored outputs, and they were WRONG: it
+# claimed "Calculated 146 charts" from a notables registry that now holds 211, and
+# "14 scientist charts" where there are 20. They were computed against a library
+# that has since changed its dignity tables, its chart ordering, its Local Mean
+# Time handling, and eight notables' birthdays. Publishing them would be publishing
+# results nobody had re-run — the exact failure the astrology guide made.
+#
+# So the library computes them, every build. A cell that fails now fails the docs
+# build, which is the same contract as scripts/update_doc_outputs.py --check: the
+# author writes the question, the library writes the answer.
+# "force", NOT "cache". The cache is keyed on the NOTEBOOK's content — so when the
+# library changes and the notebook does not, which is exactly the case we care
+# about, "cache" happily serves the old outputs. It executes in 7 seconds.
+nb_execution_mode = "force"
+nb_execution_timeout = 180
+nb_execution_raise_on_error = True
+nb_merge_streams = True  # one output block per cell, not one per print()
+
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "archive", "planning"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "archive",
+    "planning",
+    # docs/development/ is the contributor/agent architecture reference — read on
+    # GitHub, by people working ON Stellium, and written with GitHub-relative links
+    # (./specs/, ../development/) that Sphinx cannot resolve. Sphinx was compiling all
+    # of it anyway: 34 documents in no toctree (built, reachable from nowhere) and 19
+    # broken cross-references between them — a build compiling files it had no business
+    # compiling, not a defect in the docs.
+    #
+    # docs/methodology/ is NOT in this list, and that is deliberate. It answers "what
+    # does Stellium implement, and on whose authority?" — Valens, Firmicus, Ptolemy,
+    # Houlding; which forks the tradition genuinely disagrees on and which default we
+    # ship; which received claims are folk-etymology. For a computational astrology
+    # library that is the most trust-establishing writing in the repository, and it
+    # belongs in front of users, not behind them.
+    "development",
+    "DOCS_INDEX.md",  # an index OF the docs, for contributors; the site has a nav
+    # Superseded by docs/development/ — its own first line reads "⚠️ SUPERSEDED —
+    # do not use as an API reference." It has no business being built, let alone
+    # (as it was until today) sitting in the Reference section of the nav.
+    "ARCHITECTURE.md",
+    "images/README.md",  # a note about the image directory, addressed to us
+    # A planning document — "what does Stellium implement, and what is still missing?"
+    # It is a map of our own gaps, addressed to us, and it goes stale the moment one
+    # is filled. The user-facing answer to the same question is docs/methodology/.
+    "astrology/CAPABILITY_AUDIT.md",
+]
 
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = "furo"
+html_theme = "stellium_theme"
+html_theme_path = ["_themes"]
 
-# Warm mystical purple theme matching PDF reports
 html_theme_options = {
-    "light_css_variables": {
-        # Primary colors - warm mystical purple
-        "color-brand-primary": "#4a3353",  # Deep warm purple
-        "color-brand-content": "#6b4d6e",  # Medium warm purple
-        # Background colors - warm cream
-        "color-background-primary": "#faf8f5",  # Warm cream
-        "color-background-secondary": "#f3efe8",  # Slightly darker cream
-        "color-background-hover": "#ebe5dd",  # Hover state
-        "color-background-border": "#d4cdc3",  # Subtle borders
-        # Foreground/text colors
-        "color-foreground-primary": "#2d2330",  # Warm near-black text
-        "color-foreground-secondary": "#4a3353",  # Deep purple for secondary text
-        "color-foreground-muted": "#6b4d6e",  # Medium purple for muted text
-        # Links
-        "color-link": "#6b4d6e",  # Medium purple links
-        "color-link--hover": "#4a3353",  # Darker on hover
-        "color-link-underline": "#8e6b8a",  # Light mauve underline
-        "color-link-underline--hover": "#6b4d6e",  # Medium purple underline on hover
-        # Code blocks
-        "color-code-background": "#f3efe8",  # Warm cream for code
-        "color-code-foreground": "#4a3353",  # Purple code text
-        # Admonitions (notes, warnings, etc)
-        "color-admonition-background": "#f9f5f0",
-        "color-admonition-title-background": "#8e6b8a",  # Light mauve
-        "color-admonition-title": "#faf8f5",
-        # Sidebar
-        "color-sidebar-background": "#faf8f5",
-        "color-sidebar-background-border": "#d4cdc3",
-        "color-sidebar-brand-text": "#4a3353",
-        "color-sidebar-link-text": "#2d2330",
-        "color-sidebar-link-text--top-level": "#4a3353",
-        # API documentation
-        "color-api-background": "#f9f5f0",
-        "color-api-background-hover": "#f3efe8",
-        "color-api-name": "#4a3353",
-        "color-api-pre-name": "#6b4d6e",
-        # Highlights
-        "color-highlighted-background": "#fff9e6",
-        "color-highlighted-text": "#2d2330",
-        # Typography - more readable for docs
-        "font-stack": "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
-        "font-stack--monospace": "'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace",
-        "font-size--normal": "16px",
-        "font-size--small": "14px",
-        "font-size--small--2": "12px",
-    },
-    "dark_css_variables": {
-        # Dark mode - mystical night sky
-        "color-brand-primary": "#a78bfa",  # Light purple
-        "color-brand-content": "#c4b5fd",  # Lighter purple
-        # Dark backgrounds
-        "color-background-primary": "#1a1625",  # Deep purple-black
-        "color-background-secondary": "#221c2e",  # Slightly lighter
-        "color-background-hover": "#2d2640",  # Hover state
-        "color-background-border": "#3d3450",  # Borders
-        # Dark foreground
-        "color-foreground-primary": "#e9e4f0",  # Light cream text
-        "color-foreground-secondary": "#d4c5e8",  # Muted cream
-        "color-foreground-muted": "#b8a5d0",  # Very muted
-        # Dark links
-        "color-link": "#c4b5fd",  # Light purple
-        "color-link--hover": "#a78bfa",  # Medium purple
-        "color-link-underline": "#8e6b8a",
-        "color-link-underline--hover": "#a78bfa",
-        # Dark code
-        "color-code-background": "#2d2640",
-        "color-code-foreground": "#c4b5fd",
-        # Dark admonitions
-        "color-admonition-background": "#2d2640",
-        "color-admonition-title-background": "#6b4d6e",
-        "color-admonition-title": "#faf8f5",
-        # Dark sidebar
-        "color-sidebar-background": "#1a1625",
-        "color-sidebar-background-border": "#3d3450",
-        "color-sidebar-brand-text": "#c4b5fd",
-        "color-sidebar-link-text": "#e9e4f0",
-        "color-sidebar-link-text--top-level": "#a78bfa",
-        # Dark API
-        "color-api-background": "#2d2640",
-        "color-api-background-hover": "#3d3450",
-        "color-api-name": "#c4b5fd",
-        "color-api-pre-name": "#a78bfa",
-    },
-    # Additional theme options
-    "sidebar_hide_name": False,
-    "navigation_with_keys": True,
-    "top_of_page_button": "edit",
-    # Footer content
-    "footer_icons": [
-        {
-            "name": "GitHub",
-            "url": "https://github.com/yourusername/stellium",
-            "html": """
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-                </svg>
-            """,
-            "class": "",
-        },
-    ],
+    # These are declared in theme.conf and rendered into stellium.css_t, so they
+    # genuinely drive the palette — they are not decoration.
+    "accent": "#5b46b0",
+    "accent_dark": "#9b8ae8",
+    "gold": "#a9782a",
+    "gold_dark": "#d9b46a",
+    "github_url": "https://github.com/katelouie/stellium",
+    "default_mode": "light",
+    "show_version": True,
 }
 
 html_title = "Stellium"
 html_short_title = "Stellium"
 
-html_static_path = ["_static"]
+# The docs' web fonts are generated by scripts/build_web_fonts.py and live in
+# assets/fonts/web/ — the repo's font home, NOT src/stellium/data/fonts/, which
+# ships in the wheel. Adding the directory here copies the .woff2 into _static/,
+# where the theme's @font-face rules expect them.
+html_static_path = ["_static", "../assets/fonts/web"]
 html_extra_path = ["starlight_colors.html"]  # Copy HTML reference to build output
-html_css_files = [
-    "custom.css",
-]
-html_js_files = [
-    "force_light_default.js",
-]
 
 # Intersphinx
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
 }
 
-# Pygments style for code highlighting
-pygments_style = "autumn"  # Warm colors matching your theme
-pygments_dark_style = "dracula"  # For dark mode
+# -- Syntax highlighting -----------------------------------------------------
+# The design specifies a five-colour palette (keyword #c4b5fd, call #e8c07d, string
+# #a3d0a8, class #7fd0a8, comment #6b6d82), identical in light and dark — only the
+# ground shifts. The docs were shipping stock **monokai**: magenta keywords, amber
+# strings. Nothing was wrong with it except that it was not the design.
+#
+# docs/_pygments/stellium_syntax.py is that palette, plus the lexer filter it needs:
+# Pygments marks a name as a function only where it is *defined*, so in a fluent chain
+# — which is the whole public API — every method arrived as an uncoloured bare Name.
+sys.path.insert(0, os.path.abspath("_pygments"))
+pygments_style = "stellium_syntax.StelliumStyle"  # code chrome is dark in BOTH themes
+
+
+def setup(app):
+    from stellium_syntax import StelliumPythonLexer
+
+    app.add_lexer("python", StelliumPythonLexer)
+
+
+# -- Generated pages ---------------------------------------------------------
+# The cookbooks in examples/ hold every runnable recipe we have, and none of them
+# appeared anywhere in this site. They are turned into pages here, on every build
+# (including on Read the Docs), rather than being committed — a generated page
+# that lives in git is a copy of the code that can drift from it, and the pages
+# `literalinclude` the real functions precisely so that they cannot.
+#
+# This runs at *config* time, not on the `builder-inited` event, and it has to:
+# MyST snapshots `myst_substitutions` into its parser config before the first
+# document is read, so a substitution assigned from an event handler is already too
+# late and every `{{ n_recipes }}` resolves to nothing.
+def _build_cookbook_pages() -> None:
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    scripts = Path(__file__).parent.parent / "scripts"
+    subprocess.run(
+        [sys.executable, str(scripts / "build_cookbook_pages.py")], check=True
+    )
+    # The galleries are a *view of a registry*, not a document. Enumerated, not authored.
+    subprocess.run(
+        [sys.executable, str(scripts / "build_gallery_pages.py")], check=True
+    )
+
+
+# -- Counts, taken from the library rather than typed ------------------------
+# Every number the prose quotes — recipes, cookbooks, themes, palettes, notables —
+# is a substitution resolved at build time from the thing it describes.
+#
+# This exists because the numbers do not hold still and nobody notices when they
+# stop being true. The home page said "374 recipes" while the generator produced
+# 421. The generator's own docstring said 357. The design mockup promised "thirteen
+# themes"; there are fourteen. Not one of these was a lie anyone told on purpose —
+# they were all true once. A count in prose is a snapshot with no expiry date, so
+# the fix is not to correct them, it is to stop writing them down.
+def _site_stats() -> dict:
+    import json
+    from pathlib import Path
+
+    from stellium.data import get_notable_registry
+    from stellium.visualization.palettes import (
+        AspectPalette,
+        PlanetGlyphPalette,
+        ZodiacPalette,
+    )
+    from stellium.visualization.themes import ChartTheme
+
+    stats_file = Path(__file__).parent / "_generated" / "site_stats.json"
+    cookbooks = json.loads(stats_file.read_text())
+
+    subs = {
+        "version": __version__,
+        "n_recipes": cookbooks["recipes"],
+        "n_cookbooks": cookbooks["cookbooks"],
+        "n_themes": len(ChartTheme),
+        "n_zodiac_palettes": len(ZodiacPalette),
+        "n_aspect_palettes": len(AspectPalette),
+        "n_planet_palettes": len(PlanetGlyphPalette),
+        "n_palettes": len(ZodiacPalette) + len(AspectPalette) + len(PlanetGlyphPalette),
+        "n_notables": len(get_notable_registry().get_all()),
+        "n_notable_births": len(get_notable_registry().get_births()),
+    }
+
+    # The biography dataset — life events and temperament, both interpretive and both
+    # graded for provenance. Counted, not quoted.
+    import warnings
+
+    from stellium.data.biography import get_notable_life_events
+    from stellium.exceptions import DataQualityWarning
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DataQualityWarning)
+        events = [
+            get_notable_life_events(n.name) or []
+            for n in get_notable_registry().get_all()
+        ]
+    subs["n_life_events"] = sum(len(e) for e in events)
+    subs["n_notables_with_events"] = sum(1 for e in events if e)
+
+    # The options catalogue. options_list.md's summary line said "37 celestial objects"
+    # and "26 aspect types" against registries holding 83 and 19; the README claimed
+    # "23+ house systems" where there are 17 — an *overclaim*, which is the worst
+    # direction to be wrong in. tests/test_documented_counts.py pins the README, which
+    # is not a Sphinx page and so cannot use these.
+    from stellium.components.arabic_parts import ARABIC_PARTS_CATALOG
+    from stellium.core.ayanamsa import AYANAMSA_REGISTRY
+    from stellium.core.registry import (
+        ASPECT_REGISTRY,
+        CELESTIAL_REGISTRY,
+        FIXED_STARS_REGISTRY,
+    )
+    from stellium.engines.houses import HOUSE_SYSTEM_CODES
+
+    subs["n_objects"] = len(CELESTIAL_REGISTRY)
+    subs["n_house_systems"] = len(HOUSE_SYSTEM_CODES)
+    subs["n_ayanamsas"] = len(AYANAMSA_REGISTRY)
+    subs["n_fixed_stars"] = len(FIXED_STARS_REGISTRY)
+    subs["n_arabic_parts"] = len(ARABIC_PARTS_CATALOG)
+    subs["n_aspects"] = len(ASPECT_REGISTRY)
+    # Per-cookbook recipe counts, e.g. {{ cb_electional }} -> 43. The home page picks
+    # *which* cookbooks to feature; the build supplies how many recipes each one has.
+    for slug, count in cookbooks["by_slug"].items():
+        subs[f"cb_{slug}"] = count
+    return subs
+
+
+_build_cookbook_pages()
+myst_substitutions = _site_stats()

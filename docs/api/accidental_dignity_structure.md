@@ -2,7 +2,7 @@
 
 This is an example of the structure of the accidental dignity data object. It is stored in a `CalculatedChart` object under `.metadata["accidental_dignities"]`.
 
-```json
+```python
 accidental_results = {
     "Sun": {
         "planet": "Sun",

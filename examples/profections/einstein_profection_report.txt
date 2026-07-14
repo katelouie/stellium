@@ -1,0 +1,66 @@
+
+Chart Overview
+==============
+        Name: Albert Einstein
+        Date: March 14, 1879
+        Time: 11:30 AM
+    Timezone: Europe/Berlin
+    Location: Ulm, Germany
+ Coordinates: 48.3984°, 9.9916°
+House System: Placidus
+      Zodiac: Tropical
+ Chart Ruler: Moon (Cancer Rising)
+
+
+Profections (Age 26)
+====================
+
+  Annual Profection
+  -----------------
+             Age: 26
+ Activated House: House 3
+  Activated Sign: ♌︎ Leo
+Lord of the Year: ☉ Sun
+    House System: Placidus
+
+  All Lords
+  ---------
+| Point  | Activated House | Sign         | Lord      |
+|--------|-----------------|--------------|-----------|
+| ASC    | House 3         | ♌︎ Leo       | ☉ Sun     |
+| ☉ Sun  | House 12        | ♊︎ Gemini    | ☿ Mercury |
+| ☽ Moon | House 8         | ♑︎ Capricorn | ♄ Saturn  |
+| MC     | House 12        | ♊︎ Gemini    | ☿ Mercury |
+
+  Natal Planets in Activated House
+  --------------------------------
+  House 3 contains: ♅ Uranus
+
+  Lord of Year - Natal Condition
+  ------------------------------
+      Planet: ☉ Sun
+  Natal Sign: ♓︎ Pisces
+Natal Degree: 23°30'
+ Natal House: House 10
+  Retrograde: No
+
+  Timeline (Ages 20-35)
+  ---------------------
+| Age    | House    | Sign           | Lord      |
+|--------|----------|----------------|-----------|
+| 20     | House 9  | ♒︎ Aquarius    | ♄ Saturn  |
+| 21     | House 10 | ♓︎ Pisces      | ♃ Jupiter |
+| 22     | House 11 | ♈︎ Aries       | ♂ Mars    |
+| 23     | House 12 | ♊︎ Gemini      | ☿ Mercury |
+| 24     | House 1  | ♋︎ Cancer      | ☽ Moon    |
+| 25     | House 2  | ♋︎ Cancer      | ☽ Moon    |
+| → 26 ← | House 3  | ♌︎ Leo         | ☉ Sun     |
+| 27     | House 4  | ♍︎ Virgo       | ☿ Mercury |
+| 28     | House 5  | ♎︎ Libra       | ♀ Venus   |
+| 29     | House 6  | ♐︎ Sagittarius | ♃ Jupiter |
+| 30     | House 7  | ♑︎ Capricorn   | ♄ Saturn  |
+| 31     | House 8  | ♑︎ Capricorn   | ♄ Saturn  |
+| 32     | House 9  | ♒︎ Aquarius    | ♄ Saturn  |
+| 33     | House 10 | ♓︎ Pisces      | ♃ Jupiter |
+| 34     | House 11 | ♈︎ Aries       | ♂ Mars    |
+| 35     | House 12 | ♊︎ Gemini      | ☿ Mercury |

@@ -19,6 +19,7 @@ class AtlasEntry:
         native: The Native (birth data) for this chart
         chart_type: Type of chart to render ("wheel" or "dial")
         chart_options: Additional options for the chart type
+
             - For "dial": {"degrees": 90} (90, 45, or 360)
     """
 

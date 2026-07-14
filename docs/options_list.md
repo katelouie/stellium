@@ -2,7 +2,7 @@
 
 This document provides a comprehensive reference of all implemented options in Stellium. Whether you're looking for a specific house system, sidereal zodiac, fixed star, Arabic lot, or aspect type, you'll find it here.
 
-**Summary:** Stellium supports **37 celestial objects**, **17 house systems**, **9 ayanamsas**, **26 fixed stars**, **28 Arabic parts**, and **26 aspect types**.
+**Summary:** Stellium supports **{{ n_objects }} celestial objects**, **{{ n_house_systems }} house systems**, **{{ n_ayanamsas }} ayanamsas**, **{{ n_fixed_stars }} fixed stars**, **{{ n_arabic_parts }} Arabic parts**, and **{{ n_aspects }} aspect types**.
 
 ---
 
@@ -506,4 +506,4 @@ Jupiter H5 Neptune (orb: 1.94°)
 
 ---
 
-*For more detailed documentation, see the individual module docstrings and the [README](../README.md).*
+*For more detailed documentation, see the individual module docstrings and the [README](https://github.com/katelouie/stellium/blob/main/README.md).*

@@ -34,6 +34,7 @@ def _set_ephemeris_path(ephe_path: str | Path | None = None) -> None:
     3. Setting the Swiss Ephemeris path
 
     By default Stellium stores ephemeris files in the user's home directory:
+
     - Users can add their own asteroid ephemeris files
     - The package size stays small (only essential files bundled)
     - Updates don't overwrite user-downloaded files
@@ -456,6 +457,7 @@ class SwissEphemerisEngine:
         Calculate phase data for an object.
 
         Uses swe.pheno_ut() which works for:
+
         - Moon (most useful)
         - Sun (phase angle = 0, always fully lit from Earth's perspective)
         - All planets
@@ -471,6 +473,7 @@ class SwissEphemerisEngine:
             PhaseData if calculation succeeds, None otherwise
 
         Why try/except instead of object type check?
+
         - Swiss Ephemeris supports phase for many object types
         - The list of supported objects may change
         - Better to attempt and gracefully fail than maintain a whitelist
@@ -528,6 +531,7 @@ class MockEphemerisEngine:
     Returns fixed positions instead of calculating them.
 
     Useful for:
+
     - Unit tests
     - Development
     - Benchmarking other components

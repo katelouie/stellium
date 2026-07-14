@@ -22,6 +22,7 @@ class DialRenderer:
     hard aspects appear as conjunctions.
 
     For a 90° dial:
+
     - 0° Aries, Cancer, Libra, Capricorn all map to 0° on the dial
     - 0° Taurus, Leo, Scorpio, Aquarius all map to 30° on the dial
     - 0° Gemini, Virgo, Sagittarius, Pisces all map to 60° on the dial
@@ -69,6 +70,7 @@ class DialRenderer:
 
         Examples:
             For 90° dial:
+
             - 0° (Aries) → 0°
             - 90° (Cancer) → 0°
             - 180° (Libra) → 0°
@@ -83,11 +85,13 @@ class DialRenderer:
         Convert dial degrees to SVG angle.
 
         SVG coordinate system:
+
         - 0° = 3 o'clock (right)
         - 90° = 6 o'clock (bottom)
         - Angles increase clockwise
 
         Dial coordinate system:
+
         - 0° = 12 o'clock (top)
         - Angles increase clockwise
         - Rotation shifts where 0° appears
@@ -281,6 +285,7 @@ class DialRenderer:
         Get the modality sector definitions for this dial.
 
         For 90° dial, each 30° sector represents one modality:
+
         - 0°-30°: Cardinal (Aries, Cancer, Libra, Capricorn)
         - 30°-60°: Fixed (Taurus, Leo, Scorpio, Aquarius)
         - 60°-90°: Mutable (Gemini, Virgo, Sagittarius, Pisces)

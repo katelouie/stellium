@@ -31,12 +31,14 @@ class PlanetLayer:
     """Renders a set of planets at a specific radius.
 
     For multiwheel charts, use wheel_index to specify which chart ring to render:
+
     - wheel_index=0: Chart 1 (innermost)
     - wheel_index=1: Chart 2
     - wheel_index=2: Chart 3
     - wheel_index=3: Chart 4 (outermost, just inside zodiac)
 
     The info_mode parameter controls how much detail to show:
+
     - "full": Degree + sign glyph + minutes (default for single charts)
     - "compact": Degree only, e.g. "15°" (good for multiwheel)
     - "no_sign": Degree + minutes, no sign glyph, e.g. "15°32'"

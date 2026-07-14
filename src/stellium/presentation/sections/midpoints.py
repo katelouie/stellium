@@ -2,6 +2,7 @@
 Midpoint-related report sections.
 
 Includes:
+
 - MidpointSection: Table of calculated midpoints
 - MidpointAspectsSection: Planets aspecting midpoints
 """
@@ -20,6 +21,7 @@ class MidpointSection:
     Table of midpoints.
 
     Shows:
+
     - Midpoint pair (e.g., "Sun/Moon")
     - Degree position
     - Sign
@@ -165,6 +167,7 @@ class MidpointAspectsSection:
     (1-2° orb), but hard aspects (square, opposition) can also be shown.
 
     Shows:
+
     - Planet that aspects the midpoint
     - Aspect type (conjunction, square, etc.)
     - Midpoint being aspected (e.g., "Sun/Moon")
@@ -194,14 +197,17 @@ class MidpointAspectsSection:
 
         Args:
             mode: Which aspects to show
+
                 - "conjunction": Only conjunctions (most common, recommended)
                 - "hard": Conjunction, square, opposition
                 - "all": All major aspects
             orb: Maximum orb in degrees (default 1.5°, typical for midpoints)
             midpoint_filter: Which midpoints to check
+
                 - "all": All midpoints
                 - "core": Only Sun/Moon/ASC/MC midpoints
             sort_by: Sort order
+
                 - "orb": Tightest aspects first (default)
                 - "planet": Group by aspecting planet
                 - "midpoint": Group by midpoint

@@ -2,6 +2,7 @@
 Miscellaneous report sections.
 
 Includes:
+
 - CacheInfoSection: Cache statistics
 - MoonPhaseSection: Moon phase information
 - DeclinationSection: Planetary declinations
@@ -126,6 +127,7 @@ class DeclinationSection:
     """Table of planetary declinations.
 
     Shows:
+
     - Planet name with glyph
     - Declination value (degrees north/south of celestial equator)
     - Direction (North/South)
@@ -205,6 +207,7 @@ class DeclinationAspectSection:
     Table of declination aspects (Parallel and Contraparallel).
 
     Shows:
+
     - Planet 1 (with glyph)
     - Aspect type (Parallel ∥ or Contraparallel ⋕)
     - Planet 2 (with glyph)
@@ -339,6 +342,7 @@ class FixedStarsSection:
     """Table of fixed star positions.
 
     Shows:
+
     - Star name with glyph
     - Zodiac position (sign + degree)
     - Constellation
@@ -475,6 +479,7 @@ class ArabicPartsSection:
     and optionally their formulas and descriptions.
 
     Modes:
+
     - "all": All calculated parts
     - "core": 7 Hermetic Lots (Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis)
     - "family": Family & Relationship Lots (Father, Mother, Marriage, Children, Siblings)
@@ -534,6 +539,7 @@ class ArabicPartsSection:
 
         Args:
             mode: Which parts to display:
+
                 - "all": All calculated parts (default)
                 - "core": 7 Hermetic Lots
                 - "family": Family & Relationship Lots
@@ -772,6 +778,7 @@ class AntisciaSection:
     are reflections across the equinox axis.
 
     Shows:
+
     - The two planets involved
     - Whether it's antiscia or contra-antiscia
     - The orb of the conjunction

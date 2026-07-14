@@ -85,6 +85,6 @@ logging.basicConfig()  # your application's handlers
   default; opt in with `configure_logging`.
 
 Contributors: the rule that keeps this consistent (and the ban on bare `print`)
-is in [`CONTRIBUTING.md`](../CONTRIBUTING.md#diagnostics-no-bare-print); the full
+is in [`CONTRIBUTING.md`](https://github.com/katelouie/stellium/blob/main/CONTRIBUTING.md#diagnostics-no-bare-print); the full
 design is in
-[`docs/development/specs/STRUCTURED_LOGGING_SPEC.md`](development/specs/STRUCTURED_LOGGING_SPEC.md).
+[`docs/development/specs/STRUCTURED_LOGGING_SPEC.md`](https://github.com/katelouie/stellium/blob/main/docs/development/STRUCTURED_LOGGING_SPEC.md).

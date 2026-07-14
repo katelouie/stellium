@@ -36,6 +36,7 @@ class EphemerisEngine(Protocol):
     Protocol for planetary position calculation engines.
 
     Different implementations might use:
+
     - Swiss Ephemeris
     - JPL Ephemeris
     - Custom calculation algorithms
@@ -69,6 +70,7 @@ class HouseSystemEngine(Protocol):
     Protocol for house system calculation engines.
 
     Different implementations for different house systems:
+
     - Whole Sign
     - Placidus
     - Koch
@@ -85,6 +87,7 @@ class HouseSystemEngine(Protocol):
         self,
         datetime: ChartDateTime,
         location: ChartLocation,
+        config: "CalculationConfig | None" = None,
     ) -> tuple[HouseCusps, list[CelestialPosition]]:
         """
         Calculate house cusps for this system.
@@ -92,6 +95,8 @@ class HouseSystemEngine(Protocol):
         Args:
             datetime: Chart datetime
             location: Chart location
+            config: Calculation configuration (carries the zodiac type — a sidereal
+                chart needs its ayanamsa applied to the cusps)
 
         Returns:
             Tuple containing:
@@ -150,6 +155,7 @@ class CrossChartAspectEngine(Protocol):
     orb configurations and aspect sets for cross-chart work.
 
     Use cases:
+
     - Synastry: Person A's planets aspecting Person B's planets
     - Transits: Current sky aspecting natal chart
     - Progressions: Progressed chart aspecting natal chart
@@ -184,6 +190,7 @@ class AspectEngine(Protocol):
     Protocol for aspect calculation engines.
 
     Different implementations might use:
+
     - Traditional aspects (Ptolemaic)
     - Modern aspects (including minor aspects)
     - Harmonic aspects
@@ -213,6 +220,7 @@ class DignityCalculator(Protocol):
     Protocol for dignity/debility calculation.
 
     Different implementations:
+
     - Traditional essential dignities
     - Modern rulerships
     - Vedic dignity system
@@ -236,6 +244,7 @@ class ChartComponent(Protocol):
     Base protocol for chart calculation components.
 
     Components can be:
+
     - Arabic part calculators
     - Midpoint finders
     - Pattern detectors (grand trine, T-square, etc.)
@@ -336,17 +345,20 @@ class ReportSection(Protocol):
 
     **Multi-Chart Support:**
     Sections may receive any of:
+
     - CalculatedChart: Single natal/event chart
     - Comparison: Two-chart comparison (deprecated, use MultiChart)
     - MultiChart: 2-4 charts for synastry, transits, progressions, etc.
 
     Implementations should use `stellium.core.chart_utils` helpers to handle
     different chart types consistently:
+
     - `get_all_charts(chart)` - Get list of all charts
     - `get_chart_labels(chart)` - Get labels for each chart
     - `chart_count(chart)` - Get number of charts
 
     Why a protocol?
+
     - Extensibility: Users can create custom sections
     - Type safety: MyPy/Pyright can verify implementations
     - No inheritance required: Keep components lightweight
@@ -393,6 +405,7 @@ class ReportRenderer(Protocol):
     output medium (terminal, plain text, HTML, etc.).
 
     Why separate renderers?
+
     - Same data, multiple output formats
     - Easy to add new formats without touching section code
     - Testable in isolation

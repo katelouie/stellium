@@ -2,11 +2,12 @@
 Centralized data path management for Stellium.
 
 This module handles:
+
 1. User data directory (~/.stellium/) for ephemeris files and user data
 2. Bundled package data (notables, essential ephemeris files)
 3. First-run initialization (copying bundled ephemeris to user directory)
 
-Two directories, deliberately kept apart by how much you would miss them:
+Two directories, deliberately kept apart by how much you would miss them::
 
     ~/.stellium/                    # DATA — you would hate to lose this
     └── ephe/                       #   Swiss Ephemeris (bundled + files YOU downloaded)
@@ -22,7 +23,7 @@ directory the ecosystem already agrees is disposable — backup tools skip it,
 cleaners empty it. On Windows the equivalent is ``%LOCALAPPDATA%\\stellium\\cache``.
 
 Both are overridable, and the two env vars are the whole story for a portable or
-read-only-$HOME install (Docker, Lambda, a Windows embedded Python on a D: drive):
+read-only-$HOME install (Docker, Lambda, a Windows embedded Python on a D: drive)::
 
     STELLIUM_EPHE_PATH   -> where the ephemeris is read from
     STELLIUM_CACHE_DIR   -> where the cache is written
@@ -272,6 +273,7 @@ def initialize_ephemeris(ephe_path: str | Path | None = None) -> Path:
     Initialize the ephemeris system.
 
     This function:
+
     1. Resolves which ephemeris directory to use (explicit arg >
        ``STELLIUM_EPHE_PATH`` env var > default ``~/.stellium/ephe/``)
     2. For the default location: ensures the directory exists and copies

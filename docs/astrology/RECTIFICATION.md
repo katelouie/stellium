@@ -47,7 +47,7 @@ right ages.
 corpus of AA-rated (certificate-verified) birth times with documented life events,
 pre-registered gates, leave-one-out cross-validation, permutation nulls, confound
 controls, and an out-of-sample holdout. The full write-up is in
-[`RECTIFICATION_REPORT.md`](../development/specs/rectification/RECTIFICATION_REPORT.md). The short
+[`RECTIFICATION_REPORT.md`](https://github.com/katelouie/stellium/blob/main/docs/development/RECTIFICATION_REPORT.md). The short
 version:
 
 > The map from **birth time → chart → life** is many-to-one. Two different birth
@@ -205,11 +205,11 @@ events = [
               description="promoted, took over the family firm", significance="moderate"),
 ]
 a = analyze_sect(chart, events=events)
-print(a.p_day, a.leans)
+print(f"{a.p_day:.4f}", a.leans)   # a probability; 16 digits of it is noise
 ```
 <!--pytest-codeblocks:expected-output-->
 ```
-0.6048940312763954 day
+0.6049 day
 ```
 
 `LifeEvent` fields: `date` (`"YYYY"`, `"YYYY-MM"`, or `"YYYY-MM-DD"`), `precision`,
@@ -280,7 +280,7 @@ traits = get_notable_temperament("Frida Kahlo")     # soft/interpretive (warns o
 
 ## Further reading
 
-- **[The full empirical study](../development/specs/rectification/RECTIFICATION_REPORT.md)** — the
+- **[The full empirical study](https://github.com/katelouie/stellium/blob/main/docs/development/RECTIFICATION_REPORT.md)** — the
   corpus, methodology, the ill-posed-inverse framing, the convergence test, the
   confound checks, and the one traditional doctrine that survived.
 - **[CHART_TYPES.md](../CHART_TYPES.md)** — where sect, directions, profections, and

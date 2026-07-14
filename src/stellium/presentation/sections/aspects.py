@@ -2,6 +2,7 @@
 Aspect-related report sections.
 
 Includes:
+
 - AspectSection: Table of aspects between planets
 - AspectPatternSection: Detected aspect patterns (Grand Trines, T-Squares, etc.)
 - CrossChartAspectSection: Cross-chart aspects for synastry/comparison
@@ -41,9 +42,11 @@ class AspectPatternSection:
 
         Args:
             pattern_types: Which pattern types to show:
+
                 - "all": Show all detected patterns (DEFAULT)
                 - list[str]: Show specific pattern types (e.g., ["Grand Trine", "T-Square"])
             sort_by: How to sort patterns:
+
                 - "type": Group by pattern type
                 - "element": Group by element (Fire, Earth, Air, Water)
                 - "count": Sort by number of planets involved
@@ -184,6 +187,7 @@ class AspectSection:
     Table of aspects between planets.
 
     Shows:
+
     - Planet 1
     - Aspect type
     - Planet 2
@@ -445,6 +449,7 @@ class CrossChartAspectSection:
     Table of cross-chart aspects for Comparison charts.
 
     Shows aspects between chart1 planets and chart2 planets:
+
     - Chart 1 Planet (with label)
     - Aspect type
     - Chart 2 Planet (with label)

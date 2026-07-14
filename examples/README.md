@@ -1,5 +1,15 @@
 # Stellium Examples
 
+> ## 📖 Read these on the documentation site instead
+>
+> **[stellium.readthedocs.io → Cookbooks](https://stellium.readthedocs.io/en/latest/cookbooks/index.html)**
+>
+> Every recipe below is rendered there with **its real output** — the printed tables and
+> the charts it draws — captured by *running* the code at build time. Same recipes, but
+> you can see what they produce without running anything.
+>
+> This directory is the source those pages are generated from.
+
 This directory contains runnable example scripts demonstrating Stellium's capabilities.
 
 ## Cookbooks

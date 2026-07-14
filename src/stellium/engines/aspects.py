@@ -22,6 +22,7 @@ def _are_axis_pair(obj1: CelestialPosition, obj2: CelestialPosition) -> bool:
     Check if two objects are an axis pair that shouldn't aspect each other.
 
     Axis pairs:
+
     - ASC/DSC (Ascendant-Descendant axis)
     - MC/IC (Midheaven-Imum Coeli axis)
     - True Node/South Node (Nodal axis)
@@ -305,12 +306,14 @@ class CrossChartAspectEngine:
     chart2 objects (but not within each chart).
 
     Use cases:
+
     - Synastry: Person A's planets aspecting Person B's planets
     - Transits: Current sky aspecting natal chart
     - Progressions: Progressed chart aspecting natal chart
 
     The key difference: controlled iteration. We only check pairs where
     one object is from chart1 and the other is from chart2. This prevents:
+
     - Object identity collision (same planet in both charts)
     - Redundant calculation (internal aspects already calculated separately)
     - Incorrect filtering (can't distinguish sources after merging lists)
@@ -433,6 +436,7 @@ class DeclinationAspectEngine:
     Calculates declination aspects (Parallel and Contraparallel).
 
     Declination aspects are based on celestial equatorial coordinates:
+
     - Parallel: Two bodies at the SAME declination (both north or both south).
       Interpreted similarly to a conjunction - blending of energies.
     - Contraparallel: Two bodies at the SAME declination magnitude but

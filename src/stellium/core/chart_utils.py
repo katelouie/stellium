@@ -8,13 +8,15 @@ The functions use duck-typing (hasattr checks) where necessary to avoid importin
 MultiChart or Comparison directly, which helps prevent circular import issues.
 
 Example usage:
-    from stellium.core.chart_utils import get_all_charts, get_chart_labels
+    .. code-block:: python
 
-    def process_chart(chart):
-        charts = get_all_charts(chart)
-        labels = get_chart_labels(chart)
-        for c, label in zip(charts, labels):
-            print(f"{label}: {c.datetime}")
+        from stellium.core.chart_utils import get_all_charts, get_chart_labels
+
+        def process_chart(chart):
+            charts = get_all_charts(chart)
+            labels = get_chart_labels(chart)
+            for c, label in zip(charts, labels):
+                print(f"{label}: {c.datetime}")
 """
 
 from __future__ import annotations

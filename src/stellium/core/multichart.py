@@ -2,6 +2,7 @@
 Unified MultiChart implementation for 2-4 chart comparisons.
 
 This module provides a single interface for all multi-chart scenarios:
+
 - Synastry (two natal charts)
 - Transits (natal + current sky)
 - Progressions (natal + progressed)
@@ -13,6 +14,7 @@ The MultiChart class combines the features of the former Comparison and MultiWhe
 classes into a unified architecture.
 
 Ring order (center -> out):
+
 - Tiny aspect center
 - Chart 1 ring (innermost) - primary/natal chart
 - Chart 2 ring
@@ -48,6 +50,7 @@ class MultiChart:
     Unified multi-chart container supporting 2-4 charts with analysis and visualization.
 
     Supports all chart relationship types:
+
     - Synastry (two natal charts)
     - Transits (natal + transit sky)
     - Progressions (natal + progressed)
@@ -55,6 +58,7 @@ class MultiChart:
     - Triwheels/Quadwheels (3-4 charts)
 
     Access charts via:
+
     - Indexed: mc[0], mc[1], mc.charts[2]
     - Named: mc.chart1, mc.chart2, mc.chart3, mc.chart4
     - Semantic: mc.inner, mc.outer, mc.natal
@@ -660,6 +664,7 @@ class MultiChartBuilder:
         Args:
             natal_data: Natal chart data (CalculatedChart, Native, or tuple)
             transit_data: Transit time - can be:
+
                 - CalculatedChart: use as-is
                 - Native: build chart from Native
                 - datetime or str: use natal chart's location
@@ -709,6 +714,7 @@ class MultiChartBuilder:
         Create a progression comparison with auto-calculation support.
 
         Supports three progression types:
+
         - **secondary** (default): 1 day = 1 year. The standard progression.
         - **tertiary**: 1 day = 1 lunar month (~27.3 days). Faster-moving.
         - **minor**: 1 lunar month = 1 year. Intermediate rate.
@@ -1154,6 +1160,7 @@ class MultiChartBuilder:
 
         Args:
             pairs: Either:
+
                 - "to_primary": Only aspects to chart[0] (default)
                 - "adjacent": Adjacent pairs (0-1, 1-2, 2-3)
                 - "all": All possible pairs
@@ -1325,6 +1332,7 @@ class MultiChartBuilder:
 
         Args:
             data: Input data - can be:
+
                 - CalculatedChart: returned as-is
                 - Native: builds chart from Native
                 - datetime or str: builds chart using location_fallback

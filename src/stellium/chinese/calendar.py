@@ -1,10 +1,12 @@
 """Chinese calendar calculations: solar terms, lunar calendar conversions.
 
 This module handles the astronomical calculations needed for Chinese astrology:
+
 - Solar terms (Jie Qi / 节气) for Bazi month determination
 - Lunar calendar conversions (future)
 
 Solar terms are based on the Sun's ecliptic longitude:
+
 - Li Chun (立春, Start of Spring) = 315°
 - Each of the 24 terms is 15° apart
 - The 12 "major" terms (Zhong Qi) mark Bazi month boundaries

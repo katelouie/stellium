@@ -76,6 +76,10 @@ def _run_cookbook(filename: str, timeout: int = 120) -> subprocess.CompletedProc
 class TestCleanCookbooks:
     """Cookbooks that need only stellium + standard dependencies."""
 
+    # analysis_cookbook is no longer a .ipynb — it is analysis_cookbook.md, executed
+    # by the Sphinx build (nb_execution_raise_on_error=True), which runs in this same
+    # workflow. A cell that fails there fails the docs job.
+
     def test_chart_cookbook(self):
         result = _run_cookbook("chart_cookbook.py")
         assert result.returncode == 0, f"STDERR:\n{result.stderr}"
@@ -223,10 +227,6 @@ class TestNotebookCookbooks:
     their own marker. Run with: pytest -m notebooks
     Excluded from the normal full suite to keep it under 5 minutes.
     """
-
-    def test_analysis_cookbook(self):
-        result = _run_notebook("analysis_cookbook.ipynb")
-        assert result.returncode == 0, f"STDERR:\n{result.stderr[-2000:]}"
 
     def test_chart_cookbook_notebook(self):
         result = _run_notebook("chart_cookbook.ipynb")

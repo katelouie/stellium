@@ -55,6 +55,7 @@ class MoonPhaseLayer:
             position: Where to place the moon phase symbol.
                 Options: "center", "top-left", "top-right", "bottom-left", "bottom-right", None
                 If None (default), automatically chooses:
+
                 - "bottom-right" if chart has aspects (keeps center clear)
                 - "center" if chart has no aspects (makes use of empty space)
             show_label: Whether to display the phase name below the moon

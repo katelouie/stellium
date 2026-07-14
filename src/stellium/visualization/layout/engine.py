@@ -246,10 +246,12 @@ class LayoutEngine:
         Layout tables for vertical (right/left) placement.
 
         For single-wheel charts:
+
         - Position and House tables side-by-side in top row
         - Aspectarian below them (centered or full width)
 
         For comparison charts:
+
         - All tables stack vertically (old behavior)
         """
         if not tables:

@@ -262,6 +262,7 @@ class DialStyle:
         Create DialStyle from a theme style dictionary.
 
         Maps theme colors to dial elements:
+
         - Graduation uses zodiac ring colors
         - Cardinal points use angle colors
         - Modality uses house fill colors

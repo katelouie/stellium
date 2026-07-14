@@ -6,6 +6,7 @@ planets and other celestial objects cross specific zodiac degrees. Uses a hybrid
 Newton-Raphson / bisection algorithm for fast, reliable convergence.
 
 Key features:
+
 - Fast convergence using planetary speed from Swiss Ephemeris
 - Handles retrograde motion and stations gracefully
 - Proper 360°/0° wraparound handling
@@ -252,6 +253,7 @@ def _normalize_angle_error(angle: float) -> float:
     """Normalize angle difference to range [-180, +180].
 
     This handles the 360°/0° wraparound properly. For example:
+
     - 359° to 1° is a difference of +2°, not -358°
     - 1° to 359° is a difference of -2°, not +358°
 
@@ -495,6 +497,7 @@ def find_all_longitude_crossings(
     """Find all times a celestial object crosses a specific longitude in a date range.
 
     Useful for:
+
     - Finding all Moon transits over a degree (roughly monthly)
     - Finding multiple Mercury crossings during retrograde (up to 3)
     - Building transit timelines
@@ -1412,6 +1415,7 @@ def find_all_aspect_exacts(
     """Find all exact aspects between two objects in a date range.
 
     Useful for:
+
     - Finding all Moon-Jupiter trines in a year
     - Tracking Mercury-Venus aspects for relationship timing
     - Building aspect timelines

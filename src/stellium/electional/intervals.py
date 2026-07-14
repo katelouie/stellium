@@ -861,6 +861,7 @@ def angle_at_longitude_windows(
 
     Since angles rotate with Earth's rotation (~1° every 4 minutes), the
     window duration depends on the orb:
+
     - 1° orb → ~8 minute window
     - 3° orb → ~24 minute window
 

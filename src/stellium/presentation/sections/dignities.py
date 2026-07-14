@@ -2,6 +2,7 @@
 Dignity-related report sections.
 
 Includes:
+
 - DignitySection: Essential dignities table
 - DispositorSection: Dispositor chains and final dispositors
 """
@@ -36,6 +37,7 @@ class DignitySection:
 
         Args:
             essential: Which essential dignity system(s) to show:
+
                 - "traditional": Traditional dignities only
                 - "modern": Modern dignities only
                 - "both": Both systems (DEFAULT)
@@ -212,6 +214,7 @@ class DispositorSection:
 
         Args:
             mode: Which dispositor analysis to show:
+
                 - "planetary": Traditional planet-disposes-planet
                 - "house": Kate's house-based innovation
                 - "both": Show both (DEFAULT)

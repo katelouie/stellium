@@ -1,6 +1,7 @@
 """Planetary returns module for Stellium.
 
 This module provides tools for calculating planetary return charts:
+
 - Solar Returns (birthday charts)
 - Lunar Returns (~monthly)
 - Saturn Returns, Jupiter Returns, etc.

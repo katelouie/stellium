@@ -61,7 +61,16 @@ dev = [
     "pandas>=2.0.0",
     "scipy>=1.10.0",
 ]
-docs = ["mkdocs>=1.5.0", "mkdocs-material>=9.5.0"]
+# The docs are Sphinx, not MkDocs. This extra declared mkdocs + mkdocs-material,
+# which nothing used. The real list is docs/requirements.txt (what Read the Docs
+# installs); this mirrors it so `pip install -e ".[docs]"` builds the site locally.
+docs = [
+    "sphinx>=9.0.4,<10",
+    "sphinx-autodoc-typehints",
+    "myst-nb",
+    "pandas>=2.0.0",
+    "graphviz",
+]
 web = ["nicegui>=1.4.0"]
 analysis = ["pandas>=2.0.0"]
 

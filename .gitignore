@@ -58,3 +58,12 @@ examples/multicharts/
 claude_info/
 # Untracked local rectification proving harness (superseded by src/stellium/rectification/)
 docs/development/specs/rectification/harness/
+docs/cookbooks/
+
+# Build-time stats for the docs (see docs/conf.py _site_stats)
+docs/_generated/
+
+# Galleries: generated from the registries at build time (scripts/build_gallery_pages.py)
+docs/THEME_GALLERY.md
+docs/PALETTE_GALLERY.md
+docs/gallery/

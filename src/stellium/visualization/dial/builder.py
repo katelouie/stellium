@@ -130,6 +130,7 @@ class DialDrawBuilder(RasterMixin):
         Set the visual theme.
 
         Uses the same themes as the main chart visualization:
+
         - "classic" (default), "dark", "midnight", "neon", "sepia", "pastel", "celestial"
         - Data science themes: "viridis", "plasma", "inferno", "magma", "cividis", "turbo"
 
@@ -285,6 +286,7 @@ class DialDrawBuilder(RasterMixin):
 
         Args:
             pointing_to: Where the pointer should point. Can be:
+
                 - A degree value (0-360 for 360° dial, 0-90 for 90° dial)
                 - A planet name (e.g., "Sun", "Moon") - will point to that planet's position
 
@@ -314,6 +316,7 @@ class DialDrawBuilder(RasterMixin):
         Add a header with chart name and birth details.
 
         The header appears at the top of the dial, showing:
+
         - Name (from chart metadata or "Natal Chart")
         - Birth date/time, location, and coordinates
         """

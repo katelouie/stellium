@@ -28,6 +28,7 @@ class BatchCalculator:
     Efficient batch calculation of multiple charts.
 
     Supports calculation from:
+
     - NotableRegistry (with optional filters)
     - List of Native objects
     - Any iterable of chart data
@@ -200,6 +201,7 @@ class BatchCalculator:
         Set progress callback for tracking calculation progress.
 
         The callback receives:
+
         - current: Current chart number (1-based)
         - total: Total number of charts (or -1 if unknown)
         - name: Name of current chart being calculated

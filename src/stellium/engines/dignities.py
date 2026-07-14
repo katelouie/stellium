@@ -365,6 +365,7 @@ class TraditionalDignityCalculator:
     calculates dignities according to classical astrological principles.
 
     Scoring system:
+
     - Domicile/Rulership: +5 points
     - Exaltation: +4 points
     - Triplicity ruler: +3 points
@@ -414,6 +415,7 @@ class TraditionalDignityCalculator:
 
         Returns:
             Dictionary with comprehensive dignity information including:
+
             - dignities: List of dignity types held
             - score: Total dignity score
             - details: Breakdown of each dignity
@@ -603,6 +605,7 @@ class TraditionalDignityCalculator:
         Check for mutual reception potential.
 
         A planet can have mutual reception by:
+
         - Rulership: Two planets in each other's domiciles
         - Exaltation: Two planets in each other's exaltation signs
         - Mixed: One planet in the other's domicile while that planet is in the first's exaltation
@@ -672,6 +675,7 @@ class ModernDignityCalculator:
     rulerships while maintaining traditional dignity principles.
 
     Scoring system:
+
     - Domicile/Rulership: +5 points (modern ruler), +3 points (traditional ruler)
     - Exaltation: +4 points
     - Triplicity ruler: +3 points

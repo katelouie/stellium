@@ -84,6 +84,7 @@ def get_glyph(object_name: str) -> dict[str, str]:
 
     Returns:
         Dictionary with:
+
         - "type": "unicode" or "svg"
         - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """
@@ -169,6 +170,7 @@ def get_aspect_glyph(aspect_name: str) -> dict[str, str]:
 
     Returns:
         Dictionary with:
+
         - "type": "unicode" or "svg"
         - "value": glyph string (unicode) or SVG content string (for inline embedding)
     """

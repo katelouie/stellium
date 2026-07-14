@@ -3,6 +3,7 @@ Parser for AAF (Astrodienst Astrological Format) files.
 
 AAF is the export format used by astro.com (Astrodienst). It contains
 birth data in a structured text format with two lines per record:
+
 - #A93: Human-readable data (name, date, time, location)
 - #B93: Computed data (Julian day, coordinates, timezone)
 

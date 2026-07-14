@@ -45,6 +45,8 @@ Marked slow: runs in CI and the full suite, not in the TDD loop.
 
 import contextlib
 import io
+import re
+import warnings
 from pathlib import Path
 
 import pytest
@@ -57,12 +59,18 @@ REPO_ROOT = Path(__file__).parent.parent
 DOC_FILES = [
     "README.md",
     "CONTRIBUTING.md",
+    # The four landing pages. The home page is the most-read page in the project and
+    # its code was, until now, the only code on the site that nothing ran.
+    "docs/index.md",
+    "docs/README.md",
+    "docs/for-developers.md",
+    "docs/for-astrologers.md",
+    "docs/api/exceptions.md",
     "docs/options_list.md",
     "docs/REPORTS.md",
     "docs/VISUALIZATION.md",
     "docs/PALETTE_GALLERY.md",
     "docs/THEME_GALLERY.md",
-    "docs/PUBLISHING.md",
     # docs/ARCHITECTURE.md excluded — significantly stale (Nov 2025), has a warning banner
     "examples/README.md",
     "docs/images/README.md",
@@ -142,7 +150,12 @@ def test_doc_codeblock(block, doc_file, tmp_path, monkeypatch):
 
     stdout = io.StringIO()
     try:
-        with contextlib.redirect_stdout(stdout):
+        # `warnings.catch_warnings()` restores the global filter list afterwards.
+        # A documented block is entitled to show `simplefilter("error", ...)` — that
+        # is exactly how you are meant to escalate a StelliumWarning — but without
+        # this, that one line would silently re-arm every block that ran after it,
+        # in a different file, and the failure would surface nowhere near its cause.
+        with warnings.catch_warnings(), contextlib.redirect_stdout(stdout):
             exec(compile(block.code, doc_file, "exec"), {"__name__": "__main__"})
     except NameError as e:
         # A fragment that continues an earlier block (`chart` defined above, etc.).
@@ -167,6 +180,30 @@ def test_doc_codeblock(block, doc_file, tmp_path, monkeypatch):
         f"    python scripts/update_doc_outputs.py {doc_file}\n"
         f"and read the diff — if a number moved, either the doc was wrong or the "
         f"library just changed behaviour, and both are worth knowing."
+    )
+
+
+# A float printed at full repr — 0.6048940312763954 — is not the same string on every
+# machine: the last bits differ between x86 and arm, and a pinned output that carries
+# them fails on the platform it was not generated on. The difference is ~1e-12°, a
+# million times finer than Swiss Ephemeris resolves, so the value is not wrong — the
+# expectation is too precise. Round at the print.
+LONG_FLOAT = re.compile(r"\d+\.\d{7,}")
+
+
+def test_no_pinned_output_depends_on_floating_point_noise():
+    """No expected output may carry a float with more than 6 decimals."""
+    offenders = []
+    for doc_file in doc_files():
+        for block in testable_blocks(doc_file):
+            for value in LONG_FLOAT.findall(block.expected_output or ""):
+                offenders.append(f"{doc_file}: {value}")
+
+    assert not offenders, (
+        "These pinned outputs print a float at a precision that is not reproducible "
+        "across platforms:\n  " + "\n  ".join(offenders) + "\n\n"
+        'Round it where it is printed — f"{value:.4f}" — then re-run '
+        "`python scripts/update_doc_outputs.py <file>`."
     )
 
 

@@ -88,6 +88,7 @@ class DialHeaderLayer:
     Renders the chart header at the top of the dial canvas.
 
     Displays:
+
     - Name (from chart metadata, or "Natal Chart" as fallback)
     - Birth date/time, location, and coordinates
     """
@@ -264,6 +265,7 @@ class DialGraduationLayer:
     Renders the graduated tick marks and degree labels on the outer ring.
 
     Draws:
+
     - Small tick marks every 1°
     - Medium tick marks every 5°
     - Labels at configured intervals (default every 5°)
@@ -701,12 +703,14 @@ class DialPlanetLayer:
     Renders planet glyphs on the dial with collision detection.
 
     By default, includes:
+
     - All 10 planets (Sun through Pluto)
     - Trans-Neptunian Objects (Eris, Sedna, Makemake, Haumea, Orcus, Quaoar)
     - Hamburg/Uranian hypothetical planets (Cupido, Hades, Zeus, Kronos,
       Apollon, Admetos, Vulkanus, Poseidon)
 
     Draws:
+
     - Tick marks at true (compressed) positions
     - Planet glyphs with collision avoidance
     - Dashed connector lines when glyphs are displaced
@@ -860,6 +864,7 @@ class DialMidpointLayer:
 
     Midpoints are the halfway points between two planets.
     Each midpoint has:
+
     - A tick mark at its true position
     - A label/glyph with collision avoidance
     - A dashed connector line if displaced
@@ -1012,6 +1017,7 @@ class DialOuterRingLayer:
 
     Can display transit planets, solar arc directions, progressions, etc.
     Each outer ring has:
+
     - Border circles defining the ring area
     - Tick marks at true positions
     - Glyphs with collision detection

@@ -2,6 +2,7 @@
 
 This module contains the fundamental building blocks shared across
 different Chinese astrology systems (Bazi, Zi Wei Dou Shu, etc.):
+
 - Polarity (Yin/Yang)
 - Five Elements (Wu Xing)
 - Ten Heavenly Stems (Tian Gan)

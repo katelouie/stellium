@@ -5,6 +5,7 @@ This module provides parsers for common astrology software file formats,
 allowing users to import their existing chart collections into Stellium.
 
 Supported formats:
+
 - AAF (Astrodienst Astrological Format): Export format from astro.com
 - CSV: Flexible CSV parsing with auto-detection and custom column mapping
 - DataFrame: Direct parsing from pandas DataFrames (requires pandas)

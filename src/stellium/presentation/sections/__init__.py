@@ -5,6 +5,7 @@ Each section extracts specific data from a CalculatedChart and formats it
 into a standardized structure that renderers can consume.
 
 This package contains domain-organized section modules:
+
 - core: Basic chart info (ChartOverview, PlanetPosition, HouseCusps)
 - aspects: Aspect-related (AspectSection, AspectPatternSection, CrossChartAspectSection)
 - dignities: Dignity analysis (DignitySection, DispositorSection)

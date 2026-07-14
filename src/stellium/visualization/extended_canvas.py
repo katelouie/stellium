@@ -26,6 +26,7 @@ def _filter_objects_for_tables(positions, object_types=None):
     Filter positions to include in position tables and aspectarian.
 
     Default includes:
+
     - All PLANET objects (except Earth)
     - All ASTEROID objects
     - All POINT objects
@@ -33,6 +34,7 @@ def _filter_objects_for_tables(positions, object_types=None):
     - ASC/AC and MC only (exclude DSC/DC and IC)
 
     Default excludes:
+
     - MIDPOINT, ARABIC_PART, FIXED_STAR
 
     Args:
@@ -1508,6 +1510,7 @@ class AspectarianLayer:
     Respects chart theme colors.
 
     Supports two modes:
+
     - Simple (default): Large aspect glyphs only
     - Detailed: Smaller glyphs with orb value and A/S (applying/separating) indicator
     """
@@ -1992,22 +1995,24 @@ def generate_aspectarian_svg(
         SVG string if output_path is None, otherwise the output_path
 
     Example:
-        # Generate and save triangle aspectarian
-        chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
-        generate_aspectarian_svg(chart, "einstein_aspects.svg")
+        .. code-block:: python
 
-        # Generate square aspectarian for synastry
-        comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
-        svg_string = generate_aspectarian_svg(comparison)
+            # Generate and save triangle aspectarian
+            chart = ChartBuilder.from_notable("Albert Einstein").with_aspects().calculate()
+            generate_aspectarian_svg(chart, "einstein_aspects.svg")
 
-        # With styling
-        generate_aspectarian_svg(
-            chart,
-            "aspects.svg",
-            cell_size=28,
-            detailed=True,
-            theme="midnight",
-        )
+            # Generate square aspectarian for synastry
+            comparison = ComparisonBuilder.synastry(chart1, chart2).calculate()
+            svg_string = generate_aspectarian_svg(comparison)
+
+            # With styling
+            generate_aspectarian_svg(
+                chart,
+                "aspects.svg",
+                cell_size=28,
+                detailed=True,
+                theme="midnight",
+            )
     """
     from stellium.visualization.config import (
         ChartVisualizationConfig,
