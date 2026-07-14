@@ -5,6 +5,19 @@
 > Prerequisites: [01 The Zodiac](./01_the_zodiac.md),
 > [02 Planets & Points](./02_planets_and_points.md).
 
+
+:::{admonition} 🚧 Under construction
+:class: warning
+
+This chapter is a **draft**. Its prose has not yet been re-verified against
+Stellium's computed output — so treat any specific degree, score or placement in it
+as unconfirmed until it has been.
+
+Two chapters of this guide were previously found to contain figures that had never
+been computed at all (see [Dignity & Rulership](06_dignity_and_rulership.md)). That is
+the check this chapter is still waiting for.
+:::
+
 ## The one-line version
 
 The **houses** are twelve slices of the sky anchored to the horizon at your
@@ -400,7 +413,7 @@ Full house options (all 18 systems and their codes) live in
 
 - **Next:** [04 Aspects](./04_aspects.md) shows how planets in different houses
   talk to each other.
-- **The angles in prediction:** [14 Profections](./14_profections.md) uses
+- **The angles in prediction:** **14 Profections** *(not yet written)* uses
   whole-sign houses to hand each year of life to a different house and its
   ruler. It's the cleanest argument for why one-sign-one-house is elegant.
 - **House strength:** [06 Dignity & Rulership](./06_dignity_and_rulership.md)

@@ -87,6 +87,7 @@ class HouseSystemEngine(Protocol):
         self,
         datetime: ChartDateTime,
         location: ChartLocation,
+        config: "CalculationConfig | None" = None,
     ) -> tuple[HouseCusps, list[CelestialPosition]]:
         """
         Calculate house cusps for this system.
@@ -94,6 +95,8 @@ class HouseSystemEngine(Protocol):
         Args:
             datetime: Chart datetime
             location: Chart location
+            config: Calculation configuration (carries the zodiac type — a sidereal
+                chart needs its ayanamsa applied to the cusps)
 
         Returns:
             Tuple containing:

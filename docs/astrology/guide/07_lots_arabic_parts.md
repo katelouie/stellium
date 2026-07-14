@@ -4,6 +4,18 @@
 > [`examples/dignities_cookbook.py`](../../../examples/dignities_cookbook.py).
 > Prerequisites: [05 Sect](./05_sect.md), [06 Dignity & Rulership](./06_dignity_and_rulership.md).
 
+
+:::{admonition} 🚧 Under construction — but this chapter's numbers were computed
+:class: note
+
+The guide as a whole is a draft. **This chapter is one of the two that have been
+rewritten from a chart that was actually run**: every figure in it comes from
+Stellium's own output, and its code blocks are pinned by the test suite, so a library
+change that moved a number would fail CI in this file.
+
+The surrounding chapters have not had that treatment yet.
+:::
+
 ## The one-line version
 
 A **lot** (or Arabic part) is a calculated point built from the arc between two
@@ -293,7 +305,7 @@ topical lots alongside the dignity scoring they depend on.
   the ruler-condition that turns a lot from a point into a reading.
 - **The sect switch:** [05 Sect](./05_sect.md) is what flips the Fortune/Spirit
   formulas; the two chapters are a matched pair.
-- **Timing with lots:** [15 Zodiacal Releasing](./15_zodiacal_releasing.md) uses
+- **Timing with lots:** **15 Zodiacal Releasing** *(not yet written)* uses
   the Lot of Fortune and the Lot of Spirit as its starting points, so this chapter
   is a prerequisite for the most powerful Hellenistic timing technique.
 

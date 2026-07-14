@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+title: "Stellium: a composable Python library for computational astrology"
+message: "If you use Stellium in research, please cite it."
+type: software
+authors:
+  - family-names: Louie
+    given-names: Kate
+repository-code: "https://github.com/katelouie/stellium"
+url: "https://stellium.readthedocs.io/"
+abstract: >-
+  Stellium is an extensible Python library for computational astrology, built on
+  the Swiss Ephemeris. It spans Western (tropical), Vedic (sidereal) and Chinese
+  (BaZi) traditions, and implements traditional timing techniques — profections,
+  zodiacal releasing, firdaria, primary directions — alongside chart rendering to
+  SVG and typeset PDF reports. Its architecture is protocol-based: every engine
+  (ephemeris, house system, aspects, orbs) can be replaced without inheritance.
+keywords:
+  - astrology
+  - swiss-ephemeris
+  - ephemeris
+  - astronomy
+  - horoscope
+  - jyotish
+  - bazi
+license: AGPL-3.0-or-later

@@ -123,6 +123,10 @@ exclude_patterns = [
     # (as it was until today) sitting in the Reference section of the nav.
     "ARCHITECTURE.md",
     "images/README.md",  # a note about the image directory, addressed to us
+    # A planning document — "what does Stellium implement, and what is still missing?"
+    # It is a map of our own gaps, addressed to us, and it goes stale the moment one
+    # is filled. The user-facing answer to the same question is docs/methodology/.
+    "astrology/CAPABILITY_AUDIT.md",
 ]
 
 

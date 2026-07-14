@@ -12,50 +12,214 @@ you can start reading, not configuring.
 This page is a **map** to the parts of the docs that matter to practice. No
 programming background is assumed.
 
-:::{container} st-panel st-panel-gold
-**Prefer not to touch Python?**
-
-The web app draws charts in your browser — roughly 50–60% of the library, with
-nothing to install.
-
-[Open the web app →](https://www.stelliumastro.app/){.st-btn .st-btn-gold}
-:::
-
 ---
 
-## Start reading charts
+## You don't have to write code
+
+Two ways in before you touch Python at all — and when you're ready for more, the
+guide takes you gently.
 
 ::::{container} st-grid
 
 :::{container} st-cbcard
-[Chart types](CHART_TYPES.md)
+**The web app**
 
-Natal, synastry, transits, composite, Davison, returns, progressions — what each
-one is and how to draw it.
+Draws charts right in your browser — roughly 50–60% of the library, nothing to
+install.
+
+[Open the web app →](https://www.stelliumastro.app/){.st-btn .st-btn-gold}
 :::
 
 :::{container} st-cbcard
-[Unknown birth time](astrology/RECTIFICATION.md)
+**Colab notebook**
 
-Read the layer that survives — honestly. Stellium recovers **sect** (day/night),
-and deliberately refuses to invent a minute-level birth time it cannot know.
-:::
+Runs the real package in the cloud — copy a cell, change the birth data, press play.
 
-:::{container} st-cbcard
-[Reports](REPORTS.md)
-
-Terminal, Markdown, HTML and typeset PDF — composed section by section.
-:::
-
-:::{container} st-cbcard
-[Visualization](VISUALIZATION.md)
-
-Wheels, dials, multiwheels; themes, palettes and presets.
+[Open in Colab →](https://colab.research.google.com/github/katelouie/stellium/blob/main/examples/stellium_sampler_colab.ipynb){.st-btn}
 :::
 
 ::::
 
-## Techniques
+Prefer the full toolkit on your own machine? `pip install stellium` — see
+[the developer's map](for-developers.md) for setup.
+
+---
+
+## Learn the astrology
+
+:::{container} st-panel st-panel-gold
+**The Stellium Astrology Guide** — what a house *is*, where quadrant systems came
+from, why anyone argues about Placidus, and how a working astrologer actually reads
+the thing. Written for the Pythonista who can call `chart.get_houses()` but isn't
+sure what they're looking at, and for the astrologer who wants the history under the
+keywords.
+
+**Eight of twenty-four chapters are written**, and it says on every page which ones
+have been checked against computed output.
+
+[Start the guide →](astrology/README.md){.st-btn .st-btn-gold}
+:::
+
+::::{container} st-tiles st-tiles-gold
+
+:::{container} st-tile
+[☰]{.st-glyph}
+
+**[00 · Orientation](astrology/guide/00_orientation.md)**
+
+What a chart actually is, and the sky as a set of coordinates.
+:::
+
+:::{container} st-tile
+[♈]{.st-glyph}
+
+**[01 · The Zodiac](astrology/guide/01_the_zodiac.md)**
+
+Signs, elements, modalities; tropical vs. sidereal.
+:::
+
+:::{container} st-tile
+[☿]{.st-glyph}
+
+**[02 · Planets & Points](astrology/guide/02_planets_and_points.md)**
+
+Luminaries to outer planets; nodes, Lilith, asteroids, centaurs.
+:::
+
+:::{container} st-tile
+[⌂]{.st-glyph}
+
+**[03 · Houses](astrology/guide/03_houses.md)**
+
+The twelve places, and the house-division argument. The flagship chapter.
+:::
+
+:::{container} st-tile
+[△]{.st-glyph}
+
+**[04 · Aspects](astrology/guide/04_aspects.md)**
+
+Major, minor and harmonic; orbs; applying and separating.
+:::
+
+:::{container} st-tile
+[☉]{.st-glyph}
+
+**[05 · Sect](astrology/guide/05_sect.md)**
+
+The day/night chart — the most under-taught traditional concept.
+:::
+
+:::{container} st-tile
+[♃]{.st-glyph}
+
+**[06 · Dignity & Rulership](astrology/guide/06_dignity_and_rulership.md)**
+
+Triplicity, bounds, decans, dispositors. **Verified against computed output.**
+:::
+
+:::{container} st-tile
+[⊕]{.st-glyph}
+
+**[07 · Lots](astrology/guide/07_lots_arabic_parts.md)**
+
+Fortune, Spirit, and the sect-based formula machine. **Verified.**
+:::
+
+::::
+
+---
+
+## Charts you can cast
+
+Every major chart form, with the defaults a working astrologer expects.
+
+::::{container} st-tiles st-tiles-gold
+
+:::{container} st-tile
+[☉]{.st-glyph}
+
+**[Natal](CHART_TYPES.md)**
+
+The birth chart — the foundation of everything else.
+:::
+
+:::{container} st-tile
+[☾]{.st-glyph}
+
+**[Synastry & composite](cookbooks/comparison.md)**
+
+Relationship work: bi-wheels, composite and Davison.
+:::
+
+:::{container} st-tile
+[♃]{.st-glyph}
+
+**[Transits](cookbooks/transit.md)**
+
+The current sky over the natal, with exact aspect timing.
+:::
+
+:::{container} st-tile
+[♄]{.st-glyph}
+
+**[Returns](cookbooks/returns.md)**
+
+Solar, lunar and planetary returns — relocated if you like.
+:::
+
+:::{container} st-tile
+[✶]{.st-glyph}
+
+**[Progressions & directions](cookbooks/progressions.md)**
+
+Secondary progressions, solar arc, primary and zodiacal directions.
+:::
+
+:::{container} st-tile
+[⚸]{.st-glyph}
+
+**[Electional](cookbooks/electional.md)**
+
+Choosing an auspicious time: predicates, intervals, planetary hours.
+:::
+
+::::
+
+:::{note}
+**No horary yet.** Electional (choosing a time) is here; horary (judging a question
+chart) is not implemented — no querent/quesited assignment, no considerations before
+judgement. It is planned, and until it exists this page will not pretend otherwise.
+:::
+
+---
+
+## Techniques & traditions
+
+Three traditions, and the traditional timing techniques usually locked inside
+desktop software.
+
+::::{container} st-grid
+
+:::{container} st-cbcard
+**Western**
+
+Tropical, traditional and modern — the deepest coverage, and the default.
+:::
+
+:::{container} st-cbcard
+**Vedic**
+
+Sidereal, nine ayanamsas, North and South Indian chart styles. [Cookbook →](cookbooks/vedic.md)
+:::
+
+:::{container} st-cbcard
+**Chinese**
+
+Ba Zi — Four Pillars, Ten Gods, hidden stems. [Cookbook →](cookbooks/bazi.md)
+:::
+
+::::
 
 Each of these is a cookbook: a page of worked recipes, every one executed at build
 time and showing its real output.
@@ -65,77 +229,96 @@ time and showing its real output.
 - [Profections](cookbooks/profections.md){.st-tag}
 - [Zodiacal Releasing](cookbooks/zodiacal_releasing.md){.st-tag}
 - [Hellenistic & lots](cookbooks/hellenistic.md){.st-tag}
-- [Electional](cookbooks/electional.md){.st-tag}
-- [Returns](cookbooks/returns.md){.st-tag}
-- [Progressions](cookbooks/progressions.md){.st-tag}
-- [Solar arc directions](cookbooks/arc_directions.md){.st-tag}
 - [Primary directions](cookbooks/directions.md){.st-tag}
+- [Solar arc directions](cookbooks/arc_directions.md){.st-tag}
 - [Uranian dials](cookbooks/dial.md){.st-tag}
-- [Transits](cookbooks/transit.md){.st-tag}
-- [Synastry & comparison](cookbooks/comparison.md){.st-tag}
 - [Aspects & orbs](cookbooks/aspects_and_orbs.md){.st-tag}
 - [Graphic ephemeris](cookbooks/ephemeris.md){.st-tag}
 :::
 
-## Traditions
+---
 
-::::{container} st-grid
+## A reading, end to end
 
-:::{container} st-cbcard
-**Western**
+If you *do* try the code, this is all it takes to cast a named chart and draw it.
+Change the name, change the theme — that's the whole loop.
 
-Tropical, traditional and modern — the deepest coverage, and the default.
+```{code-block} python
+:caption: reading.py
 
-[Chart types](CHART_TYPES.md) · [Hellenistic](cookbooks/hellenistic.md)
+from stellium import ChartBuilder
+
+chart = ChartBuilder.from_notable("Frida Kahlo").with_aspects().calculate()
+
+chart.draw("frida.svg").with_theme("celestial").save()
+```
+
+---
+
+## Unknown birth time
+
+:::{container} st-panel st-panel-gold
+Stellium recovers **sect** — whether the chart is a day chart or a night chart — and
+stops there. It will not invent a minute-level birth time, because that is an
+ill-posed problem: many times fit the evidence equally well, and a method that
+returns one of them anyway is hiding the problem rather than solving it.
+
+[Read the layer that survives →](astrology/RECTIFICATION.md){.st-btn .st-btn-gold}
 :::
 
-:::{container} st-cbcard
-**Vedic**
+---
 
-Sidereal, nine ayanamsas, North and South Indian chart styles.
+## Make it beautiful
 
-[Vedic cookbook](cookbooks/vedic.md) [{{ cb_vedic }}]{.st-n}
+{{ n_themes }} themes and independently-swappable palettes for the ring, the aspect
+lines and the glyphs — so a chart for a client looks the way you want it to.
+
+::::{container} st-strip
+
+:::{container} st-shot
+![celestial](images/gallery/celestial_rainbow_celestial.svg)
+[celestial]{.st-shot-label}
 :::
 
-:::{container} st-cbcard
-**Chinese**
+:::{container} st-shot
+![classic · elemental](images/gallery/classic_elemental.svg)
+[classic · elemental]{.st-shot-label}
+:::
 
-Ba Zi — Four Pillars, Ten Gods, hidden stems, element balance.
+:::{container} st-shot
+![sepia](images/gallery/sepia_elemental.svg)
+[sepia]{.st-shot-label}
+:::
 
-[BaZi cookbook](cookbooks/bazi.md) [{{ cb_bazi }}]{.st-n}
+:::{container} st-shot
+![midnight](images/gallery/midnight_rainbow_midnight.svg)
+[midnight]{.st-shot-label}
 :::
 
 ::::
+
+[Browse the full theme & palette galleries →](THEME_GALLERY.md)
+
+---
+
+## Reports & planners
+
+Turn any chart into a sectioned, client-ready document — placements, aspects,
+dignities and timing — exported to polished PDF with the fonts embedded, so it looks
+the same on someone else's machine. Start with the [Reports guide](REPORTS.md) or the
+[report cookbook](cookbooks/report.md).
 
 ## On whose authority?
 
 :::{container} st-panel st-panel-gold
 Stellium takes sides on questions the tradition genuinely disagrees about — which
-term bounds, which planetary years, whether Zodiacal Releasing loops. The
-methodology pages say **what we compute, which source it comes from, and where the
-authorities part ways** — citing Valens, Ptolemy, Firmicus and Houlding — so you can
-check our defaults against your own practice rather than take them on faith.
+term bounds, which planetary years, whether Zodiacal Releasing loops. The methodology
+pages say **what we compute, which source it comes from, and where the authorities
+part ways** — citing Valens, Ptolemy, Firmicus and Houlding — so you can check our
+defaults against your own practice rather than take them on faith.
 
 [Read the methodology →](methodology/README.md){.st-btn .st-btn-gold}
 :::
-
-## Make it beautiful
-
-::::{container} st-grid
-
-:::{container} st-cbcard
-[Theme Gallery](THEME_GALLERY.md)
-
-All {{ n_themes }} chart themes, rendered.
-:::
-
-:::{container} st-cbcard
-[Palette Gallery](PALETTE_GALLERY.md)
-
-{{ n_palettes }} palettes for zodiac rings, aspect lines and planet glyphs.
-:::
-
-::::
 
 ---
 

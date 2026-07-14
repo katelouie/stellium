@@ -4,6 +4,19 @@
 > [`examples/chart_cookbook.py`](../../../examples/chart_cookbook.py).
 > Prerequisites: [00 Orientation](./00_orientation.md).
 
+
+:::{admonition} 🚧 Under construction
+:class: warning
+
+This chapter is a **draft**. Its prose has not yet been re-verified against
+Stellium's computed output — so treat any specific degree, score or placement in it
+as unconfirmed until it has been.
+
+Two chapters of this guide were previously found to contain figures that had never
+been computed at all (see [Dignity & Rulership](06_dignity_and_rulership.md)). That is
+the check this chapter is still waiting for.
+:::
+
 ## The one-line version
 
 The **zodiac** is the coordinate ring from [chapter 00](./00_orientation.md),
@@ -256,7 +269,7 @@ print(dict(modes))      # {'Fixed': 6, 'Cardinal': 3, 'Mutable': 1}  <- fixed-do
 
 (If you install the analysis extra, `stellium.analysis.ChartStats` will compute
 element and modality distributions across many charts for you; see
-[chapter 23](./23_the_modern_synthesis.md).)
+**chapter 23** *(not yet written)*.)
 
 ### Switching to the sidereal zodiac
 
@@ -303,7 +316,7 @@ print(chart.get_object("Sun").sign_position)
 each one anchors to, is in
 [`docs/options_list.md`](../../options_list.md#ayanamsas--sidereal-zodiacs-9-systems),
 and the sidereal machinery gets its full workout in the Vedic chapter
-([21](./21_vedic_jyotish.md)).
+(**21** *(not yet written)*).
 
 ---
 
@@ -314,7 +327,7 @@ and the sidereal machinery gets its full workout in the Vedic chapter
 - **Rulership in depth:** [06 Dignity & Rulership](./06_dignity_and_rulership.md)
   builds on the sign rulers here into the full essential-dignity system (a planet
   is strong or weak partly by which sign it's in).
-- **The sidereal world:** [21 Vedic / Jyotish](./21_vedic_jyotish.md) is where the
+- **The sidereal world:** **21 Vedic / Jyotish** *(not yet written)* is where the
   sidereal zodiac is the home team, not the alternative.
 
 **Further reading:**

@@ -381,7 +381,18 @@ def output_block(text: str) -> list[str]:
             "",
             f"… {cut} more lines — run the recipe to see them",
         ]
-    return ["```{code-block} text", ":caption: Output", "", *lines, "```", ""]
+    # NOT `:caption:`. A captioned block gets the theme's editor chrome — traffic
+    # lights and a filename — which says "this is source, you can run it". This is the
+    # opposite: it is what running it *printed*. Same dark ground, its own quiet label.
+    return [
+        ":::{container} st-output",
+        "```{code-block} text",
+        "",
+        *lines,
+        "```",
+        ":::",
+        "",
+    ]
 
 
 def page(path: Path) -> tuple[str, str, int, str]:

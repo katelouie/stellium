@@ -74,7 +74,7 @@ the modern synthesis. When a chapter swaps in a guest, it says so.
 
 Grouped roughly from "you need this first" to "advanced and specialized." The
 **Audit** column ties each chapter back to
-[`CAPABILITY_AUDIT.md`](./CAPABILITY_AUDIT.md); the **Cookbook** column points at
+[`CAPABILITY_AUDIT.md`](https://github.com/katelouie/stellium/blob/main/docs/astrology/CAPABILITY_AUDIT.md); the **Cookbook** column points at
 the runnable code.
 
 ### Foundations
@@ -137,15 +137,50 @@ order).
 
 ---
 
-## Status
+## Status — 8 chapters of 24
+
+:::{admonition} 🚧 This guide is under construction
+:class: warning
+
+**Eight of twenty-four chapters are written.** The rest are planned, listed above,
+and not yet drafted — links to them do not exist rather than pointing somewhere empty.
+
+Of the eight, **two have been verified against computed output**: 06 Dignity &
+Rulership and 07 Lots. Those were rewritten from a chart that was actually run, and
+their code blocks are pinned by the test suite. The other six are drafts whose
+specific figures have **not** yet been re-checked against the library.
+
+That distinction is not pedantry. Chapters 06 and 07 previously asserted a dignity
+score of `+3` and a Lot of Fortune in the 7th house — numbers that had never been
+computed, and that the engine disagrees with. Every chapter here is worth reading;
+none of the unverified ones is worth quoting a number from yet.
+:::
 
 | Chapter | Status |
 |---|---|
-| 03 Houses | **Draft complete** (the flagship / voice reference) |
-| all others | Planned |
+| 00 Orientation · 01 The Zodiac · 02 Planets & Points | Draft — prose unverified |
+| 03 Houses | Draft — the flagship / voice reference |
+| 04 Aspects · 05 Sect | Draft — prose unverified |
+| **06 Dignity & Rulership** · **07 Lots** | **Verified against computed output** |
+| 08–23 | Not yet written |
 
-Start with [03 Houses](./guide/03_houses.md) — it's the fully-written
-reference chapter that sets the voice, depth, and structure for the rest.
+New here? Start with [00 Orientation](guide/00_orientation.md), or jump to
+[03 Houses](guide/03_houses.md) — the fully-written reference chapter that sets the
+voice, depth and structure for the rest.
+
+```{toctree}
+:hidden:
+:maxdepth: 1
+
+guide/00_orientation
+guide/01_the_zodiac
+guide/02_planets_and_points
+guide/03_houses
+guide/04_aspects
+guide/05_sect
+guide/06_dignity_and_rulership
+guide/07_lots_arabic_parts
+```
 
 ---
 

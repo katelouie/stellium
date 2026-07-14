@@ -4,6 +4,19 @@
 > [`examples/chart_cookbook.py`](../../../examples/chart_cookbook.py).
 > Prerequisites: [00 Orientation](./00_orientation.md), [01 The Zodiac](./01_the_zodiac.md).
 
+
+:::{admonition} 🚧 Under construction
+:class: warning
+
+This chapter is a **draft**. Its prose has not yet been re-verified against
+Stellium's computed output — so treat any specific degree, score or placement in it
+as unconfirmed until it has been.
+
+Two chapters of this guide were previously found to contain figures that had never
+been computed at all (see [Dignity & Rulership](06_dignity_and_rulership.md)). That is
+the check this chapter is still waiting for.
+:::
+
 ## The one-line version
 
 The **planets** are the actors, the *what* of the chart: a set of basic human
@@ -114,7 +127,7 @@ out-of-bounds** at −27.9° declination, and stack that with its near-stationar
 emphasis and you get the picture: a powerfully concentrated, rule-breaking drive
 (Mars) aimed at the far philosophical horizon (Sagittarius). For the man who broke
 with Freud and went looking for the psyche's outer edges, that is not a subtle
-signature. Declination gets its own chapter ([10](./10_declination.md)); for now,
+signature. Declination gets its own chapter (**10** *(not yet written)*); for now,
 "out-of-bounds" means "unusually free of the normal limits."
 
 ### The points that aren't bodies
@@ -157,7 +170,7 @@ that more bodies is not more insight.
   dwarf planets and bodies, still building an interpretive tradition.
 - **Uranian / Hamburg School points** (Cupido, Hades, and the rest): hypothetical
   points used in a specific midpoint-based tradition covered in
-  [chapter 18](./18_uranian_and_midpoints.md).
+  **chapter 18** *(not yet written)*.
 
 That's 37 selectable objects in all. The skill is restraint, which is the next
 section.
@@ -303,7 +316,7 @@ Cupido   12°39' Gemini
 > `chart.get_object("Eris")` quietly comes back `None`. Download them once with
 > `stellium ephemeris download-asteroid --tnos` and they'll resolve on every
 > future chart. (Same bundled-vs-downloaded split as the
-> [README's ephemeris section](../../../README.md#ephemeris-data-location).)
+> [README's ephemeris section](https://github.com/katelouie/stellium#ephemeris-data-location).)
 
 The full menu of all 37 objects (planets, nodes, points, asteroids, centaurs,
 TNOs, Uranian hypotheticals) with glyphs and aliases lives in
@@ -315,13 +328,13 @@ them deliberately, per the asteroid-soup warning above.
 ## Going deeper
 
 - **Next:** [03 Houses](./03_houses.md) gives every planet a *where* to act.
-- **The Moon in depth:** [08 The Moon](./08_the_moon.md) covers phases,
+- **The Moon in depth:** **08 The Moon** *(not yet written)* covers phases,
   void-of-course, and the nodal axis as a timing tool.
 - **Planetary strength:** [06 Dignity & Rulership](./06_dignity_and_rulership.md)
   is how you tell a strong planet from a weak one, beyond raw motion.
-- **Out-of-bounds and declination:** [10 Declination](./10_declination.md) picks
+- **Out-of-bounds and declination:** **10 Declination** *(not yet written)* picks
   up Jung's out-of-bounds Mars and the north-south dimension of the chart.
-- **The Uranian points:** [18 Uranian & Midpoints](./18_uranian_and_midpoints.md)
+- **The Uranian points:** **18 Uranian & Midpoints** *(not yet written)*
   for the tradition those hypotheticals belong to.
 
 **Further reading:**

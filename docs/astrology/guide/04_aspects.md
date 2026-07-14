@@ -5,6 +5,19 @@
 > Prerequisites: [01 The Zodiac](./01_the_zodiac.md),
 > [02 Planets & Points](./02_planets_and_points.md), [03 Houses](./03_houses.md).
 
+
+:::{admonition} 🚧 Under construction
+:class: warning
+
+This chapter is a **draft**. Its prose has not yet been re-verified against
+Stellium's computed output — so treat any specific degree, score or placement in it
+as unconfirmed until it has been.
+
+Two chapters of this guide were previously found to contain figures that had never
+been computed at all (see [Dignity & Rulership](06_dignity_and_rulership.md)). That is
+the check this chapter is still waiting for.
+:::
+
 ## The one-line version
 
 An **aspect** is a meaningful angle between two planets. If houses tell you
@@ -453,9 +466,9 @@ certainty. (More on unknown-time charts in [chapter 00](./00_orientation.md).)
 ## Going deeper
 
 - **Prev:** [03 Houses](./03_houses.md) placed the planets. Aspects connect them.
-- **Chart shape:** [20 Chart Shapes](./20_chart_shapes.md) zooms out from
+- **Chart shape:** **20 Chart Shapes** *(not yet written)* zooms out from
   individual patterns to the whole chart's silhouette.
-- **Declination aspects:** [10 Declination](./10_declination.md) covers parallels
+- **Declination aspects:** **10 Declination** *(not yet written)* covers parallels
   and contraparallels, aspects measured north-south instead of around the zodiac.
 - **Orbs in depth:** the [aspects & orbs cookbook](../../../examples/aspects_and_orbs_cookbook.py)
   is the code-side companion, with all four orb engines and the traditional

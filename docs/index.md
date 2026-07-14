@@ -75,6 +75,53 @@ Traditional and modern techniques, real chart output, sensible defaults out of t
 
 ---
 
+## What you can build
+
+From a one-off natal wheel to a batch of {{ n_notables }} charts feeding a research
+notebook — the same library, the same objects.
+
+::::{container} st-tiles
+
+:::{container} st-tile
+[☉]{.st-glyph}
+
+**[Natal & return charts](cookbooks/chart.md)**
+
+Publication-quality SVG wheels with dignities, fixed stars and Arabic parts — natal,
+solar and lunar returns, Vedic squares, Uranian dials.
+:::
+
+:::{container} st-tile
+[☍]{.st-glyph}
+
+**[Relationship & timing work](cookbooks/comparison.md)**
+
+Synastry, composite and Davison; transit, progression and solar-arc bi-, tri- and
+quad-wheels.
+:::
+
+:::{container} st-tile
+[♃]{.st-glyph}
+
+**[Client-ready reports](cookbooks/report.md)**
+
+Sectioned terminal, Markdown and HTML reports, plus typeset PDFs — with every font
+embedded, so they render identically on someone else's machine.
+:::
+
+:::{container} st-tile
+[⌘]{.st-glyph}
+
+**[Data & research pipelines](cookbooks/analysis.md)**
+
+Serialize any chart to `dict`/JSON, batch thousands into a DataFrame, or feed
+structured chart text straight to an LLM.
+:::
+
+::::
+
+---
+
 ## Composable, not hard-coded
 
 Most astrology libraries hand you one rigid constructor. Stellium hands you a
@@ -130,6 +177,32 @@ inside desktop software — not scattered across half a dozen half-maintained pa
 
 See the [chart-type catalog](CHART_TYPES.md) and the [options reference](options_list.md)
 for everything, with signatures.
+
+---
+
+## Installation & requirements
+
+One command. Every dependency — `pyswisseph`, `pytz`, `geopy`, `rich`, `svgwrite`,
+`typst` — is pulled in automatically, and the Swiss Ephemeris data ships **inside the
+wheel**, so there is nothing to download and no `PATH` to configure.
+
+```{code-block} bash
+:caption: shell
+
+pip install stellium
+```
+
+:::{container} st-pills
+- Python 3.11+
+- macOS · Linux · Windows
+- ephemeris bundled
+- PDF export included
+- no API keys
+:::
+
+The astronomy runs with no network at all. The one exception is geocoding: passing a
+*place name* looks it up over the network, while passing coordinates does not — see
+[Locations & time](LOCATIONS.md).
 
 ---
 
@@ -228,12 +301,47 @@ on top of that.
 
 ---
 
-## Project links
+## Project & community
 
-- [**Contributing**](https://github.com/katelouie/stellium/blob/main/CONTRIBUTING.md) — how to work on Stellium
-- [**Changelog**](https://github.com/katelouie/stellium/blob/main/CHANGELOG.md) — release history
-- [**GitHub**](https://github.com/katelouie/stellium) — source and issues
-- [**Colour & theme reference**](starlight_colors.html) — every theme, palette and hex value, in one interactive page
+::::{container} st-tiles
+
+:::{container} st-tile
+[⌥]{.st-glyph}
+
+**[Source on GitHub](https://github.com/katelouie/stellium)**
+
+Issues, discussions, and the [contributing guide](https://github.com/katelouie/stellium/blob/main/CONTRIBUTING.md).
+:::
+
+:::{container} st-tile
+[❋]{.st-glyph}
+
+**[Changelog](https://github.com/katelouie/stellium/blob/main/CHANGELOG.md)**
+
+What's new in v{{ version }}, and the release history.
+:::
+
+:::{container} st-tile
+[❞]{.st-glyph}
+
+**[Citing Stellium](https://github.com/katelouie/stellium/blob/main/CITATION.cff)**
+
+How to reference the library in research — GitHub's *Cite this repository* reads it.
+:::
+
+:::{container} st-tile
+[◑]{.st-glyph}
+
+**[Colour & theme reference](starlight_colors.html)**
+
+Every theme, palette and hex value, on one interactive page.
+:::
+
+::::
+
+Licensed **AGPL-v3** · built and maintained by
+[Kate Louie](https://github.com/katelouie) · ephemeris data © Astrodienst
+(Swiss Ephemeris).
 
 ```{toctree}
 :hidden:
@@ -256,6 +364,14 @@ Chart Types <CHART_TYPES>
 Rectification <astrology/RECTIFICATION>
 Locations <LOCATIONS>
 Diagnostics <DIAGNOSTICS>
+```
+
+```{toctree}
+:hidden:
+:caption: The Astrology Guide
+:maxdepth: 2
+
+Introduction <astrology/README>
 ```
 
 ```{toctree}

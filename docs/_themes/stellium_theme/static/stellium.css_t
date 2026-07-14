@@ -757,3 +757,138 @@ a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(-
    the underline back up on hover. */
 .st-prose .st-cbcard > p:first-child a:hover,
 .st-prose .st-card > p:first-child a:hover{text-decoration:underline; text-underline-offset:2px;}
+
+/* ============================================================================
+   v2 LANDING COMPONENTS
+
+   Everything here is chrome only. The content — glyph, title, blurb, link — is
+   authored in the Markdown as a `:::{container}` and plain Markdown inside it, so
+   a page can be re-ordered or re-written without touching CSS, and every link
+   stays a cross-reference Sphinx checks.
+   ========================================================================== */
+
+/* ---- glyph tiles: "what you can build", "charts you can cast" ----
+   Source shape:
+
+     ::::{container} st-tiles
+     :::{container} st-tile
+     [☉]{.st-glyph}
+     **[Natal](CHART_TYPES.md)**
+     The birth chart — the foundation of everything else.
+     :::
+     ::::
+*/
+.st-tiles{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+  gap:16px; margin:24px 0;
+}
+.st-tile{
+  border:1px solid var(--border); border-radius:14px;
+  background:var(--panel); padding:18px 20px;
+  transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+.st-tile:hover{
+  border-color:var(--accent); transform:translateY(-2px);
+  box-shadow:0 6px 22px rgba(20,18,45,.07);
+}
+/* The glyph sits in a soft-accent square. It is decoration: an astrological symbol
+   that names the section, not a control. */
+.st-glyph{
+  display:flex; align-items:center; justify-content:center;
+  width:34px; height:34px; margin-bottom:12px;
+  border-radius:9px;
+  background:var(--accent-soft); color:var(--accent);
+  font-size:16px; line-height:1;
+}
+.st-tile > p:first-child{margin:0;}                 /* the glyph's own paragraph */
+.st-tile > p:nth-child(2){
+  margin:0 0 6px; font-size:15px; font-weight:600; color:var(--fg);
+}
+.st-tile > p{font-size:13.5px; line-height:1.55; color:var(--fg-muted); margin:0;}
+/* Gold variant, for the astrologer side. */
+.st-tiles-gold .st-tile:hover{border-color:var(--gold);}
+.st-tiles-gold .st-glyph{background:var(--gold-soft); color:var(--gold);}
+
+/* ---- the flow strip: Native -> ChartBuilder -> CalculatedChart -> Renderer ----
+   The arrows are generated, so the Markdown holds four steps and no punctuation. */
+.st-flow{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+  gap:10px; margin:24px 0;
+}
+.st-step{
+  position:relative;
+  border:1px solid var(--border); border-radius:12px;
+  background:var(--bg-soft); padding:16px;
+  text-align:center;
+}
+.st-step + .st-step::before{
+  content:"→";
+  position:absolute; left:-11px; top:50%; transform:translateY(-50%);
+  color:var(--fg-faint); font-size:13px;
+}
+.st-step .st-glyph{margin:0 auto 10px;}
+.st-step > p:nth-child(2){
+  margin:0 0 3px;
+  font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:600; color:var(--fg);
+}
+.st-step > p{margin:0; font-size:12px; color:var(--fg-faint);}
+@media (max-width:760px){
+  .st-step + .st-step::before{content:"↓"; left:50%; top:-14px; transform:translateX(-50%);}
+}
+
+/* ---- capability pills: "Python 3.11+", "no API keys" ----
+   Mono, quiet, factual. Distinct from .st-tag, which is a *link* to a technique. */
+.st-pills ul{list-style:none; display:flex; flex-wrap:wrap; gap:8px; padding:0; margin:16px 0;}
+.st-pills li{margin:0; line-height:1;}
+.st-pills li{
+  font-family:'IBM Plex Mono',monospace; font-size:12px; line-height:1.5;
+  color:var(--fg-muted); background:var(--panel-2);
+  border:1px solid var(--border); border-radius:7px;
+  padding:6px 12px;
+}
+
+/* ---- code block filename bar ----
+   Sphinx emits a `.code-block-caption` when a block carries `:caption:`. Only then
+   — so an output block, which has no caption, gets no chrome and cannot be mistaken
+   for something you are meant to run. */
+.st-prose .literal-block-wrapper{
+  border:1px solid var(--code-border); border-radius:11px;
+  overflow:hidden; margin:0 0 22px; background:var(--code-bg);
+}
+.st-prose .literal-block-wrapper .code-block-caption{
+  display:flex; align-items:center; gap:7px;
+  background:var(--code-bg); border-bottom:1px solid var(--code-border);
+  padding:10px 16px; margin:0;
+  font-family:'IBM Plex Mono',monospace; font-size:11px; color:#8f8ca8;
+}
+/* The traffic lights. Purely decorative, and generated — so a caption in the
+   Markdown is just a filename, with no markup in it. */
+.st-prose .literal-block-wrapper .code-block-caption::before{
+  content:"";
+  flex:none; width:10px; height:10px; border-radius:50%;
+  background:#f0674f;
+  box-shadow:16px 0 0 #e9b949, 32px 0 0 #3fb950;
+  margin-right:36px;
+}
+.st-prose .literal-block-wrapper .caption-number{display:none;}
+.st-prose .literal-block-wrapper .highlight{
+  border:0; border-radius:0; margin:0;
+}
+
+/* ---- captured output on a cookbook page ----
+   Deliberately NOT the captioned/traffic-light chrome above. That chrome says
+   "this is source — you can run it"; this block is what running it *printed*.
+   Same dark ground so the pair reads as one unit, but its own quiet label. */
+.st-output{
+  border:1px solid var(--code-border); border-radius:11px;
+  overflow:hidden; margin:0 0 22px; background:var(--code-bg);
+}
+.st-output::before{
+  content:"Output";
+  display:block;
+  background:var(--code-bg); border-bottom:1px solid var(--code-border);
+  padding:9px 16px;
+  font-family:'IBM Plex Mono',monospace; font-size:10.5px;
+  letter-spacing:1.2px; text-transform:uppercase; color:#8f8ca8;
+}
+.st-output .highlight{border:0; border-radius:0; margin:0;}

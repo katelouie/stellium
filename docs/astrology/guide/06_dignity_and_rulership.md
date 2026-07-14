@@ -5,6 +5,18 @@
 > Prerequisites: [01 The Zodiac](./01_the_zodiac.md), [03 Houses](./03_houses.md),
 > [05 Sect](./05_sect.md).
 
+
+:::{admonition} 🚧 Under construction — but this chapter's numbers were computed
+:class: note
+
+The guide as a whole is a draft. **This chapter is one of the two that have been
+rewritten from a chart that was actually run**: every figure in it comes from
+Stellium's own output, and its code blocks are pinned by the test suite, so a library
+change that moved a number would fail CI in this file.
+
+The surrounding chapters have not had that treatment yet.
+:::
+
 ## The one-line version
 
 **Dignity** is how much power a planet actually has to do its job. A planet can
@@ -325,7 +337,7 @@ peregrine detection in full.
   partly through the dignity of the planets involved.
 - **Angularity in depth:** [03 Houses](./03_houses.md) for the accidental-dignity
   side of house placement.
-- **Chart shape and the chart ruler:** [20 Chart Shapes](./20_chart_shapes.md).
+- **Chart shape and the chart ruler:** **20 Chart Shapes** *(not yet written)*.
 
 **Primary sources & further reading:**
 

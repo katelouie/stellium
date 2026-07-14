@@ -4,6 +4,19 @@
 > [`examples/chart_cookbook.py`](../../../examples/chart_cookbook.py).
 > Prerequisites: none. This is the front door.
 
+
+:::{admonition} 🚧 Under construction
+:class: warning
+
+This chapter is a **draft**. Its prose has not yet been re-verified against
+Stellium's computed output — so treat any specific degree, score or placement in it
+as unconfirmed until it has been.
+
+Two chapters of this guide were previously found to contain figures that had never
+been computed at all (see [Dignity & Rulership](06_dignity_and_rulership.md)). That is
+the check this chapter is still waiting for.
+:::
+
 ## The one-line version
 
 A **birth chart** is a map of the sky as it looked from one exact spot on Earth

@@ -11,14 +11,12 @@ shape of this one.
 :::
 
 This page is a **map, not a wall** — the fastest routes through the docs for
-building software with Stellium. Everything linked here lives in the shared
-guides and reference; this page just orders it for you.
+building software with Stellium. Everything linked here lives in the shared guides
+and reference; this page just orders it for you.
 
-:::{container} st-eyebrow
-The whole idea, in one block
-:::
+```{code-block} python
+:caption: the whole idea, in one block
 
-```python
 from stellium import ChartBuilder
 from stellium.engines import ModernAspectEngine, PlacidusHouses, WholeSignHouses
 from stellium.components import ArabicPartsCalculator
@@ -30,6 +28,89 @@ chart = (ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
     .calculate())   # lazy · fully typed · nothing runs until here
 ```
 
+---
+
+## Install & set up
+
+Install from PyPI to use it, or clone for an editable environment with the test suite.
+
+```{code-block} bash
+:caption: shell
+
+# use it
+pip install stellium
+
+# hack on it
+git clone https://github.com/katelouie/stellium && cd stellium
+pip install -e ".[dev]"
+pytest
+```
+
+:::{container} st-pills
+- Python 3.11+
+- macOS · Linux · Windows
+- fully type-hinted
+- ephemeris bundled
+- no API keys
+:::
+
+:::{note}
+**Offline, with one asterisk.** The Swiss Ephemeris data ships inside the wheel, so
+the *astronomy* needs no network. But `from_details("...", "Seattle, WA")` geocodes
+the place name over the network (Nominatim). Pass coordinates via
+{py:class}`~stellium.core.native.Native` and the library never reaches out at all —
+which is what you want in a container, a Lambda, or a test.
+:::
+
+---
+
+## The mental model
+
+Data flows one direction. You parse a birth into a `Native`, configure a
+`ChartBuilder`, call `.calculate()` to get an **immutable** chart, then hand that to
+a renderer or a report.
+
+::::{container} st-flow
+
+:::{container} st-step
+[☽]{.st-glyph}
+
+**Native**
+
+time + place
+:::
+
+:::{container} st-step
+[⚙]{.st-glyph}
+
+**ChartBuilder**
+
+configure
+:::
+
+:::{container} st-step
+[☉]{.st-glyph}
+
+**CalculatedChart**
+
+immutable
+:::
+
+:::{container} st-step
+[✦]{.st-glyph}
+
+**Renderer / Report**
+
+SVG · PDF · dict
+:::
+
+::::
+
+The arrow between the last two is the one that matters: **nothing before
+`.calculate()` computes anything, and nothing after it can mutate the result.**
+
+## Core concepts
+
 Three ideas carry the whole design, and they are worth naming before you read
 anything else:
 
@@ -40,11 +121,63 @@ Protocols, not inheritance
 
 Immutability
 : Every result object is a frozen dataclass. A `CalculatedChart` cannot be mutated
-  after it is built, which is what makes it safe to share, cache and thread.
+  after it is built, which is what makes it safe to share, cache and thread. Use
+  `dataclasses.replace()` to derive a changed copy.
 
 Lazy configuration
-: `ChartBuilder` accumulates configuration and computes nothing. The work happens
-  in `.calculate()`, once, and hands back the immutable result above.
+: `ChartBuilder` accumulates configuration and computes nothing. The work happens in
+  `.calculate()`, once, and hands back the immutable result above.
+
+---
+
+## Extending with your own engine
+
+There is no base class to inherit and no registry to sign up with. Match the
+signature and the builder will take it.
+
+```{code-block} python
+:caption: my_engine.py
+
+from stellium import ChartBuilder
+from stellium.core.models import HouseCusps
+
+
+class EqualFromMC:
+    """A house system: twelve equal houses, measured from the Midheaven."""
+
+    @property
+    def system_name(self) -> str:
+        return "Equal from MC"
+
+    def calculate_house_data(self, datetime, location, config=None):
+        cusps = tuple((30.0 * i) % 360.0 for i in range(12))   # your real maths here
+        return HouseCusps(system=self.system_name, cusps=cusps), []
+
+    def assign_houses(self, positions, cusps):
+        return {p.name: int(p.longitude // 30) + 1 for p in positions}
+
+
+chart = (
+    ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
+    .with_house_systems([EqualFromMC()])
+    .calculate()
+)
+print(f"Sun is in house {chart.get_house('Sun', 'Equal from MC')}")
+```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+Sun is in house 10
+```
+
+No import of ours appears in that class, and no base class. `EqualFromMC` satisfies
+{py:class}`~stellium.core.protocols.HouseSystemEngine` because it has the right two
+methods — that is the entire contract.
+
+The same shape works for `AspectEngine`, `OrbEngine`, `EphemerisEngine`, chart
+components, report sections and render layers. All of them are in
+[Core → Protocols](api/core.md).
 
 ---
 
@@ -78,17 +211,6 @@ What the library warns about, and how to make it tell you more.
 
 ::::
 
-## Understand the design
-
-The architecture reference is written for contributors and lives on GitHub, next
-to the code it describes — it is deliberately not duplicated into this site, so it
-cannot drift from the source.
-
-- [**Architecture & protocols**](https://github.com/katelouie/stellium/blob/main/docs/development/ARCHITECTURE.md) — the layer map, the dependency rules, and what `.calculate()` actually does
-- [**Chart building**](https://github.com/katelouie/stellium/blob/main/docs/development/CHART_BUILDING.md) — `Native`, `Notable`, `ChartBuilder`, `CalculatedChart`, config, registries
-- [**Engines**](https://github.com/katelouie/stellium/blob/main/docs/development/ENGINES.md) — ephemeris, houses, aspects, orbs, dignities, patterns, profections
-- [**Extending**](https://github.com/katelouie/stellium/blob/main/docs/development/EXTENDING.md) — write a custom house / aspect / orb engine, with no inheritance
-
 ## Data & integration
 
 ::::{container} st-grid
@@ -107,6 +229,17 @@ Import natives from CSV and AAF; export charts to JSON and to LLM prompt text.
 :::
 
 ::::
+
+## Understand the internals
+
+The architecture reference is written for contributors and lives on GitHub, next to
+the code it describes — deliberately not duplicated into this site, so it cannot
+drift from the source.
+
+- [**Architecture & protocols**](https://github.com/katelouie/stellium/blob/main/docs/development/ARCHITECTURE.md) — the layer map, the dependency rules, and what `.calculate()` actually does
+- [**Chart building**](https://github.com/katelouie/stellium/blob/main/docs/development/CHART_BUILDING.md) — `Native`, `Notable`, `ChartBuilder`, `CalculatedChart`, config, registries
+- [**Engines**](https://github.com/katelouie/stellium/blob/main/docs/development/ENGINES.md) — ephemeris, houses, aspects, orbs, dignities, patterns, profections
+- [**Extending**](https://github.com/katelouie/stellium/blob/main/docs/development/EXTENDING.md) — adding engines, components, analyzers, layers, themes and sections
 
 ## Reference
 
