@@ -1,4 +1,4 @@
-# Overview
+# Install & first chart
 
 Stellium is a Python library for computational astrology, built on
 [Swiss Ephemeris](https://www.astro.com/swisseph/) for astronomical accuracy. It

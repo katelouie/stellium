@@ -116,8 +116,8 @@ anything else:
 
 Protocols, not inheritance
 : An engine is anything with the right method signature. To add a house system you
-  write a class with `calculate_houses(...)` — you do not subclass anything, and
-  nothing in the library needs to know your type exists.
+  write a class with `calculate_house_data(...)` and `assign_houses(...)` — you do not
+  subclass anything, and nothing in the library needs to know your type exists.
 
 Immutability
 : Every result object is a frozen dataclass. A `CalculatedChart` cannot be mutated
@@ -186,7 +186,7 @@ components, report sections and render layers. All of them are in
 ::::{container} st-grid
 
 :::{container} st-cbcard
-[Overview: install & first chart](README.md)
+[Install & first chart](README.md)
 
 `pip install stellium`, then a chart in two lines.
 :::

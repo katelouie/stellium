@@ -352,7 +352,8 @@ Licensed **AGPL-v3** · built and maintained by
 :caption: Start Here
 :maxdepth: 1
 
-Overview <README>
+Overview <self>
+Install & first chart <README>
 For developers <for-developers>
 For astrologers <for-astrologers>
 ```
