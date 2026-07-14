@@ -11,9 +11,10 @@ kernelspec:
   name: python3
 ---
 
-# Stellium Analysis Cookbook
+# Statistical Analysis
 
-This notebook demonstrates the data analysis capabilities of the `stellium.analysis` module.
+Calculate hundreds of charts at once, convert them to pandas DataFrames, query them by
+astrological criteria, and run statistics across the whole set.
 
 The analysis module provides tools for:
 - **Batch chart calculation** - Calculate 100s-1000s of charts efficiently

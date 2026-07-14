@@ -360,3 +360,96 @@ footer a{color:var(--fg-muted);}
   border:0; white-space:normal;
 }
 .st-toc ul ul{margin-left:10px;}
+
+/* ============================================================================
+   EXECUTED NOTEBOOK CELLS (myst-nb)
+   ==========================================================================
+
+   myst-nb wraps every code cell in `.cell_input`, and paints it #505050 — a mid-grey
+   slab sitting *around* our correctly-dark `.highlight`. That is the grey bar. The
+   wrapper should be nothing: the code block inside it is already the chrome.
+   ------------------------------------------------------------------------------ */
+
+.cell{margin:0 0 26px;}
+
+.cell_input{
+  background:transparent !important;
+  border:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  box-shadow:none !important;
+}
+.cell_input .highlight{margin:0;}
+
+/* stdout / stderr: the same treatment as a cookbook Output block. */
+.cell_output .output.stream,
+.cell_output .output.text_plain pre{
+  background:var(--out-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px 16px;
+  font-family:'IBM Plex Mono',monospace; font-size:12.5px; line-height:1.55;
+  color:var(--fg-muted);
+  overflow-x:auto;
+  margin:10px 0 0;
+}
+.cell_output .output.stream pre{background:none;border:0;padding:0;margin:0;}
+
+/* ---------------------------------------------------------------------------
+   pandas DataFrames.
+
+   Rendered raw they arrive with `border: 1px outset` — the browser's 1995 table
+   default — in no theme colour, and with NOTHING to scroll in. The widest frame on
+   the analysis page is 1269px inside an 804px column: it simply ran off the side.
+
+   `.output.text_html > div` is the wrapper pandas' HTML lands in, so that is what
+   scrolls. The table itself must not be width:100%, or it would squeeze instead of
+   scroll.
+   --------------------------------------------------------------------------- */
+
+.cell_output .output.text_html{margin:10px 0 0;}
+.cell_output .output.text_html > div{
+  overflow-x:auto;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--panel);
+}
+
+table.dataframe{
+  border-collapse:collapse;
+  border:0 !important;
+  margin:0;
+  width:auto;                       /* let it be as wide as it is, and scroll */
+  font-size:12.5px;
+  font-variant-numeric:tabular-nums; /* digits line up in columns */
+}
+table.dataframe th,
+table.dataframe td{
+  border:0 !important;
+  border-bottom:1px solid var(--border) !important;
+  padding:7px 14px;
+  text-align:right;
+  white-space:nowrap;
+  color:var(--fg-muted);
+}
+table.dataframe thead th{
+  position:sticky; top:0;            /* the header survives a long scroll */
+  background:var(--panel-2);
+  color:var(--fg);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px; letter-spacing:.8px; text-transform:uppercase;
+  font-weight:500;
+  border-bottom:1px solid var(--border-strong) !important;
+}
+/* The index column: it is a label, not a number. */
+table.dataframe tbody th{
+  text-align:left;
+  color:var(--fg);
+  font-weight:500;
+  background:var(--panel);
+  position:sticky; left:0;           /* stays put while the frame scrolls */
+}
+table.dataframe tbody tr:hover td,
+table.dataframe tbody tr:hover th{background:var(--bg-soft);}
+table.dataframe tbody tr:last-child td,
+table.dataframe tbody tr:last-child th{border-bottom:0 !important;}
