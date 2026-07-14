@@ -130,6 +130,63 @@
     });
   }
 
+
+  /**
+   * Collapsible sections in the left rail.
+   *
+   * Every link is already in the HTML (the toctree is rendered with collapse=False);
+   * CSS hides the children of a closed section. All this does is add the control that
+   * opens one — and a count, so a closed section says how much is behind it rather
+   * than just sitting there.
+   *
+   * The section containing the current page carries Sphinx's own `.current` class and
+   * is open before this runs. If the JS never loads, the nav is still correct: you get
+   * the section you are in, expanded, and the rest closed.
+   */
+  function wireNavCollapse() {
+    var items = document.querySelectorAll(".st-nav li");
+
+    items.forEach(function (li) {
+      var children = li.querySelector(":scope > ul");
+      var link = li.querySelector(":scope > a");
+      if (!children || !link) return;
+
+      li.classList.add("st-has-children");
+
+      var count = children.querySelectorAll("li").length;
+      var badge = document.createElement("span");
+      badge.className = "st-count";
+      badge.textContent = count;
+      link.appendChild(badge);
+
+      var caret = document.createElement("button");
+      caret.className = "st-caret";
+      caret.type = "button";
+      caret.innerHTML = "&#9654;"; // ▶ — rotated 90° by CSS when open
+      caret.setAttribute("aria-label", "Expand section");
+      caret.setAttribute(
+        "aria-expanded",
+        li.classList.contains("current") ? "true" : "false"
+      );
+
+      caret.addEventListener("click", function (event) {
+        // The chevron opens the section; the link still navigates. Two controls,
+        // two jobs — clicking "Cookbooks" to peek at it should not take you away
+        // from the page you are reading.
+        event.preventDefault();
+        event.stopPropagation();
+        var open = li.classList.toggle("st-open");
+        if (li.classList.contains("current") && !open) {
+          // `.current` also forces it open in CSS; drop it so the toggle wins.
+          li.classList.remove("current");
+        }
+        caret.setAttribute("aria-expanded", String(open));
+      });
+
+      li.appendChild(caret);
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     var toggle = document.getElementById("st-theme-toggle");
     if (toggle) {
@@ -140,5 +197,6 @@
     wireMobileNav();
     wireSearch();
     wireScrollSpy();
+    wireNavCollapse();
   });
 })();

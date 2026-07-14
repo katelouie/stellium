@@ -964,3 +964,50 @@ a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(-
 @media (min-width:900px){
   .st-strip-wide{grid-template-columns:repeat(3, 1fr);}
 }
+
+/* ---------------------------------------------------------------------------
+   Collapsible sections in the left rail.
+
+   The home page rendered **81 sidebar links** — every guide chapter, every cookbook,
+   every API module, every theme — while the reader was inside none of those sections.
+   A site map that shows you everything at once is not a map, it is the territory.
+
+   `collapse=True` on the toctree would fix the *look* by making Sphinx emit only the
+   active branch. We keep `collapse=False` on purpose: every link stays in the HTML,
+   so a section can be opened *in place* without navigating into it first, and the
+   browser's own find-in-page still reaches all of it. The hiding is ours, and so is
+   the chevron.
+
+   Sphinx marks the ancestors of the current page `.current`, so the section you are
+   reading is open on arrival without any JS having to run.
+   --------------------------------------------------------------------------- */
+
+.st-nav li > ul{display:none;}
+.st-nav li.current > ul,
+.st-nav li.st-open > ul{display:block;}
+
+/* A parent's row becomes: [ link ................. chevron ] */
+.st-nav li.st-has-children > a{padding-right:30px;}
+.st-nav li.st-has-children{position:relative;}
+
+.st-nav .st-caret{
+  position:absolute; top:3px; right:2px;
+  display:flex; align-items:center; justify-content:center;
+  width:24px; height:24px; padding:0;
+  border:0; background:none; cursor:pointer;
+  color:var(--fg-faint); font-size:10px; line-height:1;
+  border-radius:6px;
+  transition:transform .15s ease, color .15s ease, background .15s ease;
+}
+.st-nav .st-caret:hover{background:var(--panel-2); color:var(--fg);}
+.st-nav li.current > .st-caret,
+.st-nav li.st-open > .st-caret{transform:rotate(90deg); color:var(--accent);}
+
+/* How many pages are behind a closed section — so the chevron is worth pressing. */
+.st-nav .st-count{
+  margin-left:6px;
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  color:var(--fg-faint);
+}
+.st-nav li.current > a .st-count,
+.st-nav li.st-open > a .st-count{display:none;}
