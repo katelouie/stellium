@@ -34,7 +34,11 @@ from stellium import ChartBuilder, MultiChartBuilder
 
 # Output directory for generated files
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUTPUT_DIR = SCRIPT_DIR / "arc_directions"
+# Where the cookbook writes. Overridable so that running it — from the test
+# suite, or the docs build — does not rewrite the artifacts committed in
+# examples/, which are regenerated deliberately and not as a side effect.
+OUTPUT_ROOT = Path(os.environ.get("STELLIUM_EXAMPLE_OUTPUT", SCRIPT_DIR))
+OUTPUT_DIR = OUTPUT_ROOT / "arc_directions"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 

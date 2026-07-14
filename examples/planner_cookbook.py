@@ -28,6 +28,7 @@ show you the result. For a real planner you almost certainly want the whole year
 swap that call for `.year(2025)`. Nothing else changes.
 """
 
+import os
 from datetime import date
 from pathlib import Path
 
@@ -39,7 +40,11 @@ DEMO_START = date(2025, 1, 1)
 DEMO_END = date(2025, 3, 31)
 
 # Output directory for all generated planners
-OUTPUT_DIR = Path(__file__).parent / "planners"
+# Where the cookbook writes. Overridable so that running it — from the test
+# suite, or the docs build — does not rewrite the artifacts committed in
+# examples/, which are regenerated deliberately and not as a side effect.
+OUTPUT_ROOT = Path(os.environ.get("STELLIUM_EXAMPLE_OUTPUT", Path(__file__).parent))
+OUTPUT_DIR = OUTPUT_ROOT / "planners"
 
 
 def get_output_path(filename: str) -> str:

@@ -85,6 +85,7 @@ Part 11: Advanced Usage
     43. Exporting results
 """
 
+import os
 from pathlib import Path
 
 # Stellium imports
@@ -138,7 +139,11 @@ from stellium.electional import (
 )
 
 # Create output directory
-OUTPUT_DIR = Path(__file__).parent / "elections"
+# Where the cookbook writes. Overridable so that running it — from the test
+# suite, or the docs build — does not rewrite the artifacts committed in
+# examples/, which are regenerated deliberately and not as a side effect.
+OUTPUT_ROOT = Path(os.environ.get("STELLIUM_EXAMPLE_OUTPUT", Path(__file__).parent))
+OUTPUT_DIR = OUTPUT_ROOT / "elections"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 # Default location for examples (San Francisco)

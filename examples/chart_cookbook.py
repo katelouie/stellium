@@ -23,7 +23,11 @@ from stellium.engines import KochHouses, PlacidusHouses, WholeSignHouses
 
 # Output directory for generated charts
 SCRIPT_DIR = Path(__file__).resolve().parent
-OUTPUT_DIR = SCRIPT_DIR / "charts"
+# Where the cookbook writes. Overridable so that running it — from the test
+# suite, or the docs build — does not rewrite the artifacts committed in
+# examples/, which are regenerated deliberately and not as a side effect.
+OUTPUT_ROOT = Path(os.environ.get("STELLIUM_EXAMPLE_OUTPUT", SCRIPT_DIR))
+OUTPUT_DIR = OUTPUT_ROOT / "charts"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 

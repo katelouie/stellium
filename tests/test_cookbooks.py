@@ -12,8 +12,10 @@ verifies that file output works correctly.
 Marked as slow: runs in CI and full suite, not in TDD loop.
 """
 
+import os
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -60,12 +62,22 @@ def _run_cookbook(filename: str, timeout: int = 120) -> subprocess.CompletedProc
     - We get the exact same behavior as a user running the file
     """
     filepath = EXAMPLES_DIR / filename
+
+    # Send the cookbook's output somewhere disposable. A cookbook resolves its output
+    # directory from __file__, so running one writes into examples/ no matter the
+    # working directory — and the artifacts committed there (report PDFs, dial and
+    # transit SVGs) were being rewritten by every test run. They churn even when
+    # nothing changed: a PDF carries its creation time, and a transit chart carries
+    # today's sky. The suite must not touch them.
+    env = {**os.environ, "STELLIUM_EXAMPLE_OUTPUT": tempfile.mkdtemp()}
+
     result = subprocess.run(
         [sys.executable, str(filepath)],
         capture_output=True,
         text=True,
         timeout=timeout,
         cwd=str(EXAMPLES_DIR),
+        env=env,
     )
     return result
 

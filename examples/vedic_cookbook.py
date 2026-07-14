@@ -19,13 +19,18 @@ Run this script to generate example charts:
     python examples/vedic_cookbook.py
 """
 
+import os
 from pathlib import Path
 
 from stellium import ChartBuilder
 from stellium.visualization.vedic import NorthIndianRenderer, SouthIndianRenderer
 
 # Output directory
-OUTPUT_DIR = Path(__file__).parent / "vedic_charts"
+# Where the cookbook writes. Overridable so that running it — from the test
+# suite, or the docs build — does not rewrite the artifacts committed in
+# examples/, which are regenerated deliberately and not as a side effect.
+OUTPUT_ROOT = Path(os.environ.get("STELLIUM_EXAMPLE_OUTPUT", Path(__file__).parent))
+OUTPUT_DIR = OUTPUT_ROOT / "vedic_charts"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 

@@ -21,6 +21,7 @@ Run this script to generate example transit outputs:
 """
 
 import datetime as dt
+import os
 from pathlib import Path
 
 from stellium import ChartBuilder, ReportBuilder
@@ -31,7 +32,11 @@ from stellium.presentation.sections.transit_periods import (
 )
 
 # Output directory
-OUTPUT_DIR = Path(__file__).parent / "transits"
+# Where the cookbook writes. Overridable so that running it — from the test
+# suite, or the docs build — does not rewrite the artifacts committed in
+# examples/, which are regenerated deliberately and not as a side effect.
+OUTPUT_ROOT = Path(os.environ.get("STELLIUM_EXAMPLE_OUTPUT", Path(__file__).parent))
+OUTPUT_DIR = OUTPUT_ROOT / "transits"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 
