@@ -119,7 +119,7 @@ def volatile_linenos(doc_file: str) -> set[int]:
     marker never reaches `block.marks` and has to be found here. The block still
     *runs* — it must not crash — it is only exempt from having its output pinned.
     """
-    lines = (REPO_ROOT / doc_file).read_text().split("\n")
+    lines = (REPO_ROOT / doc_file).read_text(encoding="utf-8").split("\n")
     marked: set[int] = set()
     for i, line in enumerate(lines):
         if line.strip() != f"<!--{VOLATILE}-->":

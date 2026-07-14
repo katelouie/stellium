@@ -228,7 +228,7 @@ def _site_stats() -> dict:
     from stellium.visualization.themes import ChartTheme
 
     stats_file = Path(__file__).parent / "_generated" / "site_stats.json"
-    cookbooks = json.loads(stats_file.read_text())
+    cookbooks = json.loads(stats_file.read_text(encoding="utf-8"))
 
     subs = {
         "version": __version__,

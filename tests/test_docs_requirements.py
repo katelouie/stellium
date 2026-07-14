@@ -40,9 +40,11 @@ def third_party_imports() -> set[str]:
     sources = list(EXAMPLES.glob("*_cookbook.py"))
 
     notebook = EXAMPLES / "analysis_cookbook.md"
-    cells = re.findall(r"```\{code-cell\}[^\n]*\n(.*?)```", notebook.read_text(), re.S)
+    cells = re.findall(
+        r"```\{code-cell\}[^\n]*\n(.*?)```", notebook.read_text(encoding="utf-8"), re.S
+    )
 
-    for source in [p.read_text() for p in sources] + cells:
+    for source in [p.read_text(encoding="utf-8") for p in sources] + cells:
         try:
             tree = ast.parse(source)
         except SyntaxError:
@@ -63,7 +65,7 @@ def third_party_imports() -> set[str]:
 def declared() -> set[str]:
     """Distribution names in docs/requirements.txt, normalised."""
     names = set()
-    for line in REQUIREMENTS.read_text().splitlines():
+    for line in REQUIREMENTS.read_text(encoding="utf-8").splitlines():
         line = line.split("#")[0].strip()
         if not line:
             continue
