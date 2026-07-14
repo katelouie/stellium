@@ -209,15 +209,15 @@ is the next section.
 from stellium import ChartBuilder
 
 chart = ChartBuilder.from_notable("Marilyn Monroe").calculate()
-print(chart.sect())    # "day"
+print(chart.sect)
 
 chart = ChartBuilder.from_notable("Muhammad Ali").calculate()
-print(chart.sect())    # "night"
+print(chart.sect)
 ```
 
 > [!TIP]
-> `chart.sect()` is a **method**, so call it with parentheses. `chart.sect`
-> without them returns the bound method, not the answer.
+> `chart.sect` is a **property**, not a method — no parentheses. It returns the
+> string `"day"` or `"night"`.
 
 ### Reading the sect roles off any chart
 
@@ -257,7 +257,7 @@ You don't have to tell Stellium the sect for dignities or lots; it reads it from
 the chart. The triplicity rulers in the dignity system
 ([chapter 06](./06_dignity_and_rulership.md)) and the Fortune/Spirit formulas in
 the lots ([chapter 07](./07_lots_arabic_parts.md)) both flip correctly on their
-own based on `chart.sect()`. The [dignities
+own based on `chart.sect`. The [dignities
 cookbook](../../../examples/dignities_cookbook.py) shows the sect-aware dignity
 scoring end to end.
 

@@ -738,6 +738,18 @@ GEOCODED_LOCATIONS = {
         "address": "Portland, OR, USA",
         "timezone": "America/Los_Angeles",
     },
+    "Kesswil, Switzerland": {
+        "latitude": 47.6,
+        "longitude": 9.3333,
+        "address": "Kesswil, Switzerland",
+        "timezone": "Europe/Zurich",
+    },
+    "Shanghai, China": {
+        "latitude": 31.2222,
+        "longitude": 121.4581,
+        "address": "Shanghai, China",
+        "timezone": "Asia/Shanghai",
+    },
 }
 
 
