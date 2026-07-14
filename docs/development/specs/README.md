@@ -7,6 +7,14 @@ become*.)
 
 ## Active
 
+- **[STRUCTURE_FIRST_SECTIONS.md](./STRUCTURE_FIRST_SECTIONS.md)** — sections stringify
+  too early, which blocks three roadmap items at once: the Typst PDF theme can't style
+  what it can't see, interactive HTML reports can't sort a string, and i18n can't
+  translate one that was already composed in English. Makes the structured payload the
+  section contract and moves composition into the renderers, where a locale can apply.
+  Folds in the Chinese-translation task. The pseudolocale doubles as a completeness
+  oracle for the refactor. Phase 0 done; Phase 1 approved.
+
 - **[STRUCTURED_LOGGING_SPEC.md](./STRUCTURED_LOGGING_SPEC.md)** — migrate the
   library's remaining bare `print()`s to stdlib `logging`/`warnings` (and
   `click.echo`/Rich for the CLI), with a lint guard. The infrastructure

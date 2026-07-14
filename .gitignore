@@ -67,3 +67,6 @@ docs/_generated/
 docs/THEME_GALLERY.md
 docs/PALETTE_GALLERY.md
 docs/gallery/
+
+# Phase 0 inventory artifact (regenerate with scripts/i18n_surface.py)
+i18n_surface.json
