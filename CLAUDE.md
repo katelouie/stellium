@@ -191,12 +191,13 @@ Presentation / Visualization / Export / Analysis
 > This is the high-level layout only.
 
 ```
-/home/user/stellium/
+stellium/
 ├── src/stellium/              # Main package
 │   ├── __init__.py            # Public API exports (the canonical surface)
 │   ├── core/                  # Abstractions — NEVER imports from higher layers
 │   │   ├── models.py          #   CelestialPosition, Aspect, CalculatedChart, MultiChart, …
-│   │   ├── protocols.py       #   ALL Protocols (engines, components, sections, layers)
+│   │   ├── protocols.py       #   engine/component/section Protocols (NOT layers:
+│   │   │                      #   IRenderLayer lives in visualization/layer_factory.py)
 │   │   ├── builder.py         #   ChartBuilder (main entry point)
 │   │   ├── native.py          #   Native, Notable (parsing/geocoding/timezone)
 │   │   ├── config.py          #   CalculationConfig, AspectConfig
@@ -222,7 +223,7 @@ Presentation / Visualization / Export / Analysis
 │   ├── utils/               # cache, time/JD, chart_shape, chart_ruler, progressions
 │   └── cli/                 # `stellium` CLI (chart, ephemeris, cache)
 │
-├── tests/                   # ~1900 tests; fast tier via `-m "not slow"`; conftest.py fixtures
+├── tests/                   # fast tier via `-m "not slow"`; conftest.py fixtures
 ├── examples/                # *_cookbook.py per subsystem + notebooks
 ├── docs/                    # Docs (see docs/DOCS_INDEX.md)
 │   └── development/         # ← Agent API/architecture reference (this set)
@@ -266,29 +267,37 @@ new_sun = replace(sun, longitude=100)  # ✅ Creates new object
 Instead of inheritance, use Protocols for extensibility:
 
 ```python
-# ✅ DO: Define interfaces with Protocol
+# The protocol, as it actually is (src/stellium/core/protocols.py):
 class EphemerisEngine(Protocol):
-    def calculate_position(self, jd: float, obj_id: int) -> tuple[float, ...]:
+    def calculate_positions(
+        self,
+        datetime: ChartDateTime,
+        location: ChartLocation,
+        objects: list[str] | None = None,
+        config: CalculationConfig | None = None,
+    ) -> list[CelestialPosition]:
         ...
 
-# Implement without inheritance
+# Implement without inheritance — match the signature and you ARE one.
 class MyCustomEngine:
-    def calculate_position(self, jd: float, obj_id: int) -> tuple[float, ...]:
-        # Your implementation
-        return (longitude, latitude, distance, ...)
+    def calculate_positions(self, datetime, location, objects=None, config=None):
+        return [...]  # list[CelestialPosition]
 
-# It just works!
 chart = ChartBuilder.from_native(native).with_ephemeris(MyCustomEngine()).calculate()
 ```
 
-**Key Protocols:**
-- `EphemerisEngine` - Calculate celestial positions
-- `HouseSystemEngine` - Calculate house cusps
-- `AspectEngine` - Find aspects
-- `OrbEngine` - Calculate orb allowances
-- `ChartComponent` - Add custom calculations
-- `ReportSection` - Add report sections
-- `IRenderLayer` - Add visualization layers
+**Key Protocols** (signatures verified against the source — do not paraphrase them
+from memory, read `protocols.py`):
+
+| Protocol | Method(s) | Lives in |
+|---|---|---|
+| `EphemerisEngine` | `calculate_positions(datetime, location, objects, config)` | `core/protocols.py` |
+| `HouseSystemEngine` | `system_name`, `calculate_house_data(datetime, location, config)`, `assign_houses(positions, cusps)` | `core/protocols.py` |
+| `AspectEngine` | `calculate_aspects(...)` | `core/protocols.py` |
+| `OrbEngine` | `get_orb_allowance(...)` | `core/protocols.py` |
+| `ChartComponent` | `component_name`, `metadata_name`, `calculate(datetime, location, positions, house_systems_map, house_placements_map)` | `core/protocols.py` |
+| `ReportSection` | `section_name`, `generate_data(chart)` | `core/protocols.py` |
+| `IRenderLayer` | `render(renderer, dwg, chart)` | **`visualization/layer_factory.py`** — *not* `core/protocols.py` |
 
 ### Dependency Injection
 
@@ -455,6 +464,9 @@ pytestmark = pytest.mark.slow
 
 **Unit Tests:**
 ```python
+from stellium.core.models import CelestialPosition, ObjectType
+
+
 def test_celestial_position_sign_calculation():
     """Test that longitude correctly converts to zodiac sign."""
     pos = CelestialPosition(
@@ -465,7 +477,18 @@ def test_celestial_position_sign_calculation():
         distance=1.0,
     )
     assert pos.sign == "Taurus"
-    assert pos.degree_in_sign == 15.5
+    assert pos.sign_degree == 15.5              # NOT `degree_in_sign` — no such field
+    assert pos.sign_position == "15°30' Taurus"
+
+
+test_celestial_position_sign_calculation()
+print("ok")
+```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+ok
 ```
 
 **Integration Tests:**
@@ -649,129 +672,154 @@ visualization/  # Imports from core, engines, components
 
 ### Task 1: Add a New House System
 
-Implement the `HouseSystemEngine` protocol:
+Implement the `HouseSystemEngine` protocol. **Two methods, not one** — the builder
+calls `calculate_house_data` and then `assign_houses`, and an engine missing the second
+raises `AttributeError` deep inside `.calculate()`.
 
-<!--pytest.mark.skip-->
 ```python
 # In src/stellium/engines/houses.py
 
-from stellium.core.protocols import HouseSystemEngine
+from stellium import ChartBuilder
 from stellium.core.models import HouseCusps
 
-class VedicHouses:
-    """Vedic/Hindu house system (whole sign from Moon)."""
+
+class EqualFromMC:
+    """Twelve equal houses, measured from the Midheaven."""
 
     @property
     def system_name(self) -> str:
-        return "Vedic"
+        return "Equal from MC"
 
-    def calculate_houses(
-        self,
-        julian_day: float,
-        latitude: float,
-        longitude: float,
-        asc_longitude: float | None = None,
-    ) -> HouseCusps:
-        """Calculate Vedic house cusps."""
-        # Your calculation logic here
-        cusps = [...]  # List of 12 cusp longitudes
+    def calculate_house_data(self, datetime, location, config=None):
+        # -> (HouseCusps, list[CelestialPosition] of the angles)
+        cusps = tuple((30.0 * i) % 360.0 for i in range(12))
+        return HouseCusps(system=self.system_name, cusps=cusps), []
 
-        return HouseCusps(
-            system_name=self.system_name,
-            cusps=cusps,
-        )
+    def assign_houses(self, positions, cusps):
+        # -> dict[object_name, house_number]
+        return {p.name: int(p.longitude // 30) + 1 for p in positions}
 
-# Usage
-chart = ChartBuilder.from_native(native).with_house_systems([VedicHouses()]).calculate()
+
+chart = (
+    ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
+    .with_house_systems([EqualFromMC()])
+    .calculate()
+)
+print(f"Sun is in house {chart.get_house('Sun', 'Equal from MC')}")
 ```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+Sun is in house 10
+```
+
+Note `HouseCusps(system=...)` — **not** `system_name=`, and the cusps are a **tuple**.
 
 ### Task 2: Add a New Component
 
-Implement the `ChartComponent` protocol:
+Implement the `ChartComponent` protocol. `calculate()` receives the chart's parts as
+**five arguments** — there is no `chart_data` dict.
 
-<!--pytest.mark.skip-->
 ```python
-# In src/stellium/components/fixed_stars.py
+# In src/stellium/components/my_component.py
 
-from stellium.core.protocols import ChartComponent
-from stellium.core.models import CelestialPosition
+from stellium import ChartBuilder
+from stellium.core.models import CelestialPosition, ObjectType
 
-class FixedStarsCalculator:
-    """Calculate positions of fixed stars."""
+
+class SolarAntiscion:
+    """A component: the Sun reflected across the Cancer–Capricorn axis."""
 
     @property
     def component_name(self) -> str:
-        return "Fixed Stars"
+        return "Solar Antiscion"
+
+    @property
+    def metadata_name(self) -> str:
+        return "solar_antiscion"
 
     def calculate(
         self,
-        chart_data: dict,  # Contains julian_day, positions, etc.
-        config: CalculationConfig,
+        datetime,
+        location,
+        positions,             # list[CelestialPosition] computed so far
+        house_systems_map,     # dict[str, HouseCusps]
+        house_placements_map,  # dict[str, dict[str, int]]
     ) -> list[CelestialPosition]:
-        """Calculate fixed star positions."""
-        julian_day = chart_data["julian_day"]
-        stars = []
+        sun = next(p for p in positions if p.name == "Sun")
+        return [
+            CelestialPosition(
+                name="Antiscion:Sun",
+                object_type=ObjectType.POINT,
+                longitude=(180.0 - sun.longitude) % 360.0,
+                latitude=0.0,
+                distance=0.0,
+            )
+        ]
 
-        for star_name, star_id in FIXED_STARS.items():
-            pos = calculate_fixed_star_position(julian_day, star_id)
-            stars.append(CelestialPosition(
-                name=star_name,
-                longitude=pos[0],
-                # ... other fields
-            ))
 
-        return stars
-
-# Usage
-chart = ChartBuilder.from_native(native).add_component(FixedStarsCalculator()).calculate()
-fixed_stars = chart.get_component_result("Fixed Stars")
+chart = (
+    ChartBuilder.from_details("2000-01-06 12:00", "Seattle, WA")
+    .add_component(SolarAntiscion())
+    .calculate()
+)
+pt = chart.get_object("Antiscion:Sun")
+print(f"{pt.name}: {pt.sign_position}")
 ```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+Antiscion:Sun: 14°11' Sagittarius
+```
+
+The positions a component returns are merged into `chart.positions`. Anything it wants
+to put in `chart.metadata` goes under its `metadata_name`.
 
 ### Task 3: Add a New Visualization Layer
 
-Implement the `IRenderLayer` protocol:
+Implement the `IRenderLayer` protocol — which lives in
+`stellium/visualization/layer_factory.py`, **not** in `core/protocols.py`.
 
-<!--pytest.mark.skip-->
 ```python
-# In src/stellium/visualization/layers.py
+# In src/stellium/visualization/layers/my_layer.py
 
-from stellium.core.protocols import IRenderLayer
+import svgwrite
+
+from stellium import ChartBuilder
 from stellium.visualization.core import ChartRenderer
 
-class FixedStarsLayer:
-    """Render fixed stars on the chart."""
 
-    def render(
-        self,
-        renderer: ChartRenderer,
-        dwg,  # SVG drawing object
-        chart: CalculatedChart,
-    ) -> None:
-        """Render fixed stars."""
-        stars = chart.get_component_result("Fixed Stars")
+class SunMarkerLayer:
+    """A render layer: put a mark on the Sun's degree."""
 
-        for star in stars:
-            # Convert longitude to (x, y) coordinates
-            x, y = renderer.get_zodiac_point(star.longitude, radius=350)
+    def render(self, renderer, dwg, chart) -> None:
+        sun = chart.get_object("Sun")
+        # longitude -> (x, y). The renderer owns the geometry; ask it.
+        x, y = renderer.polar_to_cartesian(sun.longitude, radius=280)
+        dwg.add(dwg.text("★", insert=(x, y), font_size="14px", text_anchor="middle"))
 
-            # Draw star symbol
-            dwg.add(dwg.text(
-                "⭐",
-                insert=(x, y),
-                font_size="12px",
-                text_anchor="middle",
-            ))
 
-# Usage
-renderer = ChartRenderer(size=800, rotation=0)
-dwg = renderer.create_svg_drawing("chart.svg")
+chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+renderer = ChartRenderer(size=600, rotation=0)
+dwg = svgwrite.Drawing("chart.svg", size=(renderer.size, renderer.size))
 
-layers = [ZodiacLayer(), HouseCuspLayer(), PlanetLayer(), FixedStarsLayer()]
-for layer in layers:
-    layer.render(renderer, dwg, chart)
-
+SunMarkerLayer().render(renderer, dwg, chart)
 dwg.save()
+print("★" in open("chart.svg").read())
 ```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+True
+```
+
+The renderer's geometry API is exactly two methods: `polar_to_cartesian(astro_deg,
+radius)` and `astrological_to_svg_angle(astro_deg)`. It does **not** create the
+drawing for you — `svgwrite.Drawing` does. In real use `LayerFactory` builds the layer
+list from the config; you rarely assemble one by hand.
 
 ### Task 4: Add Caching — and when not to
 
@@ -804,19 +852,32 @@ Two rules, both now enforced rather than advised:
 
 ### Task 5: Working with the Notable Database
 
-<!--pytest.mark.skip-->
 ```python
-# List available notables
+from stellium import ChartBuilder
 from stellium.data import get_notable_registry
-registry = get_notable_registry()
-for name in registry.list_notable_names():
-    print(name)
 
-# Create chart for a notable
+registry = get_notable_registry()
+
+# The registry's real surface: get_all / get_births / get_events / get_by_name /
+# get_by_category / get_by_event_type / search(**filters).
+# There is NO `list_notable_names()`.
+print(len(registry.get_all()), "records:",
+      len(registry.get_births()), "births +",
+      len(registry.get_events()), "events")
+print(registry.get_by_name("Albert Einstein").name)
+
+# Create a chart for a notable
 chart = ChartBuilder.from_notable("Albert Einstein").calculate()
 
-# Add a new notable (edit data/notables/births/*.yaml)
-# Format: YAML file with name, datetime, location
+# Add a new notable: edit src/stellium/data/notables/births/*.yaml
+# Schema, provenance fields, Old Style dates: docs/development/NOTABLES.md
+```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+211 records: 190 births + 21 events
+Albert Einstein
 ```
 
 ### Task 6: Export Chart Data to JSON
@@ -886,22 +947,34 @@ assert new_sun.longitude == 100
 
 ### Pattern 3: Registry Pattern
 
-Celestial objects and aspects are defined in registries:
+Celestial objects and aspects are defined in registries. **The registries are plain
+`dict`s** — there is no `.get_object()` / `.get_aspect()` method. Subscript them, or
+use the module-level lookup helpers (which also resolve aliases).
 
-<!--pytest.mark.skip-->
 ```python
-from stellium.core.registry import CELESTIAL_REGISTRY, ASPECT_REGISTRY
+from stellium.core.registry import (
+    CELESTIAL_REGISTRY,
+    ASPECT_REGISTRY,
+    get_object_info,
+    get_aspect_info,
+)
 
-# Get object info
-sun_info = CELESTIAL_REGISTRY.get_object("Sun")
-print(sun_info.symbol)  # ☉
-print(sun_info.glyph)   # Unicode glyph
+sun_info = get_object_info("Sun")          # or CELESTIAL_REGISTRY["Sun"]
+trine_info = get_aspect_info("Trine")      # or ASPECT_REGISTRY["Trine"]
 
-# Get aspect info
-trine_info = ASPECT_REGISTRY.get_aspect("Trine")
-print(trine_info.angle)  # 120.0
-print(trine_info.symbol) # △
+print(sun_info.glyph, trine_info.glyph, trine_info.angle)
+print(len(CELESTIAL_REGISTRY), "objects;", len(ASPECT_REGISTRY), "aspects")
 ```
+
+<!--pytest-codeblocks:expected-output-->
+
+```
+☉ △ 120.0
+83 objects; 19 aspects
+```
+
+The field is `.glyph`, **not** `.symbol` — `CelestialObjectInfo` and `AspectInfo` have
+no `symbol` attribute at all.
 
 ### Pattern 4: Protocol-Based Extension
 
