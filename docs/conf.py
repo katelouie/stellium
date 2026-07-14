@@ -27,7 +27,8 @@ extensions = [
     "sphinx.ext.viewcode",  # Add links to source code
     "sphinx.ext.intersphinx",  # Link to other docs
     "sphinx_autodoc_typehints",  # Better type hints
-    "myst_parser",  # MARKDOWN SUPPORT!
+    # myst_nb supersedes myst_parser: it IS myst_parser, plus .ipynb.
+    "myst_nb",
 ]
 
 # MyST configuration
@@ -40,8 +41,26 @@ myst_enable_extensions = [
 # Source file suffixes
 source_suffix = {
     ".rst": "restructuredtext",
-    ".md": "markdown",
+    ".md": "myst-nb",
+    ".ipynb": "myst-nb",
 }
+
+# EXECUTE the notebook at build time; never publish its stored outputs.
+#
+# analysis_cookbook.ipynb shipped 52 stored outputs, and they were WRONG: it
+# claimed "Calculated 146 charts" from a notables registry that now holds 211, and
+# "14 scientist charts" where there are 20. They were computed against a library
+# that has since changed its dignity tables, its chart ordering, its Local Mean
+# Time handling, and eight notables' birthdays. Publishing them would be publishing
+# results nobody had re-run — the exact failure the astrology guide made.
+#
+# So the library computes them, every build. A cell that fails now fails the docs
+# build, which is the same contract as scripts/update_doc_outputs.py --check: the
+# author writes the question, the library writes the answer.
+nb_execution_mode = "cache"  # re-runs only when the notebook changes
+nb_execution_timeout = 180
+nb_execution_raise_on_error = True
+nb_merge_streams = True  # one output block per cell, not one per print()
 
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "archive", "planning"]

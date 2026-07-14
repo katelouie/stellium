@@ -2,7 +2,7 @@
 Chart Overview
 ──────────────
 Name: Galileo Galilei
-Date: February 15, 1564
+Date: February 25, 1564
 Time: 04:00 PM
 Timezone: Europe/Rome
 Location: Pisa, Italy
@@ -14,23 +14,23 @@ Chart Ruler: Sun (Leo Rising)
 
 Planet Positions
 ────────────────
-┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
-┃ Planet              ┃ Position              ┃ House (Pl) ┃
-┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
-│ ☉ Sun               │ ♒︎ Aquarius 26°02'    │ 7          │
-│ ☽ Moon              │ ♏︎ Scorpio 27°17'     │ 4          │
-│ ☿ Mercury           │ ♒︎ Aquarius 24°04'    │ 7          │
-│ ♀ Venus             │ ♓︎ Pisces 8°07'       │ 8          │
-│ ♂ Mars              │ ♉︎ Taurus 23°41'      │ 10         │
-│ ♃ Jupiter           │ ♌︎ Leo 0°22'          │ 12         │
-│ ♄ Saturn            │ ♋︎ Cancer 28°02'      │ 12         │
-│ ♅ Uranus            │ ♐︎ Sagittarius 7°37'  │ 5          │
-│ ♆ Neptune           │ ♊︎ Gemini 5°05'       │ 11         │
-│ ♇ Pluto             │ ♓︎ Pisces 13°35'      │ 8          │
-│ ☊ North Node        │ ♑︎ Capricorn 6°35'    │ 5          │
-│ ☋ South Node        │ ♋︎ Cancer 6°35'       │ 11         │
-│ ⚸ Black Moon Lilith │ ♍︎ Virgo 17°33'       │ 2          │
-│ 🜊 Vertex            │ ♐︎ Sagittarius 25°54' │ 5          │
-│ ⚷ Chiron            │ ♑︎ Capricorn 18°39'   │ 6          │
-└─────────────────────┴───────────────────────┴────────────┘
+┏━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Planet              ┃ Position             ┃ House (Pl) ┃
+┡━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ ☉ Sun               │ ♓︎ Pisces 6°05'      │ 7          │
+│ ☽ Moon              │ ♈︎ Aries 21°06'      │ 9          │
+│ ☿ Mercury           │ ♓︎ Pisces 12°53'     │ 8          │
+│ ♀ Venus             │ ♓︎ Pisces 20°36'     │ 8          │
+│ ♂ Mars              │ ♉︎ Taurus 28°55'     │ 10         │
+│ ♃ Jupiter           │ ♋︎ Cancer 29°24'     │ 12         │
+│ ♄ Saturn            │ ♋︎ Cancer 27°26'     │ 12         │
+│ ♅ Uranus            │ ♐︎ Sagittarius 7°48' │ 4          │
+│ ♆ Neptune           │ ♊︎ Gemini 5°07'      │ 10         │
+│ ♇ Pluto             │ ♓︎ Pisces 13°51'     │ 8          │
+│ ☊ North Node        │ ♑︎ Capricorn 5°55'   │ 5          │
+│ ☋ South Node        │ ♋︎ Cancer 5°55'      │ 11         │
+│ ⚸ Black Moon Lilith │ ♍︎ Virgo 18°40'      │ 2          │
+│ 🜊 Vertex            │ ♑︎ Capricorn 6°45'   │ 5          │
+│ ⚷ Chiron            │ ♑︎ Capricorn 19°24'  │ 6          │
+└─────────────────────┴──────────────────────┴────────────┘
 

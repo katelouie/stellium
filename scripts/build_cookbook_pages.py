@@ -36,14 +36,31 @@ from __future__ import annotations
 
 import argparse
 import ast
+import contextlib
+import io
+import os
 import re
+import tempfile
 import textwrap
+import warnings
 from dataclasses import dataclass
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 EXAMPLES = REPO / "examples"
 OUT = REPO / "docs" / "cookbooks"
+
+# Set STELLIUM_DOCS_FAST=1 to skip execution while iterating on the theme locally.
+# CI and Read the Docs never set it: there, the outputs are always computed.
+FAST = os.environ.get("STELLIUM_DOCS_FAST") == "1"
+
+# The planner renders real PDFs through Typst: 11 recipes, 104 seconds — as much as
+# the other 356 combined, four times over. Its output is a file path, not a table, so
+# there is nothing on the page to gain by paying for it.
+SKIP_EXECUTION = {"planner"}
+
+# Output long enough to bury the next recipe. Keep the head, say what was cut.
+MAX_OUTPUT_LINES = 40
 
 # "Example 1: Solar Arc Directions by Age" -> "Solar Arc Directions by Age".
 # The number is already the heading's position on the page; repeating it is noise.
@@ -202,6 +219,81 @@ def recipes(path: Path) -> list[Recipe]:
     return found
 
 
+def run_recipes(path: Path, plan: list[Recipe]) -> dict[str, str]:
+    """Execute a cookbook and capture what each recipe prints.
+
+    The library writes the answers; nobody hand-copies them. This is the same contract
+    as scripts/update_doc_outputs.py — an author writes the question, the code writes
+    the result — and it is the reason the documentation can be trusted at all.
+
+    Each cookbook is exec'd once (for its imports and module-level setup), then each
+    recipe is called and its stdout captured. It all happens in a scratch directory,
+    because plenty of recipes save an SVG or a PDF and the repository is not the place
+    for them.
+    """
+    if FAST or path.stem.removesuffix("_cookbook") in SKIP_EXECUTION:
+        return {}
+
+    namespace: dict = {"__name__": "__cookbook__", "__file__": str(path)}
+    captured: dict[str, str] = {}
+    cwd = os.getcwd()
+
+    with tempfile.TemporaryDirectory() as scratch, warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        try:
+            os.chdir(scratch)
+            with contextlib.redirect_stdout(io.StringIO()):
+                exec(
+                    compile(path.read_text(encoding="utf-8"), str(path), "exec"),
+                    namespace,
+                )
+
+            # Silence the banner helpers before calling anything. They print
+            #     ========================================
+            #       Example 1: Least (Minor) Years
+            #     ========================================
+            # which is how a cookbook tells you where you are as it scrolls past in a
+            # terminal. On a page whose heading already says it, that is the same
+            # sentence a third time — and since the call has been stripped from the
+            # displayed code, the output would be announcing a line nobody can see.
+            for helper in BANNER_CALLS:
+                if callable(namespace.get(helper)):
+                    namespace[helper] = lambda *args, **kwargs: None
+
+            for recipe in plan:
+                function = namespace.get(recipe.name)
+                if not callable(function):
+                    continue
+                buffer = io.StringIO()
+                try:
+                    with contextlib.redirect_stdout(buffer):
+                        function()
+                except Exception as exc:  # noqa: BLE001 - report, do not mask
+                    raise SystemExit(
+                        f"{path.name}::{recipe.name} raised {type(exc).__name__}: {exc}\n"
+                        f"A cookbook recipe that does not run is a recipe the docs "
+                        f"should not be showing."
+                    ) from exc
+                text = buffer.getvalue().strip("\n")
+                if text.strip():
+                    captured[recipe.name] = text
+        finally:
+            os.chdir(cwd)
+    return captured
+
+
+def output_block(text: str) -> list[str]:
+    """Render captured stdout, truncated if it would swamp the page."""
+    lines = text.split("\n")
+    if len(lines) > MAX_OUTPUT_LINES:
+        cut = len(lines) - MAX_OUTPUT_LINES
+        lines = lines[:MAX_OUTPUT_LINES] + [
+            "",
+            f"… {cut} more lines — run the recipe to see them",
+        ]
+    return ["```{code-block} text", ":caption: Output", "", *lines, "```", ""]
+
+
 def page(path: Path) -> tuple[str, str, int, str]:
     """Render one cookbook page. Returns (slug, markdown, recipe count, title)."""
     slug = path.stem.removesuffix("_cookbook")
@@ -250,6 +342,8 @@ def page(path: Path) -> tuple[str, str, int, str]:
         ":::",
         "",
     ]
+    outputs = run_recipes(path, found)
+
     for recipe in found:
         out += [f"## {recipe.title}", ""]
         if recipe.prose:
@@ -268,6 +362,9 @@ def page(path: Path) -> tuple[str, str, int, str]:
             "```",
             "",
         ]
+        # What it actually prints, captured by running it — never transcribed.
+        if recipe.name in outputs:
+            out += output_block(outputs[recipe.name])
     return slug, "\n".join(out), len(found), heading
 
 
