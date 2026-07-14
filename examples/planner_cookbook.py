@@ -21,11 +21,22 @@ Drop any page with the matching `.without_*()` call.
 Planners are rendered by the bundled Typst design system, so they take a theme:
 "house" (default), "sepia", "celestial", "blues", or "greyscale". Reach for
 "greyscale" if you're printing at home — it swaps ink fills for outlines.
+
+**On the date range.** These recipes render a single quarter — `.date_range(START,
+END)` — so that the documentation can execute every one of them on each build and
+show you the result. For a real planner you almost certainly want the whole year:
+swap that call for `.year(2025)`. Nothing else changes.
 """
 
+from datetime import date
 from pathlib import Path
 
 from stellium import Native, PlannerBuilder
+
+# The recipes below render one quarter rather than a full year, so the docs build can
+# run all of them. `.year(2025)` is the same call with a twelve-month range.
+DEMO_START = date(2025, 1, 1)
+DEMO_END = date(2025, 3, 31)
 
 # Output directory for all generated planners
 OUTPUT_DIR = Path(__file__).parent / "planners"
@@ -55,7 +66,7 @@ def basic_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("America/Los_Angeles")
         .generate(get_output_path("basic_planner.pdf"))
     )
@@ -84,7 +95,7 @@ def full_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2026)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("America/Los_Angeles")
         .page_size("letter")
         .theme("house")  # the default; try "celestial" or "greyscale"
@@ -126,7 +137,7 @@ def outer_planets_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("America/Los_Angeles")
         .with_natal_chart()
         .with_graphic_ephemeris(harmonic=360)  # Full zodiac view
@@ -158,7 +169,7 @@ def monday_start_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("Europe/London")
         .week_starts_on("monday")  # Monday-Sunday weeks
         .with_natal_chart()
@@ -214,7 +225,7 @@ def one_month_relocated_planner():
 
     Two things worth knowing here.
 
-    **The range is free.** `.year(2026)` is only shorthand for
+    **The range is free.** `.date_range(DEMO_START, DEMO_END)` is only shorthand for
     `.date_range(date(2026, 1, 1), date(2026, 12, 31))`. Any span works, and the
     front matter adapts: the pages are titled from the actual range, so this one
     says "March 2026 at a Glance" rather than pretending to be a year. A month
@@ -275,7 +286,7 @@ def printable_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("America/New_York")
         .page_size("letter")  # US Letter (8.5" x 11")
         .binding_margin(0.25)  # Extra 0.25" on the inner (bound) edge
@@ -311,7 +322,7 @@ def minimal_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("America/Los_Angeles")
         # Strip the reference pages back to nothing
         .without_natal_chart()
@@ -351,7 +362,7 @@ def themed_planners():
     for theme in ("house", "sepia", "celestial", "blues", "greyscale"):
         planner = (
             PlannerBuilder.for_native(native)
-            .year(2026)
+            .date_range(DEMO_START, DEMO_END)
             .timezone("America/Los_Angeles")
             .page_size("letter")
             .theme(theme)
@@ -379,7 +390,7 @@ def modern_voc_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("America/Los_Angeles")
         .with_natal_chart()
         .include_natal_transits()
@@ -408,7 +419,7 @@ def notable_planner():
 
     planner = (
         PlannerBuilder.for_native(native)
-        .year(2025)
+        .date_range(DEMO_START, DEMO_END)
         .timezone("Europe/Berlin")
         .with_natal_chart()
         .with_graphic_ephemeris(harmonic=90)

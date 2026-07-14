@@ -63,10 +63,10 @@ STATS = REPO / "docs" / "_generated" / "site_stats.json"
 # CI and Read the Docs never set it: there, the outputs are always computed.
 FAST = os.environ.get("STELLIUM_DOCS_FAST") == "1"
 
-# The planner renders real PDFs through Typst: 11 recipes, 104 seconds — as much as
-# the other 356 combined, four times over. Its output is a file path, not a table, so
-# there is nothing on the page to gain by paying for it.
-SKIP_EXECUTION = {"planner"}
+# Nothing is skipped. The planner cookbook renders real PDFs through Typst, which is
+# slow enough that its recipes are scoped to one quarter rather than a full year (see
+# examples/planner_cookbook.py) — that is what makes running them affordable.
+SKIP_EXECUTION: set[str] = set()
 
 # Output long enough to bury the next recipe. Keep the head, say what was cut.
 MAX_OUTPUT_LINES = 40
@@ -89,6 +89,18 @@ OUTPUT_DIR_NAME = "OUTPUT_DIR"
 
 # What we can actually show on a page. A PDF is a download, not a figure.
 RENDERABLE = {".svg", ".png"}
+
+# A PDF cannot be shown inline, but a page of it can. The planner's output *is* a
+# typeset document, so a page of it says far more than the byte count its recipes print.
+#
+# Page 2, not page 1: page 1 is a title page — a name, a date range, and a lot of white
+# — and it is identical for every recipe built from the same native. Page 2 is the "at a
+# glance" spread (lord of the year, profection, eclipses placed in the native's houses,
+# retrograde windows), which is both the substance and the part that actually differs
+# between recipes.
+PREVIEWABLE = {".pdf"}
+PDF_PREVIEW_PAGE = 2  # 1-indexed; falls back to the last page if a doc is shorter
+PDF_PREVIEW_DPI = 110
 
 # "Example 1: Solar Arc Directions by Age" -> "Solar Arc Directions by Age".
 # The number is already the heading's position on the page; repeating it is noise.
@@ -354,22 +366,53 @@ def run_recipes(
                     for f in drawn_into.rglob("*")
                     if f.is_file()
                     and f not in before
-                    and f.suffix.lower() in RENDERABLE
+                    and f.suffix.lower() in RENDERABLE | PREVIEWABLE
                 )
                 for index, source in enumerate(new):
                     target_dir = IMAGES / slug
                     target_dir.mkdir(parents=True, exist_ok=True)
                     suffix = f"_{index}" if len(new) > 1 else ""
-                    target = (
-                        target_dir / f"{recipe.name}{suffix}{source.suffix.lower()}"
-                    )
-                    shutil.copy2(source, target)
+
+                    if source.suffix.lower() in PREVIEWABLE:
+                        target = target_dir / f"{recipe.name}{suffix}.png"
+                        if not pdf_preview(source, target):
+                            continue
+                    else:
+                        target = (
+                            target_dir / f"{recipe.name}{suffix}{source.suffix.lower()}"
+                        )
+                        shutil.copy2(source, target)
+
                     figures.setdefault(recipe.name, []).append(
                         f"images/{slug}/{target.name}"
                     )
         finally:
             os.chdir(cwd)
     return captured, figures
+
+
+def pdf_preview(source: Path, target: Path) -> bool:
+    """Render one page of a PDF to PNG. Returns False if we cannot.
+
+    PyMuPDF is a pure wheel with no system dependency, which matters: `pdf2image`
+    needs poppler installed, and Read the Docs does not have it.
+    """
+    try:
+        import pymupdf
+    except ImportError:
+        warnings.warn(
+            "pymupdf is not installed, so PDF previews are missing from the cookbook "
+            "pages. `pip install pymupdf` (it is in docs/requirements.txt).",
+            stacklevel=2,
+        )
+        return False
+
+    with pymupdf.open(source) as doc:
+        if not doc.page_count:
+            return False
+        index = min(PDF_PREVIEW_PAGE, doc.page_count) - 1
+        doc[index].get_pixmap(dpi=PDF_PREVIEW_DPI).save(target)
+    return True
 
 
 def output_block(text: str) -> list[str]:

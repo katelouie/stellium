@@ -25,3 +25,8 @@ graphviz
 
 # No theme dependency: docs/_themes/stellium_theme is ours and lives in-tree.
 # (furo AND sphinx-rtd-theme were both installed here. Neither was used.)
+
+# The planner cookbook's output is a typeset PDF — the most showable artifact the
+# library produces. PyMuPDF renders its first page to PNG so the page can show it.
+# (pdf2image would need poppler, a system binary Read the Docs does not have.)
+pymupdf
