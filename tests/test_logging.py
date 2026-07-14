@@ -124,18 +124,40 @@ def test_logs_are_silent_without_configuration(restore_stellium_logger, capsys):
 # =============================================================================
 
 
-@pytest.mark.parametrize(
-    "cls",
-    [
-        DataQualityWarning,
-        GeocodingWarning,
-        ConfigurationWarning,
-        MissingEphemerisWarning,
-    ],
-)
+def _all_warning_classes():
+    """Every warning the library defines — *discovered*, not hand-listed.
+
+    Both MissingGlyphWarning and TimeZoneWarning were raised at users while being
+    absent from the hand-written list here **and** from `stellium.__all__`, so they
+    could not be filtered: `warnings.filterwarnings(category=stellium.TimeZoneWarning)`
+    raised AttributeError. A typed warning you cannot import is not a typed warning.
+    Enumerate the module, and a new one is covered the moment it exists.
+    """
+    import inspect
+
+    from stellium import exceptions
+
+    return [
+        cls
+        for _name, cls in inspect.getmembers(exceptions, inspect.isclass)
+        if issubclass(cls, StelliumWarning) and cls is not StelliumWarning
+    ]
+
+
+@pytest.mark.parametrize("cls", _all_warning_classes(), ids=lambda c: c.__name__)
 def test_warning_subclasses_derive_from_base(cls):
     assert issubclass(cls, StelliumWarning)
     assert issubclass(cls, UserWarning)
+
+
+@pytest.mark.parametrize("cls", _all_warning_classes(), ids=lambda c: c.__name__)
+def test_every_warning_is_importable_from_the_package(cls):
+    """A caller filters by class, so every warning we raise must be reachable as
+    `stellium.<Name>` and be in `__all__`. Two were not."""
+    assert hasattr(stellium, cls.__name__), (
+        f"{cls.__name__} is raised at users but not exported — they cannot filter it"
+    )
+    assert cls.__name__ in stellium.__all__
 
 
 def test_base_warning_filter_silences_all_subclasses():
