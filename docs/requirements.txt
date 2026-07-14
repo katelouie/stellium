@@ -30,3 +30,10 @@ graphviz
 # library produces. PyMuPDF renders its first page to PNG so the page can show it.
 # (pdf2image would need poppler, a system binary Read the Docs does not have.)
 pymupdf
+
+# The build EXECUTES every cookbook recipe and the analysis notebook, so it needs what
+# they import — not just what Sphinx needs. scipy is imported unguarded by the notebook
+# (a missing one fails the build); openpyxl is guarded, and without it the I/O page
+# quietly prints "Skipping Excel example" instead of its output.
+scipy>=1.10.0
+openpyxl>=3.1.0

@@ -9,235 +9,143 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.22.0] - 2026-07-14
 
-> ### ⚠️ This release corrects wrong answers
+> ### ⚠️ Results that change on upgrade
 >
-> Four bugs in this release were **silently returning incorrect results**, not crashing.
-> If you relied on any of the following, your output was wrong and will now change:
+> Four bugs returned incorrect results rather than raising. If you used any of these, your output was wrong and will now differ:
 >
 > | If you used… | You were getting… |
 > |---|---|
-> | `ElectionalSearch` / `find_aspect_exact` with an **opposition** | the **conjunction** — the opposite moment from the one you asked for |
-> | `ReturnBuilder.solar()` with a **July–December birthday** | the **previous year's** solar return chart |
-> | **dignity scores, almuten, sect, length-of-life** for a Water sign | a **swapped day/night triplicity ruler** (plus an asteroid in the traditional falls, and Mars's exaltation degree off by one) |
-> | **declination aspects** (Parallel / Contraparallel) on an ecliptic engine | an aspect measured against **longitude**, which cannot express it at all |
+> | `ElectionalSearch` / `find_aspect_exact` with an **opposition** | the conjunction — the opposite moment from the one you asked for |
+> | `ReturnBuilder.solar()` with a **July–December birthday** | the previous year's solar return |
+> | **dignity, almuten, sect, length-of-life** for a Water sign | a swapped day/night triplicity ruler |
+> | **declination aspects** on an ecliptic engine | an aspect measured against longitude, which cannot express one |
 >
-> All four are detailed under *Fixed* below. They were found by a new ground-truth
-> test suite (see *Added*) that checks the engines against the **sky** rather than
-> against themselves — an approach that found four bugs within an hour of existing.
+> Charts also change for **pre-standard-time births** (Local Mean Time), **eight notables** whose dates were in the Julian calendar, and any chart drawn from the **traditional dignity tables**. Details under *Fixed*.
 
 ### Added
 
-- **A rebuilt documentation site** ([stellium.readthedocs.io](https://stellium.readthedocs.io/)). The structure follows Diátaxis — Start Here, Guides, Cookbooks, Reference, Methodology, Galleries — behind a new custom Sphinx theme with light/dark modes, self-hosted fonts (no CDN request), a collapsible site map, and search.
+**Documentation**
 
-  Most of it is *generated from the library at build time*, so it cannot drift from the code:
+- **A rebuilt site** at [stellium.readthedocs.io](https://stellium.readthedocs.io/) — Diátaxis structure, new theme, light/dark, search. Most of it is generated from the library at build time: all **421 cookbook recipes execute on every build** and show their real output (188 charts, 15 planner pages), the galleries are enumerated from `ChartTheme` and the palette enums, and counts like "14 themes" resolve from the registries.
+- **The Astrology Guide** — 8 of a planned 24 chapters, each marked with whether its figures have been verified against computed output.
+- **A Methodology section** — what Stellium computes and on whose authority (Valens, Ptolemy, Firmicus, Houlding), and where the tradition disagrees.
+- **`CITATION.cff`** for GitHub's *Cite this repository*.
+- **Documented code blocks are held to their output.** `scripts/update_doc_outputs.py` runs each block and writes its real output back into the markdown; CI fails when a library change makes a document false. A block whose output legitimately varies marks itself `<!--doc-output:volatile-->`.
+- **An optional docs-freshness reminder** — `pre-commit install --hook-type post-commit`. Never blocks a commit.
 
-  | Section | What it is |
-  |---|---|
-  | **Cookbooks** | All 421 recipes from `examples/`, every one **executed on each build** and shown with its real output — 188 charts and 15 planner pages rendered inline. The code is `literalinclude`d from the scripts, so the page holds no copy of it. |
-  | **Galleries** | Every `ChartTheme` and palette, enumerated from the enums and drawn at build time. Click a theme for the four lines that produced it. |
-  | **API Reference** | One page per module, each object documented once, and every object now in the search index and cross-referenceable. |
-  | **Analysis notebook** | Executed at build time rather than shipping stored outputs. |
-  | **Counts** | "421 recipes", "14 themes", "211 notables" are resolved from the registries, not typed. |
+**Charts**
 
-- **The Astrology Guide** is published — 8 of a planned 24 chapters, each marked with whether its figures have been verified against computed output. Explains the astrology (what a house *is*, why anyone argues about Placidus), not the API.
+- **`ChartBuilder.from_notable(name, use_recorded_time=True)`** — build a chart from the clock time in a record whose audit distrusts it (William Lilly's, for instance, which AstroDatabank rates A but flags as possibly self-rectified). Such records default to unknown-time: noon, no houses, no angles, no Lots.
 
-- **A Methodology section** — what Stellium computes and on whose authority (Valens, Ptolemy, Firmicus, Houlding), where the tradition genuinely disagrees, and which default ships.
+  The flag is provenance-*preserving*: you get the chart, you get one `DataQualityWarning`, and `chart.metadata["time_provenance"]` records what the chart is standing on — travelling into reports and `to_dict()`. It overrides the audit, not the absence of data: a record with no time at all still raises.
 
-- **`CITATION.cff`** — GitHub's *Cite this repository*, for referencing Stellium in research.
+- **`TimeZoneWarning` and `MissingGlyphWarning`** are exported from `stellium`, alongside the existing `StelliumWarning` family. Escalate the lot with `warnings.simplefilter("error", StelliumWarning)`.
 
-- **A docs-freshness reminder** — an opt-in `post-commit` hook (`pre-commit install --hook-type post-commit`) that suggests rebuilding the docs when they fall behind the code. It never blocks a commit.
+**Bodies and glyphs**
 
-- **The documentation's code blocks are now held to the output they claim** — `scripts/update_doc_outputs.py`, and a `tests/test_doc_codeblocks.py` that finally reads what a block *prints*. It only ever checked that a block did not crash: stdout was executed and thrown away, so a doc could assert any result it liked and stay green forever. It did. The (unreleased) astrology guide stated William Lilly's Venus scored **`+7 ['domicile', 'term']`**; it scores **`+10 ['domicile', 'triplicity_ruler', 'term']`**, and always has — Lilly has no birth time on record, so his chart is a *noon* `UnknownTimeChart`, unambiguously a **day** chart, whose Earth triplicity ruler is Venus. The documented numbers require a *night* chart. They cannot have come from running the code.
+- **34 new bodies. `CELESTIAL_REGISTRY` goes from 49 to 83.**
+  - `with_named_asteroids()` — 18 beyond the big four (Psyche, Sappho, Pandora, Amor, Astraea, Hebe, Iris, Flora, Metis, Fortuna, Diana, Hidalgo, …).
+  - `with_centaurs()` — 10 (Chiron, Pholus, Nessus, Chariklo, Asbolus, Hylonome, Echeclus, Elatus, Bienor, Okyrhoe).
+  - `with_tnos()` — 6 → 16, adding Ixion, Huya, Chaos, Deucalion, Altjira, Varuna, Salacia, Logos, Typhon and **Gonggong**.
 
-  So a human no longer writes an expected output — the library does. `python scripts/update_doc_outputs.py` runs each block and writes its real output back into the markdown (pytest-codeblocks' `<!--pytest-codeblocks:expected-output-->` convention), and CI fails the day a library change makes a document false. You cannot fabricate a result you do not author. Guide chapters are discovered by glob, so a new one is covered the moment it lands.
+  All need their `.se1` file: `stellium ephemeris download-asteroid`.
+- **Harmonic aspects have glyphs** — `AspectInfo.glyph_svg_path`, `visualization.core.get_aspect_glyph()`, eight new drawings. The 5th/7th/9th-harmonic aspects have no Unicode codepoint, so they previously fell back to ASCII initials (`Q`, `bQ`, `tS`). Each is now the star polygon whose edge subtends its own angle — the same rule that makes △ the trine.
+- **`QUALITY_REGISTRY`** — elements and modalities as registry entries (`QualityInfo`, `ELEMENTS`, `MODALITIES`, `get_quality_info()`, `get_element_of()`, `get_modality_of()`), with their own glyphs.
+- **A glyph sheet** — [`docs/GLYPH_SHEET.html`](docs/GLYPH_SHEET.html), all 172 symbols and how each one reaches a page (bundled SVG, or a font whose `cmap` contains the codepoint). Generated by `scripts/build_glyph_sheet.py`.
+- **A contract for the glyph SVGs**, enforced by `scripts/normalize_glyphs.py` and `tests/test_glyph_coverage.py`: square viewBox, `currentColor`, one of two paint modes.
 
-  A block whose output genuinely cannot be pinned marks itself `<!--doc-output:volatile-->` and is run but not compared — it must say so rather than quietly going unchecked. **As of now, nothing needs it: all 49 blocks are pinned.**
+**Output**
 
-- **`ChartBuilder.from_notable(name, use_recorded_time=True)`** — build a chart from the clock time in a record the audit distrusts. Some records carry a time we will not draw houses from: William Lilly's is rated **A** by AstroDatabank (quoted by the person — his own letter to Ashmole) *and* flagged unreliable, because ADB's notes say *"the time may have been rectified by him"* and the record's own audit is blunter still — *"cannot validate a rectifier."* So his chart defaults to unknown-time: noon, no houses, no angles, no Lots.
-
-  That default is right, but as a **hard block it protected nothing**. Anyone could write `Native(datetime(1602, 5, 11, 2, 0), "Diseworth")` and get the identical chart with **no caveat anywhere** — the same report, the same PDF, the same `to_dict()` as a chart built from a birth certificate. The guard did not reduce the risk; it pushed the risk somewhere nothing could see it.
-
-  So the flag is **provenance-preserving rather than provenance-erasing**: you get the chart, you get one `DataQualityWarning`, and the chart carries what it is standing on in `chart.metadata["time_provenance"]` — which travels into reports and `to_dict()`. A chart built on a rectified time can never quietly pass for one built on a birth record. It overrides the *audit*, not the absence of data (a record with no time at all raises rather than inventing one), and it is a silent no-op where nothing is being overridden.
-
-  It is only worth having because the other two fixes landed first: with Lilly's Old Style date and his Local Mean Time both corrected, the Ascendant this delivers is **2°03.6′ Pisces against AstroDatabank's 2°04′**. Before them it would have delivered a confident, wrong Ascendant — which is worse than refusing to draw one.
-
-- **34 new bodies — `CELESTIAL_REGISTRY` goes from 49 to 83** — with two new builder methods and a much larger `with_tnos()`:
-
-  - **`with_named_asteroids()`** — 18 asteroids beyond the big four: Psyche, Sappho, Pandora, Amor, Astraea, Hebe, Iris, Flora, Metis, Fortuna, Diana, Hidalgo, Icarus, Toro, Bacchus, Eros, Urania, Apollo.
-  - **`with_centaurs()`** — 10: Chiron, Pholus, Nessus, Chariklo, Asbolus, Hylonome, Echeclus, Elatus, Bienor, Okyrhoe.
-  - **`with_tnos()`** — 6 → 16, adding Ixion, Huya, Chaos, Deucalion, Altjira, Varuna, Salacia, Logos, Typhon and Gonggong.
-
-  Every id is pinned to NASA JPL Horizons (below), because swisseph will not tell you when one is wrong. All of them need their `.se1` file — `stellium ephemeris download-asteroid <name>` fetches it, and a body whose file is absent raises rather than returning a number from the wrong rock.
-
-- **Gonggong** (MPC 225088, the TNO formerly known as 2007 OR10) joins the registry, `with_tnos()` and `stellium ephemeris download-asteroid`. Its hand-drawn glyph had been sitting unused in the package all along — a file with nothing pointing at it.
-
-- **The harmonic aspects are drawn as star polygons** — `AspectInfo.glyph_svg_path`, `visualization.core.get_aspect_glyph()`, and eight new glyphs. The 5th/7th/9th-harmonic aspects have **no Unicode codepoint in any block**, so they carried ASCII initials (`Q`, `bQ`, `tS`, `qN`) — the convention in Solar Fire and on astro.com, and the right fallback for a terminal, but letters sitting among symbols in a drawing.
-
-  There was nothing to invent, only a pattern to finish. The classical glyphs are not mnemonics: **△ is the trine because a triangle's edge subtends 120°**, □ is the square because a square's subtends 90°, ⚹ is the sextile. Each glyph *is* the regular polygon whose edge subtends the aspect. So each harmonic is now the star polygon **{n/k}** — `n` points on a circle joined every `k`-th — whose edge subtends exactly `k · 360/n`:
-
-  | Aspect | Angle | Figure |
-  |---|---|---|
-  | Quintile / Biquintile | 72° / 144° | pentagon / **pentagram** |
-  | Septile / Biseptile / Triseptile | 51.43° / 102.86° / 154.29° | heptagon / heptagram, open / heptagram, sharp |
-  | Novile / Binovile / Quadnovile | 40° / 80° / 160° | nonagon / nonagram, open / nonagram, sharp |
-
-  The pentagram falling out as *biquintile* is the tell that the rule is real rather than imposed — and so is the gap: there is no "trinovile", because {9/3} has gcd 3, degenerates into three separate triangles, and subtends 120°, which is just the trine. The geometry predicted the registry's contents. Generated by `scripts/generate_harmonic_glyphs.py`, and `tests/test_glyph_coverage.py` measures the angle each glyph actually subtends against the angle its aspect claims — a drawing can be checked against a number, so it is.
-
-- **`QUALITY_REGISTRY` — elements and modalities as first-class registry entries** (`QualityInfo`, `ELEMENTS`, `MODALITIES`, `get_quality_info()`, `get_element_of()`, `get_modality_of()`). They were previously ad-hoc strings scattered across the analysis, presentation and visualization layers with no glyph of their own. The drawn glyph is not cosmetic here: **Mutable's Unicode fallback is ☿ — the same codepoint as the planet Mercury** — so a chart showing both would have drawn one symbol for two unrelated things.
-
-- **A glyph sheet — [`docs/GLYPH_SHEET.html`](docs/GLYPH_SHEET.html)** — every symbol Stellium can emit (172 of them), showing for each one *how it will actually reach a page*: a bundled SVG, or a named font whose `cmap` genuinely contains the codepoint. Generated by `scripts/build_glyph_sheet.py`, which resolves each glyph exactly as `get_glyph()` does at draw time, so the sheet cannot drift from the code. It carries a wishlist of what Stellium does not know yet (Hellenistic lots, condition and dignity marks, the hypotheticals), and entries graduate off it automatically once wired. **The sheet is now at 0 gaps** — it opened at 8.
-
-- **A contract for the glyph SVGs, and `scripts/normalize_glyphs.py` to enforce it** — square viewBox, exactly one of two paint modes (`fill:none` + `stroke:currentColor` for the line-drawn bodies, `fill:currentColor` + `stroke:none` for the filled star sigils), `currentColor` never a literal, no editor cruft. The alternative was teaching the renderer to parse every dialect a drawing program can emit — `fill:#000;fill-opacity:0` is an outline that *looks* filled — which is reimplementing an SVG renderer, badly, and finding a new corner with every export. These are our own data, so the data gets fixed. `tests/test_glyph_coverage.py` holds the line.
-
-- **PNG export — `chart.draw(...).save_png()` / `.to_png()`**, and `svg_to_png()` for any SVG. Charts have always been exportable as SVG, but rasterising one has been a reliable way to produce a wall of tofu boxes: an astrology chart is mostly *text* (☉ ♀ ♄ for the planets, ♈ ♉ ♊ for the signs), and **every general-purpose rasteriser — rsvg, cairosvg, Inkscape — resolves the font family against the *host's* installed fonts**. On a machine without a symbol font the glyphs simply are not there. That is not a bug in those tools; it is what they do.
-
-  So Stellium does not ask the host. Typst rasterises the chart with `ignore_system_fonts=True` and **only the fonts Stellium bundles** — which `tests/test_glyph_coverage.py` proves cover every glyph the registries can emit. The result is identical on a laptop, in CI, and in a bare container with no fonts installed at all, which is the whole point of exporting a PNG rather than an SVG. No new dependency: Typst was already there for the PDFs.
+- **PNG export** — `chart.draw(...).save_png()` / `.to_png()`, and `svg_to_png()` for any SVG. Rasterising is done by Typst against **only the fonts Stellium bundles**, so a chart's glyphs do not depend on what is installed on the host.
 
   ```python
   chart.draw("einstein.svg").preset_standard().save_png(scale=2)   # -> einstein.png
   chart.draw_dial("dial.svg", degrees=90).to_png(background="white")
   ```
 
-  `scale` is pixels per SVG unit (`2.0` for retina density). The background is **transparent** by default, for compositing; pass a colour if the target cannot cope with an alpha channel. Wheel and dial charts both support it.
+  `scale` is pixels per SVG unit. Background is transparent by default.
 
+**Planner**
 
+- **`stellium.planner.almanac`** — year-level reference data. `build_year_almanac(chart, start, end, timezone)` returns a `YearAlmanac`: profection and Lord of the Year, solar return, eclipses with the natal house each falls in, retrograde windows, the progressed Moon's dated natal aspects, year-defining outer transits, and the active releasing periods. Each piece is available on its own (`find_eclipses`, `find_retrogrades`, `find_progressed_moon`, `find_zr_year`, `house_for_longitude`).
+- **`PlannerBuilder.theme()`** and the `.without_*()` front-matter opt-outs.
+- **`tests/test_planner_almanac.py`** (22 tests). The planner previously had no unit tests.
 
-- **`stellium.planner.almanac` — the planner's year-level reference data** — the year-scoped counterpart to `events.py` (which is day-scoped). `build_year_almanac(chart, start, end, timezone)` returns a `YearAlmanac`: the profection and Lord of the Year, the solar return, eclipses with the natal house each falls in, retrograde windows clipped to the year, the progressed Moon's walk and its dated natal aspects, the year-defining outer transits, and the releasing periods active this year. Each piece is also available on its own (`find_eclipses`, `find_retrogrades`, `find_progressed_moon`, `find_zr_year`, `house_for_longitude`). Everything is computed from the engines directly rather than by re-parsing `DailyEvent`'s human-readable strings.
-- **`TransitHit` and `find_natal_transits()`** — a shared structured transit primitive. The daily transit lines and the year's transit summary come from the same longitude-crossing search, so it now runs once and both consumers read structure.
-- **`ECLIPTIC_ASPECT_REGISTRY` and `DECLINATION_ASPECT_REGISTRY`** — derived views over `ASPECT_REGISTRY`, exported from `stellium`. Declination aspects (Parallel, Contraparallel) deliberately stay *in* the main registry so that looking an aspect up **by name** remains uniform — a caller holding an `Aspect` with `aspect_name="Parallel"` just wants its glyph and shouldn't have to know which family it belongs to (this is what `get_aspect_display()` and `OrbEngine`'s default-orb map rely on). But they are recorded at 0° and 180° purely by analogy with Conjunction and Opposition, which means **angle is not a unique key across the whole registry**. Anything keying on angle — or reasoning about ecliptic geometry — should now build over `ECLIPTIC_ASPECT_REGISTRY`, where angle *is* unique (an invariant now pinned by a test).
-- **`PlannerBuilder.theme()` and the `.without_*()` front-matter opt-outs** (see above).
-- **Planner tests** — `tests/test_planner_almanac.py` (22 tests). The planner previously had **no unit tests at all**, only an end-to-end cookbook smoke test.
-- **Asteroid identity is validated against NASA JPL Horizons.** Swiss Ephemeris does not check an asteroid id: ask for the wrong one and it returns a *different asteroid's* position, computed to full precision, with no complaint. There is no way to catch that from inside the library — the only oracle is something that shares no code with it. All 16 numbered bodies are now pinned to JPL Horizons longitudes for 2000-01-01 (worst disagreement: **2 arcseconds**), and Horizons' own `Target body name` confirms the *identity*, not just the number. The trap is real and specific: there are **two id conventions** — Ceres, Pallas, Juno, Vesta, Chiron and Pholus use swisseph's *built-in* ids (17, 18, 19, 20, 15, 16), everything else is MPC + offset. Hygiea is MPC **10**, so it must be `10010`; ask for `10` and swisseph cheerfully hands back the **Mean Node** (125.041° instead of 227.882°) without a murmur.
-- **A ground-truth test suite** (`tests/test_astronomical_ground_truth.py`) — tests that appeal to nothing in our own implementation. Most tests check that the code does what the code *says*; these check that it says something *true*. Four layers: **impossibilities** (Venus never strays 47° from the Sun, so a Sun–Venus trine cannot exist and must never be reported), **periodicities** (12–13 lunations a year; each outer planet opposes the Sun exactly once; Mercury retrogrades 3–4 times), **almanac facts** (the Great Conjunction of 21 Dec 2020; the Great American Eclipses of 2017 and 2024), and **cross-engine agreement** — the most valuable layer, where two independent code paths must agree and the other path is the oracle (every eclipse must fall on a syzygy; every station where speed crosses zero; every ingress on a 30° boundary). It found four real bugs within an hour of existing, three of them in tables that had been quietly wrong for months.
-- **`stellium.presentation.typst_runtime`** — the shared Typst runtime: `theme_dir()`, `font_paths()`, `THEMES`/`THEME_WHEEL`, `validate_theme()`, `compile_pdf()`, `materialize_svgs()` and a `TypstDocument` context manager. The report, the planner and the atlas each had their own copy of the temp-dir/copy-design-system/compile dance and their own answer for *where the fonts are* — and two of the three answers were wrong. Now there is one. (The planner was also importing `typst_render._font_paths` and `_theme_dir` across a package boundary: code that *said* "shared infrastructure" while *spelling* it "private".)
+**Internals**
+
+- **`TransitHit` and `find_natal_transits()`** — one structured transit primitive shared by the daily lines and the year summary.
+- **`ECLIPTIC_ASPECT_REGISTRY` and `DECLINATION_ASPECT_REGISTRY`** — derived views over `ASPECT_REGISTRY`. Declination aspects sit at 0°/180° by analogy, so **angle is not a unique key across the whole registry**; anything keying on angle should build over `ECLIPTIC_ASPECT_REGISTRY`, where it is.
+- **`stellium.presentation.typst_runtime`** — one Typst runtime (`theme_dir()`, `font_paths()`, `THEMES`, `validate_theme()`, `compile_pdf()`, `materialize_svgs()`, `TypstDocument`) shared by the report, planner and atlas.
+- **A ground-truth test suite** (`tests/test_astronomical_ground_truth.py`) — checks the engines against published values rather than against themselves. **Asteroid identity is pinned to NASA JPL Horizons**: Swiss Ephemeris returns a *different* asteroid's position for a wrong id without complaint, so all 16 numbered bodies are verified against Horizons (worst disagreement: 2 arcseconds).
 
 ### Changed
 
-- **`HouseSystemEngine.calculate_house_data()` now declares its `config` argument.** The Protocol took `(datetime, location)` while `ChartBuilder` called it with `(datetime, location, config)` — so a custom house system written against the *documented* interface raised `TypeError`. If you have one, it already needed the third argument; it is now in the Protocol.
-
-- **The planner cookbook's recipes render one quarter** rather than a full year, so the documentation can execute all of them. Swap `.date_range(...)` for `.year(2025)` for the full twelve months; nothing else changes.
-
-- **The planner is rebuilt on the Typst design system, and its front matter is redesigned** — `PlannerBuilder(...).generate()` now serialises the planner to a JSON contract that the bundled design system renders, replacing a renderer that built ~1,100 lines of Typst markup as Python f-strings around a hardcoded purple palette. The planner gains all five themes (`.theme("house" | "sepia" | "celestial" | "blues" | "greyscale")`), the shared glyph/component vocabulary, and the bundled font stack. Chart wheels are now drawn stripped (no header, info box, or moon-phase corner) and transparent, and theme-coordinated, so they composite onto the page instead of sitting in a hardcoded gold frame.
-
-  The front matter was **redesigned, not ported**. A natal report is a *portrait* — read once, about who you are. A planner is an *instrument* — consulted daily, for a year, with a pen in hand. Its front matter is therefore a **reference section**, ordered "this year → your chart → how to read it", answering the questions the daily pages actually provoke:
-
-  - **The Year at a Glance** (new) — Lord of the Year and the profection, the solar return, the active releasing period, **eclipses placed in *your* houses**, the retrograde windows (with any that straddle a year boundary flagged rather than truncated), and the slow transits that shape the year. Every one of these was already computable; none of it had ever been gathered onto a page.
-  - **A year overview** (new) — twelve mini-months with eclipse and station days marked, so the shape of the year is legible without reading a word.
-  - **Your natal chart as a lookup, not a portrait** — the placements table now leads (the wheel follows on its own page), because a daily line reading `Moon □ natal Mercury` sends you here to find out *where natal Mercury is*.
-  - **The progressed Moon** — replaces the decorative progressed wheel (nothing on the daily pages ever cited one) with what a planner can use: its dated exact aspects to your natal planets. Under secondary progression the Moon covers only ~13° in a year, so it changes sign at most once — the aspects are the payload.
-  - **Zodiacal releasing scoped to the year**, not the lifetime.
-  - **A glyph legend** (new) — the daily pages are dense 5.5pt glyph shorthand, and were effectively unreadable without a key. A report spells things out in prose and never needs one; a planner must have one.
-
-  The front matter is curated **on** by default (a planner should be useful out of the box); drop any page with the matching `.without_*()` call — `.without_natal_chart()`, `.without_progressed_chart()`, `.without_solar_return()`, `.without_profections()`, `.without_zr_timeline()`, `.without_graphic_ephemeris()`.
-
-- **Planner glyphs are derived from the registries** — `planner/events.py` carried its own three hardcoded glyph dicts (a fourth copy alongside `CELESTIAL_REGISTRY`, `ASPECT_REGISTRY` and the design system's `glyphs.typ`). They are now derived, so there is a single source of truth: coverage goes from 12 hardcoded bodies to 49 (an asteroid or a lot previously fell through and rendered as a bare letter) and from 5 aspects to 17.
-
-- **The documentation no longer recommends caching the ephemeris.** `CLAUDE.md`, the architecture docs and the performance notes all advertised `@cached(cache_type="ephemeris")` as a "20× faster" optimisation and told contributors to reach for it. It was never measured, and it was 13× *slower* (see 0.21.1). Those claims are gone, and the guidance now says what is actually true: `swe.calc_ut` is microseconds, a pickle round-trip is not, and caching is for the network calls. PNG export is surfaced in the README and `examples/chart_cookbook.py`.
+- **`HouseSystemEngine.calculate_house_data()` now declares its `config` argument.** The Protocol took `(datetime, location)` while `ChartBuilder` called it with `(datetime, location, config)`, so a custom house system written against the documented interface raised `TypeError`. If you have one, it already needed the third argument.
+- **The planner is rebuilt on the Typst design system.** `PlannerBuilder(...).generate()` now serialises to a JSON contract that the bundled design system renders, replacing ~1,100 lines of Typst markup built as Python f-strings around a hardcoded palette. It gains all five themes (`.theme("house" | "sepia" | "celestial" | "blues" | "greyscale")`), the shared glyph vocabulary, and the bundled fonts.
+- **The planner's front matter is redesigned** for an instrument you consult rather than a report you read once: **Year at a Glance** (Lord of the Year, solar return, eclipses placed in *your* houses, retrograde windows), a **year overview**, the natal chart as a **lookup table** (wheel follows), the **progressed Moon's dated aspects** in place of a decorative progressed wheel, **releasing scoped to the year**, and a **glyph legend** for the 5.5pt daily shorthand. Curated on by default; drop any page with the matching `.without_*()`.
+- **Planner glyphs are derived from the registries** rather than three hardcoded dicts — coverage goes from 12 bodies to 49 and from 5 aspects to 17.
+- **The planner cookbook's recipes render one quarter** so the docs can execute them. Swap `.date_range(...)` for `.year(2025)` for twelve months.
+- **The documentation no longer recommends caching the ephemeris.** Chart calculation is not disk-cached; `@cached` remains only on geocoding, which is a network call.
 
 ### Fixed
 
-- **API docs rendered lists as block quotes.** Around 250 bullet lists in library docstrings were missing the blank line RST requires, so they rendered as indented paragraphs with the bullets stripped and the lead-in sentence run into the first item. `Example:` blocks holding plain Python were parsed as prose (a line like `name="Midpoint:Sun/Moon",` became a definition list). Both are fixed; the docs now build with zero warnings.
+**Wrong results**
 
-- **README counts.** "23+ house systems" — there are **17**; "13 themes" — there are **14**. `docs/options_list.md` claimed 37 celestial objects (there are 83) and 26 aspect types (19). The docs now resolve these from the registries; the README's are pinned by a test.
-
-- **The same chart, calculated twice, was not the same chart** *(output ordering change)*. `chart.positions` came out in a **different order on every run** — and everything downstream inherited it, because the aspect engines feed `positions` straight into `combinations()`. So `chart.aspects` was reordered too, and with it every report, aspectarian, and exported JSON. Two people running byte-identical code got documents that listed their planets and aspects differently; so did the same person, twice.
-
-  ```
-  run 1:  Moon Trine Venus       Moon Square MC        Chiron Conjunction Neptune
-  run 2:  Neptune Square Node    Neptune Conj Chiron   Neptune Trine Uranus
-  run 3:  Saturn Sextile Node    Saturn Conj Mercury   Saturn Trine South Node
-  ```
-
-  Three separate places deduplicated with a **set** and then called `list()` on it — a correct dedupe followed by an arbitrary order: `ChartBuilder._get_objects_list()`, and the Grand Cross and Mystic Rectangle finders in `AspectPatternAnalyzer` (whose set literals meant a pattern reported *its own planets* in a different order each run). All three now use `dict.fromkeys()`, which dedupes and keeps the order the caller asked for — so `positions` finally comes out as Sun, Moon, Mercury… as configured, rather than however the hash table felt.
-
-  It was invisible because it is **arbitrary per process**, not per call: Python randomizes string hashing at interpreter start, and `CelestialPosition` is a frozen dataclass hashing off its string fields. Within one process the order is stable, so every existing test passed, and building two charts in one test and comparing them proved nothing. The new `tests/test_determinism.py` therefore spawns **real subprocesses with differing `PYTHONHASHSEED`** and pins a maximal chart's entire `to_dict()` across them — the general lesson being that a nondeterminism test which does not cross a process boundary is testing the seed, not the code.
-
-- **Charts before standard time used the wrong Local Mean Time — the zone's, not the birthplace's** *(chart output change for any birth before standard time reached its location; 64 of the 211 dated notables)*. Before standard time, the clock on the wall showed **Local Mean Time**: noon was when the Sun crossed *your* meridian, so the offset from UT was a function of your longitude and nothing else. Britain adopted standard time in 1880, the United States in 1883, Germany in 1893.
-
-  IANA models that period as an `LMT` offset and pytz hands it over quite happily — but it is the LMT of the **zone's reference city**, not of the birthplace. William Lilly was born at Diseworth (1°16′W), whose LMT is **−5m04s** from UT; `Europe/London`'s LMT is −1m. Four minutes of clock is about a degree of Ascendant, and in Lilly's case it decided his **rising sign**:
+- **`find_aspect_exact` / `find_all_aspect_exacts` searched for a conjunction when asked for an opposition.** Every exactitude search for an opposition — including through `ElectionalSearch` — returned the wrong moment.
+- **`ReturnBuilder.solar(natal, year=N)` returned the year N−1 return** for anyone born in the second half of the year: it searched from 1 January instead of from the birthday.
+- **Three values in the traditional dignity tables were wrong**, silently corrupting dignity scores, almuten, sect and length-of-life:
+  1. The **Water triplicity had its day/night rulers swapped** (was day=Mars, night=Venus; Dorotheus gives day=Venus, night=Mars).
+  2. **Pisces' traditional fall was `"Ceres"`** — an asteroid, in the traditional table. It is Mercury.
+  3. **Mars' exaltation degree was 27° Capricorn.** It is 28°.
+- **The ecliptic aspect engines miscomputed declination aspects.** Parallel and Contraparallel sit at 0°/180° by analogy, so an ecliptic engine measured them against longitude, which cannot express a declination aspect.
+- **Charts before standard time used the wrong Local Mean Time** — the *zone's*, not the birthplace's. IANA models the pre-standard era as an `LMT` offset, but it is the LMT of the zone's reference city. For William Lilly (Diseworth, −5m04s; `Europe/London` is −1m):
 
   | | Ascendant |
   |---|---|
   | AstroDatabank publishes | **2°04′ Pisces** |
-  | LMT from his longitude (now) | 2°03.6′ Pisces |
-  | LMT from the IANA zone (before) | 29°47′ **Aquarius** |
+  | Now | 2°03.6′ Pisces |
+  | Before | 29°47′ **Aquarius** |
 
-  The zone is still what *detects* the pre-standard era — adoption was staggered by country, so there is no cutoff year to hardcode, and IANA knows the real date for every zone and names the period `LMT`. But the offset now comes from the birth longitude, which is what actually set the clock. This is what AstroDatabank and astrological practice both do, and with it Lilly's Sun, Moon **and** Ascendant all reproduce ADB to under an arcminute. A pre-standard birth with no longitude available now raises `TimeZoneWarning` rather than silently using the zone's.
+  Affects **64 of 211 notables** and any `Native` built from a pre-standardisation birth.
+- **Eight notables had the wrong birthday, by up to ten days.** Historical records are cited in the Julian calendar; some had been converted by whoever entered them and some had not, with no field saying which. Records now store the date their sources give and declare `calendar: julian | gregorian`, which `Notable` converts at load. Leonardo da Vinci was also off by a day. `tests/test_notables_data.py` now holds every record's chart to its own `astrological_notes`.
+- **`DIGNITIES` recorded "no lord" as the literal string `"None"`**, so Leo, Scorpio and Aquarius appeared to have an exaltation lord named *None*.
 
-  The blast radius is real and worth naming: Einstein's Mars moves across a house cusp (Ulm is 9°59′E while `Europe/Berlin`'s LMT is Berlin's, 13°24′E — 3.4° of longitude, ~13½ minutes of clock), which changes his length-of-life from *mean* to *greater* years. Modern charts are untouched.
+**Output ordering** *(same data, different order)*
 
-- **Eight notables had the wrong birthday, by up to ten days** *(chart output change for those natives)*. Historical records are cited in the calendar of their day, and usually do not say so. William Lilly's birth is "1 May 1602" in Gadbury, in Lilly's own letter to Ashmole, and in AstroDatabank — and all three mean the **Julian** 1 May. Stored as `1602-05-01` and handed to Swiss Ephemeris as a Gregorian date, it computed a chart ten days early: Lilly's Sun came out at **10° Taurus instead of 19°**, and his Moon landed in **Virgo instead of Capricorn**. Not a rounding error — a different chart. Nothing raised.
+- **The same chart, calculated twice, was not the same chart.** Three places deduplicated with a `set` and then called `list()` on it — a correct dedupe followed by an arbitrary order. Because Python randomizes string hashing at interpreter start, the order changed on every run.
+- **Report rows came out in a different order on Linux than on macOS.** Aspects were sorted on a raw float orb, so two aspects that are mathematically the same angle (the nodes are exactly 180° apart) ordered by whichever last bit was larger. Sorting now quantizes the orb and breaks ties by name.
 
-  And it was not uniformly wrong, which is worse: Newton and Catherine the Great had been converted by whoever entered them, Lilly, Kepler, Galileo, Copernicus, Michelangelo, Nostradamus and Rumi had not, and **no field recorded which** — so you could not tell by looking, and neither could the library.
+**Glyphs and fonts**
 
-  Records now store **the date their sources give** and declare the calendar it is in (`calendar: julian | gregorian`), which `Notable` converts at load via Swiss Ephemeris's own `julday`/`revjul` (new `utils.time.julian_to_gregorian` / `to_gregorian`, also usable directly). Storing the *converted* date instead would leave every record disagreeing with the citations in its own `sources:` list — ADB shows both, and so do we. Three traps this avoids: the offset is **not** a constant ten days (9 in the 1400s, 7 in the 1200s); the conversion can roll the **year** (Kepler's 27 Dec **1571** is 6 Jan **1572**); and adoption was staggered by country (Catholic Europe 1582, Britain 1752, Russia 1918), so the calendar is a property of the *record*, never inferable from the year. A birth before 1753 must now declare it — a silent default is fine at 1990 and a coin flip at 1602.
+- **The hand-drawn glyph SVGs never shipped**, so 25 bodies rendered as tofu for anyone who installed from PyPI. They are now package data (`stellium/data/glyphs/`), resolved package-relative.
+- **Three bodies could never be calculated, and six had the wrong Swiss Ephemeris id.** Swiss Ephemeris addresses a numbered asteroid as MPC number + 10000; the registry stored the raw MPC number. `Hygiea`, `Nessus` and `Chariklo` were skipped silently. All ids are now validated against JPL Horizons.
+- **Fixed-star glyphs were tiny, clipped, black-on-black and mostly unreachable** — the generic `★` was found first, the raw viewBoxes clipped the drawings, and the embedder themed the stroke while copying the fill through, so filled sigils stayed `#000000` on every dark theme.
+- **Three glyphs were in none of the bundled fonts** — Semisquare (U+2220), Contraparallel (U+22D5), Pholus (U+2B30). `tests/test_glyph_coverage.py` now requires every glyph to be drawable.
+- **Aspect glyphs could become declination glyphs** — an angle lookup against `ASPECT_REGISTRY` could return Parallel for a conjunction.
+- **The atlas never used its own fonts** — it walked up four directories to a path that does not exist in an installed package.
+- **Planner PDFs were not portable** — the planner passed Typst a repo-root font path that never shipped in the wheel.
 
-  **Leonardo da Vinci was also simply wrong by a day**, and the reason it survived is the useful part. His record stored 23 April 1452, and his `astrological_notes` agreed with it perfectly — because they had been *computed from our own record* rather than taken from a source. The note corroborated the error instead of catching it. His only actual source is a family diary: *"born April 15, **Saturday**, three hours into the night."* Our 23 April is a **Friday**; 15 April Old Style is 24 April Gregorian, which is a **Saturday**. Fixed, and his note is flagged for re-sourcing rather than regenerated.
+**Planner**
 
-  New `tests/test_notables_data.py` holds the database to itself: every record's computed chart must match its own `astrological_notes` (108 of them do; this is what surfaced the bug), pre-1753 births must declare a calendar, calendar values must be real (`calendar: julian_original` had shipped for months — it parses, and means nothing), and **no record may repeat a key**, because PyYAML silently keeps the last of a duplicate and two records had two `calendar:` keys. New [docs/development/NOTABLES.md](docs/development/NOTABLES.md) documents the schema, what each provenance field means (`data_quality` rates the *source*; `has_reliable_time` rates whether you may build houses from it — Lilly is Rodden **A** and `has_reliable_time: false`, because a well-attested quote of a time he probably rectified himself is exactly that), and the curation rules.
-
-- **Report rows came out in a different order on Linux than on macOS** *(output ordering change)*. The aspect table sorted with `key=lambda a: a.orb` — a raw float. Two aspects that are *mathematically the same angle* hold orbs differing only in the last bits:
-
-  ```
-  Neptune Square True Node     5.1401672080752405
-  Neptune Square South Node    5.140167208075212
-  ```
-
-  The nodes are exactly 180° apart, so those are the same number; which one sorts first depends on the platform's libm. Both print as `5.14°`, so there was no visible rounding difference to notice — just two rows that quietly swapped places depending on the machine. The new `get_orb_sort_key()` quantizes at 1e-9° and then breaks ties by name (quantizing alone is not enough — a true value can straddle the boundary and round two ways; the names make the order *total*). **No value changes anywhere:** `aspect.orb` keeps every digit in the chart, in `to_dict()`, and on the page — the rounding lives inside the comparison key and dies with it. 1e-9° is ~3.6 microarcseconds, and Swiss Ephemeris resolves about 0.001″, so the discarded bits are roughly a million times finer than the ephemeris can see. Applied to all five orb sorts, including the planner's transit contacts, which would otherwise have shuffled a planner's daily lines between machines. Caught by the new doc snapshots: generated on macOS, validated on Ubuntu.
-
-- **The test suite's mock geocoder was charting the wrong places, and silently charting the ocean for anywhere it didn't know** *(test fixture; no library change)*. Not user-facing, but it means a large part of the suite has been validating against coordinates nobody ever gets.
-
-  `conftest.GEOCODED_LOCATIONS` exists so CI need not call Nominatim. Its coordinates were **hand-written from general knowledge, not captured from the geocoder they stand in for** — `37.7749, -122.4194` for San Francisco, `40.7128, -74.0060` for New York: the familiar textbook values. **Nine of the ten disagreed with what Nominatim actually returns**, and Tokyo was off by 0.11° of longitude — about **10 km**, which is a real shift in the MC and every house cusp with it.
-
-  Worse, the fallback for any location *not* in the list returned `(0.0, 0.0, "UTC")` — **Null Island, a point in the Gulf of Guinea** — under the comment *"prevents test failure"*. It did prevent them: **53 tests** were computing charts for the wrong hemisphere in the wrong timezone, and passing. A fixture whose purpose is to stop tests failing also stops them telling you anything.
-
-  The table is now **captured from the real `_cached_geocode` at full precision** (a script, not a memory), the six places that were silently landing in the Atlantic are added (Boston, Chicago, Mountain View, New Haven, Lima, Portland), and the fallback **raises** instead of inventing a location. It found one more on its first run: the README's atlas example builds a chart for `"Portland, OR"`, which had been Null Island all along.
-
-  Two things worth knowing that fell out of this: Nominatim is **not** nondeterministic — it returns the same answer every time, and an earlier draft of this entry wrongly said otherwise. And it returns names in the **local language** unless asked otherwise (`'東京都, 日本'`, `'Ulm, Baden-Württemberg, Deutschland'`), because Stellium never sets an `Accept-Language`; whether `location.name` should be localized is a real decision nobody has made.
-
-- **Three values in the traditional dignity tables were simply wrong** *(dignity output change)*. They do not crash; they silently corrupt dignity scoring, and feed onward into almuten, sect analysis, length-of-life and the planner's Chart Analysis page. Found by testing the tables against the sources they claim to follow.
-  1. **The Water triplicity had its day and night rulers swapped.** Ours read day=Mars, night=Venus. Dorotheus gives Water as **day=Venus, night=Mars**, participating=Moon. Fire, Earth and Air all matched Dorotheus *exactly* — so the table was plainly meant to be Dorothean, and Water alone was reversed. It was neither Dorothean nor Ptolemaic (Ptolemy and Lilly give Mars for both). Affects every chart with a planet in Cancer, Scorpio or Pisces.
-  2. **Pisces' traditional fall was `"Ceres"`** — an asteroid, in the *traditional* table. Mercury is exalted in Virgo, so Mercury falls in Pisces.
-  3. **Mars' exaltation degree was 27° Capricorn.** It is 28°. The other six exaltation degrees were all correct, so this was a lone off-by-one.
-
-- **`ReturnBuilder.solar(natal, year=N)` returned the year *N−1* solar return for anyone born in the second half of the year.** It searched from **1 January** of year N, and the underlying `find_return_near_date()` returns the nearest crossing in *either* direction — so for a July birthday, the return nearest 1 January 2026 is the one in **July 2025**, 169 days back, rather than July 2026, 196 days forward. Every native born July–December was silently handed the wrong solar return chart, in a public API, and the planner's front matter inherited it. The search now starts from the birthday's anniversary in the requested year (leap-day births fall back to 28 February), where the return always falls within a day. It survived because every fixture in `tests/test_returns.py` has a first-half birthday (Einstein 14 March, Kate 6 January) and the tests asserted the return's *month* but never its *year* — so only the half that worked was ever exercised. The regression test now sweeps all twelve birth months.
-- **A planner that was not a year still called itself one.** The front matter hardcoded "The Year at a Glance", "The Year", "The Year's Transits", "The Year's Charts" and a `"%B %Y – %B %Y"` descriptor, so a one-month planner announced itself as **"March 2026 – March 2026"**. Titles are now derived from the actual span (`_period_label` / `_span_descriptor` / `_span_noun`): a March planner reads "March 2026 at a Glance / 1 – 31 March 2026", while a Sep→Aug planner is still correctly *a year* (the noun goes by length, not by whether the range sits inside one calendar year). The calendar page also drew the empty cells of a ragged final row as bordered boxes — a one-month planner was one month beside two empty holes — because the mini-month grid took its border from the enclosing table; each month now carries its own border and the grid is strokeless.
-- **Oppositions were never findable — `find_aspect_exact` / `find_all_aspect_exacts` silently searched for a conjunction instead.** The exactitude search folded the requested angle with `aspect_angle % 180`, and **`180 % 180 == 0`**, so every opposition search became a conjunction search: it found the conjunction and returned it under the opposition's name. That is how the planner came to report *"Sun opposition Venus"* — an aspect Venus physically cannot make, since it never strays ~47° from the Sun — at a true separation of 0.00°. Two further bugs compounded it: even with the angle intact, nothing could **bracket** an opposition (separation is a folded 0–180 quantity, so at both ends of that range the error only *touches* zero rather than crossing it, and only the conjunction half of that case had extremum detection); and refinement used Newton–Raphson, which cannot converge on a folded separation because its derivative flips where it folds — and on failure the code **returned its last guess as though it were the answer**. Now the refinement method matches the shape of the problem: conjunctions and oppositions are extrema and refine by ternary search, every other aspect is a genuine sign change with a bracket already in hand and refines by bisection (which is guaranteed to converge), and a final sanity check returns `None` rather than a confident wrong answer. The effect is not a rounding difference — *Sun opposition Jupiter*: never found → found at 0.000000°; *new and full Moons*: never found → 12 and 13 a year at 0.000000°; *Moon trine Jupiter*: **0 a year** → 26 a year; *Mars square Saturn*: 0.11° error → 0.00003°; *Sun opposition Venus*: 2 a year → 0, as physics requires.
-- **The ecliptic aspect engines silently miscomputed declination aspects.** Parallel and Contraparallel sit in `ASPECT_REGISTRY` at 0° and 180° purely by analogy with Conjunction and Opposition, and `ModernAspectEngine` (and its sibling) take an aspect *name* from config, look up that angle, and compare it against **ecliptic longitude** — so configuring `"Parallel"` made the engine measure the wrong thing entirely, reporting an *opposition* as a contraparallel. A parallel is a relationship between declinations and cannot be derived from longitude at all. Both engines now refuse declination aspects with a `ConfigurationWarning` pointing at `with_declination_aspects()`, instead of fabricating them.
-- **`DIGNITIES` recorded "no lord" as the literal string `"None"`.** Leo, Scorpio and Aquarius have no traditional exaltation lord, and Leo, Taurus and Aquarius have no fall — but the table stored that as `"None"`, a *truthy* string that prints as though it were a planet (the planner's new Chart Analysis page duly rendered "Exalt: None"). The same dicts already used a real `None` for `exaltation_degree`, so this was an inconsistency rather than a convention. Existing scorers were unaffected only by luck — they compare `== position.name` and no planet is named "None", and `almuten.award()` guards with `if planet in scores`.
-- **`TraditionalDignityCalculator.calculate_dignities()` emitted `receiption_potential`** — misspelled, while the docstring, the local variable and `_check_reception_potential()` all say "reception", so anyone following the documentation got nothing back. The correctly-spelled key is now emitted, with the typo kept as an alias so existing callers keep working.
-- **`PlannerConfig.location` was ignored.** It existed, had a builder method, and did nothing: `ReturnBuilder.solar()` has always accepted a location override, but the planner never passed it. `.location()` now relocates the solar return and prints "All times local to …" on the title page — a planner is used where you live, not where you were born.
-- **A planner that was not a calendar year lied about itself.** The title page, running head, footer and year overview all hardcoded `start.year`, so a September→August planner called itself "2026".
-- **`.without_natal_chart()` only dropped the wheel**, leaving the placements table behind. It now drops the whole natal reference, which is what it says.
-- **Planner PDFs were not portable** — the planner passed Typst a repo-root `assets/fonts/` path that never shipped in the wheel, so a `pip install`ed planner silently fell back to host fonts and tofu'd the astrology glyphs. It now uses the packaged font bundle, like the report.
-- **Aspect glyphs could silently become declination glyphs** — `ASPECT_REGISTRY` contains Parallel (0°) and Contraparallel (180°) alongside Conjunction (0°) and Opposition (180°), so keying glyphs by angle let a declination aspect overwrite a Ptolemaic one (☌ → ∥). Angle-keyed maps are now built over the new `ECLIPTIC_ASPECT_REGISTRY` view, where angle is a unique key, and `ASPECT_GLYPHS_BY_NAME` is available as the unambiguous key when you have a name.
+- **`PlannerConfig.location` was ignored.** It existed, had a builder method, and did nothing.
+- **`.without_natal_chart()` only dropped the wheel**, leaving the placements table.
+- **A planner that was not a calendar year still called itself one** — title, running head, footer and overview all hardcoded `start.year`.
 - **The planner built its natal chart three times** per run; it now builds it once.
-- **`examples/planner_cookbook.py`'s `minimal_planner()` was not minimal** — it claimed to disable the front matter "by not calling `with_*` methods", but those default to on, so it had been quietly generating the *full* front matter. It now opts out explicitly.
+- **`TraditionalDignityCalculator.calculate_dignities()` emitted `receiption_potential`** (misspelled) while everything else read `reception_potential`.
 
-- **The atlas has never used its own fonts.** `AtlasRenderer._get_font_dirs()` walked up four directories from its own file to reach `assets/fonts` — but the atlas lives one level deeper than the planner it was copied from, so it landed on `src/assets/fonts`, **a path that has never existed in any environment**. Typst does not error on a missing font directory; it silently substitutes whatever the host has. So every atlas ever generated was typeset in fallback faces, and the astrology glyphs depended on the host happening to have a symbol font. It now uses the packaged font bundle via the shared runtime, and asks for faces the package actually ships (it was naming "Crimson Pro" and "Cinzel Decorative", neither of which is bundled).
+**Documentation**
 
-- **Fixed-star glyphs were tiny, clipped, black-on-black, and mostly unreachable.** Three independent bugs, none of which raised anything.
-  1. **Unreachable.** A fixed star lives in *both* registries: `CELESTIAL_REGISTRY` carries a generic `★`, `FIXED_STARS_REGISTRY` carries the real hand-drawn sigil — and `get_glyph()` consulted only the former. So eight drawn star glyphs could never be reached and every star rendered as the same anonymous `★`. Algol worked purely by accident, because its celestial entry happened to name the same file.
-  2. **Tiny and clipped.** `embed_svg_glyph()` nests a glyph in a *square* box using the file's own viewBox. The star SVGs were raw Inkscape exports with a **2:1 landscape viewBox**, so `preserveAspectRatio` fitted the width: they rendered at ~57% scale with their tops and bottoms cropped off. All eight renormalised to a square viewBox tight around the true bezier bounds — 1.1× to 3.1× larger, and no longer cut.
-  3. **Black on black.** Two drawing conventions live in the bundle — bodies are `fill:none` + stroked outlines, stars are `fill:<colour>` + `stroke:none` solid shapes. The embedder themed the *stroke* and copied the file's *fill* through verbatim, so filled star glyphs stayed `#000000` whatever the theme: **invisible on every dark theme**. It now recolours whichever property the glyph actually uses, and carries `fill-rule` through (drop it and the counters fill in solid).
+- **API docs rendered lists as block quotes.** ~250 bullet lists in library docstrings were missing the blank line RST requires, so the bullets were stripped and the lead-in sentence swallowed. `Example:` blocks holding plain Python were parsed as prose.
+- **README counts.** "23+ house systems" — there are **17**. "13 themes" — there are **14**. `options_list.md` claimed 37 celestial objects (83) and 26 aspect types (19). The site now resolves these from the registries; the README's are pinned by a test.
 
-- **Three bodies could never be calculated, and six had the wrong Swiss Ephemeris id.** `CELESTIAL_REGISTRY.swiss_ephemeris_id` and `engines.ephemeris.SWISS_EPHEMERIS_IDS` both name the same bodies and are both read at runtime — and they disagreed.
-  - Swiss Ephemeris addresses a numbered asteroid as **MPC number + `AST_OFFSET` (10000)**. The registry stored the *raw MPC number* in a field called `swiss_ephemeris_id`, and `utils/planetary_crossing.py` reads it — so `ReturnBuilder.planetary(natal, "Eris")` asked swisseph for id `136199`, which resolves to `s126199s.se1`: **a different asteroid**. It failed with a misleading "file not found", and anyone who happened to own that other rock's file would have silently got the wrong body.
-  - `calculate_positions()` skips any name absent from the engine's table — **silently**. `Hygiea`, `Nessus` and `Chariklo` each had a registry entry *and* a hand-drawn glyph, and were dropped from every chart that asked for them.
+**Development**
 
-  Both tables now agree, and all three bodies compute. **Every asteroid id is now validated against NASA JPL Horizons** (see *Added*).
-
-- **The hand-drawn glyph SVGs never shipped, so 25 bodies rendered as tofu for everyone who installed from PyPI.** `CELESTIAL_REGISTRY` referenced them as the *relative* path `"assets/glyphs/pholus.svg"`, resolved against the repository root — a directory that is not in the wheel. `visualization.core.get_glyph()` then fell back to the Unicode glyph **silently**. The SVGs exist precisely *because* those codepoints are inadequate, so the fallback was a visible failure dressed as graceful degradation: Pholus is U+2B30, present in **no font on any platform**; Eris rendered as a tofu box; and Sedna's fallback was the literal string **`"Sed"`** — the first three letters of its own name. It looked perfect for us, because we run from the repository root.
-
-  The glyphs are now package data (`stellium/data/glyphs/`), declared in `package-data`, and resolved package-relative by `data.paths.find_glyph_svg()` — never against the repo root, and never against the working directory. A glyph that cannot be found now raises `MissingGlyphWarning` rather than degrading in silence.
-
-- **Three glyphs were in none of the bundled fonts**: Semisquare (U+2220), Contraparallel (U+22D5) and Pholus (U+2B30) — so they were tofu in the PDF too, not just the SVG. Adds **Noto Sans Math, subsetted to the 11 codepoints Stellium's registries actually emit (8 KB, not 967 KB)**. The OFL permits this — the font declares no Reserved Font Name, and the copyright and licence notices are retained in its name table — and `LICENSE-FONTS.txt` records it. Typst's symbol-font fallback now includes it.
-
-  `tests/test_glyph_coverage.py` is the guard: **every glyph must be drawable** — either a bundled SVG, or a codepoint that a bundled font actually contains. Nothing in the rendering stack reports otherwise; fonts, SVG readers and Typst all substitute silently, so a missing glyph is never an error anywhere — just a chart that looks wrong to the person holding it.
+- **The test suite rewrote committed example artifacts.** A cookbook resolves its output directory from `__file__`, so running one wrote into `examples/` regardless of the working directory. Cookbooks now honour `STELLIUM_EXAMPLE_OUTPUT`; the suite points it at a temp directory.
+- **The test suite's mock geocoder charted the wrong places**, and returned `(0.0, 0.0, "UTC")` — the Gulf of Guinea — for anywhere it did not know. Coordinates are now captured from the real geocoder, and an unknown location raises. *(Test fixture; no library behaviour depended on it.)*
 
 ### Removed
 
-- **`presentation/renderers.py::TypstRenderer` and `presentation/templates/astro_report.typ`** — two dead generations of the PDF renderer, 752 lines in total. `TypstRenderer` was unreachable (exported from no `__init__`, imported by nothing, tested by nothing): it built Typst *source* as Python f-strings around a hardcoded purple palette, which is precisely what the data-driven design system replaced. `astro_report.typ` was deader still — `TypstRenderer` inlines all its own Typst and never read it; the template belongs to a generation *before* that one. Neither was part of the public API.
+- **`presentation/renderers.py::TypstRenderer` and `presentation/templates/astro_report.typ`** — two dead generations of the PDF renderer, 752 lines.
 
 ## [0.21.1] - 2026-07-12
 
