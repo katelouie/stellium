@@ -211,6 +211,30 @@ What the library warns about, and how to make it tell you more.
 
 ::::
 
+## From the command line
+
+A CLI ships with the package, for quick charts and for managing ephemeris data — no
+script needed.
+
+```{code-block} bash
+:caption: shell
+
+# draw a chart straight from the notables database
+stellium chart from-registry "Albert Einstein" -o einstein.svg
+
+# ...or print it to the terminal instead
+stellium chart from-registry "Carl Jung" --format terminal --house-system "Whole Sign"
+
+# ephemeris data, and where everything lives
+stellium ephemeris download --years 1000-3000
+stellium ephemeris list
+stellium cache info
+```
+
+`stellium cache info` is the one to reach for when something is not where you expect:
+it prints the resolved cache and ephemeris directories and which environment variable,
+if any, set them.
+
 ## Data & integration
 
 ::::{container} st-grid
@@ -228,7 +252,31 @@ every number on that page was computed by the commit you are reading.
 Import natives from CSV and AAF; export charts to JSON and to LLM prompt text.
 :::
 
+:::{container} st-cbcard
+[Notable datasets](api/data.md)
+
+{{ n_notables }} charts, plus **{{ n_life_events }} taxonomy-tagged life events** for
+{{ n_notables_with_events }} of them — `get_notable_life_events()`.
+:::
+
+:::{container} st-cbcard
+[Exceptions & warnings](api/exceptions.md)
+
+Escalate the whole `StelliumWarning` family in one line, so a data problem cannot
+pass silently through a pipeline.
+:::
+
 ::::
+
+:::{container} st-callout
+[Honest]{.st-callout-label}
+
+**The biography data is interpretive, and the library says so.** Life events are
+provenance-graded, but temperament descriptors are distilled from biographies rather
+than measured — so reading them raises a `DataQualityWarning` rather than handing you
+a number that looks as solid as a planet's longitude. Treat them as a research
+convenience, not as ground truth.
+:::
 
 ## Understand the internals
 

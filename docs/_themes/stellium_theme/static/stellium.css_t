@@ -892,3 +892,28 @@ a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(-
   letter-spacing:1.2px; text-transform:uppercase; color:#8f8ca8;
 }
 .st-output .highlight{border:0; border-radius:0; margin:0;}
+
+/* ---- labelled callout ----
+   A panel with a mono eyebrow that names what *kind* of statement it is — HONEST for
+   a limitation we are volunteering, DEEPER for a pointer past the edge of the page.
+   The label is the first line of the container in the Markdown:
+
+     :::{container} st-callout
+     [Honest]{.st-callout-label}
+     **Unknown birth time?** …
+     :::
+*/
+.st-callout{
+  border:1px solid var(--border); border-left:3px solid var(--accent);
+  border-radius:12px; background:var(--bg-soft);
+  padding:18px 20px; margin:22px 0;
+}
+.st-callout-label{
+  display:block; margin-bottom:8px;
+  font-family:'IBM Plex Mono',monospace; font-size:10px;
+  letter-spacing:1.4px; text-transform:uppercase; color:var(--accent);
+}
+.st-callout > p{margin:0 0 10px; font-size:14.5px; line-height:1.62; color:var(--fg-muted);}
+.st-callout > p:last-child{margin-bottom:0;}
+.st-callout-gold{border-left-color:var(--gold); background:var(--gold-soft);}
+.st-callout-gold .st-callout-label{color:var(--gold);}

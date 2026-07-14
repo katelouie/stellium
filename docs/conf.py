@@ -239,6 +239,22 @@ def _site_stats() -> dict:
         "n_notables": len(get_notable_registry().get_all()),
         "n_notable_births": len(get_notable_registry().get_births()),
     }
+
+    # The biography dataset — life events and temperament, both interpretive and both
+    # graded for provenance. Counted, not quoted.
+    import warnings
+
+    from stellium.data.biography import get_notable_life_events
+    from stellium.exceptions import DataQualityWarning
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore", DataQualityWarning)
+        events = [
+            get_notable_life_events(n.name) or []
+            for n in get_notable_registry().get_all()
+        ]
+    subs["n_life_events"] = sum(len(e) for e in events)
+    subs["n_notables_with_events"] = sum(1 for e in events if e)
     # Per-cookbook recipe counts, e.g. {{ cb_electional }} -> 43. The home page picks
     # *which* cookbooks to feature; the build supplies how many recipes each one has.
     for slug, count in cookbooks["by_slug"].items():

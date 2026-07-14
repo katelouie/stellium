@@ -257,13 +257,19 @@ chart.draw("frida.svg").with_theme("celestial").save()
 
 ## Unknown birth time
 
-:::{container} st-panel st-panel-gold
-Stellium recovers **sect** — whether the chart is a day chart or a night chart — and
-stops there. It will not invent a minute-level birth time, because that is an
-ill-posed problem: many times fit the evidence equally well, and a method that
-returns one of them anyway is hiding the problem rather than solving it.
+:::{container} st-callout st-callout-gold
+[Honest]{.st-callout-label}
 
-[Read the layer that survives →](astrology/RECTIFICATION.md){.st-btn .st-btn-gold}
+**Stellium reads the layer that survives.** A human-in-the-loop *compare-hypothesis*
+workbench recovers **sect** — whether the chart is a day or a night chart — at around
+70%, cross-validated. It stops there, and it will not invent a minute-level birth
+time, because that is an ill-posed problem: many times fit the evidence equally well,
+and a method that returns one of them anyway is hiding the problem rather than solving
+it.
+
+Sect is worth recovering on its own. It moves the rulership of the whole chart.
+
+[Read the rectification guide →](astrology/RECTIFICATION.md){.st-btn .st-btn-gold}
 :::
 
 ---
@@ -305,8 +311,9 @@ lines and the glyphs — so a chart for a client looks the way you want it to.
 
 Turn any chart into a sectioned, client-ready document — placements, aspects,
 dignities and timing — exported to polished PDF with the fonts embedded, so it looks
-the same on someone else's machine. Start with the [Reports guide](REPORTS.md) or the
-[report cookbook](cookbooks/report.md).
+the same on someone else's machine. Reports can be rendered in other languages with
+`with_locale()` (Simplified Chinese ships in the box). Start with the
+[Reports guide](REPORTS.md) or the [report cookbook](cookbooks/report.md).
 
 ## On whose authority?
 
