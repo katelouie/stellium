@@ -198,8 +198,14 @@ def _build_cookbook_pages() -> None:
     import sys
     from pathlib import Path
 
-    script = Path(__file__).parent.parent / "scripts" / "build_cookbook_pages.py"
-    subprocess.run([sys.executable, str(script)], check=True)
+    scripts = Path(__file__).parent.parent / "scripts"
+    subprocess.run(
+        [sys.executable, str(scripts / "build_cookbook_pages.py")], check=True
+    )
+    # The galleries are a *view of a registry*, not a document. Enumerated, not authored.
+    subprocess.run(
+        [sys.executable, str(scripts / "build_gallery_pages.py")], check=True
+    )
 
 
 # -- Counts, taken from the library rather than typed ------------------------

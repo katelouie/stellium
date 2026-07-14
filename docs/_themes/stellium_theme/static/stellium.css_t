@@ -917,3 +917,14 @@ a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(-
 .st-callout > p:last-child{margin-bottom:0;}
 .st-callout-gold{border-left-color:var(--gold); background:var(--gold-soft);}
 .st-callout-gold .st-callout-label{color:var(--gold);}
+
+/* ---- gallery: a clickable thumbnail with a caption and a one-line note ----
+   `.st-shot` already frames a chart; the gallery adds the note under the label and
+   makes the whole tile a link. */
+.st-shot-note{
+  display:block; margin-top:2px;
+  font-size:11.5px; line-height:1.4; color:var(--fg-faint);
+}
+.st-shot a{display:block;}
+.st-shot a img{margin:0;}
+.st-strip .st-shot p{margin:0;}

@@ -31,6 +31,7 @@ from stellium.core.registry import (
     FIXED_STARS_REGISTRY,
 )
 from stellium.engines.houses import HOUSE_SYSTEM_CODES
+from stellium.visualization.themes import ChartTheme
 
 README = Path(__file__).parent.parent / "README.md"
 
@@ -46,6 +47,10 @@ CLAIMS = [
         len(ARABIC_PARTS_CATALOG),
         "floor",
     ),
+    # The gallery pages no longer state this — they are generated from ChartTheme, so
+    # they cannot be wrong. The README still says it out loud, and said "13" for as
+    # long as there have been 14.
+    (r"\*\*(\d+) themes\*\*", "themes", len(ChartTheme), "exact"),
 ]
 
 

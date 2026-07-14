@@ -64,7 +64,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
 - **Antiscia and contra-antiscia** with a dedicated report section
-- **Beautiful visualizations** with professional SVG chart rendering and 13 themes
+- **Beautiful visualizations** with professional SVG chart rendering and **14 themes**
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Localized reports** — render terminal, Markdown, HTML, and PDF reports in multiple languages (Simplified Chinese included) via `with_locale()`
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)
@@ -1279,7 +1279,7 @@ python examples/chart_cookbook.py
 
 | Gallery | Description |
 |---------|-------------|
-| **[THEME_GALLERY.md](docs/THEME_GALLERY.md)** | Visual showcase of all 13+ chart themes |
+| **[THEME_GALLERY.md](docs/THEME_GALLERY.md)** | Visual showcase of every chart theme (generated from the registry) |
 | **[PALETTE_GALLERY.md](docs/PALETTE_GALLERY.md)** | Zodiac ring color palettes with previews |
 | **[HTML overview](docs/starlight_colors.html)** | Full color story overview of all themes and palettes |
 
