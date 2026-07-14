@@ -31,6 +31,22 @@ extensions = [
     "myst_nb",
 ]
 
+# Render a Google-style `Attributes:` block as :ivar: fields inside the class body,
+# rather than as free-standing `.. attribute::` directives.
+#
+# This is not cosmetic. Nearly every result model is a frozen dataclass that documents
+# its fields in an `Attributes:` block, and autodoc's `:undoc-members:` *also* emits an
+# attribute for each field — so every one was being registered twice, from one directive:
+# 253 "duplicate object description" warnings, all of them `SomeModel.some_field`.
+napoleon_use_ivar = True
+
+# In the "on this page" rail, a method is `add_analyzer()` — not
+# `ChartBuilder.add_analyzer()`. The rail is 232px wide and the class name is the same
+# on every entry, so the prefix is the one part guaranteed to carry no information,
+# while being the part that survives truncation: thirteen consecutive links all
+# reading "ChartBuilder.a…". The parent is already the heading they sit under.
+toc_object_entries_show_parents = "hide"
+
 # MyST configuration
 myst_enable_extensions = [
     "colon_fence",  # ::: fences

@@ -45,6 +45,7 @@ Marked slow: runs in CI and the full suite, not in the TDD loop.
 
 import contextlib
 import io
+import warnings
 from pathlib import Path
 
 import pytest
@@ -63,6 +64,7 @@ DOC_FILES = [
     "docs/README.md",
     "docs/for-developers.md",
     "docs/for-astrologers.md",
+    "docs/api/exceptions.md",
     "docs/options_list.md",
     "docs/REPORTS.md",
     "docs/VISUALIZATION.md",
@@ -147,7 +149,12 @@ def test_doc_codeblock(block, doc_file, tmp_path, monkeypatch):
 
     stdout = io.StringIO()
     try:
-        with contextlib.redirect_stdout(stdout):
+        # `warnings.catch_warnings()` restores the global filter list afterwards.
+        # A documented block is entitled to show `simplefilter("error", ...)` — that
+        # is exactly how you are meant to escalate a StelliumWarning — but without
+        # this, that one line would silently re-arm every block that ran after it,
+        # in a different file, and the failure would surface nowhere near its cause.
+        with warnings.catch_warnings(), contextlib.redirect_stdout(stdout):
             exec(compile(block.code, doc_file, "exec"), {"__name__": "__main__"})
     except NameError as e:
         # A fragment that continues an earlier block (`chart` defined above, etc.).

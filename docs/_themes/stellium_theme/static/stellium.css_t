@@ -209,8 +209,18 @@ html[data-theme="dark"] .st-i-moon{display:none;}
 /* ============================ RIGHT TOC ============================ */
 .st-toc-label{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:1.6px; text-transform:uppercase; color:var(--fg-faint); margin-bottom:14px; padding-left:12px;}
 .st-toc ul{list-style:none; margin:0; padding:0;}
-.st-toc a{display:block; font-size:12.5px; color:var(--fg-muted); padding:3px 0 3px 12px; line-height:1.4;}
+/* One line per entry, elided if it does not fit.
+   On an API page this rail is the method index, and a name like
+   `ChartBuilder.add_analyzer()` has nowhere to wrap — the browser was breaking it
+   mid-identifier ("ChartBuilder.ad / d_analyzer()"), which is unreadable and, worse,
+   looks like a different method. */
+.st-toc a{
+  display:block; font-size:12.5px; color:var(--fg-muted);
+  padding:3px 0 3px 12px; line-height:1.4;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
 .st-toc a:hover{color:var(--fg);}
+.st-toc code{font-size:11.5px; background:none; border:0; padding:0; color:inherit;}
 .st-toc ul ul{padding-left:12px;}
 .st-toc > ul > li > a{color:var(--accent); box-shadow:inset 2px 0 0 var(--accent);}
 
@@ -350,14 +360,15 @@ footer a{color:var(--fg-muted);}
 /* ---------------------------------------------------------------------------
    On-this-page: headings that contain code.
 
-   Several API headings are signatures — `with_zodiac_palette(palette: str)` —
-   and at 216px wide they ran straight out of the rail. Let them break, and shrink
-   the inline code so a signature stands a chance of fitting.
+   These entries are method names — `ChartBuilder.add_analyzer()` — and at 216px
+   they do not fit. The first attempt let them break anywhere, which split them
+   *mid-identifier* ("ChartBuilder.ad / d_analyzer()"): unreadable, and it reads as
+   a different method than the one it links to. An identifier is an atom. Keep it on
+   one line and elide the tail instead — see the .st-toc rule above, which this must
+   not undo.
    --------------------------------------------------------------------------- */
-.st-toc{overflow-wrap:anywhere;}
 .st-toc code, .st-toc .literal{
-  font-size:11px; padding:0 3px; background:none; color:inherit;
-  border:0; white-space:normal;
+  font-size:11px; padding:0 3px; background:none; color:inherit; border:0;
 }
 .st-toc ul ul{margin-left:10px;}
 
