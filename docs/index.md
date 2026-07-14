@@ -17,7 +17,7 @@ chart.draw("jung.svg").preset_standard().save()
 | If you want to… | Go to |
 |---|---|
 | Install it and draw your first chart | [Overview](README.md) |
-| Do a specific thing, with runnable code | [Cookbooks](cookbooks/index.md) — **357 recipes** |
+| Do a specific thing, with runnable code | [Cookbooks](cookbooks/index.md) — **374 recipes** |
 | Understand a subsystem in depth | [Guides](VISUALIZATION.md) |
 | Look up a class or a method | [API Reference](api/index.md) |
 | See what the charts actually look like | [Theme Gallery](THEME_GALLERY.md) · [Palette Gallery](PALETTE_GALLERY.md) |
@@ -29,7 +29,7 @@ chart.draw("jung.svg").preset_standard().save()
 :caption: Start Here
 :maxdepth: 1
 
-README
+Overview <README>
 ```
 
 ```{toctree}
@@ -37,12 +37,12 @@ README
 :caption: Guides
 :maxdepth: 1
 
-VISUALIZATION
-REPORTS
-CHART_TYPES
-astrology/RECTIFICATION
-LOCATIONS
-DIAGNOSTICS
+Visualization <VISUALIZATION>
+Reports <REPORTS>
+Chart Types <CHART_TYPES>
+Rectification <astrology/RECTIFICATION>
+Locations <LOCATIONS>
+Diagnostics <DIAGNOSTICS>
 ```
 
 ```{toctree}
@@ -58,9 +58,9 @@ cookbooks/index
 :caption: Reference
 :maxdepth: 1
 
-api/index
-options_list
-api/accidental_dignity_structure
+API Reference <api/index>
+Options & Objects <options_list>
+Accidental Dignity <api/accidental_dignity_structure>
 ```
 
 ```{toctree}
@@ -68,8 +68,8 @@ api/accidental_dignity_structure
 :caption: Galleries
 :maxdepth: 1
 
-THEME_GALLERY
-PALETTE_GALLERY
+Themes <THEME_GALLERY>
+Palettes <PALETTE_GALLERY>
 ```
 
 ```{toctree}
@@ -77,7 +77,7 @@ PALETTE_GALLERY
 :caption: Contributing
 :maxdepth: 1
 
-PUBLISHING
+Publishing a Release <PUBLISHING>
 ```
 
 ## Project links
