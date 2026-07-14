@@ -10,17 +10,18 @@ It sits between three neighbours and overlaps none of them:
 
 | Doc area | Answers |
 |---|---|
-| [`docs/astrology/`](../astrology/) | *How do I use this technique as a practitioner?* (teaching) |
+| [`docs/astrology/`](../astrology/RECTIFICATION.md) | *How do I use this technique as a practitioner?* (teaching) |
 | **`docs/methodology/`** (here) | *What does Stellium implement, and from which sources?* (scholarship) |
-| [`docs/development/`](../development/) | *How is it built in the code?* (architecture) |
+| [`docs/development/`](https://github.com/katelouie/stellium/tree/main/docs/development) | *How is it built in the code?* (architecture) |
 
-Design specs in [`docs/development/specs/`](../development/specs/) capture a
+Design specs in [`docs/development/specs/`](https://github.com/katelouie/stellium/tree/main/docs/development/specs) capture a
 change *before* it's built; this doc is the durable sourcing that outlives them.
 
 **A principle throughout:** where the tradition genuinely disagrees, Stellium
 surfaces the fork as a **toggle or preset** rather than silently choosing —
-and documents which default it ships and why. The raw investigations (with
-verbatim quotes and full bibliographies) live in [`research/`](./research/).
+and documents which default it ships and why. The raw investigations (with verbatim quotes and full bibliographies) are the
+[planetary years](research/planetary-years.md), [zodiacal releasing](research/zodiacal-releasing.md)
+and [firdaria](research/firdaria.md) reports.
 
 ---
 
@@ -180,4 +181,4 @@ Primary texts and the translations/editions Stellium's implementations lean on:
   Manwaring (Delphic Oracle; the "27 lunar mansions" note), Steven Birchfield.
 
 Full per-parameter attribution, verbatim quotes, and the contested-point
-evidence are in the three reports under [`research/`](./research/).
+evidence are in the three reports under [research reports](research/planetary-years.md).

@@ -38,6 +38,14 @@ myst_enable_extensions = [
     "tasklist",  # Task lists
 ]
 
+# Generate an anchor for every heading down to h4.
+#
+# Without this MyST creates NO heading anchors, so every `[Quick Start](#quick-start)`
+# in every hand-written table of contents silently resolved to nothing — which is most
+# of the 121 broken cross-references the build was reporting. The links rendered, they
+# just went nowhere.
+myst_heading_anchors = 4
+
 # Source file suffixes
 source_suffix = {
     ".rst": "restructuredtext",
@@ -66,7 +74,33 @@ nb_execution_raise_on_error = True
 nb_merge_streams = True  # one output block per cell, not one per print()
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "archive", "planning"]
+exclude_patterns = [
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "archive",
+    "planning",
+    # docs/development/ is the contributor/agent architecture reference — read on
+    # GitHub, by people working ON Stellium, and written with GitHub-relative links
+    # (./specs/, ../development/) that Sphinx cannot resolve. Sphinx was compiling all
+    # of it anyway: 34 documents in no toctree (built, reachable from nowhere) and 19
+    # broken cross-references between them — a build compiling files it had no business
+    # compiling, not a defect in the docs.
+    #
+    # docs/methodology/ is NOT in this list, and that is deliberate. It answers "what
+    # does Stellium implement, and on whose authority?" — Valens, Firmicus, Ptolemy,
+    # Houlding; which forks the tradition genuinely disagrees on and which default we
+    # ship; which received claims are folk-etymology. For a computational astrology
+    # library that is the most trust-establishing writing in the repository, and it
+    # belongs in front of users, not behind them.
+    "development",
+    "DOCS_INDEX.md",  # an index OF the docs, for contributors; the site has a nav
+    # Superseded by docs/development/ — its own first line reads "⚠️ SUPERSEDED —
+    # do not use as an API reference." It has no business being built, let alone
+    # (as it was until today) sitting in the Reference section of the nav.
+    "ARCHITECTURE.md",
+    "images/README.md",  # a note about the image directory, addressed to us
+]
 
 
 # -- Options for HTML output -------------------------------------------------

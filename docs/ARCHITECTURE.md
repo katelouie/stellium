@@ -5,10 +5,10 @@
 > APIs (`ComparisonBuilder`, old import paths, removed functions).
 >
 > **For current architecture and API, use the maintained agent docs:**
-> - **[docs/development/](development/README.md)** — the current architecture + API reference set
-> - **[docs/development/ARCHITECTURE.md](development/ARCHITECTURE.md)** — current architecture map
-> - **[docs/DOCS_INDEX.md](DOCS_INDEX.md)** — full documentation index
-> - **[/CLAUDE.md](../CLAUDE.md)** — development hub & conventions
+> - **[docs/development/](https://github.com/katelouie/stellium/blob/main/docs/development/README.md)** — the current architecture + API reference set
+> - **[docs/development/ARCHITECTURE.md](https://github.com/katelouie/stellium/blob/main/docs/development/ARCHITECTURE.md)** — current architecture map
+> - **[docs/DOCS_INDEX.md](https://github.com/katelouie/stellium/blob/main/docs/DOCS_INDEX.md)** — full documentation index
+> - **[/CLAUDE.md](https://github.com/katelouie/stellium/blob/main/CLAUDE.md)** — development hub & conventions
 >
 > This file is retained only for its high-level *concepts* (protocols,
 > composability, immutability), which remain accurate. **Do not copy-paste its

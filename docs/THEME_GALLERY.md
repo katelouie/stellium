@@ -568,7 +568,7 @@ Try mixing and matching themes and palettes to find your perfect combination!
 
 - [Visualization Guide](VISUALIZATION.md) - Complete API documentation
 - [Palette Gallery](PALETTE_GALLERY.md) - Detailed palette showcase
-- [Main README](../README.md) - Project overview
+- [Main README](https://github.com/katelouie/stellium/blob/main/README.md) - Project overview
 
 ---
 

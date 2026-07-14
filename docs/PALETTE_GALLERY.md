@@ -791,7 +791,7 @@ chart.draw("my_palette.svg") \
 
 - [Visualization Guide](VISUALIZATION.md) - Complete API documentation
 - [Theme Gallery](THEME_GALLERY.md) - Visual showcase of all themes
-- [Main README](../README.md) - Project overview
+- [Main README](https://github.com/katelouie/stellium/blob/main/README.md) - Project overview
 
 ---
 

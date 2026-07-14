@@ -1121,7 +1121,7 @@ See the [Theme Gallery](THEME_GALLERY.md) and [Palette Gallery](PALETTE_GALLERY.
 
 ## Need More Help?
 
-- [Main README](../README.md) - Project overview and installation
+- [Main README](https://github.com/katelouie/stellium/blob/main/README.md) - Project overview and installation
 - [Theme Gallery](THEME_GALLERY.md) - Visual showcase of all themes
 - [Palette Gallery](PALETTE_GALLERY.md) - Visual showcase of all palettes
 - [GitHub Issues](https://github.com/katelouie/stellium/issues) - Report bugs or request features

@@ -1,7 +1,7 @@
 # Documentation Index
 
 A complete map of Stellium's documentation. The **hub** for development is
-[`/CLAUDE.md`](../CLAUDE.md).
+[`/CLAUDE.md`](https://github.com/katelouie/stellium/blob/main/CLAUDE.md).
 
 ## For coding agents / contributors — `docs/development/`
 
@@ -12,16 +12,16 @@ A complete map of Stellium's documentation. The **hub** for development is
 
 | Doc | Purpose | Status |
 |---|---|---|
-| [development/README.md](development/README.md) | Reading order + scope of the agent docs | Current |
-| [development/ARCHITECTURE.md](development/ARCHITECTURE.md) | Mental model, layer map, dependency rules, `.calculate()` flow | Current |
-| [development/CHART_BUILDING.md](development/CHART_BUILDING.md) | `Native`/`Notable`, `ChartBuilder`, `CalculatedChart`, config, registries | Current |
-| [development/ENGINES.md](development/ENGINES.md) | Ephemeris, houses, aspects, orbs, dignities, patterns, profections, … | Current |
-| [development/COMPONENTS_AND_ANALYSIS.md](development/COMPONENTS_AND_ANALYSIS.md) | Components, analysis/DataFrames, IO, caching, utils | Current |
-| [development/VISUALIZATION_INTERNALS.md](development/VISUALIZATION_INTERNALS.md) | SVG pipeline, coordinates, layers, themes/palettes, dial/vedic/atlas | Current |
-| [development/PRESENTATION_INTERNALS.md](development/PRESENTATION_INTERNALS.md) | `ReportBuilder`, sections, renderers | Current |
-| [development/SUBSYSTEMS.md](development/SUBSYSTEMS.md) | Multi-chart, returns, electional, planner, Chinese/BaZi, CLI | Current |
-| [development/NOTABLES.md](development/NOTABLES.md) | The notables database: schema, provenance, Old Style dates, curation rules | Current |
-| [development/EXTENDING.md](development/EXTENDING.md) | How to add engines/components/analyzers/layers/themes/sections | Current |
+| [development/README.md](https://github.com/katelouie/stellium/blob/main/docs/development/README.md) | Reading order + scope of the agent docs | Current |
+| [development/ARCHITECTURE.md](https://github.com/katelouie/stellium/blob/main/docs/development/ARCHITECTURE.md) | Mental model, layer map, dependency rules, `.calculate()` flow | Current |
+| [development/CHART_BUILDING.md](https://github.com/katelouie/stellium/blob/main/docs/development/CHART_BUILDING.md) | `Native`/`Notable`, `ChartBuilder`, `CalculatedChart`, config, registries | Current |
+| [development/ENGINES.md](https://github.com/katelouie/stellium/blob/main/docs/development/ENGINES.md) | Ephemeris, houses, aspects, orbs, dignities, patterns, profections, … | Current |
+| [development/COMPONENTS_AND_ANALYSIS.md](https://github.com/katelouie/stellium/blob/main/docs/development/COMPONENTS_AND_ANALYSIS.md) | Components, analysis/DataFrames, IO, caching, utils | Current |
+| [development/VISUALIZATION_INTERNALS.md](https://github.com/katelouie/stellium/blob/main/docs/development/VISUALIZATION_INTERNALS.md) | SVG pipeline, coordinates, layers, themes/palettes, dial/vedic/atlas | Current |
+| [development/PRESENTATION_INTERNALS.md](https://github.com/katelouie/stellium/blob/main/docs/development/PRESENTATION_INTERNALS.md) | `ReportBuilder`, sections, renderers | Current |
+| [development/SUBSYSTEMS.md](https://github.com/katelouie/stellium/blob/main/docs/development/SUBSYSTEMS.md) | Multi-chart, returns, electional, planner, Chinese/BaZi, CLI | Current |
+| [development/NOTABLES.md](https://github.com/katelouie/stellium/blob/main/docs/development/NOTABLES.md) | The notables database: schema, provenance, Old Style dates, curation rules | Current |
+| [development/EXTENDING.md](https://github.com/katelouie/stellium/blob/main/docs/development/EXTENDING.md) | How to add engines/components/analyzers/layers/themes/sections | Current |
 
 ## User-facing guides — `docs/`
 
@@ -66,8 +66,8 @@ whose authority. Separate from the practitioner-facing astrology guide
 
 ## Top-level references (repo root)
 
-- [`/README.md`](../README.md) — project overview & quick start
-- [`/CLAUDE.md`](../CLAUDE.md) — development hub for agents
-- [`/CONTRIBUTING.md`](../CONTRIBUTING.md) — contribution workflow
-- [`/CHANGELOG.md`](../CHANGELOG.md) — release history
-- [`/TODO.md`](../TODO.md) — roadmap
+- [`/README.md`](https://github.com/katelouie/stellium/blob/main/README.md) — project overview & quick start
+- [`/CLAUDE.md`](https://github.com/katelouie/stellium/blob/main/CLAUDE.md) — development hub for agents
+- [`/CONTRIBUTING.md`](https://github.com/katelouie/stellium/blob/main/CONTRIBUTING.md) — contribution workflow
+- [`/CHANGELOG.md`](https://github.com/katelouie/stellium/blob/main/CHANGELOG.md) — release history
+- [`/TODO.md`](https://github.com/katelouie/stellium/blob/main/TODO.md) — roadmap

@@ -817,9 +817,6 @@ Utility functions and helpers.
    :show-inheritance:
    :no-index:
 
-.. automodule:: stellium.utils.cache_utils
-   :members:
-   :undoc-members:
    :show-inheritance:
    :no-index:
 

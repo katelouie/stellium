@@ -86,6 +86,9 @@ RENDERABLE = {".svg", ".png"}
 # The number is already the heading's position on the page; repeating it is noise.
 EXAMPLE_PREFIX = re.compile(r"^Example\s+\d+\s*[:.\-–]\s*", re.I)
 
+# A rule underlining the docstring's title: ----- or ===== or ~~~~~.
+RULE = re.compile(r"^[-=~_]{3,}\s*$", re.M)
+
 # Every cookbook titles itself "<Topic> Cookbook — <something>", and the something is
 # usually "Comprehensive Examples" or "Examples for Stellium <the topic again>". In a
 # section called Cookbooks, on a page full of examples, none of that carries any
@@ -218,6 +221,18 @@ def recipes(path: Path) -> list[Recipe]:
         lines = doc.strip().split("\n")
         title = EXAMPLE_PREFIX.sub("", lines[0]).strip().rstrip(".")
         prose = textwrap.dedent("\n".join(lines[1:])).strip()
+
+        # Some docstrings underline their title with a rule:
+        #
+        #     Example 1: Simplest Search with Lambda Conditions
+        #     -------------------------------------------------
+        #     The most basic way to use ElectionalSearch is...
+        #
+        # Lifted out, that rule becomes the FIRST thing in the section — which docutils
+        # reads as a transition, and a section may not begin with one (43 build errors,
+        # every one of them from a page this script generated). The title is a heading
+        # now; it does not need underlining.
+        prose = RULE.sub("", prose, count=1).strip()
 
         # Skip the docstring AND the banner statements that follow it, so the code
         # block starts at the first line that actually does something.

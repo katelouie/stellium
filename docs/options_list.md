@@ -506,4 +506,4 @@ Jupiter H5 Neptune (orb: 1.94°)
 
 ---
 
-*For more detailed documentation, see the individual module docstrings and the [README](../README.md).*
+*For more detailed documentation, see the individual module docstrings and the [README](https://github.com/katelouie/stellium/blob/main/README.md).*

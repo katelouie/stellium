@@ -21,6 +21,7 @@ chart.draw("jung.svg").preset_standard().save()
 | Understand a subsystem in depth | [Guides](VISUALIZATION.md) |
 | Look up a class or a method | [API Reference](api/index.md) |
 | See what the charts actually look like | [Theme Gallery](THEME_GALLERY.md) · [Palette Gallery](PALETTE_GALLERY.md) |
+| Know **which sources** a technique is computed from | [Methodology](methodology/README.md) — Valens, Ptolemy, Firmicus, and where they disagree |
 
 ---
 
@@ -65,19 +66,22 @@ Accidental Dignity <api/accidental_dignity_structure>
 
 ```{toctree}
 :hidden:
+:caption: Methodology & Sources
+:maxdepth: 1
+
+Traditional Methods & Sources <methodology/README>
+Planetary Years <methodology/research/planetary-years>
+Zodiacal Releasing <methodology/research/zodiacal-releasing>
+Firdaria <methodology/research/firdaria>
+```
+
+```{toctree}
+:hidden:
 :caption: Galleries
 :maxdepth: 1
 
 Themes <THEME_GALLERY>
 Palettes <PALETTE_GALLERY>
-```
-
-```{toctree}
-:hidden:
-:caption: Contributing
-:maxdepth: 1
-
-Publishing a Release <PUBLISHING>
 ```
 
 ## Project links
