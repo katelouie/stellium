@@ -453,3 +453,212 @@ table.dataframe tbody tr:hover td,
 table.dataframe tbody tr:hover th{background:var(--bg-soft);}
 table.dataframe tbody tr:last-child td,
 table.dataframe tbody tr:last-child th{border-bottom:0 !important;}
+
+/* ============================================================================
+   LANDING PAGES — home, and the two orientation maps.
+
+   These pages are written in plain Markdown (`:::{container} st-card` and
+   `[42]{.st-n}`), never raw HTML, so that every link on them stays a real Sphinx
+   cross-reference that the build checks. The chrome lives here instead.
+   ========================================================================== */
+
+/* ---- lede + eyebrow ---- */
+.st-lede{
+  font-size:17.5px; line-height:1.62; color:var(--fg-muted);
+  max-width:60ch; margin:0 0 26px;
+}
+.st-lede p{margin:0;}
+.st-eyebrow{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px; letter-spacing:1.4px; text-transform:uppercase;
+  color:var(--gold); margin:0 0 10px;
+}
+.st-eyebrow p{margin:0;}
+
+/* ---- call-to-action row ----
+   A <ul> in the source: three items, no bullets, wrapping on a narrow screen. */
+.st-cta ul{list-style:none; display:flex; flex-wrap:wrap; gap:10px; padding:0; margin:0;}
+.st-cta li{margin:0;}
+
+.st-cta-code{
+  display:inline-block;
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  background:var(--code-bg); color:var(--code-fg);
+  padding:10px 16px; border-radius:9px; border:1px solid var(--code-border);
+  user-select:all;                     /* one click selects the whole command */
+}
+/* The span wraps a literal, and prose <code> carries its own chip styling — which
+   painted a second, lighter box inside this one. Here the span IS the chip. */
+.st-cta-code code{
+  background:none; border:0; padding:0; color:inherit;
+  font-size:inherit; font-family:inherit;
+}
+
+.st-btn{
+  display:inline-block;
+  font-size:13.5px; font-weight:500;
+  padding:10px 16px; border-radius:9px;
+  border:1px solid var(--border-strong);
+  background:var(--panel); color:var(--fg);
+  text-decoration:none;                /* prose underlines its links; a button is not prose */
+  transition:border-color .15s ease, background .15s ease, transform .15s ease;
+}
+.st-btn:hover{border-color:var(--accent); color:var(--accent); transform:translateY(-1px);}
+.st-btn-primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+.st-btn-primary:hover{background:var(--accent-2); border-color:var(--accent-2); color:#fff;}
+.st-btn-gold{background:var(--gold); border-color:var(--gold); color:#fff;}
+.st-btn-gold:hover{filter:brightness(1.08); color:#fff;}
+html[data-theme="dark"] .st-btn-primary,
+html[data-theme="dark"] .st-btn-gold{color:#12121a;}  /* light accent needs dark ink */
+
+.st-cta-note{font-size:13px; color:var(--fg-faint); margin:12px 0 0;}
+.st-cta-note p{margin:0;}
+
+/* ---- hero: code beside its rendered chart ---- */
+.st-split{
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:26px; align-items:center; margin:34px 0 8px;
+}
+.st-split-figure img{
+  width:100%;
+  border:1px solid var(--border); border-radius:14px;
+  background:var(--panel); padding:10px;
+}
+.st-split .highlight{margin:0;}
+@media (max-width:900px){
+  .st-split{grid-template-columns:1fr;}
+}
+
+/* ---- cards ----
+   One card body, three uses: the audience fork, the cookbook grid, the
+   traditions row. The axis of variation is the accent, so that is all that the
+   modifier classes change. */
+.st-card, .st-cbcard{
+  border:1px solid var(--border); border-radius:14px;
+  background:var(--panel); padding:18px 20px;
+  transition:border-color .15s ease, transform .15s ease, box-shadow .15s ease;
+}
+.st-card:hover, .st-cbcard:hover{
+  border-color:var(--accent);
+  transform:translateY(-2px);
+  box-shadow:0 6px 22px rgba(20,18,45,.07);
+}
+.st-card-astro:hover{border-color:var(--gold);}
+
+.st-fork{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin:22px 0;}
+@media (max-width:900px){.st-fork{grid-template-columns:1fr;}}
+
+/* The card's first paragraph is its title. */
+.st-card > p:first-child, .st-cbcard > p:first-child{
+  margin:0 0 8px; font-size:15.5px; font-weight:600; color:var(--fg);
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+}
+.st-card > p:first-child strong, .st-cbcard > p:first-child strong{font-weight:600;}
+.st-cbcard > p{font-size:13.5px; color:var(--fg-muted); line-height:1.55; margin:0;}
+.st-cbcard > p + p{margin-top:8px;}
+
+/* The recipe count, right-aligned on the title row. */
+.st-n{
+  font-family:'IBM Plex Mono',monospace; font-size:11.5px; font-weight:400;
+  color:var(--fg-faint); flex:none;
+}
+
+/* The link list inside a fork card: rows with a trailing arrow. */
+.st-card ul{list-style:none; padding:0; margin:14px 0 0;}
+.st-card li{margin:0 0 6px;}
+.st-card li a{
+  display:flex; align-items:center; justify-content:space-between;
+  font-size:13.5px; color:var(--fg);
+  padding:9px 12px; border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--bg-soft);
+  transition:border-color .15s ease, color .15s ease, background .15s ease;
+}
+.st-card li a::after{content:"→"; color:var(--fg-faint); font-size:13px;}
+.st-card li a:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft);}
+.st-card li a:hover::after{color:var(--accent);}
+.st-card-astro li a:hover{border-color:var(--gold); color:var(--gold); background:var(--gold-soft);}
+.st-card-astro li a:hover::after{color:var(--gold);}
+
+/* ---- the cookbook / traditions grid ---- */
+.st-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:16px; margin:22px 0;
+}
+
+/* ---- technique tags ---- */
+.st-tags ul{list-style:none; display:flex; flex-wrap:wrap; gap:8px; padding:0; margin:20px 0;}
+/* line-height matters here: each <li> is a flex item whose height is its line box, so
+   the prose line-height (1.7) was adding ~40px of dead air between every row of pills. */
+.st-tags li{margin:0; line-height:1;}
+.st-tag{
+  display:inline-block;
+  font-size:12.5px; color:var(--fg-muted); line-height:1.4;
+  padding:6px 12px; border-radius:999px;
+  border:1px solid var(--border); background:var(--panel);
+  text-decoration:none;
+  transition:border-color .15s ease, color .15s ease, background .15s ease;
+}
+a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(--accent-soft);}
+/* The three traditions lead the list, so they carry the accent. */
+.st-tag-lead{
+  color:var(--gold); border-color:var(--gold); background:var(--gold-soft);
+  font-weight:500;
+}
+
+/* ---- callout panel (API, web app, methodology) ---- */
+.st-panel{
+  border:1px solid var(--border); border-radius:14px;
+  background:var(--bg-soft);
+  border-left:3px solid var(--accent);
+  padding:20px 22px; margin:22px 0;
+}
+.st-panel > p{margin:0 0 12px; color:var(--fg-muted); font-size:14.5px; line-height:1.6;}
+.st-panel > p:last-child{margin-bottom:0;}
+.st-panel-gold{border-left-color:var(--gold); background:var(--gold-soft);}
+
+/* ---- theme strip ---- */
+.st-strip{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:14px; margin:22px 0;
+}
+.st-shot{
+  border:1px solid var(--border); border-radius:12px;
+  background:var(--panel); padding:8px;
+  transition:border-color .15s ease, transform .15s ease;
+}
+.st-shot:hover{border-color:var(--accent); transform:translateY(-2px);}
+.st-shot img{width:100%; display:block; border-radius:7px;}
+.st-shot p{margin:0;}
+.st-shot-label{
+  display:block; margin-top:7px;
+  font-family:'IBM Plex Mono',monospace; font-size:11px;
+  color:var(--fg-faint);
+}
+
+/* ---- the cross-link between the two maps ---- */
+.st-switch{
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  border:1px dashed var(--border-strong); border-radius:12px;
+  padding:16px 20px; margin:28px 0 0;
+  background:var(--bg-soft);
+}
+.st-switch p{margin:0; font-size:14px; color:var(--fg-muted);}
+.st-switch a{font-weight:500;}
+
+/* The prose link style (`.st-prose a` — underlined, 0,1,1) out-specifies every
+   component class above (0,1,0), so buttons, pills, card titles and figure labels
+   all came out underlined. They are chrome, not prose: say so once, here, where the
+   selector can actually win. */
+.st-prose a.st-btn,
+.st-prose a.st-tag,
+.st-prose .st-card a,
+.st-prose .st-cbcard a,
+.st-prose .st-shot a,
+.st-prose .st-panel a.st-btn{
+  text-decoration:none;
+}
+/* …but a card title still has to look clickable, so it keeps the accent and picks
+   the underline back up on hover. */
+.st-prose .st-cbcard > p:first-child a:hover,
+.st-prose .st-card > p:first-child a:hover{text-decoration:underline; text-underline-offset:2px;}

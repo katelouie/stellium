@@ -59,3 +59,6 @@ claude_info/
 # Untracked local rectification proving harness (superseded by src/stellium/rectification/)
 docs/development/specs/rectification/harness/
 docs/cookbooks/
+
+# Build-time stats for the docs (see docs/conf.py _site_stats)
+docs/_generated/

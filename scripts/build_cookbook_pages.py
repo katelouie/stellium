@@ -5,15 +5,19 @@ Generate a documentation page for every cookbook in `examples/`.
     python scripts/build_cookbook_pages.py          # write docs/cookbooks/*.md
     python scripts/build_cookbook_pages.py --clean  # remove them
 
-`docs/conf.py` calls this on `builder-inited`, so the pages are rebuilt from the
+`docs/conf.py` calls this while loading its config, so the pages are rebuilt from the
 scripts on every Sphinx build — including on Read the Docs. Nothing is committed,
 so nothing can go stale: **there is no copy of the code to drift.**
 
-That matters here more than usual. There are 21 cookbooks holding **374 runnable
-recipes**, and not one of them appeared anywhere in the documentation site. Hand-
-copying that into Markdown would have created 374 code blocks with no connection to
-the code they claim to show — which is exactly the failure the astrology guide made,
-and exactly what `tests/test_doc_codeblocks.py` exists to prevent.
+That matters here more than usual. Every cookbook in `examples/` holds dozens of
+runnable recipes, and not one of them appeared anywhere in the documentation site.
+Hand-copying them into Markdown would have created hundreds of code blocks with no
+connection to the code they claim to show — which is exactly the failure the astrology
+guide made, and exactly what `tests/test_doc_codeblocks.py` exists to prevent.
+
+The counts are written to `docs/_generated/site_stats.json` for the same reason, and
+conf.py turns them into MyST substitutions: this docstring used to say "374 recipes"
+while the script it describes produced 421.
 
 So the pages do not contain code. They `literalinclude` it by line range, so Sphinx
 reads it out of the real script at build time and there is nothing to keep in sync.
@@ -38,6 +42,7 @@ import argparse
 import ast
 import contextlib
 import io
+import json
 import os
 import re
 import shutil
@@ -50,6 +55,9 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 EXAMPLES = REPO / "examples"
 OUT = REPO / "docs" / "cookbooks"
+
+# Counts, for conf.py to expose as MyST substitutions. See main().
+STATS = REPO / "docs" / "_generated" / "site_stats.json"
 
 # Set STELLIUM_DOCS_FAST=1 to skip execution while iterating on the theme locally.
 # CI and Read the Docs never set it: there, the outputs are always computed.
@@ -511,10 +519,14 @@ def main() -> None:
 
     # An index, so the section has a landing page rather than a bare toctree.
     total = sum(c for _, _, c, _ in written) + notebook_cells
+    # The notebook is a cookbook: it is listed in the table below and it is one of the
+    # pages. Counting it in the recipe total but not in the cookbook total made this
+    # line disagree with its own table, and with the home page.
+    n_cookbooks = len(written) + bool(notebook_cells)
     index = [
         "# Cookbooks",
         "",
-        f"**{total} runnable recipes** across {len(written)} cookbooks. Each one is a real "
+        f"**{total} runnable recipes** across {n_cookbooks} cookbooks. Each one is a real "
         "function in a real script in [`examples/`](https://github.com/katelouie/stellium/tree/main/examples) "
         "— run the file and every recipe on the page executes.",
         "",
@@ -539,6 +551,20 @@ def main() -> None:
         index.append("analysis")
     index += ["```", ""]
     (OUT / "index.md").write_text("\n".join(index), encoding="utf-8")
+
+    # Hand a machine-readable copy of the same numbers to conf.py, which turns them into
+    # MyST substitutions. Any page that wants to say "N recipes" then *asks* rather than
+    # asserts. The index.md this replaced claimed 374 while the build produced 421 — a
+    # number is only true on the day someone types it, so stop typing them.
+    stats = {
+        "recipes": total,
+        "cookbooks": n_cookbooks,
+        "by_slug": {slug: count for slug, _, count, _ in written},
+    }
+    if notebook_cells:
+        stats["by_slug"]["analysis"] = notebook_cells
+    STATS.parent.mkdir(parents=True, exist_ok=True)
+    STATS.write_text(json.dumps(stats, indent=2) + "\n", encoding="utf-8")
 
     for _slug, script, count, title in written:
         print(f"  {title:34} {count:3} recipes  <- {script}")

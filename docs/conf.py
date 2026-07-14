@@ -36,6 +36,13 @@ myst_enable_extensions = [
     "colon_fence",  # ::: fences
     "deflist",  # Definition lists
     "tasklist",  # Task lists
+    # `{{ n_recipes }}` — see _site_stats() at the foot of this file. Counts are
+    # resolved from the library at build time rather than typed into prose.
+    "substitution",
+    # `[42]{.st-n}` — a span with a class, so the landing pages can be laid out in
+    # plain Markdown (whose links Sphinx therefore checks) instead of raw HTML
+    # (whose links it cannot). The theme's CSS does the rest.
+    "attrs_inline",
 ]
 
 # Generate an anchor for every heading down to h4.
@@ -142,12 +149,17 @@ pygments_dark_style = "monokai"
 
 
 # -- Generated pages ---------------------------------------------------------
-# The 21 cookbooks in examples/ hold 357 runnable recipes, and none of them
+# The cookbooks in examples/ hold every runnable recipe we have, and none of them
 # appeared anywhere in this site. They are turned into pages here, on every build
 # (including on Read the Docs), rather than being committed — a generated page
 # that lives in git is a copy of the code that can drift from it, and the pages
 # `literalinclude` the real functions precisely so that they cannot.
-def _build_cookbook_pages(app):
+#
+# This runs at *config* time, not on the `builder-inited` event, and it has to:
+# MyST snapshots `myst_substitutions` into its parser config before the first
+# document is read, so a substitution assigned from an event handler is already too
+# late and every `{{ n_recipes }}` resolves to nothing.
+def _build_cookbook_pages() -> None:
     import subprocess
     import sys
     from pathlib import Path
@@ -156,5 +168,49 @@ def _build_cookbook_pages(app):
     subprocess.run([sys.executable, str(script)], check=True)
 
 
-def setup(app):
-    app.connect("builder-inited", _build_cookbook_pages)
+# -- Counts, taken from the library rather than typed ------------------------
+# Every number the prose quotes — recipes, cookbooks, themes, palettes, notables —
+# is a substitution resolved at build time from the thing it describes.
+#
+# This exists because the numbers do not hold still and nobody notices when they
+# stop being true. The home page said "374 recipes" while the generator produced
+# 421. The generator's own docstring said 357. The design mockup promised "thirteen
+# themes"; there are fourteen. Not one of these was a lie anyone told on purpose —
+# they were all true once. A count in prose is a snapshot with no expiry date, so
+# the fix is not to correct them, it is to stop writing them down.
+def _site_stats() -> dict:
+    import json
+    from pathlib import Path
+
+    from stellium.data import get_notable_registry
+    from stellium.visualization.palettes import (
+        AspectPalette,
+        PlanetGlyphPalette,
+        ZodiacPalette,
+    )
+    from stellium.visualization.themes import ChartTheme
+
+    stats_file = Path(__file__).parent / "_generated" / "site_stats.json"
+    cookbooks = json.loads(stats_file.read_text())
+
+    subs = {
+        "version": __version__,
+        "n_recipes": cookbooks["recipes"],
+        "n_cookbooks": cookbooks["cookbooks"],
+        "n_themes": len(ChartTheme),
+        "n_zodiac_palettes": len(ZodiacPalette),
+        "n_aspect_palettes": len(AspectPalette),
+        "n_planet_palettes": len(PlanetGlyphPalette),
+        "n_palettes": len(ZodiacPalette) + len(AspectPalette) + len(PlanetGlyphPalette),
+        "n_notables": len(get_notable_registry().get_all()),
+        "n_notable_births": len(get_notable_registry().get_births()),
+    }
+    # Per-cookbook recipe counts, e.g. {{ cb_electional }} -> 43. The home page picks
+    # *which* cookbooks to feature; the build supplies how many recipes each one has.
+    for slug, count in cookbooks["by_slug"].items():
+        subs[f"cb_{slug}"] = count
+    return subs
+
+
+_build_cookbook_pages()
+myst_substitutions = _site_stats()

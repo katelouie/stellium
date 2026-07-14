@@ -57,12 +57,17 @@ REPO_ROOT = Path(__file__).parent.parent
 DOC_FILES = [
     "README.md",
     "CONTRIBUTING.md",
+    # The four landing pages. The home page is the most-read page in the project and
+    # its code was, until now, the only code on the site that nothing ran.
+    "docs/index.md",
+    "docs/README.md",
+    "docs/for-developers.md",
+    "docs/for-astrologers.md",
     "docs/options_list.md",
     "docs/REPORTS.md",
     "docs/VISUALIZATION.md",
     "docs/PALETTE_GALLERY.md",
     "docs/THEME_GALLERY.md",
-    "docs/PUBLISHING.md",
     # docs/ARCHITECTURE.md excluded — significantly stale (Nov 2025), has a warning banner
     "examples/README.md",
     "docs/images/README.md",
