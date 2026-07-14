@@ -42,5 +42,3 @@ Utility functions and helpers.
    :undoc-members:
    :show-inheritance:
 ```
-
----

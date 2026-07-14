@@ -32,5 +32,3 @@ scope: `events` gathers what happens on each *day*, and `almanac` aggregates the
    :undoc-members:
    :show-inheritance:
 ```
-
----

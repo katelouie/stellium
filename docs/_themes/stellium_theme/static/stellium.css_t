@@ -30,7 +30,11 @@
   --fg:#16161d; --fg-muted:#54566a; --fg-faint:#8a8c9d;
   --accent:{{ theme_accent|default('#5b46b0') }}; --accent-2:#7d6fbf; --accent-soft:#eeebf8;
   --gold:{{ theme_gold|default('#a9782a') }}; --gold-soft:#f5eeda;
-  --code-bg:#12131c; --code-fg:#dbdce9; --code-border:#20212e;
+  /* Code chrome stays dark in light mode — deliberate, per the design. But #12131c
+     against a white page is a hole punched in it, so the ground is lifted a little.
+     Dark mode keeps its own (darker) values below: there, the page IS dark, and the
+     block should sit *into* it rather than stand off it. */
+  --code-bg:#1c1d29; --code-fg:#dee0ec; --code-border:#2a2b3a;
   --note-bg:#eeebf8; --warn-bg:#f8f0dd; --warn-border:#d9a94a;
   --sig-bg:#f7f7fb; --sig-border:#e3e3ee; --out-bg:#f7f7fb;
   color-scheme:light;
@@ -224,6 +228,18 @@ html[data-theme="dark"] .st-i-moon{display:none;}
 .st-toc ul ul{padding-left:12px;}
 .st-toc > ul > li > a{color:var(--accent); box-shadow:inset 2px 0 0 var(--accent);}
 
+/* Drop the page's own title from "on this page".
+   Sphinx's `toc` nests everything under a single top-level entry: the page's H1 —
+   i.e. a link to the page you are already on. It says nothing, and it costs a level
+   of indent on every entry below it, which is exactly the width the rail does not
+   have (an API page's method index needs all 232px of it).
+
+   `:only-child` is the guard: this collapses the wrapper *only* when there is one
+   top-level entry, so a page that genuinely has several top-level sections still
+   shows them all rather than silently losing the first. */
+.st-toc > ul > li:only-child > a{display:none;}
+.st-toc > ul > li:only-child > ul{padding-left:0; margin-left:0;}
+
 /* ============================ BREADCRUMB / PREV-NEXT ============================ */
 .st-breadcrumb{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--fg-faint); margin-bottom:22px;}
 .st-breadcrumb a{color:var(--fg-faint);}
@@ -323,9 +339,17 @@ dl.py > dd{
 }
 dl.py > dd p{font-size:14.5px; line-height:1.6; color:var(--fg-muted);}
 .sig-name, .py .property{color:var(--fg); font-weight:600;}
-.sig-prename, .pre{color:var(--fg-muted);}
-.sig-param, .n{color:var(--accent-2);}
-em.property, .k{color:var(--gold);}
+.sig-prename{color:var(--fg-muted);}
+
+/* Signature tokens — and ONLY signature tokens.
+   These were written as bare `.n` and `.k`, which are also **Pygments' classes for
+   Name and Keyword**. So a rule meant to tint the parameters of an autodoc signature
+   was silently repainting every identifier and keyword in every code block on the
+   site: `ChartBuilder` came out accent-purple in a block whose palette says it should
+   be default text. Scope them to the signature, where they were always meant to live. */
+.sig .n, .sig-param{color:var(--accent-2);}
+.sig .k, em.property{color:var(--gold);}
+.sig .pre, .sig-prename .pre{color:var(--fg-muted);}
 .field-list > dt{font-family:'IBM Plex Sans',sans-serif; font-weight:600; font-size:13px; color:var(--fg); background:none; border:none; padding:8px 0 2px;}
 .field-list dd{border:none; padding:0 0 6px;}
 

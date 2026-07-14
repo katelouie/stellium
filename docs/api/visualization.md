@@ -189,5 +189,3 @@ North and South Indian chart rendering.
    :undoc-members:
    :show-inheritance:
 ```
-
----

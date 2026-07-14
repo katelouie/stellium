@@ -30,5 +30,3 @@ Optional calculation components that can be added to charts.
    :undoc-members:
    :show-inheritance:
 ```
-
----

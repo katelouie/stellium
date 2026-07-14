@@ -159,9 +159,23 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
 }
 
-# Pygments style for code highlighting
-pygments_style = "monokai"  # code chrome is dark in BOTH themes (see the design)
-pygments_dark_style = "monokai"
+# -- Syntax highlighting -----------------------------------------------------
+# The design specifies a five-colour palette (keyword #c4b5fd, call #e8c07d, string
+# #a3d0a8, class #7fd0a8, comment #6b6d82), identical in light and dark — only the
+# ground shifts. The docs were shipping stock **monokai**: magenta keywords, amber
+# strings. Nothing was wrong with it except that it was not the design.
+#
+# docs/_pygments/stellium_syntax.py is that palette, plus the lexer filter it needs:
+# Pygments marks a name as a function only where it is *defined*, so in a fluent chain
+# — which is the whole public API — every method arrived as an uncoloured bare Name.
+sys.path.insert(0, os.path.abspath("_pygments"))
+pygments_style = "stellium_syntax.StelliumStyle"  # code chrome is dark in BOTH themes
+
+
+def setup(app):
+    from stellium_syntax import StelliumPythonLexer
+
+    app.add_lexer("python", StelliumPythonLexer)
 
 
 # -- Generated pages ---------------------------------------------------------

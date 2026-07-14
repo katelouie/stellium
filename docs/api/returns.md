@@ -10,5 +10,3 @@ Solar, lunar, and planetary return calculations.
    :undoc-members:
    :show-inheritance:
 ```
-
----

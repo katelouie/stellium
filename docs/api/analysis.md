@@ -35,5 +35,3 @@ Batch chart analysis and data processing.
    :undoc-members:
    :show-inheritance:
 ```
-
----

@@ -20,5 +20,3 @@ Input/output formats for chart data.
    :undoc-members:
    :show-inheritance:
 ```
-
----

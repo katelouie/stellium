@@ -115,5 +115,3 @@ Interface definitions for extending Stellium.
    :undoc-members:
    :show-inheritance:
 ```
-
----

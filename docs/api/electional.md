@@ -25,5 +25,3 @@ Electional astrology tools for finding optimal times.
    :undoc-members:
    :show-inheritance:
 ```
-
----

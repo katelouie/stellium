@@ -70,5 +70,3 @@ Calculation engines for ephemeris, houses, aspects, orbs, dignities, and fixed s
    :undoc-members:
    :show-inheritance:
 ```
-
----

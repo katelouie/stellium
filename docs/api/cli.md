@@ -30,5 +30,3 @@ Command-line interface for chart generation, cache management, and ephemeris dow
    :undoc-members:
    :show-inheritance:
 ```
-
----
