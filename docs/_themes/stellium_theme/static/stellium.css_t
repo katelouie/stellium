@@ -837,14 +837,23 @@ a.st-tag:hover{border-color:var(--accent); color:var(--accent); background:var(-
 }
 
 /* ---- capability pills: "Python 3.11+", "no API keys" ----
-   Mono, quiet, factual. Distinct from .st-tag, which is a *link* to a technique. */
+   Mono, quiet, factual. Distinct from .st-tag, which is a *link* to a technique.
+
+   The text of each pill is bare in the list item, so MyST wraps it in a <p> — which
+   then takes the prose <p> rules (16px, 18px bottom margin) and inflates the pill to
+   60px tall. Style the paragraph, not just the item. (.st-tags avoids this only
+   because its text sits inside a span.) */
 .st-pills ul{list-style:none; display:flex; flex-wrap:wrap; gap:8px; padding:0; margin:16px 0;}
-.st-pills li{margin:0; line-height:1;}
 .st-pills li{
+  margin:0;
   font-family:'IBM Plex Mono',monospace; font-size:12px; line-height:1.5;
   color:var(--fg-muted); background:var(--panel-2);
   border:1px solid var(--border); border-radius:7px;
   padding:6px 12px;
+}
+.st-pills li p{
+  margin:0;
+  font-size:inherit; line-height:inherit; color:inherit; font-family:inherit;
 }
 
 /* ---- code block filename bar ----
