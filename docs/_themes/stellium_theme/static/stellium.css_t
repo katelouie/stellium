@@ -325,18 +325,78 @@ div.admonition.tip > .admonition-title{color:var(--gold);}
 }
 .st-prose table.docutils td{padding:9px 14px; border-top:1px solid var(--border); color:var(--fg-muted);}
 
-/* ============================ AUTODOC (dl.py) ============================ */
-dl.py, dl.class, dl.function, dl.method, dl.data{margin:0 0 20px;}
-dl.py > dt, dl.class > dt, dl.function > dt, dl.method > dt{
-  font-family:'IBM Plex Mono',monospace; font-size:13.5px;
+/* ============================ AUTODOC (dl.py) ============================
+   A class and one of its methods are BOTH `dl.py`. Styling them with one blanket
+   rule — which is what this did — drew them at identical weight: the same bordered
+   card, the same 3px accent bar, one nested inside the other in the same colour. So
+   a page of thirteen house-system engines read as an undifferentiated wall of boxes,
+   with nothing to say where one class ended and the next began.
+
+   Sphinx already tells us which is which (`dl.py.class` vs `dl.py.method`); we just
+   were not listening. Two levels now:
+
+     class / function / exception  — the page's real units. A card, with air and a
+                                     rule between them. These are what you scan for.
+     method / property / attribute — members. NOT cards: a quiet rail hanging off the
+                                     class that owns them, so the class's own card
+                                     stays the only boundary on the page.
+   ------------------------------------------------------------------------ */
+
+dl.py{margin:0;}
+
+/* ---- the unit: a class, a module-level function, an exception ---- */
+dl.py.class, dl.py.function, dl.py.exception, dl.py.data{
+  margin:0 0 40px;
+}
+/* A rule between consecutive units — the separator the page had none of. */
+dl.py.class + dl.py.class,
+dl.py.class + dl.py.function,
+dl.py.function + dl.py.function,
+dl.py.function + dl.py.class,
+dl.py.exception + dl.py.exception{
+  border-top:1px solid var(--border);
+  padding-top:40px;
+}
+
+dl.py.class > dt,
+dl.py.function > dt,
+dl.py.exception > dt,
+dl.py.data > dt{
+  font-family:'IBM Plex Mono',monospace; font-size:14px;
   background:var(--sig-bg); border:1px solid var(--sig-border);
   border-left:3px solid var(--accent); border-radius:10px 10px 0 0;
-  padding:13px 18px; color:var(--fg); overflow-x:auto;
+  padding:14px 18px; color:var(--fg); overflow-x:auto;
 }
-dl.py > dd{
+dl.py.class > dd,
+dl.py.function > dd,
+dl.py.exception > dd,
+dl.py.data > dd{
   border:1px solid var(--sig-border); border-top:none;
-  border-radius:0 0 10px 10px; padding:15px 18px; margin:0;
+  border-radius:0 0 10px 10px; padding:16px 18px; margin:0;
 }
+
+/* ---- members: children of the unit above, and they must read as children ---- */
+dl.py.method, dl.py.classmethod, dl.py.staticmethod,
+dl.py.property, dl.py.attribute{
+  margin:16px 0 16px 2px;
+  padding-left:16px;
+  border-left:2px solid var(--border);
+}
+dl.py.method:hover, dl.py.classmethod:hover, dl.py.staticmethod:hover,
+dl.py.property:hover, dl.py.attribute:hover{border-left-color:var(--accent);}
+
+dl.py.method > dt, dl.py.classmethod > dt, dl.py.staticmethod > dt,
+dl.py.property > dt, dl.py.attribute > dt{
+  font-family:'IBM Plex Mono',monospace; font-size:13px;
+  background:var(--panel-2); border:0; border-radius:7px;
+  padding:8px 12px; color:var(--fg); overflow-x:auto;
+}
+dl.py.method > dd, dl.py.classmethod > dd, dl.py.staticmethod > dd,
+dl.py.property > dd, dl.py.attribute > dd{
+  border:0; border-radius:0; background:none;
+  padding:2px 0 0 12px; margin:0;
+}
+
 dl.py > dd p{font-size:14.5px; line-height:1.6; color:var(--fg-muted);}
 .sig-name, .py .property{color:var(--fg); font-weight:600;}
 .sig-prename{color:var(--fg-muted);}
