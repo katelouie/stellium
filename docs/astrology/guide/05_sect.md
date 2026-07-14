@@ -214,6 +214,11 @@ print(chart.sect)
 chart = ChartBuilder.from_notable("Muhammad Ali").calculate()
 print(chart.sect)
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+day
+night
+```
 
 > [!TIP]
 > `chart.sect` is a **property**, not a method — no parentheses. It returns the
@@ -236,8 +241,8 @@ NIGHT = [("Moon","sect light"), ("Venus","benefic of sect"),
 
 def sect_roles(name):
     c = ChartBuilder.from_notable(name).calculate()
-    roles = DAY if c.sect() == "day" else NIGHT
-    print(f"{name} ({c.sect()} chart):")
+    roles = DAY if c.sect == "day" else NIGHT
+    print(f"{name} ({c.sect} chart):")
     for planet, role in roles:
         o = c.get_object(planet)
         print(f"  {planet:8} {o.sign_position:20} house {c.get_house(planet):<2}  {role}")
@@ -249,6 +254,15 @@ sect_roles("Muhammad Ali")
 #   Jupiter  11°57' Gemini        house 10  out-of-sect benefic
 #   Mars      3°03' Taurus        house 9   malefic of sect
 #   Saturn   21°39' Taurus        house 10  out-of-sect malefic (the hard one)
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Muhammad Ali (night chart):
+  Moon     12°25' Aquarius      house 6   sect light
+  Venus    20°40' Aquarius      house 7   benefic of sect
+  Jupiter  11°57' Gemini        house 10  out-of-sect benefic
+  Mars     3°03' Taurus         house 9   malefic of sect
+  Saturn   21°39' Taurus        house 10  out-of-sect malefic (the hard one)
 ```
 
 ### Sect-aware calculations happen automatically

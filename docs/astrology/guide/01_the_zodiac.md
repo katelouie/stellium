@@ -226,6 +226,12 @@ print(sun.sign)             # Leo
 print(sun.sign_position)    # 3°18' Leo
 print(sun.longitude)        # 123.31  (the raw coordinate underneath)
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Leo
+3°18' Leo
+123.30532166261611
+```
 
 Element and modality aren't a single field, but they're a two-line lookup, and
 counting them across the chart is the balance technique from above:
@@ -266,6 +272,12 @@ print("Tropical:", sun_t.sign_position)   # 3°18' Leo
 print("Sidereal:", sun_s.sign_position)   # 11°11' Cancer
 print(f"Ayanamsa: {sun_t.longitude - sun_s.longitude:.1f}°")   # ~22.1  (for 1875)
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Tropical: 3°18' Leo
+Sidereal: 11°11' Cancer
+Ayanamsa: 22.1°
+```
 
 His Sun crosses a whole sign, Leo to Cancer, when you change the ring. That single
 line of output is the entire tropical-vs-sidereal debate in miniature.
@@ -273,13 +285,18 @@ line of output is the entire tropical-vs-sidereal debate in miniature.
 ### Choosing an ayanamsa
 
 ```python
+from stellium import ChartBuilder
 from stellium.core.ayanamsa import list_ayanamsas
 
 print(list_ayanamsas())
-# ['deluce', 'fagan_bradley', 'jn_bhasin', 'krishnamurti',
-#  'lahiri', 'raman', 'true_citra', 'true_revati', 'yukteshwar']
 
 chart = ChartBuilder.from_notable("Carl Jung").with_sidereal("fagan_bradley").calculate()
+print(chart.get_object("Sun").sign_position)
+```
+<!--pytest-codeblocks:expected-output-->
+```
+['deluce', 'fagan_bradley', 'jn_bhasin', 'krishnamurti', 'lahiri', 'raman', 'true_citra', 'true_revati', 'yukteshwar']
+10°18' Cancer
 ```
 
 `with_tropical()` switches back explicitly. The full ayanamsa reference, with what

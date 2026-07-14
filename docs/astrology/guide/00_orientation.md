@@ -306,6 +306,12 @@ print(type(chart).__name__)   # UnknownTimeChart
 print(chart.get_houses())     # None: it won't invent houses it can't know
 print(chart.moon_range)       # a Moon range, not a false exact degree
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+UnknownTimeChart
+None
+Moon: Cancer 22° - Leo 6° (arc: 13.8°)
+```
 
 Both routes return an `UnknownTimeChart`: no houses, no angles, and a
 `moon_range` instead of a single Moon position. Your planet-to-planet aspects

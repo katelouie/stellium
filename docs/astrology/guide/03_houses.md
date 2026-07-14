@@ -275,6 +275,23 @@ for h in range(1, 13):
 print("Sun is in house", chart.get_house("Sun"))    # 7
 print("Moon is in house", chart.get_house("Moon"))   # 3
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+House  1: Capricorn    (cusp 298.88°)
+House  2: Pisces       (cusp 352.12°)
+House  3: Taurus       (cusp 31.74°)
+House  4: Taurus       (cusp 57.34°)
+House  5: Gemini       (cusp 77.03°)
+House  6: Cancer       (cusp 95.75°)
+House  7: Cancer       (cusp 118.88°)
+House  8: Virgo        (cusp 172.12°)
+House  9: Scorpio      (cusp 211.74°)
+House 10: Scorpio      (cusp 237.34°)
+House 11: Sagittarius  (cusp 257.03°)
+House 12: Capricorn    (cusp 275.75°)
+Sun is in house 7
+Moon is in house 3
+```
 
 ### Whole Sign (the traditional default)
 
@@ -288,6 +305,11 @@ chart = (ChartBuilder.from_notable("Carl Jung")
 
 print("House system:", chart.default_house_system)   # "Whole Sign"
 print("Sun (Whole Sign):", chart.get_house("Sun"))   # 8
+```
+<!--pytest-codeblocks:expected-output-->
+```
+House system: Whole Sign
+Sun (Whole Sign): 8
 ```
 
 ### Compare systems side by side (the reason to use Stellium)
@@ -322,6 +344,16 @@ for system in ("Placidus", "Koch", "Whole Sign"):
 # Pull the full cusp set for any one of them
 whole = chart.get_houses("Whole Sign")
 topo  = chart.get_houses("Topocentric")
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Placidus    : Sun in house 7
+Whole Sign  : Sun in house 8
+Koch        : Sun in house 7
+Topocentric : Sun in house 7
+Placidus    : Jupiter in house 8
+Koch        : Jupiter in house 9
+Whole Sign  : Jupiter in house 10
 ```
 
 When Whole Sign puts the Sun in the 8th and the quadrant systems put it in the

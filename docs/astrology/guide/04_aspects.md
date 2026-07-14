@@ -268,6 +268,57 @@ for asp in sorted(chart.aspects, key=lambda a: a.orb):
     print(f"{asp.object1.name:12} {asp.aspect_name:12} {asp.object2.name:12} "
           f"orb {asp.orb:4.2f}°  {direction}")
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Mars         Opposition   True Node    orb 0.31°  separating
+Mars         Conjunction  South Node   orb 0.31°  separating
+Venus        Trine        Jupiter      orb 1.04°  separating
+Mercury      Trine        Saturn       orb 1.05°  applying
+Sun          Square       Jupiter      orb 1.18°  separating
+Neptune      Sextile      Pluto        orb 1.22°  exact/stationary
+Saturn       Sextile      Chiron       orb 1.31°  separating
+Jupiter      Trine        Chiron       orb 1.40°  separating
+Moon         Square       Mars         orb 1.77°  separating
+Moon         Square       True Node    orb 2.07°  separating
+Moon         Square       South Node   orb 2.07°  separating
+Mercury      Opposition   Chiron       orb 2.36°  applying
+Venus        Trine        Chiron       orb 2.45°  separating
+Jupiter      Sextile      Saturn       orb 2.71°  separating
+Mercury      Trine        Mean Apogee  orb 2.77°  separating
+Moon         Square       Neptune      orb 2.88°  exact/stationary
+Sun          Square       True Node    orb 2.97°  applying
+Sun          Square       South Node   orb 2.97°  applying
+Venus        Trine        True Node    orb 3.11°  applying
+Venus        Sextile      South Node   orb 3.11°  applying
+Sun          Square       Mars         orb 3.28°  applying
+Venus        Sextile      Mars         orb 3.41°  applying
+Mars         Trine        Pluto        orb 3.42°  applying
+Pluto        Sextile      True Node    orb 3.73°  separating
+Pluto        Trine        South Node   orb 3.73°  applying
+Venus        Opposition   Saturn       orb 3.76°  separating
+Mercury      Sextile      Jupiter      orb 3.76°  applying
+Saturn       Trine        Mean Apogee  orb 3.81°  applying
+Jupiter      Conjunction  True Node    orb 4.15°  applying
+Jupiter      Opposition   South Node   orb 4.15°  separating
+Mars         Opposition   Jupiter      orb 4.46°  separating
+Mars         Opposition   Neptune      orb 4.65°  exact/stationary
+Mercury      Sextile      Venus        orb 4.81°  applying
+Neptune      Conjunction  True Node    orb 4.95°  exact/stationary
+Neptune      Opposition   South Node   orb 4.95°  exact/stationary
+Sun          Conjunction  Moon         orb 5.05°  separating
+Chiron       Sextile      Mean Apogee  orb 5.13°  applying
+Uranus       Trine        Mean Apogee  orb 5.54°  separating
+True Node    Trine        Chiron       orb 5.55°  applying
+Chiron       Sextile      South Node   orb 5.55°  separating
+Mars         Sextile      Chiron       orb 5.86°  separating
+Moon         Square       Jupiter      orb 6.22°  separating
+Jupiter      Opposition   Mean Apogee  orb 6.53°  applying
+Saturn       Trine        South Node   orb 6.86°  separating
+Mars         Trine        Saturn       orb 7.17°  separating
+Sun          Square       Mean Apogee  orb 7.70°  separating
+Mercury      Trine        South Node   orb 7.91°  applying
+Sun          Square       Neptune      orb 7.93°  exact/stationary
+```
 
 The tightest few are his Sun-MC conjunction (0.03°, a noon artifact, ignore it),
 Mars conjunct South Node (0.31°), Jupiter conjunct Ascendant (another artifact),
@@ -312,6 +363,38 @@ chart = (ChartBuilder.from_notable("Wong Kar-wai")
 (ReportBuilder().from_chart(chart)
     .with_aspect_patterns()
     .render(format="rich_table"))
+```
+<!--pytest-codeblocks:expected-output-->
+```
+
+Aspect Patterns
+───────────────
+┏━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Pattern          ┃ Planets                           ┃ Element/Quality ┃ Details                 ┃
+┡━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ Mystic Rectangle │ ☿ Mercury, ⚷ Chiron, ♀ Venus, ♄   │ —               │ 4 planets               │
+│                  │ Saturn                            │                 │                         │
+│ Mystic Rectangle │ ☿ Mercury, ⚷ Chiron, ♃ Jupiter, ⚸ │ —               │ 4 planets               │
+│                  │ Black Moon Lilith                 │                 │                         │
+│ Mystic Rectangle │ ☿ Mercury, ⚷ Chiron, ♃ Jupiter, ☋ │ —               │ 4 planets               │
+│                  │ South Node                        │                 │                         │
+│ Mystic Rectangle │ ♀ Venus, ♄ Saturn, ♂ Mars, ♃      │ —               │ 4 planets               │
+│                  │ Jupiter                           │                 │                         │
+│ Mystic Rectangle │ ♀ Venus, ♄ Saturn, ♃ Jupiter, ☋   │ —               │ 4 planets               │
+│                  │ South Node                        │                 │                         │
+│ T-Square         │ ♂ Mars, ♃ Jupiter, ☉ Sun          │ Cardinal        │ 3 planets, Apex: ☉ Sun  │
+│ T-Square         │ ♂ Mars, ♃ Jupiter, ☽ Moon         │ Cardinal        │ 3 planets, Apex: ☽ Moon │
+│ T-Square         │ ♂ Mars, ♆ Neptune, ☉ Sun          │ Mixed           │ 3 planets, Apex: ☉ Sun  │
+│ T-Square         │ ♂ Mars, ♆ Neptune, ☽ Moon         │ Mixed           │ 3 planets, Apex: ☽ Moon │
+│ T-Square         │ ♂ Mars, ☊ North Node, ☉ Sun       │ Cardinal        │ 3 planets, Apex: ☉ Sun  │
+│ T-Square         │ ♂ Mars, ☊ North Node, ☽ Moon      │ Cardinal        │ 3 planets, Apex: ☽ Moon │
+│ T-Square         │ ♃ Jupiter, ⚸ Black Moon Lilith, ☉ │ Cardinal        │ 3 planets, Apex: ☉ Sun  │
+│                  │ Sun                               │                 │                         │
+│ T-Square         │ ♃ Jupiter, ☋ South Node, ☉ Sun    │ Cardinal        │ 3 planets, Apex: ☉ Sun  │
+│ T-Square         │ ♃ Jupiter, ☋ South Node, ☽ Moon   │ Cardinal        │ 3 planets, Apex: ☽ Moon │
+│ T-Square         │ ♆ Neptune, ☋ South Node, ☉ Sun    │ Mixed           │ 3 planets, Apex: ☉ Sun  │
+│ T-Square         │ ♆ Neptune, ☋ South Node, ☽ Moon   │ Mixed           │ 3 planets, Apex: ☽ Moon │
+└──────────────────┴───────────────────────────────────┴─────────────────┴─────────────────────────┘
 ```
 
 Remember the caveat: this prints 22 T-squares and 9 mystic rectangles, which are

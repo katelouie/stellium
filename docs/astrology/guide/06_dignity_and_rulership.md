@@ -68,9 +68,14 @@ weak), and the tradition assigns each a score.
 | **Detriment** | −5 | Opposite its domicile. In exile, in hostile territory. |
 
 A planet can hold several dignities at once and you add them up. Lilly's **Venus
-is in Taurus, which it rules**, so it scores domicile (+5), and it also sits in
-its own bound (+2), for a total of **+7**. That is the strongest essential
-condition in his chart: Venus is the craftsman in the fully-stocked workshop.
+is in Taurus, which it rules**: domicile, **+5**. That is the strongest essential
+condition in his chart — Venus is the craftsman in the fully-stocked workshop.
+
+And the adding-up cuts both ways, which his Moon shows better than Venus does. It
+sits in **Capricorn, its detriment** (−5) — the sign opposite the one it rules. But
+Lilly was born at two in the morning, so this is a **night** chart, and the Moon is
+the night **triplicity ruler** of the earth signs (+3). Net: **−2**. Badly placed,
+and not without resource. A single number would have thrown that away.
 
 By contrast, his **Sun and his Saturn are both peregrine** (score 0): they sit in
 signs where they hold no rulership, exaltation, triplicity, bound, or face. Not
@@ -113,27 +118,29 @@ Accidental dignity has nothing to do with the sign. It's about the planet's
 
 > [!IMPORTANT]
 > **Essential and accidental dignity are independent, and they can conflict.**
-> Lilly's Venus is essentially dignified to the hilt (+7, in domicile) *and*
-> accidentally debilitated (combust, only 3.5° from the Sun). A brilliant
-> craftsman, working in a locked and darkened room. Never collapse the two into a
+> Lilly's Venus is essentially dignified to the hilt (+5, in domicile) *and*
+> accidentally debilitated — **combust**, a mere **0°50′** from the Sun, which is
+> close enough to be all but swallowed. A brilliant craftsman, working in a locked
+> and darkened room. Never collapse the two into a
 > single "good/bad" verdict; read them as two separate layers and let the tension
 > between them tell the story.
 
 ### Dispositors: the chart's chain of command
 
 Here's the technique that turns dignity into structure. A planet is **disposited**
-by whatever planet rules the sign it sits in. Lilly's Moon is in Virgo, so Mercury
-(Virgo's ruler) is the Moon's dispositor. But Mercury is in Taurus, ruled by
-Venus, so Venus disposits Mercury. And Venus is in Taurus, its *own* sign, so
-Venus disposits itself. The chain stops there.
+by whatever planet rules the sign it sits in. Lilly's Moon is in Capricorn, so
+Saturn (Capricorn's ruler) is the Moon's dispositor. But Saturn is in Scorpio, ruled
+by Mars; Mars is in Virgo, ruled by Mercury; Mercury is in Taurus, ruled by Venus.
+And Venus is in Taurus, its *own* sign, so Venus disposits itself. The chain stops
+there.
 
 Follow every planet's chain up and, in Lilly's chart, they *all* terminate at
 Venus:
 
 ```
-Moon → Mercury → Venus → (Venus rules itself: stop)
+Sun    → Venus → (Venus rules itself: stop)
+Moon   → Saturn → Mars → Mercury → Venus → (stop)
 Saturn → Mars → Mercury → Venus → (stop)
-Sun → Venus → (stop)
 ```
 
 When one planet swallows every chain like this, it's the **final dispositor**: the
@@ -144,26 +151,39 @@ man who married well and made astrology pay.
 
 Sometimes two planets rule each other's signs and the chain loops between them
 forever: that's **mutual reception**, and the two planets prop each other up, able
-to "trade places." Lilly has Mercury in Taurus and the Moon in Virgo in mutual
-reception *by exaltation* (Mercury exalts in Virgo, the Moon in Taurus), a mutual
-support between his thinking and his instincts.
+to "trade places." Lilly has **none** — every chain runs straight to Venus without
+looping — which is itself the point of drawing the graph: a chart with a single
+final dispositor and no receptions has one unambiguous centre of gravity. A chart
+full of loops does not.
 
 ### Chart ruler vs final dispositor (not the same thing)
 
 Two "most important planet" concepts that beginners fuse, and Lilly pulls them
 cleanly apart:
 
-- The **chart ruler** is the planet that rules the *rising sign*: it stands for
-  the native, the self. Lilly has Aquarius rising, so his chart ruler is
-  **Saturn**.
+- The **chart ruler** is the planet that rules the *rising sign*: it stands for the
+  native, the self. Lilly has **Pisces rising** (2°04′), so his chart ruler is
+  **Jupiter** — the greater benefic, sitting at 13°29′ Libra in the **7th house** of
+  partnership, holding a modest **+2** (participating triplicity ruler).
 - The **final dispositor** is where the dispositor chains *terminate*: the chart's
-  structural authority. Lilly's is **Venus**.
+  structural authority. Lilly's is **Venus**, in Taurus in the 2nd.
 
-They're different planets doing different jobs. And there's a poignancy in Lilly's
-version: his chart ruler Saturn is peregrine *and* cadent (weak by both measures),
-yet it sits in the **9th house**, the traditional house of divination and the
-astrological art. The self is a rootless wanderer, but it's a wanderer standing in
-the house of prophecy.
+They are different planets doing different jobs, and in Lilly's case they tell the
+same story from two directions. The **self** (Jupiter, from Pisces rising) stands in
+the house of **partnership**. The **structure** (Venus, final dispositor) stands in
+the house of **money**. AstroDatabank's biography, in one sentence: *"Lilly acquired a
+fortune by marriage, which allowed him the leisure to study and follow his bent."*
+Marriage, then money, then the freedom to become the most famous astrologer in
+England — and his chart puts each of those exactly where you would look for it.
+
+Notice too what the *self* is made of. Jupiter is only lightly dignified: it can act,
+but it is not a powerhouse. The real concentration of the chart is a **Taurus stellium
+in the 2nd** — Sun, Mercury and Venus all crowded into the house of resources, with
+Venus (the only planet in the chart with real essential dignity) sitting **0°50′ from
+the Sun**, close enough to be swallowed by it. That is a man whose whole chart points
+at material security and whose single strongest planet is hidden inside the Sun's
+glare. Whether that reads as "the craftsman working in a darkened room" or as
+something else is a judgment call — but the *configuration* is not.
 
 ---
 
@@ -205,43 +225,72 @@ system that was actually built for the job.
 
 ## In Stellium
 
+> [!IMPORTANT]
+> **Why `use_recorded_time=True`?** Lilly's birth time (02:00) is on record, and
+> AstroDatabank rates it **A** — quoted by the person, in his own letter to Elias
+> Ashmole. It also notes that *"the time may have been rectified by him"*, with
+> Gadbury giving 2:00, Sibly 2:08 and Wangemann 3:00. Good provenance for a number
+> he probably back-solved. So Stellium marks it `has_reliable_time: false` and, by
+> default, builds him **unknown-time**: noon, no houses, no angles, no Lots.
+>
+> This chapter needs his houses, so it asks for the recorded time explicitly. The
+> flag warns once and stamps `chart.metadata["time_provenance"]` onto the chart, so
+> it can never quietly pass for a birth-certificate chart. **That is the honest way
+> to work with a rectified time: use it, and never forget that you did.**
+
 ### Essential dignity and scoring
 
 ```python
 from stellium import ChartBuilder
 from stellium.components import DignityComponent
 
-chart = (ChartBuilder.from_notable("William Lilly")
+chart = (ChartBuilder.from_notable("William Lilly", use_recorded_time=True)
     .add_component(DignityComponent(traditional=True))
     .calculate())
 
 venus = chart.get_planet_dignity("Venus", system="traditional")
 print(venus["score"], venus["dignities"])
-# 7 ['domicile', 'term']
 
 for p in ("Sun", "Moon", "Venus", "Saturn"):
     d = chart.get_planet_dignity(p, system="traditional")
     print(f"{p:8} {d['sign']:8} {d['score']:+d}  {d['dignities']}")
-# Sun      Taurus   +0  ['peregrine']
-# Moon     Virgo    +3  ['triplicity_ruler']
-# Venus    Taurus   +7  ['domicile', 'term']
-# Saturn   Scorpio  +0  ['peregrine']
 
 print(chart.get_strongest_planet())     # ('Venus', 7)
 print(chart.get_mutual_receptions())     # Mercury <-> Moon by exaltation
+```
+<!--pytest-codeblocks:expected-output-->
+```
+5 ['domicile']
+Sun      Taurus   +0  ['peregrine']
+Moon     Capricorn -2  ['triplicity_ruler', 'detriment']
+Venus    Taurus   +5  ['domicile']
+Saturn   Scorpio  +0  ['peregrine']
+('Venus', 5)
+[]
 ```
 
 ### Dispositors, final dispositor, and chart ruler
 
 ```python
+from stellium import ChartBuilder
 from stellium.engines.dispositors import DispositorEngine
 from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
-disp = DispositorEngine(chart, rulership_system="traditional").planetary()
-print(disp.final_dispositor)     # Venus
-print(disp.chains["Saturn"])     # ['Saturn', 'Mars', 'Mercury', 'Venus', 'Venus']
+chart = ChartBuilder.from_notable("William Lilly", use_recorded_time=True).calculate()
 
-print(get_chart_ruler_from_chart(chart))   # ('Saturn', 'Aquarius')
+disp = DispositorEngine(chart, rulership_system="traditional").planetary()
+print(disp.final_dispositor)
+print(disp.chains["Saturn"])
+print(disp.chains["Moon"])
+
+print(get_chart_ruler_from_chart(chart))
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Venus
+['Saturn', 'Mars', 'Mercury', 'Venus', 'Venus']
+['Moon', 'Saturn', 'Mars', 'Mercury', 'Venus', 'Venus']
+('Jupiter', 'Pisces')
 ```
 
 The chart ruler is a `(planet, rising_sign)` pair; note it's **Saturn** here
@@ -252,13 +301,14 @@ would hand Aquarius to Uranus) to see how the whole chain-of-command shifts.
 ### Accidental dignity
 
 ```python
+from stellium import ChartBuilder
 from stellium.components import AccidentalDignityComponent
 
-chart = (ChartBuilder.from_notable("William Lilly")
+chart = (ChartBuilder.from_notable("William Lilly", use_recorded_time=True)
     .add_component(AccidentalDignityComponent())
     .calculate())
 # Scores angularity, retrograde, combustion/cazimi, joys, etc. into chart.metadata
-# (This is what flags Lilly's Venus as combust despite its +7 essential dignity.)
+# (This is what flags Lilly's Venus as combust — 0°50' from the Sun — despite its +5.)
 ```
 
 The [dignities cookbook](../../../examples/dignities_cookbook.py) walks through

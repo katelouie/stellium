@@ -231,6 +231,23 @@ print(mars.is_out_of_bounds)    # True  <- declination past ±23°27'
 print(round(mars.declination, 1), "declination")   # -27.9
 print(round(mars.speed_longitude, 3), "°/day (near-stationary)")  # 0.016
 ```
+<!--pytest-codeblocks:expected-output-->
+```
+Sun       3°18' Leo              speed +0.956°/day
+Moon      15°25' Taurus          speed +14.208°/day
+Mercury   13°45' Cancer          speed +0.848°/day
+Venus     17°29' Cancer          speed +1.223°/day
+Mars      21°22' Sagittarius     speed +0.016°/day
+Jupiter   23°47' Libra           speed +0.104°/day
+Saturn    24°11' Aquarius        speed -0.067°/day
+Uranus    14°48' Leo             speed +0.061°/day
+Neptune   3°02' Taurus           speed +0.006°/day
+Pluto     23°30' Taurus          speed +0.010°/day
+False
+True
+-27.9 declination
+0.016 °/day (near-stationary)
+```
 
 Every `CelestialPosition` carries `speed_longitude` (negative means retrograde),
 `is_retrograde`, `is_out_of_bounds`, and `declination`, so the motion states from
@@ -270,6 +287,12 @@ for name in ("Ceres", "Chiron", "Cupido"):
 # Ceres    21°27' Leo
 # Chiron   26°24' Aries
 # Cupido   12°39' Gemini
+```
+<!--pytest-codeblocks:expected-output-->
+```
+Ceres    21°26' Leo
+Chiron   26°24' Aries
+Cupido   12°39' Gemini
 ```
 
 > [!IMPORTANT]
