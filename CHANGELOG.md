@@ -114,6 +114,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   It was invisible because it is **arbitrary per process**, not per call: Python randomizes string hashing at interpreter start, and `CelestialPosition` is a frozen dataclass hashing off its string fields. Within one process the order is stable, so every existing test passed, and building two charts in one test and comparing them proved nothing. The new `tests/test_determinism.py` therefore spawns **real subprocesses with differing `PYTHONHASHSEED`** and pins a maximal chart's entire `to_dict()` across them — the general lesson being that a nondeterminism test which does not cross a process boundary is testing the seed, not the code.
 
+- **Report rows came out in a different order on Linux than on macOS** *(output ordering change)*. The aspect table sorted with `key=lambda a: a.orb` — a raw float. Two aspects that are *mathematically the same angle* hold orbs differing only in the last bits:
+
+  ```
+  Neptune Square True Node     5.1401672080752405
+  Neptune Square South Node    5.140167208075212
+  ```
+
+  The nodes are exactly 180° apart, so those are the same number; which one sorts first depends on the platform's libm. Both print as `5.14°`, so there was no visible rounding difference to notice — just two rows that quietly swapped places depending on the machine. The new `get_orb_sort_key()` quantizes at 1e-9° and then breaks ties by name (quantizing alone is not enough — a true value can straddle the boundary and round two ways; the names make the order *total*). **No value changes anywhere:** `aspect.orb` keeps every digit in the chart, in `to_dict()`, and on the page — the rounding lives inside the comparison key and dies with it. 1e-9° is ~3.6 microarcseconds, and Swiss Ephemeris resolves about 0.001″, so the discarded bits are roughly a million times finer than the ephemeris can see. Applied to all five orb sorts, including the planner's transit contacts, which would otherwise have shuffled a planner's daily lines between machines. Caught by the new doc snapshots: generated on macOS, validated on Ubuntu.
+
 - **The test suite's mock geocoder was charting the wrong places, and silently charting the ocean for anywhere it didn't know** *(test fixture; no library change)*. Not user-facing, but it means a large part of the suite has been validating against coordinates nobody ever gets.
 
   `conftest.GEOCODED_LOCATIONS` exists so CI need not call Nominatim. Its coordinates were **hand-written from general knowledge, not captured from the geocoder they stand in for** — `37.7749, -122.4194` for San Francisco, `40.7128, -74.0060` for New York: the familiar textbook values. **Nine of the ten disagreed with what Nominatim actually returns**, and Tokyo was off by 0.11° of longitude — about **10 km**, which is a real shift in the MC and every house cusp with it.
