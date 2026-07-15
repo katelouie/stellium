@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **Proposal.** Built on `feat/structure-first-sections` (it blocks the Chinese chart output). |
+| **Status** | **Landed** on `feat/structure-first-sections`. Font provisioning (A1–A4) + wheel localization (B1–B2) shipped; a live `fonts-v1` release backs it. Element/modality table went glyph-based instead of localized. Remaining: additional non-Latin packs as needed. |
 | **Created** | 2026-07-14 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
