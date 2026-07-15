@@ -138,6 +138,10 @@ def build_catalog() -> dict[str, str]:
         for name in names:
             catalog[f"{namespace}.{name}"] = name
 
+    # A short form for the one place a narrow column abbreviates it (the PDF motion
+    # column prints "Retro"). Everything else falls back to the full term.
+    catalog["motion.Retrograde.short"] = "Retro"
+
     return catalog
 
 

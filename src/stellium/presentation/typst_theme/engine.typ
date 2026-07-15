@@ -97,6 +97,7 @@
       sec.planets,
       house-headers: sec.at("house_headers", default: ()),
       show-speed: sec.at("show_speed", default: true),
+      labels: sec.at("labels", default: (:)),
     )
   } else if kind == "table" {
     (c.generic-table)(sec.headers, sec.rows)

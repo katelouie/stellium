@@ -220,13 +220,14 @@
   // --- planet positions table -------------------------------------------------
   // planets: array of (name, glyph, sign, sign_glyph, degree, houses:(..), speed, retro)
   // columns: which house-system column headers to show.
-  let planet-table(planets, house-headers: (), show-speed: true) = {
+  let planet-table(planets, house-headers: (), show-speed: true, labels: (:)) = {
     let head-cells = (
-      lbl("Planet", size: 7.5pt), lbl("Position", size: 7.5pt),
+      lbl(labels.at("planet", default: "Planet"), size: 7.5pt),
+      lbl(labels.at("position", default: "Position"), size: 7.5pt),
     )
     head-cells += house-headers.map(h => align(center)[#lbl(h, size: 7.5pt)])
     if show-speed {
-      head-cells += (align(right)[#lbl("Speed", size: 7.5pt)], align(right)[#lbl("Motion", size: 7.5pt)])
+      head-cells += (align(right)[#lbl(labels.at("speed", default: "Speed"), size: 7.5pt)], align(right)[#lbl(labels.at("motion", default: "Motion"), size: 7.5pt)])
     }
     let ncol = 2 + house-headers.len() + (if show-speed { 2 } else { 0 })
     // Fill the panel width: name auto, position stretches, the rest hug right.
@@ -244,14 +245,14 @@
         // position: sign glyph + sign + mono degree
         {
           let sg = p.at("sign_glyph", default: sign-glyph-of(p.sign))
-          box[#(if sg != none and sg != "" { glyph(sg, size: 11pt, fill: accent) }) #text(font: body, size: 11pt, fill: muted)[#p.sign] #h(3pt) #mono(p.degree, size: 11pt, fill: ink)]
+          box[#(if sg != none and sg != "" { glyph(sg, size: 11pt, fill: accent) }) #text(font: body, size: 11pt, fill: muted)[#p.at("sign_label", default: p.sign)] #h(3pt) #mono(p.degree, size: 11pt, fill: ink)]
         },
       )
       cells += p.houses.map(h => align(center + horizon)[#badge(h)])
       if show-speed {
         cells += (
           align(right + horizon)[#mono(p.speed, size: 9.5pt, fill: muted)],
-          align(right + horizon)[#(if p.retro { text(font: body, size: 10pt, fill: aspect-colors.square)[Retro] } else { text(font: body, size: 10pt, fill: muted)[Direct] })],
+          align(right + horizon)[#(if p.retro { text(font: body, size: 10pt, fill: aspect-colors.square)[#p.at("motion", default: "Retro")] } else { text(font: body, size: 10pt, fill: muted)[#p.at("motion", default: "Direct")] })],
         )
       }
       rows.push(cells)

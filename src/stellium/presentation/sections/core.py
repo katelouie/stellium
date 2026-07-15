@@ -364,14 +364,14 @@ class PlanetPositionSection:
         # Sort positions consistently
         positions = sorted(positions, key=get_object_sort_key)
 
-        # Build the structured planet list ONCE (the single source of truth),
-        # then derive the string ``rows`` from it. Renderers that want structure
-        # (e.g. the Typst PDF design system) read ``planets``; the terminal /
-        # HTML / markdown renderers consume the derived ``rows``.
+        # Build the planet payload ONCE — the single source of truth. Canonical identity
+        # fields (name, sign, the glyph chars) stay raw for the structured renderer's
+        # colour/glyph lookups; display fields are i18n tokens the resolve pass localizes.
+        # The flat ``rows`` are then DERIVED from it, reusing the same tokens, so no data
+        # is composed twice. See the Unified Renderer Contract spec §4.3.
         planets: list[dict[str, Any]] = []
-        rows = []
         for pos in positions:
-            display_name, glyph = get_object_display(pos.name)
+            _display_name, glyph = get_object_display(pos.name)
             degree = int(pos.sign_degree)
             minute = int((pos.sign_degree % 1) * 60)
             deg_str = f"{degree}°{minute:02d}'"
@@ -387,44 +387,49 @@ class PlanetPositionSection:
                     except KeyError:
                         houses.append("—")
 
+            motion = "Retrograde" if pos.is_retrograde else "Direct"
             planets.append(
                 {
-                    "name": pos.name,  # canonical (matching)
-                    "label": display_name,  # registry display name
-                    "glyph": glyph or "",  # registry glyph char
-                    "sign": pos.sign,
-                    "sign_glyph": sign_glyph or "",
+                    "name": pos.name,  # canonical — colour/glyph/matching
+                    "label": term(
+                        f"body.{pos.name}"
+                    ),  # display (localized by the pass)
+                    "glyph": glyph or "",  # language-neutral
+                    "sign": pos.sign,  # canonical — disc tint, glyph fallback
+                    "sign_label": term(f"sign.{pos.sign}"),  # display
+                    "sign_glyph": sign_glyph or "",  # language-neutral
                     "degree": deg_str,
                     "houses": houses,
-                    "speed": f"{pos.speed_longitude:.3f}°",
+                    "speed": f"{pos.speed_longitude:.3f}°",  # structured-view speed
+                    "speed_value": pos.speed_longitude,  # raw, for the text view
                     "retro": bool(pos.is_retrograde),
+                    "motion": term(f"motion.{motion}", short=True),  # display (abbrev)
                 }
             )
 
-            # Structured row: the name and sign are catalog terms, the glyph is
-            # language-neutral, the degree is a number. The renderer composes the string
-            # last, in the active locale (English output is unchanged).
+        # Derive the flat rows from the payload — reuse the same tokens, compose last.
+        rows = []
+        for p in planets:
             name_cell: Any = (
-                msg("{glyph} {name}", glyph=glyph, name=term(f"body.{pos.name}"))
-                if glyph
-                else term(f"body.{pos.name}")
+                msg("{glyph} {name}", glyph=p["glyph"], name=p["label"])
+                if p["glyph"]
+                else p["label"]
             )
             position_cell: Any = (
                 msg(
                     "{glyph} {sign} {deg}",
-                    glyph=sign_glyph,
-                    sign=term(f"sign.{pos.sign}"),
-                    deg=deg_str,
+                    glyph=p["sign_glyph"],
+                    sign=p["sign_label"],
+                    deg=p["degree"],
                 )
-                if sign_glyph
-                else msg("{sign} {deg}", sign=term(f"sign.{pos.sign}"), deg=deg_str)
+                if p["sign_glyph"]
+                else msg("{sign} {deg}", sign=p["sign_label"], deg=p["degree"])
             )
-            row: list[Any] = [name_cell, position_cell]
-            row.extend(houses)
+            row: list[Any] = [name_cell, position_cell, *p["houses"]]
             if self.include_speed:
-                row.append(f"{pos.speed_longitude:.4f}°/day")
-                motion = "Retrograde" if pos.is_retrograde else "Direct"
-                row.append(term(f"motion.{motion}"))
+                row.append(f"{p['speed_value']:.4f}°/day")
+                # Text view uses the full motion word, not the column abbreviation.
+                row.append(term(f"motion.{'Retrograde' if p['retro'] else 'Direct'}"))
             rows.append(row)
 
         result = {
@@ -435,6 +440,14 @@ class PlanetPositionSection:
             "planets": planets,
             "house_headers": house_headers,
             "show_speed": self.include_speed,
+            # Chrome for the structured (Typst) planet table: the template reads these
+            # localized labels instead of hardcoding English column headers.
+            "labels": {
+                "planet": msg("Planet"),
+                "position": msg("Position"),
+                "speed": msg("Speed"),
+                "motion": msg("Motion"),
+            },
         }
         if title:
             result["title"] = title
