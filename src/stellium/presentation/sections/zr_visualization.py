@@ -21,6 +21,7 @@ import svgwrite
 from stellium.core.models import CalculatedChart, ZRPeriod, ZRTimeline
 from stellium.core.registry import CELESTIAL_REGISTRY
 from stellium.engines.releasing import PLANET_PERIODS
+from stellium.i18n import t
 
 from ._utils import get_sign_glyph
 
@@ -374,7 +375,7 @@ class ZRVisualizationSection:
         # Title
         dwg.add(
             dwg.text(
-                "ZODIACAL RELEASING OVERVIEW",
+                t("ZODIACAL RELEASING OVERVIEW"),
                 insert=(config.width / 2, y_offset),
                 text_anchor="middle",
                 font_family="Arial, sans-serif",
@@ -600,12 +601,12 @@ class ZRVisualizationSection:
 
         # Table headers
         headers = [
-            "Ruler",
-            "Signs",
-            "L1 (Years)",
-            "L2 (Months)",
-            "L3 (Days)",
-            "L4 (Hours)",
+            t("Ruler"),
+            t("Signs"),
+            t("L1 (Years)"),
+            t("L2 (Months)"),
+            t("L3 (Days)"),
+            t("L4 (Hours)"),
         ]
         col_widths = [80, 140, 80, 80, 80, 80]
         x_start = 60
@@ -926,8 +927,12 @@ The timeline on the following page shows your actual periods with start and end 
     ) -> None:
         """Render a single timeline level."""
         # Level label
-        level_names = {1: "LIFETIME VIEW", 2: "DECADE VIEW", 3: "YEAR VIEW"}
-        level_name = level_names.get(level, f"LEVEL {level}")
+        level_names = {
+            1: t("LIFETIME VIEW"),
+            2: t("DECADE VIEW"),
+            3: t("YEAR VIEW"),
+        }
+        level_name = level_names.get(level, t("LEVEL {level}").format(level=level))
 
         # Level badge
         self._add_section_header(

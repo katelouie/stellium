@@ -1986,6 +1986,28 @@ class ReportBuilder:
     # -------------------------------------------------------------------------
     # Rendering Methods
     # -------------------------------------------------------------------------
+    def _generate_section_data(self) -> list[tuple[str, dict[str, Any]]]:
+        """Run every section's ``generate_data``, with the report locale made ambient.
+
+        Most sections emit locale-agnostic structure (Term/Message) that the resolve pass
+        localizes later. But sections that **bake** their output — the SVG visualizations
+        draw text into a drawing at generate time, before the resolve pass ever sees it —
+        can't defer. For their benefit the report locale is set as the default around
+        generation (and restored after), so a ``t()`` call inside an SVG builder resolves
+        to the right language. It is a no-op for every format-last section.
+        """
+        from stellium.i18n import get_default_locale, set_default_locale
+
+        previous = get_default_locale()
+        try:
+            set_default_locale(self._locale or "en")
+            return [
+                (section.section_name, section.generate_data(self._chart))
+                for section in self._sections
+            ]
+        finally:
+            set_default_locale(previous)
+
     def render(
         self,
         format: str = "rich_table",
@@ -2050,10 +2072,7 @@ class ReportBuilder:
         title = self._title
 
         # Generate section data once
-        section_data = [
-            (section.section_name, section.generate_data(self._chart))
-            for section in self._sections
-        ]
+        section_data = self._generate_section_data()
 
         # Resolve structured values (Term/Message/date) that migrated sections emit,
         # for every locale — this is what composes localized strings from structure.
@@ -2119,10 +2138,7 @@ class ReportBuilder:
                 "render(format='pdf', file=...) instead."
             )
 
-        section_data = [
-            (section.section_name, section.generate_data(self._chart))
-            for section in self._sections
-        ]
+        section_data = self._generate_section_data()
 
         # Resolve structured values (Term/Message/date) for every locale, then apply the
         # legacy substring translator to remaining plain strings (prose is English-only).

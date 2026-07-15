@@ -21,6 +21,7 @@ import svgwrite
 
 from stellium.core.models import CalculatedChart
 from stellium.core.registry import CELESTIAL_REGISTRY
+from stellium.i18n import t
 
 from ._utils import get_sign_glyph
 from .zr_visualization import _add_font_defs
@@ -306,7 +307,7 @@ class ProfectionVisualizationSection:
         # Title
         dwg.add(
             dwg.text(
-                "ANNUAL PROFECTIONS",
+                t("ANNUAL PROFECTIONS"),
                 insert=(center_x, 25),
                 text_anchor="middle",
                 font_family="Arial, sans-serif",
@@ -668,7 +669,7 @@ class ProfectionVisualizationSection:
 
         dwg.add(
             dwg.text(
-                "Current period",
+                t("Current period"),
                 insert=(x + 26, y + 16),
                 font_family="Arial, sans-serif",
                 font_size="9px",
@@ -689,7 +690,7 @@ class ProfectionVisualizationSection:
 
         dwg.add(
             dwg.text(
-                "Natal placements",
+                t("Natal placements"),
                 insert=(x + 26, y + 35),
                 font_family="Arial, sans-serif",
                 font_size="9px",
@@ -734,14 +735,14 @@ class ProfectionVisualizationSection:
         # Get ages to compare
         ages = config.compare_ages or [config.current_age, config.current_age + 1]
 
-        # Table layout
+        # Table layout (row labels are UI text; the newline is kept for wrapping)
         row_labels = [
-            "SOLAR RETURN\n(NATAL LOCATION)",
-            "PROFECTED HOUSE",
-            "ANNUAL TIMELORD",
-            "NATAL PLACEMENTS IN\nPROFECTED HOUSE",
-            "TIMELORD'S NATAL POSITION",
-            "TIMELORD ALSO RULES",
+            t("SOLAR RETURN\n(NATAL LOCATION)"),
+            t("PROFECTED HOUSE"),
+            t("ANNUAL TIMELORD"),
+            t("NATAL PLACEMENTS IN\nPROFECTED HOUSE"),
+            t("TIMELORD'S NATAL POSITION"),
+            t("TIMELORD ALSO RULES"),
         ]
 
         label_width = 180
@@ -764,7 +765,7 @@ class ProfectionVisualizationSection:
             )
             dwg.add(
                 dwg.text(
-                    f"AGE {age}",
+                    t("AGE {age}").format(age=age),
                     insert=(x + col_width / 2, start_y + 17),
                     text_anchor="middle",
                     font_family="Arial, sans-serif",

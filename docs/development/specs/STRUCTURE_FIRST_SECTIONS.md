@@ -406,6 +406,14 @@ Rules:
 
 Phases 1–3 are what this spec commits to. 4–5 re-scope once 3 lands.
 
+**SVG visualizations** (profection/ZR wheels) bake their text into the drawing at generate
+time, so they cannot defer to the resolve pass. They use the ambient default locale
+instead: `ReportBuilder._generate_section_data` sets the report locale as the default
+around generation (restoring it after), so a `t()` inside an SVG builder resolves
+correctly. The wheels are mostly glyphs; their fixed UI labels (titles, headers, legends)
+are localized via `t()`. The descriptive *sentences* ("Bar height shows angular
+strength…") stay English (prose, §3), as do a few composed lot-titles.
+
 ### 7.1 The bridge
 
 Phase 1 adds machinery without removing anything. Through Phases 2–3, `render()` passes
