@@ -90,26 +90,47 @@ def coverage(locale: str) -> None:
 @i18n_group.command(name="extract")
 @click.option("--locale", default=None, help="Seed from an existing locale's strings.")
 def extract(locale: str | None) -> None:
-    """Print a locale file skeleton containing every key, ready to translate."""
+    """Print a locale file skeleton, grouped by namespace, ready to translate.
+
+    The shape matches a real locale file: catalog terms nested under their namespace,
+    format patterns under ``format``. A translator fills in the empty values and drops
+    the result at ``locales/<code>/strings.json``. Seeding from an existing locale keeps
+    the translations already done and leaves only the gaps blank.
+    """
     existing = _get_locale_strings(locale) if locale else {}
 
-    strings: dict[str, str] = {}
-    grouped: dict[str, list[str]] = defaultdict(list)
+    # Catalog terms nest under their namespace: "body.Sun" -> groups["body"]["Sun"].
+    groups: dict[str, dict[str, str]] = defaultdict(dict)
     for key in build_catalog():
-        grouped[key.split(".", 1)[0]].append(key)
-    for ns in sorted(grouped):
-        for key in sorted(grouped[ns]):
-            strings[key] = existing.get(key, "")
-    for key, english in DEFAULT_PATTERNS.items():
-        strings[key] = existing.get(key, english)
+        ns, rest = key.split(".", 1)
+        groups[ns][rest] = existing.get(key, "")
 
-    click.echo(
-        json.dumps(
-            {
-                "metadata": {"language": locale or "??", "status": "draft"},
-                "strings": strings,
-            },
-            indent=2,
-            ensure_ascii=False,
-        )
-    )
+    # Format patterns default to the English layout (a translator overrides what differs).
+    for key, english in DEFAULT_PATTERNS.items():
+        rest = key.split(".", 1)[1]
+        groups["format"][rest] = existing.get(key, english)
+
+    # Message keys (report labels, templates) are English strings the sections register,
+    # not derivable from the catalog — so carry over what the seed locale has, or a
+    # re-extract would silently drop them. The 'legacy' group is deliberately omitted:
+    # it is scaffolding that Phase 3 removes, and a fresh translation should not inherit
+    # it (translating the catalog makes it redundant).
+    catalog_terms = {v for k, v in build_catalog().items() if not k.endswith(".short")}
+    for full_key, value in existing.items():
+        namespace = full_key.split(".", 1)[0]
+        if namespace in groups or namespace == "format":
+            continue  # already emitted as a catalog/format entry
+        if "{" in full_key or full_key not in catalog_terms:
+            groups.setdefault("message", {})[full_key] = value
+        # else: a bare catalog duplicate — legacy scaffolding, skip.
+
+    doc: dict[str, object] = {
+        "metadata": {"language": locale or "??", "status": "draft"}
+    }
+    for ns in sorted(k for k in groups if k not in {"format", "message"}):
+        doc[ns] = dict(sorted(groups[ns].items()))
+    doc["format"] = dict(sorted(groups["format"].items()))
+    if groups.get("message"):
+        doc["message"] = dict(sorted(groups["message"].items()))
+
+    click.echo(json.dumps(doc, indent=2, ensure_ascii=False))

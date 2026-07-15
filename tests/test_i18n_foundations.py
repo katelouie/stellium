@@ -106,6 +106,36 @@ def test_bad_translation_that_invents_a_slot_degrades_to_english(monkeypatch):
     assert render(m, "zh_CN") == "火星 rules"
 
 
+def test_locale_flatten_and_nest_are_mutual_inverses():
+    """The grouped file and the dotted keys it loads to must round-trip losslessly.
+
+    flatten(nested) is what the loader returns; nest(flat) is what tooling uses to
+    regenerate the file. They are inverses, so a translator can edit either form. The
+    one thing flatten discards is the message/legacy split (both flatten to bare keys),
+    so nest takes the legacy key set to recover it.
+    """
+    import json
+    from pathlib import Path
+
+    from stellium.i18n.loader import _flatten_locale, _nest_locale
+
+    path = Path("src/stellium/i18n/locales/zh_CN/strings.json")
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    flat = _flatten_locale(doc)
+    legacy = frozenset(doc.get("legacy", {}))
+
+    # The direction tooling depends on: edit the dotted keys, regroup, no loss.
+    assert _flatten_locale(_nest_locale(flat, doc["metadata"], legacy)) == flat
+
+    # Full structural round-trip: the regrouped document equals the file on disk.
+    rebuilt = _nest_locale(flat, doc["metadata"], legacy)
+    assert rebuilt == doc
+
+    # A namespaced key must not collide a bare English one: body.Earth and element.Earth
+    # survive the round-trip as distinct keys with distinct values.
+    assert flat["body.Earth"] != flat["element.Earth"]
+
+
 @pytest.mark.slow
 def test_english_and_zh_output_unchanged():
     """The refactor's safety net: rendered reports are byte-identical to pre-Phase-1.

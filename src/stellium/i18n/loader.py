@@ -45,18 +45,99 @@ def _locale_metadata(locale: str) -> dict:
     return _metadata_cache[locale]
 
 
+# Groups whose keys are already the full lookup string (an English message, or a bare
+# catalog term the legacy translator still looks up), so they flatten *without* a prefix.
+# Every other group is a namespace and prefixes its keys with the group name — that
+# prefix is exactly what keeps ``body.Earth`` and ``element.Earth`` from colliding, the
+# collision the old no-prefix flatten produced.
+_PASSTHROUGH_GROUPS = frozenset({"message", "legacy"})
+
+
+def _flatten_locale(data: dict) -> dict[str, str]:
+    """Flatten a nested locale document to dotted keys, preserving the namespace prefix.
+
+    ``{"body": {"Sun": "太阳"}}`` → ``{"body.Sun": "太阳"}``. Keys inside a passthrough
+    group are used verbatim. A key that already contains a dot (``"Placidus.short"``
+    under ``house_system``) simply extends the path: ``house_system.Placidus.short``.
+
+    The inverse is :func:`_nest_locale`; the two are mutual inverses on a well-formed
+    document (see ``test_i18n_locale_roundtrip``).
+    """
+    flat: dict[str, str] = {}
+    for group, entries in data.items():
+        if group == "metadata" or not isinstance(entries, dict):
+            continue
+        prefix = "" if group in _PASSTHROUGH_GROUPS else f"{group}."
+        for key, value in entries.items():
+            if isinstance(value, str):
+                flat[f"{prefix}{key}"] = value
+    return flat
+
+
+def _key_group(dotted_key: str, namespaces: frozenset[str]) -> tuple[str, str]:
+    """Which group a flat key belongs to, and its key within that group.
+
+    The inverse of the prefix rule in :func:`_flatten_locale`. A key is namespaced only
+    if its first dot-segment is a *known* namespace — so ``body.Sun`` splits to
+    ``("body", "Sun")`` but ``"No eclipses in this period."`` (a full English sentence
+    that merely contains a dot) does not, and stays whole in a passthrough group.
+    """
+    head = dotted_key.split(".", 1)[0]
+    if "." in dotted_key and head in namespaces:
+        return head, dotted_key.split(".", 1)[1]
+    return "", dotted_key  # passthrough: the key is already the full lookup string
+
+
+def _nest_locale(
+    flat: dict[str, str],
+    metadata: dict | None = None,
+    legacy_keys: frozenset[str] = frozenset(),
+) -> dict:
+    """Rebuild the grouped document from a flat dotted mapping — the inverse of flatten.
+
+    Namespaced keys nest under their namespace. Everything else is a passthrough key
+    (an English message string), which goes to the ``legacy`` group if it is named in
+    ``legacy_keys`` — the bare catalog duplicates the pre-format-last renderer looks up
+    — and to ``message`` otherwise. ``legacy_keys`` is the one thing flatten discards
+    (both passthrough groups flatten to bare keys), so pass it to recover the split;
+    omit it and every passthrough key lands in ``message``, which is still lossless as a
+    key/value mapping.
+    """
+    from stellium.i18n.catalog import namespaces as catalog_namespaces
+
+    known = frozenset(catalog_namespaces()) | {"format"}
+    groups: dict[str, dict[str, str]] = {}
+    for key, value in flat.items():
+        group, subkey = _key_group(key, known)
+        if not group:
+            group = "legacy" if key in legacy_keys else "message"
+        groups.setdefault(group, {})[subkey] = value
+
+    doc: dict = {"metadata": metadata or {}}
+    catalog_ns = sorted(k for k in groups if k not in {"format", "message", "legacy"})
+    for name in catalog_ns:
+        doc[name] = dict(sorted(groups[name].items()))
+    for tail in ("format", "message", "legacy"):
+        if groups.get(tail):
+            doc[tail] = dict(sorted(groups[tail].items()))
+    return doc
+
+
 def _load_locale(locale: str) -> dict[str, str]:
     """Load and flatten a locale's strings from its JSON file.
+
+    The file is grouped by namespace (``body``, ``sign``, ``house_system``, ``format``,
+    ``message``, ``legacy``); this returns the flat dotted-key mapping the rest of the
+    system looks up. See :func:`_flatten_locale`.
 
     Args:
         locale: Locale identifier (e.g., "zh_CN")
 
     Returns:
-        Flat dict mapping English keys to translated strings.
-        Empty dict if the locale directory or file doesn't exist.
+        Flat dict mapping dotted keys to translated strings. Empty if the locale file
+        does not exist.
     """
-    locale_dir = _LOCALES_DIR / locale
-    strings_file = locale_dir / "strings.json"
+    strings_file = _LOCALES_DIR / locale / "strings.json"
 
     if not strings_file.exists():
         return {}
@@ -66,21 +147,12 @@ def _load_locale(locale: str) -> dict[str, str]:
     except (json.JSONDecodeError, OSError):
         return {}
 
-    # The "strings" key contains the flat key-value mapping.
-    # If the file is just a flat dict (no "strings" wrapper), use it directly.
+    # A legacy flat file kept its strings under a "strings" wrapper; the grouped format
+    # puts namespaces at the top level. Support both so an old file still loads.
     if "strings" in data and isinstance(data["strings"], dict):
         return data["strings"]
 
-    # Fallback: try to flatten all non-metadata dict values
-    flat: dict[str, str] = {}
-    for key, value in data.items():
-        if key == "metadata":
-            continue
-        if isinstance(value, dict):
-            flat.update(value)
-        elif isinstance(value, str):
-            flat[key] = value
-    return flat
+    return _flatten_locale(data)
 
 
 def _get_locale_strings(locale: str) -> dict[str, str]:

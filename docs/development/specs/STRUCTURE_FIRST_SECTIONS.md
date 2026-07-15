@@ -169,6 +169,64 @@ hand-translating 327 strings that are about to stop existing.
 
 ---
 
+## 3a. Two i18n systems, one boundary
+
+There are deliberately **two** localization systems, and they must not be merged:
+
+| | `web/i18n/` | `stellium.i18n` (this spec) |
+|---|---|---|
+| Translates | web-app **chrome** — "Create Your Birth Chart", buttons, forms | report/chart **content** — planets, signs, aspects, the report |
+| Key scheme | the English string itself (`_("CREATE CHART")`) | namespaced catalog keys + English-string messages |
+| Bridge | `web/i18n/report_locale()` → `ReportBuilder.with_locale()` | — |
+
+The boundary is **UI chrome vs. astrological content**, it is documented in
+`web/i18n/README.md`, and the one connection between them is `report_locale()`, which
+maps the user's web locale to a library locale (or `en` if the library lacks it).
+
+Why the two systems use **different key schemes** is not an inconsistency — it follows
+from their data. The web app's keys are full English *phrases* ("Create Your Birth
+Chart"), which are collision-free, so the English-string-as-key scheme is perfect and
+needs no namespaces. The library's catalog keys are single *words* (`Earth`, `Fixed`,
+`Square`), which collide across meanings — so the library needs the namespace in the key.
+This spec's **messages** use English-string keys exactly like the web app (they are
+phrases too); only the single-word **catalog** is namespaced. Each system fits its data.
+
+The original contribution (PR #37) arrived as three files split across this boundary:
+`frontend.json` → already absorbed into `web/i18n/zh_CN.json`; `report.json` +
+`pdf_terms.json` → this layer.
+
+### Locale file shape
+
+A library locale file is **grouped by namespace** and loaded via a *prefix-preserving*
+flatten to dotted keys:
+
+```json
+{ "body":   { "Sun": "太阳", "Earth": "地球" },
+  "element":{ "Earth": "土象" },
+  "house_system": { "Placidus": "普拉西度斯", "Placidus.short": "普" },
+  "format": { "date": "{year}年{month_num}月{day}日" },
+  "message":{ "House ({system})": "宫位（{system}）", "Chart Overview": "星盘概览" },
+  "legacy": { "Aries": "白羊座" } }
+```
+
+- Namespace groups (`body`, `sign`, …, `format`) **prefix** their keys →
+  `body.Sun`, `house_system.Placidus.short`. That prefix is what keeps `body.Earth`
+  from colliding with `element.Earth` — the collision the earlier *no-prefix* flatten
+  produced (it mapped the planet Earth to 土象, the element).
+- `message` holds English-string keys (report labels, templates); `legacy` holds the
+  bare catalog terms the pre-format-last renderer still looks up by English string.
+  Both flatten **without** a prefix. `legacy` is scaffolding, removed with the substring
+  translator in Phase 3.
+- `_flatten_locale` / `_nest_locale` (in `loader.py`) are mutual inverses, so a
+  contributor may edit either the grouped file or the dotted keys and regenerate the
+  other losslessly. `stellium i18n extract` emits the grouped shape.
+
+The web app uses a *no-prefix* flatten — correct there, because its phrase keys don't
+collide. The library's prefix-preserving flatten is the one deliberate divergence, for
+the reason above.
+
+---
+
 ## 4. Design
 
 ### 4.1 The section contract
