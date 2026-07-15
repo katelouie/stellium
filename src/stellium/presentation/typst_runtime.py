@@ -176,6 +176,7 @@ def compile_png(
     root: str,
     ppi: float = 144.0,
     sys_inputs: dict[str, str] | None = None,
+    extra_fonts: list[str] | None = None,
 ) -> bytes:
     """Compile a ``.typ`` entry file to PNG bytes.
 
@@ -192,7 +193,7 @@ def compile_png(
     return require_typst().compile(
         entry,
         root=root,
-        font_paths=font_paths(),
+        font_paths=font_paths(extra=extra_fonts),
         ignore_system_fonts=True,
         format="png",
         ppi=ppi,

@@ -15,6 +15,7 @@ from stellium.core.models import (
     ObjectType,
     PhaseData,
 )
+from stellium.i18n import render, term
 
 from .core import ChartRenderer
 
@@ -201,7 +202,7 @@ class MoonPhaseLayer:
 
                 dwg.add(
                     dwg.text(
-                        phase_data.phase_name,
+                        render(term(f"phase.{phase_data.phase_name}"), renderer.locale),
                         insert=(x, label_y),
                         text_anchor="middle",
                         dominant_baseline=dominant_baseline,

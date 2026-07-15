@@ -39,6 +39,7 @@ __all__ = [
     "locale_script",
     "families_for_locale",
     "missing_font_packs",
+    "font_family_of",
     "FontDownloadError",
 ]
 
@@ -202,6 +203,28 @@ def missing_font_packs(text: str, locale: str | None = None) -> list[str]:
         preferred = locale_script(locale) if locale else None
         needed.append(preferred if preferred in ("zh", "zh-hant") else "zh")
     return needed
+
+
+def font_family_of(path: str) -> str | None:
+    """The family name of a font file, for naming it in the SVG. None for a directory.
+
+    Best-effort: reads the ``name`` table via fonttools when present, else falls back to
+    the filename stem. Only the SVG's ``font-family`` needs this — the PNG/PDF path finds
+    the font by directory regardless of what it is called.
+    """
+    p = Path(path)
+    if p.is_dir() or not p.is_file():
+        return None
+    try:
+        from fontTools.ttLib import TTFont
+
+        with TTFont(p, fontNumber=0, lazy=True) as font:
+            name = font["name"].getDebugName(16) or font["name"].getDebugName(1)
+        if name:
+            return name
+    except Exception:
+        pass
+    return p.stem
 
 
 def remove_pack(script: str) -> bool:

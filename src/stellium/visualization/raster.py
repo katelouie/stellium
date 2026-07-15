@@ -111,6 +111,7 @@ def svg_to_png(
     *,
     scale: float = 2.0,
     background: str | None = None,
+    extra_fonts: list[str] | None = None,
 ) -> bytes:
     """Rasterise SVG markup (or a path to an ``.svg``) to PNG bytes.
 
@@ -149,6 +150,7 @@ def svg_to_png(
             os.path.join(root, "raster.typ"),
             root=root,
             ppi=72.0 * scale,
+            extra_fonts=extra_fonts,
         )
 
 
@@ -186,7 +188,20 @@ class RasterMixin:
             self.save(to_string=True),  # type: ignore[attr-defined]
             scale=scale,
             background=background,
+            extra_fonts=self._extra_font_dirs(),
         )
+
+    def _extra_font_dirs(self) -> list[str]:
+        """Directories for an explicit ``with_font`` path (Typst searches directories).
+
+        The bundled fonts and downloaded packs are already on the path; this adds only a
+        font the caller pointed at directly. A file contributes its parent directory.
+        """
+        font = getattr(self, "_font", None)
+        if not font:
+            return []
+        p = Path(font)
+        return [str(p if p.is_dir() else p.parent)]
 
     def save_png(
         self,

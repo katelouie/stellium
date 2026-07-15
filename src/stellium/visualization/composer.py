@@ -85,6 +85,8 @@ class ChartComposer:
         from stellium import fonts
         from stellium.exceptions import MissingFontWarning
 
+        if self.config.font:  # an explicit with_font() — the caller owns coverage
+            return
         packs = fonts.missing_font_packs(svg, self.config.locale)
         if packs:
             warnings.warn(
@@ -162,11 +164,18 @@ class ChartComposer:
         separately (it is a path, not a family the SVG can name)."""
         from stellium import fonts
 
-        families = fonts.families_for_locale(self.config.locale)
-        sans = families.get("sans")
+        # An explicit with_font() wins over the pack, so it goes on last (prepended last).
+        names = []
+        sans = fonts.families_for_locale(self.config.locale).get("sans")
         if sans:
+            names.append(sans)
+        if self.config.font:
+            family = fonts.font_family_of(self.config.font)
+            if family:
+                names.append(family)
+        for family in names:
             current = renderer.style.get("font_family_text", "")
-            renderer.style["font_family_text"] = f'"{sans}", {current}'
+            renderer.style["font_family_text"] = f'"{family}", {current}'
 
     def _get_background_color(self) -> str:
         """Get background color from theme or default."""
