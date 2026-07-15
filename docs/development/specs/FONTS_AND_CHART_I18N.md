@@ -138,20 +138,35 @@ as long as the shipped copy is a release/other-repo — not the package tree.
 
 ### 4.3 The manifest, checksums and licenses
 
-A small `fonts.json` manifest (hosted alongside, and mirrored in the repo for the CLI to
-read offline) declares each pack:
+A small `font_packs.json` manifest (bundled in the package for offline CLI reads; its URLs
+point at the release) declares each pack. A pack may carry **more than one font, each with
+a role** — `sans` / `serif` / `mono` — so every Latin role gets a matching non-Latin
+companion (the chart wheel's labels want the sans; a themed PDF's body wants the serif).
+`scripts/build_font_manifest.py` generates this from a staging folder (§7, A2):
 
 ```json
 {
+  "version": "fonts-v1",
+  "base_url": "https://github.com/katelouie/stellium/releases/download/fonts-v1",
   "packs": {
-    "zh":      { "files": [
-                  {"name": "NotoSansSC-Regular.ttf", "sha256": "…", "bytes": 10485760},
-                  {"name": "OFL.txt", "sha256": "…"}],
-                 "family": "Noto Sans SC", "covers": "Simplified Chinese" },
-    "zh-hant": { "files": [ … ], "family": "Noto Sans TC", "covers": "Traditional Chinese (HK/TW)" }
+    "zh": {
+      "covers": "Simplified Chinese",
+      "fonts": [
+        {"role": "sans",  "family": "Noto Sans SC",  "name": "NotoSansSC-Regular.ttf",
+         "asset": "zh_NotoSansSC-Regular.ttf",  "sha256": "…", "bytes": 10485760},
+        {"role": "serif", "family": "Noto Serif SC", "name": "NotoSerifSC-Regular.ttf",
+         "asset": "zh_NotoSerifSC-Regular.ttf", "sha256": "…", "bytes": 11010048}
+      ],
+      "files": [{"name": "OFL.txt", "asset": "zh_OFL.txt", "sha256": "…", "bytes": 4096}]
+    }
   }
 }
 ```
+
+`asset` is the (script-prefixed, collision-free) filename in the flat release; `name` is
+how it installs, under `~/.stellium/fonts/<script>/`. Role and family are read from each
+font (family from the `name` table, role from the family name), overridable per file via a
+pack's optional `meta.json`.
 
 - **Checksum.** Every file is verified against its `sha256` after download; a mismatch
   aborts and deletes the partial file. Fonts are binaries pulled over the network and font
@@ -162,11 +177,16 @@ read offline) declares each pack:
 
 ### 4.4 Resolution and auto-discovery
 
-Font resolution has to reach **both** render paths:
+Font resolution has to reach **both** render paths, and is **role-matched** — the CJK
+`sans` slots into the sans stacks, the CJK `serif` into the serif/display stacks, so a
+themed PDF's serif body gets a serif CJK companion rather than whatever fallback finds
+first:
 
-- **SVG** — the user's font family is prepended to `style["font_family_text"]`, so the SVG
-  text names it first.
-- **PNG/PDF** — the font's *directory* is appended to Typst's `font_paths()`.
+- **SVG** — the pack's `sans` family is prepended to `style["font_family_text"]` (and its
+  `serif`, when present, to any serif stack the theme uses), so the SVG text names it first.
+- **PNG/PDF** — the fonts' *directory* is appended to Typst's `font_paths()`; Typst then
+  covers CJK codepoints, and naming the role-matched family in the document keeps sans-with-
+  sans and serif-with-serif.
 
 The single seam is `typst_runtime.font_paths()`, which today returns only the bundle. It
 becomes:

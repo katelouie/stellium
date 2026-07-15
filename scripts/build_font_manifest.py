@@ -6,21 +6,27 @@ installing it. This script does the tedious half so the maintainer's job is just
 fonts in a folder, run this, upload the result".
 
 **Input** — a staging directory with one subdirectory per script code, each holding the
-font file(s) and the license, e.g.::
+font file(s) and the license. A pack may carry more than one font — a sans and a serif —
+so each Latin role gets a matching non-Latin companion (the chart wheel's labels want the
+sans, a themed PDF's body wants the serif)::
 
     staging/
-        zh/       NotoSansSC-Regular.ttf   OFL.txt   [meta.json]
-        zh-hant/  NotoSansTC-Regular.ttf   OFL.txt   [meta.json]
+        zh/       NotoSansSC-Regular.ttf  NotoSerifSC-Regular.ttf  OFL.txt  [meta.json]
+        zh-hant/  NotoSansTC-Regular.ttf  NotoSerifTC-Regular.ttf  OFL.txt  [meta.json]
 
-An optional ``meta.json`` in a pack directory supplies ``{"covers": "...",
-"family": "..."}``; ``covers`` is the human description shown by ``stellium fonts list``
-and cannot be sniffed, ``family`` overrides the name read from the font.
+Each font's **family** and **role** (sans / serif / mono) are read from the font — family
+from the ``name`` table, role from the family name. An optional ``meta.json`` supplies
+what can't be sniffed and overrides what can::
+
+    { "covers": "Simplified Chinese",          # human description for `stellium fonts list`
+      "roles":   {"Ambiguous.ttf": "serif"},   # override role when the name isn't obvious
+      "families": {"Ambiguous.ttf": "My Face"}} # override family, rarely needed
 
 **Output** — two things:
 
-1. ``font_packs.json`` (the manifest): for each pack, its family, coverage description, and
-   every file's release-asset name, SHA-256 and byte size. This is committed into the
-   package so the CLI can read it offline, and its URLs point at the release.
+1. ``font_packs.json`` (the manifest): for each pack, its coverage description, its fonts
+   (role, family, asset name, SHA-256, bytes) and its other files (the license). Committed
+   into the package so the CLI reads it offline; its URLs point at the release.
 2. ``<upload-dir>/`` — a flat folder of the same files renamed ``<script>_<file>`` so they
    are unique across packs (a GitHub Release is a flat namespace). Upload it whole::
 
@@ -111,42 +117,65 @@ def sniff_family(path: Path) -> str:
     return _family_from_name_table(path) or path.stem
 
 
+def detect_role(family: str) -> str:
+    """A font's role — sans / serif / mono — from its family name.
+
+    The renderer slots each into the matching Latin stack: the chart wheel's labels want
+    the CJK *sans*, a themed PDF's body wants the CJK *serif*. "sans" is checked before
+    "serif" so a stray "sans-serif" resolves to sans, and it is the default — the wheel is
+    the primary consumer. Override per file with ``meta.json`` ``roles`` when a name is
+    ambiguous.
+    """
+    low = family.lower()
+    if "mono" in low:
+        return "mono"
+    if "sans" in low:
+        return "sans"
+    if "serif" in low:
+        return "serif"
+    return "sans"
+
+
 def build_pack(pack_dir: Path, upload_dir: Path) -> dict:
     script = pack_dir.name
     meta = {}
     meta_file = pack_dir / "meta.json"
     if meta_file.exists():
         meta = json.loads(meta_file.read_text(encoding="utf-8"))
+    role_overrides = meta.get("roles", {})
+    family_overrides = meta.get("families", {})
 
-    files = sorted(
+    paths = sorted(
         p for p in pack_dir.iterdir() if p.is_file() and p.name != "meta.json"
     )
-    fonts = [p for p in files if p.suffix.lower() in FONT_SUFFIXES]
+    fonts: list[dict] = []
+    files: list[dict] = []
+    for path in paths:
+        asset = f"{script}_{path.name}"  # unique in the flat release namespace
+        shutil.copy(path, upload_dir / asset)
+        entry = {
+            "name": path.name,  # installed as fonts/<script>/<name>
+            "asset": asset,  # release asset filename
+            "sha256": sha256(path),
+            "bytes": path.stat().st_size,
+        }
+        if path.suffix.lower() in FONT_SUFFIXES:
+            family = family_overrides.get(path.name) or sniff_family(path)
+            role = role_overrides.get(path.name) or detect_role(family)
+            fonts.append({"role": role, "family": family, **entry})
+        else:
+            files.append(entry)
+
     if not fonts:
         raise SystemExit(f"pack {script!r} has no font file (.ttf/.otf/.ttc)")
 
-    family = meta.get("family") or sniff_family(fonts[0])
     covers = meta.get("covers")
     if not covers:
         print(
             f"  ! {script}: no 'covers' description — add meta.json with a 'covers' key"
         )
 
-    file_entries = []
-    for path in files:
-        asset = f"{script}_{path.name}"  # unique in the flat release namespace
-        shutil.copy(path, upload_dir / asset)
-        file_entries.append(
-            {
-                "name": path.name,  # installed as fonts/<script>/<name>
-                "asset": asset,  # release asset filename
-                "sha256": sha256(path),
-                "bytes": path.stat().st_size,
-                "is_font": path.suffix.lower() in FONT_SUFFIXES,
-            }
-        )
-
-    return {"family": family, "covers": covers or "", "files": file_entries}
+    return {"covers": covers or "", "fonts": fonts, "files": files}
 
 
 def main() -> int:
@@ -169,11 +198,19 @@ def main() -> int:
     args.upload_dir.mkdir(parents=True, exist_ok=True)
 
     packs = {}
+    total_files = 0
     for pack_dir in sorted(p for p in args.staging.iterdir() if p.is_dir()):
         print(f"  {pack_dir.name}:")
-        packs[pack_dir.name] = build_pack(pack_dir, args.upload_dir)
-        for f in packs[pack_dir.name]["files"]:
-            print(f"      {f['asset']:32} {f['bytes']:>9,} B  {f['sha256'][:12]}…")
+        pack = build_pack(pack_dir, args.upload_dir)
+        packs[pack_dir.name] = pack
+        for f in pack["fonts"]:
+            print(
+                f"      [{f['role']:5}] {f['family']:18} {f['asset']:34} "
+                f"{f['bytes']:>9,} B  {f['sha256'][:12]}…"
+            )
+        for f in pack["files"]:
+            print(f"      [file ] {'':18} {f['asset']:34} {f['bytes']:>9,} B")
+        total_files += len(pack["fonts"]) + len(pack["files"])
 
     manifest = {
         "version": args.version,
@@ -185,9 +222,7 @@ def main() -> int:
     )
 
     print(f"\nwrote manifest: {args.out}")
-    print(
-        f"upload folder:  {args.upload_dir}/  ({sum(len(p['files']) for p in packs.values())} files)"
-    )
+    print(f"upload folder:  {args.upload_dir}/  ({total_files} files)")
     print("\nNext:")
     print(f"  gh release create {args.version} --repo katelouie/stellium \\")
     print(
