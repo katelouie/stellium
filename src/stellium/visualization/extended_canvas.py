@@ -12,8 +12,25 @@ import svgwrite
 from stellium.core.chart_utils import is_comparison, is_multichart
 from stellium.core.models import Aspect, CalculatedChart, ObjectType
 from stellium.core.registry import CELESTIAL_REGISTRY, get_aspect_info
+from stellium.i18n import msg, render, term
 
 from .core import ChartRenderer, get_glyph
+
+
+def _body_name(name: str, locale: str) -> str:
+    """A celestial body's display name, localized (English identity is its display name)."""
+    return render(term(f"body.{name}"), locale)
+
+
+def _sign_name(sign: str, locale: str) -> str:
+    """A zodiac sign, localized."""
+    return render(term(f"sign.{sign}"), locale)
+
+
+def _header(label: str, locale: str) -> str:
+    """A table column header, localized (the English string is the key)."""
+    return render(msg(label), locale)
+
 
 # Legacy aliases for backward compatibility within this module
 # These are used by layers.py which imports them from here
@@ -264,7 +281,11 @@ class PositionTableLayer:
 
         # Header row with column mapping
         col_names = ["planet", "sign", "degree"]
-        headers = ["Planet", "Sign", "Degree"]
+        headers = [
+            _header("Planet", renderer.locale),
+            _header("Sign", renderer.locale),
+            _header("Degree", renderer.locale),
+        ]
 
         # Add house column(s) - one per system
         for system_name in house_systems:
@@ -275,11 +296,11 @@ class PositionTableLayer:
                 abbrev = self._abbreviate_house_system(system_name)
                 headers.append(abbrev)
             else:
-                headers.append("House")
+                headers.append(_header("House", renderer.locale))
 
         if self.style["show_speed"]:
             col_names.append("speed")
-            headers.append("Speed")
+            headers.append(_header("Speed", renderer.locale))
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -315,9 +336,8 @@ class PositionTableLayer:
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
-            # Get display name from registry
-            obj_info = CELESTIAL_REGISTRY.get(pos.name)
-            display_name = obj_info.display_name if obj_info else pos.name
+            # Localized display name (English identity is the registry's display_name).
+            display_name = _body_name(pos.name, renderer.locale)
 
             # Render glyph and text separately to use correct fonts
             x_offset = col_x_positions[0]
@@ -378,7 +398,7 @@ class PositionTableLayer:
             # Column 1: Sign
             dwg.add(
                 dwg.text(
-                    pos.sign,
+                    _sign_name(pos.sign, renderer.locale),
                     insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
@@ -747,13 +767,17 @@ class PositionTableLayer:
 
         # Header row with column mapping
         col_names = ["planet", "sign", "degree"]
-        headers = ["Planet", "Sign", "Degree"]
+        headers = [
+            _header("Planet", renderer.locale),
+            _header("Sign", renderer.locale),
+            _header("Degree", renderer.locale),
+        ]
         if self.style["show_house"]:
             col_names.append("house")
             headers.append("House")
         if self.style["show_speed"]:
             col_names.append("speed")
-            headers.append("Speed")
+            headers.append(_header("Speed", renderer.locale))
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -789,9 +813,8 @@ class PositionTableLayer:
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
-            # Get display name from registry
-            obj_info = CELESTIAL_REGISTRY.get(pos.name)
-            display_name = obj_info.display_name if obj_info else pos.name
+            # Localized display name (English identity is the registry's display_name).
+            display_name = _body_name(pos.name, renderer.locale)
 
             # Render glyph and text separately to use correct fonts
             x_offset = col_x_positions[0]
@@ -852,7 +875,7 @@ class PositionTableLayer:
             # Column 1: Sign
             dwg.add(
                 dwg.text(
-                    pos.sign,
+                    _sign_name(pos.sign, renderer.locale),
                     insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
@@ -1046,7 +1069,7 @@ class HouseCuspTableLayer:
 
         # Build column names and headers: House + (Sign, Degree) per system
         col_names = ["house"]
-        headers = ["House"]
+        headers = [_header("House", renderer.locale)]
 
         for system_name in house_systems:
             col_names.extend(["sign", "degree"])
@@ -1055,7 +1078,12 @@ class HouseCuspTableLayer:
                 abbrev = self._abbreviate_house_system(system_name)
                 headers.extend([f"{abbrev}", "Deg"])
             else:
-                headers.extend(["Sign", "Degree"])
+                headers.extend(
+                    [
+                        _header("Sign", renderer.locale),
+                        _header("Degree", renderer.locale),
+                    ]
+                )
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -1135,7 +1163,7 @@ class HouseCuspTableLayer:
                 # Sign column
                 dwg.add(
                     dwg.text(
-                        sign_name,
+                        _sign_name(sign_name, renderer.locale),
                         insert=(col_x_positions[col_idx], y),
                         text_anchor="start",
                         dominant_baseline="hanging",
@@ -1403,7 +1431,11 @@ class HouseCuspTableLayer:
 
         # Header row with column mapping
         col_names = ["house", "sign", "degree"]
-        headers = ["House", "Sign", "Degree"]
+        headers = [
+            _header("House", renderer.locale),
+            _header("Sign", renderer.locale),
+            _header("Degree", renderer.locale),
+        ]
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -1473,7 +1505,7 @@ class HouseCuspTableLayer:
             # Column 1: Sign
             dwg.add(
                 dwg.text(
-                    sign_name,
+                    _sign_name(sign_name, renderer.locale),
                     insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
