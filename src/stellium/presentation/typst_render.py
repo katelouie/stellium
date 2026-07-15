@@ -23,6 +23,7 @@ from stellium.presentation.typst_runtime import (
     TypstDocument,
     validate_theme,
 )
+from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 __all__ = [
     "MOON_STYLES",
@@ -135,8 +136,6 @@ def _metadata_line(chart: Any, locale: str) -> list[str]:
 
     # Chart ruler → "{ruler}-ruled".
     try:
-        from stellium.utils.chart_ruler import get_chart_ruler_from_chart
-
         ruler, _asc = get_chart_ruler_from_chart(chart)
     except Exception:
         ruler = None

@@ -13,6 +13,13 @@ from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
 from stellium.core.protocols import ReportRenderer, ReportSection
+from stellium.i18n import (
+    get_default_locale,
+    msg,
+    render,
+    set_default_locale,
+    t,
+)
 
 from .renderers import PlainTextRenderer, RichTableRenderer
 from .sections import (
@@ -195,7 +202,6 @@ def _resolve_structured(
     now bracketed, so it stops registering as a leak. This is the Phase 3 move that takes
     labels off the bridge.
     """
-    from stellium.i18n import msg, render
 
     def resolve(value: Any) -> Any:
         # Recurse containers so a cell may itself hold a list of renderables.
@@ -275,7 +281,6 @@ def _translate_section_data(
     Returns:
         New list with translated strings (original is not mutated).
     """
-    from stellium.i18n import t
 
     def tr(s: str) -> str:
         return t(s, locale=locale)
@@ -1996,8 +2001,6 @@ class ReportBuilder:
         generation (and restored after), so a ``t()`` call inside an SVG builder resolves
         to the right language. It is a no-op for every format-last section.
         """
-        from stellium.i18n import get_default_locale, set_default_locale
-
         previous = get_default_locale()
         try:
             set_default_locale(self._locale or "en")
@@ -2084,8 +2087,6 @@ class ReportBuilder:
         if locale and format != "prose":
             section_data = _translate_section_data(section_data, locale)
             if title:
-                from stellium.i18n import t
-
                 title = t(title, locale=locale)
 
         # Show in terminal if requested and format supports it
@@ -2304,7 +2305,6 @@ class ReportBuilder:
         Returns:
             PDF as bytes
         """
-        from stellium.i18n import t
         from stellium.presentation.typst_render import render_pdf
 
         locale = self._locale or "en"
