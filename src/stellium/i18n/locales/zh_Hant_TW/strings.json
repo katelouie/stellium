@@ -1,0 +1,36 @@
+{
+  "metadata": {
+    "language": "zh_Hant_TW",
+    "status": "draft",
+    "fallback": "zh_Hant",
+    "prepared_by": "Stellium i18n research (rounds 1-2), pending native review",
+    "notes": "Taiwan-specific overrides on the zh_Hant base (13 keys). See TRANSLATION_NOTES.md."
+  },
+  "body": {
+    "Aries Point": "牡羊點"
+  },
+  "house_system": {
+    "Campanus": "坎帕納斯制",
+    "Morinus": "莫里努斯制",
+    "Regiomontanus": "芮吉歐蒙塔那制"
+  },
+  "message": {
+    "Aries": "牡羊座",
+    "Generated with Stellium": "由 Stellium 產生",
+    "Planet Positions": "行星位置"
+  },
+  "phase": {
+    "Waxing Crescent": "眉月"
+  },
+  "sign": {
+    "Aries": "牡羊座"
+  },
+  "star": {
+    "Altair": "牛郎星",
+    "Vega": "織女星"
+  },
+  "time_unit": {
+    "week": "週",
+    "weeks": "週"
+  }
+}
