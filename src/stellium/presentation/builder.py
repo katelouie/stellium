@@ -6,6 +6,7 @@ by adding sections one at a time, then rendering in their chosen format.
 """
 
 import datetime as dt
+import re
 from collections.abc import Iterable
 from typing import Any
 
@@ -14,6 +15,8 @@ from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
 from stellium.core.protocols import ReportRenderer, ReportSection
 from stellium.i18n import (
+    Message,
+    Term,
     get_default_locale,
     msg,
     render,
@@ -181,6 +184,23 @@ def _get_translatable_terms() -> list[str]:
     return _TRANSLATABLE_TERMS
 
 
+def _section_key(section: ReportSection) -> str:
+    """The section's stable internal identity — for renderer dispatch, never displayed.
+
+    Split from the display title (which is localized): a renderer keys behind-the-scenes
+    handling off this, so translating a title can never break routing. A section may set
+    an explicit ``section_key`` attribute; otherwise it is derived from the class name
+    (``ChartOverviewSection`` → ``chart_overview``). See the Unified Renderer Contract spec.
+    """
+    explicit = getattr(section, "section_key", None)
+    if isinstance(explicit, str) and explicit:
+        return explicit
+    name = type(section).__name__
+    if name.endswith("Section"):
+        name = name[: -len("Section")]
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower()
+
+
 def _resolve_structured(
     section_data: list[tuple[str, dict[str, Any]]],
     locale: str,
@@ -228,38 +248,50 @@ def _resolve_structured(
             return {k: resolve(v) for k, v in row.items()}
         return [resolve(c) for c in row]
 
+    def deep(value: Any) -> Any:
+        # Localize any i18n token nested *anywhere* — including a rich payload a
+        # structure-aware renderer reads (`planets`, `aspect_pairs`, …). A Term/Message
+        # renders to a localized string; a raw str/int/float/bool and language-neutral
+        # fields (glyph chars, canonical names) pass through untouched. Unlike `resolve`,
+        # it does not join a list into one string, so a payload's list structure survives.
+        # See the Unified Renderer Contract spec §4.2.
+        if isinstance(value, (Term, Message)):
+            return render(value, locale)
+        if isinstance(value, dict):
+            return {k: deep(v) for k, v in value.items()}
+        if isinstance(value, (list, tuple)):
+            return type(value)(deep(v) for v in value)
+        return value
+
     def walk(data: dict[str, Any]) -> dict[str, Any]:
+        # Deep-localize the whole dict first (this is what reaches the rich payloads), then
+        # override the structural keys with their specialized label/row treatment.
         dtype = data.get("type")
+        base = deep(data)
         if dtype == "table":
-            return {
-                **data,
-                "headers": [label(h) for h in data.get("headers", [])],
-                "rows": [resolve_row(row) for row in data.get("rows", [])],
-            }
+            base["headers"] = [label(h) for h in data.get("headers", [])]
+            base["rows"] = [resolve_row(row) for row in data.get("rows", [])]
+            return base
         if dtype == "key_value":
-            return {
-                **data,
-                "data": {label(k): resolve(v) for k, v in data["data"].items()},
-            }
+            base["data"] = {label(k): resolve(v) for k, v in data["data"].items()}
+            return base
         if dtype == "compound":
-            return {
-                **data,
-                "sections": [(label(n), walk(d)) for n, d in data.get("sections", [])],
-            }
+            base["sections"] = [
+                (label(n), walk(d)) for n, d in data.get("sections", [])
+            ]
+            return base
         if dtype in ("side_by_side_tables", "grouped_tables"):
-            return {
-                **data,
-                "tables": [
-                    {
-                        **t,
-                        "title": label(t["title"]) if "title" in t else t.get("title"),
-                        "headers": [label(h) for h in t.get("headers", [])],
-                        "rows": [resolve_row(r) for r in t.get("rows", [])],
-                    }
-                    for t in data.get("tables", [])
-                ],
-            }
-        return data
+            base["tables"] = [
+                {
+                    **t,
+                    "title": label(t["title"]) if "title" in t else t.get("title"),
+                    "headers": [label(h) for h in t.get("headers", [])],
+                    "rows": [resolve_row(r) for r in t.get("rows", [])],
+                }
+                for t in data.get("tables", [])
+            ]
+            return base
+        return base
 
     return [(label(name), walk(data)) for name, data in section_data]
 
@@ -2004,10 +2036,15 @@ class ReportBuilder:
         previous = get_default_locale()
         try:
             set_default_locale(self._locale or "en")
-            return [
-                (section.section_name, section.generate_data(self._chart))
-                for section in self._sections
-            ]
+            out: list[tuple[str, dict[str, Any]]] = []
+            for section in self._sections:
+                data = section.generate_data(self._chart)
+                # Stamp the stable internal key so renderers dispatch on it rather than on
+                # the (localized) display title. See the Unified Renderer Contract spec.
+                if isinstance(data, dict):
+                    data.setdefault("section_key", _section_key(section))
+                out.append((section.section_name, data))
+            return out
         finally:
             set_default_locale(previous)
 

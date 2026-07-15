@@ -426,8 +426,10 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
 
 
 def _map_section(name: str, d: dict[str, Any], chart: Any) -> dict | None:
-    lname = name.lower()
-    if lname.startswith("chart overview") and d.get("type") == "key_value":
+    # Dispatch on the stable section_key, never the localized display name — a translated
+    # title must not silently disable the special-casing. See the Unified Renderer Contract.
+    key = d.get("section_key", "")
+    if key == "chart_overview" and d.get("type") == "key_value":
         return {
             "kind": "chart_overview",
             "title": name,
@@ -437,12 +439,15 @@ def _map_section(name: str, d: dict[str, Any], chart: Any) -> dict | None:
         rich = _planet_positions(name, d)
         if rich:
             return rich
-    if lname.startswith("moon phase"):
+    if key == "moon_phase":
         rich = _moon_phase(name, d)
         if rich:
             return rich
-    if lname.startswith("dispositor") and d.get("type") == "compound":
-        return _dispositor_section(name, d)
+    # NOTE: the dispositor special layout (_dispositor_section) is intentionally not wired
+    # here. Its old dispatch — `name.startswith("dispositor")` — never matched the actual
+    # section name "Planetary Dispositors", so it was dead; the section renders via the
+    # generic compound path. Re-enabling the bespoke layout via section_key is a deliberate
+    # behavior change deferred to a later step of the Unified Renderer Contract.
     return _generic(name, d)
 
 
