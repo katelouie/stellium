@@ -18,9 +18,12 @@ Each font's **family** and **role** (sans / serif / mono) are read from the font
 from the ``name`` table, role from the family name. An optional ``meta.json`` supplies
 what can't be sniffed and overrides what can::
 
-    { "covers": "Simplified Chinese",          # human description for `stellium fonts list`
-      "roles":   {"Ambiguous.ttf": "serif"},   # override role when the name isn't obvious
-      "families": {"Ambiguous.ttf": "My Face"}} # override family, rarely needed
+    { "covers": "Simplified Chinese",              # human description; `stellium fonts list`
+      "roles":   {"ZCOOLXiaoWei-Regular.ttf": "display"},  # a title face is neither sans nor serif
+      "families": {"Ambiguous.ttf": "My Face"}}    # override sniffed family, rarely needed
+
+Roles are ``sans`` / ``serif`` / ``mono`` / ``display``. sans/serif/mono are auto-detected
+from the family name; ``display`` (decorative title faces) can't be sniffed, so declare it.
 
 **Output** — two things:
 
@@ -146,7 +149,9 @@ def build_pack(pack_dir: Path, upload_dir: Path) -> dict:
     family_overrides = meta.get("families", {})
 
     paths = sorted(
-        p for p in pack_dir.iterdir() if p.is_file() and p.name != "meta.json"
+        p
+        for p in pack_dir.iterdir()
+        if p.is_file() and p.name != "meta.json" and not p.name.startswith(".")
     )
     fonts: list[dict] = []
     files: list[dict] = []
