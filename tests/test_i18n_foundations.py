@@ -207,16 +207,26 @@ def test_pseudolocale_is_a_partial_oracle():
 
 
 @pytest.mark.slow
-def test_pseudolocale_flags_unmigrated_sections_as_leaks():
-    """A section that still stringifies shows up as unbracketed English — the progress
-    meter for Phase 2/3. Once a section is migrated, its leaks drop to zero."""
+def test_migrated_sections_have_no_pseudolocale_leaks():
+    """The completeness oracle: a fully-migrated section, rendered in the pseudolocale,
+    has NO unbracketed text outside the do-not-translate set.
+
+    Every string ChartOverview and PlanetPositions emit — values, headers, key labels,
+    the section name — now goes through the catalog, so it is bracketed. The only Latin
+    left is proper nouns (a person's name, a place, a timezone), which are data. If a
+    future edit stringifies a cell behind the contract's back, this fails.
+    """
+    dnt = {"Albert", "Einstein", "Ulm", "Germany", "Europe", "Berlin", "Europe/Berlin"}
     chart = ChartBuilder.from_notable("Albert Einstein").calculate()
     out = (
         ReportBuilder()
         .from_chart(chart)
         .with_locale(PSEUDO_LOCALE)
         .with_chart_overview()
+        .with_planet_positions()
         .to_string(format="markdown")
     )
-    # ChartOverview is not migrated yet, so it is still composed English: leaks exist.
-    assert len(find_leaks(out)) > 0
+    leaks = [w for w in find_leaks(out) if w not in dnt]
+    assert leaks == [], (
+        f"a migrated section is stringifying behind the contract: {leaks}"
+    )

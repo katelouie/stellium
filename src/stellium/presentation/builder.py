@@ -184,11 +184,18 @@ def _resolve_structured(
     (``term(...)``, ``msg(...)``, a raw ``date``) into their data instead of pre-composed
     strings, because ``generate_data`` runs before the locale is known. This pass — which
     runs for **every** locale, English included, and before the legacy substring
-    translator — resolves them with ``render()``. A plain string passes through
+    translator — resolves them with ``render()``. A plain string *value* passes through
     untouched, so an un-migrated section is unaffected and the two coexist during the
     migration (spec §7.1).
+
+    **Labels** — section names, table headers, key-value keys, table titles — are treated
+    as messages: a plain-string label is wrapped as ``msg(label)`` so it routes through
+    the catalog rather than the substring translator. In English it is unchanged; in
+    another locale it resolves via ``t()`` exactly as before; under the pseudolocale it is
+    now bracketed, so it stops registering as a leak. This is the Phase 3 move that takes
+    labels off the bridge.
     """
-    from stellium.i18n import render
+    from stellium.i18n import msg, render
 
     def resolve(value: Any) -> Any:
         # Recurse containers so a cell may itself hold a list of renderables.
@@ -204,20 +211,27 @@ def _resolve_structured(
             return [resolve(v) for v in value]
         return render(value, locale)
 
+    def label(value: Any) -> str:
+        # A label is a message: a bare string is its own English template.
+        return render(msg(value) if isinstance(value, str) else value, locale)
+
     def walk(data: dict[str, Any]) -> dict[str, Any]:
         dtype = data.get("type")
         if dtype == "table":
             return {
                 **data,
-                "headers": [resolve(h) for h in data.get("headers", [])],
+                "headers": [label(h) for h in data.get("headers", [])],
                 "rows": [[resolve(c) for c in row] for row in data.get("rows", [])],
             }
         if dtype == "key_value":
-            return {**data, "data": {k: resolve(v) for k, v in data["data"].items()}}
+            return {
+                **data,
+                "data": {label(k): resolve(v) for k, v in data["data"].items()},
+            }
         if dtype == "compound":
             return {
                 **data,
-                "sections": [(n, walk(d)) for n, d in data.get("sections", [])],
+                "sections": [(label(n), walk(d)) for n, d in data.get("sections", [])],
             }
         if dtype in ("side_by_side_tables", "grouped_tables"):
             return {
@@ -225,7 +239,8 @@ def _resolve_structured(
                 "tables": [
                     {
                         **t,
-                        "headers": [resolve(h) for h in t.get("headers", [])],
+                        "title": label(t["title"]) if "title" in t else t.get("title"),
+                        "headers": [label(h) for h in t.get("headers", [])],
                         "rows": [[resolve(c) for c in r] for r in t.get("rows", [])],
                     }
                     for t in data.get("tables", [])
@@ -233,7 +248,7 @@ def _resolve_structured(
             }
         return data
 
-    return [(name, walk(data)) for name, data in section_data]
+    return [(label(name), walk(data)) for name, data in section_data]
 
 
 def _translate_section_data(
