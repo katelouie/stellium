@@ -215,13 +215,20 @@ def _resolve_structured(
         # A label is a message: a bare string is its own English template.
         return render(msg(value) if isinstance(value, str) else value, locale)
 
+    def resolve_row(row: Any) -> Any:
+        # Most sections use list rows; some (stations, ingresses) use dict rows keyed by
+        # field. Resolve the values either way without flattening the dict to its keys.
+        if isinstance(row, dict):
+            return {k: resolve(v) for k, v in row.items()}
+        return [resolve(c) for c in row]
+
     def walk(data: dict[str, Any]) -> dict[str, Any]:
         dtype = data.get("type")
         if dtype == "table":
             return {
                 **data,
                 "headers": [label(h) for h in data.get("headers", [])],
-                "rows": [[resolve(c) for c in row] for row in data.get("rows", [])],
+                "rows": [resolve_row(row) for row in data.get("rows", [])],
             }
         if dtype == "key_value":
             return {
@@ -241,7 +248,7 @@ def _resolve_structured(
                         **t,
                         "title": label(t["title"]) if "title" in t else t.get("title"),
                         "headers": [label(h) for h in t.get("headers", [])],
-                        "rows": [[resolve(c) for c in r] for r in t.get("rows", [])],
+                        "rows": [resolve_row(r) for r in t.get("rows", [])],
                     }
                     for t in data.get("tables", [])
                 ],
