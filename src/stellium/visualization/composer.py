@@ -120,7 +120,27 @@ class ChartComposer:
         # Set header height for layers that need to account for it
         renderer.header_height = layout.header_height
 
+        # Localization: the layers read renderer.locale to translate their words, and the
+        # text stack names an installed pack's font first so non-Latin text renders (in the
+        # SVG; the pack's dir is auto-discovered for PNG/PDF). Glyph fonts are unchanged —
+        # planet/sign glyphs are language-neutral.
+        renderer.locale = self.config.locale
+        self._apply_locale_fonts(renderer)
+
         return renderer
+
+    def _apply_locale_fonts(self, renderer: ChartRenderer) -> None:
+        """Name an installed pack's font first in the text stack, so non-Latin text
+        renders in the SVG. The pack's directory is already on the PNG/PDF font path via
+        auto-discovery; an explicit ``with_font`` path is threaded to the rasteriser
+        separately (it is a path, not a family the SVG can name)."""
+        from stellium import fonts
+
+        families = fonts.families_for_locale(self.config.locale)
+        sans = families.get("sans")
+        if sans:
+            current = renderer.style.get("font_family_text", "")
+            renderer.style["font_family_text"] = f'"{sans}", {current}'
 
     def _get_background_color(self) -> str:
         """Get background color from theme or default."""

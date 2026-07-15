@@ -123,6 +123,7 @@
   },
   "format": {
     "date": "{year}年{month_num}月{day}日",
+    "date_short": "{year}年{month_num}月{day}日",
     "datetime": "{date} {time}",
     "time": "{hour24}:{minute}"
   },

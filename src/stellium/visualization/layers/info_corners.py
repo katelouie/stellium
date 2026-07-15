@@ -10,6 +10,7 @@ from stellium.core.models import (
     CalculatedChart,
     UnknownTimeChart,
 )
+from stellium.i18n import format_date, format_time, render, t, term
 from stellium.visualization.core import (
     ChartRenderer,
     embed_svg_glyph,
@@ -130,18 +131,17 @@ class ChartInfoLayer:
         if "datetime" in self.fields and chart.datetime:
             # Check if this is an unknown time chart
             is_unknown_time = isinstance(chart, UnknownTimeChart)
+            loc = renderer.locale
+            local = chart.datetime.local_datetime
 
             if is_unknown_time:
-                # Show date only with "Time Unknown" indicator
-                if chart.datetime.local_datetime:
-                    dt_str = chart.datetime.local_datetime.strftime("%B %d, %Y")
-                else:
-                    dt_str = chart.datetime.utc_datetime.strftime("%B %d, %Y")
-                dt_str += "  (Time Unknown)"
-            elif chart.datetime.local_datetime:
-                dt_str = chart.datetime.local_datetime.strftime("%B %d, %Y  %I:%M %p")
+                when = local or chart.datetime.utc_datetime
+                dt_str = f"{format_date(when.date(), loc)}  ({t('Time Unknown', loc)})"
+            elif local:
+                dt_str = f"{format_date(local.date(), loc)}  {format_time(local, loc)}"
             else:
-                dt_str = chart.datetime.utc_datetime.strftime("%B %d, %Y  %H:%M UTC")
+                utc = chart.datetime.utc_datetime
+                dt_str = f"{format_date(utc.date(), loc)}  {utc.strftime('%H:%M')} UTC"
             lines.append(dt_str)
 
         if "timezone" in self.fields and chart.location:
@@ -161,21 +161,22 @@ class ChartInfoLayer:
             is_unknown_time = isinstance(chart, UnknownTimeChart)
             if not is_unknown_time:
                 # Use provided house_systems list if available, otherwise use chart's default
-                if self.house_systems:
-                    if len(self.house_systems) == 1:
-                        lines.append(self.house_systems[0])
-                    else:
-                        # Multiple house systems - show all
-                        systems_str = ", ".join(self.house_systems)
-                        lines.append(systems_str)
-                else:
-                    house_system = getattr(chart, "default_house_system", None)
-                    if house_system:
-                        lines.append(house_system)
+                loc = renderer.locale
+                systems = self.house_systems or (
+                    [getattr(chart, "default_house_system", None)]
+                    if getattr(chart, "default_house_system", None)
+                    else []
+                )
+                if systems:
+                    lines.append(
+                        ", ".join(
+                            render(term(f"house_system.{s}"), loc) for s in systems
+                        )
+                    )
 
         if "ephemeris" in self.fields:
             # Currently only Tropical is implemented
-            lines.append("Tropical")
+            lines.append(t("Tropical", renderer.locale))
 
         if not name and not lines:
             return

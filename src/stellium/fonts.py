@@ -36,6 +36,8 @@ __all__ = [
     "download_pack",
     "remove_pack",
     "installed_font_dirs",
+    "locale_script",
+    "families_for_locale",
     "FontDownloadError",
 ]
 
@@ -141,6 +143,34 @@ def download_pack(
 
     report(f"installed {script} ({len(pack['fonts'])} fonts) to {target}")
     return target
+
+
+def locale_script(locale: str) -> str | None:
+    """The font-pack script code a locale needs, or None if Latin covers it.
+
+    ``zh_CN`` → ``zh``; ``zh_Hant`` / ``zh_TW`` / ``zh_HK`` → ``zh-hant``. Extend as packs
+    for other scripts are added.
+    """
+    low = locale.lower()
+    if "hant" in low or low.replace("-", "_") in ("zh_tw", "zh_hk"):
+        return "zh-hant"
+    if low.startswith("zh"):
+        return "zh"
+    return None
+
+
+def families_for_locale(locale: str) -> dict[str, str]:
+    """``{role: family}`` of the installed pack covering this locale, or ``{}``.
+
+    Empty when the locale needs no special font (Latin) or when the pack it needs is not
+    downloaded — the renderer then leaves its Latin stack untouched, and the missing-font
+    warning fires if the text turns out to need coverage.
+    """
+    script = locale_script(locale)
+    if script is None or not is_installed(script):
+        return {}
+    pack = load_manifest()["packs"][script]
+    return {f["role"]: f["family"] for f in pack["fonts"] if f.get("role") != "file"}
 
 
 def remove_pack(script: str) -> bool:

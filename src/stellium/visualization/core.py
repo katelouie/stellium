@@ -365,6 +365,7 @@ class ChartRenderer:
         self.size = size
         self.center = size // 2
         self.rotation = rotation
+        self.locale = "en"  # set by the composer; layers translate their text with it
 
         # Initialize offsets (set by extended canvas mode in drawing.py)
         self.x_offset = 0

@@ -10,6 +10,7 @@ from stellium.core.models import (
     CalculatedChart,
     UnknownTimeChart,
 )
+from stellium.i18n import format_date, format_time, t
 from stellium.visualization.core import (
     ChartRenderer,
 )
@@ -273,17 +274,26 @@ class HeaderLayer:
 
         if chart.datetime:
             is_unknown_time = isinstance(chart, UnknownTimeChart)
+            loc = renderer.locale
+            local = chart.datetime.local_datetime
 
             if is_unknown_time:
-                if chart.datetime.local_datetime:
-                    dt_str = chart.datetime.local_datetime.strftime("%b %d, %Y")
-                else:
-                    dt_str = chart.datetime.utc_datetime.strftime("%b %d, %Y")
-                dt_str += " (Time Unknown)"
-            elif chart.datetime.local_datetime:
-                dt_str = chart.datetime.local_datetime.strftime("%b %d, %Y %I:%M %p")
+                when = local or chart.datetime.utc_datetime
+                dt_str = (
+                    f"{format_date(when.date(), loc, short=True)} "
+                    f"({t('Time Unknown', loc)})"
+                )
+            elif local:
+                dt_str = (
+                    f"{format_date(local.date(), loc, short=True)} "
+                    f"{format_time(local, loc)}"
+                )
             else:
-                dt_str = chart.datetime.utc_datetime.strftime("%b %d, %Y %H:%M UTC")
+                utc = chart.datetime.utc_datetime
+                dt_str = (
+                    f"{format_date(utc.date(), loc, short=True)} "
+                    f"{utc.strftime('%H:%M')} UTC"
+                )
 
             datetime_parts.append(dt_str)
 

@@ -28,6 +28,7 @@ from stellium.i18n.loader import t
 # unpadded day (Chinese: "3日", not "03日") uses {day}/{hour12} instead of the _pad forms.
 DEFAULT_PATTERNS: dict[str, str] = {
     "format.date": "{month} {day_pad}, {year}",
+    "format.date_short": "{month_abbr} {day_pad}, {year}",
     "format.time": "{hour12_pad}:{minute} {ampm}",
     "format.datetime": "{date} {time}",
     "format.degrees": "{deg}°{min:02d}'",
@@ -60,16 +61,33 @@ def pattern(key: str, locale: str | None = None) -> str:
     return default if found == key else found
 
 
-def format_date(value: dt.date, locale: str | None = None) -> str:
-    """A date, laid out the way the locale lays out dates."""
-    return pattern("format.date", locale).format(
+def format_date(
+    value: dt.date, locale: str | None = None, *, short: bool = False
+) -> str:
+    """A date, laid out the way the locale lays out dates.
+
+    ``short=True`` uses ``format.date_short`` (an abbreviated month, "Mar"), for the
+    compact header line. A locale with no concept of month abbreviation just uses the
+    numeric month in its short pattern.
+    """
+    key = "format.date_short" if short else "format.date"
+    return pattern(key, locale).format(
         year=value.year,
         month=_month_name(value.month, locale),
+        month_abbr=_month_abbr(value.month, locale),
         month_num=value.month,
         month_pad=f"{value.month:02d}",
         day=value.day,
         day_pad=f"{value.day:02d}",
     )
+
+
+def _month_abbr(month: int, locale: str | None) -> str:
+    """The 3-letter month ("Mar"). Localizable via ``month_abbr.<English>`` keys."""
+    english = MONTHS[month - 1][:3]
+    key = f"month_abbr.{MONTHS[month - 1]}"
+    found = t(key, locale=locale)
+    return english if found == key else found
 
 
 def _month_name(month: int, locale: str | None) -> str:
