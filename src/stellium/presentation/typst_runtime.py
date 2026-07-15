@@ -94,23 +94,38 @@ def theme_dir() -> str:
     return os.path.join(os.path.dirname(__file__), "typst_theme")
 
 
-def font_paths() -> list[str]:
-    """The bundled font directory (``stellium/data/fonts``).
+def font_paths(extra: list[str] | None = None) -> list[str]:
+    """Font directories to search when rasterizing, most-authoritative last.
 
-    Every display/body/mono face the themes use, plus the Noto symbol fonts, so a PDF
-    renders identically on any machine with no dependency on host fonts. System fonts
-    are still searched as well (``ignore_system_fonts`` stays False), but the bundle
-    is self-sufficient.
+    Three sources, in order:
 
-    **This is the only correct answer, and it is the reason this module exists** — see
-    the module docstring for the two wrong ones it replaces.
+    1. The **bundled** directory (``stellium/data/fonts``) — every display/body/mono face
+       the themes use plus the Noto symbol fonts, so a PDF renders identically on any
+       machine with no dependency on host fonts.
+    2. **Downloaded font packs** under ``~/.stellium/fonts/`` — auto-discovered, so a
+       ``stellium fonts download zh`` makes non-Latin charts render with no code change.
+       The bundle covers Latin + astrological symbols only; CJK/Arabic/etc. live here.
+    3. ``extra`` — directories from a per-render ``with_font()`` override.
+
+    The bundle stays self-sufficient for Latin charts; the later entries only add coverage
+    the bundle lacks.
+
+    **This is the reason this module exists** — see the module docstring for the two wrong
+    answers it replaces.
     """
     fonts = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),  # -> stellium/
         "data",
         "fonts",
     )
-    return [fonts] if os.path.isdir(fonts) else []
+    paths: list[str] = [fonts] if os.path.isdir(fonts) else []
+
+    from stellium.data.paths import installed_font_dirs
+
+    paths.extend(str(d) for d in installed_font_dirs())
+    if extra:
+        paths.extend(extra)
+    return paths
 
 
 # ---------------------------------------------------------------------------

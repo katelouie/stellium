@@ -47,6 +47,9 @@ log = get_logger("data.paths")
 # User data directory
 USER_DATA_DIR = Path.home() / ".stellium"
 USER_EPHE_DIR = USER_DATA_DIR / "ephe"
+# Downloaded font packs (one subdir per script), for rendering non-Latin charts. Sibling
+# to ephe/ because both are user-fetched data you would hate to lose, not cache.
+USER_FONTS_DIR = USER_DATA_DIR / "fonts"
 
 # Environment variable that lets users override the ephemeris directory
 # without touching code — handy for portable installs, read-only $HOME
@@ -102,6 +105,35 @@ def get_user_ephe_dir() -> Path:
     """
     USER_EPHE_DIR.mkdir(parents=True, exist_ok=True)
     return USER_EPHE_DIR
+
+
+def get_user_fonts_dir() -> Path:
+    """The user font directory (``~/.stellium/fonts/``), creating it if necessary.
+
+    Holds font packs downloaded by ``stellium fonts download <script>`` — one subdirectory
+    per script — for rendering charts whose text is not covered by the bundled Latin and
+    symbol fonts. Auto-discovered by the renderer (see ``typst_runtime.font_paths``).
+    """
+    USER_FONTS_DIR.mkdir(parents=True, exist_ok=True)
+    return USER_FONTS_DIR
+
+
+def installed_font_dirs() -> list[Path]:
+    """Every directory under ``~/.stellium/fonts/`` that contains a font file.
+
+    These are appended to the render font path so a downloaded pack is found with no
+    ``with_font()`` call. Returns an empty list if nothing has been downloaded — the
+    common case, and cheap.
+    """
+    if not USER_FONTS_DIR.is_dir():
+        return []
+    dirs: list[Path] = []
+    for path in sorted(USER_FONTS_DIR.rglob("*")):
+        if path.is_dir() and any(
+            child.suffix.lower() in (".ttf", ".otf", ".ttc") for child in path.iterdir()
+        ):
+            dirs.append(path)
+    return dirs
 
 
 def resolve_cache_dir() -> Path:
