@@ -189,6 +189,27 @@ def test_chart_overview_localizes_fully_in_zh():
     assert leaks == [], f"zh_CN ChartOverview still leaks English: {leaks}"
 
 
+def test_available_locales_info_reports_resolved_coverage():
+    """The locale overview counts coverage through the fallback chain, not per-file.
+
+    zh_Hant_TW's own file has ~13 override keys, but resolved through
+    zh_Hant_TW → zh_Hant → zh → en it covers far more — that resolved number is what the
+    overview (and `stellium i18n locales`) must show, or a base+override locale looks
+    almost empty.
+    """
+    from stellium.i18n import available_locales_info
+
+    info = {row["code"]: row for row in available_locales_info()}
+    assert "en" in info and info["en"]["coverage"][0] == info["en"]["coverage"][1]
+
+    if "zh_Hant_TW" in info:  # present once the traditional locales are installed
+        tw = info["zh_Hant_TW"]
+        assert tw["chain"] == ["zh_Hant_TW", "zh_Hant", "zh", "en"]
+        done, total = tw["coverage"]
+        assert done > 100  # far more than the ~13 keys in its own file
+        assert done <= total
+
+
 def test_pseudolocale_is_a_partial_oracle():
     """Bracketing must mean 'went through the catalog' — and nothing else.
 

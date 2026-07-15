@@ -265,6 +265,61 @@ def get_available_locales() -> list[str]:
     return sorted(locales)
 
 
+def resolved_coverage(locale: str) -> tuple[int, int]:
+    """``(translated, total)`` catalog terms this locale resolves through its chain.
+
+    Counts each catalog key that resolves to a non-English value *somewhere* in the
+    fallback chain (excluding English) — so a base-plus-override locale like
+    ``zh_Hant_TW`` reports its true coverage (base + overrides), not just the handful of
+    keys in its own file.
+    """
+    from stellium.i18n.catalog import build_catalog
+
+    catalog = build_catalog()
+    steps = [s for s in locale_chain(locale) if s != "en"]
+    translated = sum(
+        any(_get_locale_strings(step).get(key) is not None for step in steps)
+        for key in catalog
+    )
+    return translated, len(catalog)
+
+
+def available_locales_info() -> list[dict]:
+    """Every available locale with its language, status, coverage and fallback chain.
+
+    The at-a-glance companion to :func:`get_available_locales` (which returns bare codes)
+    and ``stellium i18n coverage <locale>`` (which details one). English is the identity
+    locale — fully covered by definition, no file.
+    """
+    from stellium.i18n.catalog import build_catalog
+
+    total = len(build_catalog())
+    info = []
+    for code in get_available_locales():
+        if code == "en":
+            info.append(
+                {
+                    "code": "en",
+                    "language": "English",
+                    "status": "identity",
+                    "coverage": (total, total),
+                    "chain": ["en"],
+                }
+            )
+            continue
+        meta = _locale_metadata(code)
+        info.append(
+            {
+                "code": code,
+                "language": meta.get("language", code),
+                "status": meta.get("status", "unknown"),
+                "coverage": resolved_coverage(code),
+                "chain": locale_chain(code),
+            }
+        )
+    return info
+
+
 def reload_locale(locale: str) -> None:
     """Force reload a locale from disk (useful after editing locale files).
 

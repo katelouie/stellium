@@ -39,9 +39,11 @@ from stellium.i18n.formats import (
 )
 from stellium.i18n.loader import (
     PSEUDO_LOCALE,
+    available_locales_info,
     get_available_locales,
     get_default_locale,
     locale_chain,
+    resolved_coverage,
     set_default_locale,
     t,
 )
@@ -57,6 +59,8 @@ __all__ = [
     "set_default_locale",
     "get_default_locale",
     "get_available_locales",
+    "available_locales_info",
+    "resolved_coverage",
     "locale_chain",
     "PSEUDO_LOCALE",
     "build_catalog",

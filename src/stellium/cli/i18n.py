@@ -14,7 +14,12 @@ import click
 from rich.console import Console
 from rich.table import Table
 
-from stellium.i18n import build_catalog, get_available_locales, namespaces
+from stellium.i18n import (
+    available_locales_info,
+    build_catalog,
+    get_available_locales,
+    namespaces,
+)
 from stellium.i18n.formats import DEFAULT_PATTERNS
 from stellium.i18n.loader import _get_locale_strings
 
@@ -24,6 +29,50 @@ console = Console()
 @click.group(name="i18n")
 def i18n_group() -> None:
     """Inspect and extend the translation catalog."""
+
+
+@i18n_group.command(name="locales")
+def locales_cmd() -> None:
+    """Show every available locale — coverage, fallback chain and font status."""
+    from stellium import fonts
+
+    table = Table(title="Available locales")
+    table.add_column("Locale")
+    table.add_column("Language")
+    table.add_column("Status")
+    table.add_column("Catalog", justify="right")
+    table.add_column("Falls back through")
+    table.add_column("Font")
+
+    for row in available_locales_info():
+        code = row["code"]
+        done, total = row["coverage"]
+        pct = 100 * done / total if total else 0
+        chain = " → ".join(row["chain"][1:]) or "—"  # drop the locale itself
+
+        script = fonts.locale_script(code)
+        if script is None:
+            font = "[dim]not needed[/dim]"
+        elif fonts.is_installed(script):
+            font = f"[green]{script} ✓[/green]"
+        else:
+            font = f"[yellow]{script} (run: stellium fonts download {script})[/yellow]"
+
+        table.add_row(
+            code,
+            row["language"],
+            row["status"],
+            f"{done}/{total} ({pct:.0f}%)",
+            chain,
+            font,
+        )
+
+    console.print(table)
+    console.print(
+        "\nDetail one with [bold]stellium i18n coverage <locale>[/bold]. "
+        "Catalog % counts the closed vocabulary resolved through the fallback chain; "
+        "message and format strings degrade to English independently."
+    )
 
 
 @i18n_group.command(name="coverage")
