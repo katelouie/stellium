@@ -32,8 +32,11 @@ Design notes:
 
 from stellium.i18n.catalog import build_catalog, namespaces
 from stellium.i18n.formats import (
+    format_coordinates,
     format_date,
     format_degrees,
+    format_latitude,
+    format_longitude,
     format_number,
     format_time,
 )
@@ -69,4 +72,7 @@ __all__ = [
     "format_time",
     "format_degrees",
     "format_number",
+    "format_latitude",
+    "format_longitude",
+    "format_coordinates",
 ]

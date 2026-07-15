@@ -45,6 +45,12 @@
     "Vertex": "宿命点",
     "Vesta": "灶神星"
   },
+  "direction": {
+    "E": "东",
+    "N": "北",
+    "S": "南",
+    "W": "西"
+  },
   "element": {
     "Air": "风象",
     "Earth": "土象",
@@ -107,6 +113,10 @@
     "Waxing Crescent": "娥眉月",
     "Waxing Gibbous": "盈凸月"
   },
+  "sect": {
+    "Day": "日",
+    "Night": "夜"
+  },
   "sign": {
     "Aquarius": "水瓶座",
     "Aries": "白羊座",
@@ -125,6 +135,8 @@
     "date": "{year}年{month_num}月{day}日",
     "date_short": "{year}年{month_num}月{day}日",
     "datetime": "{date} {time}",
+    "latitude": "{hemisphere}{value}°",
+    "longitude": "{hemisphere}{value}°",
     "time": "{hour24}:{minute}"
   },
   "message": {
@@ -365,9 +377,5 @@
     "Waxing Crescent": "娥眉月",
     "Waxing Gibbous": "盈凸月",
     "Whole Sign": "整宫制"
-  },
-  "sect": {
-    "Day": "日",
-    "Night": "夜"
   }
 }

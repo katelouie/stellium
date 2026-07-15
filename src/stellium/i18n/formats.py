@@ -131,6 +131,50 @@ def format_degrees(longitude: float, locale: str | None = None) -> str:
     return pattern("format.degrees", locale).format(deg=deg, min=minute)
 
 
+def _direction(letter: str, locale: str | None) -> str:
+    """A coordinate direction ("N"), translated. Falls back to the letter, never a key.
+
+    Mirrors :func:`_month_name`: the English value of the catalog term ``direction.N`` is
+    the letter itself, so an untranslated locale renders "N" and a translated one renders
+    its word (Chinese "北").
+    """
+    key = f"direction.{letter}"
+    found = t(key, locale=locale)
+    return letter if found == key else found
+
+
+def format_latitude(
+    value: float, locale: str | None = None, *, precision: int = 2
+) -> str:
+    """A latitude, laid out per ``format.latitude`` — "47.60°N", or Chinese "北47.60°"."""
+    direction = "N" if value >= 0 else "S"
+    return pattern("format.latitude", locale).format(
+        value=f"{abs(value):.{precision}f}",
+        hemisphere=_direction(direction, locale),
+    )
+
+
+def format_longitude(
+    value: float, locale: str | None = None, *, precision: int = 2
+) -> str:
+    """A longitude, laid out per ``format.longitude`` — "8.55°E", or Chinese "東8.55°"."""
+    direction = "E" if value >= 0 else "W"
+    return pattern("format.longitude", locale).format(
+        value=f"{abs(value):.{precision}f}",
+        hemisphere=_direction(direction, locale),
+    )
+
+
+def format_coordinates(
+    lat: float, lon: float, locale: str | None = None, *, precision: int = 2
+) -> str:
+    """A latitude/longitude pair, each formatted and joined — "47.60°N, 8.55°E"."""
+    return (
+        f"{format_latitude(lat, locale, precision=precision)}, "
+        f"{format_longitude(lon, locale, precision=precision)}"
+    )
+
+
 def format_number(value: float, locale: str | None = None, decimals: int = 2) -> str:
     """A decimal number. Several locales write ``3,14`` where English writes ``3.14``."""
     text = f"{value:.{decimals}f}"

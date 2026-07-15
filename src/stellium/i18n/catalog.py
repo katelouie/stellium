@@ -81,6 +81,11 @@ SECTS: tuple[str, ...] = ("Day", "Night")
 
 ASPECT_MOTIONS: tuple[str, ...] = ("Applying", "Separating")
 
+# The cardinal coordinate directions. Their English *is* the single letter a chart prints
+# after a latitude/longitude ("47.60°N"); a locale translates the letter and reorders it
+# via the format.latitude / format.longitude pattern (Chinese writes "北47.60°").
+DIRECTIONS: tuple[str, ...] = ("N", "S", "E", "W")
+
 
 def _house_short_forms() -> dict[str, str]:
     """The English short forms, from the one implementation that has all 17 systems."""
@@ -123,6 +128,7 @@ def build_catalog() -> dict[str, str]:
         ("dignity", DIGNITIES),
         ("sect", SECTS),
         ("aspect_motion", ASPECT_MOTIONS),
+        ("direction", DIRECTIONS),
     ):
         for name in names:
             catalog[f"{namespace}.{name}"] = name

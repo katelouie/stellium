@@ -10,7 +10,14 @@ from stellium.core.models import (
     CalculatedChart,
     UnknownTimeChart,
 )
-from stellium.i18n import format_date, format_time, render, t, term
+from stellium.i18n import (
+    format_coordinates,
+    format_date,
+    format_time,
+    render,
+    t,
+    term,
+)
 from stellium.visualization.core import (
     ChartRenderer,
     embed_svg_glyph,
@@ -175,9 +182,7 @@ class ChartInfoLayer:
         if "coordinates" in self.fields and chart.location:
             lat = chart.location.latitude
             lon = chart.location.longitude
-            lat_dir = "N" if lat >= 0 else "S"
-            lon_dir = "E" if lon >= 0 else "W"
-            lines.append(f"{abs(lat):.2f}°{lat_dir}, {abs(lon):.2f}°{lon_dir}")
+            lines.append(format_coordinates(lat, lon, loc, precision=2))
 
         if "house_system" in self.fields:
             # Skip house system for unknown time charts (no houses without time!)
