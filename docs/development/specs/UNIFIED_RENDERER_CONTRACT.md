@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **Proposed.** Design approved (see §5). Not yet built. Survey complete (§2). |
+| **Status** | **In progress.** Steps 1–2 landed (dispatch + planet table); the **`Gloss`** primitive (§4) is built and spiked. The resolve-pass reshape onto `Gloss` (steps 3–5) is next. |
 | **Created** | 2026-07-15 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
@@ -127,7 +127,9 @@ facts are §2.1–2.3 above, plus:
   do-not-translate set (proper nouns, IANA zones, brand). Provable by the pseudolocale
   oracle extended to the PDF-JSON path (§7).
 - English output — markdown **and** PDF — is **byte-identical** to before.
-- Text renderers are **untouched**: cells stay plain strings.
+- Text renderers flatten at their **display edge** (a single `unmask()`); their internal
+  cell handling stays string-based (a `Gloss` is its English string to everything but the
+  final `.loc` read).
 
 ### Non-Goals
 
@@ -143,163 +145,153 @@ facts are §2.1–2.3 above, plus:
 
 ---
 
-## 4. Design
+## 4. Design — Gloss: identity coupled to presentation
 
-### 4.1 Two names: stable `section_key` + localized display name
+The unifying primitive is **`Gloss`** (`stellium/i18n/gloss.py`): a concept resolved for a
+locale that carries *both* dimensions at once, so nothing downstream has to choose between
+matching and displaying.
 
-A section carries a **stable internal identity** distinct from its **display title**:
-
-- **`section_key`** — a fixed English-ish slug (`"planet_positions"`, `"chart_overview"`,
-  `"moon_phase"`). Never localized. Emitted in the section dict. Drives all
-  behind-the-scenes handling: Typst dispatch, special-payload selection, any table-family
-  logic-gating.
-- **display name** — the tuple's `name`, localized by the resolve pass exactly as today,
-  used for the rendered header.
-
-This directly replaces the fragile `name.lower() == "chart overview"` routing
-(`typst_render.py:428`) with `section_key == "chart_overview"`. It composes with the
-existing `type` field: `type` is the **shape** (table / key_value), `section_key` is the
-**identity** (planet_positions vs house_cusps — both `type: table`).
-
-> Why not one field? `type` says how to lay it out generically; `section_key` says whether
-> a renderer has a bespoke treatment for *this specific* section. Most sections need only
-> `type`; the ~4 rich ones are found by `section_key`.
-
-### 4.2 The unified resolve pass
-
-Extend `_resolve_structured` so it **deep-resolves token values anywhere in the dict**, not
-only inside `headers`/`rows`/`data`/`tables`. The rule stays type-correct:
-
-- **Label positions** (section name, `headers`, `key_value` keys, table `title`) — wrapped
-  as `msg(...)` so a bare string routes through the catalog (unchanged behavior).
-- **Every other value, at any depth** — resolved as a *plain value*: a `Term`/`Message`/
-  `date` renders to a localized string; a plain `str`, `int`, `float`, or `bool` passes
-  through untouched.
-
-Because raw strings pass through, the language-neutral bits of a payload — the glyph char,
-the canonical `name` used for color/matching — survive verbatim, while the display fields
-(which the section now emits as tokens) get localized. One pass, every shape.
-
-### 4.3 Rich payloads carry tokens; build once, derive rows
-
-The bespoke sections stop emitting raw English in their payloads. The payload's **display**
-fields become tokens; only the **language-neutral** fields stay raw:
+### 4.1 The `Gloss` object
 
 ```python
-# PlanetPositionSection, per planet — the SINGLE source of truth
+class Gloss:            # not a str subclass — see below
+    en:  str            # identity — the internal language every machine op matches on
+    loc: str            # presentation — the mask a renderer flips on at the display edge
+    key: str | None     # finest identity ("sign.Aries") for glyph/colour lookup
+
+    __eq__/__hash__  → delegate to .en   # a Gloss IS its English string as a dict key
+    __str__          → .en               # a forgotten .loc leaks visible English
+```
+
+`gloss(term_or_message, locale)` produces one by rendering the token twice — once in `"en"`,
+once in `locale` — so a Message's slots and a list join localize consistently in each
+dimension for free.
+
+Three properties earn it its place:
+
+1. **Machinery is locale-invariant.** `==` and `hash` go by `.en`, so `data["Illumination"]`
+   finds a `Gloss` key in *any* locale. This is the direct kill for the entire "lookup
+   breaks under localization" bug class (§2.2/§2.3): the cover scrape, the moon `get()`, the
+   dispatch match — all were machinery keyed on a string the resolve pass had translated out
+   from under them. A `Gloss` key can't be translated out from under anything.
+2. **It fails safe, not silent.** Deliberately **not** a `str` subclass. `==`/`hash` make it
+   a drop-in dict key, but a string *operation* (`.upper()`, slicing, `+`) raises instead of
+   silently returning English and dropping the mask. And `__str__` returns `.en`, so a
+   renderer that forgets `.loc` prints **visible English** — which the pseudolocale
+   completeness oracle catches mechanically. Silent-wrong output is impossible.
+3. **It is where inflection lives** (see I18N_GRAMMATICAL_INFLECTION.md). `.en` is always
+   plain identity; all grammar happens when computing `.loc`. The two designs compose.
+
+### 4.2 The resolve pass produces `Gloss`, not flat strings
+
+`_resolve_structured` stops flattening a `Term`/`Message` to a bare localized string and
+instead produces a `Gloss(en, loc)` in its place, everywhere in the section dict (labels,
+cells, and rich-payload display fields alike). A plain string with no token passes through
+unchanged (the substring bridge still handles un-migrated sections; it **skips** `Gloss`
+values, which are already resolved). One pass, one primitive, every shape — and the
+structure that flows out still *looks* like its English self to every machine that reads it.
+
+### 4.3 Rich payloads: `Gloss` collapses the canonical/display split
+
+The `name`-vs-`label` duality §2's planet payload needed is now one field. A `Gloss` label
+carries the display in `.loc` **and** the canonical identity in `.en`/`.key`:
+
+```python
 planet = {
-    "name":  pos.name,                       # canonical, raw — color/matching/glyph key
-    "label": term(f"body.{pos.name}"),       # display  → localized by the resolve pass
-    "glyph": glyph,                           # language-neutral
-    "sign":  term(f"sign.{pos.sign}"),        # display  → localized
-    "sign_glyph": sign_glyph,                 # language-neutral
-    "degree": deg_str, "houses": houses,      # neutral
-    "speed": speed_str, "retro": pos.is_retrograde,
+    "label": term(f"body.{pos.name}"),   # → Gloss: .loc "太阳" prints, .en "Sun" looks up the glyph
+    "glyph": glyph,                       # language-neutral
+    "sign":  term(f"sign.{pos.sign}"),    # → Gloss: .loc "双鱼座", .en "Pisces" tints the disc
+    "degree": deg_str, "houses": houses, "retro": pos.is_retrograde,
 }
+rows = [compose_row(p) for p in planets]  # derived — the same Glosses, one construction
 ```
 
-The flat `rows` are then **derived** from the payload rather than hand-built a second time:
+Built once, `rows` derived. (During migration a raw canonical field may stay alongside for a
+step; the endpoint is the single `Gloss`.)
 
-```python
-rows = [ compose_row(p) for p in planets ]   # the flat view, for text renderers
-```
+### 4.4 The JSON boundary — encoder emits the mask; identity travels beside it
 
-One data construction; two views (flat rows for text renderers, structured payload for
-Typst). This kills the "build it twice" smell §2.3 identified.
+A `Gloss` isn't JSON-serializable. The encoder emits its **`.loc`** (the display string), so
+the `.typ` templates receive plain localized strings and need *no change* on the generic
+paths. Where a template genuinely needs identity (the planet disc's glyph/colour lookup), the
+payload carries the canonical field explicitly, or the encoder emits `{en, loc}` for that
+field and the `.typ` reads `.en`. The spike proved both shapes clean.
 
-### 4.4 Column metadata (optional, section-level)
+### 4.5 Renderer behaviour after the change
 
-Structural hints about columns are declared **once per section**, never per cell:
+- **Text renderers** — call `unmask()` (`.loc` for a `Gloss`, the value unchanged otherwise)
+  at their **display edge**. Their internals stay string-based; it is a one-line flatten at
+  the boundary, after any machinery, not a rewrite of cell handling.
+- **Typst mappers** — read `.en` for identity (dispatch, the moon field ID, glyph lookup)
+  and let `.loc` flow to the `.typ` via the encoder. `_moon_phase` stops re-deriving hardcoded
+  English fields — it iterates the glossed key/value, IDs fields by `.en`, prints `.loc`.
+  `_generic` uses `unmask` instead of `str()` (which would print `.en`).
+- **The `.typ`** — generic paths unchanged (they get `.loc` strings); hardcoded chrome moves
+  to section-declared labels (also Glosses → `.loc`).
 
-```python
-"columns": [
-    {"role": "body",     "align": "left"},
-    {"role": "position", "align": "left"},
-    {"role": "house",    "align": "right"},
-    {"role": "numeric",  "align": "right"},   # speed
-    {"role": "motion"},
-]
-```
+### 4.6 What `Gloss` subsumes
 
-Roles let generic Typst tables get consistent treatment (numeric right-alignment,
-emphasis) without per-section code. They are **not** where glyph identity lives — that
-stays in the payload's canonical `name` (glyphs need the canonical key, which a localized
-cell has lost). Column metadata is a convenience for the generic path; the bespoke path
-uses the payload.
+Three things this spec earlier built by hand collapse into the one primitive:
 
-### 4.5 Chrome moves from `.typ` into section-declared labels
-
-Every hardcoded display label in the templates (§2.2 item 2) becomes a **section-declared,
-localized label** passed through the JSON. The `.typ` reads the value instead of a literal:
-
-```typst
-// before
-lbl("Planet", size: 7.5pt)
-// after
-lbl(headers.planet, size: 7.5pt)   // headers.planet already localized in the data
-```
-
-The section provides a small labels block (`planet`, `position`, `speed`, `motion` for the
-planet table; `elements`, `modalities`, `polarity`, `yang`, `yin` for the snapshot). The
-resolve pass localizes them like any other label. `List B` from the survey — the glyph and
-palette maps keyed by `"Sun"`/`"Trine"` — **stays untouched**; those keys are never
-displayed.
-
-### 4.6 Renderer behavior after the change
-
-- **Text renderers** — unchanged. Read `type` + container keys, `str()` the cells, use the
-  localized display name.
-- **Typst renderer** — dispatch on `section_key`. For the ~4 bespoke sections, lay out from
-  the (now localized) payload + declared labels. For everything else, render a **generic**
-  table/key_value/text/compound from the resolved `headers`/`rows`/`data` — the same keys
-  the text renderers read. Delete `_planet_positions`/`_moon_phase` raw re-derivation, the
-  title-substring routing, and the hardcoded `.typ` chrome.
+- **`section_key`** (§ was 4.1) — the section name is a `Gloss`; `.en` dispatches, `.loc`
+  displays. (`section_key` may stay as an explicit belt-and-braces slug, but is no longer
+  load-bearing.)
+- **The payload canonical/display split** (§4.3) — one `Gloss` field, not `name` + `label`.
+- **The labels-map / per-structure identity schemes** — never built; `Gloss` is the identity
+  everywhere.
 
 ---
 
-## 5. Design decision: payload + dispatch, not per-cell enrichment
+## 5. Design decision: a `Gloss` object, not a string and not a parallel map
 
-An alternative was considered and **rejected**: making each resolved cell a rich object
-(`RenderedCell(text, glyph, key)`, `__str__` → text) so any renderer could pull glyph and
-identity from any cell.
+The primitive went through three shapes before landing on `Gloss`; recording the path so it
+is not re-litigated:
 
-Rejected because:
+1. **Per-cell rich object `RenderedCell(text, glyph, key)`** — rejected: it made every cell a
+   non-string and forced every renderer to learn a new cell type, and it restated the column
+   role on every row.
+2. **Parallel `labels` map + stable `section_key`** — workable but *per-structure*: every
+   section shape needed its own identity-beside-display scheme, kept in sync by hand. Identity
+   and display living in two structures is the thing that drifts.
+3. **`RosettaStr(str)`** — a `str` subclass with `.trans`. Elegant (machinery transparent)
+   but a **footgun**: every `str` method (`.upper()`, `+`, an f-string) silently returns the
+   English content and *drops the translation*, and JSON serializes the English. Silent
+   failures.
 
-1. **It touches every renderer.** A cell that is secretly an object breaks any renderer
-   doing `.upper()`, slicing, or `len()` on it — and the survey shows they treat cells as
-   real strings. Plain-string cells keep the text renderers literally unchanged.
-2. **It duplicates the column role on every row.** "Column 0 is a body" is one fact;
-   per-cell `key` restates it once per planet. Section-level column metadata states it
-   once.
-3. **It pays for generality nobody uses.** Enriching all cells would let *any* table render
-   glyphs — but most sections are plain flat tables wanting no special handling, and the
-   few bespoke ones want hand-built layout regardless. Enriching every cell to serve four
-   sections is the wrong trade.
-
-The chosen model — **plain-string cells + a stable `section_key` + section-level metadata +
-localized payloads** — confines the complexity to exactly the sections that have it, and
-keeps the common path (a flat table) trivial.
+**`Gloss` keeps the good part of each and drops the traps.** Like `RosettaStr` it couples the
+two dimensions in one value, so there is no parallel structure to sync and machinery reads
+identity transparently via `==`/`hash`. Unlike `RosettaStr` it is **not** a `str`, so string
+operations fail *loudly* rather than silently masking-then-dropping — and `__str__ = .en`
+plus the completeness oracle means the one residual failure mode (a forgotten `.loc`) is
+caught mechanically as visible English. One primitive, universal, safe by construction.
 
 ---
 
 ## 6. Migration plan
 
 Each step ends green with English byte-identical (markdown hash **and** PDF text) before
-the next begins.
+the next begins. Steps 1–2 landed under the pre-Gloss design; step 2b re-homes them on
+`Gloss` and the rest follows almost for free.
 
-1. **Contract + resolve.** Add `section_key` to the section dicts; swap `_map_section`
-   routing from title-substring to `section_key`; extend `_resolve_structured` to
-   deep-resolve token values anywhere. Prove: text output unchanged, English PDF unchanged
-   (the payloads are still raw English at this point, so nothing moves yet).
-2. **Planet positions.** Emit the `planets` payload with tokens; derive `rows` from it; add
-   the labels block; rewrite the Typst planet table to read localized payload + labels.
-   Prove English unchanged, `zh_CN`/`zh_Hant` planet names + headers localized.
-3. **Aspects + moon.** Same treatment for the aspect list, the aspectarian, and the
-   moon-phase key/value (drop `_moon_phase`'s hardcoded fields — it becomes an ordinary
-   localized `key_value`).
-4. **Snapshot chrome + cleanup.** Move `engine.typ`'s `Elements`/`Modalities`/`Polarity`/
-   `Yang`/`Yin` to declared labels; delete the dead Typst mappers, the substring routing,
-   and every hardcoded `.typ` chrome literal from List A.
+1. **Contract + resolve.** ✅ Landed. `section_key` dispatch; deep-resolve token values
+   anywhere. Byte-identical.
+2. **Planet positions.** ✅ Landed. Payload with tokens, rows derived, section-declared
+   labels, Typst planet table reads localized payload. Byte-identical English; zh planet
+   table localized.
+2b. **`Gloss` foundation.** ✅ Landed (additive). The `Gloss` primitive + `gloss()`/`unmask()`,
+   spiked end-to-end on moon-phase data.
+3. **Resolve pass → `Gloss`.** The reshape. `_resolve_structured` produces `Gloss` for
+   tokens; the substring bridge skips `Gloss`; text renderers `unmask()` at their edge; the
+   Typst JSON encoder emits `.loc`. English stays byte-identical (`.loc == .en` in English,
+   and `__str__` is `.en` regardless); a missed `unmask()` shows English, not a crash or a
+   wrong lookup. Prove text + PDF byte-identical English; zh unchanged from step 2.
+4. **Moon phase on `Gloss`.** `_moon_phase` iterates the glossed key/value, IDs fields by
+   `.en`, prints `.loc` — deleting every hardcoded English field label and the broken
+   English-key lookup. First section the reshape *fixes*.
+5. **Aspects + generic chrome.** Aspect list + aspectarian via the same read-`.en`/print-`.loc`
+   pattern; `_generic` uses `unmask` not `str()`; snapshot chrome (`Elements`/`Polarity`/…)
+   moves to section-declared label Glosses. Delete the dead mappers and the hardcoded `.typ`
+   chrome.
 
 ---
 
@@ -334,7 +326,8 @@ the next begins.
    construction (rows derived), and no section emits the same data twice by hand.
 6. `_moon_phase`'s hardcoded English field labels and all List A `.typ` chrome literals are
    gone; the templates read declared, localized labels.
-7. Text renderers are unchanged (no diff to their cell handling).
+7. The resolve pass produces `Gloss`; machinery reads `.en`, renderers `unmask()` to `.loc`
+   at their edge; a forgotten `.loc` surfaces as oracle-caught English, never a wrong lookup.
 
 ---
 
