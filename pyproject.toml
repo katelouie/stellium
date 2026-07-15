@@ -126,11 +126,13 @@ where = ["src"]
     "typst_theme/*.typ",
 ]
 # Locale strings, read by i18n/loader.py from `Path(__file__).parent / "locales"`.
-# The `*.json` glob ships _TEMPLATE.json (the translator's starting point) alongside the
-# per-locale `*/strings.json` files.
+# One recursive glob ships every locale's JSON at any depth — `_TEMPLATE.json`, each
+# `<locale>/strings.json`, and any future nesting — so a new locale needs no pyproject
+# edit. Still tight: JSON only, never a stray file (test_package_data_globs_do_not_sweep
+# guards against pickles/caches). Translator docs (TRANSLATION_NOTES / research reports)
+# are .md and stay out of the wheel deliberately.
 "stellium.i18n" = [
-    "locales/*.json",
-    "locales/*/*.json",
+    "locales/**/*.json",
 ]
 
 # Tool configurations
