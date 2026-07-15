@@ -558,16 +558,21 @@ class HouseCuspsSection:
         else:  # "specific"
             systems_to_show = [s for s in self._systems if s in chart.house_systems]
 
-        # Build headers
-        headers = ["House"]
+        # Build headers. "Cusp (Pl)" is composed, like the planet-table house header —
+        # a message with the system as a short-form term.
+        headers: list[Any] = ["House"]
         for system_name in systems_to_show:
-            abbrev = abbreviate_house_system(system_name)
-            headers.append(f"Cusp ({abbrev})")
+            headers.append(
+                msg(
+                    "Cusp ({system})",
+                    system=term(f"house_system.{system_name}", short=True),
+                )
+            )
 
         # Build rows (houses 1-12)
         rows = []
         for house_num in range(1, 13):
-            row = [str(house_num)]
+            row: list[Any] = [str(house_num)]
 
             for system_name in systems_to_show:
                 house_cusps = chart.house_systems[system_name]
@@ -578,12 +583,20 @@ class HouseCuspsSection:
                 degree = int(sign_degree)
                 minute = int((sign_degree % 1) * 60)
 
-                # Format with sign glyph
+                # Glyph form is language-neutral (number + glyph). The name fallback is a
+                # term, so a sign with no glyph still localizes rather than leaking.
                 sign_glyph = get_sign_glyph(sign)
                 if sign_glyph:
                     row.append(f"{degree}° {sign_glyph} {minute:02d}'")
                 else:
-                    row.append(f"{degree}° {sign} {minute:02d}'")
+                    row.append(
+                        msg(
+                            "{deg}° {sign} {min}'",
+                            deg=degree,
+                            sign=term(f"sign.{sign}"),
+                            min=f"{minute:02d}",
+                        )
+                    )
 
             rows.append(row)
 
