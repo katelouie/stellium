@@ -280,7 +280,7 @@
     "Yes": "是",
     "Zodiac": "黄道系统",
     "Zodiacal Releasing": "黄道释放",
-    "{ruler} (ruler of {sign})": "{ruler}（{sign}守护星）",
+    "{ruler} ({sign} Rising)": "{ruler}（{sign}上升）",
     "{sect} Chart": "{sect}间盘"
   },
   "legacy": {
@@ -364,5 +364,9 @@
     "Waxing Crescent": "娥眉月",
     "Waxing Gibbous": "盈凸月",
     "Whole Sign": "整宫制"
+  },
+  "sect": {
+    "Day": "日",
+    "Night": "夜"
   }
 }

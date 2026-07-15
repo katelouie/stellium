@@ -136,32 +136,57 @@ def test_locale_flatten_and_nest_are_mutual_inverses():
     assert flat["body.Earth"] != flat["element.Earth"]
 
 
-@pytest.mark.slow
-def test_english_and_zh_output_unchanged():
-    """The refactor's safety net: rendered reports are byte-identical to pre-Phase-1.
+def _report(chart, locale):
+    return (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_locale(locale)
+        .with_chart_overview()
+        .with_planet_positions()
+        .with_aspects(mode="major")
+        .with_dignities()
+        .with_moon_phase()
+        .to_string(format="markdown")
+    )
 
-    Hashes captured against commit 3399e86 (the branch's spec commit, before any i18n
-    foundation code). If this fails, Phase 1 changed output it was not supposed to touch.
+
+@pytest.mark.slow
+def test_english_report_byte_identical():
+    """The refactor invariant, across every phase: English output does not move.
+
+    Hash captured against commit 3399e86 (before any i18n code). Each phase migrates
+    sections to the format-last contract; if any of that changes the *English* report,
+    it is a bug. (The zh_CN report is *meant* to change as leaks are fixed — that is
+    asserted separately, by rendered content rather than a hash that would churn.)
     """
     chart = ChartBuilder.from_notable("Albert Einstein").calculate()
-    expected = {
-        "en": "d7349ef80c503871fc3b49bb1358020db06a981a",
-        "zh_CN": "195ae89600b19f73b78b6ef254ca7d799c6e8f4a",
-    }
-    for locale, want in expected.items():
-        report = (
-            ReportBuilder()
-            .from_chart(chart)
-            .with_locale(locale)
-            .with_chart_overview()
-            .with_planet_positions()
-            .with_aspects(mode="major")
-            .with_dignities()
-            .with_moon_phase()
-        )
-        out = report.to_string(format="markdown")
-        got = hashlib.sha1(out.encode()).hexdigest()
-        assert got == want, f"{locale} report changed (was {want}, now {got})"
+    got = hashlib.sha1(_report(chart, "en").encode()).hexdigest()
+    assert got == "d7349ef80c503871fc3b49bb1358020db06a981a", (
+        f"English report changed (now {got}) — the migration must not touch English"
+    )
+
+
+@pytest.mark.slow
+def test_chart_overview_localizes_fully_in_zh():
+    """ChartOverview is migrated: its zh_CN output has no English but proper nouns.
+
+    The four original leaks lived here — the date (a reorder), the time, "Rising", and
+    "Day Chart" (composed). A person's name, a geocoded place and an IANA timezone are
+    data, not translatable, so they stay; nothing else may.
+    """
+    import re
+
+    dnt = {"Albert", "Einstein", "Ulm", "Germany", "Europe", "Berlin"}
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    out = (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_locale("zh_CN")
+        .with_chart_overview()
+        .to_string(format="markdown")
+    )
+    leaks = [w for w in re.findall(r"[A-Za-z][A-Za-z'’.]+", out) if w not in dnt]
+    assert leaks == [], f"zh_CN ChartOverview still leaks English: {leaks}"
 
 
 def test_pseudolocale_is_a_partial_oracle():

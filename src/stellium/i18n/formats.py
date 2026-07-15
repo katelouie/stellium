@@ -22,9 +22,13 @@ from stellium.i18n.loader import t
 
 # The English patterns. Each is also the translation *key* for its locale override, so a
 # locale file's "format.date" replaces the whole layout rather than any single word.
+# The English defaults reproduce the strftime calls they replace ("%B %d, %Y" and
+# "%I:%M %p"), including the zero-padded day and hour, so migrating a section to
+# format_date/format_time leaves English output byte-identical. A locale wanting an
+# unpadded day (Chinese: "3日", not "03日") uses {day}/{hour12} instead of the _pad forms.
 DEFAULT_PATTERNS: dict[str, str] = {
-    "format.date": "{month} {day}, {year}",
-    "format.time": "{hour12}:{minute} {ampm}",
+    "format.date": "{month} {day_pad}, {year}",
+    "format.time": "{hour12_pad}:{minute} {ampm}",
     "format.datetime": "{date} {time}",
     "format.degrees": "{deg}°{min:02d}'",
     "format.decimal_sep": ".",
@@ -84,9 +88,18 @@ def format_time(value: dt.time | dt.datetime, locale: str | None = None) -> str:
         hour24=hour24,
         hour24_pad=f"{hour24:02d}",
         hour12=hour12,
+        hour12_pad=f"{hour12:02d}",
         minute=f"{value.minute:02d}",
         second=f"{value.second:02d}",
         ampm=t("AM" if hour24 < 12 else "PM", locale=locale),
+    )
+
+
+def format_datetime(value: dt.datetime, locale: str | None = None) -> str:
+    """A date and time together, laid out per the locale's ``format.datetime``."""
+    return pattern("format.datetime", locale).format(
+        date=format_date(value.date(), locale),
+        time=format_time(value, locale),
     )
 
 

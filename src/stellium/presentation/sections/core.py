@@ -14,6 +14,7 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import msg, term
 from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 from ._utils import (
@@ -81,17 +82,19 @@ class ChartOverviewSection:
             else:
                 data["Name"] = name
 
-        # Date and time
+        # Date and time. The raw date/time objects are handed over; the renderer lays
+        # them out per the active locale (a date is a reorder, not a word — the whole
+        # reason post-hoc translation could not do this). See i18n.render / format_date.
         birth: dt.datetime = chart.datetime.local_datetime
         date_label = f"{label} Date" if label else "Date"
         time_label = f"{label} Time" if label else "Time"
-        data[date_label] = birth.strftime("%B %d, %Y")
-        data[time_label] = birth.strftime("%I:%M %p")
+        data[date_label] = birth.date()
+        data[time_label] = birth.time()
 
         if not label:  # Only show timezone for single charts
             data["Timezone"] = str(chart.location.timezone)
 
-        # Location
+        # Location — a geocoded place name, do-not-translate.
         loc = chart.location
         loc_label = f"{label} Location" if label else "Location"
         data[loc_label] = f"{loc.name}" if loc.name else "Unknown"
@@ -99,17 +102,23 @@ class ChartOverviewSection:
         if not label:  # Only show detailed info for single charts
             data["Coordinates"] = f"{loc.latitude:.4f}°, {loc.longitude:.4f}°"
 
-            # Chart metadata
-            house_systems = ", ".join(chart.house_systems.keys())
-            data["House System"] = house_systems
+            # House systems: a comma-list of catalog terms (render joins them).
+            data["House System"] = [
+                term(f"house_system.{name}") for name in chart.house_systems
+            ]
 
             # Zodiac system
             if chart.zodiac_type:
-                zodiac_display = chart.zodiac_type.value.title()
+                zodiac_word = chart.zodiac_type.value.title()  # Tropical / Sidereal
                 if chart.zodiac_type.value == "sidereal" and chart.ayanamsa:
                     ayanamsa_display = chart.ayanamsa.replace("_", " ").title()
-                    zodiac_display = f"{zodiac_display} ({ayanamsa_display})"
-                data["Zodiac"] = zodiac_display
+                    data["Zodiac"] = msg(
+                        "{zodiac} ({ayanamsa})",
+                        zodiac=msg(zodiac_word),
+                        ayanamsa=ayanamsa_display,
+                    )
+                else:
+                    data["Zodiac"] = msg(zodiac_word)
 
                 if (
                     chart.zodiac_type.value == "sidereal"
@@ -123,12 +132,18 @@ class ChartOverviewSection:
             # Sect (if available in metadata)
             if "dignities" in chart.metadata:
                 sect = chart.metadata["dignities"].get("sect", "unknown")
-                data["Chart Sect"] = f"{sect.title()} Chart"
+                data["Chart Sect"] = msg(
+                    "{sect} Chart", sect=term(f"sect.{sect.title()}")
+                )
 
             # Chart Ruler
             try:
                 ruler, asc_sign = get_chart_ruler_from_chart(chart)
-                data["Chart Ruler"] = f"{ruler} ({asc_sign} Rising)"
+                data["Chart Ruler"] = msg(
+                    "{ruler} ({sign} Rising)",
+                    ruler=term(f"body.{ruler}"),
+                    sign=term(f"sign.{asc_sign}"),
+                )
             except (ValueError, KeyError):
                 pass  # Skip if ASC not found
 

@@ -148,21 +148,27 @@ def test_chart_overview_generate_data(sample_chart):
 
 
 def test_chart_overview_date_format(sample_chart):
-    """Test that date is formatted correctly."""
-    section = ChartOverviewSection()
-    data = section.generate_data(sample_chart)
+    """The section emits a raw date; the renderer formats it per locale.
 
-    assert data["data"]["Date"] == "January 01, 2000"
+    ChartOverview is format-last now: it hands over the date object rather than a
+    pre-formatted string, so the same chart can render in any locale. In English it
+    still reads "January 01, 2000".
+    """
+    from stellium.i18n import render
+
+    data = ChartOverviewSection().generate_data(sample_chart)
+    assert data["data"]["Date"] == dt.date(2000, 1, 1)
+    assert render(data["data"]["Date"], "en") == "January 01, 2000"
 
 
 def test_chart_overview_house_systems(sample_chart):
-    """Test that house systems are listed correctly."""
-    section = ChartOverviewSection()
-    data = section.generate_data(sample_chart)
+    """House systems are emitted as catalog terms; the renderer joins and localizes."""
+    from stellium.i18n import render
 
-    house_systems = data["data"]["House System"]
-    assert "Placidus" in house_systems
-    assert "Whole Sign" in house_systems
+    data = ChartOverviewSection().generate_data(sample_chart)
+    rendered = render(data["data"]["House System"], "en")
+    assert "Placidus" in rendered
+    assert "Whole Sign" in rendered
 
 
 def test_chart_overview_location(sample_chart):

@@ -174,6 +174,63 @@ def _get_translatable_terms() -> list[str]:
     return _TRANSLATABLE_TERMS
 
 
+def _resolve_structured(
+    section_data: list[tuple[str, dict[str, Any]]],
+    locale: str,
+) -> list[tuple[str, dict[str, Any]]]:
+    """Render any Term/Message/date a *migrated* section emitted, into a string.
+
+    Sections that have moved to the format-last contract put structured values
+    (``term(...)``, ``msg(...)``, a raw ``date``) into their data instead of pre-composed
+    strings, because ``generate_data`` runs before the locale is known. This pass — which
+    runs for **every** locale, English included, and before the legacy substring
+    translator — resolves them with ``render()``. A plain string passes through
+    untouched, so an un-migrated section is unaffected and the two coexist during the
+    migration (spec §7.1).
+    """
+    from stellium.i18n import render
+
+    def resolve(value: Any) -> Any:
+        # Recurse containers so a cell may itself hold a list of renderables.
+        if isinstance(value, dict):
+            return {k: resolve(v) for k, v in value.items()}
+        if isinstance(value, str):
+            return value
+        if isinstance(value, (list, tuple)) and any(
+            not isinstance(v, (str, int, float)) for v in value
+        ):
+            return render(value, locale)  # a list of renderables -> joined string
+        if isinstance(value, list):
+            return [resolve(v) for v in value]
+        return render(value, locale)
+
+    def walk(data: dict[str, Any]) -> dict[str, Any]:
+        dtype = data.get("type")
+        if dtype == "table":
+            return {
+                **data,
+                "rows": [[resolve(c) for c in row] for row in data.get("rows", [])],
+            }
+        if dtype == "key_value":
+            return {**data, "data": {k: resolve(v) for k, v in data["data"].items()}}
+        if dtype == "compound":
+            return {
+                **data,
+                "sections": [(n, walk(d)) for n, d in data.get("sections", [])],
+            }
+        if dtype in ("side_by_side_tables", "grouped_tables"):
+            return {
+                **data,
+                "tables": [
+                    {**t, "rows": [[resolve(c) for c in r] for r in t.get("rows", [])]}
+                    for t in data.get("tables", [])
+                ],
+            }
+        return data
+
+    return [(name, walk(data)) for name, data in section_data]
+
+
 def _translate_section_data(
     section_data: list[tuple[str, dict[str, Any]]],
     locale: str,
@@ -1971,9 +2028,12 @@ class ReportBuilder:
             for section in self._sections
         ]
 
-        # Apply locale translation if set.
-        # Translates section names, headers, labels, and cell content.
-        # Prose format is English-only (it generates natural language sentences).
+        # Resolve structured values (Term/Message/date) that migrated sections emit,
+        # for every locale — this is what composes localized strings from structure.
+        section_data = _resolve_structured(section_data, self._locale or "en")
+
+        # Apply the legacy substring translator to whatever un-migrated sections still
+        # emit as plain English strings. Prose is English-only (natural-language output).
         locale = self._locale if self._locale and self._locale != "en" else None
         if locale and format != "prose":
             section_data = _translate_section_data(section_data, locale)
@@ -2037,7 +2097,9 @@ class ReportBuilder:
             for section in self._sections
         ]
 
-        # Apply locale translation if set (prose is English-only).
+        # Resolve structured values (Term/Message/date) for every locale, then apply the
+        # legacy substring translator to remaining plain strings (prose is English-only).
+        section_data = _resolve_structured(section_data, self._locale or "en")
         locale = self._locale if self._locale and self._locale != "en" else None
         if locale and format != "prose":
             section_data = _translate_section_data(section_data, locale)

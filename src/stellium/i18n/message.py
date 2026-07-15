@@ -18,6 +18,7 @@ See docs/development/specs/STRUCTURE_FIRST_SECTIONS.md §4.3.
 
 from __future__ import annotations
 
+import datetime as _dt
 import string
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -94,6 +95,26 @@ def render(value: Any, locale: str | None = None) -> str:
     """
     if isinstance(value, str):
         return value
+
+    # A date/time is locale *data*, not a word — the section hands over the raw object
+    # and the locale's pattern lays it out. datetime is a subclass of date, so it must
+    # be tested first.
+    if isinstance(value, _dt.datetime):
+        from stellium.i18n.formats import format_datetime
+
+        return format_datetime(value, locale)
+    if isinstance(value, _dt.date):
+        from stellium.i18n.formats import format_date
+
+        return format_date(value, locale)
+    if isinstance(value, _dt.time):
+        from stellium.i18n.formats import format_time
+
+        return format_time(value, locale)
+
+    # A list/tuple of renderables joins with ", " (a comma-list of house systems, say).
+    if isinstance(value, (list, tuple)):
+        return ", ".join(render(v, locale) for v in value)
 
     if isinstance(value, Term):
         return _render_term(value, locale or "en")
