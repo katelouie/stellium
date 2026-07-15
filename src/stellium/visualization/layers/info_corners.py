@@ -30,6 +30,29 @@ def _px(size: str | float) -> float:
     return float(str(size).removesuffix("px").strip() or 0)
 
 
+_QUALITY_GLYPH_FILES = {
+    "Cardinal": "cardinal.svg",
+    "Fixed": "fixed.svg",
+    "Mutable": "mutable.svg",
+}
+
+
+def _embed_quality_glyph(
+    dwg: svgwrite.Drawing,
+    modality: str,
+    x: float,
+    y: float,
+    size: float,
+    color: str,
+) -> None:
+    """Draw a modality's glyph (data/glyphs/{cardinal,fixed,mutable}.svg) centered at x,y."""
+    from stellium.data.paths import find_glyph_svg
+
+    path = find_glyph_svg(_QUALITY_GLYPH_FILES[modality])
+    if path is not None:
+        embed_svg_glyph(dwg, path.read_text(encoding="utf-8"), x, y, size, color)
+
+
 class ChartInfoLayer:
     """
     Renders chart metadata information in a corner of the chart.
@@ -704,13 +727,9 @@ class ElementModalityTableLayer:
 
         # Determine positioning based on corner
         if "right" in self.position:
-            # Right-aligned: row headers on right, data columns to the left
-            row_header_anchor = "end"
             data_anchor = "middle"
             col_offset_multiplier = -1
         else:
-            # Left-aligned: row headers on left, data columns to the right
-            row_header_anchor = "start"
             data_anchor = "middle"
             col_offset_multiplier = 1
 
@@ -743,74 +762,39 @@ class ElementModalityTableLayer:
             theme_text_color, background_color, min_contrast=4.5
         )
 
-        # Header row - render each column header separately
+        # Header row - the modality columns are marked with glyphs, not words, so the
+        # table needs no translation (the element rows use the alchemical symbols the
+        # same way). See data/glyphs/{cardinal,fixed,mutable}.svg.
         header_y = y
+        glyph_size = _px(self.style["text_size"]) * 1.1
 
-        # Empty space for element column
-        # (no header needed for element column)
-
-        # Column headers (Card, Fix, Mut)
-        dwg.add(
-            dwg.text(
-                "Card",
-                insert=(col_card_x, header_y),
-                text_anchor=data_anchor,
-                dominant_baseline="hanging",
-                font_size=self.style["text_size"],
-                fill=text_color,
-                font_family=renderer.style["font_family_text"],
-                font_weight=self.style["title_weight"],
+        for modality, col_x in (
+            ("Cardinal", col_card_x),
+            ("Fixed", col_fix_x),
+            ("Mutable", col_mut_x),
+        ):
+            _embed_quality_glyph(
+                dwg, modality, col_x, header_y + glyph_size / 2, glyph_size, text_color
             )
-        )
-        dwg.add(
-            dwg.text(
-                "Fix",
-                insert=(col_fix_x, header_y),
-                text_anchor=data_anchor,
-                dominant_baseline="hanging",
-                font_size=self.style["text_size"],
-                fill=text_color,
-                font_family=renderer.style["font_family_text"],
-                font_weight=self.style["title_weight"],
-            )
-        )
-        dwg.add(
-            dwg.text(
-                "Mut",
-                insert=(col_mut_x, header_y),
-                text_anchor=data_anchor,
-                dominant_baseline="hanging",
-                font_size=self.style["text_size"],
-                fill=text_color,
-                font_family=renderer.style["font_family_text"],
-                font_weight=self.style["title_weight"],
-            )
-        )
 
         # Data rows
         elements = ["Fire", "Earth", "Air", "Water"]
-        glyph_width = 12  # Approximate width for element symbol
         glyph_y_offset = -2  # Nudge glyphs up to align with text baseline
 
         for i, element in enumerate(elements):
             row_y = header_y + ((i + 1) * line_height)
 
-            # Element symbol + name (row header) - render separately for proper fonts
+            # Element alchemical symbol is the row label (no text abbreviation).
             symbol = self.ELEMENT_SYMBOLS.get(element, element[0])
-            element_abbrev = element[:2]
-
             if "right" in self.position:
-                # Right-aligned: text first (rightmost), then symbol to its left
-                text_x = row_header_x
-                symbol_x = row_header_x - len(element_abbrev) * 6 - 4
+                symbol_x = row_header_x
                 symbol_anchor = "end"
             else:
-                # Left-aligned: symbol first, then text
                 symbol_x = row_header_x
-                text_x = row_header_x + glyph_width
                 symbol_anchor = "start"
 
-            # Render symbol with glyph font
+            # The element's alchemical symbol is the row label — language-neutral, so the
+            # two-letter abbreviation ("Fi", "Ea") it used to carry is dropped.
             dwg.add(
                 dwg.text(
                     symbol,
@@ -820,20 +804,6 @@ class ElementModalityTableLayer:
                     font_size=self.style["text_size"],
                     fill=text_color,
                     font_family=renderer.style["font_family_glyphs"],
-                    font_weight=self.style["font_weight"],
-                )
-            )
-
-            # Render text with text font
-            dwg.add(
-                dwg.text(
-                    element_abbrev,
-                    insert=(text_x, row_y),
-                    text_anchor=row_header_anchor,
-                    dominant_baseline="hanging",
-                    font_size=self.style["text_size"],
-                    fill=text_color,
-                    font_family=renderer.style["font_family_text"],
                     font_weight=self.style["font_weight"],
                 )
             )
