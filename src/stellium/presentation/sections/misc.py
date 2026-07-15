@@ -16,6 +16,7 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import msg, term
 
 from ._utils import (
     get_aspect_display,
@@ -95,19 +96,23 @@ class MoonPhaseSection:
 
         phase = moon.phase
 
-        # Ecliptic separation: Moon's angular distance ahead of Sun (0-360°)
+        # The phase name is a catalog term; the separation is a number. The renderer
+        # composes them, so "Waning Gibbous (137°)" localizes without a substring swap.
+        phase_term = term(f"phase.{phase.phase_name}")
         if phase.moon_longitude is not None and phase.sun_longitude is not None:
             separation = (phase.moon_longitude - phase.sun_longitude) % 360
-            phase_display = f"{phase.phase_name} ({separation:.0f}°)"
+            phase_display: Any = msg(
+                "{phase} ({sep}°)", phase=phase_term, sep=f"{separation:.0f}"
+            )
         else:
             separation = None
-            phase_display = phase.phase_name
+            phase_display = phase_term
 
-        data = {
+        data: dict[str, Any] = {
             "Phase Name": phase_display,
             "Illumination": f"{phase.illuminated_fraction:.1%}",
             "Phase Angle": f"{phase.phase_angle:.1f}°",
-            "Direction": "Waxing" if phase.is_waxing else "Waning",
+            "Direction": msg("Waxing") if phase.is_waxing else msg("Waning"),
             "Apparent Magnitude": f"{phase.apparent_magnitude:.2f}",
             "Apparent Diameter": f"{phase.apparent_diameter:.1f}″",
             "Geocentric Parallax": f"{phase.geocentric_parallax:.4f} rad",
@@ -434,16 +439,24 @@ class FixedStarsSection:
             if hasattr(star, "is_royal") and star.is_royal:
                 tier_marker = " ♔"  # Crown for royal stars
 
-            star_label = f"★ {star.name}{tier_marker}"
+            star_label: Any = msg(
+                "★ {name}{marker}", name=term(f"star.{star.name}"), marker=tier_marker
+            )
 
-            # Position with sign glyph
+            # Position with sign glyph (the sign is a catalog term)
             degree = int(star.sign_degree)
             minute = int((star.sign_degree % 1) * 60)
             sign_glyph = get_sign_glyph(star.sign)
+            deg = f"{degree}°{minute:02d}'"
             if sign_glyph:
-                position = f"{sign_glyph} {star.sign} {degree}°{minute:02d}'"
+                position: Any = msg(
+                    "{glyph} {sign} {deg}",
+                    glyph=sign_glyph,
+                    sign=term(f"sign.{star.sign}"),
+                    deg=deg,
+                )
             else:
-                position = f"{star.sign} {degree}°{minute:02d}'"
+                position = msg("{sign} {deg}", sign=term(f"sign.{star.sign}"), deg=deg)
 
             # Constellation
             constellation = getattr(star, "constellation", "")
@@ -627,13 +640,19 @@ class ArabicPartsSection:
             # Part name (clean up for display)
             display_name = self._format_part_name(part.name)
 
-            # Position (degree° Sign minute')
+            # Position (degree° Sign minute'). The sign is a catalog term.
             degree = int(part.sign_degree)
             minute = int((part.sign_degree % 1) * 60)
             sign_glyph = get_sign_glyph(part.sign)
-            position = f"{degree}°{sign_glyph}{part.sign} {minute:02d}'"
+            position = msg(
+                "{deg}°{glyph}{sign} {min}'",
+                deg=degree,
+                glyph=sign_glyph,
+                sign=term(f"sign.{part.sign}"),
+                min=f"{minute:02d}",
+            )
 
-            row = [display_name, position]
+            row: list[Any] = [display_name, position]
 
             # House placements - one column per system
             if len(house_systems) == 0:

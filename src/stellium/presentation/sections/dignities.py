@@ -16,7 +16,8 @@ from stellium.core.multichart import MultiChart
 if TYPE_CHECKING:
     from stellium.engines.dispositors import DispositorResult
 
-from ._utils import get_object_display, get_object_sort_key
+
+from ._utils import get_object_display, get_object_sort_key, glyph_label
 
 
 class DignitySection:
@@ -138,14 +139,11 @@ class DignitySection:
             if pos.name not in planet_dignities:
                 continue
 
-            row = []
+            row: list[Any] = []
 
-            # Planet name with glyph
-            display_name, glyph = get_object_display(pos.name)
-            if glyph:
-                row.append(f"{glyph} {display_name}")
-            else:
-                row.append(display_name)
+            # Planet name with glyph (a catalog term)
+            _, glyph = get_object_display(pos.name)
+            row.append(glyph_label(glyph, f"body.{pos.name}"))
 
             dignity_info = planet_dignities[pos.name]
 
@@ -154,7 +152,10 @@ class DignitySection:
                 if "traditional" in dignity_info:
                     trad = dignity_info["traditional"]
                     if self.show_details:
-                        # Show dignity names
+                        # Dignity names come from the engine lowercased; the catalog keys
+                        # are capitalized, so localizing these needs a case decision that
+                        # would also change the English display. Left as-is for now — a
+                        # follow-up, tracked in the spec. (Planet names ARE localized.)
                         dignity_names = trad.get("dignities", [])
                         if dignity_names:
                             row.append(", ".join(dignity_names))
@@ -172,7 +173,7 @@ class DignitySection:
                 if "modern" in dignity_info:
                     mod = dignity_info["modern"]
                     if self.show_details:
-                        # Show dignity names
+                        # See the traditional column: dignity-name case is a follow-up.
                         dignity_names = mod.get("dignities", [])
                         if dignity_names:
                             row.append(", ".join(dignity_names))

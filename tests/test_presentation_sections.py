@@ -388,9 +388,10 @@ def test_aspect_section_major_only(sample_chart):
     section = AspectSection(mode="major", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
-    # Check that only major aspects are included
-    # Aspect names may include glyphs like "△ Trine", so check substring
-    aspect_names = [row[1] for row in data["rows"]]
+    # Aspect cells are format-last (a term + glyph); render to check the name.
+    from stellium.i18n import render
+
+    aspect_names = [render(row[1], "en") for row in data["rows"]]
     major_aspects = ["Conjunction", "Opposition", "Trine", "Square", "Sextile"]
 
     for aspect_name in aspect_names:
@@ -834,14 +835,14 @@ def test_arabic_parts_section_position_format(chart_with_arabic_parts):
     section = ArabicPartsSection(mode="core", show_formula=False)
     data = section.generate_data(chart_with_arabic_parts)
 
+    from stellium.i18n import render
+
     position_idx = data["headers"].index("Position")
 
     for row in data["rows"]:
-        position = row[position_idx]
-        # Position should contain degree symbol
-        assert "°" in position
-        # Position should contain minute indicator
-        assert "'" in position
+        position = render(row[position_idx], "en")  # format-last cell
+        assert "°" in position  # degree symbol
+        assert "'" in position  # minute indicator
 
 
 def test_arabic_parts_section_part_name_formatting():

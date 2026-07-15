@@ -5,6 +5,8 @@ These helper functions are shared across multiple section implementations
 for consistent formatting and display.
 """
 
+from typing import Any
+
 from stellium.core.models import ObjectType
 from stellium.core.registry import (
     ASPECT_REGISTRY,
@@ -13,6 +15,18 @@ from stellium.core.registry import (
     get_aspect_info,
 )
 from stellium.engines.dignities import DIGNITIES
+from stellium.i18n import msg, term
+
+
+def glyph_label(glyph: str, key: str) -> Any:
+    """A table cell that is a catalog term with an optional glyph prefix.
+
+    The glyph (☉, △, ♑︎) is language-neutral and stays; the name is a catalog term the
+    renderer localizes. ``glyph_label("☉", "body.Sun")`` renders "☉ Sun" / "☉ 太阳";
+    with no glyph it is just the term. This is the shape of nearly every cell in the
+    planet, aspect, dignity, midpoint and star tables.
+    """
+    return msg("{glyph} {name}", glyph=glyph, name=term(key)) if glyph else term(key)
 
 
 def get_object_display(name: str) -> tuple[str, str]:

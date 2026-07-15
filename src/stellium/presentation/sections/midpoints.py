@@ -12,8 +12,14 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, MidpointPosition, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import msg, term
 
-from ._utils import get_aspect_display, get_object_display, get_object_sort_key
+from ._utils import (
+    get_aspect_display,
+    get_object_display,
+    get_object_sort_key,
+    glyph_label,
+)
 
 
 class MidpointSection:
@@ -126,10 +132,15 @@ class MidpointSection:
             else:
                 pair_name = mp.name
 
-            # Position
+            # Position (the sign is a catalog term)
             degree = int(mp.sign_degree)
             minute = int((mp.sign_degree % 1) * 60)
-            position = f"{degree}° {mp.sign} {minute:02d}'"
+            position = msg(
+                "{deg}° {sign} {min}'",
+                deg=degree,
+                sign=term(f"sign.{mp.sign}"),
+                min=f"{minute:02d}",
+            )
 
             rows.append([pair_name, position])
 
@@ -365,13 +376,11 @@ class MidpointAspectsSection:
 
         for asp in found_aspects:
             planet = asp["planet"]
-            display_name, glyph = get_object_display(planet.name)
-            planet_label = f"{glyph} {display_name}" if glyph else display_name
+            _, glyph = get_object_display(planet.name)
+            planet_label = glyph_label(glyph, f"body.{planet.name}")
 
-            aspect_name, aspect_glyph = get_aspect_display(asp["aspect"])
-            aspect_label = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
+            _, aspect_glyph = get_aspect_display(asp["aspect"])
+            aspect_label = glyph_label(aspect_glyph, f"aspect.{asp['aspect']}")
 
             orb_str = f"{asp['orb']:.2f}°"
 

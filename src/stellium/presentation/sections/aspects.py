@@ -21,6 +21,7 @@ from ._utils import (
     get_object_display,
     get_object_sort_key,
     get_orb_sort_key,
+    glyph_label,
 )
 
 
@@ -323,24 +324,19 @@ class AspectSection:
             headers.append("Orb")
             headers.append("Applying")
 
-        # Build rows
+        # Build rows. Object and aspect names are catalog terms; the glyph, orb and
+        # applying markers are language-neutral. The renderer composes each cell.
         rows = []
         for aspect in aspects:
-            # Planet 1 with glyph
-            name1, glyph1 = get_object_display(aspect.object1.name)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            _, glyph1 = get_object_display(aspect.object1.name)
+            _, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            _, glyph2 = get_object_display(aspect.object2.name)
 
-            # Aspect with glyph
-            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
-
-            # Planet 2 with glyph
-            name2, glyph2 = get_object_display(aspect.object2.name)
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
-
-            row = [planet1, aspect_display, planet2]
+            row: list[Any] = [
+                glyph_label(glyph1, f"body.{aspect.object1.name}"),
+                glyph_label(aspect_glyph, f"aspect.{aspect.aspect_name}"),
+                glyph_label(glyph2, f"body.{aspect.object2.name}"),
+            ]
 
             if self.orb_display:
                 row.append(f"{aspect.orb:.2f}°")
@@ -590,24 +586,18 @@ class CrossChartAspectSection:
             headers.append("Orb")
             headers.append("Applying")
 
-        # Build rows
+        # Build rows (object/aspect names are catalog terms; see _utils.glyph_label)
         rows = []
         for aspect in aspects:
-            # Planet 1 with glyph (from chart1)
-            name1, glyph1 = get_object_display(aspect.object1.name)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            _, glyph1 = get_object_display(aspect.object1.name)
+            _, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            _, glyph2 = get_object_display(aspect.object2.name)
 
-            # Aspect with glyph
-            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
-
-            # Planet 2 with glyph (from chart2)
-            name2, glyph2 = get_object_display(aspect.object2.name)
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
-
-            row = [planet1, aspect_display, planet2]
+            row: list[Any] = [
+                glyph_label(glyph1, f"body.{aspect.object1.name}"),
+                glyph_label(aspect_glyph, f"aspect.{aspect.aspect_name}"),
+                glyph_label(glyph2, f"body.{aspect.object2.name}"),
+            ]
 
             if self.orb_display:
                 row.append(f"{aspect.orb:.2f}°")
