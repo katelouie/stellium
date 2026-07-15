@@ -12,8 +12,9 @@ from typing import Any
 
 from stellium.core.models import CalculatedChart, ZRPeriod, ZRSnapshot, ZRTimeline
 from stellium.core.registry import CELESTIAL_REGISTRY
+from stellium.i18n import msg, term
 
-from ._utils import get_sign_glyph
+from ._utils import get_sign_glyph, glyph_label
 
 
 class ProfectionSection:
@@ -160,11 +161,15 @@ class ProfectionSection:
         # Get sign glyph
         sign_glyph = get_sign_glyph(result.profected_sign)
 
-        data = {
+        data: dict[str, Any] = {
             "Age": str(result.units),
-            "Activated House": f"House {result.profected_house}",
-            "Activated Sign": f"{sign_glyph} {result.profected_sign}",
-            "Lord of the Year": f"{ruler_glyph} {result.ruler}",
+            "Activated House": msg("House {number}", number=result.profected_house),
+            "Activated Sign": msg(
+                "{glyph} {sign}",
+                glyph=sign_glyph,
+                sign=term(f"sign.{result.profected_sign}"),
+            ),
+            "Lord of the Year": glyph_label(ruler_glyph, f"body.{result.ruler}"),
             "House System": house_system,
         }
 
@@ -172,7 +177,9 @@ class ProfectionSection:
             modern_glyph = ""
             if result.ruler_modern in CELESTIAL_REGISTRY:
                 modern_glyph = CELESTIAL_REGISTRY[result.ruler_modern].glyph
-            data["Modern Ruler"] = f"{modern_glyph} {result.ruler_modern}"
+            data["Modern Ruler"] = glyph_label(
+                modern_glyph, f"body.{result.ruler_modern}"
+            )
 
         return {
             "type": "key_value",
@@ -189,11 +196,15 @@ class ProfectionSection:
 
         sign_glyph = get_sign_glyph(result.profected_sign)
 
-        data = {
+        data: dict[str, Any] = {
             "Month in Year": str(month),
-            "Activated House": f"House {result.profected_house}",
-            "Activated Sign": f"{sign_glyph} {result.profected_sign}",
-            "Lord of the Month": f"{ruler_glyph} {result.ruler}",
+            "Activated House": msg("House {number}", number=result.profected_house),
+            "Activated Sign": msg(
+                "{glyph} {sign}",
+                glyph=sign_glyph,
+                sign=term(f"sign.{result.profected_sign}"),
+            ),
+            "Lord of the Month": glyph_label(ruler_glyph, f"body.{result.ruler}"),
         }
 
         return {
@@ -219,10 +230,14 @@ class ProfectionSection:
 
             rows.append(
                 [
-                    f"{point_glyph} {point}" if point_glyph else point,
-                    f"House {result.profected_house}",
-                    f"{sign_glyph} {result.profected_sign}",
-                    f"{ruler_glyph} {result.ruler}",
+                    glyph_label(point_glyph, f"body.{point}"),
+                    msg("House {number}", number=result.profected_house),
+                    msg(
+                        "{glyph} {sign}",
+                        glyph=sign_glyph,
+                        sign=term(f"sign.{result.profected_sign}"),
+                    ),
+                    glyph_label(ruler_glyph, f"body.{result.ruler}"),
                 ]
             )
 
@@ -265,11 +280,15 @@ class ProfectionSection:
         degree = int(pos.sign_degree)
         minute = int((pos.sign_degree % 1) * 60)
 
-        data = {
-            "Planet": f"{ruler_glyph} {result.ruler}",
-            "Natal Sign": f"{sign_glyph} {pos.sign}",
+        data: dict[str, Any] = {
+            "Planet": glyph_label(ruler_glyph, f"body.{result.ruler}"),
+            "Natal Sign": msg(
+                "{glyph} {sign}", glyph=sign_glyph, sign=term(f"sign.{pos.sign}")
+            ),
             "Natal Degree": f"{degree}°{minute:02d}'",
-            "Natal House": f"House {result.ruler_house}" if result.ruler_house else "—",
+            "Natal House": msg("House {number}", number=result.ruler_house)
+            if result.ruler_house
+            else "—",
             "Retrograde": "Yes ℞" if pos.is_retrograde else "No",
         }
 
@@ -297,9 +316,13 @@ class ProfectionSection:
             rows.append(
                 [
                     age_str,
-                    f"House {entry.profected_house}",
-                    f"{sign_glyph} {entry.profected_sign}",
-                    f"{ruler_glyph} {entry.ruler}",
+                    msg("House {number}", number=entry.profected_house),
+                    msg(
+                        "{glyph} {sign}",
+                        glyph=sign_glyph,
+                        sign=term(f"sign.{entry.profected_sign}"),
+                    ),
+                    glyph_label(ruler_glyph, f"body.{entry.ruler}"),
                 ]
             )
 
@@ -530,7 +553,11 @@ class ZodiacalReleasingSection:
         rows.append(
             [
                 "L1 (Major)",
-                f"{get_sign_glyph(l1.sign)} {l1.sign}",
+                msg(
+                    "{glyph} {sign}",
+                    glyph=get_sign_glyph(l1.sign),
+                    sign=term(f"sign.{l1.sign}"),
+                ),
                 self._format_ruler(l1.ruler),
                 l1_period,
                 l1_quality,
@@ -549,7 +576,11 @@ class ZodiacalReleasingSection:
         rows.append(
             [
                 "L2 (Sub)",
-                f"{get_sign_glyph(l2.sign)} {l2.sign}",
+                msg(
+                    "{glyph} {sign}",
+                    glyph=get_sign_glyph(l2.sign),
+                    sign=term(f"sign.{l2.sign}"),
+                ),
                 self._format_ruler(l2.ruler),
                 l2_period,
                 l2_quality,

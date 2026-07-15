@@ -24,6 +24,7 @@ from ._utils import (
     get_object_sort_key,
     get_orb_sort_key,
     get_sign_glyph,
+    glyph_label,
 )
 
 
@@ -183,8 +184,8 @@ class DeclinationSection:
             if obj.object_type in (ObjectType.ASTEROID, ObjectType.POINT):
                 continue
 
-            display_name, glyph = get_object_display(obj.name)
-            planet_label = f"{glyph} {display_name}"
+            _, glyph = get_object_display(obj.name)
+            planet_label = glyph_label(glyph, f"body.{obj.name}")
 
             # Format declination as degrees°minutes'
             dec_abs = abs(obj.declination)
@@ -192,8 +193,8 @@ class DeclinationSection:
             minutes = int((dec_abs % 1) * 60)
             dec_str = f"{degrees}°{minutes:02d}'"
 
-            # Direction
-            direction = obj.declination_direction.title()
+            # Direction (North/South)
+            direction = msg(obj.declination_direction.title())
 
             # Status - mark out-of-bounds planets
             status = "OOB ⚠" if obj.is_out_of_bounds else ""
@@ -308,24 +309,18 @@ class DeclinationAspectSection:
         if self.show_oob_status:
             headers.append("OOB")
 
-        # Build rows
+        # Build rows (object/aspect names are catalog terms; see _utils.glyph_label)
         rows = []
         for aspect in aspects:
-            # Planet 1 with glyph
-            name1, glyph1 = get_object_display(aspect.object1.name)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            _, glyph1 = get_object_display(aspect.object1.name)
+            _, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            _, glyph2 = get_object_display(aspect.object2.name)
 
-            # Aspect with glyph
-            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
-
-            # Planet 2 with glyph
-            name2, glyph2 = get_object_display(aspect.object2.name)
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
-
-            row = [planet1, aspect_display, planet2]
+            row: list[Any] = [
+                glyph_label(glyph1, f"body.{aspect.object1.name}"),
+                glyph_label(aspect_glyph, f"aspect.{aspect.aspect_name}"),
+                glyph_label(glyph2, f"body.{aspect.object2.name}"),
+            ]
 
             if self.show_orbs:
                 row.append(f"{aspect.orb:.2f}°")
@@ -875,17 +870,17 @@ class AntisciaSection:
         rows = []
 
         for conj_type, conj in all_conjs:
-            # Get planet display (returns tuple of name, glyph)
-            name1, glyph1 = get_object_display(conj.planet1)
-            name2, glyph2 = get_object_display(conj.planet2)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
+            _, glyph1 = get_object_display(conj.planet1)
+            _, glyph2 = get_object_display(conj.planet2)
+            planet1 = glyph_label(glyph1, f"body.{conj.planet1}")
+            planet2 = glyph_label(glyph2, f"body.{conj.planet2}")
 
             # Orb formatting
             orb_str = f"{conj.orb:.1f}°"
 
-            # Applying/separating
-            state = "Applying" if conj.is_applying else "Separating"
+            # Applying/separating (an aspect-motion term)
+            motion = "Applying" if conj.is_applying else "Separating"
+            state = term(f"aspect_motion.{motion}")
 
             rows.append([planet1, planet2, conj_type, orb_str, state])
 
@@ -908,21 +903,26 @@ class AntisciaSection:
                 if p.object_type == ObjectType.CONTRA_ANTISCION
             ]
 
-            point_rows = []
-            for pt in antiscia_pts:
+            def _antiscia_position(pt: Any) -> Any:
                 degree = int(pt.sign_degree)
                 minute = int((pt.sign_degree % 1) * 60)
-                sign_glyph = get_sign_glyph(pt.sign)
-                position = f"{degree}°{sign_glyph}{pt.sign} {minute:02d}'"
-                point_rows.append([pt.name, position, "Antiscion"])
+                return msg(
+                    "{deg}°{glyph}{sign} {min}'",
+                    deg=degree,
+                    glyph=get_sign_glyph(pt.sign),
+                    sign=term(f"sign.{pt.sign}"),
+                    min=f"{minute:02d}",
+                )
+
+            point_rows = []
+            for pt in antiscia_pts:
+                point_rows.append([pt.name, _antiscia_position(pt), "Antiscion"])
 
             if self.include_contra:
                 for pt in contra_pts:
-                    degree = int(pt.sign_degree)
-                    minute = int((pt.sign_degree % 1) * 60)
-                    sign_glyph = get_sign_glyph(pt.sign)
-                    position = f"{degree}°{sign_glyph}{pt.sign} {minute:02d}'"
-                    point_rows.append([pt.name, position, "Contra-Antiscion"])
+                    point_rows.append(
+                        [pt.name, _antiscia_position(pt), "Contra-Antiscion"]
+                    )
 
             if point_rows:
                 result = {

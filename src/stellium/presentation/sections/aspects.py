@@ -14,6 +14,7 @@ from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
 from stellium.core.registry import get_aspects_by_category
+from stellium.i18n import msg, term
 
 from ._utils import (
     get_aspect_display,
@@ -140,28 +141,34 @@ class AspectPatternSection:
         # Build rows
         rows = []
         for pattern in patterns:
-            row = []
+            row: list[Any] = []
 
-            # Pattern name
-            row.append(pattern.name)
+            # Pattern name (a message; the pattern.* namespace is optional/forward-looking)
+            row.append(msg(pattern.name))
 
-            # Planets involved (with glyphs)
-            planet_names = []
-            for planet in pattern.planets:
-                display_name, glyph = get_object_display(planet.name)
-                if glyph:
-                    planet_names.append(f"{glyph} {display_name}")
-                else:
-                    planet_names.append(display_name)
-            row.append(", ".join(planet_names))
+            # Planets involved — catalog terms with glyphs; a list renders comma-joined.
+            row.append(
+                [
+                    glyph_label(get_object_display(p.name)[1], f"body.{p.name}")
+                    for p in pattern.planets
+                ]
+            )
 
-            # Element/Quality
-            elem_qual = []
-            if pattern.element:
-                elem_qual.append(pattern.element)
-            if pattern.quality:
-                elem_qual.append(pattern.quality)
-            row.append(" / ".join(elem_qual) if elem_qual else "—")
+            # Element / Quality (catalog element and modality terms)
+            if pattern.element and pattern.quality:
+                row.append(
+                    msg(
+                        "{elem} / {qual}",
+                        elem=term(f"element.{pattern.element}"),
+                        qual=term(f"modality.{pattern.quality}"),
+                    )
+                )
+            elif pattern.element:
+                row.append(term(f"element.{pattern.element}"))
+            elif pattern.quality:
+                row.append(term(f"modality.{pattern.quality}"))
+            else:
+                row.append("—")
 
             # Details (count + focal planet if applicable)
             details = []
