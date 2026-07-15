@@ -125,12 +125,18 @@ class MidpointSection:
         rows = []
 
         for mp in midpoints:
-            # Parse midpoint name (e.g., "Midpoint:Sun/Moon")
-            name_parts = mp.name.split(":")
-            if len(name_parts) > 1:
-                pair_name = name_parts[1]
+            # Pair name: use the component objects (terms) when available rather than
+            # parsing "Midpoint:Sun/Moon" — that keeps names like "Black Moon Lilith"
+            # intact and localizes each body.
+            if isinstance(mp, MidpointPosition):
+                pair_name: Any = msg(
+                    "{a}/{b}",
+                    a=term(f"body.{mp.object1.name}"),
+                    b=term(f"body.{mp.object2.name}"),
+                )
             else:
-                pair_name = mp.name
+                name_parts = mp.name.split(":")
+                pair_name = name_parts[1] if len(name_parts) > 1 else mp.name
 
             # Position (the sign is a catalog term)
             degree = int(mp.sign_degree)

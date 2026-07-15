@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **In progress.** Phase 0 (inventory) and Phase 1 (foundations) landed — §2.4, §7. Phase 2 next. |
+| **Status** | **In progress.** Phases 0–1 landed; Phase 2 done for ~14 sections; Phase 3 (labels off the bridge) landed — the completeness oracle certifies fully-migrated sections at zero leaks. Remaining: niche/transit/viz sections, and deleting the substring translator once all cells are migrated. |
 | **Created** | 2026-07-14 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |

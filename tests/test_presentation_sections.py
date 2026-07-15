@@ -482,10 +482,12 @@ def test_midpoint_section_core_mode(chart_with_midpoints):
     data = section.generate_data(chart_with_midpoints)
 
     # Core midpoints should only involve Sun, Moon, ASC, MC
+    from stellium.i18n import render
+
     core_objects = {"Sun", "Moon", "ASC", "MC"}
 
     for row in data["rows"]:
-        midpoint_name = row[0]
+        midpoint_name = render(row[0], "en")  # pair cell is format-last
         objects = midpoint_name.replace(" (indirect)", "").split("/")
 
         # At least one object should be in core
