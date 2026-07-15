@@ -12,6 +12,7 @@ from typing import TYPE_CHECKING, Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import term
 
 if TYPE_CHECKING:
     from stellium.engines.dispositors import DispositorResult
@@ -152,15 +153,21 @@ class DignitySection:
                 if "traditional" in dignity_info:
                     trad = dignity_info["traditional"]
                     if self.show_details:
-                        # Dignity names come from the engine lowercased; the catalog keys
-                        # are capitalized, so localizing these needs a case decision that
-                        # would also change the English display. Left as-is for now — a
-                        # follow-up, tracked in the spec. (Planet names ARE localized.)
+                        # Dignity names are catalog terms. The engine emits them
+                        # lowercased ("exaltation"); the catalog and the astrology
+                        # convention are capitalized, so title-case for the key — this
+                        # also capitalizes the English display, which is correct.
                         dignity_names = trad.get("dignities", [])
                         if dignity_names:
-                            row.append(", ".join(dignity_names))
+                            row.append(
+                                [term(f"dignity.{d.title()}") for d in dignity_names]
+                            )
                         else:
-                            row.append("Peregrine" if trad.get("is_peregrine") else "—")
+                            row.append(
+                                term("dignity.Peregrine")
+                                if trad.get("is_peregrine")
+                                else "—"
+                            )
                     else:
                         # Show score
                         score = trad.get("score", 0)
@@ -173,10 +180,12 @@ class DignitySection:
                 if "modern" in dignity_info:
                     mod = dignity_info["modern"]
                     if self.show_details:
-                        # See the traditional column: dignity-name case is a follow-up.
+                        # Catalog terms, title-cased (see the traditional column).
                         dignity_names = mod.get("dignities", [])
                         if dignity_names:
-                            row.append(", ".join(dignity_names))
+                            row.append(
+                                [term(f"dignity.{d.title()}") for d in dignity_names]
+                            )
                         else:
                             row.append("—")
                     else:

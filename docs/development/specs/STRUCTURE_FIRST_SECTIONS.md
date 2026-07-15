@@ -520,12 +520,13 @@ would mean a contributor cannot land a partial language.
 - Six sections need constructor arguments and were not surveyed in Phase 0 (transits,
   eclipses, ingresses, stations, profections). They are unlikely to change the shape of
   the problem, but they are not in the 452.
-- **Dignity names render lowercased** (`exaltation, triplicity`) because the dignity
-  engine returns lowercase keys, while the catalog is capitalized (`dignity.Exaltation`).
-  Localizing them needs a case decision that also changes the English display, so the
-  DignitySection migration localizes planet names but leaves the dignity-name cells as
-  the lowercase string join. Follow-up: normalize the engine's dignity casing (or add
-  lowercase catalog aliases) and localize, in a commit that owns the English change.
+- ~~**Dignity names render lowercased**~~ — resolved. The dignity engine emits lowercase
+  keys (a contract `test_almuten.py` depends on), so DignitySection title-cases at the
+  *display* layer for the catalog lookup. Dignity names now render capitalized
+  (`Peregrine`, `Detriment`), matching the astrology convention — a deliberate English
+  change, owned by that commit. zh_CN dignity terms are left untranslated (English
+  fallback) pending a native-speaker pass, rather than diluting the donated file with
+  guesses.
 
 ---
 
