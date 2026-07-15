@@ -30,7 +30,16 @@ become*.)
   the section → renderer boundary: one localization pass over every shape, a stable
   `section_key` for dispatch split from the localized display name, plain-string cells for
   text renderers, localized structured payloads for the ~4 bespoke sections, and chrome
-  moved from templates into section-declared labels. Design approved; not yet built.
+  moved from templates into section-declared labels. Design approved; steps 1–2 landed.
+
+- **[I18N_GRAMMATICAL_INFLECTION.md](./I18N_GRAMMATICAL_INFLECTION.md)** — English and Chinese
+  validated nothing about inflection because neither inflects; the `{slot}` + single-string
+  catalog-term model breaks on plurals (Russian's 3 forms vs our 2), case (`Марс в Овне`
+  declines the sign), and gender. Opens with a **buy-vs-build** comparison (Fluent, which
+  fits almost exactly, vs extending our layer) and recommends building now — babel for CLDR
+  plurals, term form-sets + slot annotations generalizing `.short` — while keeping Fluent on
+  the table as a later foundation question. Orthogonal to the renderer contract (inflection
+  lives below `render()`); gates Russian/Polish. Proposed; not built.
 
 - **[STRUCTURED_LOGGING_SPEC.md](./STRUCTURED_LOGGING_SPEC.md)** — migrate the
   library's remaining bare `print()`s to stdlib `logging`/`warnings` (and

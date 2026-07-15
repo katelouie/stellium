@@ -6,7 +6,7 @@
 | **Created** | 2026-07-15 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
-| **Relates to** | Completes the *renderer half* of [STRUCTURE_FIRST_SECTIONS.md](./STRUCTURE_FIRST_SECTIONS.md). That spec made sections emit structure and text renderers compose last; this one makes **every** renderer — the Typst/PDF one included — consume that structure through a single contract. |
+| **Relates to** | Completes the *renderer half* of [STRUCTURE_FIRST_SECTIONS.md](./STRUCTURE_FIRST_SECTIONS.md). That spec made sections emit structure and text renderers compose last; this one makes **every** renderer — the Typst/PDF one included — consume that structure through a single contract. **Grammatical inflection** (plurals, case, gender for languages like Russian/German) is handled *below* this contract, inside `render()` — see [I18N_GRAMMATICAL_INFLECTION.md](./I18N_GRAMMATICAL_INFLECTION.md). A `term()` stays a `term()` here; it only gains the ability to inflect when a locale provides forms, so this contract is unaffected by that work. |
 
 ---
 
