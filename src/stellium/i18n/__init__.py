@@ -30,16 +30,39 @@ Design notes:
       translation lookup is pure (no mutation during read).
 """
 
+from stellium.i18n.catalog import build_catalog, namespaces
+from stellium.i18n.formats import (
+    format_date,
+    format_degrees,
+    format_number,
+    format_time,
+)
 from stellium.i18n.loader import (
+    PSEUDO_LOCALE,
     get_available_locales,
     get_default_locale,
+    locale_chain,
     set_default_locale,
     t,
 )
+from stellium.i18n.message import Message, Term, msg, render, term
 
 __all__ = [
     "t",
+    "term",
+    "msg",
+    "render",
+    "Term",
+    "Message",
     "set_default_locale",
     "get_default_locale",
     "get_available_locales",
+    "locale_chain",
+    "PSEUDO_LOCALE",
+    "build_catalog",
+    "namespaces",
+    "format_date",
+    "format_time",
+    "format_degrees",
+    "format_number",
 ]

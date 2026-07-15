@@ -1,0 +1,107 @@
+"""Locale patterns for the things that are not words: dates, times, numbers, degrees.
+
+A date is the case that proves why post-hoc translation cannot work. ``March 14, 1879``
+→ ``1879年3月14日`` is a *reorder*; no amount of word substitution produces it. So the
+pattern itself is locale data:
+
+    "format.date": "{year}年{month_num}月{day}日"
+
+Every slot is always supplied, so a locale takes whichever it needs and ignores the rest
+— a locale wanting the month spelled out uses ``{month}``, one wanting it numeric uses
+``{month_num}``, and neither has to tell us in advance. The English default *is* the
+fallback pattern, so a locale that defines nothing still renders correctly.
+
+See docs/development/specs/STRUCTURE_FIRST_SECTIONS.md §4.4.
+"""
+
+from __future__ import annotations
+
+import datetime as dt
+
+from stellium.i18n.loader import t
+
+# The English patterns. Each is also the translation *key* for its locale override, so a
+# locale file's "format.date" replaces the whole layout rather than any single word.
+DEFAULT_PATTERNS: dict[str, str] = {
+    "format.date": "{month} {day}, {year}",
+    "format.time": "{hour12}:{minute} {ampm}",
+    "format.datetime": "{date} {time}",
+    "format.degrees": "{deg}°{min:02d}'",
+    "format.decimal_sep": ".",
+    "format.latitude": "{value}°{hemisphere}",
+    "format.longitude": "{value}°{hemisphere}",
+}
+
+MONTHS: tuple[str, ...] = (
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+)
+
+
+def pattern(key: str, locale: str | None = None) -> str:
+    """The locale's pattern for ``key``, or the English default."""
+    default = DEFAULT_PATTERNS[key]
+    found = t(key, locale=locale)
+    # t() echoes the key back when there is no translation.
+    return default if found == key else found
+
+
+def format_date(value: dt.date, locale: str | None = None) -> str:
+    """A date, laid out the way the locale lays out dates."""
+    return pattern("format.date", locale).format(
+        year=value.year,
+        month=_month_name(value.month, locale),
+        month_num=value.month,
+        month_pad=f"{value.month:02d}",
+        day=value.day,
+        day_pad=f"{value.day:02d}",
+    )
+
+
+def _month_name(month: int, locale: str | None) -> str:
+    """The month's name. Falls back to English, never to a bare key."""
+    english = MONTHS[month - 1]
+    key = f"month.{english}"
+    found = t(key, locale=locale)
+    return english if found == key else found
+
+
+def format_time(value: dt.time | dt.datetime, locale: str | None = None) -> str:
+    """A time of day. A locale on a 24-hour clock simply omits ``{ampm}``."""
+    hour24 = value.hour
+    hour12 = hour24 % 12 or 12
+    return pattern("format.time", locale).format(
+        hour24=hour24,
+        hour24_pad=f"{hour24:02d}",
+        hour12=hour12,
+        minute=f"{value.minute:02d}",
+        second=f"{value.second:02d}",
+        ampm=t("AM" if hour24 < 12 else "PM", locale=locale),
+    )
+
+
+def format_degrees(longitude: float, locale: str | None = None) -> str:
+    """Degrees and arcminutes *within a sign* (0–30°), the notation reports use."""
+    within = longitude % 30
+    deg = int(within)
+    minute = int(round((within - deg) * 60))
+    if minute == 60:  # rounding can carry
+        deg, minute = deg + 1, 0
+    return pattern("format.degrees", locale).format(deg=deg, min=minute)
+
+
+def format_number(value: float, locale: str | None = None, decimals: int = 2) -> str:
+    """A decimal number. Several locales write ``3,14`` where English writes ``3.14``."""
+    text = f"{value:.{decimals}f}"
+    sep = pattern("format.decimal_sep", locale)
+    return text.replace(".", sep) if sep != "." else text

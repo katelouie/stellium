@@ -20,6 +20,31 @@ _locale_lock = threading.Lock()
 _cache: dict[str, dict[str, str]] = {}
 
 
+# The pseudolocale is synthesised, never loaded from disk — so it cannot go stale as the
+# catalog grows. See pseudo.py.
+PSEUDO_LOCALE = "qps"
+
+# metadata blocks, cached alongside the strings
+_metadata_cache: dict[str, dict] = {}
+
+
+def _locale_metadata(locale: str) -> dict:
+    """The locale file's ``metadata`` block ({} if there is no such locale)."""
+    if locale not in _metadata_cache:
+        strings_file = _LOCALES_DIR / locale / "strings.json"
+        meta: dict = {}
+        if strings_file.exists():
+            try:
+                data = json.loads(strings_file.read_text(encoding="utf-8"))
+                if isinstance(data.get("metadata"), dict):
+                    meta = data["metadata"]
+            except (json.JSONDecodeError, OSError):
+                meta = {}
+        with _locale_lock:
+            _metadata_cache[locale] = meta
+    return _metadata_cache[locale]
+
+
 def _load_locale(locale: str) -> dict[str, str]:
     """Load and flatten a locale's strings from its JSON file.
 
@@ -68,16 +93,43 @@ def _get_locale_strings(locale: str) -> dict[str, str]:
     return _cache[locale]
 
 
-def t(key: str, locale: str | None = None) -> str:
-    """Translate a string to the active or specified locale.
+def locale_chain(locale: str) -> list[str]:
+    """The lookup order for a locale, most specific first, always ending at English.
 
-    English is the identity locale: the key IS the English string,
-    so no English locale file is needed. For non-English locales,
-    the key is looked up in the locale's strings.json. If not found,
-    the key itself is returned (graceful degradation).
+    ``"zh_Hant_TW"`` → ``["zh_Hant_TW", "zh_Hant", "zh", "en"]``, so a regional locale
+    inherits from its parent and overrides only what differs. A locale may also name an
+    explicit parent via ``metadata.fallback``, which is inserted before English.
+    """
+    if locale == "en":
+        return ["en"]
+
+    chain: list[str] = []
+    parts = locale.split("_")
+    for i in range(len(parts), 0, -1):
+        chain.append("_".join(parts[:i]))
+
+    declared = _locale_metadata(locale).get("fallback")
+    if isinstance(declared, str) and declared not in chain:
+        chain.append(declared)
+
+    chain.append("en")
+    return chain
+
+
+def t(key: str, locale: str | None = None) -> str:
+    """Translate a string, walking the locale's fallback chain.
+
+    English is the identity locale: the key IS the English string, so no English locale
+    file is needed. If nothing in the chain defines the key, the key itself is returned —
+    which for a *message* is already correct English, and is why a half-finished locale
+    degrades to mixed-but-readable rather than to raw identifiers.
+
+    Catalog keys (``body.Sun``) are the exception: the key is not English, so callers
+    should go through :func:`stellium.i18n.render`, which falls back to the catalog's
+    English value instead.
 
     Args:
-        key: The English string to translate (e.g., "Chart Overview")
+        key: The English string, or a namespaced catalog key.
         locale: Override locale. If None, uses the default locale.
 
     Returns:
@@ -85,12 +137,22 @@ def t(key: str, locale: str | None = None) -> str:
     """
     loc = locale or _default_locale
 
-    # English is the identity function
     if loc == "en":
         return key
 
-    strings = _get_locale_strings(loc)
-    return strings.get(key, key)
+    if loc == PSEUDO_LOCALE:
+        from stellium.i18n.pseudo import pseudo_translate
+
+        pseudo = pseudo_translate(key)
+        return pseudo if pseudo is not None else key
+
+    for step in locale_chain(loc):
+        if step == "en":
+            break
+        found = _get_locale_strings(step).get(key)
+        if found is not None:
+            return found
+    return key
 
 
 def set_default_locale(locale: str) -> None:
