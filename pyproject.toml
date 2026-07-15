@@ -108,6 +108,7 @@ where = ["src"]
     "swisseph/ephe/*.se1",
     "swisseph/ephe/*.txt",
     "geocode_cache.json",
+    "font_packs.json",  # manifest for `stellium fonts` — read offline by the CLI
     "fonts/*.ttf",
     "fonts/*.otf",
     "fonts/LICENSE-FONTS.txt",

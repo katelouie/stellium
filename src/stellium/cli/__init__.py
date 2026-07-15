@@ -8,6 +8,7 @@ from stellium import __version__
 from stellium.cli.cache import cache_group
 from stellium.cli.chart import chart_group
 from stellium.cli.ephemeris import ephemeris_group
+from stellium.cli.fonts import fonts_group
 from stellium.cli.i18n import i18n_group
 
 
@@ -26,6 +27,7 @@ def cli():
 cli.add_command(cache_group)
 cli.add_command(ephemeris_group)
 cli.add_command(chart_group)
+cli.add_command(fonts_group)
 cli.add_command(i18n_group)
 
 if __name__ == "__main__":
