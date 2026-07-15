@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **Proposal.** Phase 0 (inventory) done — §2.4. Phase 1 approved to start. |
+| **Status** | **In progress.** Phase 0 (inventory) and Phase 1 (foundations) landed — §2.4, §7. Phase 2 next. |
 | **Created** | 2026-07-14 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
@@ -340,7 +340,7 @@ Rules:
 | Phase | Scope | Done when |
 |---|---|---|
 | **0 · Inventory** ✅ | `scripts/i18n_surface.py`: render every section, capture what reaches the output, classify. | Done — §2.4. 452 strings, 327 of them cells that evaporate. |
-| **1 · Foundations** | `catalog.py`, `message.py`, `formats.py`, `pseudo.py`; fallback chain; locale passed not ambient; `stellium i18n` CLI. **Nothing else changes** — the old substring translator stays and keeps working. | Pseudolocale renders the current report with every leak visibly unmarked. `en` and `zh_CN` output byte-identical. |
+| **1 · Foundations** ✅ | `catalog.py`, `message.py`, `formats.py`, `pseudo.py`; fallback chain; `stellium i18n` CLI. The old substring translator stays and keeps working. | Done (`e4c206c`). `en`/`zh_CN` output byte-identical (pinned test); pseudolocale flags the unmigrated sections. Coverage: zh_CN 48%. |
 | **2 · Sections** | The 13 unmigrated section files emit structured payloads, following `PlanetPositionSection`. `rows` still derived alongside. | Every section has a structured payload; the Typst theme reads structure for all of them. |
 | **3 · Renderers** | Rich / HTML / markdown / plain renderers compose from structure via `render()`. Drop the derived `rows`. Delete `_get_translatable_terms()` and `_translate_section_data()` (~200 lines). | English output byte-identical. `zh_CN` report has zero leaks. Pseudolocale has zero unmarked strings outside the DNT set. |
 | **4 · Charts** | `ChartDrawBuilder.with_locale()`; thread locale through renderer → layers. Small — 6 text elements per wheel. | Chart SVG renders in `zh_CN`. **Gated on §8.** |
