@@ -22,6 +22,16 @@ become*.)
   Folds in the Chinese-translation task. The pseudolocale doubles as a completeness
   oracle for the refactor. Phase 0 done; Phase 1 approved.
 
+- **[UNIFIED_RENDERER_CONTRACT.md](./UNIFIED_RENDERER_CONTRACT.md)** — the *renderer half*
+  of the above. The text renderers share one agnostic contract and localize cleanly, but
+  the Typst/PDF renderer never joined it: it reads raw parallel payloads the resolve pass
+  never touches, hardcodes column headers in the `.typ` templates, and routes on localized
+  titles — so a localized report is correct as markdown and leaks English as a PDF. Unifies
+  the section → renderer boundary: one localization pass over every shape, a stable
+  `section_key` for dispatch split from the localized display name, plain-string cells for
+  text renderers, localized structured payloads for the ~4 bespoke sections, and chrome
+  moved from templates into section-declared labels. Design approved; not yet built.
+
 - **[STRUCTURED_LOGGING_SPEC.md](./STRUCTURED_LOGGING_SPEC.md)** — migrate the
   library's remaining bare `print()`s to stdlib `logging`/`warnings` (and
   `click.echo`/Rich for the CLI), with a lint guard. The infrastructure
