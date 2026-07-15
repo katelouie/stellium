@@ -502,6 +502,7 @@
     "Retrograde": "逆行",
     "Retrograde Planets": "逆行行星",
     "Right Ascension": "赤經",
+    "Rising": "上升",
     "Ruler": "守護星",
     "Rulership": "守護",
     "Sagittarius": "射手座",
@@ -569,6 +570,7 @@
     "Zodiac": "黃道系統",
     "Zodiacal Releasing": "黃道釋放",
     "{degrees} {sign}": "{sign}{degrees}",
+    "{ordinal} house": "第{n}宮",
     "{planet} Return": "{planet}返照盤",
     "{planet} in House {number}": "{planet}在第{number}宮",
     "{planet} in {sign}": "{planet}在{sign}",
@@ -652,12 +654,15 @@
     "Waxing Gibbous": "盈凸月"
   },
   "polarity": {
+    "Balanced": "平衡",
     "Diurnal": "日間",
     "Feminine": "陰性",
     "Masculine": "陽性",
     "Negative": "負極",
     "Nocturnal": "夜間",
-    "Positive": "正極"
+    "Positive": "正極",
+    "Yang": "陽",
+    "Yin": "陰"
   },
   "sect": {
     "Day": "日間",

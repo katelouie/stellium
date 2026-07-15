@@ -86,6 +86,10 @@ ASPECT_MOTIONS: tuple[str, ...] = ("Applying", "Separating")
 # via the format.latitude / format.longitude pattern (Chinese writes "北47.60°").
 DIRECTIONS: tuple[str, ...] = ("N", "S", "E", "W")
 
+# Elemental polarity, as the report's snapshot names it. "Yang"/"Yin" are the attested
+# terms even in English astrology; a Chinese chart renders them with the native 陽/陰.
+POLARITIES: tuple[str, ...] = ("Yang", "Yin", "Balanced")
+
 
 def _house_short_forms() -> dict[str, str]:
     """The English short forms, from the one implementation that has all 17 systems."""
@@ -129,6 +133,7 @@ def build_catalog() -> dict[str, str]:
         ("sect", SECTS),
         ("aspect_motion", ASPECT_MOTIONS),
         ("direction", DIRECTIONS),
+        ("polarity", POLARITIES),
     ):
         for name in names:
             catalog[f"{namespace}.{name}"] = name

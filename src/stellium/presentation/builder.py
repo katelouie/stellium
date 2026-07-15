@@ -2304,15 +2304,18 @@ class ReportBuilder:
         Returns:
             PDF as bytes
         """
+        from stellium.i18n import t
         from stellium.presentation.typst_render import render_pdf
+
+        locale = self._locale or "en"
 
         # Build title from chart name if not provided
         if title is None and self._chart:
             chart_name = self._chart.metadata.get("name")
             if chart_name:
-                title = f"{chart_name} — Natal Chart"  # em dash
+                title = f"{chart_name} — {t('Natal Chart', locale=locale)}"  # em dash
             else:
-                title = "Natal Chart Report"
+                title = t("Natal Chart Report", locale=locale)
 
         return render_pdf(
             self._chart,
@@ -2320,6 +2323,7 @@ class ReportBuilder:
             chart_svg_path=chart_svg_path,
             title=title,
             theme=theme,
+            locale=locale,
         )
 
     def _print_to_console(

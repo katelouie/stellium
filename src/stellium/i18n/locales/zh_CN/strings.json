@@ -113,6 +113,11 @@
     "Waxing Crescent": "娥眉月",
     "Waxing Gibbous": "盈凸月"
   },
+  "polarity": {
+    "Balanced": "平衡",
+    "Yang": "阳",
+    "Yin": "阴"
+  },
   "sect": {
     "Day": "日",
     "Night": "夜"
@@ -262,10 +267,12 @@
     "Planets": "涉及行星",
     "Planets Conjunct Midpoints": "合中点的行星",
     "Point": "点",
+    "Polarity": "极性",
     "Position": "位置",
     "Profections": "小限法",
     "Quality": "性质",
     "Relationships": "关系",
+    "Rising": "上升",
     "Ruler": "主星",
     "Semi-Sextile": "半六分相",
     "Semi-Square": "半四分相",
@@ -293,6 +300,7 @@
     "Yes": "是",
     "Zodiac": "黄道系统",
     "Zodiacal Releasing": "黄道释放",
+    "{ordinal} house": "第{n}宫",
     "{ruler} ({sign} Rising)": "{ruler}（{sign}上升）",
     "{sect} Chart": "{sect}间盘"
   },
