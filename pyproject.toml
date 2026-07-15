@@ -125,7 +125,10 @@ where = ["src"]
     "typst_theme/*.typ",
 ]
 # Locale strings, read by i18n/loader.py from `Path(__file__).parent / "locales"`.
+# The `*.json` glob ships _TEMPLATE.json (the translator's starting point) alongside the
+# per-locale `*/strings.json` files.
 "stellium.i18n" = [
+    "locales/*.json",
     "locales/*/*.json",
 ]
 
