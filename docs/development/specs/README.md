@@ -7,6 +7,13 @@ become*.)
 
 ## Active
 
+- **[FONTS_AND_CHART_I18N.md](./FONTS_AND_CHART_I18N.md)** — the chart wheel has no locale,
+  and a CJK wheel renders as tofu in PNG/PDF because Stellium rasterizes with bundled fonts
+  only (Latin + symbols). Adds on-demand font packs downloaded to `~/.stellium/fonts/`
+  (the ephemeris pattern, one dir over) with checksums, a `with_font()` override, a
+  fail-loud warning, and `ChartDrawBuilder.with_locale()`. Built on this branch because it
+  blocks the Chinese chart output.
+
 - **[STRUCTURE_FIRST_SECTIONS.md](./STRUCTURE_FIRST_SECTIONS.md)** — sections stringify
   too early, which blocks three roadmap items at once: the Typst PDF theme can't style
   what it can't see, interactive HTML reports can't sort a string, and i18n can't
