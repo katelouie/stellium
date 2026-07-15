@@ -210,3 +210,41 @@ own at Phase 3.
 `build_zh_cn.py` regenerates the file from `_TEMPLATE.json` + the donation. It
 asserts the expected old value before every replacement and aborts if the
 donation changes underneath it, so a re-run can't silently clobber donor edits.
+
+
+## Three-locale validation pass (July 2026)
+
+A sourced pass re-validated the terms this project added or left open, across all
+three Chinese locales (mainland Simplified plus HK/TW Traditional) and two
+registers (software UI vs scholarly prose). For zh-CN specifically:
+
+### Corrections to earlier additions
+
+| Key | Was | Now | Why |
+|---|---|---|---|
+| `message.Polarity` | 极性 | **阴阳** | Calque. 极性 reads as electrical/magnetic polarity. Chinese astrology owns the concept natively as 阴阳 (二分法 in scholarly prose; 阳性/阴性星座 for the values). Sourced: Zhihu, Sina, freehoro — HIGH. |
+| `polarity.Balanced` | 平衡 | **均衡** | Bare 平衡 collides with the "Element Balance" section (元素平衡). 均衡 keeps the "roughly equal" sense without the section-name ambiguity. |
+| `format.latitude` / `format.longitude` | `{hemisphere}{value}°` (北48.40°) | **`{hemisphere}纬{value}°` / `{hemisphere}经{value}°`** (北纬48.40° / 东经114.17°) | The compact 北48.40° is unattested and non-native: 北 as a coordinate prefix is bound to 纬 (北纬), and dropping 纬 is ungrammatical. Latitude takes 纬, longitude takes 经. Sourced: HKO. **This reverses the earlier compact-form choice.** |
+
+### New UI terms (previously English fallback)
+
+| Key | Value | Note |
+|---|---|---|
+| `message.Snapshot` | 概览 | NOT 快照 (that is the computing/filesystem sense). 星盘总览 for a more writerly tone. |
+| `message.distribution & balance` | 分布与平衡 | Mainland uses 分布 (HK/TW use 分佈). |
+| `message.Dominant Element` | 主导元素 | 优势元素 an accepted synonym. |
+| `message.Dominant Modality` | 主导模式 | Modern/lay choice. Classical synonym **四正** (paired with element = 三方); scholarly prose also uses **性质** / 三态. |
+| `message.{ruler}-ruled` | {ruler}守护 | 守护 = rulership. The chart-ruler concept itself is 命主星 (= 上升守护星). |
+| `message.{count} of {total}` | {count}/{total} | Bare fraction; locale-neutral, no wordier form is standard. |
+| `body.Ascendant` | 上升点 | The point — distinct from 上升星座 (the sign) and 命宫 (the first house). |
+| `message.{name} (Inner Wheel)` / `(Outer Wheel)` | {name}（内圈）/（外圈） | 内盘/外盘 an accepted synonym. |
+| `message.{name} Houses` | {name}的宫位 | |
+| `message.Chart 1` / `Chart 2` | 星盘一 / 星盘二 | Biwheel default labels (when no chart name is given). |
+
+### Kept Latin (project decision)
+
+The angle abbreviations **ASC / MC / IC / DSC** stay Latin in the narrow position-table
+columns — 爱星盘 translates them (上升/中天/下降/天底) but keeping Latin in tight columns
+is standard and attested. If ever translated, **MC = 中天** (天顶 an accepted synonym) and
+**IC = 天底**. Caveat flagged by the pass: the attested Latin abbreviation for the
+descendant is **DES**, not DSC; DSC is kept here by project decision.

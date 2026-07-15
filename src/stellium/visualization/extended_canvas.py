@@ -32,6 +32,19 @@ def _header(label: str, locale: str) -> str:
     return render(msg(label), locale)
 
 
+def _wheel_title(
+    label: str | None, default_key: str, template: str, locale: str
+) -> str:
+    """A biwheel table title, localized.
+
+    ``label`` is a person's name (data, kept verbatim) or None, in which case the
+    localized default ("Chart 1"/"Chart 2") is used. ``template`` positions the name per
+    locale — English suffixes "(Inner Wheel)"; Chinese wraps it, e.g. "（內圈）".
+    """
+    name = label or render(msg(default_key), locale)
+    return render(msg(template, name=name), locale)
+
+
 # Legacy aliases for backward compatibility within this module
 # These are used by layers.py which imports them from here
 _is_comparison = is_comparison
@@ -561,7 +574,9 @@ class PositionTableLayer:
         y_start = self.y_offset
 
         # Chart 1 title
-        title_text = f"{comparison.chart1_label or 'Chart 1'} (Inner Wheel)"
+        title_text = _wheel_title(
+            comparison.chart1_label, "Chart 1", "{name} (Inner Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -584,7 +599,9 @@ class PositionTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{comparison.chart2_label or 'Chart 2'} (Outer Wheel)"
+        title_text = _wheel_title(
+            comparison.chart2_label, "Chart 2", "{name} (Outer Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -675,15 +692,17 @@ class PositionTableLayer:
                 single_table_width += gap
 
         # Get labels from multichart
-        label1 = multichart.labels[0] if multichart.labels else "Chart 1"
-        label2 = multichart.labels[1] if len(multichart.labels) > 1 else "Chart 2"
+        label1 = multichart.labels[0] if multichart.labels else None
+        label2 = multichart.labels[1] if len(multichart.labels) > 1 else None
 
         # Render Chart 1 table (left)
         x_chart1 = self.x_offset
         y_start = self.y_offset
 
         # Chart 1 title
-        title_text = f"{label1} (Inner Wheel)"
+        title_text = _wheel_title(
+            label1, "Chart 1", "{name} (Inner Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -711,7 +730,9 @@ class PositionTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{label2} (Outer Wheel)"
+        title_text = _wheel_title(
+            label2, "Chart 2", "{name} (Outer Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -1239,7 +1260,9 @@ class HouseCuspTableLayer:
         header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Chart 1 title
-        title_text = f"{comparison.chart1_label or 'Chart 1'} Houses"
+        title_text = _wheel_title(
+            comparison.chart1_label, "Chart 1", "{name} Houses", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -1271,7 +1294,9 @@ class HouseCuspTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{comparison.chart2_label or 'Chart 2'} Houses"
+        title_text = _wheel_title(
+            comparison.chart2_label, "Chart 2", "{name} Houses", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -1340,8 +1365,8 @@ class HouseCuspTableLayer:
                 single_table_width += gap_between_cols
 
         # Get labels from multichart
-        label1 = multichart.labels[0] if multichart.labels else "Chart 1"
-        label2 = multichart.labels[1] if len(multichart.labels) > 1 else "Chart 2"
+        label1 = multichart.labels[0] if multichart.labels else None
+        label2 = multichart.labels[1] if len(multichart.labels) > 1 else None
 
         # Render Chart 1 house table (left)
         x_chart1 = self.x_offset
@@ -1352,7 +1377,7 @@ class HouseCuspTableLayer:
         header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Chart 1 title
-        title_text = f"{label1} Houses"
+        title_text = _wheel_title(label1, "Chart 1", "{name} Houses", renderer.locale)
         dwg.add(
             dwg.text(
                 title_text,
@@ -1384,7 +1409,7 @@ class HouseCuspTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{label2} Houses"
+        title_text = _wheel_title(label2, "Chart 2", "{name} Houses", renderer.locale)
         dwg.add(
             dwg.text(
                 title_text,

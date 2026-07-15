@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   **PDF cover page and snapshot**, and the **position and house-cusp tables**; the wheel
   body and the aspectarian are glyphs and stay language-neutral. Values that read in a
   locale-specific order are laid out, not word-swapped: a Chinese chart reads `1879年3月14日`
-  for a date and `北48.40°` for a latitude, not a reordered English string. English output
+  for a date and `北緯48.40°` for a latitude, not a reordered English string. English output
   is unchanged.
 
   ```python

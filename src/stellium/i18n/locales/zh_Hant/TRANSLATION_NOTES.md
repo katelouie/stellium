@@ -126,3 +126,44 @@ generalist — flagging rather than quietly picking.
 `build.py` regenerates both files from `_TEMPLATE.json`. If the registry grows
 and the template is regenerated, re-run it — new keys will simply be absent from
 both locales (falling back to English) until values are added to the script.
+
+
+## Three-locale validation pass (July 2026)
+
+A dedicated pass re-validated the terms this project added or left open, reported
+per locale and per register (software UI vs scholarly prose). The headline: the
+three locales overlap almost entirely — nearly every difference is mechanical
+Hant↔Hans conversion (陽/阳, 緯/纬, 佈/布), not word choice. HK and TW agree on
+every term below, so none needed a new override.
+
+### Corrections
+
+| Key | Was | Now | Why |
+|---|---|---|---|
+| `message.Polarity` | 極性 | **陰陽** | Calque. 極性 reads as electrical/magnetic polarity. Chinese astrology owns the concept natively as 陰陽 (二分法 in scholarly prose; 陽性/陰性星座 for the values). Sourced: Zhihu, Sina, freehoro, 丹尼爾 — HIGH. |
+| `polarity.Balanced` | 平衡 | **均衡** | Bare 平衡 collides with the "Element Balance" section (元素平衡). 均衡 keeps the "roughly equal" sense without the section-name ambiguity. |
+| `format.latitude` / `format.longitude` | `{hemisphere}{value}°` (北48.40°) | **`{hemisphere}緯{value}°` / `{hemisphere}經{value}°`** (北緯48.40° / 東經114.17°) | The compact 北48.40° is unattested and non-native: 北 as a coordinate prefix is bound to 緯 (北緯), and dropping 緯 is ungrammatical. Latitude takes 緯, longitude takes 經. Sourced: HKO. **This reverses the earlier compact-form choice.** |
+
+### New UI terms (previously English fallback)
+
+| Key | Value | Note |
+|---|---|---|
+| `message.Snapshot` | 概覽 | NOT 快照 (that is the computing/filesystem sense). 星盤總覽 if a more writerly tone is wanted. |
+| `message.distribution & balance` | 分佈與平衡 | HK/TW use 分佈; mainland uses 分布 — the one genuine spelling split here. |
+| `message.Dominant Element` | 主導元素 | 優勢元素 an accepted synonym. |
+| `message.Dominant Modality` | 主導模式 | Modern/lay choice. Classical synonym **四正** (paired with element = 三方, per 占星之門); psychological-astrology prose uses **性質**. 占星之門/TW prints 啟動 for cardinal where this project uses 開創 — a within-tradition split, not a locale one. |
+| `message.{ruler}-ruled` | {ruler}守護 | 守護 = rulership. The chart-ruler concept itself is 命主星 (= 上升守護星). |
+| `message.{count} of {total}` | {count}/{total} | Bare fraction; locale-neutral, no wordier form is standard. |
+| `body.Ascendant` | 上升點 | The point — distinct from 上升星座 (the sign) and 命宮 (the first house). |
+| `message.{name} (Inner Wheel)` / `(Outer Wheel)` | {name}（內圈）/（外圈） | 內盤/外盤 an accepted synonym; 內輪/外輪 is rare. |
+| `message.{name} Houses` | {name}的宮位 | |
+| `message.Chart 1` / `Chart 2` | 星盤一 / 星盤二 | Biwheel default labels (when no chart name is given). |
+
+### Kept Latin (project decision)
+
+The angle abbreviations **ASC / MC / IC / DSC** stay Latin in the narrow position-table
+columns. Both practices are attested — 爱星盘 translates them (上升/中天/下降/天底),
+占星之門 keeps Latin inline in prose — and Latin in tight columns is standard. If ever
+translated, **MC = 中天** (天頂 is an accepted synonym, common in TW / 占星之門) and
+**IC = 天底**. One caveat the pass flagged: the attested Latin abbreviation for the
+descendant is **DES**, not DSC; DSC is kept here by project decision.

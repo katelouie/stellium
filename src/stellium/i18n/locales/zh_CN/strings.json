@@ -78,7 +78,8 @@
     "Vertex": "宿命点",
     "Vesta": "灶神星",
     "Vulkanus": "弗卡奴斯",
-    "Zeus": "宙斯"
+    "Zeus": "宙斯",
+    "Ascendant": "上升点"
   },
   "dignity": {
     "Detriment": "失势",
@@ -331,7 +332,7 @@
     "Positive": "正极",
     "Yang": "阳",
     "Yin": "阴",
-    "Balanced": "平衡"
+    "Balanced": "均衡"
   },
   "time_unit": {
     "day": "天",
@@ -572,7 +573,7 @@
     "Planets": "行星",
     "Planets Conjunct Midpoints": "合中点的行星",
     "Point": "点",
-    "Polarity": "极性",
+    "Polarity": "阴阳",
     "Porphyry": "波菲利",
     "Position": "位置",
     "Primary Directions": "主限法",
@@ -634,15 +635,26 @@
     "{ruler} ({sign} Rising)": "{ruler}（{sign}上升）",
     "Rising": "上升",
     "{ordinal} house": "第{n}宫",
-    "Degree": "度数"
+    "Degree": "度数",
+    "Snapshot": "概览",
+    "distribution & balance": "分布与平衡",
+    "Dominant Element": "主导元素",
+    "Dominant Modality": "主导模式",
+    "{ruler}-ruled": "{ruler}守护",
+    "{count} of {total}": "{count}/{total}",
+    "{name} (Inner Wheel)": "{name}（内圈）",
+    "{name} (Outer Wheel)": "{name}（外圈）",
+    "{name} Houses": "{name}的宫位",
+    "Chart 1": "星盘一",
+    "Chart 2": "星盘二"
   },
   "format": {
     "date": "{year}年{month_num}月{day}日",
     "datetime": "{date} {time}",
     "decimal_sep": ".",
     "degrees": "{deg}°{min:02d}′",
-    "latitude": "{hemisphere}{value}°",
-    "longitude": "{hemisphere}{value}°",
+    "latitude": "{hemisphere}纬{value}°",
+    "longitude": "{hemisphere}经{value}°",
     "time": "{hour24}:{minute}",
     "date_short": "{year}年{month_num}月{day}日"
   },

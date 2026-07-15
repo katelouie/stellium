@@ -109,7 +109,8 @@
     "Vertex": "宿命點",
     "Vesta": "灶神星",
     "Vulkanus": "伏爾坎努斯",
-    "Zeus": "宙斯"
+    "Zeus": "宙斯",
+    "Ascendant": "上升點"
   },
   "chart_type": {
     "Composite": "組合中點盤",
@@ -205,8 +206,8 @@
     "datetime": "{date} {time}",
     "decimal_sep": ".",
     "degrees": "{deg}°{min:02d}′",
-    "latitude": "{hemisphere}{value}°",
-    "longitude": "{hemisphere}{value}°",
+    "latitude": "{hemisphere}緯{value}°",
+    "longitude": "{hemisphere}經{value}°",
     "time": "{ampm}{hour12}:{minute}"
   },
   "heavenly_stem": {
@@ -489,7 +490,7 @@
     "Planets Conjunct Midpoints": "合相中點的行星",
     "Pluto": "冥王星",
     "Point": "點",
-    "Polarity": "極性",
+    "Polarity": "陰陽",
     "Porphyry": "波菲利制",
     "Position": "位置",
     "Primary Directions": "主限推運",
@@ -578,7 +579,18 @@
     "{planet} is {condition}": "{planet}為{condition}",
     "{ruler} (ruler of {sign})": "{ruler}（{sign}的守護星）",
     "{sect} Chart": "{sect}盤",
-    "{value}°{hemisphere}": "{hemisphere}{value}°"
+    "{value}°{hemisphere}": "{hemisphere}{value}°",
+    "Snapshot": "概覽",
+    "distribution & balance": "分佈與平衡",
+    "Dominant Element": "主導元素",
+    "Dominant Modality": "主導模式",
+    "{ruler}-ruled": "{ruler}守護",
+    "{count} of {total}": "{count}/{total}",
+    "{name} (Inner Wheel)": "{name}（內圈）",
+    "{name} (Outer Wheel)": "{name}（外圈）",
+    "{name} Houses": "{name}的宮位",
+    "Chart 1": "星盤一",
+    "Chart 2": "星盤二"
   },
   "modality": {
     "Cardinal": "開創",
@@ -655,7 +667,7 @@
     "Waxing Gibbous": "盈凸月"
   },
   "polarity": {
-    "Balanced": "平衡",
+    "Balanced": "均衡",
     "Diurnal": "日間",
     "Feminine": "陰性",
     "Masculine": "陽性",
