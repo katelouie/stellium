@@ -70,6 +70,23 @@ class MissingGlyphWarning(StelliumWarning):
     """
 
 
+class MissingFontWarning(StelliumWarning):
+    """A chart's text needs a font that is not installed, so it will render as boxes.
+
+    Distinct from :class:`MissingGlyphWarning` (a missing *object* glyph): this is about
+    the *text* — a Chinese name, a localized label — whose script the bundled Latin and
+    symbol fonts do not cover. In a PNG or PDF (which are rasterised with only the
+    bundled/downloaded fonts, for reproducibility) that text becomes tofu boxes; in an
+    SVG opened in a browser it may still work via the host's system fonts. The remedy,
+    named in the message, is ``stellium fonts download <script>`` or
+    ``ChartDrawBuilder.with_font(path)``.
+
+    Silence it as usual::
+
+        warnings.filterwarnings("ignore", category=MissingFontWarning)
+    """
+
+
 class MissingEphemerisWarning(StelliumWarning):
     """A body was skipped because its ephemeris file is unavailable.
 

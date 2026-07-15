@@ -63,6 +63,8 @@ class ChartComposer:
         if self.config.tables.enabled:
             self._render_tables(canvas, renderer, chart, layout)
 
+        self._warn_if_font_missing(canvas.tostring())
+
         if to_string:
             return canvas.tostring()
         else:
@@ -70,6 +72,30 @@ class ChartComposer:
             canvas.save()
 
             return self.config.filename
+
+    def _warn_if_font_missing(self, svg: str) -> None:
+        """Warn if the rendered text needs a script font that is not installed.
+
+        The chart still renders (in an SVG the browser may fall back to a system font),
+        but a PNG/PDF — rasterised with only the bundled/downloaded fonts — would show
+        that text as boxes. Fail loud, with the remedy, rather than silent tofu.
+        """
+        import warnings
+
+        from stellium import fonts
+        from stellium.exceptions import MissingFontWarning
+
+        packs = fonts.missing_font_packs(svg, self.config.locale)
+        if packs:
+            warnings.warn(
+                "This chart's text contains characters no installed font covers "
+                "(likely CJK). PNG/PDF export will render them as boxes. Run "
+                f"'stellium fonts download {packs[0]}', or pass "
+                ".with_font(path). An SVG opened in a browser may still work via "
+                "system fonts.",
+                MissingFontWarning,
+                stacklevel=2,
+            )
 
     def _create_canvas(self, layout: LayoutResult) -> svgwrite.Drawing:
         """Create SVG canvas with correct dimensions (only once)."""

@@ -38,6 +38,7 @@ __all__ = [
     "installed_font_dirs",
     "locale_script",
     "families_for_locale",
+    "missing_font_packs",
     "FontDownloadError",
 ]
 
@@ -171,6 +172,36 @@ def families_for_locale(locale: str) -> dict[str, str]:
         return {}
     pack = load_manifest()["packs"][script]
     return {f["role"]: f["family"] for f in pack["fonts"] if f.get("role") != "file"}
+
+
+# CJK Unicode blocks (the scripts our packs cover). Extend as packs are added.
+_CJK_RANGES = (
+    (0x2E80, 0x2FDF),  # radicals
+    (0x3000, 0x303F),  # CJK symbols & punctuation
+    (0x3400, 0x4DBF),  # extension A
+    (0x4E00, 0x9FFF),  # unified ideographs
+    (0xF900, 0xFAFF),  # compatibility ideographs
+    (0x20000, 0x2A6DF),  # extension B
+)
+
+
+def _has_cjk(text: str) -> bool:
+    return any(any(lo <= ord(ch) <= hi for lo, hi in _CJK_RANGES) for ch in text)
+
+
+def missing_font_packs(text: str, locale: str | None = None) -> list[str]:
+    """Font packs ``text`` needs for full coverage but that are not installed.
+
+    Empty when the bundled fonts already cover the text (Latin), or when a covering pack
+    is installed. Otherwise the pack to suggest — the locale's script when known
+    (``zh_Hant`` → ``zh-hant``), else Simplified as the common default. Used to warn
+    before a chart rasterises to tofu; see :class:`stellium.exceptions.MissingFontWarning`.
+    """
+    needed: list[str] = []
+    if _has_cjk(text) and not (is_installed("zh") or is_installed("zh-hant")):
+        preferred = locale_script(locale) if locale else None
+        needed.append(preferred if preferred in ("zh", "zh-hant") else "zh")
+    return needed
 
 
 def remove_pack(script: str) -> bool:

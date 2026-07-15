@@ -147,6 +147,43 @@ def test_unknown_pack_lists_the_available_ones(tmp_path, monkeypatch):
         fonts.download_pack("zz")
 
 
+def test_missing_font_packs_detects_uncovered_cjk(tmp_path, monkeypatch):
+    from stellium import fonts
+
+    monkeypatch.setattr(
+        paths, "USER_FONTS_DIR", tmp_path / "fonts"
+    )  # nothing installed
+
+    assert fonts.missing_font_packs("Albert Einstein") == []  # Latin: covered by bundle
+    assert fonts.missing_font_packs("太阳 月亮") == ["zh"]  # CJK, no pack -> suggest zh
+    # The locale steers which pack is suggested.
+    assert fonts.missing_font_packs("太陽", locale="zh_Hant") == ["zh-hant"]
+
+
+def test_missing_font_packs_is_empty_once_a_pack_is_installed(tmp_path, monkeypatch):
+    fonts = _fixture_manifest(monkeypatch, b"font")
+    monkeypatch.setattr(paths, "USER_FONTS_DIR", tmp_path / "fonts")
+    # Pretend a CJK pack is installed; the CJK text is then covered.
+    monkeypatch.setattr(fonts, "is_installed", lambda script: script == "zh")
+    assert fonts.missing_font_packs("太阳") == []
+
+
+def test_chart_warns_when_a_cjk_font_is_missing(tmp_path, monkeypatch):
+    import warnings
+
+    from stellium import ChartBuilder
+    from stellium.exceptions import MissingFontWarning
+
+    monkeypatch.setattr(paths, "USER_FONTS_DIR", tmp_path / "fonts")  # no pack
+    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        chart.draw().with_header().with_locale("zh_CN").save(to_string=True)
+    warned = [w for w in caught if issubclass(w.category, MissingFontWarning)]
+    assert warned and "stellium fonts download zh" in str(warned[0].message)
+
+
 def test_shipped_manifest_is_valid_and_matches_the_paths():
     """The committed font_packs.json parses and its packs align with the pack dirs."""
     from stellium import fonts
