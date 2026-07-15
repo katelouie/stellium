@@ -1,0 +1,104 @@
+{
+  "version": "fonts-v1",
+  "base_url": "https://github.com/katelouie/stellium/releases/download/fonts-v1",
+  "packs": {
+    "zh": {
+      "covers": "Simplified Chinese",
+      "fonts": [
+        {
+          "role": "sans",
+          "family": "Noto Sans SC",
+          "name": "NotoSansSC-VariableFont_wght.ttf",
+          "asset": "zh_NotoSansSC-VariableFont_wght.ttf",
+          "sha256": "e80613a35583f59b46dbf6cc2eb640f3db0bb0f53fa7f6fbaa7b09faf20e5172",
+          "bytes": 17773248
+        },
+        {
+          "role": "serif",
+          "family": "Noto Serif SC",
+          "name": "NotoSerifSC-VariableFont_wght.ttf",
+          "asset": "zh_NotoSerifSC-VariableFont_wght.ttf",
+          "sha256": "e553aa4a7eb6e45ba39d7a562ef4b51ac5764d21ce9ea12995f264a9b3e63cd7",
+          "bytes": 25053412
+        },
+        {
+          "role": "display",
+          "family": "ZCOOL XiaoWei",
+          "name": "ZCOOLXiaoWei-Regular.ttf",
+          "asset": "zh_ZCOOLXiaoWei-Regular.ttf",
+          "sha256": "f5ffee4980db40005b7d7e76f7e8c7a0f959e87d57c33aeb8c9793a5a1077a35",
+          "bytes": 6302244
+        }
+      ],
+      "files": [
+        {
+          "name": "OFL_notosans.txt",
+          "asset": "zh_OFL_notosans.txt",
+          "sha256": "92c343f7e7caebff8bace350bc091b79755f4d0c8b70bb0df21570a1828917b8",
+          "bytes": 4481
+        },
+        {
+          "name": "OFL_notoserif.txt",
+          "asset": "zh_OFL_notoserif.txt",
+          "sha256": "f7933a8d153874eb029b1b74eb9baa002543cabfd4e3388be5f9158055468d71",
+          "bytes": 4445
+        },
+        {
+          "name": "OFL_xiaowei.txt",
+          "asset": "zh_OFL_xiaowei.txt",
+          "sha256": "3243fdad2d6866d0e819ba0ce1604407785bff455dc844c48786adfc17a6c200",
+          "bytes": 4494
+        }
+      ]
+    },
+    "zh-hant": {
+      "covers": "Traditional Chinese (Hong Kong / Taiwan)",
+      "fonts": [
+        {
+          "role": "sans",
+          "family": "Noto Sans TC",
+          "name": "NotoSansTC-VariableFont_wght.ttf",
+          "asset": "zh-hant_NotoSansTC-VariableFont_wght.ttf",
+          "sha256": "d1e21c6f2fd404665cc8c3726950948832490cd0aeb5d950f9ca91a2eb664bf8",
+          "bytes": 11917560
+        },
+        {
+          "role": "serif",
+          "family": "Noto Serif TC",
+          "name": "NotoSerifTC-VariableFont_wght.ttf",
+          "asset": "zh-hant_NotoSerifTC-VariableFont_wght.ttf",
+          "sha256": "cb57c3790e90a46be337f811b50dd01e576bcfe38a59ab401c60e283f5421f91",
+          "bytes": 16779920
+        },
+        {
+          "role": "display",
+          "family": "Yuji Syuku",
+          "name": "YujiSyuku-Regular.ttf",
+          "asset": "zh-hant_YujiSyuku-Regular.ttf",
+          "sha256": "881a876b179ff4930a08fbba624a8cd04ddf4a4ef5dfa679deca36033a0f1ad3",
+          "bytes": 8376120
+        }
+      ],
+      "files": [
+        {
+          "name": "OFL_notosans.txt",
+          "asset": "zh-hant_OFL_notosans.txt",
+          "sha256": "92c343f7e7caebff8bace350bc091b79755f4d0c8b70bb0df21570a1828917b8",
+          "bytes": 4481
+        },
+        {
+          "name": "OFL_notoserif.txt",
+          "asset": "zh-hant_OFL_notoserif.txt",
+          "sha256": "f7933a8d153874eb029b1b74eb9baa002543cabfd4e3388be5f9158055468d71",
+          "bytes": 4445
+        },
+        {
+          "name": "OFL_yuji.txt",
+          "asset": "zh-hant_OFL_yuji.txt",
+          "sha256": "5ee26fa2ffcdb8cb5b6371ca95feff5298d94ae1aaee915bd47a5374fc239b94",
+          "bytes": 4481
+        }
+      ]
+    }
+  }
+}
