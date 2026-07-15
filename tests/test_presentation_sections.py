@@ -211,18 +211,24 @@ def test_planet_position_custom_options():
 
 
 def test_planet_position_generate_data(sample_chart):
-    """Test PlanetPositionSection data generation."""
+    """Test PlanetPositionSection data generation.
+
+    Headers are format-last: "Planet"/"Position" are still plain labels, but the house
+    header is a message that renders to "House (Pl)" — the one header the old substring
+    translator could never localize.
+    """
+    from stellium.i18n import render
+
     section = PlanetPositionSection()
     data = section.generate_data(sample_chart)
 
     assert data["type"] == "table"
     assert "headers" in data
     assert "rows" in data
-    assert "Planet" in data["headers"]
-    assert "Position" in data["headers"]
-    # House headers are now abbreviated like "House (Pl)", "House (WS)"
-    house_headers = [h for h in data["headers"] if h.startswith("House")]
-    assert len(house_headers) > 0
+    rendered = [render(h, "en") for h in data["headers"]]
+    assert "Planet" in rendered
+    assert "Position" in rendered
+    assert any(h.startswith("House (") for h in rendered)
 
 
 def test_planet_position_headers_with_speed(sample_chart):
@@ -243,44 +249,40 @@ def test_planet_position_headers_without_house():
 
 
 def test_planet_position_rows_content(mock_chart):
-    """Test that rows contain planet data."""
+    """Rows carry structured cells (terms/messages) that render to name and position."""
+    from stellium.i18n import render
+
     section = PlanetPositionSection(include_house=False, include_speed=False)
     data = section.generate_data(mock_chart)
 
     rows = data["rows"]
     assert len(rows) > 0
-
-    # Each row should have planet name and position
     for row in rows:
         assert len(row) >= 2  # At least name and position
-        assert isinstance(row[0], str)  # Planet name
-        assert "°" in row[1]  # Position with degree symbol
+        assert render(row[0], "en")  # Planet name renders to something
+        assert "°" in render(row[1], "en")  # Position with degree symbol
 
 
 def test_planet_position_filters_objects(mock_chart):
     """Test that only planets, asteroids, nodes, points are included."""
+    from stellium.i18n import render
+
     section = PlanetPositionSection()
     data = section.generate_data(mock_chart)
 
-    # Get all position names from rows (may include glyphs like "☉ Sun")
-    planet_names = [row[0] for row in data["rows"]]
-
-    # Should include Sun, Moon, etc. (with glyphs prepended)
+    planet_names = [render(row[0], "en") for row in data["rows"]]
     assert any("Sun" in name for name in planet_names)
     assert any("Moon" in name for name in planet_names)
-
-    # Should not include angles (they're in a different category)
-    # Angles might be included depending on ObjectType, but midpoints shouldn't
-    # be in the planet list
 
 
 def test_planet_position_sorting(mock_chart):
     """Test that planets are sorted consistently."""
+    from stellium.i18n import render
+
     section = PlanetPositionSection()
     data = section.generate_data(mock_chart)
 
-    planet_names = [row[0] for row in data["rows"]]
-
+    planet_names = [render(row[0], "en") for row in data["rows"]]
     # Sun should typically come first in the standard ordering (with glyph)
     assert "Sun" in planet_names[0]
 

@@ -327,14 +327,21 @@ class PlanetPositionSection:
         else:  # "default"
             systems_to_show = [chart.default_house_system]
 
-        # Build headers based on options
-        headers = ["Planet", "Position"]
+        # Build headers based on options. The "House (Pl)" header is *composed* — the one
+        # thing the old substring translator could never localize (it matched whole cells,
+        # not fragments), so it becomes a message with the system as a short-form term.
+        headers: list[Any] = ["Planet", "Position"]
         house_headers: list[str] = []
 
         if self.include_house and systems_to_show:
             for system_name in systems_to_show:
                 abbrev = abbreviate_house_system(system_name)
-                headers.append(f"House ({abbrev})")
+                headers.append(
+                    msg(
+                        "House ({system})",
+                        system=term(f"house_system.{system_name}", short=True),
+                    )
+                )
                 house_headers.append(abbrev)
 
         if self.include_speed:
@@ -394,17 +401,30 @@ class PlanetPositionSection:
                 }
             )
 
-            # Derived string row (unchanged output for the other renderers).
-            row = [f"{glyph} {display_name}" if glyph else display_name]
-            row.append(
-                f"{sign_glyph} {pos.sign} {deg_str}"
-                if sign_glyph
-                else f"{pos.sign} {deg_str}"
+            # Structured row: the name and sign are catalog terms, the glyph is
+            # language-neutral, the degree is a number. The renderer composes the string
+            # last, in the active locale (English output is unchanged).
+            name_cell: Any = (
+                msg("{glyph} {name}", glyph=glyph, name=term(f"body.{pos.name}"))
+                if glyph
+                else term(f"body.{pos.name}")
             )
+            position_cell: Any = (
+                msg(
+                    "{glyph} {sign} {deg}",
+                    glyph=sign_glyph,
+                    sign=term(f"sign.{pos.sign}"),
+                    deg=deg_str,
+                )
+                if sign_glyph
+                else msg("{sign} {deg}", sign=term(f"sign.{pos.sign}"), deg=deg_str)
+            )
+            row: list[Any] = [name_cell, position_cell]
             row.extend(houses)
             if self.include_speed:
                 row.append(f"{pos.speed_longitude:.4f}°/day")
-                row.append("Retrograde" if pos.is_retrograde else "Direct")
+                motion = "Retrograde" if pos.is_retrograde else "Direct"
+                row.append(term(f"motion.{motion}"))
             rows.append(row)
 
         result = {

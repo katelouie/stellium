@@ -209,6 +209,7 @@ def _resolve_structured(
         if dtype == "table":
             return {
                 **data,
+                "headers": [resolve(h) for h in data.get("headers", [])],
                 "rows": [[resolve(c) for c in row] for row in data.get("rows", [])],
             }
         if dtype == "key_value":
@@ -222,7 +223,11 @@ def _resolve_structured(
             return {
                 **data,
                 "tables": [
-                    {**t, "rows": [[resolve(c) for c in r] for r in t.get("rows", [])]}
+                    {
+                        **t,
+                        "headers": [resolve(h) for h in t.get("headers", [])],
+                        "rows": [[resolve(c) for c in r] for r in t.get("rows", [])],
+                    }
                     for t in data.get("tables", [])
                 ],
             }

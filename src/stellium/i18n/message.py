@@ -83,7 +83,10 @@ def _render_term(value: Term, locale: str) -> str:
         if long_translated != value.key:
             return long_translated
 
-    return english(lookup) or english(value.key) or value.key
+    # Fall back to the catalog's English, then to the bare term name — never the raw
+    # namespaced key. A term for a body outside the registry renders "Part of Fortune",
+    # not "body.Part of Fortune".
+    return english(lookup) or english(value.key) or value.key.split(".", 1)[-1]
 
 
 def render(value: Any, locale: str | None = None) -> str:
