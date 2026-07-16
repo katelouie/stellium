@@ -40,7 +40,7 @@ from stellium.i18n.formats import (
     format_number,
     format_time,
 )
-from stellium.i18n.gloss import Gloss, gloss, unmask
+from stellium.i18n.gloss import Gloss, display, display_all, gloss
 from stellium.i18n.loader import (
     PSEUDO_LOCALE,
     available_locales_info,
@@ -62,7 +62,8 @@ __all__ = [
     "Message",
     "Gloss",
     "gloss",
-    "unmask",
+    "display",
+    "display_all",
     "set_default_locale",
     "get_default_locale",
     "get_available_locales",

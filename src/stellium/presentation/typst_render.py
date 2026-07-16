@@ -15,7 +15,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from stellium.i18n import format_date, format_time, msg, render, term
+from stellium.i18n import display, format_date, format_time, msg, render, term
 from stellium.presentation.typst_runtime import (
     THEME_LABELS,
     THEME_WHEEL,
@@ -322,7 +322,7 @@ def _moon_phase(name: str, d: dict[str, Any]) -> dict | None:
     def get(*keys):
         for k in keys:
             if k in data:
-                return str(data[k])
+                return display(data[k])
         return None
 
     phase = (get("Phase Name", "Phase") or "Moon").split(" (")[0]
@@ -368,8 +368,8 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
         return {"kind": "aspect_list", "title": name, "aspects": d["aspect_pairs"]}
     typ = d.get("type")
     if typ == "table":
-        headers = [str(h) for h in d.get("headers", [])]
-        rows = [[str(c) for c in r] for r in d.get("rows", [])]
+        headers = [display(h) for h in d.get("headers", [])]
+        rows = [[display(c) for c in r] for r in d.get("rows", [])]
         # Narrow + long tables (e.g. house cusps) waste the page's width run as a
         # single column. Split them into two halves side by side so they fill it.
         if len(headers) <= 3 and len(rows) >= 12:
@@ -387,13 +387,13 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
         return {
             "kind": "key_value",
             "title": name,
-            "pairs": [[str(k), str(v)] for k, v in d.get("data", {}).items()],
+            "pairs": [[display(k), display(v)] for k, v in d.get("data", {}).items()],
         }
     if typ == "text":
         return {
             "kind": "text",
             "title": name,
-            "text": str(d.get("text", d.get("content", ""))),
+            "text": display(d.get("text", d.get("content", ""))),
         }
     if typ == "side_by_side_tables":
         return {
@@ -401,9 +401,9 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
             "title": name,
             "tables": [
                 {
-                    "title": str(t.get("title", "")),
-                    "headers": [str(h) for h in t.get("headers", [])],
-                    "rows": [[str(c) for c in r] for r in t.get("rows", [])],
+                    "title": display(t.get("title", "")),
+                    "headers": [display(h) for h in t.get("headers", [])],
+                    "rows": [[display(c) for c in r] for r in t.get("rows", [])],
                 }
                 for t in d.get("tables", [])
             ],
@@ -434,7 +434,7 @@ def _map_section(name: str, d: dict[str, Any], chart: Any) -> dict | None:
         return {
             "kind": "chart_overview",
             "title": name,
-            "pairs": [[str(k), str(v)] for k, v in d.get("data", {}).items()],
+            "pairs": [[display(k), display(v)] for k, v in d.get("data", {}).items()],
         }
     if d.get("planets") is not None:
         rich = _planet_positions(name, d)
@@ -462,7 +462,9 @@ def _dispositor_section(name: str, d: dict[str, Any]) -> dict:
             if mapped:
                 out_subs.append(mapped)
         elif sub_d.get("type") == "text":
-            text_cols.append({"title": sub_name, "text": str(sub_d.get("text", ""))})
+            text_cols.append(
+                {"title": sub_name, "text": display(sub_d.get("text", ""))}
+            )
         else:
             mapped = _generic(sub_name, sub_d)
             if mapped:

@@ -15,11 +15,13 @@ from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
 from stellium.core.protocols import ReportRenderer, ReportSection
 from stellium.i18n import (
+    Gloss,
     Message,
     Term,
+    display_all,
     get_default_locale,
+    gloss,
     msg,
-    render,
     set_default_locale,
     t,
 )
@@ -224,7 +226,8 @@ def _resolve_structured(
     """
 
     def resolve(value: Any) -> Any:
-        # Recurse containers so a cell may itself hold a list of renderables.
+        # A token becomes a Gloss (identity .en + mask .loc); a plain str is left for the
+        # substring bridge; containers recurse. See the Unified Renderer Contract §4.2.
         if isinstance(value, dict):
             return {k: resolve(v) for k, v in value.items()}
         if isinstance(value, str):
@@ -232,14 +235,15 @@ def _resolve_structured(
         if isinstance(value, (list, tuple)) and any(
             not isinstance(v, (str, int, float)) for v in value
         ):
-            return render(value, locale)  # a list of renderables -> joined string
+            return gloss(value, locale)  # a list of renderables -> one joined Gloss
         if isinstance(value, list):
             return [resolve(v) for v in value]
-        return render(value, locale)
+        return gloss(value, locale)
 
-    def label(value: Any) -> str:
-        # A label is a message: a bare string is its own English template.
-        return render(msg(value) if isinstance(value, str) else value, locale)
+    def label(value: Any) -> Any:
+        # A label is a message: a bare string is its own English template. It becomes a
+        # Gloss too, so machinery keys on .en and the renderer displays .loc.
+        return gloss(msg(value) if isinstance(value, str) else value, locale)
 
     def resolve_row(row: Any) -> Any:
         # Most sections use list rows; some (stations, ingresses) use dict rows keyed by
@@ -256,7 +260,7 @@ def _resolve_structured(
         # it does not join a list into one string, so a payload's list structure survives.
         # See the Unified Renderer Contract spec §4.2.
         if isinstance(value, (Term, Message)):
-            return render(value, locale)
+            return gloss(value, locale)
         if isinstance(value, dict):
             return {k: deep(v) for k, v in value.items()}
         if isinstance(value, (list, tuple)):
@@ -314,13 +318,16 @@ def _translate_section_data(
         New list with translated strings (original is not mutated).
     """
 
-    def tr(s: str) -> str:
+    def tr(s: Any) -> Any:
+        # A Gloss is already resolved — the bridge only touches un-migrated plain strings.
+        if isinstance(s, Gloss):
+            return s
         return t(s, locale=locale)
 
     def translate_cell(value: Any) -> Any:
         """Translate known terms within a cell value."""
         if not isinstance(value, str):
-            return value
+            return value  # a Gloss (already resolved) or a non-string passes through
         # Try direct translation first (exact match)
         translated = tr(value)
         if translated != value:
@@ -2276,6 +2283,10 @@ class ReportBuilder:
         Returns:
             Plaintext string representation
         """
+        # Text renderers are the display edge: flip every Gloss to its .loc mask. Their
+        # internals stay plain-string. (The Typst path keeps Glosses — its mappers still
+        # need the .en identity.) See the Unified Renderer Contract §4.5.
+        section_data = display_all(section_data)
         # Map format names to renderer methods
         if format in ("rich_table", "plain_table", "text"):
             # For terminal formats, use PlainTextRenderer for file output
@@ -2373,6 +2384,8 @@ class ReportBuilder:
             section_data: List of (section_name, section_dict) tuples
             format: Output format (must be terminal-friendly)
         """
+        # Display edge: flip every Gloss to its .loc mask (see _to_string).
+        section_data = display_all(section_data)
         if format == "rich_table":
             # Use Rich renderer's print method (preserves ANSI formatting)
             renderer = RichTableRenderer()

@@ -127,7 +127,7 @@ facts are §2.1–2.3 above, plus:
   do-not-translate set (proper nouns, IANA zones, brand). Provable by the pseudolocale
   oracle extended to the PDF-JSON path (§7).
 - English output — markdown **and** PDF — is **byte-identical** to before.
-- Text renderers flatten at their **display edge** (a single `unmask()`); their internal
+- Text renderers flatten at their **display edge** (a single `display()`); their internal
   cell handling stays string-based (a `Gloss` is its English string to everything but the
   final `.loc` read).
 
@@ -219,13 +219,13 @@ field and the `.typ` reads `.en`. The spike proved both shapes clean.
 
 ### 4.5 Renderer behaviour after the change
 
-- **Text renderers** — call `unmask()` (`.loc` for a `Gloss`, the value unchanged otherwise)
+- **Text renderers** — call `display()` (`.loc` for a `Gloss`, the value unchanged otherwise)
   at their **display edge**. Their internals stay string-based; it is a one-line flatten at
   the boundary, after any machinery, not a rewrite of cell handling.
 - **Typst mappers** — read `.en` for identity (dispatch, the moon field ID, glyph lookup)
   and let `.loc` flow to the `.typ` via the encoder. `_moon_phase` stops re-deriving hardcoded
   English fields — it iterates the glossed key/value, IDs fields by `.en`, prints `.loc`.
-  `_generic` uses `unmask` instead of `str()` (which would print `.en`).
+  `_generic` uses `display` instead of `str()` (which would print `.en`).
 - **The `.typ`** — generic paths unchanged (they get `.loc` strings); hardcoded chrome moves
   to section-declared labels (also Glosses → `.loc`).
 
@@ -278,18 +278,18 @@ the next begins. Steps 1–2 landed under the pre-Gloss design; step 2b re-homes
 2. **Planet positions.** ✅ Landed. Payload with tokens, rows derived, section-declared
    labels, Typst planet table reads localized payload. Byte-identical English; zh planet
    table localized.
-2b. **`Gloss` foundation.** ✅ Landed (additive). The `Gloss` primitive + `gloss()`/`unmask()`,
+2b. **`Gloss` foundation.** ✅ Landed (additive). The `Gloss` primitive + `gloss()`/`display()`,
    spiked end-to-end on moon-phase data.
 3. **Resolve pass → `Gloss`.** The reshape. `_resolve_structured` produces `Gloss` for
-   tokens; the substring bridge skips `Gloss`; text renderers `unmask()` at their edge; the
+   tokens; the substring bridge skips `Gloss`; text renderers `display()` at their edge; the
    Typst JSON encoder emits `.loc`. English stays byte-identical (`.loc == .en` in English,
-   and `__str__` is `.en` regardless); a missed `unmask()` shows English, not a crash or a
+   and `__str__` is `.en` regardless); a missed `display()` shows English, not a crash or a
    wrong lookup. Prove text + PDF byte-identical English; zh unchanged from step 2.
 4. **Moon phase on `Gloss`.** `_moon_phase` iterates the glossed key/value, IDs fields by
    `.en`, prints `.loc` — deleting every hardcoded English field label and the broken
    English-key lookup. First section the reshape *fixes*.
 5. **Aspects + generic chrome.** Aspect list + aspectarian via the same read-`.en`/print-`.loc`
-   pattern; `_generic` uses `unmask` not `str()`; snapshot chrome (`Elements`/`Polarity`/…)
+   pattern; `_generic` uses `display` not `str()`; snapshot chrome (`Elements`/`Polarity`/…)
    moves to section-declared label Glosses. Delete the dead mappers and the hardcoded `.typ`
    chrome.
 
@@ -326,7 +326,7 @@ the next begins. Steps 1–2 landed under the pre-Gloss design; step 2b re-homes
    construction (rows derived), and no section emits the same data twice by hand.
 6. `_moon_phase`'s hardcoded English field labels and all List A `.typ` chrome literals are
    gone; the templates read declared, localized labels.
-7. The resolve pass produces `Gloss`; machinery reads `.en`, renderers `unmask()` to `.loc`
+7. The resolve pass produces `Gloss`; machinery reads `.en`, renderers `display()` to `.loc`
    at their edge; a forgotten `.loc` surfaces as oracle-caught English, never a wrong lookup.
 
 ---

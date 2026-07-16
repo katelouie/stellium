@@ -65,9 +65,26 @@ def gloss(value: Any, locale: str) -> Gloss:
     return Gloss(en=render(value, "en"), loc=render(value, locale), key=key)
 
 
-def unmask(value: Any) -> Any:
-    """The presentation of a value: a ``Gloss``'s ``.loc``, else the value unchanged.
+def display(value: Any) -> Any:
+    """The presentation of a value: a ``Gloss``'s ``.loc`` mask, else the value unchanged.
 
-    What a renderer calls at its display edge — the one place the mask is flipped on.
+    What a renderer calls at its display edge — the one place the mask is flipped *on* for
+    the user. (The identity underneath is ``.en``; this returns what is shown, not that.)
     """
     return value.loc if isinstance(value, Gloss) else value
+
+
+def display_all(value: Any) -> Any:
+    """Deep-flatten a structure to its presentation: every ``Gloss`` → its ``.loc`` mask.
+
+    A text renderer applies this once at its boundary, *after* any machinery has read the
+    ``.en`` identities, so its internals can stay plain-string. Dict keys flip too, so a
+    key_value's localized labels appear.
+    """
+    if isinstance(value, Gloss):
+        return value.loc
+    if isinstance(value, dict):
+        return {display_all(k): display_all(v) for k, v in value.items()}
+    if isinstance(value, (list, tuple)):
+        return type(value)(display_all(v) for v in value)
+    return value

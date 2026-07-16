@@ -72,6 +72,15 @@ THEME_WHEEL = {
 }
 
 
+def _gloss_to_loc(obj: Any) -> str:
+    """json.dump ``default`` — a Gloss serializes to its localized display mask (.loc)."""
+    from stellium.i18n import Gloss
+
+    if isinstance(obj, Gloss):
+        return obj.loc
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+
 def validate_theme(theme: str) -> str:
     """Reject an unknown theme by name rather than rendering something surprising."""
     if theme not in THEMES:
@@ -294,7 +303,10 @@ class TypstDocument:
             materialize_svgs(svg_sections, self.root)
 
         with open(os.path.join(self.root, "data.json"), "w", encoding="utf-8") as fh:
-            json.dump(data, fh, ensure_ascii=False)
+            # A Gloss serializes to its .loc mask — the template receives plain localized
+            # strings. Where a template needs the .en identity (a glyph/colour lookup), the
+            # payload carries that canonical field explicitly. See Unified Renderer Contract.
+            json.dump(data, fh, ensure_ascii=False, default=_gloss_to_loc)
 
         return compile_pdf(
             os.path.join(self.root, self.entry),

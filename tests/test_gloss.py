@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import json
 
-from stellium.i18n import Gloss, gloss, msg, term, unmask
+from stellium.i18n import Gloss, display, gloss, msg, term
 from stellium.i18n.pseudo import find_leaks
 
 
@@ -32,8 +32,8 @@ def test_gloss_is_not_a_str():
     assert (
         str(g) == "Retrograde"
     )  # identity — oracle-catchable if it ever reaches output
-    assert unmask(g) == "逆行"  # the mask, flipped on at the display edge
-    assert unmask("plain") == "plain"  # a non-Gloss passes through
+    assert display(g) == "逆行"  # the mask, flipped on at the display edge
+    assert display("plain") == "plain"  # a non-Gloss passes through
 
 
 def test_gloss_of_a_term_carries_both_dimensions_and_the_key():
