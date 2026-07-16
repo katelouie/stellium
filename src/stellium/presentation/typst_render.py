@@ -279,15 +279,33 @@ def _snapshot_section(chart: Any, locale: str) -> dict | None:
                 "sub": f"{yang_word} {yang} · {yin_word} {yin}",
             },
         ],
+        # Each bar carries its canonical English `key` (for the colour lookup, which is
+        # keyed on "Fire"/"Cardinal") and a localized `label` (for display).
         "elements": [
-            {"label": render(term(f"element.{lbl}"), locale), "count": el[key]}
+            {
+                "key": lbl,
+                "label": render(term(f"element.{lbl}"), locale),
+                "count": el[key],
+            }
             for lbl, key in el_order
         ],
         "modalities": [
-            {"label": render(term(f"modality.{lbl}"), locale), "count": mo[key]}
+            {
+                "key": lbl,
+                "label": render(term(f"modality.{lbl}"), locale),
+                "count": mo[key],
+            }
             for lbl, key in mo_order
         ],
         "polarity": {"yang": yang, "yin": yin},
+        # Chrome for the snapshot bars (Elements/Modalities/Polarity/Yang/Yin).
+        "labels": {
+            "elements": render(msg("Elements"), locale),
+            "modalities": render(msg("Modalities"), locale),
+            "polarity": render(msg("Polarity"), locale),
+            "yang": yang_word,
+            "yin": yin_word,
+        },
     }
 
 
