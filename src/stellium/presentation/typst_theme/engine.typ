@@ -108,7 +108,7 @@
       (c.aspect-legend)(),
     )
   } else if kind == "aspect_list" {
-    (c.aspect-list)(sec.aspects)
+    (c.aspect-list)(sec.aspects, labels: sec.at("labels", default: (:)))
   } else if kind == "dispositor_graph" {
     (c.dispositor-graph)(sec.graphs)
   } else if kind == "text_columns" {

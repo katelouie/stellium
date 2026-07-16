@@ -381,7 +381,12 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
         }
     # Structured aspect list (the "Aspect List" subsection carries aspect_pairs).
     if d.get("aspect_pairs") is not None:
-        return {"kind": "aspect_list", "title": name, "aspects": d["aspect_pairs"]}
+        return {
+            "kind": "aspect_list",
+            "title": name,
+            "aspects": d["aspect_pairs"],
+            "labels": d.get("labels", {}),
+        }
     typ = d.get("type")
     if typ == "table":
         headers = [display(h) for h in d.get("headers", [])]

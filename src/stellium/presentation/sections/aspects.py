@@ -369,27 +369,39 @@ class AspectSection:
             disp, glyph = get_object_display(nm)
             return disp, (glyph or "")
 
+        # Structured payload: canonical identity fields (name, aspect key, glyphs) stay raw
+        # for the template's glyph lookup; display fields are i18n tokens the resolve pass
+        # turns into Glosses. See the Unified Renderer Contract.
         bodies = []
         for o in sorted(body_objs.values(), key=get_object_sort_key):
-            disp, glyph = _body_info(o.name)
-            bodies.append({"name": o.name, "label": disp, "glyph": glyph})
+            _disp, glyph = _body_info(o.name)
+            bodies.append(
+                {"name": o.name, "label": term(f"body.{o.name}"), "glyph": glyph}
+            )
 
         pairs = []
         for aspect in aspects:
-            p1d, p1g = _body_info(aspect.object1.name)
-            p2d, p2g = _body_info(aspect.object2.name)
+            _p1d, p1g = _body_info(aspect.object1.name)
+            _p2d, p2g = _body_info(aspect.object2.name)
+            applying = aspect.is_applying
             pairs.append(
                 {
-                    "p1": aspect.object1.name,
-                    "p1_label": p1d,
+                    "p1": aspect.object1.name,  # canonical
+                    "p1_label": term(f"body.{aspect.object1.name}"),  # display
                     "p1_glyph": p1g,
-                    "p2": aspect.object2.name,
-                    "p2_label": p2d,
+                    "p2": aspect.object2.name,  # canonical
+                    "p2_label": term(f"body.{aspect.object2.name}"),  # display
                     "p2_glyph": p2g,
-                    "aspect": aspect.aspect_name,
+                    "aspect": aspect.aspect_name,  # canonical — glyph/colour key
+                    "aspect_label": term(f"aspect.{aspect.aspect_name}"),  # display
                     "orb": f"{aspect.orb:.2f}°",
-                    "applying": (
-                        None if aspect.is_applying is None else bool(aspect.is_applying)
+                    "applying": None if applying is None else bool(applying),
+                    "applying_label": (
+                        None
+                        if applying is None
+                        else term(
+                            f"aspect_motion.{'Applying' if applying else 'Separating'}"
+                        )
                     ),
                 }
             )
@@ -400,6 +412,14 @@ class AspectSection:
             "rows": rows,
             "bodies": bodies,
             "aspect_pairs": pairs,
+            # Chrome for the structured (Typst) aspect list.
+            "labels": {
+                "planet1": msg("Planet 1"),
+                "aspect": msg("Aspect"),
+                "planet2": msg("Planet 2"),
+                "orb": msg("Orb"),
+                "applying": msg("Applying"),
+            },
         }
 
     def _generate_single_chart_with_aspectarian(

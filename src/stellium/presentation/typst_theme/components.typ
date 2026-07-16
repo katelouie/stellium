@@ -447,13 +447,13 @@
   }
 
   // --- aspect list: structured rows with design-system glyphs ----------------
-  let aspect-list(aspects) = {
+  let aspect-list(aspects, labels: (:)) = {
     let planet-cell(gch, lbl-txt) = {
       box[#(if gch != none and gch != "" { glyph(gch, size: 11pt, fill: ink) }) #text(font: body, size: 10.5pt, fill: ink)[ #lbl-txt]]
     }
-    let applying-cell(ap) = {
-      if ap == true { text(font: body, size: 10pt, fill: muted)[Applying] }
-      else if ap == false { text(font: body, size: 10pt, fill: muted)[Separating] }
+    // The label is localized in the data (Applying/Separating); none → an em dash.
+    let applying-cell(txt) = {
+      if txt != none and txt != "" { text(font: body, size: 10pt, fill: muted)[#txt] }
       else { text(font: body, size: 10pt, fill: muted)[—] }
     }
     table(
@@ -463,17 +463,17 @@
       align: (col, row) => if col >= 3 { right + horizon } else { left + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(
-        lbl("Planet 1", size: 7.5pt), lbl("Aspect", size: 7.5pt),
-        lbl("Planet 2", size: 7.5pt),
-        align(right)[#lbl("Orb", size: 7.5pt)],
-        align(right)[#lbl("Applying", size: 7.5pt)],
+        lbl(labels.at("planet1", default: "Planet 1"), size: 7.5pt), lbl(labels.at("aspect", default: "Aspect"), size: 7.5pt),
+        lbl(labels.at("planet2", default: "Planet 2"), size: 7.5pt),
+        align(right)[#lbl(labels.at("orb", default: "Orb"), size: 7.5pt)],
+        align(right)[#lbl(labels.at("applying", default: "Applying"), size: 7.5pt)],
       ),
       ..aspects.map(a => (
         planet-cell(a.at("p1_glyph", default: ""), a.at("p1_label", default: a.p1)),
-        box[#aspect-mark(a.aspect, size: 11pt) #text(font: body, size: 10.5pt, fill: ink)[ #a.aspect]],
+        box[#aspect-mark(a.aspect, size: 11pt) #text(font: body, size: 10.5pt, fill: ink)[ #a.at("aspect_label", default: a.aspect)]],
         planet-cell(a.at("p2_glyph", default: ""), a.at("p2_label", default: a.p2)),
         mono(a.at("orb", default: ""), size: 9.5pt, fill: muted),
-        applying-cell(a.at("applying", default: none)),
+        applying-cell(a.at("applying_label", default: none)),
       )).flatten(),
     )
   }
