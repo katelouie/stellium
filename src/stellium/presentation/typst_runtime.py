@@ -73,11 +73,19 @@ THEME_WHEEL = {
 
 
 def _gloss_to_loc(obj: Any) -> str:
-    """json.dump ``default`` — a Gloss serializes to its localized display mask (.loc)."""
-    from stellium.i18n import Gloss
+    """json.dump ``default`` for the Typst data contract.
+
+    A ``Gloss`` serializes to its localized display mask (``.loc``). A stray unresolved
+    token (``Term``/``Message``) — data that skipped the resolve pass, as the planner's
+    can — degrades to its English identity rather than crashing the render; that is the
+    safe fallback, and it is visible (English) so the completeness oracle can flag it.
+    """
+    from stellium.i18n import Gloss, Message, Term, render
 
     if isinstance(obj, Gloss):
         return obj.loc
+    if isinstance(obj, (Term, Message)):
+        return render(obj, "en")
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 

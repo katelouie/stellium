@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | **In progress.** Steps 1–2 landed (dispatch + planet table); the **`Gloss`** primitive (§4) is built and spiked. The resolve-pass reshape onto `Gloss` (steps 3–5) is next. |
+| **Status** | **Substantially landed.** Steps 1–5 done: dispatch, the **`Gloss`** reshape (§4), and every bespoke section (planet table, aspect list + aspectarian legend, moon phase, snapshot) plus the generic tables and chrome now localize in the PDF, English byte-identical. Remaining English in a zh PDF is the separate per-cell **tokenization axis** (dispositors, aspect-pattern details — §3 Non-Goals) and empty-state help text that shows Python code. |
 | **Created** | 2026-07-15 |
 | **Owner** | Kate |
 | **Type** | Spec-Driven Development (SDD) design doc |
