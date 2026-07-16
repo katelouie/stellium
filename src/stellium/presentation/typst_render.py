@@ -15,7 +15,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
-from stellium.i18n import display, format_date, format_time, msg, render, term
+from stellium.i18n import Gloss, display, format_date, format_time, msg, render, term
 from stellium.presentation.typst_runtime import (
     THEME_LABELS,
     THEME_WHEEL,
@@ -314,35 +314,51 @@ def _planet_positions(name: str, d: dict[str, Any]) -> dict | None:
 
 
 def _moon_phase(name: str, d: dict[str, Any]) -> dict | None:
-    """Build the rich moon-phase block from the section's key/value data."""
+    """Build the rich moon-phase block from the section's key/value data.
+
+    Ordered and emphasized by the field's **English identity** (`.en`), while the label and
+    value carry their localized `.loc` mask — no hardcoded English, no lookup-by-localized
+    key (the bug this section had before Gloss). See the Unified Renderer Contract.
+    """
     data = d.get("data", {})
     if not data:
         return None
 
-    def get(*keys):
-        for k in keys:
-            if k in data:
-                return display(data[k])
-        return None
+    # Index the glossed key/value pairs by English identity.
+    by_en = {(k.en if isinstance(k, Gloss) else k): (k, v) for k, v in data.items()}
 
-    phase = (get("Phase Name", "Phase") or "Moon").split(" (")[0]
-    fields: list[list] = []
-    illum = get("Illumination")
-    direction = get("Direction")
-    if illum:
-        fields.append(["Illumination", illum, True])
-    if direction:
-        fields.append(["Direction", direction, True])
-    for label, keys in (
-        ("Phase Angle", ("Phase Angle",)),
-        ("Sun–Moon Sep.", ("Sun-Moon Separation", "Sun–Moon Separation")),
-        ("App. Magnitude", ("Apparent Magnitude",)),
-        ("App. Diameter", ("Apparent Diameter",)),
-        ("Geocentric Parallax", ("Geocentric Parallax",)),
-    ):
-        val = get(*keys)
-        if val:
-            fields.append([label, val])
+    # English abbreviations for the narrow column. A *translated* label (its .loc differs
+    # from its .en) is already short and is used verbatim; only the English display, where
+    # .loc == .en, is abbreviated.
+    short = {
+        "Sun-Moon Separation": "Sun–Moon Sep.",
+        "Apparent Magnitude": "App. Magnitude",
+        "Apparent Diameter": "App. Diameter",
+    }
+
+    def field(en_key: str, *, emphasize: bool = False) -> list | None:
+        pair = by_en.get(en_key)
+        if pair is None:
+            return None
+        key, value = pair  # key/value are Glosses (or plain str) → encoder emits .loc
+        label: Any = key
+        if isinstance(key, Gloss) and key.loc == key.en and en_key in short:
+            label = short[en_key]
+        return [label, value, True] if emphasize else [label, value]
+
+    phase_pair = by_en.get("Phase Name") or by_en.get("Phase")
+    phase = display(phase_pair[1]).split(" (")[0] if phase_pair else "Moon"
+
+    ordered = [
+        field("Illumination", emphasize=True),
+        field("Direction", emphasize=True),
+        field("Phase Angle"),
+        field("Sun-Moon Separation"),
+        field("Apparent Magnitude"),
+        field("Apparent Diameter"),
+        field("Geocentric Parallax"),
+    ]
+    fields = [f for f in ordered if f]
     if not fields:
         return None
     return {"kind": "moon_phase", "title": name, "phase": phase, "fields": fields}
