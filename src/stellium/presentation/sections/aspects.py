@@ -420,6 +420,11 @@ class AspectSection:
                 "orb": msg("Orb"),
                 "applying": msg("Applying"),
             },
+            # The colour-code legend: canonical key (glyph/colour) + localized label.
+            "legend": [
+                {"key": a, "label": term(f"aspect.{a}")}
+                for a in ("Conjunction", "Sextile", "Square", "Trine", "Opposition")
+            ],
         }
 
     def _generate_single_chart_with_aspectarian(
@@ -454,6 +459,7 @@ class AspectSection:
                 "aspectarian": {
                     "bodies": table_data.get("bodies", []),
                     "cells": table_data.get("aspect_pairs", []),
+                    "legend": table_data.get("legend", []),
                 },
             }
             return {

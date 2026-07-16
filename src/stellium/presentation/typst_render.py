@@ -396,6 +396,7 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
             "title": name,
             "bodies": ac["bodies"],
             "cells": ac.get("cells", []),
+            "legend": ac.get("legend", []),
         }
     # Structured aspect list (the "Aspect List" subsection carries aspect_pairs).
     if d.get("aspect_pairs") is not None:

@@ -344,16 +344,21 @@
   }
 
   // --- aspect colour-code legend ---------------------------------------------
-  let aspect-legend() = {
-    let items = (
-      ("Conjunction", "Conj"), ("Sextile", "Sextile"), ("Square", "Square"),
-      ("Trine", "Trine"), ("Opposition", "Opp"),
-    )
+  // items: (key, label) records — key is the canonical aspect name (glyph/colour), label
+  // the localized display. Falls back to a fixed English set if none are provided.
+  let aspect-legend(items) = {
+    if items == none or items.len() == 0 {
+      items = (
+        (key: "Conjunction", label: "Conj"), (key: "Sextile", label: "Sextile"),
+        (key: "Square", label: "Square"), (key: "Trine", label: "Trine"),
+        (key: "Opposition", label: "Opp"),
+      )
+    }
     grid(
       columns: items.len() * (auto,),
       column-gutter: 16pt,
       ..items.map(it => box[
-        #aspect-mark(it.at(0), size: 11pt) #h(3pt) #text(font: body, size: 9pt, fill: muted)[#it.at(1)]
+        #aspect-mark(it.key, size: 11pt) #h(3pt) #text(font: body, size: 9pt, fill: muted)[#it.label]
       ]),
     )
   }

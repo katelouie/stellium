@@ -108,7 +108,7 @@
     stack(
       spacing: 14pt,
       (c.aspectarian)(sec.bodies, sec.cells),
-      (c.aspect-legend)(),
+      (c.aspect-legend)(sec.at("legend", default: ())),
     )
   } else if kind == "aspect_list" {
     (c.aspect-list)(sec.aspects, labels: sec.at("labels", default: (:)))
