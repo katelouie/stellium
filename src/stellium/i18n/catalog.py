@@ -81,14 +81,45 @@ SECTS: tuple[str, ...] = ("Day", "Night")
 
 ASPECT_MOTIONS: tuple[str, ...] = ("Applying", "Separating")
 
-# The cardinal coordinate directions. Their English *is* the single letter a chart prints
+# The cardinal directions, in two registers. The single letters are what a chart prints
 # after a latitude/longitude ("47.60°N"); a locale translates the letter and reorders it
-# via the format.latitude / format.longitude pattern (Chinese writes "北47.60°").
-DIRECTIONS: tuple[str, ...] = ("N", "S", "E", "W")
+# via the format.latitude / format.longitude pattern (Chinese writes "北47.60°"). The full
+# words are what a table spells out (the declination column's North/South); a locale that
+# translates the letter almost always wants the word too, so both share the namespace.
+DIRECTIONS: tuple[str, ...] = (
+    "N",
+    "S",
+    "E",
+    "W",
+    "North",
+    "South",
+    "East",
+    "West",
+)
 
 # Elemental polarity, as the report's snapshot names it. "Yang"/"Yin" are the attested
 # terms even in English astrology; a Chinese chart renders them with the native 陽/陰.
 POLARITIES: tuple[str, ...] = ("Yang", "Yin", "Balanced")
+
+# Aspect-pattern names, as the pattern engine emits them (engines/patterns.py) plus the
+# forms the locales already carry. No registry owns these, so — like SIGNS — this module
+# is their home. "Mixed" is the qualifier a pattern gets when its planets span more than
+# one element or quality, so it belongs here beside the shape names.
+PATTERNS: tuple[str, ...] = (
+    "Cradle",
+    "Grand Cross",
+    "Grand Sextile",
+    "Grand Trine",
+    "Kite",
+    "Minor Grand Trine",
+    "Mystic Rectangle",
+    "Rectangle",
+    "Star of David",
+    "Stellium",
+    "T-Square",
+    "Yod",
+    "Mixed",
+)
 
 
 def _house_short_forms() -> dict[str, str]:
@@ -134,6 +165,7 @@ def build_catalog() -> dict[str, str]:
         ("aspect_motion", ASPECT_MOTIONS),
         ("direction", DIRECTIONS),
         ("polarity", POLARITIES),
+        ("pattern", PATTERNS),
     ):
         for name in names:
             catalog[f"{namespace}.{name}"] = name

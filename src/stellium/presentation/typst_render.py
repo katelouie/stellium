@@ -324,7 +324,7 @@ def _planet_positions(name: str, d: dict[str, Any]) -> dict | None:
     return {
         "kind": "planet_positions",
         "title": name,
-        "house_headers": [str(h) for h in d.get("house_headers", [])],
+        "house_headers": [display(h) for h in d.get("house_headers", [])],
         "show_speed": bool(d.get("show_speed", True)),
         "planets": planets,
         "labels": d.get("labels", {}),  # localized column headers (Planet/Position/…)

@@ -193,11 +193,13 @@ class DeclinationSection:
             minutes = int((dec_abs % 1) * 60)
             dec_str = f"{degrees}°{minutes:02d}'"
 
-            # Direction (North/South)
-            direction = msg(obj.declination_direction.title())
+            # Direction (North/South) — a catalog term, so it localizes and is
+            # coverage-tracked (the locale already carries direction.North etc.).
+            direction = term(f"direction.{obj.declination_direction.title()}")
 
-            # Status - mark out-of-bounds planets
-            status = "OOB ⚠" if obj.is_out_of_bounds else ""
+            # Status - mark out-of-bounds planets. "OOB" is an astrology abbreviation
+            # (out of bounds); it is a message so a locale can render it natively.
+            status: Any = msg("{oob} ⚠", oob=msg("OOB")) if obj.is_out_of_bounds else ""
 
             rows.append([planet_label, dec_str, direction, status])
 

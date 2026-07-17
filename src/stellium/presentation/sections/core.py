@@ -18,7 +18,6 @@ from stellium.i18n import msg, term
 from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 from ._utils import (
-    abbreviate_house_system,
     get_object_display,
     get_object_sort_key,
     get_sign_glyph,
@@ -331,18 +330,16 @@ class PlanetPositionSection:
         # thing the old substring translator could never localize (it matched whole cells,
         # not fragments), so it becomes a message with the system as a short-form term.
         headers: list[Any] = ["Planet", "Position"]
-        house_headers: list[str] = []
+        # The structured (PDF) planet table shows a narrow per-system column; its header is
+        # the short-form house term, which localizes (Placidus -> "Pl" / "普") instead of
+        # the raw English abbreviation the Typst renderer used to print verbatim.
+        house_headers: list[Any] = []
 
         if self.include_house and systems_to_show:
             for system_name in systems_to_show:
-                abbrev = abbreviate_house_system(system_name)
-                headers.append(
-                    msg(
-                        "House ({system})",
-                        system=term(f"house_system.{system_name}", short=True),
-                    )
-                )
-                house_headers.append(abbrev)
+                short_term = term(f"house_system.{system_name}", short=True)
+                headers.append(msg("House ({system})", system=short_term))
+                house_headers.append(short_term)
 
         if self.include_speed:
             headers.append("Speed")

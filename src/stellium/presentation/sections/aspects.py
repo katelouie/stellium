@@ -26,6 +26,12 @@ from ._utils import (
 )
 
 
+def _eq(value: str, namespace: str) -> Any:
+    """An element/quality term, routing the multi-element "Mixed" qualifier to the
+    pattern namespace (it is not a real element or modality)."""
+    return term("pattern.Mixed") if value == "Mixed" else term(f"{namespace}.{value}")
+
+
 class AspectPatternSection:
     """
     Table of detected aspect patterns.
@@ -143,8 +149,8 @@ class AspectPatternSection:
         for pattern in patterns:
             row: list[Any] = []
 
-            # Pattern name (a message; the pattern.* namespace is optional/forward-looking)
-            row.append(msg(pattern.name))
+            # Pattern name — a catalog term (pattern.* namespace).
+            row.append(term(f"pattern.{pattern.name}"))
 
             # Planets involved — catalog terms with glyphs; a list renders comma-joined.
             row.append(
@@ -154,36 +160,39 @@ class AspectPatternSection:
                 ]
             )
 
-            # Element / Quality (catalog element and modality terms)
+            # Element / Quality. A pattern spanning several elements/qualities is "Mixed",
+            # which lives in the pattern namespace (not element/modality). _eq() routes it.
             if pattern.element and pattern.quality:
                 row.append(
                     msg(
                         "{elem} / {qual}",
-                        elem=term(f"element.{pattern.element}"),
-                        qual=term(f"modality.{pattern.quality}"),
+                        elem=_eq(pattern.element, "element"),
+                        qual=_eq(pattern.quality, "modality"),
                     )
                 )
             elif pattern.element:
-                row.append(term(f"element.{pattern.element}"))
+                row.append(_eq(pattern.element, "element"))
             elif pattern.quality:
-                row.append(term(f"modality.{pattern.quality}"))
+                row.append(_eq(pattern.quality, "modality"))
             else:
                 row.append("—")
 
-            # Details (count + focal planet if applicable)
-            details = []
-            details.append(f"{len(pattern.planets)} planets")
+            # Details (count + focal planet if applicable) — a list of tokens the resolve
+            # pass renders and comma-joins, so every label localizes.
+            details: list[Any] = [msg("{n} planets", n=len(pattern.planets))]
 
             # Check for focal/apex planet
             focal = pattern.focal_planet
             if focal:
-                focal_display, focal_glyph = get_object_display(focal.name)
-                if focal_glyph:
-                    details.append(f"Apex: {focal_glyph} {focal_display}")
-                else:
-                    details.append(f"Apex: {focal_display}")
+                _, focal_glyph = get_object_display(focal.name)
+                details.append(
+                    msg(
+                        "Apex: {planet}",
+                        planet=glyph_label(focal_glyph, f"body.{focal.name}"),
+                    )
+                )
 
-            row.append(", ".join(details))
+            row.append(details)
 
             rows.append(row)
 
