@@ -608,6 +608,11 @@ class MarkdownRenderer:
                 parts.append(self._render_key_value(sub_data))
             elif sub_type == "text":
                 parts.append(sub_data.get("content", sub_data.get("text", "")))
+            elif sub_type == "compound":
+                # Nested compound (e.g. the ZR snapshot's inner sections).
+                parts.append(self._render_compound(sub_data))
+            elif sub_type == "side_by_side_tables":
+                parts.append(self._render_side_by_side_tables(sub_data))
             else:
                 parts.append(f"*Unknown type: {sub_type}*")
             parts.append("")
