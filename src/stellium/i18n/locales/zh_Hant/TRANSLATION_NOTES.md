@@ -167,3 +167,14 @@ columns. Both practices are attested — 爱星盘 translates them (上升/中�
 translated, **MC = 中天** (天頂 is an accepted synonym, common in TW / 占星之門) and
 **IC = 天底**. One caveat the pass flagged: the attested Latin abbreviation for the
 descendant is **DES**, not DSC; DSC is kept here by project decision.
+
+### Long-tail section pass (moon, declination, placements, aspect patterns, dispositors, ZR)
+
+Same additions as the zh_CN pass (see that file's table), in Traditional characters:
+定位星 / 互容 / 定位鏈 / 第{n}宮 / 出界 / 相位角 / 日月角距 / 混合 / 頂點 / 主要時期 / 當前狀態 …
+Date-order overrides `{year}年{month}` and `{month}{day}日`.
+
+**FLAGGED FOR EXPERT REVIEW** — the Hellenistic ZR role codes (S.Ben→宗吉, C.Mal→逆凶,
+S.Lgt→宗光, …) and status markers (★ 巔峰（第10宮）, 角宮, 鬆綁) are conservative
+best-effort with LOW confidence; they need a Hellenistic-literate reviewer. Tokenized so
+they can be corrected in the JSON.

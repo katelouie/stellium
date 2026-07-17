@@ -248,3 +248,36 @@ columns — 爱星盘 translates them (上升/中天/下降/天底) but keeping 
 is standard and attested. If ever translated, **MC = 中天** (天顶 an accepted synonym) and
 **IC = 天底**. Caveat flagged by the pass: the attested Latin abbreviation for the
 descendant is **DES**, not DSC; DSC is kept here by project decision.
+
+### Long-tail section pass (moon, declination, placements, aspect patterns, dispositors, ZR)
+
+Tokenizing report sections that still fell back to English. Confident terms:
+
+| Key | Value | Note |
+|---|---|---|
+| `message.Phase Angle` | 相位角 | Moon phase. |
+| `message.Sun-Moon Separation` | 日月角距 | Angular separation Moon−Sun. |
+| `message.OOB` | 出界 | Declination out-of-bounds (越界/超界 also seen). |
+| `direction.North/South/East/West` | 北/南/东/西 | Full-word directions (declination column); the single letters N/S/E/W already existed. |
+| `pattern.Mixed` | 混合 | Multi-element/quality aspect pattern qualifier. |
+| `message.{n} planets` / `Apex: {planet}` | {n}颗行星 / 顶点：{planet} | Aspect-pattern Details column. |
+| `message.Dispositors` (+ Planetary/House/Graph) | 定位星 … | 定位星 is the standard term for dispositor. |
+| `message.Mutual Receptions:` / `Disposition Chains:` | 互容： / 定位链： | |
+| `message.House {n}` | 第{n}宫 | |
+| ZR labels (`Current State`, `Major Periods`, `L3/L4 Context`, `Active Rulers`, …) | 当前状态 / 主要时期 / L3 背景 … | |
+| `message.{month} {year}` / `{month} {day}` | {year}年{month} / {month}{day}日 | Date-order overrides so partial dates read natively (1920年三月). |
+| `message.{v} rad` / `{v}°/day` | {v} 弧度 / {v}°/天 | Units. |
+
+**FLAGGED FOR EXPERT REVIEW — Hellenistic ZR jargon (conservative best-effort, low confidence):**
+
+| Key | Value | Note |
+|---|---|---|
+| `message.S.Ben / C.Ben` | 宗吉 / 逆吉 | sect / contrary benefic. "sect" (of/contrary to the sect) has no settled Chinese rendering; 宗 vs 逆 is a guess. |
+| `message.S.Mal / C.Mal` | 宗凶 / 逆凶 | sect / contrary malefic. |
+| `message.S.Lgt / C.Lgt` | 宗光 / 逆光 | sect / contrary light (luminary). |
+| `message.★ Peak (10th)` / `Angular` | ★ 巅峰（第10宫） / 角宫 | ZR period status. |
+| `message.Loosing of Bond` | 松绑 | 解绑 also plausible; astrology-specific (λύσις). |
+
+These six role codes and the ZR status markers need a Hellenistic-astrology-literate
+reviewer; they were tokenized (so they *can* be fixed in the JSON) but the Chinese is
+not attested. Until reviewed, treat as provisional.
