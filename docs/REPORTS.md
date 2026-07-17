@@ -1641,18 +1641,18 @@ Essential Dignities
 ┏━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Planet    ┃ Traditional Dignities                     ┃ Modern Dignities                         ┃
 ┡━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ☉ Sun     │ peregrine                                 │ peregrine                                │
-│ ☽ Moon    │ peregrine                                 │ peregrine                                │
-│ ☿ Mercury │ peregrine                                 │ peregrine                                │
-│ ♀ Venus   │ detriment, peregrine                      │ detriment_modern, peregrine              │
-│ ♂ Mars    │ exaltation, exaltation_exact,             │ exaltation, exaltation_exact,            │
-│           │ participating_ruler, term                 │ triplicity_participating, term           │
-│ ♃ Jupiter │ participating_ruler                       │ triplicity_participating                 │
-│ ♄ Saturn  │ participating_ruler, fall                 │ triplicity_participating, fall           │
-│ ♅ Uranus  │ —                                         │ peregrine                                │
-│ ♆ Neptune │ —                                         │ peregrine                                │
-│ ♇ Pluto   │ —                                         │ detriment_modern, peregrine              │
-│ ⚷ Chiron  │ —                                         │ peregrine                                │
+│ ☉ Sun     │ Peregrine                                 │ Peregrine                                │
+│ ☽ Moon    │ Peregrine                                 │ Peregrine                                │
+│ ☿ Mercury │ Peregrine                                 │ Peregrine                                │
+│ ♀ Venus   │ Detriment, Peregrine                      │ Detriment_Modern, Peregrine              │
+│ ♂ Mars    │ Exaltation, Exaltation_Exact,             │ Exaltation, Exaltation_Exact,            │
+│           │ Participating_Ruler, Term                 │ Triplicity_Participating, Term           │
+│ ♃ Jupiter │ Participating_Ruler                       │ Triplicity_Participating                 │
+│ ♄ Saturn  │ Participating_Ruler, Fall                 │ Triplicity_Participating, Fall           │
+│ ♅ Uranus  │ —                                         │ Peregrine                                │
+│ ♆ Neptune │ —                                         │ Peregrine                                │
+│ ♇ Pluto   │ —                                         │ Detriment_Modern, Peregrine              │
+│ ⚷ Chiron  │ —                                         │ Peregrine                                │
 └───────────┴───────────────────────────────────────────┴──────────────────────────────────────────┘
 
 Dispositors

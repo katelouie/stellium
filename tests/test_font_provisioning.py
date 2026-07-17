@@ -193,4 +193,6 @@ def test_shipped_manifest_is_valid_and_matches_the_paths():
     for script, pack in packs.items():
         assert pack["fonts"], f"{script} has no fonts"
         assert all("sha256" in f and "asset" in f for f in pack["fonts"])
-        assert pack["install_dir"].endswith(f"fonts/{script}")
+        # install_dir is an OS-native path (str(pack_dir)); compare on path
+        # components, not a hardcoded "/", so this holds on Windows too.
+        assert Path(pack["install_dir"]).parts[-2:] == ("fonts", script)
