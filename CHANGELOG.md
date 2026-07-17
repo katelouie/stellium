@@ -13,12 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Reports and charts render in another language.** `ReportBuilder().with_locale("zh_CN")`
   and `chart.draw().with_locale("zh_CN")` translate the *content* — planets, signs,
-  aspects, house systems, dates. On the wheel this covers the header and info corners, the
-  **PDF cover page and snapshot**, and the **position and house-cusp tables**; the wheel
-  body and the aspectarian are glyphs and stay language-neutral. Values that read in a
+  aspects, house systems, dates. This covers **both output paths**: the terminal/markdown/
+  HTML report *and* the Typst **PDF** — cover page, snapshot, planet-positions table, aspect
+  list, aspectarian legend, moon phase, chart overview, and the house-cusp/generic tables.
+  On the SVG wheel it covers the header, info corners, and extended tables; the wheel body
+  and the aspectarian grid are glyphs and stay language-neutral. Values that read in a
   locale-specific order are laid out, not word-swapped: a Chinese chart reads `1879年3月14日`
   for a date and `北緯48.40°` for a latitude, not a reordered English string. English output
-  is unchanged.
+  is byte-identical.
 
   ```python
   ReportBuilder().from_chart(chart).with_locale("zh_Hant_TW").render()
@@ -67,6 +69,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Sections emit structured data**, and renderers compose the display strings — so the
   Typst PDF theme (and future consumers) can style semantic fields instead of parsing a
   formatted string. Every report section now carries this structure.
+
+- **One localization pass, every renderer.** Introduced `Gloss` — a resolved concept
+  carrying its English identity (`.en`) beside its localized presentation (`.loc`) — so the
+  resolve pass localizes once and every renderer, the PDF one included, reads the same
+  data: machinery matches on identity (locale-invariant), and each renderer flips the mask
+  on at its display edge. This is what closed the gap where a localized report was correct
+  as markdown but leaked English as a PDF.
 
 ### Changed
 
