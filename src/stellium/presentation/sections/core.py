@@ -424,7 +424,8 @@ class PlanetPositionSection:
             )
             row: list[Any] = [name_cell, position_cell, *p["houses"]]
             if self.include_speed:
-                row.append(f"{p['speed_value']:.4f}°/day")
+                # "°/day" is a unit; a message so a locale can render "day" (天).
+                row.append(msg("{v}°/day", v=f"{p['speed_value']:.4f}"))
                 # Text view uses the full motion word, not the column abbreviation.
                 row.append(term(f"motion.{'Retrograde' if p['retro'] else 'Direct'}"))
             rows.append(row)

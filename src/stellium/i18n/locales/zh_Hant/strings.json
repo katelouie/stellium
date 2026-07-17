@@ -638,6 +638,8 @@
     "{ruler}-ruled": "{ruler}守護",
     "{sect} Chart": "{sect}盤",
     "{value}°{hemisphere}": "{hemisphere}{value}°",
+    "{v} rad": "{v} 弧度",
+    "{v}°/day": "{v}°/天",
     "◆ Angular ({angle})": "◆ 角宮（{angle}）",
     "★ Peak (10th)": "★ 巔峰（第10宮）",
     "★ Peak Period": "★ 巔峰期",

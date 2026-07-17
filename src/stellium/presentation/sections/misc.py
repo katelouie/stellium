@@ -116,7 +116,8 @@ class MoonPhaseSection:
             "Direction": msg("Waxing") if phase.is_waxing else msg("Waning"),
             "Apparent Magnitude": f"{phase.apparent_magnitude:.2f}",
             "Apparent Diameter": f"{phase.apparent_diameter:.1f}″",
-            "Geocentric Parallax": f"{phase.geocentric_parallax:.4f} rad",
+            # "rad" (radians) is a unit; a message so a locale can render it (弧度).
+            "Geocentric Parallax": msg("{v} rad", v=f"{phase.geocentric_parallax:.4f}"),
         }
 
         if separation is not None:
