@@ -57,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The element/modality table on charts is now glyph-based.** The column headers use the Cardinal/Fixed/Mutable glyphs and each row its element symbol, rather than the words "Card/Fix/Mut" and two-letter abbreviations — so the table reads the same in every language and needs no translation.
 - **Essential-dignity names are capitalized** in the `show_details` view — "Peregrine, Detriment" rather than "peregrine, detriment", the standard convention (the lowercase was the engine's internal form leaking into display). Compound dignities now read as "Exaltation (exact)" / "Participating Ruler" / "Triplicity (participating)" rather than the raw `Exaltation_Exact` / `Participating_Ruler` keys.
 - **Every house system has a distinct short-form abbreviation.** A 4-character truncating fallback previously collided — `Equal (MC)` and `Equal (Vertex)` both rendered as `Equa`; they are now `EqMC` and `EqVx`.
+- **PDF table zebra stripes now full-bleed to the panel edge.** The alternating row shading in the planet table, full-width long-tail tables, and the aspect list stopped 18pt short on both sides, leaving an inset gutter; the fill now runs edge to edge while the text stays aligned with the section header. The aspectarian gets a much subtler per-theme `zebra_faint` band on alternating planet rows — enough to track a row across, not enough to fight the aspect glyphs.
 
 ### Fixed
 
