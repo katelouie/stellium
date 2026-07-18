@@ -55,8 +55,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (dates laid out per locale, e.g. `1920年三月`), midpoints, and fixed stars now render in
   the target language. Sections that had only ever localized via a legacy substring bridge
   (bare-name lookups) now emit catalog terms directly, so they survive that bridge's
-  eventual removal; a `star_keyword` translation-data run is the remaining gap (keywords are
-  tokenized but not yet translated). English output stays byte-identical.
+  eventual removal. The Chinese renderings for the fixed-star interpretive keywords and the
+  zodiacal-releasing Hellenistic vocabulary (sect benefics/malefics, luminaries, Loosing of
+  the Bond, peak periods) come from sourced research — the ZR terms use the transparent
+  區分內/區分外 (in-/out-of-sect) system, replacing an earlier machine draft whose 逆光 for
+  "contrary light" literally read as photographic "backlight." Resolved coverage now runs
+  zh_CN 90% / zh_Hant 96% / zh_Hant_TW·HK 98%. English output stays byte-identical.
 
 **Fonts for non-Latin charts**
 
