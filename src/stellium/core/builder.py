@@ -75,10 +75,13 @@ class ChartBuilder:
         self._location = location
         self.native = native  # Store Native for reference
 
-        # Default engines (can be overridden)
+        # Default engines (can be overridden). Aspects are on by default — like the
+        # ephemeris, houses and orbs — because a natal chart without them is a
+        # surprise; `.without_aspects()` opts out (batch/analysis that never reads
+        # `chart.aspects`).
         self._ephemeris: EphemerisEngine = SwissEphemerisEngine()
         self._house_engines: list[HouseSystemEngine] = [PlacidusHouses()]
-        self._aspect_engine: AspectEngine | None = None  # optional
+        self._aspect_engine: AspectEngine | None = ModernAspectEngine()
         self._orb_engine: OrbEngine = SimpleOrbEngine()
 
         # Configuration
@@ -338,8 +341,22 @@ class ChartBuilder:
         return self
 
     def with_aspects(self, engine: AspectEngine | None = None) -> "ChartBuilder":
-        """Set the aspect calculation engine."""
+        """Set the aspect calculation engine.
+
+        Aspects are computed by default (with :class:`ModernAspectEngine`), so call
+        this only to supply a *different* engine. To turn aspects off, use
+        :meth:`without_aspects`.
+        """
         self._aspect_engine = engine or ModernAspectEngine()
+        return self
+
+    def without_aspects(self) -> "ChartBuilder":
+        """Skip aspect calculation, leaving ``chart.aspects`` empty.
+
+        Aspects are on by default. Opt out when you never read them — batch position
+        analysis, ephemeris sweeps — to save the O(n²) pairwise pass.
+        """
+        self._aspect_engine = None
         return self
 
     def with_orbs(self, engine: OrbEngine | None = None) -> "ChartBuilder":

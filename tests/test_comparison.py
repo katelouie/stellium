@@ -151,13 +151,16 @@ def test_internal_aspects_calculated_if_missing():
     """Test that internal aspects are calculated if charts don't have them."""
     loc = ChartLocation(latitude=40.7128, longitude=-74.0060, name="New York")
 
-    # Create charts WITHOUT aspects
+    # Create charts WITHOUT aspects (aspects are on by default now, so opt out).
     native_a = Native(datetime(1990, 1, 1, 12, 0, tzinfo=dt.UTC), loc)
-    chart_a_no_aspects = ChartBuilder.from_native(native_a).calculate()
-    # Note: Currently ChartBuilder doesn't calculate aspects by default (aspects OFF)
+    chart_a_no_aspects = (
+        ChartBuilder.from_native(native_a).without_aspects().calculate()
+    )
 
     native_b = Native(datetime(1995, 6, 15, 14, 30, tzinfo=dt.UTC), loc)
-    chart_b_no_aspects = ChartBuilder.from_native(native_b).calculate()
+    chart_b_no_aspects = (
+        ChartBuilder.from_native(native_b).without_aspects().calculate()
+    )
 
     # Verify charts don't have aspects
     assert len(chart_a_no_aspects.aspects) == 0

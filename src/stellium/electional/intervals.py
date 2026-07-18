@@ -603,7 +603,9 @@ def _find_voc_transition_in_sign(
         dt = _julian_day_to_datetime(jd)
         # Use a neutral location for VOC calculation (doesn't matter for Moon aspects)
         native = Native(dt, (0.0, 0.0))  # (latitude, longitude) tuple
-        chart = ChartBuilder.from_native(native).calculate()
+        # voc_moon computes its own forward-aspect scan and never reads chart.aspects,
+        # so skip the now-default aspect pass — this runs in a per-JD search loop.
+        chart = ChartBuilder.from_native(native).without_aspects().calculate()
         result = chart.voc_moon(aspects=mode)
         return result.is_void
 

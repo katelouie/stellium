@@ -53,6 +53,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Aspects are computed by default.** `ChartBuilder.from_native(native).calculate()` now populates `chart.aspects` (via `ModernAspectEngine`), matching the ephemeris, houses and orbs — all of which were already on by default. Previously aspects alone were opt-in, so a bare chart silently had `chart.aspects == []`, and a report's aspect list / aspectarian / patterns rendered empty unless you remembered `.with_aspects()`. **This changes results on upgrade**: code that relied on a bare chart having no aspects now sees them. Opt out with the new **`.without_aspects()`** where you never read them (batch position analysis, ephemeris sweeps) to skip the O(n²) pass; the built-in batch calculator and the void-of-course search already do.
+
 - **The element/modality table on charts is now glyph-based.** The column headers use the Cardinal/Fixed/Mutable glyphs and each row its element symbol, rather than the words "Card/Fix/Mut" and two-letter abbreviations — so the table reads the same in every language and needs no translation.
 - **Essential-dignity names are capitalized** in the `show_details` view — "Peregrine, Detriment" rather than "peregrine, detriment", the standard convention (the lowercase was the engine's internal form leaking into display). Compound dignities now read as "Exaltation (exact)" / "Participating Ruler" / "Triplicity (participating)" rather than the raw `Exaltation_Exact` / `Participating_Ruler` keys.
 - **Every house system has a distinct short-form abbreviation.** A 4-character truncating fallback previously collided — `Equal (MC)` and `Equal (Vertex)` both rendered as `Equa`; they are now `EqMC` and `EqVx`.
