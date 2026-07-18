@@ -26,6 +26,7 @@
   let hair = t.hair
   let panel = t.panel
   let zebra = t.zebra
+  let zebra-faint = t.zebra_faint
   let gridline = t.grid
   let laser = t.laser
   let display = t.display
@@ -116,9 +117,19 @@
 
   // --- section: star + tracked-caps title + hairline + optional descriptor ----
   // Wrapped in a full-width rounded panel (radius 12, 1px hair border).
+  // Full-bleed inset for a table row: the section pads its body by 18pt, so a table
+  // wrapped in pad(x: -18pt) reaches the panel edge; give its outer columns an 18pt
+  // inset so the *text* stays aligned with the section header while the zebra fill runs
+  // edge to edge. Interior columns keep the tight `gap` spacing.
+  let edge-inset(last, gap) = (x, y) => (
+    left: if x == 0 { 18pt } else { gap },
+    right: if x == last { 18pt } else { gap },
+    top: 7pt, bottom: 7pt,
+  )
+
   let section(title, body-content, descriptor: none) = {
     block(
-      width: 100%, breakable: true,
+      width: 100%, breakable: true, clip: true,
       fill: panel, radius: 12pt,
       stroke: 1pt + hair,
       inset: (x: 18pt, y: 16pt),
@@ -258,14 +269,14 @@
       rows.push(cells)
     }
 
-    table(
+    pad(x: -18pt, table(
       columns: col-spec,
       stroke: none,
-      inset: (x: 4pt, y: 7pt),
+      inset: edge-inset(col-spec.len() - 1, 4pt),
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..head-cells),
       ..rows.flatten(),
-    )
+    ))
   }
 
   // --- themed generic fallback table (long-tail sections) --------------------
@@ -283,21 +294,29 @@
     } else {
       (1fr,) * ncol
     }
+    // Full-width tables full-bleed the zebra to the panel edge (pad + edge inset);
+    // natural-width tables stay inset and centred, where full-bleed would look wrong.
     let tbl = table(
       columns: col-spec,
       stroke: none,
-      inset: (x: 8pt, y: 7pt),
+      inset: if full-width { edge-inset(ncol - 1, 8pt) } else { (x: 8pt, y: 7pt) },
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
       ..rows.map(r => r.map(cell => text(font: (body, ..symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
     )
-    if full-width { tbl } else { align(center)[#tbl] }
+    if full-width { pad(x: -18pt, tbl) } else { align(center)[#tbl] }
   }
 
   // --- aspectarian: lower-triangular aspect matrix ---------------------------
-  // bodies: ordered canonical names. cells: (p1, p2, aspect) dicts.
-  let aspectarian(bodies, cells) = {
+  // bodies: ordered canonical names. cells: (p1, p2, aspect, orb_grid, tightness,
+  // motion_short) dicts.
+  //   detailed: false → mode A: the aspect symbol only, with orb tightness encoded
+  //                     in the cell *border* — a tight (near-exact) orb gets a heavy
+  //                     dark border, a wide (near-limit) orb a dotted one.
+  //   detailed: true  → mode B: symbol over an orb + applying/separating line, with
+  //                     the same tightness border retained underneath.
+  let aspectarian(bodies, cells, detailed: false) = {
     let n = bodies.len()
     if n == 0 { return [] }
     let name-of(b) = if type(b) == dictionary { b.name } else { b }
@@ -309,10 +328,28 @@
       if i != none and j != none and i != j {
         let hi = calc.max(i, j)
         let lo = calc.min(i, j)
-        amap.insert(str(hi) + "_" + str(lo), cel.aspect)
+        amap.insert(str(hi) + "_" + str(lo), cel)
       }
     }
-    let cs = 21pt
+    // Mode B stacks two lines, so it needs a taller cell; mode A stays compact.
+    let cs = if detailed { 23pt } else { 21pt }
+    // Orb-tightness indicator. Encoded as an *inset ring* rather than the cell border:
+    // grid cells share edges, so a per-side border stroke gets overdrawn by the
+    // neighbouring cell's border (drawn later), leaving a muddy line and a ring that
+    // only shows on 2 of its 4 sides. An inset rect never touches a shared edge, so it
+    // renders cleanly and can't be clobbered. Solid accent = near-exact orb (the theme's
+    // identity colour — aubergine / gold / blue, not the near-black ink); dotted muted =
+    // near the orb limit; normal cells get no ring (just the uniform base gridline).
+    let tightness-ring(tier) = {
+      if tier == "tight" {
+        place(center + horizon, rect(
+          width: cs - 3pt, height: cs - 3pt, radius: 2pt, stroke: 1.1pt + accent))
+      } else if tier == "wide" {
+        place(center + horizon, rect(
+          width: cs - 3pt, height: cs - 3pt, radius: 2pt,
+          stroke: (paint: muted, thickness: 0.8pt, dash: "dotted")))
+      }
+    }
     let cell(i, j) = {
       if j == i {
         let b = bodies.at(i)
@@ -326,11 +363,31 @@
           )]
         ]
       } else if j < i {
-        let asp = amap.at(str(i) + "_" + str(j), default: none)
-        box(width: cs, height: cs, stroke: 0.5pt + gridline)[
-          #align(center + horizon)[#(if asp != none { aspect-mark(asp, size: 11pt) })]
+        let rec = amap.at(str(i) + "_" + str(j), default: none)
+        let tier = if rec != none { rec.at("tightness", default: "normal") } else { "normal" }
+        // Uniform base gridline on every triangle cell (shared edges are identical, so
+        // the doubling is invisible). Alternating-row band tracks the eye across a row.
+        box(width: cs, height: cs, stroke: 0.5pt + gridline,
+            fill: if calc.odd(i) { zebra-faint } else { none })[
+          #tightness-ring(tier)
+          #align(center + horizon)[#(if rec != none {
+            if detailed {
+              // astro.com-style: aspect glyph over its orb + applying/separating letter.
+              let orb = rec.at("orb_grid", default: rec.at("orb", default: none))
+              let mo = rec.at("motion_short", default: "")
+              stack(
+                dir: ttb, spacing: 0.5pt,
+                aspect-mark(rec.aspect, size: 9pt),
+                if orb != none { text(font: body, size: 5.5pt, fill: muted)[#orb#mo] },
+              )
+            } else {
+              aspect-mark(rec.aspect, size: 11pt)
+            }
+          })]
         ]
       } else {
+        // Empty upper-triangle cell: no band, so the zebra follows the triangle's
+        // staircase (stopping at the diagonal) instead of running the full row width.
         box(width: cs, height: cs)
       }
     }
@@ -346,7 +403,9 @@
   // --- aspect colour-code legend ---------------------------------------------
   // items: (key, label) records — key is the canonical aspect name (glyph/colour), label
   // the localized display. Falls back to a fixed English set if none are provided.
-  let aspect-legend(items) = {
+  // orb-tiers: optional (tier, label) records keying the aspectarian tightness rings —
+  // a small swatch of the same ring style (solid accent = tight, dotted muted = wide).
+  let aspect-legend(items, orb-tiers: ()) = {
     if items == none or items.len() == 0 {
       items = (
         (key: "Conjunction", label: "Conj"), (key: "Sextile", label: "Sextile"),
@@ -354,12 +413,32 @@
         (key: "Opposition", label: "Opp"),
       )
     }
+    // A miniature of the cell ring. Vertical alignment is handled by the grid's
+    // `align: horizon` (below), which centres every entry in the row — so the glyph
+    // entries and the ring entries line up regardless of their differing box heights.
+    let ring-swatch(tier) = if tier == "tight" {
+      rect(width: 11pt, height: 11pt, radius: 2pt, stroke: 1.1pt + accent)
+    } else {
+      rect(width: 11pt, height: 11pt, radius: 2pt,
+        stroke: (paint: muted, thickness: 0.8pt, dash: "dotted"))
+    }
+    // Both entry kinds share one construction — a 2-column horizon-aligned grid of
+    // (symbol, label) — so an aspect glyph and a ring swatch centre identically in the
+    // outer row. (Mixing an inline box with a grid floated the rings a hair high.)
+    let aspect-boxes = items.map(it => grid(
+      columns: 2, column-gutter: 3pt, align: horizon,
+      aspect-mark(it.key, size: 11pt), text(font: body, size: 9pt, fill: muted)[#it.label],
+    ))
+    let tier-boxes = orb-tiers.map(it => grid(
+      columns: 2, column-gutter: 3pt, align: horizon,
+      ring-swatch(it.tier), text(font: body, size: 9pt, fill: muted)[#it.label],
+    ))
+    let all = aspect-boxes + tier-boxes
     grid(
-      columns: items.len() * (auto,),
+      columns: all.len() * (auto,),
       column-gutter: 16pt,
-      ..items.map(it => box[
-        #aspect-mark(it.key, size: 11pt) #h(3pt) #text(font: body, size: 9pt, fill: muted)[#it.label]
-      ]),
+      align: horizon,
+      ..all,
     )
   }
 
@@ -461,10 +540,10 @@
       if txt != none and txt != "" { text(font: body, size: 10pt, fill: muted)[#txt] }
       else { text(font: body, size: 10pt, fill: muted)[—] }
     }
-    table(
+    pad(x: -18pt, table(
       columns: (1.4fr, 1fr, 1.4fr, auto, auto),
       stroke: none,
-      inset: (x: 6pt, y: 6pt),
+      inset: edge-inset(4, 6pt),
       align: (col, row) => if col >= 3 { right + horizon } else { left + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(
@@ -480,7 +559,7 @@
         mono(a.at("orb", default: ""), size: 9.5pt, fill: muted),
         applying-cell(a.at("applying_label", default: none)),
       )).flatten(),
-    )
+    ))
   }
 
   // --- two tables side by side (comparison / multichart) ---------------------

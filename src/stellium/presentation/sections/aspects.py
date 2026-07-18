@@ -13,7 +13,7 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
-from stellium.core.registry import get_aspects_by_category
+from stellium.core.registry import get_aspect_info, get_aspects_by_category
 from stellium.i18n import msg, term
 
 from ._utils import (
@@ -393,6 +393,16 @@ class AspectSection:
             _p1d, p1g = _body_info(aspect.object1.name)
             _p2d, p2g = _body_info(aspect.object2.name)
             applying = aspect.is_applying
+            # Orb tightness *relative to the aspect's allowance* (a 1° conjunction and a
+            # 1° sextile are not equally tight in absolute terms). Drives the aspectarian
+            # cell border: tight → heavy/dark, wide → dashed. Uses the registry default
+            # orb as the allowance proxy; the exact per-pair allowance isn't on the Aspect.
+            _info = get_aspect_info(aspect.aspect_name)
+            _allow = _info.default_orb if _info and _info.default_orb else 8.0
+            _frac = aspect.orb / _allow if _allow else 0.0
+            tightness = (
+                "tight" if _frac <= 0.25 else "wide" if _frac >= 0.70 else "normal"
+            )
             pairs.append(
                 {
                     "p1": aspect.object1.name,  # canonical
@@ -404,6 +414,16 @@ class AspectSection:
                     "aspect": aspect.aspect_name,  # canonical — glyph/colour key
                     "aspect_label": term(f"aspect.{aspect.aspect_name}"),  # display
                     "orb": f"{aspect.orb:.2f}°",
+                    # Compact orb for the aspectarian grid cell (1 decimal reads cleanly
+                    # under the glyph at ~6pt; the 2-decimal `orb` stays for the list).
+                    "orb_grid": f"{aspect.orb:.1f}°",
+                    # Orb-tightness tier for the mode-A cell border.
+                    "tightness": tightness,
+                    # A/S shorthand for the detailed (mode-B) cell — astrological
+                    # convention (astro.com uses a/s); ASCII by design, not localized.
+                    "motion_short": (
+                        "" if applying is None else "a" if applying else "s"
+                    ),
                     "applying": None if applying is None else bool(applying),
                     "applying_label": (
                         None
@@ -469,6 +489,14 @@ class AspectSection:
                     "bodies": table_data.get("bodies", []),
                     "cells": table_data.get("aspect_pairs", []),
                     "legend": table_data.get("legend", []),
+                    # Mode A (default): symbol only, tightness in the cell border.
+                    # Mode B (detailed): symbol + orb + A/S line.
+                    "detailed": self.aspectarian_detailed,
+                    # Legend keys for the tightness rings (solid = tight, dotted = wide).
+                    "orb_legend": [
+                        {"tier": "tight", "label": msg("Tight orb")},
+                        {"tier": "wide", "label": msg("Wide orb")},
+                    ],
                 },
             }
             return {

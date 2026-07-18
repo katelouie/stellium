@@ -64,7 +64,7 @@ If you've used React (composable, plug-and-play components) or PyTorch (sensible
 - **Electional astrology** - Find auspicious times with 30+ predicates, interval optimization, and planetary hours
 - **Heliocentric positions**
 - **Antiscia and contra-antiscia** with a dedicated report section
-- **Beautiful visualizations** with professional SVG chart rendering and **14 themes**
+- **Beautiful visualizations** with professional SVG chart rendering and **15 themes**
 - **Beautiful Composable PDF or CLI reports** to show nitty-gritty details of the chart (see [this example](examples/reports/einstein_complete_report.pdf) for a subset of what's available)
 - **Localized reports** — render terminal, Markdown, HTML, and PDF reports in multiple languages (Simplified Chinese included) via `with_locale()`
 - **Notable births database** for quick exploration and learning. [Check out the current list](data/notables/INDEX.md)

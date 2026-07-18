@@ -107,8 +107,11 @@
   } else if kind == "aspectarian" {
     stack(
       spacing: 14pt,
-      (c.aspectarian)(sec.bodies, sec.cells),
-      (c.aspect-legend)(sec.at("legend", default: ())),
+      (c.aspectarian)(sec.bodies, sec.cells, detailed: sec.at("detailed", default: false)),
+      (c.aspect-legend)(
+        sec.at("legend", default: ()),
+        orb-tiers: sec.at("orb_legend", default: ()),
+      ),
     )
   } else if kind == "aspect_list" {
     (c.aspect-list)(sec.aspects, labels: sec.at("labels", default: (:)))

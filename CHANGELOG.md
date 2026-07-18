@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Three Chinese locales.** Simplified `zh_CN` (a native-speaker donation) plus a researched, sourced **Traditional** set: a shared `zh_Hant` base with `zh_Hant_HK` and `zh_Hant_TW` regional overrides for the ~13 terms that genuinely differ between Hong Kong and Taiwan usage. Unattested terms fall back to English rather than shipping invented ones; see each locale's `TRANSLATION_NOTES.md`.
 
 - **The web app's chart wheel follows its language too.** The web app already rendered its *report* in the selected language (via `report_locale()` → `ReportBuilder.with_locale()`); the drawn chart SVG did not, so a Chinese session showed a Chinese report beside an English wheel. Every `chart.draw()` in the app (natal, relationships, timing returns/composites, explore) now passes the same locale, so the wheel, header, info corners, and extended tables match the rest of the page.
+- **The web app offers Traditional Chinese.** Its language dropdown now includes 繁體中文（台灣）and （香港）alongside Simplified, driven by a `zh_Hant` base with a fallback chain mirroring the library (one file serves both regions until a genuinely divergent term appears). The app's own UI chrome was converted from the corrected `zh_CN` via OpenCC, fixing donor calques (热带黄道→回归黄道, 神之手→上帝之指) and two real mistranslations (`Sign Ingresses` 星座入相, which means an *applying aspect*, → 星座转换; `CHART OPTIONS` 图表选项 → 星盘选项). `report_locale()` threads the region through so generated reports follow.
 
 - **The locale toolkit.** `stellium i18n locales` shows every available language with its coverage, fallback chain and font status; `stellium i18n coverage <locale>` details one; `stellium i18n extract` emits a fill-in-the-blanks template. Adding a language means writing **one JSON file** — no code. Fallback resolves most-specific first (`zh_Hant_TW → zh_Hant → zh → en`), so a regional locale inherits and overrides only what differs, and a partial locale degrades to English.
 
@@ -51,17 +52,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **One localization pass, every renderer.** Introduced `Gloss` — a resolved concept carrying its English identity (`.en`) beside its localized presentation (`.loc`) — so the resolve pass localizes once and every renderer, the PDF one included, reads the same data: machinery matches on identity (locale-invariant), and each renderer flips the mask on at its display edge. This is what closed the gap where a localized report was correct as markdown but leaked English as a PDF.
 
+- **The PDF aspectarian shows orb strength.** Each cell in the aspect matrix now marks how tight the aspect is — *relative to that aspect's allowed orb*, so a 2° sextile reads as tighter than a 2° trine — with an inset ring: a solid **accent** ring for a near-exact orb, a dotted **muted** ring for one near the limit, both keyed in the legend (Tight orb / Wide orb). The ring colours are theme tokens, so they follow the palette (aubergine on house, gold on celestial, blue on blues…) rather than hardcoding a colour. `ReportBuilder().with_aspects(aspectarian_detailed=True)` additionally prints the orb and an applying/separating letter under each glyph, astro.com-style; the rings stay. English output unchanged.
+
+- **Cookbooks** — a new `examples/localization_cookbook.py` walks the two independent knobs (locale = which words, fonts = whether they render) across chart SVG/PNG and report PDF, and `examples/report_cookbook.py` gains an aspectarian recipe covering the tightness rings and the detailed mode.
+
 ### Changed
 
 - **The element/modality table on charts is now glyph-based.** The column headers use the Cardinal/Fixed/Mutable glyphs and each row its element symbol, rather than the words "Card/Fix/Mut" and two-letter abbreviations — so the table reads the same in every language and needs no translation.
 - **Essential-dignity names are capitalized** in the `show_details` view — "Peregrine, Detriment" rather than "peregrine, detriment", the standard convention (the lowercase was the engine's internal form leaking into display). Compound dignities now read as "Exaltation (exact)" / "Participating Ruler" / "Triplicity (participating)" rather than the raw `Exaltation_Exact` / `Participating_Ruler` keys.
 - **Every house system has a distinct short-form abbreviation.** A 4-character truncating fallback previously collided — `Equal (MC)` and `Equal (Vertex)` both rendered as `Equa`; they are now `EqMC` and `EqVx`.
+- **PDF table zebra stripes now full-bleed to the panel edge.** The alternating row shading in the planet table, full-width long-tail tables, and the aspect list stopped 18pt short on both sides, leaving an inset gutter; the fill now runs edge to edge while the text stays aligned with the section header. The aspectarian gets a much subtler per-theme `zebra_faint` band on alternating planet rows — enough to track a row across, not enough to fight the aspect glyphs.
 
 ### Fixed
 
 - **`zh_CN` rendered the planet Earth as the element** (`土象`) rather than `地球`, because the previous translation layer looked terms up by English string with no namespace, so `Earth` the body and `Earth` the element collided. Terms are now namespaced.
 - **The markdown/text report dropped a compound section nested in a compound**, rendering it as `*Unknown type: compound*` — the zodiacal-releasing snapshot hit this. The renderer now recurses (the PDF path already did), so the snapshot's inner tables render.
 - **`CalculationConfig.comprehensive()` silently omitted Hygiea** — Ceres, Pallas, Juno and Vesta all resolved, but Hygiea (the fourth-largest asteroid, fifth of the classical "big five") was absent. Its Swiss Ephemeris id was corrected in 0.22.0, so it now belongs in the set and computes.
+- **The greyscale (laser/B&W) PDF's chart wheel still printed colour** — retrograde markers came out red, and outer-wheel / multi-chart planets blue/green/purple, because it borrowed the `classic` visualization theme. There's now a proper **`greyscale` chart theme** (`chart.draw().with_theme("greyscale")`) that desaturates every ink colour into distinguishable greys; the greyscale PDF maps its wheel to it, so nothing reads as colour on a monochrome print.
 
 ## [0.22.0] - 2026-07-14
 

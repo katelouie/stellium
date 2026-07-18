@@ -29,6 +29,7 @@ class ChartTheme(StrEnum):
     PASTEL = "pastel"
     CELESTIAL = "celestial"
     ATLAS = "atlas"
+    GREYSCALE = "greyscale"
 
     # Data science themes
     VIRIDIS = "viridis"
@@ -49,6 +50,7 @@ THEME_DEFAULT_PALETTES = {
     ChartTheme.PASTEL: ZodiacPalette.RAINBOW,
     ChartTheme.CELESTIAL: ZodiacPalette.RAINBOW_CELESTIAL,
     ChartTheme.ATLAS: ZodiacPalette.RAINBOW,
+    ChartTheme.GREYSCALE: ZodiacPalette.GREY,
     # Data science themes
     ChartTheme.VIRIDIS: ZodiacPalette.VIRIDIS,
     ChartTheme.PLASMA: ZodiacPalette.PLASMA,
@@ -68,6 +70,7 @@ THEME_DEFAULT_ASPECT_PALETTES = {
     ChartTheme.PASTEL: AspectPalette.PASTEL,
     ChartTheme.CELESTIAL: AspectPalette.CELESTIAL,
     ChartTheme.ATLAS: AspectPalette.CLASSIC,
+    ChartTheme.GREYSCALE: AspectPalette.GREYSCALE,
     # Data science themes
     ChartTheme.VIRIDIS: AspectPalette.VIRIDIS,
     ChartTheme.PLASMA: AspectPalette.PLASMA,
@@ -87,6 +90,7 @@ THEME_DEFAULT_PLANET_PALETTES = {
     ChartTheme.PASTEL: PlanetGlyphPalette.DEFAULT,
     ChartTheme.CELESTIAL: PlanetGlyphPalette.DEFAULT,
     ChartTheme.ATLAS: PlanetGlyphPalette.DEFAULT,
+    ChartTheme.GREYSCALE: PlanetGlyphPalette.DEFAULT,
     # Data science themes
     ChartTheme.VIRIDIS: PlanetGlyphPalette.VIRIDIS,
     ChartTheme.PLASMA: PlanetGlyphPalette.PLASMA,
@@ -123,6 +127,8 @@ def get_theme_style(theme: ChartTheme) -> dict[str, Any]:
         return _get_celestial_theme()
     elif theme == ChartTheme.ATLAS:
         return _get_atlas_theme()
+    elif theme == ChartTheme.GREYSCALE:
+        return _get_greyscale_theme()
     elif theme == ChartTheme.VIRIDIS:
         return _get_viridis_theme()
     elif theme == ChartTheme.PLASMA:
@@ -716,6 +722,40 @@ def _get_atlas_theme() -> dict[str, Any]:
 # ============================================================================
 
 
+def _get_greyscale_theme() -> dict[str, Any]:
+    """Fully desaturated 'classic' — for laser / black-and-white printing.
+
+    Classic is already mostly grey; this greys the handful of ink colours it keeps — the
+    red retrograde marker, the blue outer-wheel planet, the secondary house-overlay tint,
+    and the blue/green/purple multi-chart series — into distinguishable greys, so nothing
+    reads as colour on a monochrome print. Paired with its default grey zodiac and
+    greyscale aspect palettes, the whole wheel prints in ink-free tones.
+    """
+    style = _get_classic_theme()
+    style["houses"].update(
+        {
+            "secondary_color": "#888888",
+            "chart2_fill_1": "#EDEDED",
+            "chart2_fill_2": "#F7F7F7",
+            "chart3_fill_1": "#E6E6E6",
+            "chart3_fill_2": "#F4F4F4",
+            "chart4_fill_1": "#DEDEDE",
+            "chart4_fill_2": "#F1F1F1",
+        }
+    )
+    style["planets"].update(
+        {
+            "retro_color": "#555555",
+            "outer_wheel_planet_color": "#777777",
+            "chart1_color": "#222222",
+            "chart2_color": "#5A5A5A",
+            "chart3_color": "#828282",
+            "chart4_color": "#AAAAAA",
+        }
+    )
+    return style
+
+
 def _get_viridis_theme() -> dict[str, Any]:
     """Viridis theme - perceptually uniform purple→green→yellow palette."""
     return {
@@ -1125,6 +1165,7 @@ def get_theme_description(theme: ChartTheme) -> str:
         ChartTheme.PASTEL: "Pastel - Soft gentle colors, light and airy",
         ChartTheme.CELESTIAL: "Celestial - Cosmic galaxy with deep purples and gold",
         ChartTheme.ATLAS: "Atlas - Cream background with purple/gold accents for PDF atlases",
+        ChartTheme.GREYSCALE: "Greyscale - fully desaturated for laser / black-and-white printing",
         # Data science themes
         ChartTheme.VIRIDIS: "Viridis - Perceptually uniform purple→green→yellow (colorblind-friendly)",
         ChartTheme.PLASMA: "Plasma - Vibrant blue→purple→orange→yellow gradient",
