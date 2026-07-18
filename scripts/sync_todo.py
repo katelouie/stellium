@@ -86,8 +86,8 @@ def collect_tasks() -> list[dict]:
     return tasks
 
 
-def write_todo(tasks: list[dict]) -> None:
-    """Write tasks to TODO.md."""
+def render_todo(tasks: list[dict]) -> str:
+    """Render the tasks to TODO.md content (does not write)."""
     lines = ["# TODO", "", f"*{len(tasks)} open tasks (synced from Obsidian)*", ""]
 
     # Group by priority
@@ -106,15 +106,39 @@ def write_todo(tasks: list[dict]) -> None:
         lines.append(f"- {task['title']}{due}{status_tag}")
 
     lines.append("")
-    TODO_PATH.write_text("\n".join(lines), encoding="utf-8")
-    print(f"Wrote {len(tasks)} tasks to {TODO_PATH}")
+    return "\n".join(lines)
+
+
+def main(check: bool) -> int:
+    """Write TODO.md, or (``--check``) only nudge if it is stale.
+
+    ``--check`` is read-only and always exits 0 — it is the post-commit reminder, so it
+    can never block a commit or fail a push. Plain (write) mode is the deliberate sync,
+    run when tasks actually change.
+    """
+    if not VAULT_TASKS_DIR.exists():
+        # Vault not present (CI, other machine) -- nothing to sync or check.
+        if not check:
+            print("Obsidian vault not found, skipping TODO sync")
+        return 0
+
+    content = render_todo(collect_tasks())
+    current = TODO_PATH.read_text(encoding="utf-8") if TODO_PATH.exists() else ""
+
+    if check:
+        if content != current:
+            print(
+                "TODO.md is out of sync with the Obsidian vault — run "
+                "`python scripts/sync_todo.py` to refresh it."
+            )
+        return 0  # never blocks
+
+    TODO_PATH.write_text(content, encoding="utf-8")
+    print(f"Wrote {content.count(chr(10) + '- ')} tasks to {TODO_PATH}")
+    return 0
 
 
 if __name__ == "__main__":
-    if not VAULT_TASKS_DIR.exists():
-        # Vault not present (CI, other machine) -- skip silently
-        print("Obsidian vault not found, skipping TODO sync")
-        raise SystemExit(0)
+    import sys
 
-    tasks = collect_tasks()
-    write_todo(tasks)
+    raise SystemExit(main(check="--check" in sys.argv))

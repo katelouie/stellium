@@ -1,6 +1,6 @@
 # TODO
 
-*42 open tasks (synced from Obsidian)*
+*41 open tasks (synced from Obsidian)*
 
 ## High
 
@@ -43,7 +43,6 @@
 - Build research platform (hypothesis testing, batch analysis)
 - Cross-tradition chart synthesis (Western + Vedic + Chinese unified view)
 - Greyscale PDF theme: fully grey the embedded chart wheel.
-- Hygiea silently absent from CalculationConfig.comprehensive()
 - Reconcile Carl Jung notable record (time + data quality)
 - Refactor SectionData to sealed dataclass hierarchy
 - Topocentric parallax corrections
