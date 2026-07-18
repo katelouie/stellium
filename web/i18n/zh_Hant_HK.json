@@ -1,0 +1,7 @@
+{
+  "metadata": {
+    "language": "zh-Hant-HK",
+    "status": "draft",
+    "prepared_by": "Regional override over zh_Hant (Hong Kong). HK == TW across the current web string set (see web-chrome-research-report.md), so this file carries no string overrides yet — every string resolves from zh_Hant through the fallback chain. Add overrides here only for genuinely HK-divergent terms if the UI grows one: font -> 字體, network -> 網絡, software -> 軟件, video call -> 視像通話, icon -> 圖標."
+  }
+}

@@ -24,6 +24,27 @@ _LOCALES_DIR = Path(__file__).parent
 _cache: dict[str, dict[str, str]] = {}
 _raw_cache: dict[str, dict] = {}
 
+# The locales offered in the header dropdown, code -> display name. Curated (not just a
+# glob of *.json) so a *base* file like ``zh_Hant`` powers the fallback chain without
+# appearing as its own selectable language — users pick a region (TW/HK), not the base.
+_DISPLAY_NAMES = {
+    "en": "English",
+    "zh_CN": "简体中文",
+    "zh_Hant_TW": "繁體中文（台灣）",
+    "zh_Hant_HK": "繁體中文（香港）",
+}
+
+
+def _locale_chain(locale: str) -> list[str]:
+    """Fallback chain, most-specific first: ``zh_Hant_TW`` -> ``zh_Hant`` -> ``zh``.
+
+    Mirrors the library's ``stellium.i18n`` resolution: a regional file overrides only
+    the terms that genuinely differ, everything else resolves from the base, and any key
+    missing from the whole chain falls back to the English source string (the key itself).
+    """
+    parts = locale.split("_")
+    return ["_".join(parts[:i]) for i in range(len(parts), 0, -1)]
+
 
 def _load_raw(locale: str) -> dict:
     """Load the raw (unflattened) locale JSON, preserving nested lists/dicts."""
@@ -86,9 +107,12 @@ def _flatten_dict(d: dict, flat: dict[str, str], prefix: str = "") -> None:
 
 
 def _get_strings(locale: str) -> dict[str, str]:
-    """Get cached locale strings."""
+    """Cached strings for a locale, merged across its fallback chain (most-specific wins)."""
     if locale not in _cache:
-        _cache[locale] = _load_locale(locale)
+        merged: dict[str, str] = {}
+        for step in reversed(_locale_chain(locale)):  # least specific first
+            merged.update(_load_locale(step))
+        _cache[locale] = merged
     return _cache[locale]
 
 
@@ -138,10 +162,12 @@ def wt_list(key: str, fallback: list) -> list:
     if locale == "en":
         return fallback
 
-    translated = _find_list(_load_raw(locale), key)
-    if translated is None or len(translated) != len(fallback):
-        return fallback
-    return translated
+    # Walk the fallback chain: use the most-specific file that carries the list.
+    for step in _locale_chain(locale):
+        translated = _find_list(_load_raw(step), key)
+        if translated is not None and len(translated) == len(fallback):
+            return translated
+    return fallback
 
 
 def report_locale() -> str:
@@ -167,24 +193,15 @@ def report_locale() -> str:
 
 
 def get_available_locales() -> dict[str, str]:
-    """Get available locales as {code: display_name} dict."""
-    locales = {"en": "English"}
+    """Selectable locales for the header dropdown, ``{code: display_name}``.
 
+    Curated via ``_DISPLAY_NAMES`` rather than a raw ``*.json`` glob, so a base file
+    (``zh_Hant``) that only exists to feed the fallback chain is not itself offered as a
+    language. English is always available (the identity locale, no file needed).
+    """
+    locales = {"en": "English"}
     for f in _LOCALES_DIR.glob("*.json"):
         code = f.stem
-        # Try to read the language name from metadata
-        try:
-            data = json.loads(f.read_text(encoding="utf-8"))
-            lang = data.get("metadata", {}).get("language", code)
-            # Map known codes to display names
-            display_names = {
-                "zh-CN": "简体中文",
-                "zh_CN": "简体中文",
-                "ja": "日本語",
-                "ko": "한국어",
-            }
-            locales[code] = display_names.get(lang, display_names.get(code, code))
-        except Exception:
-            locales[code] = code
-
+        if code in _DISPLAY_NAMES:
+            locales[code] = _DISPLAY_NAMES[code]
     return locales

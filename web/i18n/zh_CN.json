@@ -40,7 +40,7 @@
     "chart generated!": "星盘已生成！"
   },
   "sections": {
-    "CHART OPTIONS": "图表选项",
+    "CHART OPTIONS": "星盘选项",
     "REPORT OPTIONS": "报告选项",
     "CHART TYPE": "星盘类型",
     "TIMING OPTIONS": "行运选项",
@@ -67,27 +67,27 @@
       [
         "★",
         "23+ 宫位系统",
-        "普拉西度斯、整体星座、科赫、等宫等。可同时计算多个系统。"
+        "普拉西度斯、整宫制、科赫、等宫等。可同时计算多个系统。"
       ],
       [
         "★",
-        "恒星与热带黄道",
+        "恒星与回归黄道",
         "双黄道系统，含 9 种阿亚南萨用于吠陀占星，包括拉希里和拉曼。"
       ],
       [
         "★",
-        "必要尊贵",
-        "传统与现代守护、旺、三方守护、界守护及面守护。"
+        "必然尊贵",
+        "传统与现代守护、旺、三分性守护、界守护及面守护。"
       ],
       [
         "★",
         "合盘与双轮星盘",
-        "关系星盘、行运、推运、合成图与达维森图。"
+        "关系星盘、行运、推运、组合盘与戴维森盘。"
       ],
       [
         "★",
         "太阳回归与月亮回归",
-        "生日图、月回归、土星回归，可迁移至任意城市重新定位。"
+        "生日盘、月回归、土星回归，可迁移至任意城市重新定位。"
       ],
       [
         "★",
@@ -107,12 +107,12 @@
       [
         "★",
         "相位图形",
-        "大三角、T形三角、神之手、三星连珠、大十字等。"
+        "大三角、T三角、上帝之指、星群、大十字等。"
       ],
       [
         "★",
         "阿拉伯点",
-        "25 个传统命运点，包括福点、精神点与爱情点，支持昼夜区分计算。"
+        "25 个传统点，包括福点、精神点与爱情点，支持昼夜区分计算。"
       ],
       [
         "★",
@@ -141,22 +141,22 @@
   },
   "relationships": {
     "Relationship Charts": "关系星盘",
-    "Synastry, Composite & Davison": "合盘、合成图 & 达维森图",
+    "Synastry, Composite & Davison": "合盘、组合盘 & 戴维森盘",
     "Synastry (Bi-wheel overlay)": "合盘（双轮叠加）",
-    "Composite (Midpoint chart)": "合成图（中点图）",
-    "Davison (Time-space midpoint)": "达维森图（时空中点）",
-    "For Composite & Davison charts:": "适用于合成图与达维森图："
+    "Composite (Midpoint chart)": "组合盘（中点盘）",
+    "Davison (Time-space midpoint)": "戴维森盘（时空中点）",
+    "For Composite & Davison charts:": "适用于组合盘与戴维森盘："
   },
   "timing": {
     "Timing & Forecasts": "行运与预测",
-    "Transits, Progressions & Returns": "行运、推运 & 回归图",
+    "Transits, Progressions & Returns": "行运、推运 & 回归盘",
     "Transit Date:": "行运日期：",
     "Progress To:": "推运至：",
     "Return Year:": "回归年份：",
     "Near Date:": "临近日期：",
     "Date:": "日期：",
     "Return Planet:": "回归行星：",
-    "Relocate return chart": "重新定位回归图",
+    "Relocate return chart": "重新定位回归盘",
     "Location:": "地点：",
     "City, Country": "城市，国家"
   },
@@ -172,11 +172,11 @@
     "All transit times will be displayed in this timezone.": "所有行运时间将以此时区显示。",
     "Charts and reference pages at the start of your planner.": "计划手册首页的图表与参考页面。",
     "Natal Chart": "本命盘",
-    "Secondary Progressed Chart": "二次推运图",
-    "Solar Return Chart": "太阳回归图",
+    "Secondary Progressed Chart": "二次推运盘",
+    "Solar Return Chart": "太阳回归盘",
     "Profections (Lord of the Year)": "小限法（年主星）",
     "Zodiacal Releasing Timeline": "黄道释放时间线",
-    "Part of Fortune": "命运点",
+    "Part of Fortune": "福点",
     "Part of Spirit": "精神点",
     "Graphic Ephemeris": "图形星历",
     "Full Zodiac (360°)": "全黄道圈 (360°)",
@@ -191,7 +191,7 @@
     "Void of Course Moon": "月亮空亡",
     "Traditional (Sun-Saturn)": "传统（太阳-土星）",
     "Modern (includes outers)": "现代（含外行星）",
-    "Sign Ingresses": "星座入相",
+    "Sign Ingresses": "星座转换",
     "Retrograde/Direct Stations": "逆行/顺行留",
     "Page Size:": "纸张大小：",
     "A4": "A4",
@@ -206,8 +206,8 @@
   },
   "options": {
     "Zodiac System": "黄道系统",
-    "Tropical (Western)": "回归制（西方）",
-    "Sidereal (Vedic)": "恒星制（吠陀）",
+    "Tropical (Western)": "回归黄道（西方）",
+    "Sidereal (Vedic)": "恒星黄道（吠陀）",
     "Ayanamsa:": "阿亚南萨：",
     "House System": "宫位系统",
     "House Systems": "宫位系统",
@@ -223,18 +223,18 @@
     "Minor: Semi-sextile, Semi-square, Sesquiquadrate, Quincunx": "次要相位：半六分、半刑、补八分相、梅花",
     "Harmonic: Quintile, Bi-quintile, Septile, Novile": "泛音相位：五分、倍五分、七分、九分",
     "Calculations": "计算项",
-    "Essential Dignities": "必要尊贵",
-    "Rulerships, exaltations, triplicities, terms, faces": "守护、旺、三方、界、面",
+    "Essential Dignities": "必然尊贵",
+    "Rulerships, exaltations, triplicities, terms, faces": "守护、旺、三分性、界、面",
     "Declinations": "赤纬",
     "Equatorial coordinates, out-of-bounds detection": "赤道坐标，超界检测",
     "Aspect Patterns": "相位图形",
-    "Grand Trines, T-Squares, Yods, Stelliums": "大三角、T 三角、神之手、星群",
+    "Grand Trines, T-Squares, Yods, Stelliums": "大三角、T 三角、上帝之指、星群",
     "Midpoints": "中点",
     "Direct midpoints for all planet pairs": "所有行星对的直接中点",
     "Arabic Parts": "阿拉伯点",
-    "25+ lots: Fortune, Spirit, Love, etc. (sect-aware)": "25+ 个命点：命运点、精神点、爱情点等（区分昼夜）",
+    "25+ lots: Fortune, Spirit, Love, etc. (sect-aware)": "25+ 阿拉伯点：福点、精神点、爱情点等（区分昼夜）",
     "Fixed Stars": "恒星",
-    "Royal Stars (4)": "皇家四星（4）",
+    "Royal Stars (4)": "四大王星（4）",
     "Major Stars (15)": "主要恒星（15）",
     "All Stars (26)": "全部恒星（26）",
     "Theme & Palettes": "主题与配色",
@@ -311,7 +311,7 @@
     "Tightest First": "容许度最小优先",
     "By Planet": "按行星",
     "By Aspect Type": "按相位类型",
-    "Grand Trines, T-Squares, Yods, etc.": "大三角、T 三角、神之手等",
+    "Grand Trines, T-Squares, Yods, etc.": "大三角、T 三角、上帝之指等",
     "Dignities in Report": "报告中的尊贵",
     "Traditional & Modern": "传统与现代",
     "Traditional Only": "仅传统",

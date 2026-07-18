@@ -86,6 +86,18 @@ def flatten_locale(path: Path) -> dict[str, str]:
     return flat
 
 
+def locale_chain(code: str) -> list[str]:
+    """Fallback chain, most-specific first: ``zh_Hant_TW`` -> ``zh_Hant`` -> ``zh``.
+
+    Kept in sync with ``i18n._locale_chain`` (this script is standalone/stdlib-only for
+    CI, so it can't import the runtime module). A string is *covered* for a locale if it
+    resolves anywhere along this chain — a regional file (``zh_Hant_TW``) need only carry
+    the terms that genuinely differ from its base (``zh_Hant``).
+    """
+    parts = code.split("_")
+    return ["_".join(parts[:i]) for i in range(len(parts), 0, -1)]
+
+
 def main() -> int:
     used = collect_used_strings()
     print(f"Found {len(used)} translatable strings used in web/ source.\n")
@@ -95,11 +107,17 @@ def main() -> int:
         print("No locale files found.")
         return 0
 
+    # Flatten every file once, keyed by locale code, so coverage can resolve the chain.
+    flats = {f.stem: flatten_locale(f) for f in locale_files}
+
     failed = False
     for locale_file in locale_files:
-        flat = flatten_locale(locale_file)
+        # Resolved coverage: union of every existing file along the fallback chain.
+        flat: dict[str, str] = {}
+        for step in reversed(locale_chain(locale_file.stem)):
+            flat.update(flats.get(step, {}))
         missing = sorted(s for s in used if s not in flat)
-        orphaned = sorted(k for k in flat if k not in used)
+        orphaned = sorted(k for k in flats[locale_file.stem] if k not in used)
 
         print(f"=== {locale_file.name} ===")
         print(

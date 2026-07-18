@@ -1,0 +1,7 @@
+{
+  "metadata": {
+    "language": "zh-Hant-TW",
+    "status": "draft",
+    "prepared_by": "Regional override over zh_Hant (Taiwan). TW == HK across the current web string set (see web-chrome-research-report.md), so this file carries no string overrides yet — every string resolves from zh_Hant through the fallback chain. Add overrides here only for genuinely TW-divergent terms if the UI grows one, e.g. font/typeface -> 字型 (HK: 字體)."
+  }
+}
