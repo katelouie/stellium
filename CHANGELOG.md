@@ -7,121 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+> **TL;DR — Stellium speaks other languages.** Reports and charts render fully in a target language across every output path — terminal, markdown, HTML, the Typst **PDF**, and the SVG wheel — from a locale system where **adding a language is one JSON file, no code**. Ships three curated Chinese locales (Simplified `zh_CN` + Traditional `zh_Hant`, with HK/TW regional overrides), 90–98% covered, plus on-demand font packs for non-Latin scripts. English output is byte-identical.
+>
+> | To… | |
+> |---|---|
+> | localize a report | `ReportBuilder().with_locale("zh_Hant_TW").render()` |
+> | localize a chart | `chart.draw().with_locale("zh_CN").save_png(...)` |
+> | add a language | write one `strings.json` |
+> | fetch a non-Latin font | `stellium fonts download zh` |
+
 ### Added
 
 **Internationalization**
 
-- **Reports and charts render in another language.** `ReportBuilder().with_locale("zh_CN")`
-  and `chart.draw().with_locale("zh_CN")` translate the *content* — planets, signs,
-  aspects, house systems, dates. This covers **both output paths**: the terminal/markdown/
-  HTML report *and* the Typst **PDF** — cover page, snapshot, planet-positions table, aspect
-  list, aspectarian legend, moon phase, chart overview, and the house-cusp/generic tables.
-  On the SVG wheel it covers the header, info corners, and extended tables; the wheel body
-  and the aspectarian grid are glyphs and stay language-neutral. Values that read in a
-  locale-specific order are laid out, not word-swapped: a Chinese chart reads `1879年3月14日`
-  for a date and `北緯48.40°` for a latitude, not a reordered English string. English output
-  is byte-identical.
+- **Reports and charts render in another language.** `ReportBuilder().with_locale("zh_CN")` and `chart.draw().with_locale("zh_CN")` translate the *content* — planets, signs, aspects, house systems, dates. This covers **both output paths**: the terminal/markdown/HTML report *and* the Typst **PDF** — cover page, snapshot, planet-positions table, aspect list, aspectarian legend, moon phase, chart overview, and the house-cusp/generic tables. On the SVG wheel it covers the header, info corners, and extended tables; the wheel body and the aspectarian grid are glyphs and stay language-neutral. Values that read in a locale-specific order are laid out, not word-swapped: a Chinese chart reads `1879年3月14日` for a date and `北緯48.40°` for a latitude, not a reordered English string. English output is byte-identical.
 
   ```python
   ReportBuilder().from_chart(chart).with_locale("zh_Hant_TW").render()
   chart.draw().with_locale("zh_CN").save_png("chart.png")
   ```
 
-- **Three Chinese locales.** Simplified `zh_CN` (a native-speaker donation) plus a
-  researched, sourced **Traditional** set: a shared `zh_Hant` base with `zh_Hant_HK` and
-  `zh_Hant_TW` regional overrides for the ~13 terms that genuinely differ between Hong Kong
-  and Taiwan usage. Unattested terms fall back to English rather than shipping invented
-  ones; see each locale's `TRANSLATION_NOTES.md`.
+- **Three Chinese locales.** Simplified `zh_CN` (a native-speaker donation) plus a researched, sourced **Traditional** set: a shared `zh_Hant` base with `zh_Hant_HK` and `zh_Hant_TW` regional overrides for the ~13 terms that genuinely differ between Hong Kong and Taiwan usage. Unattested terms fall back to English rather than shipping invented ones; see each locale's `TRANSLATION_NOTES.md`.
 
-- **The web app's chart wheel follows its language too.** The web app already rendered its
-  *report* in the selected language (via `report_locale()` → `ReportBuilder.with_locale()`);
-  the drawn chart SVG did not, so a Chinese session showed a Chinese report beside an English
-  wheel. Every `chart.draw()` in the app (natal, relationships, timing returns/composites,
-  explore) now passes the same locale, so the wheel, header, info corners, and extended
-  tables match the rest of the page.
+- **The web app's chart wheel follows its language too.** The web app already rendered its *report* in the selected language (via `report_locale()` → `ReportBuilder.with_locale()`); the drawn chart SVG did not, so a Chinese session showed a Chinese report beside an English wheel. Every `chart.draw()` in the app (natal, relationships, timing returns/composites, explore) now passes the same locale, so the wheel, header, info corners, and extended tables match the rest of the page.
 
-- **The locale toolkit.** `stellium i18n locales` shows every available language with its
-  coverage, fallback chain and font status; `stellium i18n coverage <locale>` details one;
-  `stellium i18n extract` emits a fill-in-the-blanks template. Adding a language means
-  writing **one JSON file** — no code. Fallback resolves most-specific first
-  (`zh_Hant_TW → zh_Hant → zh → en`), so a regional locale inherits and overrides only what
-  differs, and a partial locale degrades to English.
+- **The locale toolkit.** `stellium i18n locales` shows every available language with its coverage, fallback chain and font status; `stellium i18n coverage <locale>` details one; `stellium i18n extract` emits a fill-in-the-blanks template. Adding a language means writing **one JSON file** — no code. Fallback resolves most-specific first (`zh_Hant_TW → zh_Hant → zh → en`), so a regional locale inherits and overrides only what differs, and a partial locale degrades to English.
 
-- **A public i18n surface** — `t()`, `term()`, `msg()`, `render()`, `format_date()`,
-  `format_time()`, `format_coordinates()` / `format_latitude()` / `format_longitude()`,
-  `available_locales_info()`, and a translator template
-  (`stellium/i18n/locales/_TEMPLATE.json`, regenerated by `scripts/build_i18n_template.py`).
-  The translatable vocabulary now includes `direction` (N/S/E/W plus the full words
-  North/South/East/West, reordered per locale via the `format.latitude` /
-  `format.longitude` patterns), `polarity` (Yang/Yin/Balanced), `pattern` (aspect-pattern
-  shapes), `constellation` (a distinct vocabulary from signs — Virgo-the-constellation is
-  室女座, Virgo-the-sign is 处女座), and `star_keyword` (fixed-star interpretive keywords).
+- **A public i18n surface** — `t()`, `term()`, `msg()`, `render()`, `format_date()`, `format_time()`, `format_coordinates()` / `format_latitude()` / `format_longitude()`, `available_locales_info()`, and a translator template (`stellium/i18n/locales/_TEMPLATE.json`, regenerated by `scripts/build_i18n_template.py`). The translatable vocabulary now includes `direction` (N/S/E/W plus the full words North/South/East/West, reordered per locale via the `format.latitude` / `format.longitude` patterns), `polarity` (Yang/Yin/Balanced), `pattern` (aspect-pattern shapes), `constellation` (a distinct vocabulary from signs — Virgo-the-constellation is 室女座, Virgo-the-sign is 处女座), and `star_keyword` (fixed-star interpretive keywords).
 
-- **The long-tail report sections localize too.** Beyond the core tables, the moon phase,
-  declinations, placement house columns, aspect patterns, dispositors, zodiacal releasing
-  (dates laid out per locale, e.g. `1920年三月`), midpoints, and fixed stars now render in
-  the target language. Sections that had only ever localized via a legacy substring bridge
-  (bare-name lookups) now emit catalog terms directly, so they survive that bridge's
-  eventual removal. The Chinese renderings for the fixed-star interpretive keywords and the
-  zodiacal-releasing Hellenistic vocabulary (sect benefics/malefics, luminaries, Loosing of
-  the Bond, peak periods) come from sourced research — the ZR terms use the transparent
-  區分內/區分外 (in-/out-of-sect) system, replacing an earlier machine draft whose 逆光 for
-  "contrary light" literally read as photographic "backlight." Resolved coverage now runs
-  zh_CN 90% / zh_Hant 96% / zh_Hant_TW·HK 98%. English output stays byte-identical.
+- **The long-tail report sections localize too.** Beyond the core tables, the moon phase, declinations, placement house columns, aspect patterns, dispositors, zodiacal releasing (dates laid out per locale, e.g. `1920年三月`), midpoints, and fixed stars now render in the target language. Sections that had only ever localized via a legacy substring bridge (bare-name lookups) now emit catalog terms directly, so they survive that bridge's eventual removal. The Chinese renderings for the fixed-star interpretive keywords and the zodiacal-releasing Hellenistic vocabulary (sect benefics/malefics, luminaries, Loosing of the Bond, peak periods) come from sourced research — the ZR terms use the transparent 區分內/區分外 (in-/out-of-sect) system, replacing an earlier machine draft whose 逆光 for "contrary light" literally read as photographic "backlight." Resolved coverage now runs zh_CN 90% / zh_Hant 96% / zh_Hant_TW·HK 98%. English output stays byte-identical.
 
 **Fonts for non-Latin charts**
 
-- **On-demand font packs.** The bundled fonts cover Latin and astrological symbols; a
-  chart whose text is in another script needs a font that covers it. `stellium fonts
-  download zh` fetches a per-script pack (checksum-verified) into `~/.stellium/fonts/`
-  — sibling to the downloaded ephemeris — where the renderer finds it automatically. No
-  non-Latin font is bundled, so the wheel stays small for the Latin-only majority.
-  `stellium fonts list` / `remove` manage them.
+- **On-demand font packs.** The bundled fonts cover Latin and astrological symbols; a chart whose text is in another script needs a font that covers it. `stellium fonts download zh` fetches a per-script pack (checksum-verified) into `~/.stellium/fonts/` — sibling to the downloaded ephemeris — where the renderer finds it automatically. No non-Latin font is bundled, so the wheel stays small for the Latin-only majority. `stellium fonts list` / `remove` manage them.
 
-- **`chart.draw().with_font(path)`** points the chart at an explicit font (file or
-  directory) for a script with no pack, or to force a specific face.
+- **`chart.draw().with_font(path)`** points the chart at an explicit font (file or directory) for a script with no pack, or to force a specific face.
 
-- **`MissingFontWarning`** (exported from `stellium`) fires at render time when a chart's
-  text needs a font that is not installed — with the exact remedy (`stellium fonts download
-  zh`) — instead of a silently tofu'd PNG. It is text-based, so it also catches a
-  non-Latin *name* in an otherwise-English chart.
+- **`MissingFontWarning`** (exported from `stellium`) fires at render time when a chart's text needs a font that is not installed — with the exact remedy (`stellium fonts download zh`) — instead of a silently tofu'd PNG. It is text-based, so it also catches a non-Latin *name* in an otherwise-English chart.
 
 **Presentation**
 
-- **Sections emit structured data**, and renderers compose the display strings — so the
-  Typst PDF theme (and future consumers) can style semantic fields instead of parsing a
-  formatted string. Every report section now carries this structure.
+- **Sections emit structured data**, and renderers compose the display strings — so the Typst PDF theme (and future consumers) can style semantic fields instead of parsing a formatted string. Every report section now carries this structure.
 
-- **One localization pass, every renderer.** Introduced `Gloss` — a resolved concept
-  carrying its English identity (`.en`) beside its localized presentation (`.loc`) — so the
-  resolve pass localizes once and every renderer, the PDF one included, reads the same
-  data: machinery matches on identity (locale-invariant), and each renderer flips the mask
-  on at its display edge. This is what closed the gap where a localized report was correct
-  as markdown but leaked English as a PDF.
+- **One localization pass, every renderer.** Introduced `Gloss` — a resolved concept carrying its English identity (`.en`) beside its localized presentation (`.loc`) — so the resolve pass localizes once and every renderer, the PDF one included, reads the same data: machinery matches on identity (locale-invariant), and each renderer flips the mask on at its display edge. This is what closed the gap where a localized report was correct as markdown but leaked English as a PDF.
 
 ### Changed
 
-- **The element/modality table on charts is now glyph-based.** The column headers use the
-  Cardinal/Fixed/Mutable glyphs and each row its element symbol, rather than the words
-  "Card/Fix/Mut" and two-letter abbreviations — so the table reads the same in every
-  language and needs no translation.
-- **Essential-dignity names are capitalized** in the `show_details` view — "Peregrine,
-  Detriment" rather than "peregrine, detriment", the standard convention (the lowercase was
-  the engine's internal form leaking into display). Compound dignities now read as
-  "Exaltation (exact)" / "Participating Ruler" / "Triplicity (participating)" rather than
-  the raw `Exaltation_Exact` / `Participating_Ruler` keys.
-- **Every house system has a distinct short-form abbreviation.** A 4-character truncating
-  fallback previously collided — `Equal (MC)` and `Equal (Vertex)` both rendered as `Equa`;
-  they are now `EqMC` and `EqVx`.
+- **The element/modality table on charts is now glyph-based.** The column headers use the Cardinal/Fixed/Mutable glyphs and each row its element symbol, rather than the words "Card/Fix/Mut" and two-letter abbreviations — so the table reads the same in every language and needs no translation.
+- **Essential-dignity names are capitalized** in the `show_details` view — "Peregrine, Detriment" rather than "peregrine, detriment", the standard convention (the lowercase was the engine's internal form leaking into display). Compound dignities now read as "Exaltation (exact)" / "Participating Ruler" / "Triplicity (participating)" rather than the raw `Exaltation_Exact` / `Participating_Ruler` keys.
+- **Every house system has a distinct short-form abbreviation.** A 4-character truncating fallback previously collided — `Equal (MC)` and `Equal (Vertex)` both rendered as `Equa`; they are now `EqMC` and `EqVx`.
 
 ### Fixed
 
-- **`zh_CN` rendered the planet Earth as the element** (`土象`) rather than `地球`, because
-  the previous translation layer looked terms up by English string with no namespace, so
-  `Earth` the body and `Earth` the element collided. Terms are now namespaced.
-- **The markdown/text report dropped a compound section nested in a compound**, rendering it
-  as `*Unknown type: compound*` — the zodiacal-releasing snapshot hit this. The renderer now
-  recurses (the PDF path already did), so the snapshot's inner tables render.
+- **`zh_CN` rendered the planet Earth as the element** (`土象`) rather than `地球`, because the previous translation layer looked terms up by English string with no namespace, so `Earth` the body and `Earth` the element collided. Terms are now namespaced.
+- **The markdown/text report dropped a compound section nested in a compound**, rendering it as `*Unknown type: compound*` — the zodiacal-releasing snapshot hit this. The renderer now recurses (the PDF path already did), so the snapshot's inner tables render.
 
 ## [0.22.0] - 2026-07-14
 
@@ -267,15 +206,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **The Typst design system was missing from the published wheel, so every PDF report failed on an installed copy** ([#60](https://github.com/katelouie/stellium/issues/60)). `[tool.setuptools.packages.find]` collects Python modules only; `presentation/typst_theme/` holds five `.typ` files and no `__init__.py`, so it was never a package and was never declared in `package-data` either. From a source checkout everything worked — the files were right there on disk — which is exactly why it shipped. On a wheel, `ReportBuilder.render(format="pdf")` raised `FileNotFoundError`. (The planner was unaffected: it generates its own Typst and does not read the design system — though see *Known issues* below.) The same omission silently broke the **Chinese locale**: `i18n/loader.py` reads `locales/*/strings.json` relative to its own file, and `locales/zh_CN/strings.json` was not in the wheel either, so `zh_CN` quietly fell back to English.
+- **The Typst design system was missing from the published wheel, so every PDF report failed on an installed copy** ([#60](https://github.com/katelouie/stellium/issues/60)). `setuptools.packages.find` collects Python modules only, and `presentation/typst_theme/` has no `__init__.py`, so its five `.typ` files were never declared in `package-data` — a source checkout worked (the files are right there on disk), an installed wheel raised `FileNotFoundError`. The same omission broke the **Chinese locale**: `zh_CN/strings.json` wasn't in the wheel either, so `zh_CN` silently fell back to English.
 
-  Both are now declared, with deliberately tight globs — a directory-wide `typst_theme/**/*` would have swept in whatever happened to be sitting in the tree, and a stray cache had at one point put **37,000 files inside `typst_theme/`**. New `tests/test_packaging.py` asserts the general invariant (*every data file in `src/stellium/` is covered by a package-data glob*), that the design system and locales specifically ship, that no glob sweeps in cache junk, and — as the only oracle that cannot be fooled — **builds a real wheel and looks inside it**.
+  Both are now declared with tight globs (a directory-wide `typst_theme/**/*` would once have swept in a 37,000-file stray cache), and `tests/test_packaging.py` — the only oracle that cannot be fooled — **builds a real wheel and looks inside it**.
 
-- **The ephemeris cache was a write-only log that grew without bound — it had accumulated 18.5 million files.** Three defects compounded. (1) `@cached` was applied to **methods**, so `self` was `args[0]`, and `json.dumps(default=str)` rendered it as `<SwissEphemerisEngine object at 0x104f2a390>` — putting the object's **memory address** in the cache key. No entry could ever be found again by another instance or process: every lookup missed, every call wrote a new file, and nothing was ever read back. Measured, the same chart built three times produced 28 → 55 → 82 pickle files and zero hits. (2) The default directory was the **relative** `".cache"`, which `Path.mkdir()` resolves against the current working directory, so the cache materialised wherever Python happened to be launched — eight of them accumulated across the repo, one of them 145 MB *inside the package*. (3) `_default_cache = Cache()` ran at **module scope**, so merely importing Stellium created directories on disk.
+- **The ephemeris cache grew without bound — 18.5 million files.** `@cached` was on *methods*, so `self` landed in the key as its **memory address** (`<SwissEphemerisEngine object at 0x104f2a390>`): every lookup missed, every call wrote a new file, nothing was ever read back. Two smaller defects piled on — the default dir was the *relative* `".cache"`, so caches materialised wherever Python launched (eight of them, one 145 MB inside the package), and `_default_cache = Cache()` ran at import, creating directories just by importing Stellium.
 
-  It was also never worth doing: a `swe.calc_ut` is microseconds and a pickle round-trip is not, so disk-caching positions measured **13× slower than recomputing them**. The ephemeris and house engines are therefore no longer disk-cached at all — **chart building goes from 2.4 ms to 0.21 ms**, and the full test suite from ~60 s to ~15 s. Geocoding *is* still cached, which is the case the mechanism was always right for: a network call keyed on a plain string, whose key was stable all along.
-
-  The cache now defaults to `~/.cache/stellium/` (`%LOCALAPPDATA%\stellium\cache` on Windows; `XDG_CACHE_HOME` honoured), overridable with **`STELLIUM_CACHE_DIR`**. It is deliberately kept *out* of `~/.stellium/`, which holds the asteroid/TNO ephemeris the user downloaded — a cache is disposable and belongs where backup tools skip it and cleaners empty it, so that "clear Stellium's junk" can never point at the ephemeris. It is created lazily on first write rather than at import, and `_make_key()` **refuses** an argument whose repr embeds a memory address (raising `UnstableCacheKey`) instead of silently poisoning the key; `@cached` degrades to an uncached call with a warning.
+  Positions were never worth caching anyway — a `swe.calc_ut` is microseconds and a pickle round-trip is not, so it measured **13× slower than recomputing**. The ephemeris and house engines are no longer disk-cached (chart build **2.4 ms → 0.21 ms**); geocoding still is, the case the mechanism was always right for — a network call with a stable string key. The cache now defaults to `~/.cache/stellium/` (override **`STELLIUM_CACHE_DIR`**), is created lazily, and `_make_key()` raises **`UnstableCacheKey`** on any address-bearing argument instead of silently poisoning the key.
 
 ### Added
 
@@ -290,6 +227,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The planner's fonts fall back to system fonts on an installed copy.** `planner/renderer.py` resolves its font directory by walking up from `__file__` to the *repository root* and looking for `assets/fonts/` — a path that exists only in a source checkout, not in the wheel. Planners still render (Typst substitutes available system fonts), so this is cosmetic rather than a failure, but the intended typography is lost — and on a bare container with no fonts installed it would be worse. It is the same shape of bug as #60, one directory over. Left for the next release, where `planner/renderer.py` is rewritten onto the design system and uses the packaged font stack (`stellium/data/fonts/`) rather than being patched in place.
 
 ## [0.21.0] - 2026-07-11
+
+> **TL;DR — a real PDF design system.** The report's PDF path goes data-driven: sections serialize to a JSON contract rendered by a bundled Typst design system with **five interchangeable themes** (house, sepia, celestial, blues, greyscale) selected by name, and the full font stack ships *inside* the package so `pip install` renders identical PDFs on any machine. Plus a native dispositor graph (graphviz dropped) and an honest, human-in-the-loop sect-rectification workbench.
 
 ### Changed
 
@@ -314,6 +253,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **`GauquelinHouses` house system** — removed. It never actually worked: Swiss Ephemeris returns 36 Gauquelin sectors, but the `HouseCusps` model requires exactly 12 cusps, so selecting it raised `ValueError` (the test suite skipped it to dodge the crash). Gauquelin sectors are a *statistical-research* instrument (the Mars-effect "plus zones"), not a 12-cusp house-placement system, so they were miscategorized in the house-system registry. If wanted for Gauquelin/Mars-effect studies over a dataset, the right shape is an **analysis primitive** (a `gauquelin_sector()`-style function usable in batch/pandas work), not a house system — a planned follow-up. House-system count: 18 → 17.
 
 ## [0.20.0] - 2026-07-10
+
+> ### ⚠️ Results that change on upgrade
+>
+> | If you used… | You were getting… |
+> |---|---|
+> | **Zodiacal Releasing** (any lot) | dates on a 365.25-day year — now the 360-day Valens default; an Aquarius period of 27 years (now 30); mis-scaled L3/L4 sub-periods; and peaks anchored to the *released* lot instead of Fortune |
+> | **dignities** for a planet at 21–26° Sagittarius | Egyptian-term ruler Mars — it is Saturn (Tetrabiblos I.20) |
+> | **modern dignities** for Venus in Gemini or Sagittarius | a false "fall," from a partner sign's exaltation/fall grafted in |
+>
+> **Breaking:** `chart.sect()` is now the property `chart.sect`; `from_notable("Mozart")` is now `"Wolfgang Mozart"`; and notables with no reliable birth time now build as **unknown-time** charts (no houses/angles) instead of a silent fake noon. Details under *Changed* / *Fixed*.
 
 ### Added
 
@@ -728,6 +677,8 @@ ASC (16°57' ♈︎)
 ### Fixed
 
 ## [0.15.0] - 2026-01-05
+
+> **TL;DR — planners, BaZi, and ML vectors.** A personalized PDF **planner** generator (year overview, ZR timeline, profections, natal lookup) with a `/planner` web page; the Chinese **BaZi / Four Pillars** suite with Ten Gods analysis; and `ChartVectorizer` — dense chart embeddings for ML and similarity search.
 
 ### Added
 
@@ -1193,6 +1144,8 @@ See `examples/planner_cookbook.py` for detailed recipes and usage patterns.
 ---
 
 ## [0.12.0] - 2025-12-17
+
+> **TL;DR — electional search.** A fluent API for finding *times that satisfy astrological conditions*: 30+ composable predicates, interval algebra (union / intersect / difference), and hierarchical optimization over a date range.
 
 ### Added
 
@@ -1810,6 +1763,8 @@ report = ReportBuilder().from_chart(mc).with_chart_overview().with_cross_aspects
 
 ## [0.8.0] - 2025-12-09
 
+> **TL;DR — timing & technique primitives.** Primary directions, hemisphere/quadrant distributions, draconic and heliocentric charts, and station/ingress finders (`find_station`, `find_ingress`, …) — building blocks several later timing features are assembled from.
+
 ### Added
 
 #### Primary Directions Engine (December 9, 2025)
@@ -2201,6 +2156,8 @@ voc_modern = chart.voc_moon(aspects="modern")
 - Make all page functions async to be able to use NiceGUI >= 3.0.0
 
 ## [0.6.0] - 2025-12-02
+
+> **TL;DR — dial charts.** A full Uranian/cosmobiology dial (`DialDrawBuilder`): a rotating 90°/360° pointer, midpoint trees, transit outer rings, and collision-avoided labels — plus on-demand asteroid ephemeris download (`stellium ephemeris`) and the multiwheel.
 
 ### Added
 
@@ -2735,7 +2692,7 @@ voc_modern = chart.voc_moon(aspects="modern")
 
 ## [0.3.0] - 2025-11-27
 
-**The Predictive Astrology Release** - Completes the "predictive trinity" with Returns, Progressions, and a massive performance improvement.
+> **TL;DR — the predictive release.** Solar/lunar **Returns** (`ReturnBuilder`), secondary **Progressions** (three angle methods), the full **sidereal** zodiac (40+ ayanamsas), and a complete **fixed-stars** system — completing the "predictive trinity," with a large performance improvement alongside.
 
 ### Added
 
@@ -3029,6 +2986,8 @@ sr_tokyo = ReturnBuilder.solar(natal, 2025, location="Tokyo, Japan").calculate()
   - Complete equatorial coordinate system available for custom analysis
 
 ## [0.2.0] - 2025-11-26
+
+> **TL;DR — the reporting subsystem.** `ReportBuilder` arrives: multi-house-system planet positions, house-cusp / dignity / aspect-pattern sections, and the first Typst-rendered PDF.
 
 ### Added
 
