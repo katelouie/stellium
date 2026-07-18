@@ -10,6 +10,7 @@ from stellium.core.models import (
     CalculatedChart,
     UnknownTimeChart,
 )
+from stellium.i18n import format_coordinates, format_date, format_time, t
 from stellium.visualization.core import (
     ChartRenderer,
 )
@@ -246,9 +247,7 @@ class HeaderLayer:
             # Build location line with coordinates
             lat = chart.location.latitude
             lon = chart.location.longitude
-            lat_dir = "N" if lat >= 0 else "S"
-            lon_dir = "E" if lon >= 0 else "W"
-            coord_str = f"({abs(lat):.{self.coord_precision}f}°{lat_dir}, {abs(lon):.{self.coord_precision}f}°{lon_dir})"
+            coord_str = f"({format_coordinates(lat, lon, renderer.locale, precision=self.coord_precision)})"
 
             if short_name:
                 location_line = f"{short_name} · {coord_str}"
@@ -273,17 +272,26 @@ class HeaderLayer:
 
         if chart.datetime:
             is_unknown_time = isinstance(chart, UnknownTimeChart)
+            loc = renderer.locale
+            local = chart.datetime.local_datetime
 
             if is_unknown_time:
-                if chart.datetime.local_datetime:
-                    dt_str = chart.datetime.local_datetime.strftime("%b %d, %Y")
-                else:
-                    dt_str = chart.datetime.utc_datetime.strftime("%b %d, %Y")
-                dt_str += " (Time Unknown)"
-            elif chart.datetime.local_datetime:
-                dt_str = chart.datetime.local_datetime.strftime("%b %d, %Y %I:%M %p")
+                when = local or chart.datetime.utc_datetime
+                dt_str = (
+                    f"{format_date(when.date(), loc, short=True)} "
+                    f"({t('Time Unknown', loc)})"
+                )
+            elif local:
+                dt_str = (
+                    f"{format_date(local.date(), loc, short=True)} "
+                    f"{format_time(local, loc)}"
+                )
             else:
-                dt_str = chart.datetime.utc_datetime.strftime("%b %d, %Y %H:%M UTC")
+                utc = chart.datetime.utc_datetime
+                dt_str = (
+                    f"{format_date(utc.date(), loc, short=True)} "
+                    f"{utc.strftime('%H:%M')} UTC"
+                )
 
             datetime_parts.append(dt_str)
 
@@ -671,9 +679,9 @@ class HeaderLayer:
         if chart.location:
             lat = chart.location.latitude
             lon = chart.location.longitude
-            lat_dir = "N" if lat >= 0 else "S"
-            lon_dir = "E" if lon >= 0 else "W"
-            coord_str = f"{abs(lat):.{self.coord_precision}f}°{lat_dir}, {abs(lon):.{self.coord_precision}f}°{lon_dir}"
+            coord_str = format_coordinates(
+                lat, lon, renderer.locale, precision=self.coord_precision
+            )
 
             # For midpoint charts, just show coordinates (the "name" is usually just raw coords anyway)
             location_line = f"Midpoint: {coord_str}"

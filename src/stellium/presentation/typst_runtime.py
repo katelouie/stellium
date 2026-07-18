@@ -72,6 +72,23 @@ THEME_WHEEL = {
 }
 
 
+def _gloss_to_loc(obj: Any) -> str:
+    """json.dump ``default`` for the Typst data contract.
+
+    A ``Gloss`` serializes to its localized display mask (``.loc``). A stray unresolved
+    token (``Term``/``Message``) — data that skipped the resolve pass, as the planner's
+    can — degrades to its English identity rather than crashing the render; that is the
+    safe fallback, and it is visible (English) so the completeness oracle can flag it.
+    """
+    from stellium.i18n import Gloss, Message, Term, render
+
+    if isinstance(obj, Gloss):
+        return obj.loc
+    if isinstance(obj, (Term, Message)):
+        return render(obj, "en")
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+
 def validate_theme(theme: str) -> str:
     """Reject an unknown theme by name rather than rendering something surprising."""
     if theme not in THEMES:
@@ -94,23 +111,38 @@ def theme_dir() -> str:
     return os.path.join(os.path.dirname(__file__), "typst_theme")
 
 
-def font_paths() -> list[str]:
-    """The bundled font directory (``stellium/data/fonts``).
+def font_paths(extra: list[str] | None = None) -> list[str]:
+    """Font directories to search when rasterizing, most-authoritative last.
 
-    Every display/body/mono face the themes use, plus the Noto symbol fonts, so a PDF
-    renders identically on any machine with no dependency on host fonts. System fonts
-    are still searched as well (``ignore_system_fonts`` stays False), but the bundle
-    is self-sufficient.
+    Three sources, in order:
 
-    **This is the only correct answer, and it is the reason this module exists** — see
-    the module docstring for the two wrong ones it replaces.
+    1. The **bundled** directory (``stellium/data/fonts``) — every display/body/mono face
+       the themes use plus the Noto symbol fonts, so a PDF renders identically on any
+       machine with no dependency on host fonts.
+    2. **Downloaded font packs** under ``~/.stellium/fonts/`` — auto-discovered, so a
+       ``stellium fonts download zh`` makes non-Latin charts render with no code change.
+       The bundle covers Latin + astrological symbols only; CJK/Arabic/etc. live here.
+    3. ``extra`` — directories from a per-render ``with_font()`` override.
+
+    The bundle stays self-sufficient for Latin charts; the later entries only add coverage
+    the bundle lacks.
+
+    **This is the reason this module exists** — see the module docstring for the two wrong
+    answers it replaces.
     """
     fonts = os.path.join(
         os.path.dirname(os.path.dirname(__file__)),  # -> stellium/
         "data",
         "fonts",
     )
-    return [fonts] if os.path.isdir(fonts) else []
+    paths: list[str] = [fonts] if os.path.isdir(fonts) else []
+
+    from stellium.data.paths import installed_font_dirs
+
+    paths.extend(str(d) for d in installed_font_dirs())
+    if extra:
+        paths.extend(extra)
+    return paths
 
 
 # ---------------------------------------------------------------------------
@@ -161,6 +193,7 @@ def compile_png(
     root: str,
     ppi: float = 144.0,
     sys_inputs: dict[str, str] | None = None,
+    extra_fonts: list[str] | None = None,
 ) -> bytes:
     """Compile a ``.typ`` entry file to PNG bytes.
 
@@ -177,7 +210,7 @@ def compile_png(
     return require_typst().compile(
         entry,
         root=root,
-        font_paths=font_paths(),
+        font_paths=font_paths(extra=extra_fonts),
         ignore_system_fonts=True,
         format="png",
         ppi=ppi,
@@ -278,7 +311,10 @@ class TypstDocument:
             materialize_svgs(svg_sections, self.root)
 
         with open(os.path.join(self.root, "data.json"), "w", encoding="utf-8") as fh:
-            json.dump(data, fh, ensure_ascii=False)
+            # A Gloss serializes to its .loc mask — the template receives plain localized
+            # strings. Where a template needs the .en identity (a glyph/colour lookup), the
+            # payload carries that canonical field explicitly. See Unified Renderer Contract.
+            json.dump(data, fh, ensure_ascii=False, default=_gloss_to_loc)
 
         return compile_pdf(
             os.path.join(self.root, self.entry),

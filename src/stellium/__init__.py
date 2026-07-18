@@ -88,6 +88,7 @@ from stellium.exceptions import (
     DataQualityWarning,
     GeocodingWarning,
     MissingEphemerisWarning,
+    MissingFontWarning,
     MissingGlyphWarning,
     StelliumWarning,
     TimeZoneWarning,
@@ -212,6 +213,7 @@ __all__ = [
     "GeocodingWarning",
     "ConfigurationWarning",
     "MissingEphemerisWarning",
+    "MissingFontWarning",
     "MissingGlyphWarning",
     "TimeZoneWarning",
 ]

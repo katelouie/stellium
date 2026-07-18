@@ -12,8 +12,9 @@ from typing import Any
 
 from stellium.core.models import CalculatedChart, ZRPeriod, ZRSnapshot, ZRTimeline
 from stellium.core.registry import CELESTIAL_REGISTRY
+from stellium.i18n import format_date, get_default_locale, msg, render, term
 
-from ._utils import get_sign_glyph
+from ._utils import get_sign_glyph, glyph_label
 
 
 class ProfectionSection:
@@ -160,11 +161,15 @@ class ProfectionSection:
         # Get sign glyph
         sign_glyph = get_sign_glyph(result.profected_sign)
 
-        data = {
+        data: dict[str, Any] = {
             "Age": str(result.units),
-            "Activated House": f"House {result.profected_house}",
-            "Activated Sign": f"{sign_glyph} {result.profected_sign}",
-            "Lord of the Year": f"{ruler_glyph} {result.ruler}",
+            "Activated House": msg("House {number}", number=result.profected_house),
+            "Activated Sign": msg(
+                "{glyph} {sign}",
+                glyph=sign_glyph,
+                sign=term(f"sign.{result.profected_sign}"),
+            ),
+            "Lord of the Year": glyph_label(ruler_glyph, f"body.{result.ruler}"),
             "House System": house_system,
         }
 
@@ -172,7 +177,9 @@ class ProfectionSection:
             modern_glyph = ""
             if result.ruler_modern in CELESTIAL_REGISTRY:
                 modern_glyph = CELESTIAL_REGISTRY[result.ruler_modern].glyph
-            data["Modern Ruler"] = f"{modern_glyph} {result.ruler_modern}"
+            data["Modern Ruler"] = glyph_label(
+                modern_glyph, f"body.{result.ruler_modern}"
+            )
 
         return {
             "type": "key_value",
@@ -189,11 +196,15 @@ class ProfectionSection:
 
         sign_glyph = get_sign_glyph(result.profected_sign)
 
-        data = {
+        data: dict[str, Any] = {
             "Month in Year": str(month),
-            "Activated House": f"House {result.profected_house}",
-            "Activated Sign": f"{sign_glyph} {result.profected_sign}",
-            "Lord of the Month": f"{ruler_glyph} {result.ruler}",
+            "Activated House": msg("House {number}", number=result.profected_house),
+            "Activated Sign": msg(
+                "{glyph} {sign}",
+                glyph=sign_glyph,
+                sign=term(f"sign.{result.profected_sign}"),
+            ),
+            "Lord of the Month": glyph_label(ruler_glyph, f"body.{result.ruler}"),
         }
 
         return {
@@ -219,10 +230,14 @@ class ProfectionSection:
 
             rows.append(
                 [
-                    f"{point_glyph} {point}" if point_glyph else point,
-                    f"House {result.profected_house}",
-                    f"{sign_glyph} {result.profected_sign}",
-                    f"{ruler_glyph} {result.ruler}",
+                    glyph_label(point_glyph, f"body.{point}"),
+                    msg("House {number}", number=result.profected_house),
+                    msg(
+                        "{glyph} {sign}",
+                        glyph=sign_glyph,
+                        sign=term(f"sign.{result.profected_sign}"),
+                    ),
+                    glyph_label(ruler_glyph, f"body.{result.ruler}"),
                 ]
             )
 
@@ -265,11 +280,15 @@ class ProfectionSection:
         degree = int(pos.sign_degree)
         minute = int((pos.sign_degree % 1) * 60)
 
-        data = {
-            "Planet": f"{ruler_glyph} {result.ruler}",
-            "Natal Sign": f"{sign_glyph} {pos.sign}",
+        data: dict[str, Any] = {
+            "Planet": glyph_label(ruler_glyph, f"body.{result.ruler}"),
+            "Natal Sign": msg(
+                "{glyph} {sign}", glyph=sign_glyph, sign=term(f"sign.{pos.sign}")
+            ),
             "Natal Degree": f"{degree}°{minute:02d}'",
-            "Natal House": f"House {result.ruler_house}" if result.ruler_house else "—",
+            "Natal House": msg("House {number}", number=result.ruler_house)
+            if result.ruler_house
+            else "—",
             "Retrograde": "Yes ℞" if pos.is_retrograde else "No",
         }
 
@@ -297,9 +316,13 @@ class ProfectionSection:
             rows.append(
                 [
                     age_str,
-                    f"House {entry.profected_house}",
-                    f"{sign_glyph} {entry.profected_sign}",
-                    f"{ruler_glyph} {entry.ruler}",
+                    msg("House {number}", number=entry.profected_house),
+                    msg(
+                        "{glyph} {sign}",
+                        glyph=sign_glyph,
+                        sign=term(f"sign.{entry.profected_sign}"),
+                    ),
+                    glyph_label(ruler_glyph, f"body.{entry.ruler}"),
                 ]
             )
 
@@ -447,8 +470,13 @@ class ZodiacalReleasingSection:
                 # Date outside timeline range - use age 0 as fallback
                 snapshot = timeline.at_age(0)
 
-            # Build lot header
-            lot_title = f"{lot_name} ({timeline.lot_sign})"
+            # Build lot header — the lot name and its sign are both terms.
+            lot_token = msg(lot_name)
+            lot_title = msg(
+                "{lot} ({sign})",
+                lot=lot_token,
+                sign=term(f"sign.{timeline.lot_sign}"),
+            )
 
             if self.mode in ("snapshot", "both"):
                 # Add snapshot section
@@ -459,7 +487,9 @@ class ZodiacalReleasingSection:
                 # Add timeline section
                 timeline_data = self._build_timeline(timeline, snapshot)
                 timeline_title = (
-                    f"{lot_name} — L1 Timeline" if self.mode == "both" else lot_title
+                    msg("{lot} — L1 Timeline", lot=lot_token)
+                    if self.mode == "both"
+                    else lot_title
                 )
                 sections.append((timeline_title, timeline_data))
 
@@ -475,37 +505,51 @@ class ZodiacalReleasingSection:
         """Build snapshot display showing current periods at all levels."""
         sections = []
 
-        # Header info
-        query_date_str = snapshot.date.strftime("%B %d, %Y")
-        header_data = {
-            "Current Age": f"{snapshot.age:.1f} years ({query_date_str})",
-            "Active Rulers": ", ".join(self._format_rulers(snapshot.rulers)),
+        # Header info. The date is laid out per locale; the age string and status labels
+        # are messages. Values in a key_value localize through the resolve pass.
+        # key_value keys stay plain strings — the resolve pass wraps them as messages
+        # (a token is unhashable and can't be a dict key). Values may be tokens.
+        loc = get_default_locale()
+        header_data: dict[str, Any] = {
+            "Current Age": msg(
+                "{age} years ({date})",
+                age=f"{snapshot.age:.1f}",
+                date=format_date(snapshot.date, loc),
+            ),
+            "Active Rulers": self._format_rulers(snapshot.rulers),
         }
 
-        # Add status indicators
+        # Add status indicators (joined with " | ", so composed as one message to keep
+        # that separator rather than the comma a list would join with).
         status_parts = []
         if snapshot.is_peak:
-            status_parts.append("★ Peak Period")
+            status_parts.append(msg("★ Peak Period"))
         if snapshot.is_lb:
-            status_parts.append("⚡ Loosing of Bond")
-        if status_parts:
-            header_data["Status"] = " | ".join(status_parts)
+            status_parts.append(msg("⚡ Loosing of Bond"))
+        if len(status_parts) == 2:
+            header_data["Status"] = msg(
+                "{a} | {b}", a=status_parts[0], b=status_parts[1]
+            )
+        elif status_parts:
+            header_data["Status"] = status_parts[0]
 
-        sections.append(("Current State", {"type": "key_value", "data": header_data}))
+        sections.append(
+            (msg("Current State"), {"type": "key_value", "data": header_data})
+        )
 
         # L1/L2 table (always show)
         l1_l2_table = self._build_l1_l2_table(snapshot, chart)
-        sections.append(("Major Periods", l1_l2_table))
+        sections.append((msg("Major Periods"), l1_l2_table))
 
         # L3 context (if available)
         if snapshot.l3 is not None:
             l3_context = self._build_level_context(timeline, snapshot, level=3)
-            sections.append(("L3 Context", l3_context))
+            sections.append((msg("L3 Context"), l3_context))
 
         # L4 context (if available)
         if snapshot.l4 is not None:
             l4_context = self._build_level_context(timeline, snapshot, level=4)
-            sections.append(("L4 Context", l4_context))
+            sections.append((msg("L4 Context"), l4_context))
 
         return {
             "type": "compound",
@@ -516,44 +560,53 @@ class ZodiacalReleasingSection:
         self, snapshot: ZRSnapshot, chart: CalculatedChart
     ) -> dict[str, Any]:
         """Build table for L1 and L2 periods."""
-        headers = ["Level", "Sign", "Ruler", "Period", "Quality", "Status"]
+        headers = [
+            msg("Level"),
+            msg("Sign"),
+            msg("Ruler"),
+            msg("Period"),
+            msg("Quality"),
+            msg("Status"),
+        ]
         rows = []
 
         # L1 row
         l1 = snapshot.l1
         l1_age_start = (l1.start - chart.datetime.utc_datetime).days / 365.25
         l1_age_end = (l1.end - chart.datetime.utc_datetime).days / 365.25
-        l1_period = f"Ages {l1_age_start:.0f} - {l1_age_end:.0f}"
-        l1_status = self._format_period_status(l1)
-        l1_quality = self._format_quality(l1)
+        l1_period = msg(
+            "Ages {start} - {end}",
+            start=f"{l1_age_start:.0f}",
+            end=f"{l1_age_end:.0f}",
+        )
 
         rows.append(
             [
-                "L1 (Major)",
-                f"{get_sign_glyph(l1.sign)} {l1.sign}",
+                msg("L1 (Major)"),
+                self._sign_cell(l1.sign),
                 self._format_ruler(l1.ruler),
                 l1_period,
-                l1_quality,
-                l1_status,
+                self._format_quality(l1),
+                self._format_period_status(l1),
             ]
         )
 
         # L2 row
         l2 = snapshot.l2
-        l2_start = l2.start.strftime("%b %Y")
-        l2_end = l2.end.strftime("%b %Y")
-        l2_period = f"{l2_start} - {l2_end}"
-        l2_status = self._format_period_status(l2)
-        l2_quality = self._format_quality(l2)
+        l2_period = msg(
+            "{start} - {end}",
+            start=self._month_year(l2.start),
+            end=self._month_year(l2.end),
+        )
 
         rows.append(
             [
-                "L2 (Sub)",
-                f"{get_sign_glyph(l2.sign)} {l2.sign}",
+                msg("L2 (Sub)"),
+                self._sign_cell(l2.sign),
                 self._format_ruler(l2.ruler),
                 l2_period,
-                l2_quality,
-                l2_status,
+                self._format_quality(l2),
+                self._format_period_status(l2),
             ]
         )
 
@@ -563,14 +616,21 @@ class ZodiacalReleasingSection:
         self, timeline: ZRTimeline, snapshot: ZRSnapshot, level: int
     ) -> dict[str, Any]:
         """Build context table for L3 or L4 showing periods around current."""
+        loc = get_default_locale()
         periods = timeline.periods.get(level, [])
         if not periods:
-            return {"type": "text", "text": f"No L{level} data available."}
+            return {
+                "type": "text",
+                "text": render(msg("No L{n} data available.", n=level), loc),
+            }
 
         # Find current period index
         current_period = snapshot.l3 if level == 3 else snapshot.l4
         if current_period is None:
-            return {"type": "text", "text": f"No L{level} data available."}
+            return {
+                "type": "text",
+                "text": render(msg("No L{n} data available.", n=level), loc),
+            }
 
         # Find index of current period
         current_idx = None
@@ -582,7 +642,9 @@ class ZodiacalReleasingSection:
         if current_idx is None:
             return {
                 "type": "text",
-                "text": f"Could not locate current L{level} period.",
+                "text": render(
+                    msg("Could not locate current L{n} period.", n=level), loc
+                ),
             }
 
         # Get context window
@@ -591,27 +653,23 @@ class ZodiacalReleasingSection:
         context_periods = periods[start_idx:end_idx]
 
         # Build table
-        headers = ["Sign", "Ruler", "Period", "Status"]
+        headers = [msg("Sign"), msg("Ruler"), msg("Period"), msg("Status")]
         rows = []
 
         for period in context_periods:
             is_current = period.start == current_period.start
-
-            # Format sign with current marker
-            sign_str = f"{get_sign_glyph(period.sign)} {period.sign}"
-            if is_current:
-                sign_str = f"⚡ {sign_str}"
-
-            # Format dates
-            start_str = period.start.strftime("%b %d")
-            end_str = period.end.strftime("%b %d")
-            period_str = f"{start_str} - {end_str}"
-
-            # Status
-            status = self._format_period_status(period)
-
+            period_str = msg(
+                "{start} - {end}",
+                start=self._month_day(period.start),
+                end=self._month_day(period.end),
+            )
             rows.append(
-                [sign_str, self._format_ruler(period.ruler), period_str, status]
+                [
+                    self._sign_cell(period.sign, current=is_current),
+                    self._format_ruler(period.ruler),
+                    period_str,
+                    self._format_period_status(period),
+                ]
             )
 
         return {"type": "table", "headers": headers, "rows": rows}
@@ -620,47 +678,55 @@ class ZodiacalReleasingSection:
         self, timeline: ZRTimeline, snapshot: ZRSnapshot
     ) -> dict[str, Any]:
         """Build L1 timeline table."""
+        loc = get_default_locale()
         l1_periods = timeline.l1_periods()
 
         if not l1_periods:
-            return {"type": "text", "text": "No L1 timeline data available."}
+            return {
+                "type": "text",
+                "text": render(msg("No L1 timeline data available."), loc),
+            }
 
-        headers = ["Sign", "Ruler", "Ages", "Quality", "Status"]
+        headers = [
+            msg("Sign"),
+            msg("Ruler"),
+            msg("Ages"),
+            msg("Quality"),
+            msg("Status"),
+        ]
         rows = []
 
         for period in l1_periods:
-            is_current = (
-                period.start <= snapshot.date < period.end
-                if snapshot.l1.start == period.start
-                else False
-            )
-            # Actually check if this is the current L1
             is_current = period.start == snapshot.l1.start
 
             # Calculate ages
             age_start = (period.start - timeline.birth_date).days / 365.25
             age_end = (period.end - timeline.birth_date).days / 365.25
-
-            # Format sign with current marker
-            sign_str = f"{get_sign_glyph(period.sign)} {period.sign}"
-            if is_current:
-                sign_str = f"⚡ {sign_str}"
-
-            # Format ages
             ages_str = f"{age_start:3.0f} - {age_end:3.0f}"
 
-            # Quality
-            quality = self._format_quality(period)
-
-            # Status
-            status = self._format_period_status(period)
-
             rows.append(
-                [sign_str, self._format_ruler(period.ruler), ages_str, quality, status]
+                [
+                    self._sign_cell(period.sign, current=is_current),
+                    self._format_ruler(period.ruler),
+                    ages_str,
+                    self._format_quality(period),
+                    self._format_period_status(period),
+                ]
             )
 
-        # Add legend
-        legend = "★ = Peak (10th)  ◆ = Angular  ⚡ = Current  LB = Loosing of Bond  +/- = Quality Score"
+        # Legend (baked; footer is free-form text). The glyph keys are neutral, the words
+        # localize.
+        legend = render(
+            msg(
+                "★ = {peak}  ◆ = {angular}  ⚡ = {current}  LB = {lb}  +/- = {score}",
+                peak=msg("Peak (10th)"),
+                angular=msg("Angular"),
+                current=msg("Current"),
+                lb=msg("Loosing of Bond"),
+                score=msg("Quality Score"),
+            ),
+            loc,
+        )
 
         return {
             "type": "table",
@@ -669,58 +735,67 @@ class ZodiacalReleasingSection:
             "footer": legend,
         }
 
-    def _format_period_status(self, period: ZRPeriod) -> str:
-        """Format status indicators for a period."""
+    def _format_period_status(self, period: ZRPeriod) -> Any:
+        """Format status indicators for a period as a token (or empty string)."""
         parts = []
         if period.is_peak:
-            parts.append("★ Peak (10th)")
+            parts.append(msg("★ Peak (10th)"))
         elif period.is_angular:
-            parts.append(f"◆ Angular ({period.angle_from_lot})")
+            parts.append(msg("◆ Angular ({angle})", angle=period.angle_from_lot))
         if period.is_loosing_bond:
-            parts.append("LB")
-        return " | ".join(parts) if parts else ""
+            parts.append(msg("LB"))
+        if not parts:
+            return ""
+        if len(parts) == 2:
+            return msg("{a} | {b}", a=parts[0], b=parts[1])
+        return parts[0]
 
-    def _format_quality(self, period: ZRPeriod) -> str:
-        """Format quality/scoring information for a period."""
-        # Build quality string with score and sentiment
-        score_str = f"{period.score:+d}"
+    # The scoring engine's internal role names → the abbreviations the report prints.
+    _ROLE_ABBR = {
+        "sect_benefic": "S.Ben",
+        "contrary_benefic": "C.Ben",
+        "sect_malefic": "S.Mal",
+        "contrary_malefic": "C.Mal",
+        "sect_light": "S.Lgt",
+        "contrary_light": "C.Lgt",
+    }
 
-        # Add sentiment icon
+    def _format_quality(self, period: ZRPeriod) -> Any:
+        """Format quality/scoring for a period. Score and sentiment icon are neutral; the
+        ruler-role abbreviation is a message so a locale can render it."""
         if period.sentiment == "positive":
             sentiment_icon = "✓"
         elif period.sentiment == "challenging":
             sentiment_icon = "✗"
         else:
             sentiment_icon = "—"
+        base = f"{period.score:+d} {sentiment_icon}"
 
-        quality = f"{score_str} {sentiment_icon}"
-
-        # Optionally add role info (if present and not too long)
-        roles = []
         if period.ruler_role:
-            # Shorten role names for display
-            role_map = {
-                "sect_benefic": "S.Ben",
-                "contrary_benefic": "C.Ben",
-                "sect_malefic": "S.Mal",
-                "contrary_malefic": "C.Mal",
-                "sect_light": "S.Lgt",
-                "contrary_light": "C.Lgt",
-            }
-            roles.append(role_map.get(period.ruler_role, period.ruler_role))
+            abbr = self._ROLE_ABBR.get(period.ruler_role, period.ruler_role)
+            return msg("{base} ({role})", base=base, role=msg(abbr))
+        return base
 
-        if roles:
-            quality += f" ({', '.join(roles)})"
+    def _format_ruler(self, ruler: str) -> Any:
+        """Format ruler as a glyph + catalog-term token (localizes in the resolve pass)."""
+        glyph = CELESTIAL_REGISTRY[ruler].glyph if ruler in CELESTIAL_REGISTRY else ""
+        return glyph_label(glyph, f"body.{ruler}")
 
-        return quality
-
-    def _format_ruler(self, ruler: str) -> str:
-        """Format ruler with glyph."""
-        if ruler in CELESTIAL_REGISTRY:
-            glyph = CELESTIAL_REGISTRY[ruler].glyph
-            return f"{glyph} {ruler}"
-        return ruler
-
-    def _format_rulers(self, rulers: list[str]) -> list[str]:
-        """Format multiple rulers with glyphs."""
+    def _format_rulers(self, rulers: list[str]) -> list[Any]:
+        """Format multiple rulers as tokens (a list renders comma-joined)."""
         return [self._format_ruler(r) for r in rulers]
+
+    def _sign_cell(self, sign: str, *, current: bool = False) -> Any:
+        """A sign cell: glyph + sign term, optionally flagged as the current period."""
+        template = "⚡ {glyph} {sign}" if current else "{glyph} {sign}"
+        return msg(template, glyph=get_sign_glyph(sign), sign=term(f"sign.{sign}"))
+
+    def _month_year(self, d: dt.datetime) -> Any:
+        """A month+year token (locales reorder via the '{month} {year}' template)."""
+        return msg(
+            "{month} {year}", month=term(f"month.{d.strftime('%B')}"), year=d.year
+        )
+
+    def _month_day(self, d: dt.datetime) -> Any:
+        """A month+day token (locales reorder via the '{month} {day}' template)."""
+        return msg("{month} {day}", month=term(f"month.{d.strftime('%B')}"), day=d.day)

@@ -12,8 +12,38 @@ import svgwrite
 from stellium.core.chart_utils import is_comparison, is_multichart
 from stellium.core.models import Aspect, CalculatedChart, ObjectType
 from stellium.core.registry import CELESTIAL_REGISTRY, get_aspect_info
+from stellium.i18n import msg, render, term
 
 from .core import ChartRenderer, get_glyph
+
+
+def _body_name(name: str, locale: str) -> str:
+    """A celestial body's display name, localized (English identity is its display name)."""
+    return render(term(f"body.{name}"), locale)
+
+
+def _sign_name(sign: str, locale: str) -> str:
+    """A zodiac sign, localized."""
+    return render(term(f"sign.{sign}"), locale)
+
+
+def _header(label: str, locale: str) -> str:
+    """A table column header, localized (the English string is the key)."""
+    return render(msg(label), locale)
+
+
+def _wheel_title(
+    label: str | None, default_key: str, template: str, locale: str
+) -> str:
+    """A biwheel table title, localized.
+
+    ``label`` is a person's name (data, kept verbatim) or None, in which case the
+    localized default ("Chart 1"/"Chart 2") is used. ``template`` positions the name per
+    locale — English suffixes "(Inner Wheel)"; Chinese wraps it, e.g. "（內圈）".
+    """
+    name = label or render(msg(default_key), locale)
+    return render(msg(template, name=name), locale)
+
 
 # Legacy aliases for backward compatibility within this module
 # These are used by layers.py which imports them from here
@@ -264,7 +294,11 @@ class PositionTableLayer:
 
         # Header row with column mapping
         col_names = ["planet", "sign", "degree"]
-        headers = ["Planet", "Sign", "Degree"]
+        headers = [
+            _header("Planet", renderer.locale),
+            _header("Sign", renderer.locale),
+            _header("Degree", renderer.locale),
+        ]
 
         # Add house column(s) - one per system
         for system_name in house_systems:
@@ -275,11 +309,11 @@ class PositionTableLayer:
                 abbrev = self._abbreviate_house_system(system_name)
                 headers.append(abbrev)
             else:
-                headers.append("House")
+                headers.append(_header("House", renderer.locale))
 
         if self.style["show_speed"]:
             col_names.append("speed")
-            headers.append("Speed")
+            headers.append(_header("Speed", renderer.locale))
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -315,9 +349,8 @@ class PositionTableLayer:
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
-            # Get display name from registry
-            obj_info = CELESTIAL_REGISTRY.get(pos.name)
-            display_name = obj_info.display_name if obj_info else pos.name
+            # Localized display name (English identity is the registry's display_name).
+            display_name = _body_name(pos.name, renderer.locale)
 
             # Render glyph and text separately to use correct fonts
             x_offset = col_x_positions[0]
@@ -378,7 +411,7 @@ class PositionTableLayer:
             # Column 1: Sign
             dwg.add(
                 dwg.text(
-                    pos.sign,
+                    _sign_name(pos.sign, renderer.locale),
                     insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
@@ -541,7 +574,9 @@ class PositionTableLayer:
         y_start = self.y_offset
 
         # Chart 1 title
-        title_text = f"{comparison.chart1_label or 'Chart 1'} (Inner Wheel)"
+        title_text = _wheel_title(
+            comparison.chart1_label, "Chart 1", "{name} (Inner Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -564,7 +599,9 @@ class PositionTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{comparison.chart2_label or 'Chart 2'} (Outer Wheel)"
+        title_text = _wheel_title(
+            comparison.chart2_label, "Chart 2", "{name} (Outer Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -655,15 +692,17 @@ class PositionTableLayer:
                 single_table_width += gap
 
         # Get labels from multichart
-        label1 = multichart.labels[0] if multichart.labels else "Chart 1"
-        label2 = multichart.labels[1] if len(multichart.labels) > 1 else "Chart 2"
+        label1 = multichart.labels[0] if multichart.labels else None
+        label2 = multichart.labels[1] if len(multichart.labels) > 1 else None
 
         # Render Chart 1 table (left)
         x_chart1 = self.x_offset
         y_start = self.y_offset
 
         # Chart 1 title
-        title_text = f"{label1} (Inner Wheel)"
+        title_text = _wheel_title(
+            label1, "Chart 1", "{name} (Inner Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -691,7 +730,9 @@ class PositionTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{label2} (Outer Wheel)"
+        title_text = _wheel_title(
+            label2, "Chart 2", "{name} (Outer Wheel)", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -747,13 +788,17 @@ class PositionTableLayer:
 
         # Header row with column mapping
         col_names = ["planet", "sign", "degree"]
-        headers = ["Planet", "Sign", "Degree"]
+        headers = [
+            _header("Planet", renderer.locale),
+            _header("Sign", renderer.locale),
+            _header("Degree", renderer.locale),
+        ]
         if self.style["show_house"]:
             col_names.append("house")
             headers.append("House")
         if self.style["show_speed"]:
             col_names.append("speed")
-            headers.append("Speed")
+            headers.append(_header("Speed", renderer.locale))
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -789,9 +834,8 @@ class PositionTableLayer:
 
             # Column 0: Planet name + glyph
             glyph_info = get_glyph(pos.name)
-            # Get display name from registry
-            obj_info = CELESTIAL_REGISTRY.get(pos.name)
-            display_name = obj_info.display_name if obj_info else pos.name
+            # Localized display name (English identity is the registry's display_name).
+            display_name = _body_name(pos.name, renderer.locale)
 
             # Render glyph and text separately to use correct fonts
             x_offset = col_x_positions[0]
@@ -852,7 +896,7 @@ class PositionTableLayer:
             # Column 1: Sign
             dwg.add(
                 dwg.text(
-                    pos.sign,
+                    _sign_name(pos.sign, renderer.locale),
                     insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",
@@ -1046,7 +1090,7 @@ class HouseCuspTableLayer:
 
         # Build column names and headers: House + (Sign, Degree) per system
         col_names = ["house"]
-        headers = ["House"]
+        headers = [_header("House", renderer.locale)]
 
         for system_name in house_systems:
             col_names.extend(["sign", "degree"])
@@ -1055,7 +1099,12 @@ class HouseCuspTableLayer:
                 abbrev = self._abbreviate_house_system(system_name)
                 headers.extend([f"{abbrev}", "Deg"])
             else:
-                headers.extend(["Sign", "Degree"])
+                headers.extend(
+                    [
+                        _header("Sign", renderer.locale),
+                        _header("Degree", renderer.locale),
+                    ]
+                )
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -1135,7 +1184,7 @@ class HouseCuspTableLayer:
                 # Sign column
                 dwg.add(
                     dwg.text(
-                        sign_name,
+                        _sign_name(sign_name, renderer.locale),
                         insert=(col_x_positions[col_idx], y),
                         text_anchor="start",
                         dominant_baseline="hanging",
@@ -1211,7 +1260,9 @@ class HouseCuspTableLayer:
         header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Chart 1 title
-        title_text = f"{comparison.chart1_label or 'Chart 1'} Houses"
+        title_text = _wheel_title(
+            comparison.chart1_label, "Chart 1", "{name} Houses", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -1243,7 +1294,9 @@ class HouseCuspTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{comparison.chart2_label or 'Chart 2'} Houses"
+        title_text = _wheel_title(
+            comparison.chart2_label, "Chart 2", "{name} Houses", renderer.locale
+        )
         dwg.add(
             dwg.text(
                 title_text,
@@ -1312,8 +1365,8 @@ class HouseCuspTableLayer:
                 single_table_width += gap_between_cols
 
         # Get labels from multichart
-        label1 = multichart.labels[0] if multichart.labels else "Chart 1"
-        label2 = multichart.labels[1] if len(multichart.labels) > 1 else "Chart 2"
+        label1 = multichart.labels[0] if multichart.labels else None
+        label2 = multichart.labels[1] if len(multichart.labels) > 1 else None
 
         # Render Chart 1 house table (left)
         x_chart1 = self.x_offset
@@ -1324,7 +1377,7 @@ class HouseCuspTableLayer:
         header_color = renderer.style.get("text_color", self.style["header_color"])
 
         # Chart 1 title
-        title_text = f"{label1} Houses"
+        title_text = _wheel_title(label1, "Chart 1", "{name} Houses", renderer.locale)
         dwg.add(
             dwg.text(
                 title_text,
@@ -1356,7 +1409,7 @@ class HouseCuspTableLayer:
         x_chart2 = x_chart1 + single_table_width + gap_between_tables
 
         # Chart 2 title
-        title_text = f"{label2} Houses"
+        title_text = _wheel_title(label2, "Chart 2", "{name} Houses", renderer.locale)
         dwg.add(
             dwg.text(
                 title_text,
@@ -1403,7 +1456,11 @@ class HouseCuspTableLayer:
 
         # Header row with column mapping
         col_names = ["house", "sign", "degree"]
-        headers = ["House", "Sign", "Degree"]
+        headers = [
+            _header("House", renderer.locale),
+            _header("Sign", renderer.locale),
+            _header("Degree", renderer.locale),
+        ]
 
         # Calculate column x positions (cumulative widths)
         col_x_positions = [x_start + padding]
@@ -1473,7 +1530,7 @@ class HouseCuspTableLayer:
             # Column 1: Sign
             dwg.add(
                 dwg.text(
-                    sign_name,
+                    _sign_name(sign_name, renderer.locale),
                     insert=(col_x_positions[1], y),
                     text_anchor="start",
                     dominant_baseline="hanging",

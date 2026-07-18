@@ -458,7 +458,7 @@ def create_timing_page():
                 ).calculate()
 
                 calculated_chart["ref"] = multichart
-                drawer = multichart.draw()
+                drawer = multichart.draw().with_locale(report_locale())
 
             elif state.chart_type == "progressions":
                 # Calculate progressed datetime
@@ -497,7 +497,7 @@ def create_timing_page():
                 ).calculate()
 
                 calculated_chart["ref"] = multichart
-                drawer = multichart.draw()
+                drawer = multichart.draw().with_locale(report_locale())
 
             elif state.chart_type == "solar_return":
                 # Solar Return for specified year
@@ -519,7 +519,7 @@ def create_timing_page():
 
                 return_chart = return_builder.calculate()
                 calculated_chart["ref"] = return_chart
-                drawer = return_chart.draw()
+                drawer = return_chart.draw().with_locale(report_locale())
 
             elif state.chart_type == "lunar_return":
                 # Lunar Return near specified date (or now if not specified)
@@ -541,7 +541,7 @@ def create_timing_page():
 
                 return_chart = return_builder.calculate()
                 calculated_chart["ref"] = return_chart
-                drawer = return_chart.draw()
+                drawer = return_chart.draw().with_locale(report_locale())
 
             elif state.chart_type == "planetary_return":
                 # Planetary Return
@@ -564,7 +564,7 @@ def create_timing_page():
 
                 return_chart = return_builder.calculate()
                 calculated_chart["ref"] = return_chart
-                drawer = return_chart.draw()
+                drawer = return_chart.draw().with_locale(report_locale())
 
             else:
                 ui.notify(

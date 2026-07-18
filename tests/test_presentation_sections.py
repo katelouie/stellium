@@ -148,21 +148,27 @@ def test_chart_overview_generate_data(sample_chart):
 
 
 def test_chart_overview_date_format(sample_chart):
-    """Test that date is formatted correctly."""
-    section = ChartOverviewSection()
-    data = section.generate_data(sample_chart)
+    """The section emits a raw date; the renderer formats it per locale.
 
-    assert data["data"]["Date"] == "January 01, 2000"
+    ChartOverview is format-last now: it hands over the date object rather than a
+    pre-formatted string, so the same chart can render in any locale. In English it
+    still reads "January 01, 2000".
+    """
+    from stellium.i18n import render
+
+    data = ChartOverviewSection().generate_data(sample_chart)
+    assert data["data"]["Date"] == dt.date(2000, 1, 1)
+    assert render(data["data"]["Date"], "en") == "January 01, 2000"
 
 
 def test_chart_overview_house_systems(sample_chart):
-    """Test that house systems are listed correctly."""
-    section = ChartOverviewSection()
-    data = section.generate_data(sample_chart)
+    """House systems are emitted as catalog terms; the renderer joins and localizes."""
+    from stellium.i18n import render
 
-    house_systems = data["data"]["House System"]
-    assert "Placidus" in house_systems
-    assert "Whole Sign" in house_systems
+    data = ChartOverviewSection().generate_data(sample_chart)
+    rendered = render(data["data"]["House System"], "en")
+    assert "Placidus" in rendered
+    assert "Whole Sign" in rendered
 
 
 def test_chart_overview_location(sample_chart):
@@ -205,18 +211,24 @@ def test_planet_position_custom_options():
 
 
 def test_planet_position_generate_data(sample_chart):
-    """Test PlanetPositionSection data generation."""
+    """Test PlanetPositionSection data generation.
+
+    Headers are format-last: "Planet"/"Position" are still plain labels, but the house
+    header is a message that renders to "House (Pl)" — the one header the old substring
+    translator could never localize.
+    """
+    from stellium.i18n import render
+
     section = PlanetPositionSection()
     data = section.generate_data(sample_chart)
 
     assert data["type"] == "table"
     assert "headers" in data
     assert "rows" in data
-    assert "Planet" in data["headers"]
-    assert "Position" in data["headers"]
-    # House headers are now abbreviated like "House (Pl)", "House (WS)"
-    house_headers = [h for h in data["headers"] if h.startswith("House")]
-    assert len(house_headers) > 0
+    rendered = [render(h, "en") for h in data["headers"]]
+    assert "Planet" in rendered
+    assert "Position" in rendered
+    assert any(h.startswith("House (") for h in rendered)
 
 
 def test_planet_position_headers_with_speed(sample_chart):
@@ -237,44 +249,40 @@ def test_planet_position_headers_without_house():
 
 
 def test_planet_position_rows_content(mock_chart):
-    """Test that rows contain planet data."""
+    """Rows carry structured cells (terms/messages) that render to name and position."""
+    from stellium.i18n import render
+
     section = PlanetPositionSection(include_house=False, include_speed=False)
     data = section.generate_data(mock_chart)
 
     rows = data["rows"]
     assert len(rows) > 0
-
-    # Each row should have planet name and position
     for row in rows:
         assert len(row) >= 2  # At least name and position
-        assert isinstance(row[0], str)  # Planet name
-        assert "°" in row[1]  # Position with degree symbol
+        assert render(row[0], "en")  # Planet name renders to something
+        assert "°" in render(row[1], "en")  # Position with degree symbol
 
 
 def test_planet_position_filters_objects(mock_chart):
     """Test that only planets, asteroids, nodes, points are included."""
+    from stellium.i18n import render
+
     section = PlanetPositionSection()
     data = section.generate_data(mock_chart)
 
-    # Get all position names from rows (may include glyphs like "☉ Sun")
-    planet_names = [row[0] for row in data["rows"]]
-
-    # Should include Sun, Moon, etc. (with glyphs prepended)
+    planet_names = [render(row[0], "en") for row in data["rows"]]
     assert any("Sun" in name for name in planet_names)
     assert any("Moon" in name for name in planet_names)
-
-    # Should not include angles (they're in a different category)
-    # Angles might be included depending on ObjectType, but midpoints shouldn't
-    # be in the planet list
 
 
 def test_planet_position_sorting(mock_chart):
     """Test that planets are sorted consistently."""
+    from stellium.i18n import render
+
     section = PlanetPositionSection()
     data = section.generate_data(mock_chart)
 
-    planet_names = [row[0] for row in data["rows"]]
-
+    planet_names = [render(row[0], "en") for row in data["rows"]]
     # Sun should typically come first in the standard ordering (with glyph)
     assert "Sun" in planet_names[0]
 
@@ -380,9 +388,10 @@ def test_aspect_section_major_only(sample_chart):
     section = AspectSection(mode="major", include_aspectarian=False)
     data = section.generate_data(sample_chart)
 
-    # Check that only major aspects are included
-    # Aspect names may include glyphs like "△ Trine", so check substring
-    aspect_names = [row[1] for row in data["rows"]]
+    # Aspect cells are format-last (a term + glyph); render to check the name.
+    from stellium.i18n import render
+
+    aspect_names = [render(row[1], "en") for row in data["rows"]]
     major_aspects = ["Conjunction", "Opposition", "Trine", "Square", "Sextile"]
 
     for aspect_name in aspect_names:
@@ -473,10 +482,12 @@ def test_midpoint_section_core_mode(chart_with_midpoints):
     data = section.generate_data(chart_with_midpoints)
 
     # Core midpoints should only involve Sun, Moon, ASC, MC
+    from stellium.i18n import render
+
     core_objects = {"Sun", "Moon", "ASC", "MC"}
 
     for row in data["rows"]:
-        midpoint_name = row[0]
+        midpoint_name = render(row[0], "en")  # pair cell is format-last
         objects = midpoint_name.replace(" (indirect)", "").split("/")
 
         # At least one object should be in core
@@ -826,14 +837,14 @@ def test_arabic_parts_section_position_format(chart_with_arabic_parts):
     section = ArabicPartsSection(mode="core", show_formula=False)
     data = section.generate_data(chart_with_arabic_parts)
 
+    from stellium.i18n import render
+
     position_idx = data["headers"].index("Position")
 
     for row in data["rows"]:
-        position = row[position_idx]
-        # Position should contain degree symbol
-        assert "°" in position
-        # Position should contain minute indicator
-        assert "'" in position
+        position = render(row[position_idx], "en")  # format-last cell
+        assert "°" in position  # degree symbol
+        assert "'" in position  # minute indicator
 
 
 def test_arabic_parts_section_part_name_formatting():

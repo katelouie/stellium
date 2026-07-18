@@ -63,6 +63,8 @@ class ChartComposer:
         if self.config.tables.enabled:
             self._render_tables(canvas, renderer, chart, layout)
 
+        self._warn_if_font_missing(canvas.tostring())
+
         if to_string:
             return canvas.tostring()
         else:
@@ -70,6 +72,32 @@ class ChartComposer:
             canvas.save()
 
             return self.config.filename
+
+    def _warn_if_font_missing(self, svg: str) -> None:
+        """Warn if the rendered text needs a script font that is not installed.
+
+        The chart still renders (in an SVG the browser may fall back to a system font),
+        but a PNG/PDF — rasterised with only the bundled/downloaded fonts — would show
+        that text as boxes. Fail loud, with the remedy, rather than silent tofu.
+        """
+        import warnings
+
+        from stellium import fonts
+        from stellium.exceptions import MissingFontWarning
+
+        if self.config.font:  # an explicit with_font() — the caller owns coverage
+            return
+        packs = fonts.missing_font_packs(svg, self.config.locale)
+        if packs:
+            warnings.warn(
+                "This chart's text contains characters no installed font covers "
+                "(likely CJK). PNG/PDF export will render them as boxes. Run "
+                f"'stellium fonts download {packs[0]}', or pass "
+                ".with_font(path). An SVG opened in a browser may still work via "
+                "system fonts.",
+                MissingFontWarning,
+                stacklevel=2,
+            )
 
     def _create_canvas(self, layout: LayoutResult) -> svgwrite.Drawing:
         """Create SVG canvas with correct dimensions (only once)."""
@@ -120,7 +148,34 @@ class ChartComposer:
         # Set header height for layers that need to account for it
         renderer.header_height = layout.header_height
 
+        # Localization: the layers read renderer.locale to translate their words, and the
+        # text stack names an installed pack's font first so non-Latin text renders (in the
+        # SVG; the pack's dir is auto-discovered for PNG/PDF). Glyph fonts are unchanged —
+        # planet/sign glyphs are language-neutral.
+        renderer.locale = self.config.locale
+        self._apply_locale_fonts(renderer)
+
         return renderer
+
+    def _apply_locale_fonts(self, renderer: ChartRenderer) -> None:
+        """Name an installed pack's font first in the text stack, so non-Latin text
+        renders in the SVG. The pack's directory is already on the PNG/PDF font path via
+        auto-discovery; an explicit ``with_font`` path is threaded to the rasteriser
+        separately (it is a path, not a family the SVG can name)."""
+        from stellium import fonts
+
+        # An explicit with_font() wins over the pack, so it goes on last (prepended last).
+        names = []
+        sans = fonts.families_for_locale(self.config.locale).get("sans")
+        if sans:
+            names.append(sans)
+        if self.config.font:
+            family = fonts.font_family_of(self.config.font)
+            if family:
+                names.append(family)
+        for family in names:
+            current = renderer.style.get("font_family_text", "")
+            renderer.style["font_family_text"] = f'"{family}", {current}'
 
     def _get_background_color(self) -> str:
         """Get background color from theme or default."""

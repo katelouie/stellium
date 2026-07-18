@@ -14,6 +14,7 @@ from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
 from stellium.core.registry import get_aspects_by_category
+from stellium.i18n import msg, term
 
 from ._utils import (
     get_aspect_display,
@@ -21,7 +22,14 @@ from ._utils import (
     get_object_display,
     get_object_sort_key,
     get_orb_sort_key,
+    glyph_label,
 )
+
+
+def _eq(value: str, namespace: str) -> Any:
+    """An element/quality term, routing the multi-element "Mixed" qualifier to the
+    pattern namespace (it is not a real element or modality)."""
+    return term("pattern.Mixed") if value == "Mixed" else term(f"{namespace}.{value}")
 
 
 class AspectPatternSection:
@@ -139,43 +147,52 @@ class AspectPatternSection:
         # Build rows
         rows = []
         for pattern in patterns:
-            row = []
+            row: list[Any] = []
 
-            # Pattern name
-            row.append(pattern.name)
+            # Pattern name — a catalog term (pattern.* namespace).
+            row.append(term(f"pattern.{pattern.name}"))
 
-            # Planets involved (with glyphs)
-            planet_names = []
-            for planet in pattern.planets:
-                display_name, glyph = get_object_display(planet.name)
-                if glyph:
-                    planet_names.append(f"{glyph} {display_name}")
-                else:
-                    planet_names.append(display_name)
-            row.append(", ".join(planet_names))
+            # Planets involved — catalog terms with glyphs; a list renders comma-joined.
+            row.append(
+                [
+                    glyph_label(get_object_display(p.name)[1], f"body.{p.name}")
+                    for p in pattern.planets
+                ]
+            )
 
-            # Element/Quality
-            elem_qual = []
-            if pattern.element:
-                elem_qual.append(pattern.element)
-            if pattern.quality:
-                elem_qual.append(pattern.quality)
-            row.append(" / ".join(elem_qual) if elem_qual else "—")
+            # Element / Quality. A pattern spanning several elements/qualities is "Mixed",
+            # which lives in the pattern namespace (not element/modality). _eq() routes it.
+            if pattern.element and pattern.quality:
+                row.append(
+                    msg(
+                        "{elem} / {qual}",
+                        elem=_eq(pattern.element, "element"),
+                        qual=_eq(pattern.quality, "modality"),
+                    )
+                )
+            elif pattern.element:
+                row.append(_eq(pattern.element, "element"))
+            elif pattern.quality:
+                row.append(_eq(pattern.quality, "modality"))
+            else:
+                row.append("—")
 
-            # Details (count + focal planet if applicable)
-            details = []
-            details.append(f"{len(pattern.planets)} planets")
+            # Details (count + focal planet if applicable) — a list of tokens the resolve
+            # pass renders and comma-joins, so every label localizes.
+            details: list[Any] = [msg("{n} planets", n=len(pattern.planets))]
 
             # Check for focal/apex planet
             focal = pattern.focal_planet
             if focal:
-                focal_display, focal_glyph = get_object_display(focal.name)
-                if focal_glyph:
-                    details.append(f"Apex: {focal_glyph} {focal_display}")
-                else:
-                    details.append(f"Apex: {focal_display}")
+                _, focal_glyph = get_object_display(focal.name)
+                details.append(
+                    msg(
+                        "Apex: {planet}",
+                        planet=glyph_label(focal_glyph, f"body.{focal.name}"),
+                    )
+                )
 
-            row.append(", ".join(details))
+            row.append(details)
 
             rows.append(row)
 
@@ -323,24 +340,19 @@ class AspectSection:
             headers.append("Orb")
             headers.append("Applying")
 
-        # Build rows
+        # Build rows. Object and aspect names are catalog terms; the glyph, orb and
+        # applying markers are language-neutral. The renderer composes each cell.
         rows = []
         for aspect in aspects:
-            # Planet 1 with glyph
-            name1, glyph1 = get_object_display(aspect.object1.name)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            _, glyph1 = get_object_display(aspect.object1.name)
+            _, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            _, glyph2 = get_object_display(aspect.object2.name)
 
-            # Aspect with glyph
-            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
-
-            # Planet 2 with glyph
-            name2, glyph2 = get_object_display(aspect.object2.name)
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
-
-            row = [planet1, aspect_display, planet2]
+            row: list[Any] = [
+                glyph_label(glyph1, f"body.{aspect.object1.name}"),
+                glyph_label(aspect_glyph, f"aspect.{aspect.aspect_name}"),
+                glyph_label(glyph2, f"body.{aspect.object2.name}"),
+            ]
 
             if self.orb_display:
                 row.append(f"{aspect.orb:.2f}°")
@@ -366,27 +378,39 @@ class AspectSection:
             disp, glyph = get_object_display(nm)
             return disp, (glyph or "")
 
+        # Structured payload: canonical identity fields (name, aspect key, glyphs) stay raw
+        # for the template's glyph lookup; display fields are i18n tokens the resolve pass
+        # turns into Glosses. See the Unified Renderer Contract.
         bodies = []
         for o in sorted(body_objs.values(), key=get_object_sort_key):
-            disp, glyph = _body_info(o.name)
-            bodies.append({"name": o.name, "label": disp, "glyph": glyph})
+            _disp, glyph = _body_info(o.name)
+            bodies.append(
+                {"name": o.name, "label": term(f"body.{o.name}"), "glyph": glyph}
+            )
 
         pairs = []
         for aspect in aspects:
-            p1d, p1g = _body_info(aspect.object1.name)
-            p2d, p2g = _body_info(aspect.object2.name)
+            _p1d, p1g = _body_info(aspect.object1.name)
+            _p2d, p2g = _body_info(aspect.object2.name)
+            applying = aspect.is_applying
             pairs.append(
                 {
-                    "p1": aspect.object1.name,
-                    "p1_label": p1d,
+                    "p1": aspect.object1.name,  # canonical
+                    "p1_label": term(f"body.{aspect.object1.name}"),  # display
                     "p1_glyph": p1g,
-                    "p2": aspect.object2.name,
-                    "p2_label": p2d,
+                    "p2": aspect.object2.name,  # canonical
+                    "p2_label": term(f"body.{aspect.object2.name}"),  # display
                     "p2_glyph": p2g,
-                    "aspect": aspect.aspect_name,
+                    "aspect": aspect.aspect_name,  # canonical — glyph/colour key
+                    "aspect_label": term(f"aspect.{aspect.aspect_name}"),  # display
                     "orb": f"{aspect.orb:.2f}°",
-                    "applying": (
-                        None if aspect.is_applying is None else bool(aspect.is_applying)
+                    "applying": None if applying is None else bool(applying),
+                    "applying_label": (
+                        None
+                        if applying is None
+                        else term(
+                            f"aspect_motion.{'Applying' if applying else 'Separating'}"
+                        )
                     ),
                 }
             )
@@ -397,6 +421,19 @@ class AspectSection:
             "rows": rows,
             "bodies": bodies,
             "aspect_pairs": pairs,
+            # Chrome for the structured (Typst) aspect list.
+            "labels": {
+                "planet1": msg("Planet 1"),
+                "aspect": msg("Aspect"),
+                "planet2": msg("Planet 2"),
+                "orb": msg("Orb"),
+                "applying": msg("Applying"),
+            },
+            # The colour-code legend: canonical key (glyph/colour) + localized label.
+            "legend": [
+                {"key": a, "label": term(f"aspect.{a}")}
+                for a in ("Conjunction", "Sextile", "Square", "Trine", "Opposition")
+            ],
         }
 
     def _generate_single_chart_with_aspectarian(
@@ -431,6 +468,7 @@ class AspectSection:
                 "aspectarian": {
                     "bodies": table_data.get("bodies", []),
                     "cells": table_data.get("aspect_pairs", []),
+                    "legend": table_data.get("legend", []),
                 },
             }
             return {
@@ -590,24 +628,18 @@ class CrossChartAspectSection:
             headers.append("Orb")
             headers.append("Applying")
 
-        # Build rows
+        # Build rows (object/aspect names are catalog terms; see _utils.glyph_label)
         rows = []
         for aspect in aspects:
-            # Planet 1 with glyph (from chart1)
-            name1, glyph1 = get_object_display(aspect.object1.name)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            _, glyph1 = get_object_display(aspect.object1.name)
+            _, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            _, glyph2 = get_object_display(aspect.object2.name)
 
-            # Aspect with glyph
-            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
-
-            # Planet 2 with glyph (from chart2)
-            name2, glyph2 = get_object_display(aspect.object2.name)
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
-
-            row = [planet1, aspect_display, planet2]
+            row: list[Any] = [
+                glyph_label(glyph1, f"body.{aspect.object1.name}"),
+                glyph_label(aspect_glyph, f"aspect.{aspect.aspect_name}"),
+                glyph_label(glyph2, f"body.{aspect.object2.name}"),
+            ]
 
             if self.orb_display:
                 row.append(f"{aspect.orb:.2f}°")

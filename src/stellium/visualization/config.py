@@ -326,6 +326,10 @@ class ChartVisualizationConfig:
     base_size: int = 600
     filename: str = "chart.svg"
 
+    # Localization
+    locale: str = "en"  # renders the header/info text; "en" is the identity
+    font: str | None = None  # explicit font (file/dir) for non-Latin text
+
     # Auto-layout settings
     auto_center: bool = True
     auto_grow_wheel: bool = False  # Grow wheel if canvas gets big

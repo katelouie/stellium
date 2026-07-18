@@ -7,6 +7,40 @@ become*.)
 
 ## Active
 
+- **[FONTS_AND_CHART_I18N.md](./FONTS_AND_CHART_I18N.md)** — the chart wheel has no locale,
+  and a CJK wheel renders as tofu in PNG/PDF because Stellium rasterizes with bundled fonts
+  only (Latin + symbols). Adds on-demand font packs downloaded to `~/.stellium/fonts/`
+  (the ephemeris pattern, one dir over) with checksums, a `with_font()` override, a
+  fail-loud warning, and `ChartDrawBuilder.with_locale()`. Built on this branch because it
+  blocks the Chinese chart output.
+
+- **[STRUCTURE_FIRST_SECTIONS.md](./STRUCTURE_FIRST_SECTIONS.md)** — sections stringify
+  too early, which blocks three roadmap items at once: the Typst PDF theme can't style
+  what it can't see, interactive HTML reports can't sort a string, and i18n can't
+  translate one that was already composed in English. Makes the structured payload the
+  section contract and moves composition into the renderers, where a locale can apply.
+  Folds in the Chinese-translation task. The pseudolocale doubles as a completeness
+  oracle for the refactor. Phase 0 done; Phase 1 approved.
+
+- **[UNIFIED_RENDERER_CONTRACT.md](./UNIFIED_RENDERER_CONTRACT.md)** — the *renderer half*
+  of the above. The text renderers share one agnostic contract and localize cleanly, but
+  the Typst/PDF renderer never joined it: it reads raw parallel payloads the resolve pass
+  never touches, hardcodes column headers in the `.typ` templates, and routes on localized
+  titles — so a localized report is correct as markdown and leaks English as a PDF. Unifies
+  the section → renderer boundary: one localization pass over every shape, a stable
+  `section_key` for dispatch split from the localized display name, plain-string cells for
+  text renderers, localized structured payloads for the ~4 bespoke sections, and chrome
+  moved from templates into section-declared labels. Design approved; steps 1–2 landed.
+
+- **[I18N_GRAMMATICAL_INFLECTION.md](./I18N_GRAMMATICAL_INFLECTION.md)** — English and Chinese
+  validated nothing about inflection because neither inflects; the `{slot}` + single-string
+  catalog-term model breaks on plurals (Russian's 3 forms vs our 2), case (`Марс в Овне`
+  declines the sign), and gender. Opens with a **buy-vs-build** comparison (Fluent, which
+  fits almost exactly, vs extending our layer) and recommends building now — babel for CLDR
+  plurals, term form-sets + slot annotations generalizing `.short` — while keeping Fluent on
+  the table as a later foundation question. Orthogonal to the renderer contract (inflection
+  lives below `render()`); gates Russian/Polish. Proposed; not built.
+
 - **[STRUCTURED_LOGGING_SPEC.md](./STRUCTURED_LOGGING_SPEC.md)** — migrate the
   library's remaining bare `print()`s to stdlib `logging`/`warnings` (and
   `click.echo`/Rich for the CLI), with a lint guard. The infrastructure

@@ -349,17 +349,17 @@ def create_relationships_page():
                     label2=p2.name or "Person 2",
                 ).calculate()
                 calculated_chart["ref"] = multichart
-                drawer = multichart.draw()
+                drawer = multichart.draw().with_locale(report_locale())
 
             elif state.chart_type == "composite":
                 synthesis = SynthesisBuilder.composite(chart1, chart2).calculate()
                 calculated_chart["ref"] = synthesis
-                drawer = synthesis.draw()
+                drawer = synthesis.draw().with_locale(report_locale())
 
             elif state.chart_type == "davison":
                 synthesis = SynthesisBuilder.davison(chart1, chart2).calculate()
                 calculated_chart["ref"] = synthesis
-                drawer = synthesis.draw()
+                drawer = synthesis.draw().with_locale(report_locale())
 
             else:
                 ui.notify(

@@ -14,10 +14,10 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import msg, term
 from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 from ._utils import (
-    abbreviate_house_system,
     get_object_display,
     get_object_sort_key,
     get_sign_glyph,
@@ -81,17 +81,19 @@ class ChartOverviewSection:
             else:
                 data["Name"] = name
 
-        # Date and time
+        # Date and time. The raw date/time objects are handed over; the renderer lays
+        # them out per the active locale (a date is a reorder, not a word — the whole
+        # reason post-hoc translation could not do this). See i18n.render / format_date.
         birth: dt.datetime = chart.datetime.local_datetime
         date_label = f"{label} Date" if label else "Date"
         time_label = f"{label} Time" if label else "Time"
-        data[date_label] = birth.strftime("%B %d, %Y")
-        data[time_label] = birth.strftime("%I:%M %p")
+        data[date_label] = birth.date()
+        data[time_label] = birth.time()
 
         if not label:  # Only show timezone for single charts
             data["Timezone"] = str(chart.location.timezone)
 
-        # Location
+        # Location — a geocoded place name, do-not-translate.
         loc = chart.location
         loc_label = f"{label} Location" if label else "Location"
         data[loc_label] = f"{loc.name}" if loc.name else "Unknown"
@@ -99,17 +101,23 @@ class ChartOverviewSection:
         if not label:  # Only show detailed info for single charts
             data["Coordinates"] = f"{loc.latitude:.4f}°, {loc.longitude:.4f}°"
 
-            # Chart metadata
-            house_systems = ", ".join(chart.house_systems.keys())
-            data["House System"] = house_systems
+            # House systems: a comma-list of catalog terms (render joins them).
+            data["House System"] = [
+                term(f"house_system.{name}") for name in chart.house_systems
+            ]
 
             # Zodiac system
             if chart.zodiac_type:
-                zodiac_display = chart.zodiac_type.value.title()
+                zodiac_word = chart.zodiac_type.value.title()  # Tropical / Sidereal
                 if chart.zodiac_type.value == "sidereal" and chart.ayanamsa:
                     ayanamsa_display = chart.ayanamsa.replace("_", " ").title()
-                    zodiac_display = f"{zodiac_display} ({ayanamsa_display})"
-                data["Zodiac"] = zodiac_display
+                    data["Zodiac"] = msg(
+                        "{zodiac} ({ayanamsa})",
+                        zodiac=msg(zodiac_word),
+                        ayanamsa=ayanamsa_display,
+                    )
+                else:
+                    data["Zodiac"] = msg(zodiac_word)
 
                 if (
                     chart.zodiac_type.value == "sidereal"
@@ -123,12 +131,18 @@ class ChartOverviewSection:
             # Sect (if available in metadata)
             if "dignities" in chart.metadata:
                 sect = chart.metadata["dignities"].get("sect", "unknown")
-                data["Chart Sect"] = f"{sect.title()} Chart"
+                data["Chart Sect"] = msg(
+                    "{sect} Chart", sect=term(f"sect.{sect.title()}")
+                )
 
             # Chart Ruler
             try:
                 ruler, asc_sign = get_chart_ruler_from_chart(chart)
-                data["Chart Ruler"] = f"{ruler} ({asc_sign} Rising)"
+                data["Chart Ruler"] = msg(
+                    "{ruler} ({sign} Rising)",
+                    ruler=term(f"body.{ruler}"),
+                    sign=term(f"sign.{asc_sign}"),
+                )
             except (ValueError, KeyError):
                 pass  # Skip if ASC not found
 
@@ -312,15 +326,20 @@ class PlanetPositionSection:
         else:  # "default"
             systems_to_show = [chart.default_house_system]
 
-        # Build headers based on options
-        headers = ["Planet", "Position"]
-        house_headers: list[str] = []
+        # Build headers based on options. The "House (Pl)" header is *composed* — the one
+        # thing the old substring translator could never localize (it matched whole cells,
+        # not fragments), so it becomes a message with the system as a short-form term.
+        headers: list[Any] = ["Planet", "Position"]
+        # The structured (PDF) planet table shows a narrow per-system column; its header is
+        # the short-form house term, which localizes (Placidus -> "Pl" / "普") instead of
+        # the raw English abbreviation the Typst renderer used to print verbatim.
+        house_headers: list[Any] = []
 
         if self.include_house and systems_to_show:
             for system_name in systems_to_show:
-                abbrev = abbreviate_house_system(system_name)
-                headers.append(f"House ({abbrev})")
-                house_headers.append(abbrev)
+                short_term = term(f"house_system.{system_name}", short=True)
+                headers.append(msg("House ({system})", system=short_term))
+                house_headers.append(short_term)
 
         if self.include_speed:
             headers.append("Speed")
@@ -342,14 +361,14 @@ class PlanetPositionSection:
         # Sort positions consistently
         positions = sorted(positions, key=get_object_sort_key)
 
-        # Build the structured planet list ONCE (the single source of truth),
-        # then derive the string ``rows`` from it. Renderers that want structure
-        # (e.g. the Typst PDF design system) read ``planets``; the terminal /
-        # HTML / markdown renderers consume the derived ``rows``.
+        # Build the planet payload ONCE — the single source of truth. Canonical identity
+        # fields (name, sign, the glyph chars) stay raw for the structured renderer's
+        # colour/glyph lookups; display fields are i18n tokens the resolve pass localizes.
+        # The flat ``rows`` are then DERIVED from it, reusing the same tokens, so no data
+        # is composed twice. See the Unified Renderer Contract spec §4.3.
         planets: list[dict[str, Any]] = []
-        rows = []
         for pos in positions:
-            display_name, glyph = get_object_display(pos.name)
+            _display_name, glyph = get_object_display(pos.name)
             degree = int(pos.sign_degree)
             minute = int((pos.sign_degree % 1) * 60)
             deg_str = f"{degree}°{minute:02d}'"
@@ -365,31 +384,50 @@ class PlanetPositionSection:
                     except KeyError:
                         houses.append("—")
 
+            motion = "Retrograde" if pos.is_retrograde else "Direct"
             planets.append(
                 {
-                    "name": pos.name,  # canonical (matching)
-                    "label": display_name,  # registry display name
-                    "glyph": glyph or "",  # registry glyph char
-                    "sign": pos.sign,
-                    "sign_glyph": sign_glyph or "",
+                    "name": pos.name,  # canonical — colour/glyph/matching
+                    "label": term(
+                        f"body.{pos.name}"
+                    ),  # display (localized by the pass)
+                    "glyph": glyph or "",  # language-neutral
+                    "sign": pos.sign,  # canonical — disc tint, glyph fallback
+                    "sign_label": term(f"sign.{pos.sign}"),  # display
+                    "sign_glyph": sign_glyph or "",  # language-neutral
                     "degree": deg_str,
                     "houses": houses,
-                    "speed": f"{pos.speed_longitude:.3f}°",
+                    "speed": f"{pos.speed_longitude:.3f}°",  # structured-view speed
+                    "speed_value": pos.speed_longitude,  # raw, for the text view
                     "retro": bool(pos.is_retrograde),
+                    "motion": term(f"motion.{motion}", short=True),  # display (abbrev)
                 }
             )
 
-            # Derived string row (unchanged output for the other renderers).
-            row = [f"{glyph} {display_name}" if glyph else display_name]
-            row.append(
-                f"{sign_glyph} {pos.sign} {deg_str}"
-                if sign_glyph
-                else f"{pos.sign} {deg_str}"
+        # Derive the flat rows from the payload — reuse the same tokens, compose last.
+        rows = []
+        for p in planets:
+            name_cell: Any = (
+                msg("{glyph} {name}", glyph=p["glyph"], name=p["label"])
+                if p["glyph"]
+                else p["label"]
             )
-            row.extend(houses)
+            position_cell: Any = (
+                msg(
+                    "{glyph} {sign} {deg}",
+                    glyph=p["sign_glyph"],
+                    sign=p["sign_label"],
+                    deg=p["degree"],
+                )
+                if p["sign_glyph"]
+                else msg("{sign} {deg}", sign=p["sign_label"], deg=p["degree"])
+            )
+            row: list[Any] = [name_cell, position_cell, *p["houses"]]
             if self.include_speed:
-                row.append(f"{pos.speed_longitude:.4f}°/day")
-                row.append("Retrograde" if pos.is_retrograde else "Direct")
+                # "°/day" is a unit; a message so a locale can render "day" (天).
+                row.append(msg("{v}°/day", v=f"{p['speed_value']:.4f}"))
+                # Text view uses the full motion word, not the column abbreviation.
+                row.append(term(f"motion.{'Retrograde' if p['retro'] else 'Direct'}"))
             rows.append(row)
 
         result = {
@@ -400,6 +438,14 @@ class PlanetPositionSection:
             "planets": planets,
             "house_headers": house_headers,
             "show_speed": self.include_speed,
+            # Chrome for the structured (Typst) planet table: the template reads these
+            # localized labels instead of hardcoding English column headers.
+            "labels": {
+                "planet": msg("Planet"),
+                "position": msg("Position"),
+                "speed": msg("Speed"),
+                "motion": msg("Motion"),
+            },
         }
         if title:
             result["title"] = title
@@ -523,16 +569,21 @@ class HouseCuspsSection:
         else:  # "specific"
             systems_to_show = [s for s in self._systems if s in chart.house_systems]
 
-        # Build headers
-        headers = ["House"]
+        # Build headers. "Cusp (Pl)" is composed, like the planet-table house header —
+        # a message with the system as a short-form term.
+        headers: list[Any] = ["House"]
         for system_name in systems_to_show:
-            abbrev = abbreviate_house_system(system_name)
-            headers.append(f"Cusp ({abbrev})")
+            headers.append(
+                msg(
+                    "Cusp ({system})",
+                    system=term(f"house_system.{system_name}", short=True),
+                )
+            )
 
         # Build rows (houses 1-12)
         rows = []
         for house_num in range(1, 13):
-            row = [str(house_num)]
+            row: list[Any] = [str(house_num)]
 
             for system_name in systems_to_show:
                 house_cusps = chart.house_systems[system_name]
@@ -543,12 +594,20 @@ class HouseCuspsSection:
                 degree = int(sign_degree)
                 minute = int((sign_degree % 1) * 60)
 
-                # Format with sign glyph
+                # Glyph form is language-neutral (number + glyph). The name fallback is a
+                # term, so a sign with no glyph still localizes rather than leaking.
                 sign_glyph = get_sign_glyph(sign)
                 if sign_glyph:
                     row.append(f"{degree}° {sign_glyph} {minute:02d}'")
                 else:
-                    row.append(f"{degree}° {sign} {minute:02d}'")
+                    row.append(
+                        msg(
+                            "{deg}° {sign} {min}'",
+                            deg=degree,
+                            sign=term(f"sign.{sign}"),
+                            min=f"{minute:02d}",
+                        )
+                    )
 
             rows.append(row)
 

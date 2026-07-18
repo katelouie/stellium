@@ -12,8 +12,14 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, MidpointPosition, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import msg, term
 
-from ._utils import get_aspect_display, get_object_display, get_object_sort_key
+from ._utils import (
+    get_aspect_display,
+    get_object_display,
+    get_object_sort_key,
+    glyph_label,
+)
 
 
 class MidpointSection:
@@ -119,17 +125,28 @@ class MidpointSection:
         rows = []
 
         for mp in midpoints:
-            # Parse midpoint name (e.g., "Midpoint:Sun/Moon")
-            name_parts = mp.name.split(":")
-            if len(name_parts) > 1:
-                pair_name = name_parts[1]
+            # Pair name: use the component objects (terms) when available rather than
+            # parsing "Midpoint:Sun/Moon" — that keeps names like "Black Moon Lilith"
+            # intact and localizes each body.
+            if isinstance(mp, MidpointPosition):
+                pair_name: Any = msg(
+                    "{a}/{b}",
+                    a=term(f"body.{mp.object1.name}"),
+                    b=term(f"body.{mp.object2.name}"),
+                )
             else:
-                pair_name = mp.name
+                name_parts = mp.name.split(":")
+                pair_name = name_parts[1] if len(name_parts) > 1 else mp.name
 
-            # Position
+            # Position (the sign is a catalog term)
             degree = int(mp.sign_degree)
             minute = int((mp.sign_degree % 1) * 60)
-            position = f"{degree}° {mp.sign} {minute:02d}'"
+            position = msg(
+                "{deg}° {sign} {min}'",
+                deg=degree,
+                sign=term(f"sign.{mp.sign}"),
+                min=f"{minute:02d}",
+            )
 
             rows.append([pair_name, position])
 
@@ -365,17 +382,17 @@ class MidpointAspectsSection:
 
         for asp in found_aspects:
             planet = asp["planet"]
-            display_name, glyph = get_object_display(planet.name)
-            planet_label = f"{glyph} {display_name}" if glyph else display_name
+            _, glyph = get_object_display(planet.name)
+            planet_label = glyph_label(glyph, f"body.{planet.name}")
 
-            aspect_name, aspect_glyph = get_aspect_display(asp["aspect"])
-            aspect_label = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
+            _, aspect_glyph = get_aspect_display(asp["aspect"])
+            aspect_label = glyph_label(aspect_glyph, f"aspect.{asp['aspect']}")
 
             orb_str = f"{asp['orb']:.2f}°"
 
-            rows.append([planet_label, aspect_label, asp["midpoint_display"], orb_str])
+            # midpoint_display remains the (string) sort key; the cell shows the token.
+            mp_token = self._midpoint_token(asp["midpoint"])
+            rows.append([planet_label, aspect_label, mp_token, orb_str])
 
         return {
             "type": "table",
@@ -406,7 +423,7 @@ class MidpointAspectsSection:
         return all(obj in self.CORE_OBJECTS for obj in objects)
 
     def _get_midpoint_display(self, midpoint) -> str:
-        """Get display name for a midpoint."""
+        """Get the display name for a midpoint as a plain string (used as a sort key)."""
         if ":" in midpoint.name:
             pair_part = midpoint.name.split(":")[1]
         else:
@@ -417,3 +434,18 @@ class MidpointAspectsSection:
             pair_part = pair_part.replace(" (indirect)", "") + "*"
 
         return pair_part
+
+    def _midpoint_token(self, midpoint) -> Any:
+        """The pair name as a token that localizes each body through the catalog, rather
+        than the bare 'Sun/Venus' string the legacy substring bridge used to translate.
+        Mirrors MidpointSection so the two tables render the same way."""
+        if isinstance(midpoint, MidpointPosition):
+            indirect = "(indirect)" in midpoint.name
+            template = "{a}/{b}*" if indirect else "{a}/{b}"
+            return msg(
+                template,
+                a=term(f"body.{midpoint.object1.name}"),
+                b=term(f"body.{midpoint.object2.name}"),
+            )
+        # Legacy CelestialPosition midpoints: fall back to the parsed string.
+        return self._get_midpoint_display(midpoint)

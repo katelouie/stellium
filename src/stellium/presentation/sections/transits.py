@@ -24,6 +24,7 @@ from stellium.engines.search import (
     find_all_sign_changes,
     find_all_stations,
 )
+from stellium.i18n import msg, term
 
 from ._utils import get_sign_glyph
 
@@ -153,10 +154,10 @@ class StationSection:
                 [
                     row["date"],
                     row["time"],
-                    row["planet"],
-                    row["station_type"],
+                    term(f"body.{row['planet']}"),
+                    term(f"motion.{row['station_type']}"),
                     f"{row['position']} {row['sign_glyph']}",
-                    row["sign"],
+                    term(f"sign.{row['sign']}"),
                 ]
                 for row in rows
             ],
@@ -275,9 +276,17 @@ class IngressSection:
                 [
                     row["date"],
                     row["time"],
-                    f"{row['direction']}{row['planet']}",
-                    f"{row['from_sign_glyph']} {row['from_sign']}",
-                    f"{row['to_sign_glyph']} {row['to_sign']}",
+                    msg("{d}{p}", d=row["direction"], p=term(f"body.{row['planet']}")),
+                    msg(
+                        "{g} {s}",
+                        g=row["from_sign_glyph"],
+                        s=term(f"sign.{row['from_sign']}"),
+                    ),
+                    msg(
+                        "{g} {s}",
+                        g=row["to_sign_glyph"],
+                        s=term(f"sign.{row['to_sign']}"),
+                    ),
                 ]
                 for row in rows
             ],
@@ -387,8 +396,8 @@ class EclipseSection:
                     row["time"],
                     row["type"],
                     f"{row['position']} {row['sign_glyph']}",
-                    row["sign"],
-                    row["node"],
+                    term(f"sign.{row['sign']}"),
+                    term(f"body.{row['node']}"),
                 ]
                 for row in rows
             ],

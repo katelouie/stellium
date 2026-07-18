@@ -15,6 +15,7 @@ from __future__ import annotations
 import os
 from typing import Any
 
+from stellium.i18n import Gloss, display, format_date, format_time, msg, render, term
 from stellium.presentation.typst_runtime import (
     THEME_LABELS,
     THEME_WHEEL,
@@ -22,6 +23,7 @@ from stellium.presentation.typst_runtime import (
     TypstDocument,
     validate_theme,
 )
+from stellium.utils.chart_ruler import get_chart_ruler_from_chart
 
 __all__ = [
     "MOON_STYLES",
@@ -67,18 +69,10 @@ MOON_STYLES = {
 # ---------------------------------------------------------------------------
 # meta (title page) derivation
 # ---------------------------------------------------------------------------
-def _overview_pairs(section_data: list[tuple[str, dict[str, Any]]]) -> dict[str, str]:
-    """Pull the Chart Overview key/value dict, if the report includes one."""
-    for name, d in section_data:
-        if d.get("type") == "key_value" and name.lower().startswith("chart overview"):
-            return {str(k): str(v) for k, v in d.get("data", {}).items()}
-    return {}
-
-
 def _card(
-    chart: Any, obj_name: str, label: str, *, rising: bool = False
+    chart: Any, obj_name: str, label: str, locale: str, *, rising: bool = False
 ) -> dict | None:
-    """Build a Sun/Moon/Ascendant title-page card from the chart."""
+    """Build a Sun/Moon/Ascendant title-page card from the chart, in ``locale``."""
     try:
         if rising:
             pos = next(
@@ -92,8 +86,9 @@ def _card(
         deg = int(pos.sign_degree)
         minute = int((pos.sign_degree % 1) * 60)
         value = f"{deg}°{minute:02d}'"
+        sign = render(term(f"sign.{pos.sign}"), locale)
         if rising:
-            sub = f"{pos.sign} · Rising"
+            sub = f"{sign} · {render(msg('Rising'), locale)}"
         else:
             house = None
             try:
@@ -101,8 +96,20 @@ def _card(
                 house = placements.get(pos.name)
             except (KeyError, AttributeError):
                 pass
-            sub = f"{pos.sign}" + (f" · {_ordinal(house)} house" if house else "")
-        return {"label": label, "value": value, "sub": sub}
+            if house:
+                # Supply both an English ordinal and the raw number, so a locale can pick
+                # ({ordinal} → "5th house"; a locale may use {n} → "第5宮").
+                house_str = render(
+                    msg("{ordinal} house", ordinal=_ordinal(house), n=house), locale
+                )
+                sub = f"{sign} · {house_str}"
+            else:
+                sub = sign
+        return {
+            "label": render(term(f"body.{label}"), locale),
+            "value": value,
+            "sub": sub,
+        }
     except Exception:  # pragma: no cover - defensive; never break the PDF
         return None
 
@@ -119,15 +126,31 @@ def _ordinal(n: Any) -> str:
     return f"{n}{suffix}"
 
 
-def _metadata_line(chart: Any, overview: dict[str, str]) -> list[str]:
-    """The gold tracked-caps chips under the title (ruler / sect / phase / …)."""
+def _metadata_line(chart: Any, locale: str) -> list[str]:
+    """The gold tracked-caps chips under the title (ruler / sect / phase / …).
+
+    Derived from the chart and localized, not scraped from the rendered overview — the
+    overview's keys are themselves localized, so an English-keyed lookup finds nothing.
+    """
     items: list[str] = []
-    ruler = overview.get("Chart Ruler", "")
+
+    # Chart ruler → "{ruler}-ruled".
+    try:
+        ruler, _asc = get_chart_ruler_from_chart(chart)
+    except Exception:
+        ruler = None
     if ruler:
-        items.append(f"{ruler.split(' (')[0]}-ruled")
-    sect = overview.get("Chart Sect", "")
-    if sect:
-        items.append(sect)
+        items.append(render(msg("{ruler}-ruled", ruler=term(f"body.{ruler}")), locale))
+
+    # Sect → "Day Chart" / "Night Chart".
+    dignities = chart.metadata.get("dignities") if hasattr(chart, "metadata") else None
+    sect = dignities.get("sect") if isinstance(dignities, dict) else None
+    if sect and sect != "unknown":
+        items.append(
+            render(msg("{sect} Chart", sect=term(f"sect.{sect.title()}")), locale)
+        )
+
+    # Moon phase → "Waning Gibbous 74%".
     try:
         moon = chart.get_object("Moon")
         ph = getattr(moon, "phase", None)
@@ -135,59 +158,74 @@ def _metadata_line(chart: Any, overview: dict[str, str]) -> list[str]:
             frac = getattr(ph, "illuminated_fraction", None)
             phase = getattr(ph, "phase_name", None)
             if phase and frac is not None:
-                items.append(f"{phase} {frac * 100:.0f}%")
+                items.append(
+                    f"{render(term(f'phase.{phase}'), locale)} {frac * 100:.0f}%"
+                )
     except Exception:
         pass
-    hs = overview.get("House System", "")
-    if hs:
-        items.append(hs.split(",")[0].strip())
-    zod = overview.get("Zodiac", "")
-    if zod:
-        items.append(zod)
+
+    # House system (the first) and zodiac.
+    systems = getattr(chart, "house_systems", None)
+    if systems:
+        first = next(iter(systems))
+        items.append(render(term(f"house_system.{first}"), locale))
+    zodiac_type = getattr(chart, "zodiac_type", None)
+    if zodiac_type:
+        items.append(render(msg(zodiac_type.value.title()), locale))
+
     return items
 
 
 def _build_meta(
     chart: Any,
-    section_data: list[tuple[str, dict[str, Any]]],
     title: str | None,
     theme: str,
+    locale: str,
 ) -> dict[str, Any]:
-    overview = _overview_pairs(section_data)
+    default_title = title or render(msg("Natal Chart"), locale)
     name = (
-        overview.get("Name")
-        or (chart.metadata.get("name") if chart else None)
-        or (title or "Natal Chart")
+        (chart.metadata.get("name") if chart and hasattr(chart, "metadata") else None)
+        or title
+        or default_title
     )
-    # subtitle: Location · Date · Time · Timezone
-    bits = [
-        overview.get("Location"),
-        overview.get("Date"),
-        overview.get("Time"),
-        overview.get("Timezone"),
-    ]
+
+    # subtitle: Location · Date · Time · Timezone. The place and IANA zone are data; the
+    # date and time are laid out per the locale (a reorder, not a word swap).
+    bits: list[str] = []
+    location = getattr(chart, "location", None)
+    if location is not None and getattr(location, "name", None):
+        bits.append(location.name)
+    try:
+        local_dt = chart.datetime.local_datetime
+        bits.append(format_date(local_dt.date(), locale))
+        bits.append(format_time(local_dt.time(), locale))
+    except Exception:  # pragma: no cover - defensive; unknown-time charts etc.
+        pass
+    if location is not None and getattr(location, "timezone", None):
+        bits.append(str(location.timezone))
     subtitle = " · ".join(b for b in bits if b)
+
     cards = [
-        _card(chart, "Sun", "Sun"),
-        _card(chart, "Moon", "Moon"),
-        _card(chart, None, "Ascendant", rising=True),
+        _card(chart, "Sun", "Sun", locale),
+        _card(chart, "Moon", "Moon", locale),
+        _card(chart, None, "Ascendant", locale, rising=True),
     ]
     return {
-        "running_left": title or "Natal Chart",
+        "running_left": default_title,
         "running_right": name,
         "footer": THEME_LABELS.get(theme, theme.title()),
-        "kicker": title or "Natal Chart",
+        "kicker": default_title,
         "name": name,
         "subtitle": subtitle,
         "cards": [c for c in cards if c],
-        "metadata": _metadata_line(chart, overview),
+        "metadata": _metadata_line(chart, locale),
     }
 
 
 # ---------------------------------------------------------------------------
 # snapshot (distribution & balance) derivation
 # ---------------------------------------------------------------------------
-def _snapshot_section(chart: Any) -> dict | None:
+def _snapshot_section(chart: Any, locale: str) -> dict | None:
     try:
         from stellium.analysis.frames import _count_elements, _count_modalities
     except Exception:  # pragma: no cover
@@ -214,26 +252,60 @@ def _snapshot_section(chart: Any) -> dict | None:
     yin = el["earth"] + el["water"]
     polarity = "Balanced" if yang == yin else ("Yang" if yang > yin else "Yin")
 
+    def count_of(n: int) -> str:
+        return render(msg("{count} of {total}", count=n, total=total), locale)
+
+    yang_word = render(term("polarity.Yang"), locale)
+    yin_word = render(term("polarity.Yin"), locale)
+
     return {
         "kind": "snapshot",
-        "title": "Snapshot",
-        "descriptor": "distribution & balance",
+        "title": render(msg("Snapshot"), locale),
+        "descriptor": render(msg("distribution & balance"), locale),
         "cards": [
             {
-                "label": "Dominant Element",
-                "value": dom_el[0],
-                "sub": f"{el[dom_el[1]]} of {total}",
+                "label": render(msg("Dominant Element"), locale),
+                "value": render(term(f"element.{dom_el[0]}"), locale),
+                "sub": count_of(el[dom_el[1]]),
             },
             {
-                "label": "Dominant Modality",
-                "value": dom_mo[0],
-                "sub": f"{mo[dom_mo[1]]} of {total}",
+                "label": render(msg("Dominant Modality"), locale),
+                "value": render(term(f"modality.{dom_mo[0]}"), locale),
+                "sub": count_of(mo[dom_mo[1]]),
             },
-            {"label": "Polarity", "value": polarity, "sub": f"Yang {yang} · Yin {yin}"},
+            {
+                "label": render(msg("Polarity"), locale),
+                "value": render(term(f"polarity.{polarity}"), locale),
+                "sub": f"{yang_word} {yang} · {yin_word} {yin}",
+            },
         ],
-        "elements": [{"label": lbl, "count": el[key]} for lbl, key in el_order],
-        "modalities": [{"label": lbl, "count": mo[key]} for lbl, key in mo_order],
+        # Each bar carries its canonical English `key` (for the colour lookup, which is
+        # keyed on "Fire"/"Cardinal") and a localized `label` (for display).
+        "elements": [
+            {
+                "key": lbl,
+                "label": render(term(f"element.{lbl}"), locale),
+                "count": el[key],
+            }
+            for lbl, key in el_order
+        ],
+        "modalities": [
+            {
+                "key": lbl,
+                "label": render(term(f"modality.{lbl}"), locale),
+                "count": mo[key],
+            }
+            for lbl, key in mo_order
+        ],
         "polarity": {"yang": yang, "yin": yin},
+        # Chrome for the snapshot bars (Elements/Modalities/Polarity/Yang/Yin).
+        "labels": {
+            "elements": render(msg("Elements"), locale),
+            "modalities": render(msg("Modalities"), locale),
+            "polarity": render(msg("Polarity"), locale),
+            "yang": yang_word,
+            "yin": yin_word,
+        },
     }
 
 
@@ -252,42 +324,59 @@ def _planet_positions(name: str, d: dict[str, Any]) -> dict | None:
     return {
         "kind": "planet_positions",
         "title": name,
-        "house_headers": [str(h) for h in d.get("house_headers", [])],
+        "house_headers": [display(h) for h in d.get("house_headers", [])],
         "show_speed": bool(d.get("show_speed", True)),
         "planets": planets,
+        "labels": d.get("labels", {}),  # localized column headers (Planet/Position/…)
     }
 
 
 def _moon_phase(name: str, d: dict[str, Any]) -> dict | None:
-    """Build the rich moon-phase block from the section's key/value data."""
+    """Build the rich moon-phase block from the section's key/value data.
+
+    Ordered and emphasized by the field's **English identity** (`.en`), while the label and
+    value carry their localized `.loc` mask — no hardcoded English, no lookup-by-localized
+    key (the bug this section had before Gloss). See the Unified Renderer Contract.
+    """
     data = d.get("data", {})
     if not data:
         return None
 
-    def get(*keys):
-        for k in keys:
-            if k in data:
-                return str(data[k])
-        return None
+    # Index the glossed key/value pairs by English identity.
+    by_en = {(k.en if isinstance(k, Gloss) else k): (k, v) for k, v in data.items()}
 
-    phase = (get("Phase Name", "Phase") or "Moon").split(" (")[0]
-    fields: list[list] = []
-    illum = get("Illumination")
-    direction = get("Direction")
-    if illum:
-        fields.append(["Illumination", illum, True])
-    if direction:
-        fields.append(["Direction", direction, True])
-    for label, keys in (
-        ("Phase Angle", ("Phase Angle",)),
-        ("Sun–Moon Sep.", ("Sun-Moon Separation", "Sun–Moon Separation")),
-        ("App. Magnitude", ("Apparent Magnitude",)),
-        ("App. Diameter", ("Apparent Diameter",)),
-        ("Geocentric Parallax", ("Geocentric Parallax",)),
-    ):
-        val = get(*keys)
-        if val:
-            fields.append([label, val])
+    # English abbreviations for the narrow column. A *translated* label (its .loc differs
+    # from its .en) is already short and is used verbatim; only the English display, where
+    # .loc == .en, is abbreviated.
+    short = {
+        "Sun-Moon Separation": "Sun–Moon Sep.",
+        "Apparent Magnitude": "App. Magnitude",
+        "Apparent Diameter": "App. Diameter",
+    }
+
+    def field(en_key: str, *, emphasize: bool = False) -> list | None:
+        pair = by_en.get(en_key)
+        if pair is None:
+            return None
+        key, value = pair  # key/value are Glosses (or plain str) → encoder emits .loc
+        label: Any = key
+        if isinstance(key, Gloss) and key.loc == key.en and en_key in short:
+            label = short[en_key]
+        return [label, value, True] if emphasize else [label, value]
+
+    phase_pair = by_en.get("Phase Name") or by_en.get("Phase")
+    phase = display(phase_pair[1]).split(" (")[0] if phase_pair else "Moon"
+
+    ordered = [
+        field("Illumination", emphasize=True),
+        field("Direction", emphasize=True),
+        field("Phase Angle"),
+        field("Sun-Moon Separation"),
+        field("Apparent Magnitude"),
+        field("Apparent Diameter"),
+        field("Geocentric Parallax"),
+    ]
+    fields = [f for f in ordered if f]
     if not fields:
         return None
     return {"kind": "moon_phase", "title": name, "phase": phase, "fields": fields}
@@ -307,14 +396,20 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
             "title": name,
             "bodies": ac["bodies"],
             "cells": ac.get("cells", []),
+            "legend": ac.get("legend", []),
         }
     # Structured aspect list (the "Aspect List" subsection carries aspect_pairs).
     if d.get("aspect_pairs") is not None:
-        return {"kind": "aspect_list", "title": name, "aspects": d["aspect_pairs"]}
+        return {
+            "kind": "aspect_list",
+            "title": name,
+            "aspects": d["aspect_pairs"],
+            "labels": d.get("labels", {}),
+        }
     typ = d.get("type")
     if typ == "table":
-        headers = [str(h) for h in d.get("headers", [])]
-        rows = [[str(c) for c in r] for r in d.get("rows", [])]
+        headers = [display(h) for h in d.get("headers", [])]
+        rows = [[display(c) for c in r] for r in d.get("rows", [])]
         # Narrow + long tables (e.g. house cusps) waste the page's width run as a
         # single column. Split them into two halves side by side so they fill it.
         if len(headers) <= 3 and len(rows) >= 12:
@@ -332,13 +427,13 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
         return {
             "kind": "key_value",
             "title": name,
-            "pairs": [[str(k), str(v)] for k, v in d.get("data", {}).items()],
+            "pairs": [[display(k), display(v)] for k, v in d.get("data", {}).items()],
         }
     if typ == "text":
         return {
             "kind": "text",
             "title": name,
-            "text": str(d.get("text", d.get("content", ""))),
+            "text": display(d.get("text", d.get("content", ""))),
         }
     if typ == "side_by_side_tables":
         return {
@@ -346,9 +441,9 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
             "title": name,
             "tables": [
                 {
-                    "title": str(t.get("title", "")),
-                    "headers": [str(h) for h in t.get("headers", [])],
-                    "rows": [[str(c) for c in r] for r in t.get("rows", [])],
+                    "title": display(t.get("title", "")),
+                    "headers": [display(h) for h in t.get("headers", [])],
+                    "rows": [[display(c) for c in r] for r in t.get("rows", [])],
                 }
                 for t in d.get("tables", [])
             ],
@@ -372,23 +467,28 @@ def _generic(name: str, d: dict[str, Any]) -> dict | None:
 
 
 def _map_section(name: str, d: dict[str, Any], chart: Any) -> dict | None:
-    lname = name.lower()
-    if lname.startswith("chart overview") and d.get("type") == "key_value":
+    # Dispatch on the stable section_key, never the localized display name — a translated
+    # title must not silently disable the special-casing. See the Unified Renderer Contract.
+    key = d.get("section_key", "")
+    if key == "chart_overview" and d.get("type") == "key_value":
         return {
             "kind": "chart_overview",
             "title": name,
-            "pairs": [[str(k), str(v)] for k, v in d.get("data", {}).items()],
+            "pairs": [[display(k), display(v)] for k, v in d.get("data", {}).items()],
         }
     if d.get("planets") is not None:
         rich = _planet_positions(name, d)
         if rich:
             return rich
-    if lname.startswith("moon phase"):
+    if key == "moon_phase":
         rich = _moon_phase(name, d)
         if rich:
             return rich
-    if lname.startswith("dispositor") and d.get("type") == "compound":
-        return _dispositor_section(name, d)
+    # NOTE: the dispositor special layout (_dispositor_section) is intentionally not wired
+    # here. Its old dispatch — `name.startswith("dispositor")` — never matched the actual
+    # section name "Planetary Dispositors", so it was dead; the section renders via the
+    # generic compound path. Re-enabling the bespoke layout via section_key is a deliberate
+    # behavior change deferred to a later step of the Unified Renderer Contract.
     return _generic(name, d)
 
 
@@ -402,7 +502,9 @@ def _dispositor_section(name: str, d: dict[str, Any]) -> dict:
             if mapped:
                 out_subs.append(mapped)
         elif sub_d.get("type") == "text":
-            text_cols.append({"title": sub_name, "text": str(sub_d.get("text", ""))})
+            text_cols.append(
+                {"title": sub_name, "text": display(sub_d.get("text", ""))}
+            )
         else:
             mapped = _generic(sub_name, sub_d)
             if mapped:
@@ -417,11 +519,12 @@ def build_report_data(
     section_data: list[tuple[str, dict[str, Any]]],
     title: str | None,
     theme: str,
+    locale: str = "en",
 ) -> dict[str, Any]:
     """Serialise a report to the typst_theme JSON contract."""
-    meta = _build_meta(chart, section_data, title, theme)
+    meta = _build_meta(chart, title, theme, locale)
     sections: list[dict] = []
-    snap = _snapshot_section(chart)
+    snap = _snapshot_section(chart, locale)
     if snap:
         sections.append(snap)
     for name, d in section_data:
@@ -440,6 +543,7 @@ def render_pdf(
     chart_svg_path: str | None = None,
     title: str | None = None,
     theme: str = "house",
+    locale: str = "en",
 ) -> bytes:
     """Render a report to PDF bytes using the bundled Typst design system.
 
@@ -448,7 +552,7 @@ def render_pdf(
     shares. What is left here is the part that is genuinely about *reports*.
     """
     validate_theme(theme)
-    data = build_report_data(chart, section_data, title, theme)
+    data = build_report_data(chart, section_data, title, theme, locale)
 
     with TypstDocument("report.typ", theme, prefix="stellium_pdf_") as doc:
         if chart_svg_path and os.path.exists(chart_svg_path):

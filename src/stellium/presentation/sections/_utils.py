@@ -5,6 +5,8 @@ These helper functions are shared across multiple section implementations
 for consistent formatting and display.
 """
 
+from typing import Any
+
 from stellium.core.models import ObjectType
 from stellium.core.registry import (
     ASPECT_REGISTRY,
@@ -13,6 +15,18 @@ from stellium.core.registry import (
     get_aspect_info,
 )
 from stellium.engines.dignities import DIGNITIES
+from stellium.i18n import msg, term
+
+
+def glyph_label(glyph: str, key: str) -> Any:
+    """A table cell that is a catalog term with an optional glyph prefix.
+
+    The glyph (☉, △, ♑︎) is language-neutral and stays; the name is a catalog term the
+    renderer localizes. ``glyph_label("☉", "body.Sun")`` renders "☉ Sun" / "☉ 太阳";
+    with no glyph it is just the term. This is the shape of nearly every cell in the
+    planet, aspect, dignity, midpoint and star tables.
+    """
+    return msg("{glyph} {name}", glyph=glyph, name=term(key)) if glyph else term(key)
 
 
 def get_object_display(name: str) -> tuple[str, str]:
@@ -175,32 +189,80 @@ def get_aspect_sort_key(aspect_name: str) -> tuple:
     return (2000, aspect_name)
 
 
-def abbreviate_house_system(system_name: str) -> str:
-    """
-    Generate 2-4 character abbreviation for house system names.
-
-    Args:
-        system_name: Full house system name (e.g., "Placidus", "Whole Sign")
-
-    Returns:
-        Short abbreviation (e.g., "Pl", "WS")
-
-    Example:
-        >>> abbreviate_house_system("Placidus")
-        'Pl'
-        >>> abbreviate_house_system("Whole Sign")
-        'WS'
-    """
-    abbreviations = {
+# Short forms for a narrow table column, per locale.
+#
+# English falls back to the first four characters when a system is not listed, which
+# collided: "Equal (MC)" and "Equal (Vertex)" both became "Equa". All 17 shipped
+# systems are now listed explicitly.
+#
+# Chinese gets one character per system, which is what a Han character is for — and it
+# resolves the collision English could not: 等中 / 等宿.
+HOUSE_ABBREVIATIONS: dict[str, dict[str, str]] = {
+    "en": {
         "Placidus": "Pl",
         "Whole Sign": "WS",
         "Koch": "Ko",
         "Equal": "Eq",
+        "Equal (MC)": "EqMC",
+        "Equal (Vertex)": "EqVx",
         "Porphyry": "Po",
         "Regiomontanus": "Re",
         "Campanus": "Ca",
         "Morinus": "Mo",
         "Meridian": "Me",
         "Alcabitius": "Al",
-    }
-    return abbreviations.get(system_name, system_name[:4])
+        "Horizontal": "Hz",
+        "Axial Rotation": "Ax",
+        "Topocentric": "Tp",
+        "Krusinski": "Kr",
+        "Vehlow Equal": "Ve",
+        "APC": "APC",
+    },
+    "zh_CN": {
+        "Placidus": "普",
+        "Whole Sign": "整",
+        "Koch": "科",
+        "Equal": "等",
+        "Equal (MC)": "等中",
+        "Equal (Vertex)": "等宿",
+        "Porphyry": "波",
+        "Regiomontanus": "雷",
+        "Campanus": "坎",
+        "Morinus": "莫",
+        "Meridian": "子",
+        "Alcabitius": "阿",
+        "Horizontal": "地平",
+        "Axial Rotation": "轴",
+        "Topocentric": "站",
+        "Krusinski": "克",
+        "Vehlow Equal": "韦",
+        "APC": "APC",
+    },
+}
+
+
+def abbreviate_house_system(system_name: str, locale: str | None = None) -> str:
+    """
+    Short form of a house system name, for a table column header.
+
+    Args:
+        system_name: Full house system name (e.g., "Placidus", "Whole Sign")
+        locale: Locale to abbreviate for. Defaults to the active locale.
+
+    Returns:
+        A short abbreviation (e.g., "Pl", "WS", or 普 / 整 in Chinese)
+
+    Example:
+        >>> abbreviate_house_system("Placidus")
+        'Pl'
+        >>> abbreviate_house_system("Equal (Vertex)")
+        'EqVx'
+        >>> abbreviate_house_system("Placidus", locale="zh_CN")
+        '普'
+    """
+    from stellium.i18n.loader import get_default_locale
+
+    lang = locale or get_default_locale() or "en"
+    table = HOUSE_ABBREVIATIONS.get(lang) or HOUSE_ABBREVIATIONS["en"]
+    fallback = HOUSE_ABBREVIATIONS["en"]
+    return table.get(system_name) or fallback.get(system_name) or system_name[:4]

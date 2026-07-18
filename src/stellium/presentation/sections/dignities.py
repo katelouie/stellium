@@ -12,11 +12,13 @@ from typing import TYPE_CHECKING, Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import get_default_locale, msg, render, term
 
 if TYPE_CHECKING:
     from stellium.engines.dispositors import DispositorResult
 
-from ._utils import get_object_display, get_object_sort_key
+
+from ._utils import get_object_display, get_object_sort_key, glyph_label
 
 
 class DignitySection:
@@ -138,14 +140,11 @@ class DignitySection:
             if pos.name not in planet_dignities:
                 continue
 
-            row = []
+            row: list[Any] = []
 
-            # Planet name with glyph
-            display_name, glyph = get_object_display(pos.name)
-            if glyph:
-                row.append(f"{glyph} {display_name}")
-            else:
-                row.append(display_name)
+            # Planet name with glyph (a catalog term)
+            _, glyph = get_object_display(pos.name)
+            row.append(glyph_label(glyph, f"body.{pos.name}"))
 
             dignity_info = planet_dignities[pos.name]
 
@@ -154,12 +153,21 @@ class DignitySection:
                 if "traditional" in dignity_info:
                     trad = dignity_info["traditional"]
                     if self.show_details:
-                        # Show dignity names
+                        # Dignity names are catalog terms. The engine emits them
+                        # lowercased ("exaltation"); the catalog and the astrology
+                        # convention are capitalized, so title-case for the key — this
+                        # also capitalizes the English display, which is correct.
                         dignity_names = trad.get("dignities", [])
                         if dignity_names:
-                            row.append(", ".join(dignity_names))
+                            row.append(
+                                [term(f"dignity.{d.title()}") for d in dignity_names]
+                            )
                         else:
-                            row.append("Peregrine" if trad.get("is_peregrine") else "—")
+                            row.append(
+                                term("dignity.Peregrine")
+                                if trad.get("is_peregrine")
+                                else "—"
+                            )
                     else:
                         # Show score
                         score = trad.get("score", 0)
@@ -172,10 +180,12 @@ class DignitySection:
                 if "modern" in dignity_info:
                     mod = dignity_info["modern"]
                     if self.show_details:
-                        # Show dignity names
+                        # Catalog terms, title-cased (see the traditional column).
                         dignity_names = mod.get("dignities", [])
                         if dignity_names:
-                            row.append(", ".join(dignity_names))
+                            row.append(
+                                [term(f"dignity.{d.title()}") for d in dignity_names]
+                            )
                         else:
                             row.append("—")
                     else:
@@ -326,14 +336,25 @@ class DispositorSection:
             render_dispositor_svg,
         )
 
+        # The graph is a baked diagram — its title is drawn into the SVG and read by the
+        # native PDF renderer, so localize it in the ambient locale before it is drawn.
+        # (The in-diagram node labels remain English pending a graph-engine i18n pass.)
+        loc = get_default_locale()
+
         graphs = []
         if planetary:
             graphs.append(
-                {"title": "Planetary Dispositors", **dispositor_graph_data(planetary)}
+                {
+                    "title": render(msg("Planetary Dispositors"), loc),
+                    **dispositor_graph_data(planetary),
+                }
             )
         if house:
             graphs.append(
-                {"title": "House Dispositors", **dispositor_graph_data(house)}
+                {
+                    "title": render(msg("House Dispositors"), loc),
+                    **dispositor_graph_data(house),
+                }
             )
         if not graphs:
             return None
@@ -344,11 +365,32 @@ class DispositorSection:
         except Exception:
             pass
 
-        return ("Dispositor Graph", sub)
+        return (msg("Dispositor Graph"), sub)
 
     def _format_result(self, result, title: str) -> dict[str, Any]:
-        """Format a DispositorResult for display."""
+        """Format a DispositorResult for display.
+
+        This section emits a ``text`` block, which the resolve pass leaves alone (free-form
+        prose localizes as a whole, not term-by-term). So it bakes its own localized text in
+        the report's ambient locale — the sanctioned path for generate-time sections — via
+        ``render(msg/term)``, which also brackets under the pseudolocale so the completeness
+        oracle still sees it.
+        """
         from stellium.core.registry import CELESTIAL_REGISTRY
+
+        loc = get_default_locale()
+
+        def L(token: Any) -> str:
+            return render(token, loc)
+
+        def planet(name: str) -> str:
+            label = L(term(f"body.{name}"))
+            if name in CELESTIAL_REGISTRY:
+                return f"{CELESTIAL_REGISTRY[name].glyph} {label}"
+            return label
+
+        def house(num: Any) -> str:
+            return L(msg("House {n}", n=num))
 
         lines = []
 
@@ -356,72 +398,55 @@ class DispositorSection:
         if result.final_dispositor:
             if isinstance(result.final_dispositor, tuple):
                 if result.mode == "planetary":
-                    # Format with glyphs
-                    fd_parts = []
-                    for planet in result.final_dispositor:
-                        if planet in CELESTIAL_REGISTRY:
-                            glyph = CELESTIAL_REGISTRY[planet].glyph
-                            fd_parts.append(f"{glyph} {planet}")
-                        else:
-                            fd_parts.append(planet)
-                    fd_str = " ↔ ".join(fd_parts)
-                    lines.append(f"Final Dispositor: {fd_str} (mutual reception)")
+                    fd_str = " ↔ ".join(planet(p) for p in result.final_dispositor)
                 else:
-                    fd_str = " ↔ ".join([f"House {h}" for h in result.final_dispositor])
-                    lines.append(f"Final Dispositor: {fd_str} (mutual reception)")
+                    fd_str = " ↔ ".join(house(h) for h in result.final_dispositor)
+                lines.append(
+                    L(msg("Final Dispositor: {fd} (mutual reception)", fd=fd_str))
+                )
             else:
                 if result.mode == "planetary":
-                    if result.final_dispositor in CELESTIAL_REGISTRY:
-                        glyph = CELESTIAL_REGISTRY[result.final_dispositor].glyph
-                        lines.append(
-                            f"Final Dispositor: {glyph} {result.final_dispositor}"
-                        )
-                    else:
-                        lines.append(f"Final Dispositor: {result.final_dispositor}")
+                    fd_str = planet(result.final_dispositor)
                 else:
-                    lines.append(f"Final Dispositor: House {result.final_dispositor}")
+                    fd_str = house(result.final_dispositor)
+                lines.append(L(msg("Final Dispositor: {fd}", fd=fd_str)))
         else:
-            lines.append("Final Dispositor: None (complex loop structure)")
+            lines.append(L(msg("Final Dispositor: None (complex loop structure)")))
 
         # Mutual receptions
         if result.mutual_receptions:
             lines.append("")
-            lines.append("Mutual Receptions:")
+            lines.append(L(msg("Mutual Receptions:")))
             for mr in result.mutual_receptions:
                 if result.mode == "planetary":
-                    glyph1 = CELESTIAL_REGISTRY.get(mr.node1, {})
-                    glyph2 = CELESTIAL_REGISTRY.get(mr.node2, {})
-                    g1 = glyph1.glyph if hasattr(glyph1, "glyph") else ""
-                    g2 = glyph2.glyph if hasattr(glyph2, "glyph") else ""
-                    lines.append(f"  {g1} {mr.node1} ↔ {g2} {mr.node2}")
+                    lines.append(f"  {planet(mr.node1)} ↔ {planet(mr.node2)}")
                 else:
-                    # House mode - include ruling planets
                     lines.append(
-                        f"  House {mr.node1} ({mr.planet1}) ↔ "
-                        f"House {mr.node2} ({mr.planet2})"
+                        f"  {house(mr.node1)} ({planet(mr.planet1)}) ↔ "
+                        f"{house(mr.node2)} ({planet(mr.planet2)})"
                     )
 
         # Chains (optional)
         if self.show_chains and result.chains:
             lines.append("")
-            lines.append("Disposition Chains:")
+            lines.append(L(msg("Disposition Chains:")))
             for _start, chain in sorted(result.chains.items()):
                 if result.mode == "planetary":
-                    # Format with glyphs
-                    chain_parts = []
-                    for node in chain:
-                        if node in CELESTIAL_REGISTRY:
-                            chain_parts.append(CELESTIAL_REGISTRY[node].glyph)
-                        else:
-                            chain_parts.append(node)
-                    chain_str = " → ".join(chain_parts)
+                    # Glyphs only — language-neutral.
+                    chain_str = " → ".join(
+                        CELESTIAL_REGISTRY[node].glyph
+                        if node in CELESTIAL_REGISTRY
+                        else node
+                        for node in chain
+                    )
                 else:
-                    chain_str = " → ".join(chain)
+                    chain_str = " → ".join(str(node) for node in chain)
                 lines.append(f"  {chain_str}")
 
-        # Return as tuple of (title, data) for compound rendering
+        # Return as tuple of (title, data) for compound rendering. The title is a message
+        # the resolve pass localizes; the text block is baked above.
         return (
-            f"{title} Dispositors",
+            msg(f"{title} Dispositors"),
             {
                 "type": "text",
                 "text": "\n".join(lines),

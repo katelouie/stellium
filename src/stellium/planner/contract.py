@@ -805,6 +805,7 @@ def build_planner_data(
     Returns:
         The JSON-serialisable contract
     """
+    from stellium.i18n import display
     from stellium.presentation.sections.core import PlanetPositionSection
 
     svgs = svgs or {}
@@ -846,7 +847,11 @@ def build_planner_data(
                 "kind": "planet_positions",
                 "title": "Your placements",
                 "planets": positions["planets"],
-                "house_headers": [str(h) for h in positions.get("house_headers", [])],
+                # house_headers are i18n terms; display() → localized str (or the
+                # encoder renders a still-unresolved term to English for the planner).
+                "house_headers": [
+                    display(h) for h in positions.get("house_headers", [])
+                ],
                 "show_speed": False,
             }
         )

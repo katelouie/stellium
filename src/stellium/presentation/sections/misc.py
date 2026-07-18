@@ -16,6 +16,7 @@ from typing import Any
 from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart, ObjectType
 from stellium.core.multichart import MultiChart
+from stellium.i18n import msg, term
 
 from ._utils import (
     get_aspect_display,
@@ -23,7 +24,19 @@ from ._utils import (
     get_object_sort_key,
     get_orb_sort_key,
     get_sign_glyph,
+    glyph_label,
 )
+
+
+def _planet_pair(value: str) -> Any:
+    """A star's planetary nature ("Mars/Saturn" or "Mars") as a token whose bodies each
+    localize through the catalog, replacing the legacy substring-bridge translation."""
+    parts = value.split("/")
+    if len(parts) == 1:
+        return term(f"body.{parts[0]}")
+    template = "/".join(f"{{p{i}}}" for i in range(len(parts)))
+    kwargs = {f"p{i}": term(f"body.{p}") for i, p in enumerate(parts)}
+    return msg(template, **kwargs)
 
 
 def _wrap_for_multichart(generate_single_func, section_label: str):
@@ -95,22 +108,27 @@ class MoonPhaseSection:
 
         phase = moon.phase
 
-        # Ecliptic separation: Moon's angular distance ahead of Sun (0-360°)
+        # The phase name is a catalog term; the separation is a number. The renderer
+        # composes them, so "Waning Gibbous (137°)" localizes without a substring swap.
+        phase_term = term(f"phase.{phase.phase_name}")
         if phase.moon_longitude is not None and phase.sun_longitude is not None:
             separation = (phase.moon_longitude - phase.sun_longitude) % 360
-            phase_display = f"{phase.phase_name} ({separation:.0f}°)"
+            phase_display: Any = msg(
+                "{phase} ({sep}°)", phase=phase_term, sep=f"{separation:.0f}"
+            )
         else:
             separation = None
-            phase_display = phase.phase_name
+            phase_display = phase_term
 
-        data = {
+        data: dict[str, Any] = {
             "Phase Name": phase_display,
             "Illumination": f"{phase.illuminated_fraction:.1%}",
             "Phase Angle": f"{phase.phase_angle:.1f}°",
-            "Direction": "Waxing" if phase.is_waxing else "Waning",
+            "Direction": msg("Waxing") if phase.is_waxing else msg("Waning"),
             "Apparent Magnitude": f"{phase.apparent_magnitude:.2f}",
             "Apparent Diameter": f"{phase.apparent_diameter:.1f}″",
-            "Geocentric Parallax": f"{phase.geocentric_parallax:.4f} rad",
+            # "rad" (radians) is a unit; a message so a locale can render it (弧度).
+            "Geocentric Parallax": msg("{v} rad", v=f"{phase.geocentric_parallax:.4f}"),
         }
 
         if separation is not None:
@@ -178,8 +196,8 @@ class DeclinationSection:
             if obj.object_type in (ObjectType.ASTEROID, ObjectType.POINT):
                 continue
 
-            display_name, glyph = get_object_display(obj.name)
-            planet_label = f"{glyph} {display_name}"
+            _, glyph = get_object_display(obj.name)
+            planet_label = glyph_label(glyph, f"body.{obj.name}")
 
             # Format declination as degrees°minutes'
             dec_abs = abs(obj.declination)
@@ -187,11 +205,13 @@ class DeclinationSection:
             minutes = int((dec_abs % 1) * 60)
             dec_str = f"{degrees}°{minutes:02d}'"
 
-            # Direction
-            direction = obj.declination_direction.title()
+            # Direction (North/South) — a catalog term, so it localizes and is
+            # coverage-tracked (the locale already carries direction.North etc.).
+            direction = term(f"direction.{obj.declination_direction.title()}")
 
-            # Status - mark out-of-bounds planets
-            status = "OOB ⚠" if obj.is_out_of_bounds else ""
+            # Status - mark out-of-bounds planets. "OOB" is an astrology abbreviation
+            # (out of bounds); it is a message so a locale can render it natively.
+            status: Any = msg("{oob} ⚠", oob=msg("OOB")) if obj.is_out_of_bounds else ""
 
             rows.append([planet_label, dec_str, direction, status])
 
@@ -303,24 +323,18 @@ class DeclinationAspectSection:
         if self.show_oob_status:
             headers.append("OOB")
 
-        # Build rows
+        # Build rows (object/aspect names are catalog terms; see _utils.glyph_label)
         rows = []
         for aspect in aspects:
-            # Planet 1 with glyph
-            name1, glyph1 = get_object_display(aspect.object1.name)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
+            _, glyph1 = get_object_display(aspect.object1.name)
+            _, aspect_glyph = get_aspect_display(aspect.aspect_name)
+            _, glyph2 = get_object_display(aspect.object2.name)
 
-            # Aspect with glyph
-            aspect_name, aspect_glyph = get_aspect_display(aspect.aspect_name)
-            aspect_display = (
-                f"{aspect_glyph} {aspect_name}" if aspect_glyph else aspect_name
-            )
-
-            # Planet 2 with glyph
-            name2, glyph2 = get_object_display(aspect.object2.name)
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
-
-            row = [planet1, aspect_display, planet2]
+            row: list[Any] = [
+                glyph_label(glyph1, f"body.{aspect.object1.name}"),
+                glyph_label(aspect_glyph, f"aspect.{aspect.aspect_name}"),
+                glyph_label(glyph2, f"body.{aspect.object2.name}"),
+            ]
 
             if self.show_orbs:
                 row.append(f"{aspect.orb:.2f}°")
@@ -434,33 +448,51 @@ class FixedStarsSection:
             if hasattr(star, "is_royal") and star.is_royal:
                 tier_marker = " ♔"  # Crown for royal stars
 
-            star_label = f"★ {star.name}{tier_marker}"
+            star_label: Any = msg(
+                "★ {name}{marker}", name=term(f"star.{star.name}"), marker=tier_marker
+            )
 
-            # Position with sign glyph
+            # Position with sign glyph (the sign is a catalog term)
             degree = int(star.sign_degree)
             minute = int((star.sign_degree % 1) * 60)
             sign_glyph = get_sign_glyph(star.sign)
+            deg = f"{degree}°{minute:02d}'"
             if sign_glyph:
-                position = f"{sign_glyph} {star.sign} {degree}°{minute:02d}'"
+                position: Any = msg(
+                    "{glyph} {sign} {deg}",
+                    glyph=sign_glyph,
+                    sign=term(f"sign.{star.sign}"),
+                    deg=deg,
+                )
             else:
-                position = f"{star.sign} {degree}°{minute:02d}'"
+                position = msg("{sign} {deg}", sign=term(f"sign.{star.sign}"), deg=deg)
 
-            # Constellation
-            constellation = getattr(star, "constellation", "")
+            # Constellation — a catalog term (its own namespace, not sign.*).
+            constellation_raw = getattr(star, "constellation", "")
+            constellation: Any = (
+                term(f"constellation.{constellation_raw}") if constellation_raw else ""
+            )
 
             # Magnitude (lower = brighter)
             magnitude = getattr(star, "magnitude", None)
             mag_str = f"{magnitude:.2f}" if magnitude is not None else "—"
 
-            # Nature
-            nature = getattr(star, "nature", "")
+            # Nature — one or more planets ("Mars/Saturn"); each is a body term so it
+            # localizes through the catalog instead of the legacy substring bridge.
+            nature_raw = getattr(star, "nature", "")
+            nature: Any = _planet_pair(nature_raw) if nature_raw else ""
 
             row = [star_label, position, constellation, mag_str, nature]
 
-            # Keywords
+            # Keywords — each is a catalog term (star_keyword.*), so the list renders
+            # comma-joined and every keyword becomes translatable/coverage-tracked.
             if self.include_keywords:
                 keywords = getattr(star, "keywords", ())
-                row.append(", ".join(keywords[:3]) if keywords else "")
+                row.append(
+                    [term(f"star_keyword.{kw}") for kw in keywords[:3]]
+                    if keywords
+                    else ""
+                )
 
             rows.append(row)
 
@@ -627,13 +659,19 @@ class ArabicPartsSection:
             # Part name (clean up for display)
             display_name = self._format_part_name(part.name)
 
-            # Position (degree° Sign minute')
+            # Position (degree° Sign minute'). The sign is a catalog term.
             degree = int(part.sign_degree)
             minute = int((part.sign_degree % 1) * 60)
             sign_glyph = get_sign_glyph(part.sign)
-            position = f"{degree}°{sign_glyph}{part.sign} {minute:02d}'"
+            position = msg(
+                "{deg}°{glyph}{sign} {min}'",
+                deg=degree,
+                glyph=sign_glyph,
+                sign=term(f"sign.{part.sign}"),
+                min=f"{minute:02d}",
+            )
 
-            row = [display_name, position]
+            row: list[Any] = [display_name, position]
 
             # House placements - one column per system
             if len(house_systems) == 0:
@@ -856,17 +894,17 @@ class AntisciaSection:
         rows = []
 
         for conj_type, conj in all_conjs:
-            # Get planet display (returns tuple of name, glyph)
-            name1, glyph1 = get_object_display(conj.planet1)
-            name2, glyph2 = get_object_display(conj.planet2)
-            planet1 = f"{glyph1} {name1}" if glyph1 else name1
-            planet2 = f"{glyph2} {name2}" if glyph2 else name2
+            _, glyph1 = get_object_display(conj.planet1)
+            _, glyph2 = get_object_display(conj.planet2)
+            planet1 = glyph_label(glyph1, f"body.{conj.planet1}")
+            planet2 = glyph_label(glyph2, f"body.{conj.planet2}")
 
             # Orb formatting
             orb_str = f"{conj.orb:.1f}°"
 
-            # Applying/separating
-            state = "Applying" if conj.is_applying else "Separating"
+            # Applying/separating (an aspect-motion term)
+            motion = "Applying" if conj.is_applying else "Separating"
+            state = term(f"aspect_motion.{motion}")
 
             rows.append([planet1, planet2, conj_type, orb_str, state])
 
@@ -889,21 +927,26 @@ class AntisciaSection:
                 if p.object_type == ObjectType.CONTRA_ANTISCION
             ]
 
-            point_rows = []
-            for pt in antiscia_pts:
+            def _antiscia_position(pt: Any) -> Any:
                 degree = int(pt.sign_degree)
                 minute = int((pt.sign_degree % 1) * 60)
-                sign_glyph = get_sign_glyph(pt.sign)
-                position = f"{degree}°{sign_glyph}{pt.sign} {minute:02d}'"
-                point_rows.append([pt.name, position, "Antiscion"])
+                return msg(
+                    "{deg}°{glyph}{sign} {min}'",
+                    deg=degree,
+                    glyph=get_sign_glyph(pt.sign),
+                    sign=term(f"sign.{pt.sign}"),
+                    min=f"{minute:02d}",
+                )
+
+            point_rows = []
+            for pt in antiscia_pts:
+                point_rows.append([pt.name, _antiscia_position(pt), "Antiscion"])
 
             if self.include_contra:
                 for pt in contra_pts:
-                    degree = int(pt.sign_degree)
-                    minute = int((pt.sign_degree % 1) * 60)
-                    sign_glyph = get_sign_glyph(pt.sign)
-                    position = f"{degree}°{sign_glyph}{pt.sign} {minute:02d}'"
-                    point_rows.append([pt.name, position, "Contra-Antiscion"])
+                    point_rows.append(
+                        [pt.name, _antiscia_position(pt), "Contra-Antiscion"]
+                    )
 
             if point_rows:
                 result = {

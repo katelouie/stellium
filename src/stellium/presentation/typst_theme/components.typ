@@ -220,13 +220,14 @@
   // --- planet positions table -------------------------------------------------
   // planets: array of (name, glyph, sign, sign_glyph, degree, houses:(..), speed, retro)
   // columns: which house-system column headers to show.
-  let planet-table(planets, house-headers: (), show-speed: true) = {
+  let planet-table(planets, house-headers: (), show-speed: true, labels: (:)) = {
     let head-cells = (
-      lbl("Planet", size: 7.5pt), lbl("Position", size: 7.5pt),
+      lbl(labels.at("planet", default: "Planet"), size: 7.5pt),
+      lbl(labels.at("position", default: "Position"), size: 7.5pt),
     )
     head-cells += house-headers.map(h => align(center)[#lbl(h, size: 7.5pt)])
     if show-speed {
-      head-cells += (align(right)[#lbl("Speed", size: 7.5pt)], align(right)[#lbl("Motion", size: 7.5pt)])
+      head-cells += (align(right)[#lbl(labels.at("speed", default: "Speed"), size: 7.5pt)], align(right)[#lbl(labels.at("motion", default: "Motion"), size: 7.5pt)])
     }
     let ncol = 2 + house-headers.len() + (if show-speed { 2 } else { 0 })
     // Fill the panel width: name auto, position stretches, the rest hug right.
@@ -244,14 +245,14 @@
         // position: sign glyph + sign + mono degree
         {
           let sg = p.at("sign_glyph", default: sign-glyph-of(p.sign))
-          box[#(if sg != none and sg != "" { glyph(sg, size: 11pt, fill: accent) }) #text(font: body, size: 11pt, fill: muted)[#p.sign] #h(3pt) #mono(p.degree, size: 11pt, fill: ink)]
+          box[#(if sg != none and sg != "" { glyph(sg, size: 11pt, fill: accent) }) #text(font: body, size: 11pt, fill: muted)[#p.at("sign_label", default: p.sign)] #h(3pt) #mono(p.degree, size: 11pt, fill: ink)]
         },
       )
       cells += p.houses.map(h => align(center + horizon)[#badge(h)])
       if show-speed {
         cells += (
           align(right + horizon)[#mono(p.speed, size: 9.5pt, fill: muted)],
-          align(right + horizon)[#(if p.retro { text(font: body, size: 10pt, fill: aspect-colors.square)[Retro] } else { text(font: body, size: 10pt, fill: muted)[Direct] })],
+          align(right + horizon)[#(if p.retro { text(font: body, size: 10pt, fill: aspect-colors.square)[#p.at("motion", default: "Retro")] } else { text(font: body, size: 10pt, fill: muted)[#p.at("motion", default: "Direct")] })],
         )
       }
       rows.push(cells)
@@ -343,16 +344,21 @@
   }
 
   // --- aspect colour-code legend ---------------------------------------------
-  let aspect-legend() = {
-    let items = (
-      ("Conjunction", "Conj"), ("Sextile", "Sextile"), ("Square", "Square"),
-      ("Trine", "Trine"), ("Opposition", "Opp"),
-    )
+  // items: (key, label) records — key is the canonical aspect name (glyph/colour), label
+  // the localized display. Falls back to a fixed English set if none are provided.
+  let aspect-legend(items) = {
+    if items == none or items.len() == 0 {
+      items = (
+        (key: "Conjunction", label: "Conj"), (key: "Sextile", label: "Sextile"),
+        (key: "Square", label: "Square"), (key: "Trine", label: "Trine"),
+        (key: "Opposition", label: "Opp"),
+      )
+    }
     grid(
       columns: items.len() * (auto,),
       column-gutter: 16pt,
       ..items.map(it => box[
-        #aspect-mark(it.at(0), size: 11pt) #h(3pt) #text(font: body, size: 9pt, fill: muted)[#it.at(1)]
+        #aspect-mark(it.key, size: 11pt) #h(3pt) #text(font: body, size: 9pt, fill: muted)[#it.label]
       ]),
     )
   }
@@ -446,13 +452,13 @@
   }
 
   // --- aspect list: structured rows with design-system glyphs ----------------
-  let aspect-list(aspects) = {
+  let aspect-list(aspects, labels: (:)) = {
     let planet-cell(gch, lbl-txt) = {
       box[#(if gch != none and gch != "" { glyph(gch, size: 11pt, fill: ink) }) #text(font: body, size: 10.5pt, fill: ink)[ #lbl-txt]]
     }
-    let applying-cell(ap) = {
-      if ap == true { text(font: body, size: 10pt, fill: muted)[Applying] }
-      else if ap == false { text(font: body, size: 10pt, fill: muted)[Separating] }
+    // The label is localized in the data (Applying/Separating); none → an em dash.
+    let applying-cell(txt) = {
+      if txt != none and txt != "" { text(font: body, size: 10pt, fill: muted)[#txt] }
       else { text(font: body, size: 10pt, fill: muted)[—] }
     }
     table(
@@ -462,17 +468,17 @@
       align: (col, row) => if col >= 3 { right + horizon } else { left + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(
-        lbl("Planet 1", size: 7.5pt), lbl("Aspect", size: 7.5pt),
-        lbl("Planet 2", size: 7.5pt),
-        align(right)[#lbl("Orb", size: 7.5pt)],
-        align(right)[#lbl("Applying", size: 7.5pt)],
+        lbl(labels.at("planet1", default: "Planet 1"), size: 7.5pt), lbl(labels.at("aspect", default: "Aspect"), size: 7.5pt),
+        lbl(labels.at("planet2", default: "Planet 2"), size: 7.5pt),
+        align(right)[#lbl(labels.at("orb", default: "Orb"), size: 7.5pt)],
+        align(right)[#lbl(labels.at("applying", default: "Applying"), size: 7.5pt)],
       ),
       ..aspects.map(a => (
         planet-cell(a.at("p1_glyph", default: ""), a.at("p1_label", default: a.p1)),
-        box[#aspect-mark(a.aspect, size: 11pt) #text(font: body, size: 10.5pt, fill: ink)[ #a.aspect]],
+        box[#aspect-mark(a.aspect, size: 11pt) #text(font: body, size: 10.5pt, fill: ink)[ #a.at("aspect_label", default: a.aspect)]],
         planet-cell(a.at("p2_glyph", default: ""), a.at("p2_label", default: a.p2)),
         mono(a.at("orb", default: ""), size: 9.5pt, fill: muted),
-        applying-cell(a.at("applying", default: none)),
+        applying-cell(a.at("applying_label", default: none)),
       )).flatten(),
     )
   }

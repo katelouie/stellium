@@ -6,6 +6,7 @@ by adding sections one at a time, then rendering in their chosen format.
 """
 
 import datetime as dt
+import re
 from collections.abc import Iterable
 from typing import Any
 
@@ -13,6 +14,17 @@ from stellium.core.comparison import Comparison
 from stellium.core.models import CalculatedChart
 from stellium.core.multichart import MultiChart
 from stellium.core.protocols import ReportRenderer, ReportSection
+from stellium.i18n import (
+    Gloss,
+    Message,
+    Term,
+    display_all,
+    get_default_locale,
+    gloss,
+    msg,
+    set_default_locale,
+    t,
+)
 
 from .renderers import PlainTextRenderer, RichTableRenderer
 from .sections import (
@@ -174,6 +186,120 @@ def _get_translatable_terms() -> list[str]:
     return _TRANSLATABLE_TERMS
 
 
+def _section_key(section: ReportSection) -> str:
+    """The section's stable internal identity — for renderer dispatch, never displayed.
+
+    Split from the display title (which is localized): a renderer keys behind-the-scenes
+    handling off this, so translating a title can never break routing. A section may set
+    an explicit ``section_key`` attribute; otherwise it is derived from the class name
+    (``ChartOverviewSection`` → ``chart_overview``). See the Unified Renderer Contract spec.
+    """
+    explicit = getattr(section, "section_key", None)
+    if isinstance(explicit, str) and explicit:
+        return explicit
+    name = type(section).__name__
+    if name.endswith("Section"):
+        name = name[: -len("Section")]
+    return re.sub(r"(?<!^)(?=[A-Z])", "_", name).lower()
+
+
+def _resolve_structured(
+    section_data: list[tuple[str, dict[str, Any]]],
+    locale: str,
+) -> list[tuple[str, dict[str, Any]]]:
+    """Render any Term/Message/date a *migrated* section emitted, into a string.
+
+    Sections that have moved to the format-last contract put structured values
+    (``term(...)``, ``msg(...)``, a raw ``date``) into their data instead of pre-composed
+    strings, because ``generate_data`` runs before the locale is known. This pass — which
+    runs for **every** locale, English included, and before the legacy substring
+    translator — resolves them with ``render()``. A plain string *value* passes through
+    untouched, so an un-migrated section is unaffected and the two coexist during the
+    migration (spec §7.1).
+
+    **Labels** — section names, table headers, key-value keys, table titles — are treated
+    as messages: a plain-string label is wrapped as ``msg(label)`` so it routes through
+    the catalog rather than the substring translator. In English it is unchanged; in
+    another locale it resolves via ``t()`` exactly as before; under the pseudolocale it is
+    now bracketed, so it stops registering as a leak. This is the Phase 3 move that takes
+    labels off the bridge.
+    """
+
+    def resolve(value: Any) -> Any:
+        # A token becomes a Gloss (identity .en + mask .loc); a plain str is left for the
+        # substring bridge; containers recurse. See the Unified Renderer Contract §4.2.
+        if isinstance(value, dict):
+            return {k: resolve(v) for k, v in value.items()}
+        if isinstance(value, str):
+            return value
+        if isinstance(value, (list, tuple)) and any(
+            not isinstance(v, (str, int, float)) for v in value
+        ):
+            return gloss(value, locale)  # a list of renderables -> one joined Gloss
+        if isinstance(value, list):
+            return [resolve(v) for v in value]
+        return gloss(value, locale)
+
+    def label(value: Any) -> Any:
+        # A label is a message: a bare string is its own English template. It becomes a
+        # Gloss too, so machinery keys on .en and the renderer displays .loc.
+        return gloss(msg(value) if isinstance(value, str) else value, locale)
+
+    def resolve_row(row: Any) -> Any:
+        # Most sections use list rows; some (stations, ingresses) use dict rows keyed by
+        # field. Resolve the values either way without flattening the dict to its keys.
+        if isinstance(row, dict):
+            return {k: resolve(v) for k, v in row.items()}
+        return [resolve(c) for c in row]
+
+    def deep(value: Any) -> Any:
+        # Localize any i18n token nested *anywhere* — including a rich payload a
+        # structure-aware renderer reads (`planets`, `aspect_pairs`, …). A Term/Message
+        # renders to a localized string; a raw str/int/float/bool and language-neutral
+        # fields (glyph chars, canonical names) pass through untouched. Unlike `resolve`,
+        # it does not join a list into one string, so a payload's list structure survives.
+        # See the Unified Renderer Contract spec §4.2.
+        if isinstance(value, (Term, Message)):
+            return gloss(value, locale)
+        if isinstance(value, dict):
+            return {k: deep(v) for k, v in value.items()}
+        if isinstance(value, (list, tuple)):
+            return type(value)(deep(v) for v in value)
+        return value
+
+    def walk(data: dict[str, Any]) -> dict[str, Any]:
+        # Deep-localize the whole dict first (this is what reaches the rich payloads), then
+        # override the structural keys with their specialized label/row treatment.
+        dtype = data.get("type")
+        base = deep(data)
+        if dtype == "table":
+            base["headers"] = [label(h) for h in data.get("headers", [])]
+            base["rows"] = [resolve_row(row) for row in data.get("rows", [])]
+            return base
+        if dtype == "key_value":
+            base["data"] = {label(k): resolve(v) for k, v in data["data"].items()}
+            return base
+        if dtype == "compound":
+            base["sections"] = [
+                (label(n), walk(d)) for n, d in data.get("sections", [])
+            ]
+            return base
+        if dtype in ("side_by_side_tables", "grouped_tables"):
+            base["tables"] = [
+                {
+                    **t,
+                    "title": label(t["title"]) if "title" in t else t.get("title"),
+                    "headers": [label(h) for h in t.get("headers", [])],
+                    "rows": [resolve_row(r) for r in t.get("rows", [])],
+                }
+                for t in data.get("tables", [])
+            ]
+            return base
+        return base
+
+    return [(label(name), walk(data)) for name, data in section_data]
+
+
 def _translate_section_data(
     section_data: list[tuple[str, dict[str, Any]]],
     locale: str,
@@ -191,15 +317,17 @@ def _translate_section_data(
     Returns:
         New list with translated strings (original is not mutated).
     """
-    from stellium.i18n import t
 
-    def tr(s: str) -> str:
+    def tr(s: Any) -> Any:
+        # A Gloss is already resolved — the bridge only touches un-migrated plain strings.
+        if isinstance(s, Gloss):
+            return s
         return t(s, locale=locale)
 
     def translate_cell(value: Any) -> Any:
         """Translate known terms within a cell value."""
         if not isinstance(value, str):
-            return value
+            return value  # a Gloss (already resolved) or a non-string passes through
         # Try direct translation first (exact match)
         translated = tr(value)
         if translated != value:
@@ -1902,6 +2030,31 @@ class ReportBuilder:
     # -------------------------------------------------------------------------
     # Rendering Methods
     # -------------------------------------------------------------------------
+    def _generate_section_data(self) -> list[tuple[str, dict[str, Any]]]:
+        """Run every section's ``generate_data``, with the report locale made ambient.
+
+        Most sections emit locale-agnostic structure (Term/Message) that the resolve pass
+        localizes later. But sections that **bake** their output — the SVG visualizations
+        draw text into a drawing at generate time, before the resolve pass ever sees it —
+        can't defer. For their benefit the report locale is set as the default around
+        generation (and restored after), so a ``t()`` call inside an SVG builder resolves
+        to the right language. It is a no-op for every format-last section.
+        """
+        previous = get_default_locale()
+        try:
+            set_default_locale(self._locale or "en")
+            out: list[tuple[str, dict[str, Any]]] = []
+            for section in self._sections:
+                data = section.generate_data(self._chart)
+                # Stamp the stable internal key so renderers dispatch on it rather than on
+                # the (localized) display title. See the Unified Renderer Contract spec.
+                if isinstance(data, dict):
+                    data.setdefault("section_key", _section_key(section))
+                out.append((section.section_name, data))
+            return out
+        finally:
+            set_default_locale(previous)
+
     def render(
         self,
         format: str = "rich_table",
@@ -1966,20 +2119,18 @@ class ReportBuilder:
         title = self._title
 
         # Generate section data once
-        section_data = [
-            (section.section_name, section.generate_data(self._chart))
-            for section in self._sections
-        ]
+        section_data = self._generate_section_data()
 
-        # Apply locale translation if set.
-        # Translates section names, headers, labels, and cell content.
-        # Prose format is English-only (it generates natural language sentences).
+        # Resolve structured values (Term/Message/date) that migrated sections emit,
+        # for every locale — this is what composes localized strings from structure.
+        section_data = _resolve_structured(section_data, self._locale or "en")
+
+        # Apply the legacy substring translator to whatever un-migrated sections still
+        # emit as plain English strings. Prose is English-only (natural-language output).
         locale = self._locale if self._locale and self._locale != "en" else None
         if locale and format != "prose":
             section_data = _translate_section_data(section_data, locale)
             if title:
-                from stellium.i18n import t
-
                 title = t(title, locale=locale)
 
         # Show in terminal if requested and format supports it
@@ -2032,12 +2183,11 @@ class ReportBuilder:
                 "render(format='pdf', file=...) instead."
             )
 
-        section_data = [
-            (section.section_name, section.generate_data(self._chart))
-            for section in self._sections
-        ]
+        section_data = self._generate_section_data()
 
-        # Apply locale translation if set (prose is English-only).
+        # Resolve structured values (Term/Message/date) for every locale, then apply the
+        # legacy substring translator to remaining plain strings (prose is English-only).
+        section_data = _resolve_structured(section_data, self._locale or "en")
         locale = self._locale if self._locale and self._locale != "en" else None
         if locale and format != "prose":
             section_data = _translate_section_data(section_data, locale)
@@ -2133,6 +2283,10 @@ class ReportBuilder:
         Returns:
             Plaintext string representation
         """
+        # Text renderers are the display edge: flip every Gloss to its .loc mask. Their
+        # internals stay plain-string. (The Typst path keeps Glosses — its mappers still
+        # need the .en identity.) See the Unified Renderer Contract §4.5.
+        section_data = display_all(section_data)
         # Map format names to renderer methods
         if format in ("rich_table", "plain_table", "text"):
             # For terminal formats, use PlainTextRenderer for file output
@@ -2201,13 +2355,15 @@ class ReportBuilder:
         """
         from stellium.presentation.typst_render import render_pdf
 
+        locale = self._locale or "en"
+
         # Build title from chart name if not provided
         if title is None and self._chart:
             chart_name = self._chart.metadata.get("name")
             if chart_name:
-                title = f"{chart_name} — Natal Chart"  # em dash
+                title = f"{chart_name} — {t('Natal Chart', locale=locale)}"  # em dash
             else:
-                title = "Natal Chart Report"
+                title = t("Natal Chart Report", locale=locale)
 
         return render_pdf(
             self._chart,
@@ -2215,6 +2371,7 @@ class ReportBuilder:
             chart_svg_path=chart_svg_path,
             title=title,
             theme=theme,
+            locale=locale,
         )
 
     def _print_to_console(
@@ -2227,6 +2384,8 @@ class ReportBuilder:
             section_data: List of (section_name, section_dict) tuples
             format: Output format (must be terminal-friendly)
         """
+        # Display edge: flip every Gloss to its .loc mask (see _to_string).
+        section_data = display_all(section_data)
         if format == "rich_table":
             # Use Rich renderer's print method (preserves ANSI formatting)
             renderer = RichTableRenderer()

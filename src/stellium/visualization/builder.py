@@ -120,6 +120,10 @@ class ChartDrawBuilder(RasterMixin):
         self._header: bool | None = None
         self._header_height: int | None = None
 
+        # Localization - None = English (identity)
+        self._locale: str | None = None
+        self._font: str | None = None
+
     def with_filename(self, filename: str) -> "ChartDrawBuilder":
         """
         Set the output filename.
@@ -341,6 +345,35 @@ class ChartDrawBuilder(RasterMixin):
             Self for chaining
         """
         self._header = False
+        return self
+
+    def with_locale(self, locale: str) -> "ChartDrawBuilder":
+        """Render the chart's text (labels, dates, house systems) in ``locale``.
+
+        The wheel body is glyphs — planets, signs, aspects — and stays language-neutral;
+        only the header/info words localize, through the same catalog the reports use. If
+        an installed font pack covers the locale's script, its font is named in the SVG and
+        its directory added to the PNG/PDF font path, so a Chinese chart renders in Chinese
+        rather than tofu. Without a covering font, SVG still works in a browser (system
+        fallback) and PNG/PDF warns — see ``stellium fonts download``.
+
+        Args:
+            locale: A locale code, e.g. ``"zh_CN"``. Defaults to English.
+        """
+        self._locale = locale
+        return self
+
+    def with_font(self, font: str) -> "ChartDrawBuilder":
+        """Use an explicit font (file or directory) for this chart's text.
+
+        For a font not in a downloaded pack, or to force a specific face. Its directory is
+        added to the PNG/PDF font search path and its family is named first in the SVG text
+        stack.
+
+        Args:
+            font: Path to a font file or a directory of fonts.
+        """
+        self._font = font
         return self
 
     def with_moon_phase(
@@ -838,6 +871,10 @@ class ChartDrawBuilder(RasterMixin):
             config_kwargs["base_size"] = self._size
         if self._margin is not None:
             config_kwargs["min_margin"] = self._margin
+        if self._locale is not None:
+            config_kwargs["locale"] = self._locale
+        if self._font is not None:
+            config_kwargs["font"] = self._font
 
         # Create config with only user-specified values
         config = ChartVisualizationConfig(**config_kwargs)

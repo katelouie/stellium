@@ -11,6 +11,7 @@ from typing import Protocol
 import svgwrite
 
 from stellium.core.models import CalculatedChart, CelestialPosition
+from stellium.i18n import format_coordinates
 from stellium.visualization.core import embed_svg_glyph, get_glyph
 from stellium.visualization.dial.config import DialConfig, DialStyle
 from stellium.visualization.dial.renderer import DialRenderer
@@ -151,9 +152,9 @@ class DialHeaderLayer:
             # Build location line with coordinates
             lat = chart.location.latitude
             lon = chart.location.longitude
-            lat_dir = "N" if lat >= 0 else "S"
-            lon_dir = "E" if lon >= 0 else "W"
-            coord_str = f"({abs(lat):.4f}°{lat_dir}, {abs(lon):.4f}°{lon_dir})"
+            # The dial renderer has no locale yet; default to English until it gains one.
+            loc = getattr(renderer, "locale", "en")
+            coord_str = f"({format_coordinates(lat, lon, loc, precision=4)})"
 
             if short_name:
                 location_line = f"{short_name} · {coord_str}"

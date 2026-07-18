@@ -487,13 +487,20 @@ class TestElementModalityTableLayer:
         layer = ElementModalityTableLayer()
         assert layer.position == "bottom-left"
 
-    def test_render(self, renderer, mock_dwg, test_chart):
-        """Test ElementModalityTableLayer rendering."""
-        layer = ElementModalityTableLayer()
-        layer.render(renderer, mock_dwg, test_chart)
+    def test_render(self, renderer, test_chart):
+        """Test ElementModalityTableLayer rendering.
 
-        # Should have added table elements
-        assert mock_dwg.add.called
+        Uses a real Drawing rather than the mock: the modality column headers are now
+        embedded SVG glyphs (data/glyphs/{cardinal,fixed,mutable}.svg), so the table is
+        language-neutral and no longer draws "Card"/"Fix"/"Mut" text.
+        """
+        dwg = svgwrite.Drawing()
+        layer = ElementModalityTableLayer()
+        layer.render(renderer, dwg, test_chart)
+
+        out = dwg.tostring()
+        assert "M11 10.33 6 1.67l-5 8.66" in out  # cardinal.svg's path — glyph embedded
+        assert "Card" not in out  # no text label
 
 
 # ============================================================================
