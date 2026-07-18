@@ -68,7 +68,7 @@ THEME_WHEEL = {
     "sepia": ("classic", "rainbow_sepia", "sepia"),
     "celestial": ("celestial", "rainbow_celestial", "celestial"),
     "blues": ("midnight", "rainbow_midnight", "midnight"),
-    "greyscale": ("classic", "grey", "greyscale"),
+    "greyscale": ("greyscale", "grey", "greyscale"),
 }
 
 
