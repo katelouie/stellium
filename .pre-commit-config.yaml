@@ -8,13 +8,23 @@ repos:
 
   - repo: local
     hooks:
+      # POST-commit, deliberately (same reasoning as docs-staleness below). TODO.md
+      # mirrors an *external* system — the Obsidian vault — so it changes whenever the
+      # vault changed, not when your code did. A modifying hook at the pre-commit/pre-push
+      # stage ALWAYS fails (the framework re-stages formatter output that way), so this one
+      # used to block every commit made after any Obsidian activity. Here it only runs
+      # `--check` (read-only): it prints a nudge if TODO.md is stale and never fails.
+      # The actual sync is deliberate — run `python scripts/sync_todo.py` when tasks change.
+      # Install with:  pre-commit install --hook-type post-commit
       - id: sync-todo
-        name: Sync TODO.md from Obsidian
-        entry: python scripts/sync_todo.py
+        name: TODO.md freshness reminder
+        stages: [post-commit]
+        entry: python scripts/sync_todo.py --check
         language: python
         additional_dependencies: [pyyaml]
         pass_filenames: false
         always_run: true
+        verbose: true
 
       # POST-commit, deliberately. It cannot block a commit and cannot fail a push —
       # it prints a reminder or it says nothing. Install with:
