@@ -52,6 +52,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **One localization pass, every renderer.** Introduced `Gloss` — a resolved concept carrying its English identity (`.en`) beside its localized presentation (`.loc`) — so the resolve pass localizes once and every renderer, the PDF one included, reads the same data: machinery matches on identity (locale-invariant), and each renderer flips the mask on at its display edge. This is what closed the gap where a localized report was correct as markdown but leaked English as a PDF.
 
+- **The PDF aspectarian shows orb strength.** Each cell in the aspect matrix now marks how tight the aspect is — *relative to that aspect's allowed orb*, so a 2° sextile reads as tighter than a 2° trine — with an inset ring: a solid **accent** ring for a near-exact orb, a dotted **muted** ring for one near the limit, both keyed in the legend (Tight orb / Wide orb). The ring colours are theme tokens, so they follow the palette (aubergine on house, gold on celestial, blue on blues…) rather than hardcoding a colour. `ReportBuilder().with_aspects(aspectarian_detailed=True)` additionally prints the orb and an applying/separating letter under each glyph, astro.com-style; the rings stay. English output unchanged.
+
+- **Cookbooks** — a new `examples/localization_cookbook.py` walks the two independent knobs (locale = which words, fonts = whether they render) across chart SVG/PNG and report PDF, and `examples/report_cookbook.py` gains an aspectarian recipe covering the tightness rings and the detailed mode.
+
 ### Changed
 
 - **The element/modality table on charts is now glyph-based.** The column headers use the Cardinal/Fixed/Mutable glyphs and each row its element symbol, rather than the words "Card/Fix/Mut" and two-letter abbreviations — so the table reads the same in every language and needs no translation.

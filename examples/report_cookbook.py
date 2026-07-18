@@ -307,6 +307,55 @@ def example_8_aspect_focused():
     print(f"Done! Open {output_file} to see the result.")
 
 
+def example_8b_aspectarian_detail():
+    """
+    Example 8b: Aspectarian Grid - Tightness Rings and Detailed Cells
+
+    The PDF aspectarian (the lower-triangular aspect matrix) has two display
+    modes, both driven by ``with_aspects(...)``:
+
+    * **Default (mode A):** each cell shows the aspect glyph and encodes the
+      orb's *tightness* in an inset ring - a solid accent ring for a near-exact
+      orb, a dotted ring for one near the aspect's orb limit. Tightness is
+      measured relative to each aspect's allowed orb, so a 2 deg sextile reads
+      as tighter than a 2 deg trine. The legend keys both (Tight orb / Wide orb).
+    * **Detailed (mode B):** ``aspectarian_detailed=True`` additionally prints
+      the orb and an applying/separating letter (a/s) under each glyph, the way
+      astro.com's grid does. The tightness rings are retained.
+
+    Other knobs: ``include_aspectarian=False`` drops the grid entirely (aspect
+    list only); ``aspectarian_cell_size`` and ``aspectarian_theme`` tune the SVG
+    fallback used by non-PDF renderers.
+    """
+    section_header("Example 8b: Aspectarian - Tightness Rings & Detail")
+
+    chart = ChartBuilder.from_notable("Marie Curie").with_aspects().calculate()
+
+    # Mode A - the default: glyphs + tightness rings.
+    default_file = OUTPUT_DIR / "curie_aspectarian_default.pdf"
+    print(f"Generating default aspectarian (rings only) to {default_file}...")
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_aspects(mode="major")
+        .render(format="pdf", file=str(default_file))
+    )
+
+    # Mode B - detailed: adds orb + applying/separating letter under each glyph.
+    detailed_file = OUTPUT_DIR / "curie_aspectarian_detailed.pdf"
+    print(f"Generating detailed aspectarian (orb + a/s) to {detailed_file}...")
+    (
+        ReportBuilder()
+        .from_chart(chart)
+        .with_chart_overview()
+        .with_aspects(mode="major", aspectarian_detailed=True)
+        .render(format="pdf", file=str(detailed_file))
+    )
+
+    print(f"Done! Compare {default_file.name} and {detailed_file.name}.")
+
+
 def example_9_positions_only():
     """
     Example 9: Positions-Only Report
@@ -742,6 +791,7 @@ def main():
     example_7_custom_sections()
     example_7b_midpoint_aspects()
     example_8_aspect_focused()
+    example_8b_aspectarian_detail()
     example_9_positions_only()
     example_9b_fixed_stars_report()
     example_9c_royal_stars_only()
