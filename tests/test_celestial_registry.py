@@ -311,3 +311,14 @@ def test_gonggong_is_registered_with_its_glyph():
     gonggong = CELESTIAL_REGISTRY["Gonggong"]
     assert gonggong.glyph_svg_path == "gonggong.svg"
     assert get_glyph("Gonggong")["type"] == "svg"
+
+
+def test_comprehensive_config_includes_hygiea():
+    """Regression: Hygiea — the fourth-largest asteroid and fifth of the classical "big
+    five" — was silently absent from ``CalculationConfig.comprehensive()`` while Ceres,
+    Pallas, Juno and Vesta all resolved. Its Swiss Ephemeris id is now correct (see the
+    ground-truth suite), so it belongs in the set.
+    """
+    from stellium.core.config import CalculationConfig
+
+    assert "Hygiea" in CalculationConfig.comprehensive().include_asteroids

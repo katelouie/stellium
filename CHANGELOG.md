@@ -61,6 +61,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **`zh_CN` rendered the planet Earth as the element** (`土象`) rather than `地球`, because the previous translation layer looked terms up by English string with no namespace, so `Earth` the body and `Earth` the element collided. Terms are now namespaced.
 - **The markdown/text report dropped a compound section nested in a compound**, rendering it as `*Unknown type: compound*` — the zodiacal-releasing snapshot hit this. The renderer now recurses (the PDF path already did), so the snapshot's inner tables render.
+- **`CalculationConfig.comprehensive()` silently omitted Hygiea** — Ceres, Pallas, Juno and Vesta all resolved, but Hygiea (the fourth-largest asteroid, fifth of the classical "big five") was absent. Its Swiss Ephemeris id was corrected in 0.22.0, so it now belongs in the set and computes.
 
 ## [0.22.0] - 2026-07-14
 

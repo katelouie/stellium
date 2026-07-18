@@ -89,5 +89,16 @@ class CalculationConfig:
             include_nodes=True,
             include_chiron=True,
             include_points=["Mean Apogee", "True Apogee"],  # Both Liliths
-            include_asteroids=["Chiron", "Pholus", "Ceres", "Pallas", "Juno", "Vesta"],
+            # The big-four asteroids plus Hygiea (the fourth-largest, and the fifth of the
+            # classical "big five"); Hygiea was silently absent until its Swiss Ephemeris
+            # id was corrected. Chiron/Pholus are the centaurs.
+            include_asteroids=[
+                "Chiron",
+                "Pholus",
+                "Ceres",
+                "Pallas",
+                "Juno",
+                "Vesta",
+                "Hygiea",
+            ],
         )
