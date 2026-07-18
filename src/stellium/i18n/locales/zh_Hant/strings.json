@@ -158,13 +158,17 @@
   },
   "dignity": {
     "Detriment": "落陷",
+    "Detriment_Modern": "落陷（現代）",
     "Domicile": "入廟",
     "Exaltation": "入旺",
+    "Exaltation_Exact": "入旺（精確）",
     "Face": "外觀",
     "Fall": "入弱",
+    "Participating_Ruler": "參與主星",
     "Peregrine": "外來的",
     "Term": "界",
-    "Triplicity": "三分性"
+    "Triplicity": "三分性",
+    "Triplicity_Participating": "三分性（參與）"
   },
   "direction": {
     "E": "東",

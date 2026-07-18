@@ -484,10 +484,15 @@ class FixedStarsSection:
 
             row = [star_label, position, constellation, mag_str, nature]
 
-            # Keywords
+            # Keywords — each is a catalog term (star_keyword.*), so the list renders
+            # comma-joined and every keyword becomes translatable/coverage-tracked.
             if self.include_keywords:
                 keywords = getattr(star, "keywords", ())
-                row.append(", ".join(keywords[:3]) if keywords else "")
+                row.append(
+                    [term(f"star_keyword.{kw}") for kw in keywords[:3]]
+                    if keywords
+                    else ""
+                )
 
             rows.append(row)
 

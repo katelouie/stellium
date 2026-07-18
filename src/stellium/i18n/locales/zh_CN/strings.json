@@ -83,13 +83,17 @@
   },
   "dignity": {
     "Detriment": "失势",
+    "Detriment_Modern": "失势（现代）",
     "Domicile": "入庙",
     "Exaltation": "擢升",
+    "Exaltation_Exact": "擢升（精确）",
     "Face": "外观",
     "Fall": "落陷",
+    "Participating_Ruler": "参与主星",
     "Peregrine": "游走",
     "Term": "界",
-    "Triplicity": "三分性"
+    "Triplicity": "三分性",
+    "Triplicity_Participating": "三分性（参与）"
   },
   "element": {
     "Air": "风象",

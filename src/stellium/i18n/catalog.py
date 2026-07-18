@@ -180,8 +180,13 @@ def build_catalog() -> dict[str, str]:
         if name in shorts:
             catalog[f"house_system.{name}.short"] = shorts[name]
 
-    for name in FIXED_STARS_REGISTRY:
+    for name, info in FIXED_STARS_REGISTRY.items():
         catalog[f"star.{name}"] = name
+        # A star's interpretive keywords are a closed (if large) vocabulary derived from
+        # the registry, so they get catalog keys and become translatable/coverage-tracked
+        # rather than free-form strings the substring bridge could never reach.
+        for keyword in getattr(info, "keywords", ()) or ():
+            catalog[f"star_keyword.{keyword}"] = keyword
 
     for namespace, names in (
         ("sign", SIGNS),
@@ -203,6 +208,13 @@ def build_catalog() -> dict[str, str]:
     # A short form for the one place a narrow column abbreviates it (the PDF motion
     # column prints "Retro"). Everything else falls back to the full term.
     catalog["motion.Retrograde.short"] = "Retro"
+
+    # Compound dignity qualifiers the engine emits (dignities.py looks them up by their
+    # .title()-cased key). Given a readable display instead of the raw "Exaltation_Exact".
+    catalog["dignity.Exaltation_Exact"] = "Exaltation (exact)"
+    catalog["dignity.Detriment_Modern"] = "Detriment (modern)"
+    catalog["dignity.Participating_Ruler"] = "Participating Ruler"
+    catalog["dignity.Triplicity_Participating"] = "Triplicity (participating)"
 
     return catalog
 

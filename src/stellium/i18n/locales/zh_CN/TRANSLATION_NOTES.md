@@ -297,3 +297,21 @@ Midpoint pair names (`太阳/金星`) and fixed-star planetary natures (`火星/
 `body.*` terms (no new data — planet names were already translated). Fixed-star **keyword**
 strings remain English (free-form interpretive text, per-star; a separate translation-data
 task, not a tokenization one).
+
+### Compound dignities + fixed-star keyword plumbing
+
+| Key | Value | Note |
+|---|---|---|
+| `dignity.Exaltation_Exact` | 擢升（精确） | The planet at its exact exaltation degree. English display fixed from the raw `Exaltation_Exact` to `Exaltation (exact)`. |
+| `dignity.Detriment_Modern` | 失势（现代） | Detriment by modern rulership. |
+| `dignity.Participating_Ruler` | 参与主星 | Participating triplicity ruler. |
+| `dignity.Triplicity_Participating` | 三分性（参与） | |
+
+(zh_Hant uses its own dignity tradition — 入旺/落陷, not 擢升/失势 — so its compound forms differ: 入旺（精確）, 落陷（現代）.)
+
+**Fixed-star keywords — DATA-SOURCING RUN NEEDED.** The 91 interpretive keywords (independence,
+cruelty, "the weeping sisters", "changing evil to good", …) are now catalog terms
+(`star_keyword.*`, derived from the fixed-star registry) — tokenized and translatable, but
+**not yet translated**; they still render English in zh. Worklist:
+`~/Downloads/stellium-i18n-review/star_keyword_worklist.json` (91 empty values to fill).
+This is a translation-*data* task, not a plumbing one.

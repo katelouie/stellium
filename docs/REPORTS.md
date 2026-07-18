@@ -1644,14 +1644,14 @@ Essential Dignities
 │ ☉ Sun     │ Peregrine                                 │ Peregrine                                │
 │ ☽ Moon    │ Peregrine                                 │ Peregrine                                │
 │ ☿ Mercury │ Peregrine                                 │ Peregrine                                │
-│ ♀ Venus   │ Detriment, Peregrine                      │ Detriment_Modern, Peregrine              │
-│ ♂ Mars    │ Exaltation, Exaltation_Exact,             │ Exaltation, Exaltation_Exact,            │
-│           │ Participating_Ruler, Term                 │ Triplicity_Participating, Term           │
-│ ♃ Jupiter │ Participating_Ruler                       │ Triplicity_Participating                 │
-│ ♄ Saturn  │ Participating_Ruler, Fall                 │ Triplicity_Participating, Fall           │
+│ ♀ Venus   │ Detriment, Peregrine                      │ Detriment (modern), Peregrine            │
+│ ♂ Mars    │ Exaltation, Exaltation (exact),           │ Exaltation, Exaltation (exact),          │
+│           │ Participating Ruler, Term                 │ Triplicity (participating), Term         │
+│ ♃ Jupiter │ Participating Ruler                       │ Triplicity (participating)               │
+│ ♄ Saturn  │ Participating Ruler, Fall                 │ Triplicity (participating), Fall         │
 │ ♅ Uranus  │ —                                         │ Peregrine                                │
 │ ♆ Neptune │ —                                         │ Peregrine                                │
-│ ♇ Pluto   │ —                                         │ Detriment_Modern, Peregrine              │
+│ ♇ Pluto   │ —                                         │ Detriment (modern), Peregrine            │
 │ ⚷ Chiron  │ —                                         │ Peregrine                                │
 └───────────┴───────────────────────────────────────────┴──────────────────────────────────────────┘
 
@@ -1680,7 +1680,7 @@ Disposition Chains:
   Final Dispositor: House 10 ↔ House 9 (mutual reception)
 
 Mutual Receptions:
-  House 9 (Saturn) ↔ House 10 (Jupiter)
+  House 9 (♄ Saturn) ↔ House 10 (♃ Jupiter)
 
 Disposition Chains:
   1 → 6 → 9 → 10 → 9
