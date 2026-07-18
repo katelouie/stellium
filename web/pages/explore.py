@@ -8,7 +8,7 @@ from analytics import CHART_GENERATED, SVG_DOWNLOADED, track_event
 from components.chart_display import create_chart_actions, create_chart_display
 from components.header import create_header, create_nav
 from config import COLORS
-from i18n import wt
+from i18n import report_locale, wt
 from nicegui import ui
 
 # Stellium imports
@@ -193,7 +193,7 @@ def create_explore_page():
             state["calculated_chart"] = chart
 
             # Generate SVG
-            drawer = chart.draw()
+            drawer = chart.draw().with_locale(report_locale())
             drawer = drawer.with_theme("classic")
             drawer = drawer.with_zodiac_palette("rainbow")
             drawer = drawer.with_header()

@@ -163,7 +163,7 @@ def create_natal_page():
             calculated_chart["ref"] = chart
 
             # Build visualization
-            drawer = chart.draw()
+            drawer = chart.draw().with_locale(report_locale())
             drawer = drawer.with_theme(state.theme)
             drawer = drawer.with_zodiac_palette(state.zodiac_palette)
             drawer = drawer.with_aspect_palette(state.aspect_palette)

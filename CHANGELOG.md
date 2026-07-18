@@ -33,6 +33,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and Taiwan usage. Unattested terms fall back to English rather than shipping invented
   ones; see each locale's `TRANSLATION_NOTES.md`.
 
+- **The web app's chart wheel follows its language too.** The web app already rendered its
+  *report* in the selected language (via `report_locale()` → `ReportBuilder.with_locale()`);
+  the drawn chart SVG did not, so a Chinese session showed a Chinese report beside an English
+  wheel. Every `chart.draw()` in the app (natal, relationships, timing returns/composites,
+  explore) now passes the same locale, so the wheel, header, info corners, and extended
+  tables match the rest of the page.
+
 - **The locale toolkit.** `stellium i18n locales` shows every available language with its
   coverage, fallback chain and font status; `stellium i18n coverage <locale>` details one;
   `stellium i18n extract` emits a fill-in-the-blanks template. Adding a language means
