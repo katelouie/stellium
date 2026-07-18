@@ -26,6 +26,7 @@
   let hair = t.hair
   let panel = t.panel
   let zebra = t.zebra
+  let zebra-faint = t.zebra_faint
   let gridline = t.grid
   let laser = t.laser
   let display = t.display
@@ -116,9 +117,19 @@
 
   // --- section: star + tracked-caps title + hairline + optional descriptor ----
   // Wrapped in a full-width rounded panel (radius 12, 1px hair border).
+  // Full-bleed inset for a table row: the section pads its body by 18pt, so a table
+  // wrapped in pad(x: -18pt) reaches the panel edge; give its outer columns an 18pt
+  // inset so the *text* stays aligned with the section header while the zebra fill runs
+  // edge to edge. Interior columns keep the tight `gap` spacing.
+  let edge-inset(last, gap) = (x, y) => (
+    left: if x == 0 { 18pt } else { gap },
+    right: if x == last { 18pt } else { gap },
+    top: 7pt, bottom: 7pt,
+  )
+
   let section(title, body-content, descriptor: none) = {
     block(
-      width: 100%, breakable: true,
+      width: 100%, breakable: true, clip: true,
       fill: panel, radius: 12pt,
       stroke: 1pt + hair,
       inset: (x: 18pt, y: 16pt),
@@ -258,14 +269,14 @@
       rows.push(cells)
     }
 
-    table(
+    pad(x: -18pt, table(
       columns: col-spec,
       stroke: none,
-      inset: (x: 4pt, y: 7pt),
+      inset: edge-inset(col-spec.len() - 1, 4pt),
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..head-cells),
       ..rows.flatten(),
-    )
+    ))
   }
 
   // --- themed generic fallback table (long-tail sections) --------------------
@@ -283,16 +294,18 @@
     } else {
       (1fr,) * ncol
     }
+    // Full-width tables full-bleed the zebra to the panel edge (pad + edge inset);
+    // natural-width tables stay inset and centred, where full-bleed would look wrong.
     let tbl = table(
       columns: col-spec,
       stroke: none,
-      inset: (x: 8pt, y: 7pt),
+      inset: if full-width { edge-inset(ncol - 1, 8pt) } else { (x: 8pt, y: 7pt) },
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
       ..rows.map(r => r.map(cell => text(font: (body, ..symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
     )
-    if full-width { tbl } else { align(center)[#tbl] }
+    if full-width { pad(x: -18pt, tbl) } else { align(center)[#tbl] }
   }
 
   // --- aspectarian: lower-triangular aspect matrix ---------------------------
@@ -327,11 +340,13 @@
         ]
       } else if j < i {
         let asp = amap.at(str(i) + "_" + str(j), default: none)
-        box(width: cs, height: cs, stroke: 0.5pt + gridline)[
+        // Very subtle alternating-row band so the eye can track across a planet's row.
+        box(width: cs, height: cs, stroke: 0.5pt + gridline,
+            fill: if calc.odd(i) { zebra-faint } else { none })[
           #align(center + horizon)[#(if asp != none { aspect-mark(asp, size: 11pt) })]
         ]
       } else {
-        box(width: cs, height: cs)
+        box(width: cs, height: cs, fill: if calc.odd(i) { zebra-faint } else { none })
       }
     }
     let items = ()
@@ -461,10 +476,10 @@
       if txt != none and txt != "" { text(font: body, size: 10pt, fill: muted)[#txt] }
       else { text(font: body, size: 10pt, fill: muted)[—] }
     }
-    table(
+    pad(x: -18pt, table(
       columns: (1.4fr, 1fr, 1.4fr, auto, auto),
       stroke: none,
-      inset: (x: 6pt, y: 6pt),
+      inset: edge-inset(4, 6pt),
       align: (col, row) => if col >= 3 { right + horizon } else { left + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(
@@ -480,7 +495,7 @@
         mono(a.at("orb", default: ""), size: 9.5pt, fill: muted),
         applying-cell(a.at("applying_label", default: none)),
       )).flatten(),
-    )
+    ))
   }
 
   // --- two tables side by side (comparison / multichart) ---------------------

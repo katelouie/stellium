@@ -112,7 +112,7 @@
   house: (
     bg: "#FAF8F6", ink: "#3A2233", accent: "#47283F", gold: "#B0872F",
     muted: "#A08A72", rule: "#D8CBB6", hair: "#ECE4D6", panel: "#FFFFFF",
-    zebra: "#F4EFE7", grid: "#C9B79E",
+    zebra: "#F4EFE7", zebra_faint: "#FBF8F3", grid: "#C9B79E",
     display: "Cormorant Garamond", body: "EB Garamond", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "rainbow", laser: false, label: "House Style",
@@ -120,7 +120,7 @@
   sepia: (
     bg: "#F2E8D5", ink: "#3A2A1A", accent: "#8B5A2B", gold: "#9B7343",
     muted: "#9A7A52", rule: "#B8A07A", hair: "#DDCEB0", panel: "#FBF5E9",
-    zebra: "#F3E9D3", grid: "#B49A72",
+    zebra: "#F3E9D3", zebra_faint: "#F8F1E1", grid: "#B49A72",
     display: "Newsreader", body: "EB Garamond", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "sepia", laser: false, label: "Sepia",
@@ -128,7 +128,7 @@
   celestial: (
     bg: "#17111F", ink: "#D9C9F2", accent: "#E8B44A", gold: "#E8B44A",
     muted: "#8B7BB0", rule: "#E8B44A", hair: "#3A2A55", panel: "#1F1730",
-    zebra: "#2A2142", grid: "#4E3F68",
+    zebra: "#2A2142", zebra_faint: "#231A36", grid: "#4E3F68",
     display: "Cinzel", body: "Spectral", mono: "IBM Plex Mono",
     display-tracking: 0.06em, display-weight: 600,
     signs: "celestial", laser: false, label: "Celestial",
@@ -136,7 +136,7 @@
   blues: (
     bg: "#0A2A44", ink: "#DCEFFF", accent: "#BFE3FF", gold: "#8FC3EE",
     muted: "#7FB2D8", rule: "#BFE3FF", hair: "#123A5A", panel: "#10375A",
-    zebra: "#16466E", grid: "#3E6E96",
+    zebra: "#16466E", zebra_faint: "#123D62", grid: "#3E6E96",
     display: "Space Grotesk", body: "Space Grotesk", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "blues", laser: false, label: "Blues", page-grid: "#123A5A",
@@ -144,7 +144,7 @@
   greyscale: (
     bg: "#FFFFFF", ink: "#1B1B1B", accent: "#1B1B1B", gold: "#6A6A6A",
     muted: "#8A8A8A", rule: "#1B1B1B", hair: "#DDD8CF", panel: "#FFFFFF",
-    zebra: "#EFEFEF", grid: "#B8B8B8",
+    zebra: "#EFEFEF", zebra_faint: "#F8F8F8", grid: "#B8B8B8",
     display: "IBM Plex Serif", body: "IBM Plex Serif", mono: "IBM Plex Mono",
     display-tracking: 0pt, display-weight: 600,
     signs: "greyscale", laser: true, label: "Greyscale",
@@ -156,7 +156,7 @@
 #let resolve-theme(name) = {
   let t = themes.at(name, default: themes.house)
   let color-keys = (
-    "bg", "ink", "accent", "gold", "muted", "rule", "hair", "panel", "zebra", "grid",
+    "bg", "ink", "accent", "gold", "muted", "rule", "hair", "panel", "zebra", "zebra_faint", "grid",
   )
   let out = (:)
   for (k, v) in t {
