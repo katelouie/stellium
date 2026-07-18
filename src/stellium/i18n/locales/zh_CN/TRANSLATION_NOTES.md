@@ -315,3 +315,72 @@ cruelty, "the weeping sisters", "changing evil to good", …) are now catalog te
 **not yet translated**; they still render English in zh. Worklist:
 `~/Downloads/stellium-i18n-review/star_keyword_worklist.json` (91 empty values to fill).
 This is a translation-*data* task, not a plumbing one.
+
+---
+
+## RESOLVED via research (2026-07): fixed-star keywords + ZR jargon
+
+Two Deep Research reports came back and were integrated wholesale, superseding the
+best-effort/flagged values above. Reports archived at
+`~/Downloads/stellium-i18n-review/{fixed_star,zr}_research_report.md`.
+
+### Fixed-star keywords (`star_keyword.*`, all 91)
+
+Sourced primarily from 魯道夫《恆星占星全書》(春光/城邦, 2021, ISBN 9789865543433 — the first
+Chinese fixed-star book), Robson-derived mainland glossaries (ixingpan/12sign/Douban — note
+these are all Robson translations, *shared ancestry not independent corroboration*), and the
+Taiwan schools (智者星象學院, SATA). Findings applied:
+
+- **HK == TW at the word level** — divergence is Simplified↔Traditional conversion only. One
+  Traditional list (`zh_Hant`) serves both HK and TW; no HK/TW overrides for keywords.
+- **Three accepted collisions** (Chinese makes no distinction — do not force one): wealth =
+  riches = 财富; martial honors = military honors = 军事荣誉; sickness = ill health = 疾病.
+- **Register traps fixed** (dictionary-default would be wrong): activity → 活跃 (not 活动),
+  negative → 凶, malevolent → 凶险, brilliance → 才华洋溢 (intellectual, not literal bright),
+  gifts → 天赋, integrity → 正直, falsity → 虚假, craftiness → 狡猾, harvest → 丰收.
+- **Tradition-bound epithets:** the weeping sisters → 哭泣的姊妹 (Pleiades/昴宿星團); burning →
+  燃烧 (resonates with Antares = 大火 "the Great Fire" / 心宿二 in the native 星官 system);
+  widowhood → 丧偶; changing evil to good → 化恶为善.
+- **Native-resonance blending (documentation note):** Chinese fixed-star writing keeps the
+  indigenous 星官 names and layers Robson's keywords on top, and several align strikingly —
+  Algol/death ↔ 大陵 (tomb), Regulus/royalty ↔ 軒轅 (Yellow Emperor), Antares/burning ↔ 大火,
+  Pleiades ↔ 昴宿. So these keywords read as continuous with the native lore, not foreign.
+- **Two LOW-confidence keys, deviating from the report's TABLE toward its PROSE:**
+  - `losing one's head` → **斩首** (literal only). The report's table showed 斩首／失去理智,
+    but its own Section A2 + recommendations say the figurative sense is unattested and "do
+    not invent a figurative rendering" — so the invented 失去理智 was dropped.
+  - `pathfinding` → 探路 (LOW; a Brady-ism that collapses toward navigation).
+- **Verify-before-final:** the coined phrases 化恶为善, 艺术中的不朽, 另辟蹊径 rest on
+  attribution that could not be quoted online; check against 魯道夫's book. `changing evil to
+  good`'s source star (Nashira/Deneb Algedi) is absent from our star list — effectively orphaned.
+
+### Zodiacal Releasing jargon (`message.*`) — the machine values were REPLACED
+
+The earlier 宗/逆 prefix system was **wrong and shipped-blocked**: 宗 is the religious-sect
+sense of "sect"; 逆 collides with 逆行 (retrograde) and **逆光 literally means photographic
+"backlight."** Replaced with the transparent 區分內 / 區分外 (in-sect / out-of-sect) family that
+matches this project's existing 区分 choice for "sect" (占星之門/astrodoor + SATA standard).
+
+| key | was (machine) | now | why |
+|---|---|---|---|
+| `S.Ben` / `C.Ben` | 宗吉 / 逆吉 | 区分内吉星 / 区分外吉星 | 宗/逆 wrong; 吉星 = benefic is universal |
+| `S.Mal` / `C.Mal` | 宗凶 / 逆凶 | 区分内凶星 / 区分外凶星 | |
+| `S.Lgt` / `C.Lgt` | 宗光 / 逆光 | 区分内发光体 / 区分外发光体 | 逆光 = "backlight"; 发光体 = luminary |
+| `Loosing of Bond` | 松绑 | 联结释放 | 松绑 = "deregulate/untie" (SOE-reform register). 易简观星 uses 联结释放 |
+| `★ Peak Period` / `Peak (10th)` | 巅峰… | 高峰期 / 高峰期（第10宫） | 高峰期 is the published Brennan-translation term |
+| `Quality Score` | 性质评分 | 质量评分 | 性质 = "nature," not "quality" |
+| `Angular` | 角宫 | 角宫 (kept) | matches this project's `condition.Angular` = 角宫; 尖轴 is the book's alt |
+| `Current` | 当前 | 当前 (kept) | correct as-is |
+
+Deviations from the report, for the record:
+- **No "(LB)" suffix** on 联结释放. The report suggests appending "(LB)" for standalone prose,
+  but this UI already surfaces the "LB" marker separately (period-status cell) and expands it
+  in the legend ("LB = 联结释放"), so the suffix would be redundant.
+- **S./C. abbreviations use full terms**, not invented compact forms (the report says no
+  settled Chinese abbreviation exists and not to fabricate one). This widens the Quality
+  column in Chinese ("−4 ✗（区分内凶星）"); keeping the English S.Ben/C.Mal is the report's
+  sanctioned alternative if that width is a problem.
+- **Book-alignment alternative** (not taken): to mirror the authoritative Brennan translation
+  《希臘占星學》(商周 2023) instead of teaching-site usage, the sect family would be 區間 /
+  區間光體 / 最大吉星, Loosing of Bond → 跳轉, Angular → 尖軸. We chose the 區分 family for
+  consistency with the existing `sect`/角宫 vocabulary.

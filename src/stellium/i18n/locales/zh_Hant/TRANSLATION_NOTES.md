@@ -178,3 +178,20 @@ Date-order overrides `{year}年{month}` and `{month}{day}日`.
 S.Lgt→宗光, …) and status markers (★ 巔峰（第10宮）, 角宮, 鬆綁) are conservative
 best-effort with LOW confidence; they need a Hellenistic-literate reviewer. Tokenized so
 they can be corrected in the JSON.
+
+---
+
+## RESOLVED via research (2026-07): fixed-star keywords + ZR jargon
+
+Integrated the same two research reports as zh_CN (see that file for full findings, sources,
+collisions, and the ZR sect-system rationale). Traditional-specific points:
+
+- **Fixed-star keywords (all 91):** HK == TW at the word level — this one Traditional list
+  serves both; no HK/TW keyword overrides. LOW keys: `losing one's head` → 斬首 (literal only,
+  dropping the report table's invented 失去理智 per the report's own prose); `pathfinding` → 探路.
+- **ZR sect system REPLACED** 宗/逆 with 區分內 / 區分外 (逆光 = photographic "backlight"; 松绑 =
+  "deregulate"): S.Ben/C.Ben → 區分內吉星/區分外吉星, S.Mal/C.Mal → 區分內凶星/區分外凶星,
+  S.Lgt/C.Lgt → 區分內發光體/區分外發光體, Loosing of Bond → 聯結釋放, Peak → 高峰期.
+- **`Quality Score` → 品質評分, NOT 質量評分** — in Taiwanese usage 質量 means "mass" (physics),
+  so 質量評分 would misread. This is a genuine zh_Hant-specific choice.
+- Angular kept as 角宮, Current as 當前 (both correct per the report).
