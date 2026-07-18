@@ -281,3 +281,19 @@ Tokenizing report sections that still fell back to English. Confident terms:
 These six role codes and the ZR status markers need a Hellenistic-astrology-literate
 reviewer; they were tokenized (so they *can* be fixed in the JSON) but the Chinese is
 not attested. Until reviewed, treat as provisional.
+
+### Bridge migration: midpoint pairs, fixed-star nature & constellations
+
+Migrating sections off the legacy substring bridge (bare-name lookups) onto catalog
+`term()`s — so they localize through the catalog, the pseudolocale oracle tracks them, and
+they survive the eventual `legacy`-namespace removal.
+
+| Namespace / key | Value | Note |
+|---|---|---|
+| `constellation.*` (new namespace, 21) | 白羊座 / 英仙座 / 室女座 … | Standard IAU Chinese names. **Distinct from signs**: Virgo the constellation is 室女座, but Virgo the *sign* is 处女座 — so constellations get their own namespace, not sign.*. |
+| `message.Star / Constellation / Mag / Nature / Keywords` | 恒星 / 星座 / 星等 / 性质 / 关键词 | Fixed-stars table headers. |
+
+Midpoint pair names (`太阳/金星`) and fixed-star planetary natures (`火星/土星`) now build from
+`body.*` terms (no new data — planet names were already translated). Fixed-star **keyword**
+strings remain English (free-form interpretive text, per-star; a separate translation-data
+task, not a tokenization one).

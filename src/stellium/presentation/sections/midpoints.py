@@ -390,7 +390,9 @@ class MidpointAspectsSection:
 
             orb_str = f"{asp['orb']:.2f}°"
 
-            rows.append([planet_label, aspect_label, asp["midpoint_display"], orb_str])
+            # midpoint_display remains the (string) sort key; the cell shows the token.
+            mp_token = self._midpoint_token(asp["midpoint"])
+            rows.append([planet_label, aspect_label, mp_token, orb_str])
 
         return {
             "type": "table",
@@ -421,7 +423,7 @@ class MidpointAspectsSection:
         return all(obj in self.CORE_OBJECTS for obj in objects)
 
     def _get_midpoint_display(self, midpoint) -> str:
-        """Get display name for a midpoint."""
+        """Get the display name for a midpoint as a plain string (used as a sort key)."""
         if ":" in midpoint.name:
             pair_part = midpoint.name.split(":")[1]
         else:
@@ -432,3 +434,18 @@ class MidpointAspectsSection:
             pair_part = pair_part.replace(" (indirect)", "") + "*"
 
         return pair_part
+
+    def _midpoint_token(self, midpoint) -> Any:
+        """The pair name as a token that localizes each body through the catalog, rather
+        than the bare 'Sun/Venus' string the legacy substring bridge used to translate.
+        Mirrors MidpointSection so the two tables render the same way."""
+        if isinstance(midpoint, MidpointPosition):
+            indirect = "(indirect)" in midpoint.name
+            template = "{a}/{b}*" if indirect else "{a}/{b}"
+            return msg(
+                template,
+                a=term(f"body.{midpoint.object1.name}"),
+                b=term(f"body.{midpoint.object2.name}"),
+            )
+        # Legacy CelestialPosition midpoints: fall back to the parsed string.
+        return self._get_midpoint_display(midpoint)

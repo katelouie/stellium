@@ -122,6 +122,35 @@ PATTERNS: tuple[str, ...] = (
 )
 
 
+# The constellations a fixed star can sit in (engines' FIXED_STARS_REGISTRY). A distinct
+# vocabulary from the signs — a constellation that shares a zodiac name is NOT the sign
+# (Virgo the constellation is 室女座; Virgo the sign is 处女座), so it gets its own namespace
+# rather than borrowing sign.*.
+CONSTELLATIONS: tuple[str, ...] = (
+    "Aquila",
+    "Aries",
+    "Auriga",
+    "Bootes",
+    "Canis Major",
+    "Canis Minor",
+    "Carina",
+    "Cygnus",
+    "Eridanus",
+    "Gemini",
+    "Leo",
+    "Libra",
+    "Lyra",
+    "Orion",
+    "Perseus",
+    "Piscis Austrinus",
+    "Scorpio",
+    "Taurus",
+    "Ursa Major",
+    "Ursa Minor",
+    "Virgo",
+)
+
+
 def _house_short_forms() -> dict[str, str]:
     """The English short forms, from the one implementation that has all 17 systems."""
     from stellium.presentation.sections._utils import HOUSE_ABBREVIATIONS
@@ -166,6 +195,7 @@ def build_catalog() -> dict[str, str]:
         ("direction", DIRECTIONS),
         ("polarity", POLARITIES),
         ("pattern", PATTERNS),
+        ("constellation", CONSTELLATIONS),
     ):
         for name in names:
             catalog[f"{namespace}.{name}"] = name

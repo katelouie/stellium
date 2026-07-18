@@ -28,6 +28,17 @@ from ._utils import (
 )
 
 
+def _planet_pair(value: str) -> Any:
+    """A star's planetary nature ("Mars/Saturn" or "Mars") as a token whose bodies each
+    localize through the catalog, replacing the legacy substring-bridge translation."""
+    parts = value.split("/")
+    if len(parts) == 1:
+        return term(f"body.{parts[0]}")
+    template = "/".join(f"{{p{i}}}" for i in range(len(parts)))
+    kwargs = {f"p{i}": term(f"body.{p}") for i, p in enumerate(parts)}
+    return msg(template, **kwargs)
+
+
 def _wrap_for_multichart(generate_single_func, section_label: str):
     """Helper to wrap single-chart generator for multi-chart support."""
 
@@ -456,15 +467,20 @@ class FixedStarsSection:
             else:
                 position = msg("{sign} {deg}", sign=term(f"sign.{star.sign}"), deg=deg)
 
-            # Constellation
-            constellation = getattr(star, "constellation", "")
+            # Constellation — a catalog term (its own namespace, not sign.*).
+            constellation_raw = getattr(star, "constellation", "")
+            constellation: Any = (
+                term(f"constellation.{constellation_raw}") if constellation_raw else ""
+            )
 
             # Magnitude (lower = brighter)
             magnitude = getattr(star, "magnitude", None)
             mag_str = f"{magnitude:.2f}" if magnitude is not None else "—"
 
-            # Nature
-            nature = getattr(star, "nature", "")
+            # Nature — one or more planets ("Mars/Saturn"); each is a body term so it
+            # localizes through the catalog instead of the legacy substring bridge.
+            nature_raw = getattr(star, "nature", "")
+            nature: Any = _planet_pair(nature_raw) if nature_raw else ""
 
             row = [star_label, position, constellation, mag_str, nature]
 
