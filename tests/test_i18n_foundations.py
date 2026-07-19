@@ -183,7 +183,11 @@ def test_english_report_byte_identical():
     it is a bug. (The zh_CN report is *meant* to change as leaks are fixed — that is
     asserted separately, by rendered content rather than a hash that would churn.)
     """
-    chart = ChartBuilder.from_notable("Albert Einstein").calculate()
+    # Aspects are on by default now; opt out so this fixture matches the state the
+    # golden hash was captured against (an empty aspect section). This keeps the test
+    # a pure i18n invariant — proving the migration didn't move English — rather than
+    # churning it on an unrelated feature that merely adds aspect rows.
+    chart = ChartBuilder.from_notable("Albert Einstein").without_aspects().calculate()
     got = hashlib.sha1(_report(chart, "en").encode()).hexdigest()
     assert got == "d7349ef80c503871fc3b49bb1358020db06a981a", (
         f"English report changed (now {got}) — the migration must not touch English"

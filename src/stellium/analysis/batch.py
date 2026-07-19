@@ -279,10 +279,14 @@ class BatchCalculator:
         # Configure house systems
         builder.with_house_systems(self._house_engines)
 
-        # Configure aspects (if enabled)
+        # Configure aspects (opt-in for batch). ChartBuilder is aspects-on by default,
+        # so explicitly opt out when the batch didn't request them — this preserves the
+        # BatchCalculator's own toggle and skips the per-chart O(n²) pass at scale.
         if self._aspect_engine:
             builder.with_aspects(self._aspect_engine)
             builder.with_orbs(self._orb_engine)
+        else:
+            builder.without_aspects()
 
         # Add analyzers
         for analyzer in self._analyzers:
