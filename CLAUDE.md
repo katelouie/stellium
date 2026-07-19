@@ -47,62 +47,39 @@ re-deriving the API from source each session:
 
 ## Environment Setup Requirements
 
-**CRITICAL: Always run these commands before executing any Python code that uses Swiss Ephemeris:**
+Stellium builds on Swiss Ephemeris (`pyswisseph`), so it needs a **Python 3.11+
+interpreter with the package installed in development mode**. Any environment
+manager works (venv, conda, pyenv, uv, …) — the goal is simply an interpreter that
+can `import stellium` and its dependencies.
 
 ```bash
-source ~/.zshrc
-pyenv activate starlight
+pip install -e ".[dev]"     # package + dev dependencies
+pre-commit install          # optional: auto-format / lint on commit
+```
+
+Once that environment is active, run the tools directly:
+
+```bash
+python path/to/file.py
+pytest                                   # full suite (~30s)
+pytest -m "not slow"                     # fast tier (~2.4s), for TDD
+pytest --cov=src --cov-report=term-missing
+python examples/viz_examples.py
 ```
 
 ### Why This Matters
 
-The Swiss Ephemeris dependency (`pyswisseph`) requires specific environment setup:
-- The `starlight` pyenv environment contains the correct Python version (3.11+) and dependencies
-- Swiss Ephemeris data files are configured for this specific environment in `data/swisseph/ephe/`
-- Without proper activation, imports will fail or calculations will be incorrect
+- Python 3.11+ is required (Stellium uses modern `X | Y` / `list[str]` type hints).
+- Swiss Ephemeris data files ship inside the package (`data/swisseph/ephe/`) and are
+  resolved at runtime — no manual path configuration once the package is installed.
+- Without the package installed in dev mode, `import stellium` fails or calculations
+  come out wrong.
 
-### Required Environment Commands
-
-**Before running Python files:**
-```bash
-source ~/.zshrc && pyenv activate starlight && python [file]
-```
-
-**Before running tests:**
-```bash
-source ~/.zshrc && pyenv activate starlight && pytest
-source ~/.zshrc && pyenv activate starlight && python tests/test_chart_generation.py
-source ~/.zshrc && pyenv activate starlight && python tests/moon_phase_tester.py
-```
-
-**Before running examples:**
-```bash
-source ~/.zshrc && pyenv activate starlight && python examples/usage.py
-source ~/.zshrc && pyenv activate starlight && python examples/viz_examples.py
-```
-
-### Development Setup
-
-```bash
-# Install in development mode with all dev dependencies
-pip install -e ".[dev]"
-
-# Set up pre-commit hooks (automatic code formatting)
-pre-commit install
-
-# Run all tests
-pytest
-
-# Run with coverage
-pytest --cov=src --cov-report=term-missing
-```
-
-> **Environment note.** The `pyenv activate starlight` step is the *local*
-> workflow. CI and any clean environment (containers, fresh checkouts) instead
-> do `pip install -e ".[dev]"` then run `pytest` / `ruff check .` /
-> `ruff format --check .` directly — no pyenv. Use whichever matches where you
-> are; the goal is just an interpreter with the package + dev deps installed.
-> CI runs on Python 3.11–3.13 across Linux/macOS/Windows (`.github/workflows/tests.yml`).
+> **CI & clean environments.** CI runs `pip install -e ".[dev]"` then `pytest` /
+> `ruff check .` / `ruff format --check .` directly — no environment-manager step. It
+> covers Python 3.11–3.13 on Linux/macOS/Windows (`.github/workflows/tests.yml`).
+> Whatever your local manager, the only requirement is an interpreter with the package
+> and dev deps installed.
 
 ---
 
@@ -330,11 +307,8 @@ class Chart:
 git clone https://github.com/katelouie/stellium.git
 cd stellium
 
-# Activate environment
-source ~/.zshrc
-pyenv activate starlight
-
-# Install with dev dependencies
+# Create & activate a Python 3.11+ environment (venv, conda, pyenv, uv, …),
+# then install with dev dependencies:
 pip install -e ".[dev]"
 
 # Setup pre-commit hooks
@@ -343,12 +317,9 @@ pre-commit install
 
 ### 2. Running Tests
 
-**Always activate environment first!**
+**With your dev environment active:**
 
 ```bash
-# Activate environment
-source ~/.zshrc && pyenv activate starlight
-
 # Run all tests
 pytest
 
@@ -368,9 +339,6 @@ pytest -v
 ### 3. Running Examples
 
 ```bash
-# Always activate environment first
-source ~/.zshrc && pyenv activate starlight
-
 # Run visualization examples
 python examples/viz_examples.py
 
@@ -410,7 +378,7 @@ ruff check src/ tests/
 git checkout -b feature/your-feature-name
 
 # Make changes, run tests
-source ~/.zshrc && pyenv activate starlight && pytest
+pytest
 
 # Commit (pre-commit hooks run automatically)
 git add .
@@ -439,13 +407,13 @@ Tests are split into two tiers using the `@pytest.mark.slow` marker:
 
 ```bash
 # Fast TDD loop (2.4s)
-source ~/.zshrc && pyenv activate starlight && pytest -m "not slow"
+pytest -m "not slow"
 
 # Full suite (30s)
-source ~/.zshrc && pyenv activate starlight && pytest
+pytest
 
 # Full with coverage
-source ~/.zshrc && pyenv activate starlight && pytest --cov=src --cov-report=term-missing
+pytest --cov=src --cov-report=term-missing
 ```
 
 To mark a new test file as slow, add near the top (after imports):
@@ -527,10 +495,10 @@ def test_moon_aspect_orb_calculation():
 
 ### Test Files That Require Environment
 
-**IMPORTANT:** All tests that import from `stellium.*` require the pyenv environment to be activated:
+**IMPORTANT:** All tests that import from `stellium.*` require your dev environment (the package installed in dev mode) to be active:
 
 ```bash
-source ~/.zshrc && pyenv activate starlight && pytest
+pytest
 ```
 
 Test files:
@@ -1083,7 +1051,7 @@ chart = (ChartBuilder.from_native(native)
 $ python tests/test_chart_builder.py  # Will fail with import errors!
 
 # ✅ DO: Always activate environment first
-$ source ~/.zshrc && pyenv activate starlight && python tests/test_chart_builder.py
+$ python tests/test_chart_builder.py
 ```
 
 ---
@@ -1093,10 +1061,7 @@ $ source ~/.zshrc && pyenv activate starlight && python tests/test_chart_builder
 ### Essential Commands
 
 ```bash
-# Activate environment (ALWAYS DO THIS FIRST!)
-source ~/.zshrc && pyenv activate starlight
-
-# Run tests
+# Run tests (with your dev environment active)
 pytest
 pytest --cov=src --cov-report=term-missing
 pytest tests/test_chart_builder.py -v
@@ -1272,7 +1237,7 @@ Major Aspects
 
 ### Common Gotchas
 
-1. **Always activate pyenv environment before running Python code**
+1. **Keep your dev environment active** (the package installed in dev mode) when running Python code
 2. **All data models are frozen** - use `replace()` to modify
 3. **Protocols don't require inheritance** - just match the signature
 4. **Builder returns self until `.calculate()`** - lazy evaluation
@@ -1318,10 +1283,4 @@ Major Aspects
 
 ---
 
-**Remember:** Always activate the pyenv environment before running any Python code!
-
-```bash
-source ~/.zshrc && pyenv activate starlight
-```
-
-This is the most important rule for working with Stellium. Without the environment activated, Swiss Ephemeris imports will fail and calculations will be incorrect.
+**Remember:** run Python with your dev environment active — the one where `pip install -e ".[dev]"` was run. Without the package installed there, `import stellium` fails and calculations come out wrong.

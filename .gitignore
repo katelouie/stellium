@@ -56,6 +56,8 @@ examples/multicharts/
 # Claude planning files
 .claude/
 claude_info/
+# Personal machine-specific Claude context (auto-loaded by Claude Code, never committed)
+CLAUDE.local.md
 # Untracked local rectification proving harness (superseded by src/stellium/rectification/)
 docs/development/specs/rectification/harness/
 docs/cookbooks/
