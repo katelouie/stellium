@@ -36,4 +36,4 @@ pymupdf
 # (a missing one fails the build); openpyxl is guarded, and without it the I/O page
 # quietly prints "Skipping Excel example" instead of its output.
 scipy>=1.10.0
-openpyxl>=3.1.0
+openpyxl>=3.1.5
