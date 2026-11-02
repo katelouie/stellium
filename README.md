@@ -1125,7 +1125,20 @@ the questions the daily pages provoke:
 - **A glyph legend** for reading the daily pages
 
 **The year itself.** Monthly calendar grids with every event packed into the day
-cells, then weekly pages of day boxes with room to write.
+cells, then weekly pages of day boxes with room to write. The daily pages carry
+transits to your natal planets, Ascendant, Midheaven and Node; ingresses; stations;
+New, Full and quarter Moons; eclipses; void-of-course Moons; and the sky's own
+planet-to-planet aspects. Each has a switch — `exclude_natal_transits()`,
+`include_natal_transits(planets, to_angles=False)`, `exclude_ingresses()`,
+`exclude_stations()`, `exclude_mundane_transits()`, `include_moon_phases(quarters=False)`,
+`include_eclipses(False)`, `exclude_voc()`.
+
+**Times are yours.** `.timezone()` sets the planner's days and clocks: each page
+runs midnight to midnight in that zone, and every time is printed in it. It never
+changes the astronomy, which is computed in UTC. `.location()` is where you'll
+*use* the planner — the solar return is cast there. Ranges need not be calendar
+years: `.date_range(date(2026, 9, 1), date(2027, 8, 31))` gets the transit map,
+solar return and profections for that span.
 
 **Themed.** All five design-system themes apply — chart wheels, aspect colours and
 table shading stay coordinated with the page. Use `greyscale` if you're printing at

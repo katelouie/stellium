@@ -19,13 +19,31 @@ from dataclasses import dataclass
 from datetime import date
 
 from stellium.planner.almanac import (
+    YEAR_DEFINING_PLANETS,
     build_year_almanac,
     find_chart_condition,
     find_natal_transits,
+    solar_return_year,
 )
 from stellium.planner.contract import build_planner_data
 from stellium.planner.events import DailyEventCollector
 from stellium.presentation.typst_runtime import TypstDocument, require_typst
+
+
+def _timezone_label(timezone: str) -> str:
+    """'US Eastern' for the common zones, else the IANA name — for the title page."""
+    friendly = {
+        "America/New_York": "US Eastern",
+        "America/Chicago": "US Central",
+        "America/Denver": "US Mountain",
+        "America/Phoenix": "Arizona",
+        "America/Los_Angeles": "US Pacific",
+        "America/Anchorage": "Alaska",
+        "Pacific/Honolulu": "Hawaii",
+        "UTC": "UTC",
+        "Etc/UTC": "UTC",
+    }.get(timezone)
+    return friendly or timezone.replace("_", " ")
 
 
 @dataclass
@@ -68,16 +86,20 @@ class PlannerRenderer:
         # renderer built the natal chart three separate times.
         natal_chart = self._build_natal_chart()
 
-        # One transit search, shared by the daily pages and the year's summary.
+        # The year's summary is the *slow* planets only — handing it the daily
+        # pages' planet list put every Moon and Mars hit on "Transits That Shape
+        # the Year" (1,132 rows for Moon/Mars/Saturn). The daily pages then reuse
+        # these hits instead of searching the same planets again.
         transits = find_natal_transits(
             natal_chart,
             start,
             end,
             self.config.timezone,
-            transit_planets=self.config.natal_transit_planets,
+            transit_planets=self._year_transit_planets(),
+            include_points=self.config.natal_transit_points,
         )
 
-        events_by_date = self._collect_events(natal_chart, start, end)
+        events_by_date = self._collect_events(natal_chart, start, end, transits)
         almanac = build_year_almanac(
             natal_chart,
             start,
@@ -85,9 +107,10 @@ class PlannerRenderer:
             self.config.timezone,
             lot=self.config.zr_lot,
             transits=transits,
+            include_progressed=self.config.include_progressed_chart,
         )
 
-        svgs = self._generate_svgs(natal_chart, theme, start)
+        svgs = self._generate_svgs(natal_chart, theme, start, end)
 
         data = build_planner_data(
             natal_chart,
@@ -101,7 +124,9 @@ class PlannerRenderer:
             weekly_starts_on=getattr(self.config, "weekly_starts_on", None),
             time_format=getattr(self.config, "time_format", "12h"),
             location_label=self._location_label(natal_chart),
+            timezone_label=_timezone_label(self.config.timezone),
             include_natal=self.config.include_natal_chart,
+            include_progressed=self.config.include_progressed_chart,
             svgs=svgs.as_dict(),
             transit_planets=self._legend_planets(),
             condition=find_chart_condition(natal_chart),
@@ -114,14 +139,20 @@ class PlannerRenderer:
 
         A planner is used where you *live*, which need not be where you were born,
         so ``.location()`` overrides the birth place for this line (and for casting
-        the solar return). Falls back to the birth location.
+        the solar return). Without one, this is None and the title page names the
+        timezone instead.
         """
         location = self.config.location
         if isinstance(location, str) and location.strip():
             return location.strip()
         if isinstance(location, tuple):
             return f"{location[0]:.4f}, {location[1]:.4f}"
-        return getattr(natal_chart.location, "name", None) or None
+        # No `.location()`: the times are in the planner's *timezone*, which need
+        # not be the birth place's. This used to fall back to the birth place, so a
+        # New York planner for someone born in San Francisco said "All times local
+        # to San Francisco" — three hours wrong on every page. The title page
+        # names the timezone instead (see timezone_label).
+        return None
 
     # -- inputs -------------------------------------------------------------
 
@@ -140,7 +171,7 @@ class PlannerRenderer:
 
     def _legend_planets(self) -> list[str]:
         """Everything that can appear on a daily page, so the key covers it."""
-        return [
+        planets = [
             "Sun",
             "Moon",
             "Mercury",
@@ -152,6 +183,20 @@ class PlannerRenderer:
             "Neptune",
             "Pluto",
         ]
+        from stellium.planner.events import DEFAULT_TRANSIT_PLANETS
+
+        for extra in self.config.natal_transit_planets or DEFAULT_TRANSIT_PLANETS:
+            if extra not in planets and extra != "True Node":  # Node: "natal points"
+                planets.append(extra)
+        return planets
+
+    def _year_transit_planets(self) -> list[str]:
+        """The slow planets for the year's summary, narrowed to the reader's
+        choice of transiting planets when they made one."""
+        chosen = self.config.natal_transit_planets
+        if not chosen:
+            return list(YEAR_DEFINING_PLANETS)
+        return [p for p in YEAR_DEFINING_PLANETS if p in chosen]
 
     def _build_natal_chart(self):
         """The natal chart, with the analyzers the front matter needs."""
@@ -166,23 +211,34 @@ class PlannerRenderer:
             )
         return builder.calculate()
 
-    def _collect_events(self, natal_chart, start: date, end: date) -> dict[date, list]:
+    def _collect_events(
+        self, natal_chart, start: date, end: date, known_hits=None
+    ) -> dict[date, list]:
+        cfg = self.config
         collector = DailyEventCollector(
             natal_chart=natal_chart,
             start=start,
             end=end,
-            timezone=self.config.timezone,
+            timezone=cfg.timezone,
         )
         collector.collect_all(
-            transit_planets=self.config.natal_transit_planets,
+            natal_transits=cfg.include_natal_transits,
+            transit_planets=cfg.natal_transit_planets,
+            natal_points=cfg.natal_transit_points,
+            known_hits=known_hits,
             # This flag existed on PlannerConfig from the start but was never
             # honoured — there was no mundane collector for it to switch on.
-            mundane_transits=self.config.include_mundane_transits,
-            ingress_planets=self.config.ingress_planets,
-            station_planets=self.config.station_planets,
-            moon_phases=self.config.include_moon_phases,
-            voc=self.config.include_voc,
-            voc_mode=self.config.voc_mode,
+            mundane_transits=cfg.include_mundane_transits,
+            mundane_planets=cfg.mundane_planets,
+            ingresses=cfg.include_ingresses,
+            ingress_planets=cfg.ingress_planets,
+            stations=cfg.include_stations,
+            station_planets=cfg.station_planets,
+            moon_phases=cfg.include_moon_phases,
+            quarter_moons=cfg.include_quarter_moons,
+            voc=cfg.include_voc,
+            voc_mode=cfg.voc_mode,
+            eclipses=cfg.include_eclipses,
         )
 
         events: dict[date, list] = {}
@@ -220,7 +276,7 @@ class PlannerRenderer:
                 draw = draw.with_aspect_palette(aspect_palette)
         return draw
 
-    def _generate_svgs(self, natal_chart, theme: str, start: date) -> _Svgs:
+    def _generate_svgs(self, natal_chart, theme: str, start: date, end: date) -> _Svgs:
         svgs = _Svgs()
 
         if self.config.include_natal_chart:
@@ -231,7 +287,7 @@ class PlannerRenderer:
 
         if self.config.include_solar_return:
             svgs.solar_return = self._safe_svg(
-                lambda: self._solar_return_svg(natal_chart, theme, start),
+                lambda: self._solar_return_svg(natal_chart, theme, start, end),
                 "solar return",
             )
 
@@ -249,7 +305,7 @@ class PlannerRenderer:
 
         if self.config.include_graphic_ephemeris:
             svgs.ephemeris = self._safe_svg(
-                lambda: self._ephemeris_svg(natal_chart, start),
+                lambda: self._ephemeris_svg(natal_chart, start, end),
                 "graphic ephemeris",
             )
 
@@ -281,14 +337,18 @@ class PlannerRenderer:
             with open(path, encoding="utf-8") as fh:
                 return fh.read()
 
-    def _solar_return_svg(self, natal_chart, theme: str, start: date) -> str:
+    def _solar_return_svg(self, natal_chart, theme: str, start: date, end: date) -> str:
         from stellium.returns import ReturnBuilder
 
         # A relocated solar return: cast for where the native will *be*, if they
         # said. `ReturnBuilder.solar` has always taken this; the planner just never
-        # passed it, so `.location()` was silently doing nothing.
+        # passed it, so `.location()` was silently doing nothing. The year is the
+        # birthday that falls in the range — not `start.year`, which gave a Sep→Aug
+        # planner the return from before it began.
         chart = ReturnBuilder.solar(
-            natal_chart, year=start.year, location=self.config.location
+            natal_chart,
+            year=solar_return_year(natal_chart, start, end),
+            location=self.config.location,
         ).calculate()
         return self._wheel_svg(chart, theme)
 
@@ -327,17 +387,16 @@ class PlannerRenderer:
                     return found
         return None
 
-    def _ephemeris_svg(self, natal_chart, start: date) -> str:
+    def _ephemeris_svg(self, natal_chart, start: date, end: date) -> str:
         from stellium.visualization.ephemeris import GraphicEphemeris
 
-        harmonic = self.config.graphic_ephemeris_harmonic
-        if harmonic not in (360, 90, 45):
-            harmonic = 90
-
+        # The planner's own span — it used to be pinned to January–December of the
+        # start year whatever range was asked for. (The harmonic is validated by
+        # the builder; it no longer quietly becomes 90 here.)
         ephemeris = GraphicEphemeris(
-            start_date=date(start.year, 1, 1),
-            end_date=date(start.year, 12, 31),
-            harmonic=harmonic,
+            start_date=start,
+            end_date=end,
+            harmonic=self.config.graphic_ephemeris_harmonic,
             natal_chart=natal_chart,
         )
 

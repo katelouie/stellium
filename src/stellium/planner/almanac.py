@@ -18,8 +18,9 @@ human-readable strings in ``DailyEvent`` — the almanac is structured data.
 
 from __future__ import annotations
 
+import warnings
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from typing import Any
 
 import pytz
@@ -60,6 +61,12 @@ RETROGRADE_PLANETS: list[str] = [
 # padded window and the resulting periods are clipped back to the year.
 _STATION_PAD_DAYS = 220
 
+# The natal points a transit can land on, beyond the ten planets. The angles are
+# the most personal points in the chart — a transit to the Ascendant or Midheaven
+# is often the most felt of the year — and the Node completes the axis eclipses
+# are measured against.
+NATAL_POINTS: list[str] = ["ASC", "MC", "True Node"]
+
 
 @dataclass(frozen=True)
 class TransitHit:
@@ -81,6 +88,24 @@ class TransitHit:
     natal_planet: str
     aspect_angle: int
     aspect_name: str
+
+
+@dataclass(frozen=True)
+class ProfectionChange:
+    """The profection that takes over on a birthday inside the planner's range.
+
+    A profected year runs birthday to birthday, so a calendar-year planner holds
+    the tail of one and the head of the next. The dashboard needs both lords, or
+    it is wrong for whichever part of the year it does not describe.
+    """
+
+    date: date
+    age: int
+    profected_house: int
+    profected_sign: str
+    lord_of_year: str
+    lord_natal_sign: str | None
+    lord_natal_house: int | None
 
 
 @dataclass(frozen=True)
@@ -186,6 +211,9 @@ class YearAlmanac:
     stations: tuple[StationEntry, ...] = ()
     lunations: tuple[LunationEntry, ...] = ()
 
+    # The next profected year, when a birthday falls inside the range.
+    profection_change: ProfectionChange | None = None
+
 
 # ---------------------------------------------------------------------------
 # helpers
@@ -228,8 +256,64 @@ def house_for_longitude(chart: CalculatedChart, longitude: float) -> int | None:
 
 
 def _natal_datetime(chart: CalculatedChart) -> datetime:
-    """The chart's birth datetime, preferring local time over UTC."""
+    """The chart's birth datetime, preferring local time over UTC.
+
+    For *display and calendar dates* only (a birthday is a local date). It is often
+    naive, so never feed it to the ephemeris — use ``_natal_utc`` for that.
+    """
     return chart.datetime.local_datetime or chart.datetime.utc_datetime
+
+
+def _natal_utc(chart: CalculatedChart) -> datetime:
+    """The chart's moment as a naive UTC datetime, which is what the search
+    engine's Julian-day conversion assumes."""
+    utc = chart.datetime.utc_datetime
+    if utc.tzinfo is not None:
+        utc = utc.astimezone(pytz.utc).replace(tzinfo=None)
+    return utc
+
+
+def natal_targets(chart: CalculatedChart, include_points: bool = True) -> list[Any]:
+    """The natal positions a transit can aspect: the planets, plus (by default)
+    the angles and the Node — see NATAL_POINTS."""
+    targets = list(chart.get_planets())
+    if include_points:
+        for name in NATAL_POINTS:
+            obj = chart.get_object(name)
+            if obj is not None:
+                targets.append(obj)
+    return targets
+
+
+def utc_window(
+    start: date, end: date, timezone: str | pytz.BaseTzInfo
+) -> tuple[datetime, datetime]:
+    """The planner's *local* days, as the naive-UTC window the search engine takes.
+
+    The search functions read a naive datetime as UTC. Handing them
+    ``datetime.combine(start, time.min)`` therefore searched UTC days, not the
+    reader's: a Tokyo planner for March lost the morning of March 1st and gained
+    April 1st, and a US one lost the evening of its last day. This converts local
+    midnight-to-midnight into the matching UTC instants.
+    """
+    tz = pytz.timezone(timezone) if isinstance(timezone, str) else timezone
+
+    def to_utc(day: date) -> datetime:
+        local = tz.localize(datetime.combine(day, time.min))
+        return local.astimezone(pytz.utc).replace(tzinfo=None)
+
+    return to_utc(start), to_utc(end + timedelta(days=1)) - timedelta(microseconds=1)
+
+
+def search_failed(what: str, exc: Exception) -> None:
+    """A failed ephemeris search must not take the planner down — but it must not
+    vanish either. Silently swallowed, it just leaves days blank."""
+    warnings.warn(
+        f"Planner: could not compute {what} ({type(exc).__name__}: {exc}); "
+        "those entries are missing.",
+        RuntimeWarning,
+        stacklevel=3,
+    )
 
 
 def _sign_of(longitude: float) -> str:
@@ -260,6 +344,7 @@ def find_natal_transits(
     timezone: str,
     transit_planets: list[str] | None = None,
     aspects: list[int] | None = None,
+    include_points: bool = True,
 ) -> list[TransitHit]:
     """Find every exact transit aspect to natal planets in a date range.
 
@@ -268,11 +353,13 @@ def find_natal_transits(
 
     Args:
         natal_chart: The natal chart whose planets are being transited
-        start: First date of the range
-        end: Last date of the range
-        timezone: IANA timezone for the returned exact times
+        start: First date of the range (local to ``timezone``)
+        end: Last date of the range (local to ``timezone``)
+        timezone: IANA timezone the range is in, and for the returned exact times
         transit_planets: Moving bodies to search (default: the year-defining planets)
         aspects: Aspect angles to search (default: the major Ptolemaic set)
+        include_points: Also search transits to the angles and the Node
+            (NATAL_POINTS), not just the planets
 
     Returns:
         Exact transit hits, sorted by time
@@ -285,12 +372,11 @@ def find_natal_transits(
         aspects = [0, 60, 90, 120, 180]
 
     tz = pytz.timezone(timezone)
-    start_dt = datetime.combine(start, datetime.min.time())
-    end_dt = datetime.combine(end, datetime.max.time())
+    start_dt, end_dt = utc_window(start, end, tz)
 
     hits: list[TransitHit] = []
     for transit_planet in transit_planets:
-        for natal_obj in natal_chart.get_planets():
+        for natal_obj in natal_targets(natal_chart, include_points):
             natal_lon = natal_obj.longitude
 
             for angle in aspects:
@@ -309,7 +395,11 @@ def find_natal_transits(
                         crossings = find_all_longitude_crossings(
                             transit_planet, target, start_dt, end_dt
                         )
-                    except Exception:
+                    except Exception as exc:
+                        search_failed(
+                            f"{transit_planet} transits to natal {natal_obj.name}",
+                            exc,
+                        )
                         continue
 
                     for crossing in crossings:
@@ -355,11 +445,9 @@ def find_eclipses(
     entries: list[EclipseEntry] = []
 
     try:
-        eclipses = find_all_eclipses(
-            datetime.combine(start, datetime.min.time()),
-            datetime.combine(end, datetime.max.time()),
-        )
-    except Exception:
+        eclipses = find_all_eclipses(*utc_window(start, end, tz))
+    except Exception as exc:
+        search_failed("eclipses", exc)
         return entries
 
     for eclipse in eclipses:
@@ -401,12 +489,8 @@ def find_retrogrades(
         planets = list(RETROGRADE_PLANETS)
 
     tz = pytz.timezone(timezone)
-    search_start = datetime.combine(
-        start - timedelta(days=_STATION_PAD_DAYS), datetime.min.time()
-    )
-    search_end = datetime.combine(
-        end + timedelta(days=_STATION_PAD_DAYS), datetime.max.time()
-    )
+    pad = timedelta(days=_STATION_PAD_DAYS)
+    search_start, search_end = utc_window(start - pad, end + pad, tz)
 
     periods: list[RetrogradePeriod] = []
 
@@ -416,7 +500,8 @@ def find_retrogrades(
                 find_all_stations(planet, search_start, search_end),
                 key=lambda s: s.julian_day,
             )
-        except Exception:
+        except Exception as exc:
+            search_failed(f"{planet} retrogrades", exc)
             continue
 
         # Pair each retrograde station with the next direct station.
@@ -492,13 +577,19 @@ def find_progressed_moon(
     )
     from stellium.utils.progressions import calculate_progressed_datetime
 
-    natal_dt = _natal_datetime(natal_chart)
+    # UTC, not local. `_datetime_to_julian_day` ignores tzinfo and reads every
+    # datetime as UTC, so progressing from the *local* birth time shifted the whole
+    # progression by the birth place's UTC offset: 7 hours for a California birth,
+    # which is ~3.5° of progressed Moon and moved its aspect dates by months.
+    natal_dt = _natal_utc(natal_chart)
     moon_id = SWISS_EPHEMERIS_IDS["Moon"]
 
     def progressed_longitude(on: date) -> float | None:
         try:
+            # Noon: the target's time of day is worth ~4 progressed minutes either
+            # way, so any fixed hour will do; noon keeps clear of date boundaries.
             prog_dt = calculate_progressed_datetime(
-                natal_dt, datetime.combine(on, datetime.min.time()), "secondary"
+                natal_dt, datetime.combine(on, time(12)), "secondary"
             )
             jd = _datetime_to_julian_day(prog_dt)
             longitude, _speed = _get_position_and_speed(moon_id, jd)
@@ -537,7 +628,7 @@ def find_progressed_moon(
     # Exact aspects to natal planets, found by watching the aspect's angular
     # separation cross zero between consecutive samples.
     aspects: list[ProgressedMoonAspect] = []
-    for natal_obj in natal_chart.get_planets():
+    for natal_obj in natal_targets(natal_chart):
         for angle, name in ASPECT_NAMES.items():
             for (_prev_date, prev_lon), (this_date, this_lon) in zip(
                 samples, samples[1:], strict=False
@@ -653,6 +744,7 @@ def build_year_almanac(
     timezone: str,
     lot: str = "Part of Fortune",
     transits: list[TransitHit] | None = None,
+    include_progressed: bool = True,
 ) -> YearAlmanac:
     """Aggregate a year into the planner's reference structures.
 
@@ -662,8 +754,10 @@ def build_year_almanac(
         end: Last day of the planner's range
         timezone: IANA timezone the planner is written in
         lot: Lot to release from for the ZR section
-        transits: Pre-computed transit hits. The daily event collector runs the
-            same search, so pass its result here rather than searching twice.
+        transits: Pre-computed transit hits for the year's summary. The renderer
+            shares the same search with the daily pages, so pass it here rather
+            than searching twice.
+        include_progressed: Compute the progressed Moon (its page can be dropped)
 
     Returns:
         The year's almanac
@@ -672,14 +766,13 @@ def build_year_almanac(
         transits = find_natal_transits(natal_chart, start, end, timezone)
 
     # Who rules the year. Profections advance one sign per year of life, so the
-    # profection is taken at the start of the planner's range.
+    # profection is taken at the start of the planner's range — and, if a birthday
+    # falls inside it, the next one is recorded too.
     age = _age_on(natal_chart, start)
     profection = natal_chart.profection(age=age, include_monthly=False)
 
     lord = profection.ruler
     lord_obj = natal_chart.get_object(lord)
-
-    solar_return = _solar_return_datetime(natal_chart, start, timezone)
 
     return YearAlmanac(
         start=start,
@@ -690,15 +783,20 @@ def build_year_almanac(
         lord_of_year=lord,
         lord_natal_sign=lord_obj.sign if lord_obj else None,
         lord_natal_house=natal_chart.get_house(lord) if lord_obj else None,
-        solar_return=solar_return,
+        solar_return=_solar_return_datetime(natal_chart, start, end, timezone),
         eclipses=tuple(find_eclipses(natal_chart, start, end, timezone)),
         retrogrades=tuple(find_retrogrades(start, end, timezone)),
-        progressed_moon=find_progressed_moon(natal_chart, start, end),
+        progressed_moon=(
+            find_progressed_moon(natal_chart, start, end)
+            if include_progressed
+            else None
+        ),
         transits=tuple(transits),
         zr_periods=tuple(find_zr_year(natal_chart, start, end, lot=lot)),
         ingresses=tuple(find_ingresses(start, end, timezone)),
         stations=tuple(find_stations(natal_chart, start, end, timezone)),
         lunations=tuple(find_lunations(natal_chart, start, end, timezone)),
+        profection_change=_profection_change(natal_chart, start, end),
     )
 
 
@@ -711,23 +809,82 @@ def _age_on(natal_chart: CalculatedChart, on: date) -> int:
     return max(age, 0)
 
 
+def _birthday_in(natal_chart: CalculatedChart, year: int) -> date:
+    """The native's birthday in a given year (a Feb 29 birth keeps Feb 28)."""
+    birth = _natal_datetime(natal_chart).date()
+    try:
+        return birth.replace(year=year)
+    except ValueError:
+        return date(year, 2, 28)
+
+
+def _profection_change(
+    natal_chart: CalculatedChart, start: date, end: date
+) -> ProfectionChange | None:
+    """The profected year that begins on the first birthday after ``start``."""
+    birthday = _birthday_in(natal_chart, start.year)
+    if birthday <= start:
+        birthday = _birthday_in(natal_chart, start.year + 1)
+    if birthday > end:
+        return None
+
+    age = _age_on(natal_chart, birthday)
+    profection = natal_chart.profection(age=age, include_monthly=False)
+    lord_obj = natal_chart.get_object(profection.ruler)
+    return ProfectionChange(
+        date=birthday,
+        age=age,
+        profected_house=profection.profected_house,
+        profected_sign=profection.profected_sign,
+        lord_of_year=profection.ruler,
+        lord_natal_sign=lord_obj.sign if lord_obj else None,
+        lord_natal_house=(
+            natal_chart.get_house(profection.ruler) if lord_obj else None
+        ),
+    )
+
+
+def solar_return_year(natal_chart: CalculatedChart, start: date, end: date) -> int:
+    """Which year's solar return belongs to this planner.
+
+    The first birthday inside the range — so a Sep→Aug planner gets the return
+    that actually falls in it, not the one of the calendar year it starts in. If
+    no birthday falls inside (a short range), the return already in force at the
+    start.
+    """
+    birthday = _birthday_in(natal_chart, start.year)
+    if birthday < start:
+        birthday = _birthday_in(natal_chart, start.year + 1)
+    if birthday > end:
+        return birthday.year - 1
+    return birthday.year
+
+
 def _solar_return_datetime(
     natal_chart: CalculatedChart,
     start: date,
+    end: date,
     timezone: str,
 ) -> datetime | None:
-    """The solar return falling in the planner's year, if it can be computed."""
+    """The moment of the planner's solar return, in the planner's timezone.
+
+    The return chart's own local time is not the reader's: it is cast without a
+    timezone and comes back in UTC, which the dashboard used to print as though
+    it were local.
+    """
     from stellium.returns import ReturnBuilder
 
+    year = solar_return_year(natal_chart, start, end)
     try:
-        chart = ReturnBuilder.solar(natal_chart, year=start.year).calculate()
-    except Exception:
+        chart = ReturnBuilder.solar(natal_chart, year=year).calculate()
+    except Exception as exc:
+        search_failed("the solar return", exc)
         return None
 
-    try:
-        return _natal_datetime(chart)
-    except Exception:
-        return None
+    utc = chart.datetime.utc_datetime
+    if utc.tzinfo is None:
+        utc = pytz.utc.localize(utc)
+    return utc.astimezone(pytz.timezone(timezone))
 
 
 # ---------------------------------------------------------------------------
@@ -839,7 +996,7 @@ def natal_contacts_at(
         except Exception:
             continue
 
-        for natal_obj in natal_chart.get_planets():
+        for natal_obj in natal_targets(natal_chart):
             for angle, name in ASPECT_NAMES.items():
                 error = abs(_signed_aspect_error(longitude, natal_obj.longitude, angle))
                 if error <= orb:
@@ -892,12 +1049,9 @@ def find_ingresses(
 
     for planet in planets:
         try:
-            changes = find_all_sign_changes(
-                planet,
-                datetime.combine(start, datetime.min.time()),
-                datetime.combine(end, datetime.max.time()),
-            )
-        except Exception:
+            changes = find_all_sign_changes(planet, *utc_window(start, end, tz))
+        except Exception as exc:
+            search_failed(f"{planet} ingresses", exc)
             continue
 
         for change in changes:
@@ -942,12 +1096,8 @@ def find_stations(
     entries: list[StationEntry] = []
 
     # Padded, so a station inside the range can still find its partner outside it.
-    search_start = datetime.combine(
-        start - timedelta(days=_STATION_PAD_DAYS), datetime.min.time()
-    )
-    search_end = datetime.combine(
-        end + timedelta(days=_STATION_PAD_DAYS), datetime.max.time()
-    )
+    pad = timedelta(days=_STATION_PAD_DAYS)
+    search_start, search_end = utc_window(start - pad, end + pad, tz)
 
     for planet in planets:
         try:
@@ -955,7 +1105,8 @@ def find_stations(
                 find_all_stations(planet, search_start, search_end),
                 key=lambda st: st.julian_day,
             )
-        except Exception:
+        except Exception as exc:
+            search_failed(f"{planet} stations", exc)
             continue
 
         wants_shadow = planet in SHADOW_PLANETS
@@ -1073,8 +1224,9 @@ def find_lunations(
     )
 
     tz = pytz.timezone(timezone)
-    start_jd = _datetime_to_julian_day(datetime.combine(start, datetime.min.time()))
-    end_jd = _datetime_to_julian_day(datetime.combine(end, datetime.max.time()))
+    window_start, window_end = utc_window(start, end, tz)
+    start_jd = _datetime_to_julian_day(window_start)
+    end_jd = _datetime_to_julian_day(window_end)
 
     # Eclipses are lunations too; tag them rather than listing them twice.
     eclipses = {e.date: e for e in find_eclipses(natal_chart, start, end, timezone)}
@@ -1085,7 +1237,8 @@ def find_lunations(
     for phase in ("new", "full"):
         try:
             moments = _find_all_lunations(start_jd, end_jd, phase)
-        except Exception:
+        except Exception as exc:
+            search_failed(f"{phase} Moons", exc)
             continue
 
         for jd in moments:

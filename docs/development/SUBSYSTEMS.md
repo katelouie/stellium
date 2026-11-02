@@ -77,10 +77,38 @@ finds times satisfying conditions. Building blocks:
 Source: `planner/`. **`PlannerBuilder.for_native(native)`** →
 `.year(...)`/`.date_range(...)`, `.theme(...)`, front matter (`with_natal_chart()`,
 `with_solar_return()`, `with_profections()`, `with_zr_timeline(...)`,
-`with_graphic_ephemeris(...)`), daily content (`include_natal_transits(...)`,
-`include_moon_phases()`, `include_voc(...)`, `include_ingresses(...)`,
-`include_stations(...)`), layout (`page_size(...)`, `binding_margin(...)`,
-`week_starts_on(...)`), then `.generate("planner.pdf")`.
+`with_graphic_ephemeris(...)`; each has a `without_*()`), daily content
+(`include_natal_transits(planets, to_angles=...)`, `include_mundane_transits(...)`,
+`include_moon_phases(quarters=...)`, `include_eclipses(...)`, `include_voc(...)`,
+`include_ingresses(...)`, `include_stations(...)`, with `exclude_*()` opposites),
+layout (`page_size(...)`, `binding_margin(...)`, `week_starts_on(...)`,
+`weekly_starts_on(...)`, `time_format(...)`), then `.generate("planner.pdf")`.
+Choice-valued setters (`theme`, `timezone`, `page_size`, weekdays, `time_format`,
+VOC mode, ephemeris harmonic) raise `ValueError` at the call, not inside
+`generate()`.
+
+**Time: the planner's days are local, the astronomy is UTC.** `.timezone()` decides
+two things only — how times print and which day an event lands on. The search
+engine (`engines/search.py`) reads every *naive* datetime as UTC and
+`_datetime_to_julian_day` ignores `tzinfo` entirely, so:
+- Search windows go through `almanac.utc_window(start, end, tz)`, which turns the
+  planner's local midnight-to-midnight days into naive-UTC bounds. Never pass
+  `datetime.combine(day, time.min)` straight to a search — that searches UTC days
+  (a Tokyo planner lost its first morning and gained the next month's first day).
+- Anything progressed or cast from the birth moment uses `almanac._natal_utc(chart)`.
+  `chart.datetime.local_datetime` is often *naive local* time; feeding it to the
+  ephemeris shifted the progressed Moon by the birth place's UTC offset (4.4° for a
+  California birth — months on its aspect dates). `_natal_datetime` is for
+  calendar dates (birthdays) only.
+- Searches that need context past the range edge (VOC) run padded, and
+  `DailyEventCollector.collect_all` drops anything outside the local range.
+
+**Range-aware, not year-pinned.** The graphic ephemeris spans `start..end`; the
+solar return is the first birthday inside the range (`almanac.solar_return_year`,
+else the return already in force), shown in the planner's timezone; a birthday
+inside the range adds `YearAlmanac.profection_change`, so the dashboard names both
+Lords of the Year. Weekly pages: a week straddling two months is printed once,
+under the month holding most of its in-range days (`contract._week_owner`).
 
 **Rendering is data-driven**, like the report: `planner/contract.py::
 build_planner_data` serialises to a JSON contract, and `planner/renderer.py`
@@ -102,7 +130,18 @@ the four classes stay ≥15 ΔE apart and ≥3:1 against the page in every theme
 **The Moon is quieted by default.** The transiting Moon aspects every natal planet
 every month — 68% of all natal transit lines, measured — so it contributes
 **conjunctions only** unless you pass `moon_natal_aspects` / `moon_aspects`. The
-same rule applies to mundane transits.
+same rule applies to mundane transits. Quarter Moons are `lunar` (they recede);
+New and Full Moons and eclipses are `notable`, and an eclipse replaces its own
+New/Full Moon line rather than doubling it.
+
+**Natal targets** are the ten planets plus `almanac.NATAL_POINTS` (ASC, MC, True
+Node) via `natal_targets(chart)` — used by transits, the progressed Moon and
+`natal_contacts_at`. Pass `include_points=False` for planets only.
+
+**Glyphs must exist in a bundled font.** Typst runs with system fonts off, and
+the emoji Moons (🌑🌓🌗) are in none of ours — the New Moon printed as a box. The
+phases use `events.MOON_PHASE_GLYPHS` (● ◐ ○ ◑); `tests/test_planner_pipeline.py`
+checks the planner's symbols against the bundled cmaps (needs `fonttools`).
 
 **Two data layers, by scope:**
 - `planner/events.py::DailyEventCollector` — *day*-scoped. Transits, ingresses,
@@ -133,9 +172,13 @@ same rule applies to mundane transits.
   exaltation, bound, triplicity and decan lords per planet). It stops short of
   bonification/maltreatment, which Stellium does not model.
 
-`TransitHit` / `find_natal_transits()` is the shared primitive behind both — run
-it once and pass the result into `build_year_almanac(transits=...)` so the
-longitude-crossing search doesn't happen twice.
+`TransitHit` / `find_natal_transits()` is the shared primitive behind both. The
+renderer runs it once for the year's summary — **slow planets only**
+(`YEAR_DEFINING_PLANETS`, narrowed to the reader's `include_natal_transits` list) —
+passes it to `build_year_almanac(transits=...)`, and hands the same hits to
+`collect_all(known_hits=...)` so the daily pages don't search those planets again.
+A failed search warns (`almanac.search_failed`) instead of silently leaving blank
+days.
 
 **Design note.** The front matter is a *reference section*, not an overture: a
 report is a portrait (read once), a planner is an instrument (consulted daily).
