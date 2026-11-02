@@ -19,6 +19,12 @@ from stellium.core.registry import (
     ECLIPTIC_ASPECT_REGISTRY,
 )
 from stellium.engines.dignities import DIGNITIES
+from stellium.planner.almanac import (
+    TransitHit,
+    find_natal_transits,
+    search_failed,
+    utc_window,
+)
 
 if TYPE_CHECKING:
     from stellium.core.models import CalculatedChart
@@ -30,6 +36,26 @@ if TYPE_CHECKING:
 # dozen (an asteroid, a lot) silently rendered as a bare letter.
 PLANET_GLYPHS: dict[str, str] = {
     name: info.glyph for name, info in CELESTIAL_REGISTRY.items() if info.glyph
+}
+# The angles have no registry glyph; astrologers write them as letters anyway.
+PLANET_GLYPHS.setdefault("ASC", "AC")
+PLANET_GLYPHS.setdefault("MC", "MC")
+
+# Moon phases, from the bundled fonts. NOT the emoji moons (🌑🌓🌗): Typst renders
+# with system fonts switched off, and only 🌕 exists in any font we ship, so a New
+# Moon printed as an empty box. Lit is white, dark is black, as on a calendar.
+MOON_PHASE_GLYPHS: dict[str, str] = {
+    "new": "●",  # ●
+    "first_quarter": "◐",  # ◐ — right half lit (northern hemisphere)
+    "full": "○",  # ○
+    "last_quarter": "◑",  # ◑ — left half lit
+}
+
+MOON_PHASE_NAMES: dict[str, str] = {
+    "new": "New Moon",
+    "first_quarter": "First Quarter Moon",
+    "full": "Full Moon",
+    "last_quarter": "Last Quarter Moon",
 }
 
 # The registry's sign symbols carry a U+FE0E text-presentation selector. That is
@@ -106,6 +132,17 @@ DEFAULT_STATION_PLANETS = [
     "Pluto",
     "Chiron",
 ]
+
+# Reader-facing names for natal points whose chart names are terse.
+_POINT_LABELS: dict[str, str] = {
+    "ASC": "Ascendant",
+    "MC": "Midheaven",
+    "True Node": "North Node",
+}
+
+
+def _point_label(name: str) -> str:
+    return _POINT_LABELS.get(name, name)
 
 
 @dataclass(frozen=True)
@@ -210,29 +247,38 @@ class DailyEventCollector:
         """Add an event to the collection."""
         self._events.append(event)
 
+    def _window(self) -> tuple[datetime, datetime]:
+        """The planner's local days as the UTC window the searches take."""
+        return utc_window(self.start, self.end, self._tz)
+
     def collect_natal_transits(
         self,
         transit_planets: list[str] | None = None,
         aspects: list[int] | None = None,
         moon_aspects: list[int] | None = None,
+        include_points: bool = True,
+        known_hits: list[TransitHit] | None = None,
     ) -> None:
         """
-        Collect transits from outer planets to natal planets.
+        Collect transits from the moving planets to the natal chart.
 
         Uses longitude crossing search to find when transit planets
-        reach aspect positions to fixed natal planet longitudes.
+        reach aspect positions to fixed natal longitudes.
 
         Args:
-            transit_planets: Which transiting planets (default: Jupiter-Pluto)
+            transit_planets: Which transiting planets (default:
+                DEFAULT_TRANSIT_PLANETS — all ten planets, the Node and Chiron)
             aspects: Which aspects to include (default: major Ptolemaic)
             moon_aspects: Aspects to collect for the *transiting Moon* specifically
                 (default: conjunctions only). The Moon aspects every natal planet
                 every month, so at the full major set it produces ~68% of all natal
                 transit lines and drowns the slower, more meaningful hits. Pass
                 ``aspects`` here to opt back into the whole set.
+            include_points: Also collect transits to the natal angles and Node
+            known_hits: Hits already found by ``find_natal_transits`` for this
+                range (the renderer runs that search for the year's summary).
+                Their transiting planets are not searched again.
         """
-        from stellium.engines.search import find_all_longitude_crossings
-
         if transit_planets is None:
             transit_planets = DEFAULT_TRANSIT_PLANETS
 
@@ -242,72 +288,56 @@ class DailyEventCollector:
         if moon_aspects is None:
             moon_aspects = [0]
 
-        # Get start/end as datetime for search functions
-        start_dt = datetime.combine(self.start, datetime.min.time())
-        end_dt = datetime.combine(self.end, datetime.max.time())
+        hits: list[TransitHit] = []
+        reused: set[str] = set()
+        if known_hits:
+            reused = {h.transit_planet for h in known_hits} & set(transit_planets)
+            reused.discard("Moon")  # the Moon gets its own aspect set
+            hits.extend(
+                h
+                for h in known_hits
+                if h.transit_planet in reused and h.aspect_angle in aspects
+            )
 
-        # Get natal planet positions
-        natal_planets = self.natal_chart.get_planets()
+        def search(planets: list[str], angles: list[int]) -> None:
+            if planets and angles:
+                hits.extend(
+                    find_natal_transits(
+                        self.natal_chart,
+                        self.start,
+                        self.end,
+                        self.timezone,
+                        transit_planets=planets,
+                        aspects=angles,
+                        include_points=include_points,
+                    )
+                )
 
-        for transit_planet in transit_planets:
-            planet_aspects = moon_aspects if transit_planet == "Moon" else aspects
+        search([p for p in transit_planets if p != "Moon" and p not in reused], aspects)
+        if "Moon" in transit_planets:
+            search(["Moon"], moon_aspects)
 
-            for natal_obj in natal_planets:
-                natal_name = natal_obj.name
-                natal_lon = natal_obj.longitude
+        for hit in hits:
+            aspect_glyph = ASPECT_GLYPHS.get(hit.aspect_angle, "?")
+            transit_glyph = PLANET_GLYPHS.get(
+                hit.transit_planet, hit.transit_planet[:2]
+            )
+            natal_glyph = PLANET_GLYPHS.get(hit.natal_planet, hit.natal_planet[:2])
+            natal_label = _point_label(hit.natal_planet)
 
-                for aspect_angle in planet_aspects:
-                    # Calculate target longitude(s) for this aspect
-                    # For most aspects, there's one target
-                    # For non-conjunction/opposition, the aspect can form from either side
-                    if aspect_angle == 0:
-                        # Conjunction: transit crosses natal longitude
-                        target_lons = [natal_lon]
-                    elif aspect_angle == 180:
-                        # Opposition: transit crosses opposite point
-                        target_lons = [(natal_lon + 180) % 360]
-                    else:
-                        # Other aspects: can form from either direction
-                        target_lons = [
-                            (natal_lon + aspect_angle) % 360,
-                            (natal_lon - aspect_angle) % 360,
-                        ]
-
-                    for target_lon in target_lons:
-                        try:
-                            crossings = find_all_longitude_crossings(
-                                transit_planet,
-                                target_lon,
-                                start_dt,
-                                end_dt,
-                            )
-
-                            for crossing in crossings:
-                                local_time = self._utc_to_local(crossing.datetime_utc)
-                                aspect_glyph = ASPECT_GLYPHS.get(aspect_angle, "?")
-                                transit_glyph = PLANET_GLYPHS.get(
-                                    transit_planet, transit_planet[0]
-                                )
-                                natal_glyph = PLANET_GLYPHS.get(
-                                    natal_name, natal_name[0]
-                                )
-
-                                # Priority based on aspect type
-                                priority = 2 if aspect_angle in [0, 90, 180] else 3
-
-                                self._add_event(
-                                    DailyEvent(
-                                        time=local_time,
-                                        event_type="transit_natal",
-                                        event_class="natal",
-                                        description=f"{transit_planet} {aspect_glyph} natal {natal_name}",
-                                        symbol=f"{transit_glyph}{aspect_glyph}{natal_glyph}(n)",
-                                        priority=priority,
-                                    )
-                                )
-                        except Exception:
-                            # Skip if search fails (e.g., missing ephemeris)
-                            pass
+            self._add_event(
+                DailyEvent(
+                    time=hit.exact.astimezone(self._tz),
+                    event_type="transit_natal",
+                    event_class="natal",
+                    description=(
+                        f"{hit.transit_planet} {hit.aspect_name.lower()} "
+                        f"natal {natal_label}"
+                    ),
+                    symbol=f"{transit_glyph}{aspect_glyph}{natal_glyph}(n)",
+                    priority=2 if hit.aspect_angle in (0, 90, 180) else 3,
+                )
+            )
 
     def collect_mundane_transits(
         self,
@@ -342,8 +372,7 @@ class DailyEventCollector:
         if moon_aspects is None:
             moon_aspects = [0]
 
-        start_dt = datetime.combine(self.start, datetime.min.time())
-        end_dt = datetime.combine(self.end, datetime.max.time())
+        start_dt, end_dt = self._window()
 
         for first, second in combinations(planets, 2):
             involves_moon = "Moon" in (first, second)
@@ -354,7 +383,8 @@ class DailyEventCollector:
                     exacts = find_all_aspect_exacts(
                         first, second, float(angle), start_dt, end_dt
                     )
-                except Exception:
+                except Exception as exc:
+                    search_failed(f"{first}–{second} aspects", exc)
                     continue
 
                 glyph1 = PLANET_GLYPHS.get(first, first[:2])
@@ -369,7 +399,7 @@ class DailyEventCollector:
                             event_type="transit_mundane",
                             # The Moon's chatter is the background of the background.
                             event_class="lunar" if involves_moon else "mundane",
-                            description=f"{first} {aspect_name} {second}",
+                            description=f"{first} {aspect_name.lower()} {second}",
                             symbol=f"{glyph1}{aspect_glyph}{glyph2}",
                             priority=4 if involves_moon else 3,
                         )
@@ -390,13 +420,15 @@ class DailyEventCollector:
         if planets is None:
             planets = list(DEFAULT_TRANSIT_PLANETS)
 
-        start_dt = datetime.combine(self.start, datetime.min.time())
-        end_dt = datetime.combine(self.end, datetime.max.time())
+        start_dt, end_dt = self._window()
 
         for planet in planets:
             try:
                 ingresses = find_all_sign_changes(planet, start_dt, end_dt)
-
+            except Exception as exc:
+                search_failed(f"{planet} ingresses", exc)
+                continue
+            else:
                 for ingress in ingresses:
                     local_time = self._jd_to_local(ingress.julian_day)
                     planet_glyph = PLANET_GLYPHS.get(planet, planet[0])
@@ -416,8 +448,6 @@ class DailyEventCollector:
                             priority=4 if is_moon else 2,
                         )
                     )
-            except Exception:
-                pass
 
     def collect_stations(self, planets: list[str] | None = None) -> None:
         """
@@ -431,13 +461,15 @@ class DailyEventCollector:
         if planets is None:
             planets = DEFAULT_STATION_PLANETS
 
-        start_dt = datetime.combine(self.start, datetime.min.time())
-        end_dt = datetime.combine(self.end, datetime.max.time())
+        start_dt, end_dt = self._window()
 
         for planet in planets:
             try:
                 stations = find_all_stations(planet, start_dt, end_dt)
-
+            except Exception as exc:
+                search_failed(f"{planet} stations", exc)
+                continue
+            else:
                 for station in stations:
                     local_time = self._jd_to_local(station.julian_day)
                     planet_glyph = PLANET_GLYPHS.get(planet, planet[0])
@@ -459,52 +491,75 @@ class DailyEventCollector:
                             priority=1,  # Stations are important
                         )
                     )
-            except Exception:
-                pass
 
-    def collect_moon_phases(self) -> None:
-        """Collect New Moon, Full Moon, and quarter phases."""
+    def collect_moon_phases(self, quarters: bool = True) -> None:
+        """Collect New and Full Moons, and (by default) the two quarter Moons.
+
+        Args:
+            quarters: Also collect First and Last Quarter Moons. They are the
+                Sun–Moon squares, so they are found as exact aspects and told
+                apart by elongation (Moon 90° ahead of the Sun is the first).
+        """
         from stellium.electional.intervals import _find_all_lunations
         from stellium.engines.search import _datetime_to_julian_day
 
-        start_jd = _datetime_to_julian_day(
-            datetime.combine(self.start, datetime.min.time())
-        )
-        end_jd = _datetime_to_julian_day(
-            datetime.combine(self.end, datetime.max.time())
-        )
+        start_dt, end_dt = self._window()
+        start_jd = _datetime_to_julian_day(start_dt)
+        end_jd = _datetime_to_julian_day(end_dt)
 
-        # New Moons
-        new_moons = _find_all_lunations(start_jd, end_jd, "new")
-        for jd in new_moons:
-            local_time = self._jd_to_local(jd)
+        moments: list[tuple[str, float]] = []
+        for phase in ("new", "full"):
+            try:
+                moments += [
+                    (phase, jd) for jd in _find_all_lunations(start_jd, end_jd, phase)
+                ]
+            except Exception as exc:
+                search_failed(MOON_PHASE_NAMES[phase] + "s", exc)
+
+        if quarters:
+            moments += self._quarter_moons(start_dt, end_dt)
+
+        for phase, jd in moments:
             self._add_event(
                 DailyEvent(
-                    time=local_time,
+                    time=self._jd_to_local(jd),
                     event_type="moon_phase",
-                    description="New Moon",
-                    symbol="\U0001f311",  # 🌑
-                    priority=1,
-                    event_class="notable",
+                    description=MOON_PHASE_NAMES[phase],
+                    symbol=MOON_PHASE_GLYPHS[phase],
+                    # Quarters are the turn of the lunar week, not a culmination.
+                    priority=1 if phase in ("new", "full") else 2,
+                    event_class="notable" if phase in ("new", "full") else "lunar",
                 )
             )
 
-        # Full Moons
-        full_moons = _find_all_lunations(start_jd, end_jd, "full")
-        for jd in full_moons:
-            local_time = self._jd_to_local(jd)
-            self._add_event(
-                DailyEvent(
-                    time=local_time,
-                    event_type="moon_phase",
-                    description="Full Moon",
-                    symbol="\U0001f315",  # 🌕
-                    priority=1,
-                    event_class="notable",
-                )
-            )
+    def _quarter_moons(
+        self, start_dt: datetime, end_dt: datetime
+    ) -> list[tuple[str, float]]:
+        """First and last quarters: the Sun–Moon squares, sorted by elongation."""
+        from stellium.engines.search import (
+            SWISS_EPHEMERIS_IDS,
+            _get_position_and_speed,
+            find_all_aspect_exacts,
+        )
 
-        # TODO: Add quarter phases if desired
+        try:
+            squares = find_all_aspect_exacts("Sun", "Moon", 90.0, start_dt, end_dt)
+        except Exception as exc:
+            search_failed("quarter Moons", exc)
+            return []
+
+        found = []
+        for exact in squares:
+            sun, _ = _get_position_and_speed(
+                SWISS_EPHEMERIS_IDS["Sun"], exact.julian_day
+            )
+            moon, _ = _get_position_and_speed(
+                SWISS_EPHEMERIS_IDS["Moon"], exact.julian_day
+            )
+            elongation = (moon - sun) % 360
+            phase = "first_quarter" if elongation < 180 else "last_quarter"
+            found.append((phase, exact.julian_day))
+        return found
 
     def collect_voc_periods(
         self, mode: Literal["traditional", "modern"] = "traditional"
@@ -517,13 +572,24 @@ class DailyEventCollector:
         Args:
             mode: "traditional" (Sun-Saturn) or "modern" (includes outer planets)
         """
+        from datetime import timedelta
+
         from stellium.electional.intervals import voc_windows
 
-        start_dt = datetime.combine(self.start, datetime.min.time())
-        end_dt = datetime.combine(self.end, datetime.max.time())
+        # Padded by a few days: voc_windows clips a period at the edge of the
+        # search, which printed a fake "VOC ends" at midnight on the day after the
+        # range (and could fake a "VOC begins" at its first midnight). A void Moon
+        # lasts at most ~2.5 days, so the pad lets every edge period resolve to its
+        # real start and end; _in_range then drops whatever falls outside.
+        pad = timedelta(days=3)
+        start_dt, end_dt = utc_window(self.start - pad, self.end + pad, self._tz)
 
         # Get VOC windows (these are when Moon IS void)
-        voc_wins = voc_windows(start_dt, end_dt, mode=mode)
+        try:
+            voc_wins = voc_windows(start_dt, end_dt, mode=mode)
+        except Exception as exc:
+            search_failed("void-of-course Moon periods", exc)
+            return
 
         for win in voc_wins:
             # VOC start
@@ -556,40 +622,63 @@ class DailyEventCollector:
         """Collect solar and lunar eclipses."""
         from stellium.engines.search import find_all_eclipses
 
-        start_dt = datetime.combine(self.start, datetime.min.time())
-        end_dt = datetime.combine(self.end, datetime.max.time())
-
         try:
-            eclipses = find_all_eclipses(start_dt, end_dt)
+            eclipses = find_all_eclipses(*self._window())
+        except Exception as exc:
+            search_failed("eclipses", exc)
+            return
 
-            for eclipse in eclipses:
-                local_time = self._jd_to_local(eclipse.julian_day)
+        for eclipse in eclipses:
+            kind = "Solar" if eclipse.eclipse_type.startswith("solar") else "Lunar"
+            # "Total Solar Eclipse", not "Solar Eclipse (solar)": eclipse_type is
+            # only ever "solar"/"lunar" — the useful word is the classification.
+            detail = (getattr(eclipse, "classification", "") or "").title()
+            if kind == "Solar":
+                symbol = MOON_PHASE_GLYPHS["new"] + "☉"  # ●☉
+            else:
+                symbol = MOON_PHASE_GLYPHS["full"] + "☽"  # ○☽
 
-                if eclipse.eclipse_type.startswith("solar"):
-                    symbol = "\U0001f311\u2609"  # 🌑☉
-                    desc = f"Solar Eclipse ({eclipse.eclipse_type})"
-                else:
-                    symbol = "\U0001f315\u263d"  # 🌕☽
-                    desc = f"Lunar Eclipse ({eclipse.eclipse_type})"
-
-                self._add_event(
-                    DailyEvent(
-                        time=local_time,
-                        event_type="eclipse",
-                        event_class="notable",
-                        description=desc,
-                        symbol=symbol,
-                        priority=1,  # Eclipses are very important
-                    )
+            self._add_event(
+                DailyEvent(
+                    time=self._jd_to_local(eclipse.julian_day),
+                    event_type="eclipse",
+                    event_class="notable",
+                    description=f"{detail} {kind} Eclipse".strip(),
+                    symbol=symbol,
+                    priority=1,  # Eclipses are very important
                 )
-        except Exception:
-            pass
+            )
+
+    def _merge_eclipse_lunations(self) -> None:
+        """An eclipse *is* its New or Full Moon — print it once, as the eclipse.
+
+        Both collectors find the same moment, so an eclipse day carried "New Moon"
+        and "Solar Eclipse" as two lines. Drop the lunation when an eclipse of the
+        matching kind sits within a day of it.
+        """
+        eclipses = [e for e in self._events if e.event_type == "eclipse"]
+        if not eclipses:
+            return
+
+        def eclipsed(event: DailyEvent) -> bool:
+            if event.event_type != "moon_phase":
+                return False
+            kind = {"New Moon": "Solar", "Full Moon": "Lunar"}.get(event.description)
+            return kind is not None and any(
+                kind in e.description
+                and abs((e.time - event.time).total_seconds()) < 86400
+                for e in eclipses
+            )
+
+        self._events = [e for e in self._events if not eclipsed(e)]
 
     def collect_all(
         self,
         natal_transits: bool = True,
         transit_planets: list[str] | None = None,
         moon_natal_aspects: list[int] | None = None,
+        natal_points: bool = True,
+        known_hits: list[TransitHit] | None = None,
         mundane_transits: bool = False,
         mundane_planets: list[str] | None = None,
         ingresses: bool = True,
@@ -597,6 +686,7 @@ class DailyEventCollector:
         stations: bool = True,
         station_planets: list[str] | None = None,
         moon_phases: bool = True,
+        quarter_moons: bool = True,
         voc: bool = True,
         voc_mode: Literal["traditional", "modern"] = "traditional",
         eclipses: bool = True,
@@ -609,6 +699,9 @@ class DailyEventCollector:
             transit_planets: Which transiting planets
             moon_natal_aspects: Aspects to collect for the transiting Moon
                 (default: conjunctions only — see collect_natal_transits)
+            natal_points: Include transits to the natal angles and Node
+            known_hits: Pre-computed natal transit hits to reuse
+                (see collect_natal_transits)
             mundane_transits: Include planet-to-planet aspects in the sky
             mundane_planets: Which bodies to pair up for those
             ingresses: Include sign ingresses
@@ -616,13 +709,17 @@ class DailyEventCollector:
             stations: Include retrograde/direct stations
             station_planets: Which planets for stations
             moon_phases: Include Moon phases
+            quarter_moons: Include the First and Last Quarter Moons too
             voc: Include VOC periods
             voc_mode: VOC calculation mode
             eclipses: Include eclipses
         """
         if natal_transits:
             self.collect_natal_transits(
-                transit_planets, moon_aspects=moon_natal_aspects
+                transit_planets,
+                moon_aspects=moon_natal_aspects,
+                include_points=natal_points,
+                known_hits=known_hits,
             )
 
         if mundane_transits:
@@ -635,16 +732,25 @@ class DailyEventCollector:
             self.collect_stations(station_planets)
 
         if moon_phases:
-            self.collect_moon_phases()
+            self.collect_moon_phases(quarters=quarter_moons)
 
         if voc:
             self.collect_voc_periods(voc_mode)
 
         if eclipses:
             self.collect_eclipses()
+            self._merge_eclipse_lunations()
+
+        # Only the planner's own local days. Searches that need context past the
+        # edges (VOC) run padded, and the rest end exactly at local midnight; this
+        # is the one place that enforces the range for all of them.
+        self._events = [e for e in self._events if self._in_range(e)]
 
         # Build the date index
         self._build_date_index()
+
+    def _in_range(self, event: DailyEvent) -> bool:
+        return self.start <= event.time.date() <= self.end
 
     def _build_date_index(self) -> None:
         """Build index of events by date for fast lookup."""

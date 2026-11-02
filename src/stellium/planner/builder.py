@@ -14,6 +14,23 @@ from typing import TYPE_CHECKING, Literal
 if TYPE_CHECKING:
     from stellium.core.native import Native
 
+PAGE_SIZES = ("a4", "a5", "letter", "half-letter")
+WEEKDAYS = ("sunday", "monday")
+TIME_FORMATS = ("12h", "24h")
+VOC_MODES = ("traditional", "modern")
+EPHEMERIS_HARMONICS = (360, 90, 45)
+
+
+def _check_choice(what: str, value: object, choices: tuple) -> None:
+    """Reject a bad option at the call that set it, not deep inside generate().
+
+    Several of these used to be accepted silently — an unknown harmonic quietly
+    became 90 — or only failed after every chart and search had already run.
+    """
+    if value not in choices:
+        options = ", ".join(repr(c) for c in choices)
+        raise ValueError(f"Unknown {what} {value!r}. Choose from: {options}")
+
 
 @dataclass
 class PlannerConfig:
@@ -28,7 +45,8 @@ class PlannerConfig:
     end_date: date | None = None
     year: int | None = None
 
-    # Location for angles/planetary hours (defaults to birth location)
+    # Where the planner is used: casts the solar return there and labels the
+    # times. The *times themselves* follow `timezone`, never this.
     location: str | tuple[float, float] | None = None
 
     # Front matter options
@@ -42,13 +60,21 @@ class PlannerConfig:
     graphic_ephemeris_harmonic: int = 360
 
     # Daily content options
-    natal_transit_planets: list[str] | None = None  # None = all outer planets
+    include_natal_transits: bool = True
+    # None = DEFAULT_TRANSIT_PLANETS: all ten planets, the True Node and Chiron
+    natal_transit_planets: list[str] | None = None
+    natal_transit_points: bool = True  # also transits to the ASC, MC and Node
     include_mundane_transits: bool = True
+    mundane_planets: list[str] | None = None  # None = the ten planets
     include_moon_phases: bool = True
+    include_quarter_moons: bool = True
+    include_eclipses: bool = True
     include_voc: bool = True
     voc_mode: Literal["traditional", "modern"] = "traditional"
-    ingress_planets: list[str] | None = None  # None = all planets
-    station_planets: list[str] | None = None  # None = outer planets
+    include_ingresses: bool = True
+    ingress_planets: list[str] | None = None  # None = DEFAULT_TRANSIT_PLANETS
+    include_stations: bool = True
+    station_planets: list[str] | None = None  # None = Mercury–Pluto and Chiron
 
     # Page layout
     page_size: Literal["a4", "a5", "letter", "half-letter"] = "a4"
@@ -107,12 +133,19 @@ class PlannerBuilder:
         self._graphic_ephemeris_harmonic = 360
 
         # Daily content flags
+        self._natal_transits = True
         self._natal_transit_planets: list[str] | None = None
+        self._natal_transit_points = True
         self._mundane_transits = True
+        self._mundane_planets: list[str] | None = None
         self._moon_phases = True
+        self._quarter_moons = True
+        self._eclipses = True
         self._voc = True
         self._voc_mode: Literal["traditional", "modern"] = "traditional"
+        self._ingresses = True
         self._ingress_planets: list[str] | None = None
+        self._stations = True
         self._station_planets: list[str] | None = None
 
         # Page layout
@@ -177,24 +210,39 @@ class PlannerBuilder:
 
     def timezone(self, tz: str) -> PlannerBuilder:
         """
-        Set the timezone for transit times.
+        Set the timezone the planner is written in.
 
-        This is required - transit times will be displayed in this timezone.
+        This is required. Every event time is shown in this timezone, and each
+        page's day runs from local midnight to midnight here. It changes only how
+        times are *displayed* and which day an event lands on — the astronomy is
+        computed in UTC either way.
 
         Args:
-            tz: Timezone string (e.g., "America/Los_Angeles", "Europe/London")
+            tz: IANA timezone (e.g., "America/New_York", "Europe/London")
 
         Returns:
             Self for chaining
         """
+        import pytz
+
+        try:
+            pytz.timezone(tz)
+        except pytz.UnknownTimeZoneError:
+            raise ValueError(
+                f"Unknown timezone {tz!r}. Use an IANA name such as "
+                "'America/New_York' or 'Europe/London'."
+            ) from None
         self._timezone = tz
         return self
 
     def location(self, location: str | tuple[float, float]) -> PlannerBuilder:
         """
-        Set location for angle calculations and planetary hours.
+        Set where the planner will be used.
 
-        Defaults to the native's birth location if not specified.
+        The solar return is cast for this place (a relocated return), and the
+        title page says the times are local to it. It does not change the times
+        themselves — those follow ``.timezone()``. Without it, the solar return is
+        cast for the birth place and the title page names the timezone.
 
         Args:
             location: City name or (latitude, longitude) tuple
@@ -217,6 +265,9 @@ class PlannerBuilder:
         Example:
             >>> PlannerBuilder.for_native(native).year(2026).theme("greyscale")
         """
+        from stellium.presentation.typst_runtime import THEMES
+
+        _check_choice("theme", name, THEMES)
         self._theme = name
         return self
 
@@ -226,6 +277,7 @@ class PlannerBuilder:
         Example:
             >>> PlannerBuilder.for_native(native).year(2026).time_format("24h")
         """
+        _check_choice("time format", fmt, TIME_FORMATS)
         self._time_format = fmt
         return self
 
@@ -236,6 +288,7 @@ class PlannerBuilder:
         reader often wants a Sunday-led month but a Monday-led working week. If
         this is never called, the weekly pages follow ``week_starts_on``.
         """
+        _check_choice("weekday", day, WEEKDAYS)
         self._weekly_starts_on = day
         return self
 
@@ -274,7 +327,7 @@ class PlannerBuilder:
         return self
 
     def with_progressed_chart(self, enabled: bool = True) -> PlannerBuilder:
-        """Include secondary progressed chart in front matter."""
+        """Include the progressed-Moon page in the front matter."""
         self._progressed_chart = enabled
         return self
 
@@ -318,6 +371,7 @@ class PlannerBuilder:
         Returns:
             Self for chaining
         """
+        _check_choice("graphic ephemeris harmonic", harmonic, EPHEMERIS_HARMONICS)
         self._graphic_ephemeris = enabled
         self._graphic_ephemeris_harmonic = harmonic
         return self
@@ -325,29 +379,73 @@ class PlannerBuilder:
     # ===== Daily Content Configuration =====
 
     def include_natal_transits(
-        self, planets: list[str] | None = None
+        self,
+        planets: list[str] | None = None,
+        *,
+        to_angles: bool = True,
+        enabled: bool = True,
     ) -> PlannerBuilder:
         """
-        Include transits to natal planets.
+        Include transits to the natal chart on the daily pages.
 
         Args:
-            planets: Which transiting planets to include. Default (None) uses
-                     outer planets: Jupiter, Saturn, Uranus, Neptune, Pluto
+            planets: Which transiting planets to include. Default (None) uses all
+                ten planets plus the True Node and Chiron. (The transiting Moon
+                contributes conjunctions only — it would otherwise be two-thirds of
+                every page.) The year's "Transits That Shape the Year" page always
+                lists only the slow planets, Jupiter through Pluto, narrowed to
+                this choice.
+            to_angles: Also find transits to the natal Ascendant, Midheaven and
+                North Node, not just the planets (default True)
+            enabled: False drops natal transits from the daily pages
 
         Returns:
             Self for chaining
         """
+        self._natal_transits = enabled
         self._natal_transit_planets = planets
+        self._natal_transit_points = to_angles
         return self
 
-    def include_mundane_transits(self, enabled: bool = True) -> PlannerBuilder:
-        """Include mundane transits (planet-to-planet in sky)."""
+    def exclude_natal_transits(self) -> PlannerBuilder:
+        """Leave natal transits off the daily pages."""
+        self._natal_transits = False
+        return self
+
+    def include_mundane_transits(
+        self, enabled: bool = True, planets: list[str] | None = None
+    ) -> PlannerBuilder:
+        """Include mundane transits (planet-to-planet in sky).
+
+        Args:
+            enabled: Whether to include them
+            planets: Which bodies to pair up (default: the ten planets)
+        """
         self._mundane_transits = enabled
+        self._mundane_planets = planets
         return self
 
-    def include_moon_phases(self, enabled: bool = True) -> PlannerBuilder:
-        """Include Moon phases (new, full, quarters)."""
+    def exclude_mundane_transits(self) -> PlannerBuilder:
+        """Leave planet-to-planet aspects off the daily pages."""
+        self._mundane_transits = False
+        return self
+
+    def include_moon_phases(
+        self, enabled: bool = True, quarters: bool = True
+    ) -> PlannerBuilder:
+        """Include Moon phases.
+
+        Args:
+            enabled: Whether to include New and Full Moons
+            quarters: Also include the First and Last Quarter Moons
+        """
         self._moon_phases = enabled
+        self._quarter_moons = quarters
+        return self
+
+    def include_eclipses(self, enabled: bool = True) -> PlannerBuilder:
+        """Include solar and lunar eclipses on the daily pages (default on)."""
+        self._eclipses = enabled
         return self
 
     def include_voc(
@@ -362,6 +460,7 @@ class PlannerBuilder:
         Returns:
             Self for chaining
         """
+        _check_choice("VOC mode", mode, VOC_MODES)
         self._voc = True
         self._voc_mode = mode
         return self
@@ -371,30 +470,50 @@ class PlannerBuilder:
         self._voc = False
         return self
 
-    def include_ingresses(self, planets: list[str] | None = None) -> PlannerBuilder:
+    def include_ingresses(
+        self, planets: list[str] | None = None, enabled: bool = True
+    ) -> PlannerBuilder:
         """
-        Include planet sign ingresses.
+        Include planet sign ingresses on the daily pages.
 
         Args:
-            planets: Which planets to track. Default (None) includes all.
+            planets: Which planets to track. Default (None): all ten planets, the
+                True Node and Chiron.
+            enabled: False drops ingresses from the daily pages
 
         Returns:
             Self for chaining
         """
+        self._ingresses = enabled
         self._ingress_planets = planets
         return self
 
-    def include_stations(self, planets: list[str] | None = None) -> PlannerBuilder:
+    def exclude_ingresses(self) -> PlannerBuilder:
+        """Leave sign ingresses off the daily pages."""
+        self._ingresses = False
+        return self
+
+    def include_stations(
+        self, planets: list[str] | None = None, enabled: bool = True
+    ) -> PlannerBuilder:
         """
-        Include retrograde/direct stations.
+        Include retrograde/direct stations on the daily pages.
 
         Args:
-            planets: Which planets to track. Default (None) uses Mercury-Pluto.
+            planets: Which planets to track. Default (None): Mercury through
+                Pluto, plus Chiron.
+            enabled: False drops stations from the daily pages
 
         Returns:
             Self for chaining
         """
+        self._stations = enabled
         self._station_planets = planets
+        return self
+
+    def exclude_stations(self) -> PlannerBuilder:
+        """Leave stations off the daily pages."""
+        self._stations = False
         return self
 
     # ===== Page Layout Configuration =====
@@ -406,11 +525,13 @@ class PlannerBuilder:
         Set page size.
 
         Args:
-            size: "a4" (default), "a5", "letter", or "half-letter" (alias for a5)
+            size: "a4" (default), "a5", "letter", or "half-letter" (US Statement,
+                5.5 × 8.5 in — close to A5 but not the same paper)
 
         Returns:
             Self for chaining
         """
+        _check_choice("page size", size, PAGE_SIZES)
         self._page_size = size
         return self
 
@@ -424,6 +545,8 @@ class PlannerBuilder:
         Returns:
             Self for chaining
         """
+        if inches < 0:
+            raise ValueError("Binding margin cannot be negative")
         self._binding_margin = inches
         return self
 
@@ -437,6 +560,7 @@ class PlannerBuilder:
         Returns:
             Self for chaining
         """
+        _check_choice("weekday", day, WEEKDAYS)
         self._week_starts_on = day
         return self
 
@@ -473,12 +597,19 @@ class PlannerBuilder:
             zr_lot=self._zr_lot,
             include_graphic_ephemeris=self._graphic_ephemeris,
             graphic_ephemeris_harmonic=self._graphic_ephemeris_harmonic,
+            include_natal_transits=self._natal_transits,
             natal_transit_planets=self._natal_transit_planets,
+            natal_transit_points=self._natal_transit_points,
             include_mundane_transits=self._mundane_transits,
+            mundane_planets=self._mundane_planets,
             include_moon_phases=self._moon_phases,
+            include_quarter_moons=self._quarter_moons,
+            include_eclipses=self._eclipses,
             include_voc=self._voc,
             voc_mode=self._voc_mode,
+            include_ingresses=self._ingresses,
             ingress_planets=self._ingress_planets,
+            include_stations=self._stations,
             station_planets=self._station_planets,
             page_size=self._page_size,
             binding_margin=self._binding_margin,
