@@ -121,10 +121,10 @@
   // wrapped in pad(x: -18pt) reaches the panel edge; give its outer columns an 18pt
   // inset so the *text* stays aligned with the section header while the zebra fill runs
   // edge to edge. Interior columns keep the tight `gap` spacing.
-  let edge-inset(last, gap) = (x, y) => (
+  let edge-inset(last, gap, y-inset: 7pt) = (x, y) => (
     left: if x == 0 { 18pt } else { gap },
     right: if x == last { 18pt } else { gap },
-    top: 7pt, bottom: 7pt,
+    top: y-inset, bottom: y-inset,
   )
 
   let section(title, body-content, descriptor: none) = {
@@ -169,16 +169,17 @@
 
   // --- key/value grid (chart overview) ---------------------------------------
   // pairs: array of (label, value). Rendered two logical columns wide.
-  let kv-grid(pairs, columns: 2) = {
+  // dense: the planner's tighter variant, for reference pages that must fit a sheet.
+  let kv-grid(pairs, columns: 2, dense: false) = {
     let cell(p) = [
-      #lbl(p.at(0), size: 8pt)
-      #v(2pt)
-      #text(font: body, size: 12pt, fill: ink)[#p.at(1)]
+      #lbl(p.at(0), size: if dense { 7.5pt } else { 8pt })
+      #v(if dense { 1pt } else { 2pt })
+      #text(font: body, size: if dense { 11pt } else { 12pt }, fill: ink)[#p.at(1)]
     ]
     grid(
       columns: (1fr,) * columns,
       column-gutter: 24pt,
-      row-gutter: 12pt,
+      row-gutter: if dense { 8pt } else { 12pt },
       ..pairs.map(cell),
     )
   }
@@ -231,7 +232,9 @@
   // --- planet positions table -------------------------------------------------
   // planets: array of (name, glyph, sign, sign_glyph, degree, houses:(..), speed, retro)
   // columns: which house-system column headers to show.
-  let planet-table(planets, house-headers: (), show-speed: true, labels: (:)) = {
+  // dense: smaller discs and tighter rows — the planner's natal lookup has to fit
+  // fifteen bodies on one sheet; the report has the room to breathe.
+  let planet-table(planets, house-headers: (), show-speed: true, labels: (:), dense: false) = {
     let head-cells = (
       lbl(labels.at("planet", default: "Planet"), size: 7.5pt),
       lbl(labels.at("position", default: "Position"), size: 7.5pt),
@@ -251,8 +254,8 @@
       let cells = (
         // disc + name
         grid(columns: (auto, auto), column-gutter: 8pt, align: horizon,
-          disc(sign: p.sign, glyph-char: p.at("glyph", default: ""), label: p.at("label", default: p.name), size: 26pt),
-          disp(p.at("label", default: p.name), size: 13pt, fill: ink)),
+          disc(sign: p.sign, glyph-char: p.at("glyph", default: ""), label: p.at("label", default: p.name), size: if dense { 20pt } else { 26pt }),
+          disp(p.at("label", default: p.name), size: if dense { 12pt } else { 13pt }, fill: ink)),
         // position: sign glyph + sign + mono degree
         {
           let sg = p.at("sign_glyph", default: sign-glyph-of(p.sign))
@@ -272,7 +275,7 @@
     pad(x: -18pt, table(
       columns: col-spec,
       stroke: none,
-      inset: edge-inset(col-spec.len() - 1, 4pt),
+      inset: edge-inset(col-spec.len() - 1, 4pt, y-inset: if dense { 4pt } else { 7pt }),
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..head-cells),
       ..rows.flatten(),
@@ -282,12 +285,19 @@
   // --- themed generic fallback table (long-tail sections) --------------------
   // full-width: true stretches the first column so the table spans the panel
   // (good for wide tables); false leaves it natural width, centred in the panel.
-  let generic-table(headers, rows, full-width: true) = {
+  //
+  // dense: tighter rows and a slightly smaller face, for planner reference pages.
+  // widths: optional relative column widths (numbers, read as fr) when equal
+  // shares would starve one column — a glyph-run column wraps to four lines in an
+  // equal share and costs the table a page.
+  let generic-table(headers, rows, full-width: true, dense: false, widths: none) = {
     let ncol = headers.len()
     // Column sizing: narrow tables get a flexible first column so they fill the
     // panel; wide tables (>=4 cols, often with a long text column) share the
     // width equally so no column collapses to zero and the table can't overflow.
-    let col-spec = if not full-width or ncol <= 1 {
+    let col-spec = if widths != none and widths.len() == ncol {
+      widths.map(w => w * 1fr)
+    } else if not full-width or ncol <= 1 {
       (auto,) * ncol
     } else if ncol <= 3 {
       (1fr,) + (auto,) * (ncol - 1)
@@ -299,11 +309,13 @@
     let tbl = table(
       columns: col-spec,
       stroke: none,
-      inset: if full-width { edge-inset(ncol - 1, 8pt) } else { (x: 8pt, y: 7pt) },
+      inset: if full-width {
+        edge-inset(ncol - 1, 8pt, y-inset: if dense { 4pt } else { 7pt })
+      } else { (x: 8pt, y: if dense { 4pt } else { 7pt }) },
       align: (col, row) => if col == 0 { left + horizon } else { center + horizon },
       fill: (col, row) => if row == 0 { none } else if calc.odd(row) { zebra } else { none },
       table.header(..headers.map(h => lbl(h, size: 7.5pt))),
-      ..rows.map(r => r.map(cell => text(font: (body, ..symbol-font), size: 10.5pt, fill: ink)[#cell])).flatten(),
+      ..rows.map(r => r.map(cell => text(font: (body, ..symbol-font), size: if dense { 9.5pt } else { 10.5pt }, fill: ink)[#cell])).flatten(),
     )
     if full-width { pad(x: -18pt, tbl) } else { align(center)[#tbl] }
   }

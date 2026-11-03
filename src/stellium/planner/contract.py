@@ -320,6 +320,9 @@ def _stations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
         "descriptor": "Where each planet turns — and what it touches in your chart",
         "new_page": True,
         "headers": ["Date", "Planet", "", "Degree", "Shadow", "Your chart"],
+        # The glyph run needs the room: in an equal sixth it wrapped to four lines
+        # a row and the table took three pages. The ℞/D column needs almost none.
+        "widths": [0.9, 1.0, 0.35, 1.0, 1.25, 2.6],
         "rows": rows,
     }
 
@@ -353,6 +356,7 @@ def _lunations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
         "descriptor": "Each new and full Moon, and where it lands for you",
         "new_page": True,
         "headers": ["Date", "Phase", "Degree", "Your House", "Your chart"],
+        "widths": [0.8, 1.5, 1.0, 0.8, 2.6],
         "rows": rows,
     }
 
@@ -966,6 +970,8 @@ def build_planner_data(
                 "title": "The Slow Transits",
                 "descriptor": "Where the slow movers travel",
                 "new_page": True,
+                # Owns its page: drawn as large as the sheet allows.
+                "fill_page": True,
                 "svg_content": svgs["ephemeris"],
             }
         )
@@ -1004,6 +1010,9 @@ def build_planner_data(
             aspects=["Conjunction", "Sextile", "Square", "Trine", "Opposition"],
         )
     )
+
+    for section in front:
+        _densify(section)
 
     # --- the months ---------------------------------------------------------
     months: list[dict[str, Any]] = []
@@ -1063,6 +1072,20 @@ def build_planner_data(
         "front": front,
         "months": months,
     }
+
+
+def _densify(section: dict[str, Any]) -> None:
+    """Mark a front-matter section's tables and grids for the tight layout.
+
+    A report has room to breathe; a planner's reference pages are consulted, and a
+    table that spills two rows onto a second sheet is a page turned for nothing.
+    The design system's ``dense`` variants keep the type legible and tighten the
+    rows. Charts and the calendar are left alone.
+    """
+    if section.get("kind") in ("table", "key_value", "planet_positions"):
+        section["dense"] = True
+    for sub in section.get("sections", []):
+        _densify(sub)
 
 
 def _period_label(start: date, end: date) -> str:

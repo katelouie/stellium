@@ -228,63 +228,77 @@
   }
 
   // --- a mini month, for the year overview ----------------------------------
-  let mini-month(month) = {
+  // fill: true when the overview is stretched to the page — the month then takes
+  // its whole grid cell, its week rows share that height, and the type grows to
+  // match (5.5pt digits in a 1.6in-tall month read as a printing error).
+  let mini-month(month, fill: false) = {
     let marks = month.at("marks", default: (:))
+    let day-size = if fill { 8.5pt } else { 5.5pt }
+    let initial-size = if fill { 7pt } else { 5pt }
+    let title-size = if fill { 11pt } else { 8.5pt }
 
     let mini-day(day) = {
       if day == 0 {
         // padding cell outside the month
-        text(size: 5.5pt)[ ]
+        text(size: day-size)[ ]
       } else {
         let key = str(day)
         let marked = marks.at(key, default: none)
         align(
-          center,
+          center + horizon,
           if marked != none {
             box(
               fill: if laser { none } else { t.gold },
               stroke: if laser { 0.4pt + t.ink } else { none },
               radius: 50%,
-              inset: (x: 1.6pt, y: 0.8pt),
+              inset: if fill { (x: 2.6pt, y: 1.4pt) } else { (x: 1.6pt, y: 0.8pt) },
               text(
-                size: 5.5pt,
+                size: day-size,
                 weight: 700,
                 fill: if laser { t.ink } else { t.bg },
               )[#day],
             )
           } else {
-            text(size: 5.5pt, fill: t.ink)[#day]
+            text(size: day-size, fill: t.ink)[#day]
           },
         )
       }
     }
 
+    let weeks = month.at("weeks", default: ())
+    let title = align(
+      center,
+      text(font: t.display, size: title-size, weight: 600, fill: t.accent)[
+        #upper(month.name)
+      ],
+    )
+    let days = table(
+      columns: (1fr,) * 7,
+      // Stretched: the initials keep their natural height and the weeks share the
+      // rest, so a five-week and a six-week month both reach the bottom edge.
+      rows: if fill { (auto,) + (1fr,) * weeks.len() } else { auto },
+      stroke: none,
+      inset: 1pt,
+      align: center + horizon,
+      ..month
+        .at("weekday_initials", default: ())
+        .map(d => text(size: initial-size, fill: t.muted, weight: 600)[#d]),
+      ..weeks.flatten().map(mini-day),
+    )
+
     block(
       width: 100%,
-      inset: 5pt,
+      height: if fill { 100% } else { auto },
+      inset: if fill { 7pt } else { 5pt },
       // Each month carries its own border, so the layout below can be a strokeless
       // grid. A bordered table would draw the empty cells of a ragged final row —
       // a one-month planner is a single month beside two empty boxes.
       stroke: 0.4pt + t.hair,
-      stack(
-        spacing: 3pt,
-        align(
-          center,
-          text(font: t.display, size: 8.5pt, weight: 600, fill: t.accent)[
-            #upper(month.name)
-          ],
-        ),
-        table(
-          columns: (1fr,) * 7,
-          stroke: none,
-          inset: 1pt,
-          align: center,
-          ..month
-            .at("weekday_initials", default: ())
-            .map(d => text(size: 5pt, fill: t.muted, weight: 600)[#d]),
-          ..month.at("weeks", default: ()).flatten().map(mini-day),
-        ),
-      ),
+      if fill {
+        grid(rows: (auto, 1fr), row-gutter: 5pt, title, days)
+      } else {
+        stack(spacing: 3pt, title, days)
+      },
     )
   }
 
@@ -293,12 +307,32 @@
   // month stretched to full width reads as a stray table, not a calendar. The grid
   // is strokeless and each month carries its own border, so the unused cells of a
   // ragged last row simply draw nothing.
-  let year-overview(months) = grid(
-    columns: (1fr,) * 3,
-    column-gutter: 2pt,
-    row-gutter: 2pt,
-    ..months.map(mini-month),
-  )
+  //
+  // height: the page height available. With three or more rows of months the grid
+  // fills it (rows are `1fr`, which needs a parent of known height — see
+  // month-grid); fewer rows stay natural size rather than stretching into towers.
+  let year-overview(months, height: none) = {
+    let nrows = calc.ceil(months.len() / 3)
+    if height == none or nrows < 3 {
+      grid(
+        columns: (1fr,) * 3,
+        column-gutter: 2pt,
+        row-gutter: 2pt,
+        ..months.map(m => mini-month(m)),
+      )
+    } else {
+      block(
+        height: height,
+        grid(
+          columns: (1fr,) * 3,
+          rows: (1fr,) * nrows,
+          column-gutter: 6pt,
+          row-gutter: 6pt,
+          ..months.map(m => mini-month(m, fill: true)),
+        ),
+      )
+    }
+  }
 
   // --- glyph key ------------------------------------------------------------
   // A report spells things out in prose and never needs this. A planner's daily

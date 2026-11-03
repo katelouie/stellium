@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Transits to the natal Ascendant, Midheaven and North Node**, not only the planets — on the daily pages, the year's transit summary, the progressed Moon's aspects and every lunation/station's "your chart" contacts. `include_natal_transits(to_angles=False)` turns it off.
 - **Two Lords of the Year when a birthday falls inside the planner.** A profected year turns over on the birthday, so the dashboard now says until when the first Lord rules and names the next one, with its profected house.
 - **Every daily-content switch is on the builder:** `exclude_natal_transits()`, `exclude_ingresses()`, `exclude_stations()`, `exclude_mundane_transits()`, `include_mundane_transits(planets=...)`, `include_eclipses(False)`.
+- **Denser front matter.** The year dashboard, the stations table and the natal placements each fit on one page; the year-at-a-glance calendar and the slow-transit map fill their pages, the map drawn portrait so its labels print larger. The shared table, key-value and planet-table components gain opt-in `dense` and `widths` settings for this; reports that don't set them render as before.
 
 - **Cookbooks** — a new `examples/localization_cookbook.py` walks the two independent knobs (locale = which words, fonts = whether they render) across chart SVG/PNG and report PDF, and `examples/report_cookbook.py` gains an aspectarian recipe covering the tightness rings and the detailed mode.
 

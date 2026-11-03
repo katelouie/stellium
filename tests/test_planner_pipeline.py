@@ -357,6 +357,52 @@ def test_full_planner_contract(native):
     assert "The Progressed Moon" not in [f.get("title") for f in dropped["front"]]
 
 
+def test_front_matter_is_marked_dense_and_glyph_columns_get_room():
+    """The planner's reference tables use the design system's tight variant, and a
+    table's explicit widths must match its headers or Typst ignores them."""
+    from stellium.planner.contract import _densify
+
+    section = {
+        "kind": "compound",
+        "sections": [
+            {"kind": "key_value", "pairs": []},
+            {"kind": "table", "headers": ["A"], "rows": []},
+            {"kind": "svg", "svg_content": "<svg/>"},
+        ],
+    }
+    _densify(section)
+    assert section["sections"][0]["dense"] and section["sections"][1]["dense"]
+    assert "dense" not in section["sections"][2]
+
+    from stellium.planner.almanac import LunationEntry, StationEntry, YearAlmanac
+    from stellium.planner.contract import _lunations_section, _stations_section
+
+    almanac = YearAlmanac(
+        start=date(2026, 1, 1),
+        end=date(2026, 12, 31),
+        age=40,
+        profected_house=5,
+        profected_sign="Leo",
+        lord_of_year="Sun",
+        lord_natal_sign=None,
+        lord_natal_house=None,
+        solar_return=None,
+        eclipses=(),
+        retrogrades=(),
+        progressed_moon=None,
+        transits=(),
+        zr_periods=(),
+        stations=(
+            StationEntry(date(2026, 3, 1), "Mercury", "direct", 5.0, "Aries", ()),
+        ),
+        lunations=(
+            LunationEntry(date(2026, 3, 3), "new", 12.0, "Pisces", 4, None, ()),
+        ),
+    )
+    for table in (_stations_section(almanac), _lunations_section(almanac)):
+        assert len(table["widths"]) == len(table["headers"])
+
+
 @pytest.mark.slow
 def test_generate_renders_a_pdf(native):
     pytest.importorskip("typst")

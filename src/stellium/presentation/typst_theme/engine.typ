@@ -92,7 +92,7 @@
   if kind == "snapshot" {
     snapshot-body(c, sec)
   } else if kind == "chart_overview" or kind == "key_value" {
-    (c.kv-grid)(sec.pairs)
+    (c.kv-grid)(sec.pairs, dense: sec.at("dense", default: false))
   } else if kind == "moon_phase" {
     (c.moon-phase)(sec)
   } else if kind == "planet_positions" {
@@ -101,9 +101,15 @@
       house-headers: sec.at("house_headers", default: ()),
       show-speed: sec.at("show_speed", default: true),
       labels: sec.at("labels", default: (:)),
+      dense: sec.at("dense", default: false),
     )
   } else if kind == "table" {
-    (c.generic-table)(sec.headers, sec.rows)
+    (c.generic-table)(
+      sec.headers,
+      sec.rows,
+      dense: sec.at("dense", default: false),
+      widths: sec.at("widths", default: none),
+    )
   } else if kind == "aspectarian" {
     stack(
       spacing: 14pt,

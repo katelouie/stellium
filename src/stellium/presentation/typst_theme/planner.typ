@@ -70,13 +70,26 @@
 )
 #set par(leading: 0.7em)
 
+// --- page-filling sections ---------------------------------------------------
+// How tall a front-matter section's body can be and still fit one sheet: the page
+// less its margins (the running header and footer sit inside the margins) less the
+// section panel's own chrome — its insets and title row. Call inside `context`.
+#let section-chrome = 1.0in
+#let fill-height() = page.height - 2 * page-margin.y - section-chrome
+
 // --- dispatch ---------------------------------------------------------------
 // The planner's own kinds first, then fall through to the shared report engine.
 
 #let planner-body-of(sec) = {
   let kind = sec.at("kind", default: "table")
   if kind == "year_overview" {
-    (p.year-overview)(sec.at("months", default: ()))
+    context (p.year-overview)(sec.at("months", default: ()), height: fill-height())
+  } else if kind == "svg" and sec.at("fill_page", default: false) and sec.at("svg_file", default: none) != none {
+    // A chart that owns its page: as large as the sheet allows, aspect kept.
+    context align(
+      center,
+      image(sec.svg_file, width: 100%, height: fill-height(), fit: "contain"),
+    )
   } else if kind == "glyph_key" {
     (p.glyph-key)(sec.at("groups", default: ()))
   } else {

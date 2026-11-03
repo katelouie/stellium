@@ -393,11 +393,17 @@ class PlannerRenderer:
         # The planner's own span — it used to be pinned to January–December of the
         # start year whatever range was asked for. (The harmonic is validated by
         # the builder; it no longer quietly becomes 90 here.)
+        # Portrait, and narrower than the 1400px default: the chart fills a portrait
+        # page, and a narrower canvas scaled to the same printed width prints its
+        # labels and glyphs ~1.4x larger. The default 1400x900 shape left the bottom
+        # half of the page blank and its type at a few points.
         ephemeris = GraphicEphemeris(
             start_date=start,
             end_date=end,
             harmonic=self.config.graphic_ephemeris_harmonic,
             natal_chart=natal_chart,
+            width=1000,
+            height=1250,
         )
 
         with tempfile.TemporaryDirectory() as tmp:
