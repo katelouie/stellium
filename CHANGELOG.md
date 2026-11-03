@@ -54,6 +54,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **The PDF aspectarian shows orb strength.** Each cell in the aspect matrix now marks how tight the aspect is — *relative to that aspect's allowed orb*, so a 2° sextile reads as tighter than a 2° trine — with an inset ring: a solid **accent** ring for a near-exact orb, a dotted **muted** ring for one near the limit, both keyed in the legend (Tight orb / Wide orb). The ring colours are theme tokens, so they follow the palette (aubergine on house, gold on celestial, blue on blues…) rather than hardcoding a colour. `ReportBuilder().with_aspects(aspectarian_detailed=True)` additionally prints the orb and an applying/separating letter under each glyph, astro.com-style; the rings stay. English output unchanged.
 
+**Planner**
+
+- **Quarter Moons** on the daily pages (First ◐ and Last ◑), switchable with `include_moon_phases(quarters=False)`.
+- **Transits to the natal Ascendant, Midheaven and North Node**, not only the planets — on the daily pages, the year's transit summary, the progressed Moon's aspects and every lunation/station's "your chart" contacts. `include_natal_transits(to_angles=False)` turns it off.
+- **Two Lords of the Year when a birthday falls inside the planner.** A profected year turns over on the birthday, so the dashboard now says until when the first Lord rules and names the next one, with its profected house.
+- **Every daily-content switch is on the builder:** `exclude_natal_transits()`, `exclude_ingresses()`, `exclude_stations()`, `exclude_mundane_transits()`, `include_mundane_transits(planets=...)`, `include_eclipses(False)`.
+- **Denser front matter.** The year dashboard, the stations table and the natal placements each fit on one page; the year-at-a-glance calendar and the slow-transit map fill their pages, the map drawn portrait so its labels print larger. The shared table, key-value and planet-table components gain opt-in `dense` and `widths` settings for this; reports that don't set them render as before.
+
 - **Cookbooks** — a new `examples/localization_cookbook.py` walks the two independent knobs (locale = which words, fonts = whether they render) across chart SVG/PNG and report PDF, and `examples/report_cookbook.py` gains an aspectarian recipe covering the tightness rings and the detailed mode.
 
 ### Changed
@@ -71,6 +79,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **The markdown/text report dropped a compound section nested in a compound**, rendering it as `*Unknown type: compound*` — the zodiacal-releasing snapshot hit this. The renderer now recurses (the PDF path already did), so the snapshot's inner tables render.
 - **`CalculationConfig.comprehensive()` silently omitted Hygiea** — Ceres, Pallas, Juno and Vesta all resolved, but Hygiea (the fourth-largest asteroid, fifth of the classical "big five") was absent. Its Swiss Ephemeris id was corrected in 0.22.0, so it now belongs in the set and computes.
 - **The greyscale (laser/B&W) PDF's chart wheel still printed colour** — retrograde markers came out red, and outer-wheel / multi-chart planets blue/green/purple, because it borrowed the `classic` visualization theme. There's now a proper **`greyscale` chart theme** (`chart.draw().with_theme("greyscale")`) that desaturates every ink colour into distinguishable greys; the greyscale PDF maps its wheel to it, so nothing reads as colour on a monochrome print.
+
+**Planner**
+
+- **The planner's days were UTC days, not the reader's.** Every search was handed `datetime.combine(day, time.min)`, which the search engine reads as UTC, so a Tokyo planner lost the morning of its first day and a US one lost the evening of its last. Searches now run from local midnight to local midnight in the planner's timezone.
+- **The progressed Moon was progressed from the local birth time read as UTC** — off by the birth place's UTC offset, which is 4.4° of progressed Moon for a California birth and moved its aspect dates by months. It is now progressed from the UTC birth moment.
+- **Weeks straddling two months were printed twice** (61 weekly pages for the 53 weeks of 2026). Each week is now printed once, under the month that holds most of its days.
+- **`.without_progressed_chart()` did nothing** — the flag was stored and never read.
+- **The solar return time was printed in UTC with no label.** It is now shown in the planner's timezone, with the zone named ("10:33 AM EDT").
+- **A custom transit list flooded "Transits That Shape the Year"** — `include_natal_transits(["Moon", "Mars", "Saturn"])` put 1,132 rows on it. That page now lists only the slow planets (Jupiter–Pluto), narrowed to your list; the daily pages reuse those hits instead of searching them twice.
+- **Custom date ranges were pinned to the start year.** The transit map always covered January–December of the start year, and the solar return was always that year's. Both now follow the range: a Sep→Aug planner gets its own span and the return that falls inside it.
+- **"All times local to" named the birth place** when no `.location()` was given, even though times follow `.timezone()` — a New York planner for a San Francisco birth claimed San Francisco time. The title page now names the timezone.
+- **A fake "VOC ends" at midnight after the last day** (and potentially a fake "VOC begins" at the first). The void-of-course search clipped periods at the range edge; it now runs padded and keeps only real boundaries inside the range.
+- **The New Moon printed as an empty box.** 🌑 is in no bundled font, and Typst renders with system fonts off. Moon phases now use ● ◐ ○ ◑, which ship; a new test checks the planner's glyphs against the bundled fonts.
+- **Eclipses were listed twice and read "Solar Eclipse (solar)".** An eclipse now replaces its own New/Full Moon line and is named by its classification ("Total Solar Eclipse").
+- **The glyph key said "VOC"**, but the pages print ☽∅ / ☽✓. The key now shows the real symbols, the Moon phases and the natal points.
+- **Failed searches vanished silently** (`except Exception: pass`), leaving blank days. They now raise a `RuntimeWarning` naming what is missing.
+- **Bad options failed late or not at all.** An unknown graphic-ephemeris harmonic quietly became 90; a bad theme or timezone failed only inside `generate()`. Every choice-valued setter now raises `ValueError` at the call.
+- **Docstrings that disagreed with the code:** the default transit planets (all ten plus the Node and Chiron, not "the outer planets"), `half-letter` (US Statement, not "an alias for A5"), and `.location()` (it never drove planetary hours).
+- **The planner title read "2026" for any January–December range**, e.g. Jan 15–Dec 10. Only a full calendar year is called by its number now.
 
 ## [0.22.0] - 2026-07-14
 

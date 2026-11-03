@@ -61,6 +61,10 @@ dev = [
     "bump-my-version>=1.4.0",
     "pandas>=2.0.0",
     "scipy>=1.10.0",
+    # Reads font cmaps for the glyph-coverage tests (test_glyph_coverage.py and
+    # the planner's). Without it those tests skip, and nothing checks that a
+    # glyph we print exists in a font we ship.
+    "fonttools>=4.0.0",
 ]
 # The docs are Sphinx, not MkDocs. This extra declared mkdocs + mkdocs-material,
 # which nothing used. The real list is docs/requirements.txt (what Read the Docs

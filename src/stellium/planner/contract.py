@@ -74,10 +74,25 @@ def _fmt_time(dt: Any, fmt: str = "12h") -> str:
     return f"{hour}:{dt.minute:02d}{meridiem[0]}"
 
 
-def _fmt_datetime(dt: Any) -> str:
-    """'July 15, 2026 at 11:19 AM'."""
-    hour, meridiem = _hour12(dt)
-    return f"{_fmt_long_date(dt)} at {hour}:{dt.minute:02d} {meridiem.upper()}"
+def _fmt_datetime(dt: Any, fmt: str = "12h") -> str:
+    """'July 15, 2026 at 11:19 AM EDT' — the zone is named when the time has one."""
+    if fmt == "24h":
+        clock = f"{dt.hour:02d}:{dt.minute:02d}"
+    else:
+        hour, meridiem = _hour12(dt)
+        clock = f"{hour}:{dt.minute:02d} {meridiem.upper()}"
+    zone = dt.tzname() if getattr(dt, "tzinfo", None) else None
+    return f"{_fmt_long_date(dt)} at {clock}" + (f" {zone}" if zone else "")
+
+
+def _lord_where(sign: str | None, house: int | None) -> str:
+    """'natal Leo, 5th house' — where the Lord of the Year sits in the chart."""
+    if not sign:
+        return ""
+    where = sign
+    if house:
+        where += f", {_ordinal(house)} house"
+    return f"  ·  natal {where}"
 
 
 # ---------------------------------------------------------------------------
@@ -85,23 +100,24 @@ def _fmt_datetime(dt: Any) -> str:
 # ---------------------------------------------------------------------------
 
 
-def _year_at_a_glance(almanac: YearAlmanac) -> dict[str, Any]:
+def _year_at_a_glance(almanac: YearAlmanac, time_format: str = "12h") -> dict[str, Any]:
     """The dashboard: the single page you flip back to all year.
 
     Everything that defines *this year* — who rules it, when the retrogrades run,
     where the eclipses land in your houses, which slow transits shape it. All of
     this existed already, but only ever as scattered lines on daily pages.
     """
-    lord_where = ""
-    if almanac.lord_natal_sign:
-        lord_where = f"{almanac.lord_natal_sign}"
-        if almanac.lord_natal_house:
-            lord_where += f", {_ordinal(almanac.lord_natal_house)} house"
+    change = almanac.profection_change
+    # A profected year turns over on the birthday, so a range that contains one has
+    # two Lords. Say until when the first one rules, or it reads as the whole year's.
+    until = f"  ·  until {_fmt_date(change.date)}" if change else ""
 
     pairs = [
         [
             "Lord of the Year",
-            almanac.lord_of_year + (f"  ·  natal {lord_where}" if lord_where else ""),
+            almanac.lord_of_year
+            + _lord_where(almanac.lord_natal_sign, almanac.lord_natal_house)
+            + until,
         ],
         [
             "Profection",
@@ -109,8 +125,21 @@ def _year_at_a_glance(almanac: YearAlmanac) -> dict[str, Any]:
             f"({almanac.profected_sign})  ·  age {almanac.age}",
         ],
     ]
+    if change:
+        pairs += [
+            [
+                f"From {_fmt_date(change.date)}",
+                f"{change.lord_of_year} rules"
+                + _lord_where(change.lord_natal_sign, change.lord_natal_house),
+            ],
+            [
+                "Next profection",
+                f"{_ordinal(change.profected_house)} house "
+                f"({change.profected_sign})  ·  age {change.age}",
+            ],
+        ]
     if almanac.solar_return:
-        pairs.append(["Solar Return", _fmt_datetime(almanac.solar_return)])
+        pairs.append(["Solar Return", _fmt_datetime(almanac.solar_return, time_format)])
     for period in almanac.zr_periods:
         if period.level == 1:
             pairs.append(["Releasing (L1)", f"{period.sign}, ruled by {period.ruler}"])
@@ -291,6 +320,9 @@ def _stations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
         "descriptor": "Where each planet turns — and what it touches in your chart",
         "new_page": True,
         "headers": ["Date", "Planet", "", "Degree", "Shadow", "Your chart"],
+        # The glyph run needs the room: in an equal sixth it wrapped to four lines
+        # a row and the table took three pages. The ℞/D column needs almost none.
+        "widths": [0.9, 1.0, 0.35, 1.0, 1.25, 2.6],
         "rows": rows,
     }
 
@@ -324,6 +356,7 @@ def _lunations_section(almanac: YearAlmanac) -> dict[str, Any] | None:
         "descriptor": "Each new and full Moon, and where it lands for you",
         "new_page": True,
         "headers": ["Date", "Phase", "Degree", "Your House", "Your chart"],
+        "widths": [0.8, 1.5, 1.0, 0.8, 2.6],
         "rows": rows,
     }
 
@@ -525,6 +558,8 @@ def _glyph_key(planets: list[str], aspects: list[str]) -> dict[str, Any]:
     """
     from stellium.planner.events import (
         ASPECT_GLYPHS_BY_NAME,
+        MOON_PHASE_GLYPHS,
+        MOON_PHASE_NAMES,
         PLANET_GLYPHS,
         SIGN_GLYPHS,
     )
@@ -557,6 +592,17 @@ def _glyph_key(planets: list[str], aspects: list[str]) -> dict[str, Any]:
                 ],
             },
             {
+                "title": "Natal points",
+                "items": [
+                    {"glyph": PLANET_GLYPHS.get(p, p), "label": label}
+                    for p, label in (
+                        ("ASC", "Ascendant"),
+                        ("MC", "Midheaven"),
+                        ("True Node", "North Node"),
+                    )
+                ],
+            },
+            {
                 "title": "Aspects",
                 "items": [
                     {"glyph": ASPECT_GLYPHS_BY_NAME.get(a, ""), "label": a}
@@ -574,7 +620,18 @@ def _glyph_key(planets: list[str], aspects: list[str]) -> dict[str, Any]:
                     {"glyph": "→", "label": "Planet enters a new sign"},
                     {"glyph": "℞", "label": "Stations retrograde"},
                     {"glyph": "D", "label": "Stations direct"},
-                    {"glyph": "VOC", "label": "Moon void of course"},
+                    {"glyph": "\u263d\u2205", "label": "Moon goes void of course"},
+                    {"glyph": "\u263d\u2713", "label": "Void of course ends"},
+                ],
+            },
+            {
+                "title": "Moon phases",
+                "items": [
+                    {
+                        "glyph": MOON_PHASE_GLYPHS[phase],
+                        "label": MOON_PHASE_NAMES[phase],
+                    }
+                    for phase in ("new", "first_quarter", "full", "last_quarter")
                 ],
             },
             # The colour code is the fastest thing on the daily pages, so it has to
@@ -653,11 +710,11 @@ def _month_weeks_detail(
     pages: list[dict[str, Any]] = []
 
     for week in cal.monthdatescalendar(year, month):
-        # A week belongs to the month that owns most of it; skip weeks whose days
-        # all sit outside the planner's range.
-        if all(day < start or day > end for day in week):
-            continue
-        if not any(day.month == month for day in week):
+        # A week that straddles two months is printed once, under the month that
+        # owns most of its in-range days (the earlier month on a tie). Checking only
+        # "has a day in this month" printed every straddling week twice — 61 weekly
+        # pages for the 53 weeks of 2026.
+        if _week_owner(week, start, end) != (year, month):
             continue
 
         days = []
@@ -683,6 +740,19 @@ def _month_weeks_detail(
         pages.append({"label": label, "days": days})
 
     return pages
+
+
+def _week_owner(week: list[date], start: date, end: date) -> tuple[int, int] | None:
+    """The (year, month) a straddling week's page belongs to, or None if the week
+    lies wholly outside the planner's range."""
+    in_range = [day for day in week if start <= day <= end]
+    if not in_range:
+        return None
+    counts: dict[tuple[int, int], int] = {}
+    for day in in_range:
+        counts[(day.year, day.month)] = counts.get((day.year, day.month), 0) + 1
+    # max() keeps the first of equal counts, and in_range is in date order.
+    return max(counts, key=lambda ym: counts[ym])
 
 
 def _weekday_names(first_weekday: int) -> list[str]:
@@ -782,7 +852,9 @@ def build_planner_data(
     weekly_starts_on: str | None = None,
     time_format: str = "12h",
     location_label: str | None = None,
+    timezone_label: str | None = None,
     include_natal: bool = True,
+    include_progressed: bool = True,
     svgs: dict[str, str] | None = None,
     transit_planets: list[str] | None = None,
     condition: Any = None,
@@ -797,7 +869,14 @@ def build_planner_data(
         theme: Design-system theme name
         page_size: One of PAPER_SIZES
         binding_margin: Extra inner margin in inches, for a bound planner
-        week_starts_on: "sunday" or "monday"
+        week_starts_on: "sunday" or "monday" (the month grids)
+        weekly_starts_on: First day of the weekly pages (default: week_starts_on)
+        time_format: "12h" or "24h"
+        location_label: Where the times are local to, for the title page
+        timezone_label: The timezone the times are in, named on the title page
+            when no location was given
+        include_natal: Include the natal reference (placements table and wheel)
+        include_progressed: Include the progressed-Moon page
         svgs: Rendered SVG markup, keyed by slot ("natal", "ephemeris",
             "solar_return", "profections", "zr")
         transit_planets: Planets appearing on the daily pages, for the legend
@@ -817,7 +896,7 @@ def build_planner_data(
 
     start, end = almanac.start, almanac.end
 
-    front: list[dict[str, Any]] = [_year_at_a_glance(almanac)]
+    front: list[dict[str, Any]] = [_year_at_a_glance(almanac, time_format)]
 
     transits_page = _year_transits(almanac)
     if transits_page:
@@ -891,6 +970,8 @@ def build_planner_data(
                 "title": "The Slow Transits",
                 "descriptor": "Where the slow movers travel",
                 "new_page": True,
+                # Owns its page: drawn as large as the sheet allows.
+                "fill_page": True,
                 "svg_content": svgs["ephemeris"],
             }
         )
@@ -914,7 +995,7 @@ def build_planner_data(
             }
         )
 
-    progressed = _progressed_moon_section(almanac)
+    progressed = _progressed_moon_section(almanac) if include_progressed else None
     if progressed:
         progressed["new_page"] = True
         front.append(progressed)
@@ -929,6 +1010,9 @@ def build_planner_data(
             aspects=["Conjunction", "Sextile", "Square", "Trine", "Opposition"],
         )
     )
+
+    for section in front:
+        _densify(section)
 
     # --- the months ---------------------------------------------------------
     months: list[dict[str, Any]] = []
@@ -967,6 +1051,8 @@ def build_planner_data(
     # where the native was born. Say so, the way a good almanac does.
     if location_label:
         metadata.append(f"All times local to {location_label}")
+    elif timezone_label:
+        metadata.append(f"All times {timezone_label}")
 
     period = _period_label(start, end)
 
@@ -988,13 +1074,31 @@ def build_planner_data(
     }
 
 
+def _densify(section: dict[str, Any]) -> None:
+    """Mark a front-matter section's tables and grids for the tight layout.
+
+    A report has room to breathe; a planner's reference pages are consulted, and a
+    table that spills two rows onto a second sheet is a page turned for nothing.
+    The design system's ``dense`` variants keep the type legible and tighten the
+    rows. Charts and the calendar are left alone.
+    """
+    if section.get("kind") in ("table", "key_value", "planet_positions"):
+        section["dense"] = True
+    for sub in section.get("sections", []):
+        _densify(sub)
+
+
 def _period_label(start: date, end: date) -> str:
     """What to call the planner's span.
 
     A planner does not have to be a calendar year — Honeycomb's run Sep→Aug — so a
     bare "2026" would be a lie for any range that crosses a New Year.
     """
-    if start.month == 1 and end.month == 12 and start.year == end.year:
+    if (
+        (start.month, start.day) == (1, 1)
+        and (end.month, end.day) == (12, 31)
+        and (start.year == end.year)
+    ):
         return str(start.year)
     if start.year == end.year:
         if start.month == end.month:
